@@ -1,0 +1,9 @@
+{
+  "name": "Reussimaths",
+  "short_name": "Reussimaths",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F4EC",
+  "theme_color": "#1B2A4A",
+  "icons": []
+}

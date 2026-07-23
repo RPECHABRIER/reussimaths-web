@@ -1,0 +1,88 @@
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+
+// Progression + statut d'abonnement d'un utilisateur pour un chapitre donné.
+// Tout est scopé par user_id + chapter_id, avec RLS côté Supabase (voir
+// supabase/schema.sql) pour qu'un utilisateur ne puisse lire/écrire que ses
+// propres lignes.
+export function useProgress(userId, chapterId) {
+  const [progress, setProgress] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    if (!userId || !chapterId) {
+      setProgress(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("chapter_progress")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("chapter_id", chapterId)
+      .maybeSingle();
+    if (error) console.error("[useProgress] load error:", error.message);
+    setProgress(data ?? { score: 0, best_streak: 0 });
+    setLoading(false);
+  }, [userId, chapterId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // À appeler après chaque exercice résolu, avec le score/streak à jour.
+  const recordResult = useCallback(
+    async ({ score, bestStreak }) => {
+      if (!userId || !chapterId) return; // pas connecté : pas de sauvegarde, juste le state local du composant
+      const { error } = await supabase.from("chapter_progress").upsert(
+        {
+          user_id: userId,
+          chapter_id: chapterId,
+          score,
+          best_streak: bestStreak,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,chapter_id" }
+      );
+      if (error) console.error("[useProgress] save error:", error.message);
+    },
+    [userId, chapterId]
+  );
+
+  return { progress, loading, recordResult, reload: load };
+}
+
+// Statut d'abonnement (mis à jour côté serveur par le webhook Stripe, voir
+// api/stripe-webhook.js). Le front ne fait que le lire.
+export function useSubscription(userId) {
+  const [subscription, setSubscription] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!userId) {
+      setSubscription(null);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) console.error("[useSubscription] load error:", error.message);
+        setSubscription(data ?? null);
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const isActive = subscription?.status === "active" || subscription?.status === "trialing";
+  return { subscription, isActive, loading };
+}

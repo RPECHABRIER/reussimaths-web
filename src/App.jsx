@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import LevelSelect from "./pages/LevelSelect";
 import Niveau from "./pages/Niveau";
@@ -6,13 +6,17 @@ import ChapterPage from "./pages/ChapterPage";
 import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
 import { useAuth } from "./hooks/useAuth";
-import { useProfile } from "./hooks/useProfile";
+import { supabase } from "./lib/supabaseClient";
 
 export default function App() {
   const { user, loading } = useAuth();
-  const { profile, loading: profileLoading } = useProfile(user?.id);
   const location = useLocation();
   const navigate = useNavigate();
+  const pathRef = useRef(location.pathname);
+
+  useEffect(() => {
+    pathRef.current = location.pathname;
+  }, [location.pathname]);
 
   // Capture un éventuel lien de parrainage (?ref=code), quelle que soit la
   // page d'arrivée — utilisé à la création du profil (voir Onboarding.jsx).
@@ -23,11 +27,25 @@ export default function App() {
 
   // Première connexion : pas encore de pseudo choisi -> redirection globale
   // vers /pseudo, quelle que soit la page sur laquelle l'utilisateur atterrit.
+  // Fait sa propre requête (plutôt que de dépendre d'un hook séparé) pour
+  // éviter toute course entre deux vérifications qui se marchent dessus.
   useEffect(() => {
-    if (!loading && !profileLoading && user && !profile && location.pathname !== "/pseudo") {
-      navigate("/pseudo");
-    }
-  }, [loading, profileLoading, user, profile, location.pathname, navigate]);
+    if (loading || !user) return;
+    let cancelled = false;
+    supabase
+      .from("profiles")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) console.error("[App] vérification du profil :", error.message);
+        if (!data && pathRef.current !== "/pseudo") navigate("/pseudo");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, user, navigate]);
 
   return (
     <Routes>

@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// Chapitre : Automatismes — transversal, toujours gratuit.
-// Placeholder minimal pour valider le registre avec plusieurs chapitres.
+// Chapitre : Automatismes — freemium (questions gratuites limitées par jour,
+// illimité avec abonnement). Placeholder minimal pour valider le registre.
 // À enrichir avec de vrais générateurs (calcul mental, pourcentages, etc.)
 // ---------------------------------------------------------------------------
 
@@ -22,8 +22,9 @@ export default {
   meta: {
     id: "automatismes",
     title: "Automatismes",
-    description: "Calcul mental, pourcentages, priorités opératoires — toujours accessible.",
-    free: true,
+    description: "Calcul mental, pourcentages, priorités opératoires.",
+    level: "premiere-spe",
+    freemiumDaily: 5, // 5 questions gratuites par jour, illimité avec abonnement
     order: 1,
   },
   generate,

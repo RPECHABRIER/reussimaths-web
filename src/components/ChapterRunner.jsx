@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
-import { Check, X, Flame, Trophy, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Check, X, Flame, Trophy, ArrowRight, Lock } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { useProgress } from "../hooks/useProgress";
+import { useProgress, useSubscription } from "../hooks/useProgress";
+import { useDailyQuota } from "../hooks/useDailyQuota";
 import MathText from "./MathText";
 
 // ---------------------------------------------------------------------------
@@ -9,10 +11,19 @@ import MathText from "./MathText";
 // progressive, score/série. Partagé par TOUS les chapitres — un chapitre
 // n'apporte que `chapter.generate()` (voir src/chapters/*.js). Ne pas mettre
 // de logique spécifique à un chapitre ici.
+//
+// Chapitres "freemiumDaily" (ex: Automatismes) : un nombre limité de
+// questions par jour est offert sans abonnement (voir useDailyQuota), au-delà
+// un écran invite à s'abonner. Un abonnement actif rend l'accès illimité.
 // ---------------------------------------------------------------------------
 export default function ChapterRunner({ chapter }) {
   const { user } = useAuth();
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
+  const { isActive } = useSubscription(user?.id);
+  const dailyLimit = chapter.meta.freemiumDaily;
+  const quota = useDailyQuota(chapter.meta.id, dailyLimit ?? 5);
+  const quotaApplies = !!dailyLimit && !isActive;
+  const quotaExhausted = quotaApplies && quota.exhausted;
 
   const [mode, setMode] = useState("classique");
   const [exercise, setExercise] = useState(() => chapter.generate());
@@ -41,6 +52,7 @@ export default function ChapterRunner({ chapter }) {
 
   const registerResult = (correct) => {
     setFeedback({ correct });
+    if (quotaApplies) quota.consume();
     if (correct) {
       const newStreak = streak + 1;
       const bonus = newStreak % 5 === 0 ? 20 : 0;
@@ -77,6 +89,36 @@ export default function ChapterRunner({ chapter }) {
   const green = "#4E8B6B";
   const red = "#C1543C";
 
+  if (quotaExhausted) {
+    return (
+      <div
+        className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
+        style={{ background: paper, fontFamily: "Inter, sans-serif" }}
+      >
+        <div
+          className="max-w-md w-full text-center rounded-2xl p-6"
+          style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}
+        >
+          <Lock size={22} color={slate} className="mx-auto mb-3" />
+          <p style={{ fontFamily: "Fraunces, serif", color: ink, fontSize: "1.2rem", fontWeight: 600 }}>
+            Questions gratuites épuisées pour aujourd'hui
+          </p>
+          <p className="text-sm mt-2 mb-5" style={{ color: slate }}>
+            Tu as utilisé tes {dailyLimit} questions gratuites du jour sur « {chapter.meta.title} ». Reviens demain,
+            ou abonne-toi pour un accès illimité à tous les chapitres.
+          </p>
+          <Link
+            to="/compte"
+            className="inline-block py-2.5 px-5 rounded-lg text-sm font-semibold"
+            style={{ backgroundColor: ink, color: paper }}
+          >
+            Voir les abonnements
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
@@ -96,8 +138,15 @@ export default function ChapterRunner({ chapter }) {
             className="text-xs tracking-widest uppercase mb-1"
             style={{ color: isJeu ? "#8b9ec4" : slate, letterSpacing: "0.15em" }}
           >
-            {chapter.meta.free ? "Chapitre gratuit" : "Chapitre abonnement"} — {chapter.meta.title}
+            {quotaApplies ? "Gratuit — accès limité" : chapter.meta.free ? "Chapitre gratuit" : "Chapitre abonnement"} —{" "}
+            {chapter.meta.title}
           </p>
+          {quotaApplies && (
+            <p className="text-xs mt-1" style={{ color: isJeu ? "#8b9ec4" : slate }}>
+              {quota.remaining} question{quota.remaining > 1 ? "s" : ""} gratuite{quota.remaining > 1 ? "s" : ""}{" "}
+              restante{quota.remaining > 1 ? "s" : ""} aujourd'hui
+            </p>
+          )}
           <h1
             style={{
               fontFamily: "Fraunces, serif",

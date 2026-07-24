@@ -7,12 +7,16 @@
 // apparaît dans la liste des chapitres sans toucher à aucun autre fichier.
 //
 // meta attendu :
-//   id          : identifiant unique (string), utilisé dans l'URL /chapitre/:id
-//   title       : titre affiché
-//   description : courte description affichée sur la page d'accueil
-//   free        : true si accessible sans abonnement
-//   order       : nombre optionnel pour l'ordre d'affichage (défaut 999)
-//   unlockHint  : texte optionnel affiché si le chapitre est verrouillé
+//   id            : identifiant unique (string), utilisé dans l'URL /chapitre/:id
+//   title         : titre affiché
+//   description   : courte description affichée sur la page d'accueil
+//   level         : identifiant du niveau (voir src/levels.js), ex: "premiere-spe"
+//   free          : true si accessible sans abonnement (sans limite)
+//   freemiumDaily : nombre optionnel de questions gratuites par jour sans
+//                   abonnement (ex: 5) — utilisé pour les chapitres
+//                   "Automatismes". Incompatible avec `free`.
+//   order         : nombre optionnel pour l'ordre d'affichage (défaut 999)
+//   unlockHint    : texte optionnel affiché si le chapitre est verrouillé
 //                 (ex: "Débloqué en partageant à 5 amis actifs")
 //
 // generate() doit retourner un objet exercice : { type: "numeric" | "qcm",
@@ -30,4 +34,8 @@ export const chapters = Object.entries(modules)
 
 export function getChapter(id) {
   return chapters.find((c) => c.meta.id === id);
+}
+
+export function getChaptersByLevel(levelId) {
+  return chapters.filter((c) => c.meta.level === levelId);
 }

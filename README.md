@@ -5,6 +5,22 @@ paiement direct via Stripe pour l'abonnement, comptes individualisés via Supaba
 Une coque native (Capacitor ou équivalent) pourra être ajoutée plus tard sans
 réécrire l'app, si la présence dans les stores devient nécessaire.
 
+## Niveaux et modèle freemium
+
+Les niveaux proposés (6e à Terminale) sont listés dans `src/levels.js`. Un
+niveau s'affiche "Disponible" sur l'accueil dès qu'au moins un chapitre déclare
+`meta.level` égal à son `id` ; sinon il s'affiche "Bientôt disponible" avec un
+bouton de vote (table `level_votes`) qui permet de prioriser les niveaux à
+développer. Rien à coder pour ça : ça découle automatiquement du contenu
+présent.
+
+Modèle freemium : un chapitre peut être...
+- `free: true` — accessible sans compte ni abonnement, en illimité ;
+- `freemiumDaily: 5` — accessible sans abonnement mais limité à N questions
+  par jour (quota client, voir `src/hooks/useDailyQuota.js`), illimité avec un
+  abonnement actif. C'est le mode utilisé pour "Automatismes" sur chaque niveau ;
+- ni l'un ni l'autre (`free` absent) — entièrement réservé à l'abonnement.
+
 ## Ajouter un nouveau chapitre (le point important)
 
 Dépose un seul fichier `src/chapters/<slug>.js` qui exporte par défaut :
@@ -15,9 +31,11 @@ export default {
     id: "mon-chapitre",       // utilisé dans l'URL /chapitre/mon-chapitre
     title: "Mon chapitre",
     description: "Courte description affichée sur l'accueil.",
-    free: false,               // true = accessible sans abonnement
+    level: "seconde",          // voir la liste des niveaux dans src/levels.js
+    free: false,               // true = accessible sans abonnement, en illimité
+    freemiumDaily: 5,          // OU : N questions gratuites/jour (incompatible avec free)
     order: 4,                  // ordre d'affichage (optionnel)
-    unlockHint: "Débloqué avec l'abonnement.", // optionnel, si free: false
+    unlockHint: "Débloqué avec l'abonnement.", // optionnel, si ni free ni freemiumDaily
   },
   generate() {
     // doit retourner un exercice, cf. src/chapters/second-degre.js pour des
@@ -35,10 +53,11 @@ export default {
 ```
 
 C'est tout. Le fichier est repéré automatiquement (`src/chapters/registry.js`
-utilise `import.meta.glob`), il apparaît sur la page d'accueil, verrouillé ou
-non selon `free`, sans toucher à aucun autre fichier. `automatismes.js` et
-`suites.js` sont des exemples volontairement minimalistes à remplacer par du
-vrai contenu.
+utilise `import.meta.glob`), il apparaît dans la liste de son niveau (et fait
+"apparaître" ce niveau comme disponible s'il ne l'était pas), verrouillé ou
+non selon `free`/`freemiumDaily`, sans toucher à aucun autre fichier.
+`automatismes.js` et `suites.js` sont des exemples volontairement
+minimalistes à remplacer par du vrai contenu.
 
 ## Lancer le projet en local
 
@@ -64,9 +83,41 @@ ne fonctionneront pas.
 
 Important sur l'anonymat (décision produit actée) : l'app n'affiche jamais le
 nom réel ni l'email de connexion. Après la première connexion, l'utilisateur
-choisit un pseudo stocké dans `profiles`, complètement séparé de son identité
-Google/Apple. À implémenter : un écran "choisis ton pseudo" au premier login
-(pas encore fait dans ce squelette — la table existe, l'écran reste à créer).
+est automatiquement redirigé vers `/pseudo` (voir `src/pages/Onboarding.jsx`)
+pour choisir un pseudo stocké dans `profiles`, complètement séparé de son
+identité Google/Apple.
+
+### Mise à jour du schéma pour un projet Supabase déjà existant
+
+Si tu as déjà exécuté une version précédente de `supabase/schema.sql`,
+exécute seulement ce complément dans l'éditeur SQL (au lieu de tout le
+fichier) :
+
+```sql
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'profiles_pseudo_unique') then
+    alter table public.profiles add constraint profiles_pseudo_unique unique (pseudo);
+  end if;
+end $$;
+
+create table if not exists public.level_votes (
+  level_id text not null,
+  voter_key text not null,
+  created_at timestamptz not null default now(),
+  primary key (level_id, voter_key)
+);
+
+alter table public.level_votes enable row level security;
+
+drop policy if exists "level_votes: public read" on public.level_votes;
+create policy "level_votes: public read" on public.level_votes
+  for select using (true);
+
+drop policy if exists "level_votes: anyone can vote once" on public.level_votes;
+create policy "level_votes: anyone can vote once" on public.level_votes
+  for insert with check (true);
+```
 
 ## Configurer l'abonnement (Stripe)
 

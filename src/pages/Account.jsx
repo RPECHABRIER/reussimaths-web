@@ -1,12 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
+import { useProfile } from "../hooks/useProfile";
 
 export default function Account() {
   const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
   const { subscription, isActive } = useSubscription(user?.id);
+  const { profile, loading: profileLoading } = useProfile(user?.id);
+  const navigate = useNavigate();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  // Première connexion : pas encore de pseudo choisi -> écran d'onboarding.
+  useEffect(() => {
+    if (user && !profileLoading && !profile) navigate("/pseudo");
+  }, [user, profileLoading, profile, navigate]);
 
   const startCheckout = async (plan) => {
     setCheckoutLoading(true);
@@ -45,10 +53,13 @@ export default function Account() {
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full max-w-xs text-center">
-          <p style={{ color: "#5C6B7A" }}>Connecté</p>
+          <p style={{ color: "#5C6B7A" }}>Connecté{profile?.pseudo ? ` — ${profile.pseudo}` : ""}</p>
           <p className="text-sm" style={{ color: "#5C6B7A" }}>
             Abonnement : {isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
+          <Link to="/pseudo" className="text-xs underline" style={{ color: "#5C6B7A" }}>
+            Changer de pseudo
+          </Link>
           {!isActive && (
             <>
               <button

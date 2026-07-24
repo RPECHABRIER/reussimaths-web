@@ -22,6 +22,7 @@ export default {
     id: "suites",
     title: "Suites numériques",
     description: "Suites arithmétiques et géométriques, sens de variation, limites.",
+    level: "premiere-spe",
     free: false,
     order: 3,
     unlockHint: "Débloqué avec l'abonnement Reussimaths.",

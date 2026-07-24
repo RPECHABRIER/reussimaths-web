@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Chapitre : Second degré (Première Spécialité) — gratuit
+// Chapitre : Second degré (Première Spécialité) — sous abonnement
 // Ce fichier ne contient QUE du contenu (générateurs d'exercices + métadonnées).
 // L'affichage (mode Classique/Jeu, pavé numérique, QCM, aide progressive) est
 // géré par le composant générique <ChapterRunner /> pour tous les chapitres.
@@ -424,8 +424,10 @@ export default {
     id: "second-degre",
     title: "Second degré",
     description: "Discriminant, formes canonique/factorisée, résolution, inéquations, lecture de courbe.",
-    free: true,
+    level: "premiere-spe",
+    free: false,
     order: 2,
+    unlockHint: "Débloqué avec l'abonnement Reussimaths.",
   },
   generate,
 };

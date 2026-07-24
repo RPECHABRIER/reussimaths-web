@@ -20,9 +20,10 @@ export default function ChapterPage() {
     );
   }
 
-  const locked = !chapter.meta.free && !isActive;
+  const freemium = !!chapter.meta.freemiumDaily;
+  const locked = !chapter.meta.free && !freemium && !isActive;
 
-  if (loading && !chapter.meta.free) {
+  if (loading && !chapter.meta.free && !freemium) {
     return <div className="min-h-screen flex items-center justify-center">Chargement…</div>;
   }
 

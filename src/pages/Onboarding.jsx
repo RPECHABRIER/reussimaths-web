@@ -29,11 +29,28 @@ export default function Onboarding() {
     const { error: err } = await supabase
       .from("profiles")
       .upsert({ user_id: user.id, pseudo: trimmed }, { onConflict: "user_id" });
-    setSaving(false);
     if (err) {
+      setSaving(false);
       setError("Ce pseudo est peut-être déjà pris, essaie un autre.");
       return;
     }
+
+    // Parrainage : si arrivé via un lien /?ref=<code>, enregistre le parrain
+    // (une seule fois — la clé est supprimée du navigateur juste après).
+    const refCode = localStorage.getItem("reussimaths_ref_code");
+    if (refCode) {
+      const { data: referrer } = await supabase
+        .from("profiles")
+        .select("user_id")
+        .eq("referral_code", refCode)
+        .maybeSingle();
+      if (referrer && referrer.user_id !== user.id) {
+        await supabase.from("referrals").insert({ referrer_id: referrer.user_id, referred_id: user.id });
+      }
+      localStorage.removeItem("reussimaths_ref_code");
+    }
+
+    setSaving(false);
     navigate("/");
   };
 

@@ -1,20 +1,23 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
+import { useReferrals } from "../hooks/useReferrals";
 
+// Note : la redirection vers /pseudo pour un utilisateur sans profil est
+// gérée globalement dans App.jsx (fonctionne quelle que soit la page
+// d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
   const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
   const { subscription, isActive } = useSubscription(user?.id);
-  const { profile, loading: profileLoading } = useProfile(user?.id);
-  const navigate = useNavigate();
+  const { profile } = useProfile(user?.id);
+  const { count: referralCount } = useReferrals(user?.id);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  // Première connexion : pas encore de pseudo choisi -> écran d'onboarding.
-  useEffect(() => {
-    if (user && !profileLoading && !profile) navigate("/pseudo");
-  }, [user, profileLoading, profile, navigate]);
+  const referralLink = profile?.referral_code
+    ? `${window.location.origin}/?ref=${profile.referral_code}`
+    : null;
 
   const startCheckout = async (plan) => {
     setCheckoutLoading(true);
@@ -60,6 +63,24 @@ export default function Account() {
           <Link to="/pseudo" className="text-xs underline" style={{ color: "#5C6B7A" }}>
             Changer de pseudo
           </Link>
+
+          {referralLink && (
+            <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#F7F4EC", border: "1px solid #e4dfd0" }}>
+              <p className="text-xs font-semibold" style={{ color: "#1B2A4A" }}>
+                Parrainage — {referralCount}/5 amis
+              </p>
+              <p className="text-xs mt-1" style={{ color: "#5C6B7A" }}>
+                Invite 5 amis pour débloquer le chapitre Probabilités, sans abonnement.
+              </p>
+              <p
+                className="text-xs mt-2 px-2 py-1.5 rounded break-all"
+                style={{ backgroundColor: "#ffffff", border: "1px solid #d5cfbc", color: "#1B2A4A", fontFamily: "Space Mono, monospace" }}
+              >
+                {referralLink}
+              </p>
+            </div>
+          )}
+
           {!isActive && (
             <>
               <button

@@ -4,6 +4,7 @@ import { getChaptersByLevel } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
+import { useReferrals } from "../hooks/useReferrals";
 import ComingSoon from "./ComingSoon";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId). Si le niveau
@@ -14,6 +15,7 @@ export default function Niveau() {
   const chapters = getChaptersByLevel(levelId);
   const { user } = useAuth();
   const { isActive } = useSubscription(user?.id);
+  const { count: referralCount } = useReferrals(user?.id);
 
   if (!level) {
     return (
@@ -46,7 +48,8 @@ export default function Niveau() {
         <div className="flex flex-col gap-3">
           {chapters.map((chapter) => {
             const freemium = !!chapter.meta.freemiumDaily;
-            const locked = !chapter.meta.free && !freemium && !isActive;
+            const referralUnlocked = !!chapter.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals;
+            const locked = !chapter.meta.free && !freemium && !isActive && !referralUnlocked;
             const content = (
               <div
                 className="rounded-2xl p-4 flex items-center justify-between"
@@ -58,7 +61,9 @@ export default function Niveau() {
                   </p>
                   <p className="text-xs mt-1" style={{ color: "#5C6B7A" }}>
                     {locked
-                      ? chapter.meta.unlockHint ?? "Chapitre sous abonnement"
+                      ? chapter.meta.unlockReferrals
+                        ? `${chapter.meta.unlockReferrals - referralCount} ami(s) à parrainer pour débloquer`
+                        : chapter.meta.unlockHint ?? "Chapitre sous abonnement"
                       : freemium
                       ? `${chapter.meta.description} — ${chapter.meta.freemiumDaily} questions gratuites/jour`
                       : chapter.meta.description}

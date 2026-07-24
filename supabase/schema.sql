@@ -9,6 +9,9 @@ create table if not exists public.profiles (
   user_id uuid primary key references auth.users (id) on delete cascade,
   pseudo text not null unique,
   avatar text,
+  -- Code de parrainage unique, généré automatiquement. Partagé via un lien
+  -- /?ref=<code> (voir src/pages/Onboarding.jsx et src/hooks/useReferrals.js).
+  referral_code text unique default substr(replace(gen_random_uuid()::text, '-', ''), 1, 8),
   created_at timestamptz not null default now()
 );
 
@@ -55,6 +58,15 @@ create table if not exists public.level_votes (
   primary key (level_id, voter_key)
 );
 
+-- Parrainage : un ami parrainé (referred_id) ne peut être enregistré qu'une
+-- fois (clé primaire), ce qui empêche de compter deux fois le même compte.
+-- Débloque certains chapitres via meta.unlockReferrals (ex: probabilites.js).
+create table if not exists public.referrals (
+  referrer_id uuid references auth.users (id) on delete cascade,
+  referred_id uuid primary key references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -63,9 +75,16 @@ alter table public.subscriptions enable row level security;
 alter table public.chapter_progress enable row level security;
 alter table public.friendships enable row level security;
 alter table public.level_votes enable row level security;
+alter table public.referrals enable row level security;
 
 create policy "profiles: self read/write" on public.profiles
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Le pseudo (et le code de parrainage) sont l'identité PUBLIQUE dans l'app
+-- (défis entre amis, résolution d'un lien de parrainage) : lecture ouverte
+-- à tous, écriture toujours restreinte à soi-même (policy ci-dessus).
+create policy "profiles: public read" on public.profiles
+  for select using (true);
 
 -- Les abonnements ne sont modifiables que par le service_role (webhook
 -- Stripe côté serveur) ; le client peut seulement lire sa propre ligne.
@@ -87,3 +106,12 @@ create policy "level_votes: public read" on public.level_votes
 
 create policy "level_votes: anyone can vote once" on public.level_votes
   for insert with check (true);
+
+-- Un utilisateur ne voit que les amis qu'IL a parrainés (pas ceux des
+-- autres) ; seul l'utilisateur parrainé peut créer sa propre ligne (il ne
+-- peut pas se faire passer pour quelqu'un d'autre grâce à la clé primaire).
+create policy "referrals: referrer can read own" on public.referrals
+  for select using (auth.uid() = referrer_id);
+
+create policy "referrals: referred user creates own row" on public.referrals
+  for insert with check (auth.uid() = referred_id);

@@ -50,8 +50,10 @@ export default function Onboarding() {
       localStorage.removeItem("reussimaths_ref_code");
     }
 
-    setSaving(false);
-    navigate("/");
+    // Rechargement complet (plutôt que navigate) pour que l'app relise le
+    // profil fraîchement créé depuis la base — sinon l'état en mémoire (encore
+    // "pas de profil") renvoyait aussitôt ici en boucle.
+    window.location.href = "/";
   };
 
   if (loading || !user) {

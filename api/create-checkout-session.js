@@ -29,9 +29,16 @@ export default async function handler(req, res) {
     return;
   }
 
+  // "mensuel" = abonnement Stripe classique (renouvellement automatique).
+  // "special_examen" = paiement UNIQUE (mode "payment", pas "subscription") :
+  // volontairement non reconductible, pour ne pas permettre d'enchaîner
+  // l'offre tous les 3 mois à la place du tarif mensuel (voir stripe-webhook.js
+  // pour le calcul des 3 mois d'accès à partir de ce paiement ponctuel).
+  const mode = plan === "special_examen" ? "payment" : "subscription";
+
   try {
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
+      mode,
       line_items: [{ price, quantity: 1 }],
       // On passe l'id Supabase en metadata pour que le webhook sache à quel
       // compte rattacher l'abonnement (voir stripe-webhook.js).

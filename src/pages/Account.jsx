@@ -60,6 +60,12 @@ export default function Account() {
           <p className="text-sm" style={{ color: "#5C6B7A" }}>
             Abonnement : {isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
+          {isActive && subscription?.plan === "special_examen" && subscription?.current_period_end && (
+            <p className="text-xs" style={{ color: "#5C6B7A" }}>
+              Accès jusqu'au {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")} (offre non
+              reconductible)
+            </p>
+          )}
           <Link to="/pseudo" className="text-xs underline" style={{ color: "#5C6B7A" }}>
             Changer de pseudo
           </Link>

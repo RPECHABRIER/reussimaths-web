@@ -83,6 +83,12 @@ export function useSubscription(userId) {
     };
   }, [userId]);
 
-  const isActive = subscription?.status === "active" || subscription?.status === "trialing";
+  // "special_examen" est un paiement unique, non reconductible : sa date de
+  // fin (current_period_end, fixée à +3 mois par le webhook) doit être
+  // respectée même si le statut est resté "active" en base (voir
+  // api/stripe-webhook.js — aucun événement Stripe ne viendra le repasser à
+  // "canceled" tout seul, contrairement à un abonnement classique).
+  const notExpired = !subscription?.current_period_end || new Date(subscription.current_period_end) > new Date();
+  const isActive = (subscription?.status === "active" || subscription?.status === "trialing") && notExpired;
   return { subscription, isActive, loading };
 }

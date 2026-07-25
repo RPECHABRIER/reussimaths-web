@@ -48,14 +48,25 @@ export default async function handler(req, res) {
       case "checkout.session.completed": {
         const session = event.data.object;
         const userId = session.client_reference_id ?? session.metadata?.supabase_user_id;
+        const plan = session.metadata?.plan ?? null;
         if (userId) {
-          await supabaseAdmin.from("subscriptions").upsert({
+          const row = {
             user_id: userId,
             stripe_customer_id: session.customer,
             status: "active",
-            plan: session.metadata?.plan ?? null,
+            plan,
             updated_at: new Date().toISOString(),
-          });
+          };
+          // "special_examen" est un paiement UNIQUE (mode "payment", voir
+          // create-checkout-session.js), volontairement non reconductible :
+          // pas d'abonnement Stripe derrière, donc pas de renouvellement
+          // possible. On fixe nous-mêmes la fin d'accès à +3 mois.
+          if (session.mode === "payment" && plan === "special_examen") {
+            const threeMonthsLater = new Date();
+            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+            row.current_period_end = threeMonthsLater.toISOString();
+          }
+          await supabaseAdmin.from("subscriptions").upsert(row);
         }
         break;
       }

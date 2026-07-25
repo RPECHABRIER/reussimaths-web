@@ -13,6 +13,17 @@ export default function LevelSelect() {
           <p className="text-sm mt-1" style={{ color: "#5C6B7A" }}>
             Choisis ton niveau
           </p>
+          <div
+            className="inline-flex flex-col items-center gap-0.5 mt-3 px-3 py-2 rounded-xl"
+            style={{ backgroundColor: "#4E8B6B14", border: "1px solid #4E8B6B33" }}
+          >
+            <p className="text-xs font-semibold" style={{ color: "#4E8B6B" }}>
+              Créé par un professeur agrégé de mathématiques
+            </p>
+            <p className="text-xs" style={{ color: "#4E8B6B" }}>
+              Recommandé par les enseignants de mathématiques
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col gap-3">

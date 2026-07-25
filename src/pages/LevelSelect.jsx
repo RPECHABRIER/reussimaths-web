@@ -42,9 +42,24 @@ export default function LevelSelect() {
           })}
         </div>
 
-        <div className="text-center mt-8">
+        <div className="text-center mt-8 flex items-center justify-center gap-4">
           <Link to="/compte" className="text-sm underline" style={{ color: "#5C6B7A" }}>
             Mon compte
+          </Link>
+          <Link to="/amis" className="text-sm underline" style={{ color: "#5C6B7A" }}>
+            Amis & défis
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4 mt-6 pt-4 text-xs" style={{ borderTop: "1px solid #e4dfd0", color: "#5C6B7A" }}>
+          <Link to="/mentions-legales" className="underline">
+            Mentions légales
+          </Link>
+          <Link to="/cgu" className="underline">
+            CGU
+          </Link>
+          <Link to="/confidentialite" className="underline">
+            Confidentialité
           </Link>
         </div>
       </div>

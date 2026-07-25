@@ -5,6 +5,10 @@ import Niveau from "./pages/Niveau";
 import ChapterPage from "./pages/ChapterPage";
 import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
+import Amis from "./pages/Amis";
+import MentionsLegales from "./pages/legal/MentionsLegales";
+import CGU from "./pages/legal/CGU";
+import Confidentialite from "./pages/legal/Confidentialite";
 import { useAuth } from "./hooks/useAuth";
 import { supabase } from "./lib/supabaseClient";
 
@@ -54,6 +58,10 @@ export default function App() {
       <Route path="/chapitre/:id" element={<ChapterPage />} />
       <Route path="/compte" element={<Account />} />
       <Route path="/pseudo" element={<Onboarding />} />
+      <Route path="/amis" element={<Amis />} />
+      <Route path="/mentions-legales" element={<MentionsLegales />} />
+      <Route path="/cgu" element={<CGU />} />
+      <Route path="/confidentialite" element={<Confidentialite />} />
     </Routes>
   );
 }

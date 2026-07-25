@@ -66,9 +66,14 @@ export default function Account() {
               reconductible)
             </p>
           )}
-          <Link to="/pseudo" className="text-xs underline" style={{ color: "#5C6B7A" }}>
-            Changer de pseudo
-          </Link>
+          <div className="flex items-center justify-center gap-3">
+            <Link to="/pseudo" className="text-xs underline" style={{ color: "#5C6B7A" }}>
+              Changer de pseudo
+            </Link>
+            <Link to="/amis" className="text-xs underline" style={{ color: "#5C6B7A" }}>
+              Amis & défis
+            </Link>
+          </div>
 
           {referralLink && (
             <div className="rounded-lg p-3 text-left" style={{ backgroundColor: "#F7F4EC", border: "1px solid #e4dfd0" }}>

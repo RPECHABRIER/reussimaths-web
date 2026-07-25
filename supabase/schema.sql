@@ -67,6 +67,26 @@ create table if not exists public.referrals (
   created_at timestamptz not null default now()
 );
 
+-- Défis asynchrones entre amis (voir src/pages/Amis.jsx et
+-- src/hooks/useChallenges.js) : celui qui défie joue N questions sur un
+-- chapitre et enregistre son score (from_score), l'ami joue à son tour
+-- (to_score), puis les deux scores sont comparés.
+-- Limite connue : la policy d'update ci-dessous permet à chaque participant
+-- de modifier n'importe quel champ de la ligne (Postgres RLS ne filtre pas
+-- par colonne) — acceptable pour un défi entre amis de confiance, mais à
+-- durcir via une fonction RPC dédiée si le produit grandit.
+create table if not exists public.challenges (
+  id uuid primary key default gen_random_uuid(),
+  from_user uuid not null references auth.users (id) on delete cascade,
+  to_user uuid not null references auth.users (id) on delete cascade,
+  chapter_id text not null,
+  from_score integer,
+  to_score integer,
+  created_at timestamptz not null default now(),
+  from_played_at timestamptz,
+  to_played_at timestamptz
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -76,6 +96,7 @@ alter table public.chapter_progress enable row level security;
 alter table public.friendships enable row level security;
 alter table public.level_votes enable row level security;
 alter table public.referrals enable row level security;
+alter table public.challenges enable row level security;
 
 create policy "profiles: self read/write" on public.profiles
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
@@ -98,6 +119,12 @@ create policy "friendships: self read/write" on public.friendships
   for all using (auth.uid() = user_id or auth.uid() = friend_id)
   with check (auth.uid() = user_id);
 
+-- Le destinataire d'une demande (friend_id) doit aussi pouvoir l'accepter :
+-- la policy ci-dessus ne l'autorise qu'en lecture et à supprimer (refuser),
+-- pas à faire passer le statut à "accepted".
+create policy "friendships: friend can accept" on public.friendships
+  for update using (auth.uid() = friend_id) with check (auth.uid() = friend_id);
+
 -- Les votes de niveau sont publics en lecture (pour afficher le compteur) et
 -- ouverts en écriture (insert) à tous, y compris sans compte ; la clé
 -- primaire (level_id, voter_key) empêche un même votant de voter deux fois.
@@ -115,3 +142,15 @@ create policy "referrals: referrer can read own" on public.referrals
 
 create policy "referrals: referred user creates own row" on public.referrals
   for insert with check (auth.uid() = referred_id);
+
+-- Défis : chaque participant (celui qui défie ou celui qui répond) voit et
+-- peut créer/mettre à jour les défis auxquels il participe.
+create policy "challenges: participants read" on public.challenges
+  for select using (auth.uid() = from_user or auth.uid() = to_user);
+
+create policy "challenges: from_user creates" on public.challenges
+  for insert with check (auth.uid() = from_user);
+
+create policy "challenges: participants update" on public.challenges
+  for update using (auth.uid() = from_user or auth.uid() = to_user)
+  with check (auth.uid() = from_user or auth.uid() = to_user);

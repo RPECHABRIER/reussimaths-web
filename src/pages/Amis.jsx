@@ -88,13 +88,19 @@ export default function Amis() {
     setActiveDuel({ mode: "respond", challengeId: challenge.id, chapterId: challenge.chapter_id, friendId: challenge.from_user });
   };
 
-  const onDuelFinish = async (score) => {
+  const onDuelFinish = async (score, durationMs) => {
     if (activeDuel.mode === "new") {
-      await createChallenge(activeDuel.friendId, activeDuel.chapterId, score);
+      await createChallenge(activeDuel.friendId, activeDuel.chapterId, score, durationMs);
     } else {
-      await submitResponse(activeDuel.challengeId, score);
+      await submitResponse(activeDuel.challengeId, score, durationMs);
     }
     setActiveDuel(null);
+  };
+
+  const formatDuration = (ms) => {
+    if (ms == null) return null;
+    const s = ms / 1000;
+    return s < 10 ? `${s.toFixed(1)}s` : `${Math.round(s)}s`;
   };
 
   const pending_for_me = challenges.filter((c) => c.to_user === user.id && c.to_score === null);
@@ -264,7 +270,18 @@ export default function Amis() {
                     const meScore = c.from_user === user.id ? c.from_score : c.to_score;
                     const otherScore = c.from_user === user.id ? c.to_score : c.from_score;
                     const otherId = c.from_user === user.id ? c.to_user : c.from_user;
-                    const result = meScore > otherScore ? "Gagné 🎉" : meScore < otherScore ? "Perdu" : "Égalité";
+                    const meDuration = c.from_user === user.id ? c.from_duration_ms : c.to_duration_ms;
+                    const otherDuration = c.from_user === user.id ? c.to_duration_ms : c.from_duration_ms;
+                    const scoreTied = meScore === otherScore;
+                    const hasDurations = meDuration != null && otherDuration != null;
+                    let result;
+                    if (!scoreTied) {
+                      result = meScore > otherScore ? "Gagné 🎉" : "Perdu";
+                    } else if (hasDurations && meDuration !== otherDuration) {
+                      result = meDuration < otherDuration ? "Gagné au chrono ⏱️" : "Perdu au chrono";
+                    } else {
+                      result = "Égalité";
+                    }
                     return (
                       <Card key={c.id}>
                         <p style={{ color: ink }}>{profiles[otherId]?.pseudo ?? "Un ami"}</p>
@@ -272,6 +289,11 @@ export default function Amis() {
                           {getChapter(c.chapter_id)?.meta.title ?? c.chapter_id} — toi {meScore}/{QUESTIONS_PER_CHALLENGE} vs{" "}
                           {otherScore}/{QUESTIONS_PER_CHALLENGE} — {result}
                         </p>
+                        {hasDurations && (
+                          <p className="text-xs mt-0.5" style={{ color: slate }}>
+                            Temps — toi {formatDuration(meDuration)} vs {formatDuration(otherDuration)}
+                          </p>
+                        )}
                       </Card>
                     );
                   })}

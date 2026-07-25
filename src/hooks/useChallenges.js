@@ -33,12 +33,13 @@ export function useChallenges(userId) {
   }, [load]);
 
   const createChallenge = useCallback(
-    async (toUserId, chapterId, score) => {
+    async (toUserId, chapterId, score, durationMs) => {
       const { error } = await supabase.from("challenges").insert({
         from_user: userId,
         to_user: toUserId,
         chapter_id: chapterId,
         from_score: score,
+        from_duration_ms: durationMs ?? null,
         from_played_at: new Date().toISOString(),
       });
       if (!error) await load();
@@ -48,10 +49,10 @@ export function useChallenges(userId) {
   );
 
   const submitResponse = useCallback(
-    async (challengeId, score) => {
+    async (challengeId, score, durationMs) => {
       const { error } = await supabase
         .from("challenges")
-        .update({ to_score: score, to_played_at: new Date().toISOString() })
+        .update({ to_score: score, to_duration_ms: durationMs ?? null, to_played_at: new Date().toISOString() })
         .eq("id", challengeId);
       if (!error) await load();
       return { error };

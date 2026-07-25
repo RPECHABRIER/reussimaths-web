@@ -75,6 +75,9 @@ create table if not exists public.referrals (
 -- de modifier n'importe quel champ de la ligne (Postgres RLS ne filtre pas
 -- par colonne) — acceptable pour un défi entre amis de confiance, mais à
 -- durcir via une fonction RPC dédiée si le produit grandit.
+-- from_duration_ms / to_duration_ms : temps mis pour répondre aux
+-- QUESTIONS_PER_CHALLENGE questions, en millisecondes. Sert uniquement de
+-- départage quand from_score = to_score (voir src/pages/Amis.jsx).
 create table if not exists public.challenges (
   id uuid primary key default gen_random_uuid(),
   from_user uuid not null references auth.users (id) on delete cascade,
@@ -82,10 +85,16 @@ create table if not exists public.challenges (
   chapter_id text not null,
   from_score integer,
   to_score integer,
+  from_duration_ms integer,
+  to_duration_ms integer,
   created_at timestamptz not null default now(),
   from_played_at timestamptz,
   to_played_at timestamptz
 );
+
+-- Migration idempotente si la table existait déjà avant l'ajout du chrono.
+alter table public.challenges add column if not exists from_duration_ms integer;
+alter table public.challenges add column if not exists to_duration_ms integer;
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.

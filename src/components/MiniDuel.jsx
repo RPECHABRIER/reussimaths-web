@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, X, Timer } from "lucide-react";
 import MathText from "./MathText";
 
 const ink = "#1B2A4A";
@@ -8,11 +8,17 @@ const slate = "#5C6B7A";
 const green = "#4E8B6B";
 const red = "#C1543C";
 
+function formatDuration(ms) {
+  const s = ms / 1000;
+  return s < 10 ? `${s.toFixed(1)}s` : `${Math.round(s)}s`;
+}
+
 // Mini-série de questions utilisée pour les défis entre amis (voir
 // src/pages/Amis.jsx) : `count` questions tirées de `chapter.generate()`,
-// score final renvoyé via onFinish(score). Volontairement plus sobre que
-// <ChapterRunner /> (pas de mode Jeu, pas de sauvegarde de progression) :
-// c'est une mécanique à part, le duel, pas une session de révision normale.
+// score ET temps total renvoyés via onFinish(score, durationMs) — le temps
+// sert de départage entre amis en cas d'égalité de score (voir Amis.jsx).
+// Volontairement plus sobre que <ChapterRunner /> (pas de mode Jeu, pas de
+// sauvegarde de progression) : c'est une mécanique à part, le duel.
 export default function MiniDuel({ chapter, count, onFinish }) {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -20,12 +26,19 @@ export default function MiniDuel({ chapter, count, onFinish }) {
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setElapsed(Date.now() - startRef.current), 100);
+    return () => clearInterval(id);
+  }, []);
 
   const next = (correct) => {
     const newScore = score + (correct ? 1 : 0);
     setScore(newScore);
     if (index + 1 >= count) {
-      onFinish(newScore);
+      onFinish(newScore, Date.now() - startRef.current);
       return;
     }
     setIndex((i) => i + 1);
@@ -53,9 +66,14 @@ export default function MiniDuel({ chapter, count, onFinish }) {
 
   return (
     <div className="rounded-xl p-4" style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}>
-      <p className="text-xs uppercase tracking-wide mb-2" style={{ color: slate }}>
-        Question {index + 1} / {count}
-      </p>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs uppercase tracking-wide" style={{ color: slate }}>
+          Question {index + 1} / {count}
+        </p>
+        <p className="text-xs flex items-center gap-1 font-semibold" style={{ color: slate, fontFamily: "Space Mono, monospace" }}>
+          <Timer size={13} /> {formatDuration(elapsed)}
+        </p>
+      </div>
       <MathText
         as="p"
         text={exercise.prompt}

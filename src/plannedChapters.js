@@ -43,6 +43,30 @@ export const PLANNED_CHAPTERS = {
     { id: "proportionnalite-cinquieme", title: "Proportionnalité", order: 11 },
     { id: "fonctions", title: "Fonctions", order: 12 },
   ],
+  // Sommaire officiel du manuel de 4e (chapitres 1 à 14, hors corrigés).
+  // Les ids "-quatrieme" évitent toute collision avec des chapitres 5e/6e de
+  // même thème. order = décalé de +1 par rapport au numéro du sommaire pour
+  // laisser la place à "Automatismes" en position 1 (voir chaque fichier de
+  // chapitre pour son meta.order réel). "Exercices de fin d'année" (issu du
+  // fichier "Exercices transversaux" du manuel) est ajouté à la toute fin,
+  // hors numérotation officielle.
+  quatrieme: [
+    { id: "nombres-relatifs-quatrieme", title: "Nombres relatifs", order: 2 },
+    { id: "addition-soustraction-rationnels", title: "Addition et soustraction de nombres rationnels", order: 3 },
+    { id: "multiplication-division-rationnels", title: "Multiplication et division de nombres rationnels", order: 4 },
+    { id: "puissances-quatrieme", title: "Puissances", order: 5 },
+    { id: "calcul-litteral-quatrieme", title: "Calcul littéral", order: 6 },
+    { id: "resolution-equations", title: "Résolution d'équations", order: 7 },
+    { id: "statistiques-quatrieme", title: "Statistiques", order: 8 },
+    { id: "probabilites-quatrieme", title: "Probabilités", order: 9 },
+    { id: "notion-fonctions", title: "Notion de fonctions", order: 10 },
+    { id: "proportionnalite-quatrieme", title: "Proportionnalité", order: 11 },
+    { id: "theoreme-thales", title: "Théorème de Thalès", order: 12 },
+    { id: "triangles-rectangles-quatrieme", title: "Propriétés des triangles rectangles", order: 13 },
+    { id: "geometrie-plane", title: "Géométrie plane", order: 14 },
+    { id: "geometrie-espace-quatrieme", title: "Géométrie dans l'espace", order: 15 },
+    { id: "exercices-fin-annee-quatrieme", title: "Exercices de fin d'année", order: 16 },
+  ],
 };
 
 export function getPlannedChapters(levelId) {

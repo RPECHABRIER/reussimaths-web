@@ -19,7 +19,7 @@ export const LEVELS = [
   { id: "premiere-non-spe", label: "Première Non Spé et Préparation au Bac", order: 7 },
   { id: "premiere-techno", label: "Première technologique et Préparation au Bac", order: 8 },
   { id: "terminale-spe", label: "Terminale Spé et Préparation au Bac", order: 9 },
-  { id: "terminale-techno", label: "Terminale technologique et Préparation au Bac", order: 10 },
+  { id: "terminale-techno", label: "Terminale technologique", order: 10 },
 ];
 
 export function getLevel(id) {

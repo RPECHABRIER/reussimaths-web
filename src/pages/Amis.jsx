@@ -9,16 +9,18 @@ import { useFriends } from "../hooks/useFriends";
 import { useChallenges, QUESTIONS_PER_CHALLENGE } from "../hooks/useChallenges";
 import { chapters, getChapter } from "../chapters/registry";
 import MiniDuel from "../components/MiniDuel";
+import { colors, fonts, shadow } from "../theme";
 
-const ink = "#1B2A4A";
-const paper = "#F7F4EC";
-const slate = "#5C6B7A";
-const gold = "#D9A441";
-const green = "#4E8B6B";
+const ink = colors.ink;
+const paper = colors.card;
+const slate = colors.slate;
+const gold = colors.gold;
+const green = colors.green;
+const red = colors.red;
 
 function Card({ children }) {
   return (
-    <div className="rounded-2xl p-4" style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}>
+    <div className="rounded-2xl p-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
       {children}
     </div>
   );
@@ -50,13 +52,19 @@ export default function Amis() {
     [isActive, referralCount]
   );
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Chargement…</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: slate }}>
+        Chargement…
+      </div>
+    );
+  }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center" style={{ background: colors.bg }}>
         <p style={{ color: slate }}>Connecte-toi pour retrouver tes amis.</p>
-        <Link to="/compte" className="text-sm underline" style={{ color: ink }}>
+        <Link to="/compte" className="text-sm font-medium" style={{ color: ink }}>
           Se connecter
         </Link>
       </div>
@@ -108,13 +116,13 @@ export default function Amis() {
   const finished = challenges.filter((c) => c.from_score !== null && c.to_score !== null);
 
   return (
-    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: "Inter, sans-serif" }}>
+    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
-        <Link to="/" className="text-sm underline" style={{ color: slate }}>
+        <Link to="/" className="text-sm font-medium" style={{ color: ink }}>
           ← Accueil
         </Link>
         <div className="text-center my-6">
-          <h1 style={{ fontFamily: "Fraunces, serif", color: ink, fontSize: "1.75rem", fontWeight: 600 }}>
+          <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             Amis & défis
           </h1>
           {profile?.pseudo && (
@@ -144,20 +152,20 @@ export default function Amis() {
                   value={pseudoInput}
                   onChange={(e) => setPseudoInput(e.target.value)}
                   placeholder="Pseudo de ton ami"
-                  className="flex-1 rounded-lg px-3 py-2 text-sm"
-                  style={{ border: "1px solid #d5cfbc", backgroundColor: "#ffffff", color: ink }}
+                  className="flex-1 rounded-full px-4 py-2 text-sm"
+                  style={{ backgroundColor: colors.card, color: ink, boxShadow: shadow.soft }}
                 />
                 <button
                   type="submit"
                   disabled={sending}
-                  className="px-4 py-2 rounded-lg text-sm font-semibold"
+                  className="px-5 py-2 rounded-full text-sm font-semibold"
                   style={{ backgroundColor: ink, color: paper }}
                 >
                   Ajouter
                 </button>
               </form>
               {sendError && (
-                <p className="text-xs mt-1" style={{ color: "#C1543C" }}>
+                <p className="text-xs mt-1" style={{ color: red }}>
                   {sendError}
                 </p>
               )}
@@ -177,7 +185,7 @@ export default function Amis() {
                           <button onClick={() => respond(r.user_id, true)} className="p-1.5 rounded-full" style={{ backgroundColor: `${green}22`, color: green }}>
                             <Check size={16} />
                           </button>
-                          <button onClick={() => respond(r.user_id, false)} className="p-1.5 rounded-full" style={{ backgroundColor: "#C1543C22", color: "#C1543C" }}>
+                          <button onClick={() => respond(r.user_id, false)} className="p-1.5 rounded-full" style={{ backgroundColor: `${red}22`, color: red }}>
                             <X size={16} />
                           </button>
                         </div>
@@ -225,7 +233,7 @@ export default function Amis() {
                         </div>
                         <button
                           onClick={() => launchResponse(c)}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"
+                          className="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1"
                           style={{ backgroundColor: gold, color: ink }}
                         >
                           <Swords size={14} /> Jouer
@@ -319,14 +327,14 @@ export default function Amis() {
                         <span style={{ color: ink }}>{profiles[otherId]?.pseudo ?? "…"}</span>
                         <button
                           onClick={() => startNewDuel(otherId)}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"
+                          className="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1"
                           style={{ backgroundColor: ink, color: paper }}
                         >
                           <Swords size={14} /> Défier
                         </button>
                       </div>
                       {duelFriendId === otherId && (
-                        <div className="mt-3 pt-3" style={{ borderTop: "1px solid #e4dfd0" }}>
+                        <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${colors.hairline}` }}>
                           {accessibleChapters.length === 0 ? (
                             <p className="text-xs" style={{ color: slate }}>
                               Débloque au moins un chapitre pour lancer un défi.
@@ -336,8 +344,8 @@ export default function Amis() {
                               <select
                                 value={duelChapterId}
                                 onChange={(e) => setDuelChapterId(e.target.value)}
-                                className="w-full rounded-lg px-2 py-1.5 text-sm mb-2"
-                                style={{ border: "1px solid #d5cfbc", color: ink }}
+                                className="w-full rounded-xl px-2 py-1.5 text-sm mb-2"
+                                style={{ color: ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
                               >
                                 {accessibleChapters.map((c) => (
                                   <option key={c.meta.id} value={c.meta.id}>
@@ -347,7 +355,7 @@ export default function Amis() {
                               </select>
                               <button
                                 onClick={launchDuel}
-                                className="w-full py-1.5 rounded-lg text-xs font-semibold"
+                                className="w-full py-1.5 rounded-full text-xs font-semibold"
                                 style={{ backgroundColor: gold, color: ink }}
                               >
                                 Lancer le défi ({QUESTIONS_PER_CHALLENGE} questions)

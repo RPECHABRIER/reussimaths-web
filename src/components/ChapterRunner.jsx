@@ -7,6 +7,7 @@ import { useDailyQuota } from "../hooks/useDailyQuota";
 import MathText from "./MathText";
 import Figure from "./Figure";
 import { matchesText, matchesMulti } from "../lib/answerMatch";
+import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : Classique/Jeu, pavé numérique, QCM, aide
@@ -102,25 +103,25 @@ export default function ChapterRunner({ chapter }) {
   };
 
   const isJeu = mode === "jeu";
-  const ink = "#1B2A4A";
-  const paper = "#F7F4EC";
-  const gold = "#D9A441";
-  const slate = "#5C6B7A";
-  const green = "#4E8B6B";
-  const red = "#C1543C";
+  const ink = colors.ink;
+  const paper = colors.bg;
+  const gold = colors.gold;
+  const slate = colors.slate;
+  const green = colors.green;
+  const red = colors.red;
 
   if (quotaExhausted) {
     return (
       <div
         className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
-        style={{ background: paper, fontFamily: "Inter, sans-serif" }}
+        style={{ background: paper, fontFamily: fonts.body }}
       >
         <div
-          className="max-w-md w-full text-center rounded-2xl p-6"
-          style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}
+          className="max-w-md w-full text-center rounded-3xl p-7"
+          style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}
         >
           <Lock size={22} color={slate} className="mx-auto mb-3" />
-          <p style={{ fontFamily: "Fraunces, serif", color: ink, fontSize: "1.2rem", fontWeight: 600 }}>
+          <p style={{ fontFamily: fonts.display, color: ink, fontSize: "1.2rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
             Questions gratuites épuisées pour aujourd'hui
           </p>
           <p className="text-sm mt-2 mb-5" style={{ color: slate }}>
@@ -129,7 +130,7 @@ export default function ChapterRunner({ chapter }) {
           </p>
           <Link
             to="/compte"
-            className="inline-block py-2.5 px-5 rounded-lg text-sm font-semibold"
+            className="inline-block py-2.5 px-6 rounded-full text-sm font-semibold"
             style={{ backgroundColor: ink, color: paper }}
           >
             Voir les abonnements
@@ -143,20 +144,16 @@ export default function ChapterRunner({ chapter }) {
     <div
       className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
       style={{
-        background: isJeu ? `radial-gradient(circle at 50% 0%, #253a63 0%, #101a30 70%)` : `${paper}`,
-        backgroundImage: !isJeu
-          ? `linear-gradient(#e4dfd0 1px, transparent 1px), linear-gradient(90deg, #e4dfd0 1px, transparent 1px)`
-          : undefined,
-        backgroundSize: !isJeu ? "24px 24px" : undefined,
+        background: isJeu ? `radial-gradient(circle at 50% 0%, #223258 0%, #0d1729 70%)` : paper,
         transition: "background 0.5s ease",
-        fontFamily: "Inter, sans-serif",
+        fontFamily: fonts.body,
       }}
     >
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <p
-            className="text-xs tracking-widest uppercase mb-1"
-            style={{ color: isJeu ? "#8b9ec4" : slate, letterSpacing: "0.15em" }}
+            className="text-xs tracking-widest uppercase mb-1 font-semibold"
+            style={{ color: isJeu ? "#8b9ec4" : gold, letterSpacing: "0.12em" }}
           >
             {quotaApplies ? "Gratuit — accès limité" : chapter.meta.free ? "Chapitre gratuit" : "Chapitre abonnement"} —{" "}
             {chapter.meta.title}
@@ -169,10 +166,11 @@ export default function ChapterRunner({ chapter }) {
           )}
           <h1
             style={{
-              fontFamily: "Fraunces, serif",
-              color: isJeu ? "#F7F4EC" : ink,
-              fontSize: "1.75rem",
-              fontWeight: 600,
+              fontFamily: fonts.display,
+              color: isJeu ? "#FFFFFF" : ink,
+              fontSize: "1.85rem",
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
             }}
           >
             {chapter.meta.title}
@@ -185,8 +183,8 @@ export default function ChapterRunner({ chapter }) {
             className="relative flex items-center rounded-full p-1 text-xs font-semibold"
             style={{
               width: "220px",
-              backgroundColor: isJeu ? "#0d1729" : "#e9e4d6",
-              border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}`,
+              backgroundColor: isJeu ? "#0d1729" : "#EAEAEE",
+              boxShadow: isJeu ? "0 0 0 1px #3a4d76" : "0 0 0 1px rgba(27,42,74,0.06)",
             }}
           >
             <span
@@ -195,13 +193,13 @@ export default function ChapterRunner({ chapter }) {
                 width: "50%",
                 left: isJeu ? "50%" : "2%",
                 backgroundColor: isJeu ? gold : ink,
-                boxShadow: isJeu ? `0 0 12px ${gold}88` : "none",
+                boxShadow: isJeu ? `0 0 12px ${gold}88` : "0 1px 2px rgba(16,24,40,0.15)",
               }}
             />
             <span className="relative z-10 flex-1 text-center py-1.5" style={{ color: !isJeu ? paper : slate }}>
               Classique
             </span>
-            <span className="relative z-10 flex-1 text-center py-1.5" style={{ color: isJeu ? ink : "#7c8db0" }}>
+            <span className="relative z-10 flex-1 text-center py-1.5" style={{ color: isJeu ? ink : "#9AA3B2" }}>
               Jeu
             </span>
           </button>
@@ -211,21 +209,20 @@ export default function ChapterRunner({ chapter }) {
           <div className="flex justify-center gap-4 mb-4">
             <div className="flex items-center gap-1.5 text-sm" style={{ color: gold }}>
               <Trophy size={16} />
-              <span style={{ fontFamily: "Space Mono, monospace" }}>{score} pts</span>
+              <span style={{ fontFamily: fonts.mono }}>{score} pts</span>
             </div>
             <div className="flex items-center gap-1.5 text-sm" style={{ color: "#e8845a" }}>
               <Flame size={16} />
-              <span style={{ fontFamily: "Space Mono, monospace" }}>{streak} d'affilée</span>
+              <span style={{ fontFamily: fonts.mono }}>{streak} d'affilée</span>
             </div>
           </div>
         )}
 
         <div
-          className="rounded-2xl p-6 transition-all duration-500"
+          className="rounded-3xl p-6 transition-all duration-500"
           style={{
-            backgroundColor: isJeu ? "#16233f" : "#ffffff",
-            border: isJeu ? `1px solid ${gold}55` : `1px solid #e4dfd0`,
-            boxShadow: isJeu ? `0 0 30px -5px ${gold}33, inset 0 0 0 1px #ffffff08` : "0 4px 20px -8px rgba(27,42,74,0.15)",
+            backgroundColor: isJeu ? "#16233f" : colors.card,
+            boxShadow: isJeu ? `0 0 40px -8px ${gold}2e, inset 0 0 0 1px #ffffff0d` : shadow.soft,
           }}
         >
           <p className="text-xs uppercase tracking-wide mb-3" style={{ color: isJeu ? "#8b9ec4" : slate }}>
@@ -235,7 +232,7 @@ export default function ChapterRunner({ chapter }) {
             as="p"
             text={exercise.prompt}
             className="mb-3 leading-relaxed"
-            style={{ fontFamily: "Space Mono, monospace", fontSize: "1.05rem", color: isJeu ? "#F7F4EC" : ink }}
+            style={{ fontFamily: fonts.mono, fontSize: "1.05rem", color: isJeu ? "#FFFFFF" : ink }}
           />
 
           {exercise.figure && <Figure spec={exercise.figure} />}
@@ -248,18 +245,18 @@ export default function ChapterRunner({ chapter }) {
                 disabled={!!feedback}
                 placeholder="Ta réponse"
                 onKeyDown={(e) => e.key === "Enter" && submitText()}
-                className="w-full rounded-lg px-3 py-2.5 mb-3 text-sm"
+                className="w-full rounded-xl px-3 py-2.5 mb-3 text-sm"
                 style={{
-                  fontFamily: "Space Mono, monospace",
-                  backgroundColor: isJeu ? "#0d1729" : "#F7F4EC",
-                  color: isJeu ? "#F7F4EC" : ink,
-                  border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}`,
+                  fontFamily: fonts.mono,
+                  backgroundColor: isJeu ? "#0d1729" : "#F5F5F7",
+                  color: isJeu ? "#FFFFFF" : ink,
+                  boxShadow: isJeu ? "0 0 0 1px #3a4d76" : "0 0 0 1px rgba(27,42,74,0.08)",
                 }}
               />
               {!feedback ? (
                 <button
                   onClick={submitText}
-                  className="w-full py-2 rounded-lg text-sm font-semibold mb-3"
+                  className="w-full py-2.5 rounded-full text-sm font-semibold mb-3"
                   style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                 >
                   Valider
@@ -267,7 +264,7 @@ export default function ChapterRunner({ chapter }) {
               ) : (
                 <button
                   onClick={newExercise}
-                  className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 mb-3"
+                  className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
                   style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                 >
                   Suivant <ArrowRight size={14} />
@@ -283,16 +280,16 @@ export default function ChapterRunner({ chapter }) {
                   const checked = selectedMulti.includes(i);
                   const isCorrectOpt = feedback && exercise.answer.includes(i);
                   const isWrongPick = feedback && checked && !exercise.answer.includes(i);
-                  let bg = isJeu ? "#0d1729" : "#F7F4EC";
-                  let border = isJeu ? "#3a4d76" : "#d5cfbc";
-                  let color = isJeu ? "#F7F4EC" : ink;
+                  let bg = isJeu ? "#0d1729" : "#F5F5F7";
+                  let ring = isJeu ? "#3a4d76" : "rgba(27,42,74,0.08)";
+                  let color = isJeu ? "#FFFFFF" : ink;
                   if (feedback && isCorrectOpt) {
-                    bg = `${green}22`;
-                    border = green;
+                    bg = `${green}1c`;
+                    ring = green;
                     color = green;
                   } else if (isWrongPick) {
-                    bg = `${red}22`;
-                    border = red;
+                    bg = `${red}1c`;
+                    ring = red;
                     color = red;
                   }
                   return (
@@ -300,8 +297,8 @@ export default function ChapterRunner({ chapter }) {
                       key={i}
                       disabled={!!feedback}
                       onClick={() => toggleMulti(i)}
-                      className="flex items-center gap-2 text-left px-4 py-2.5 rounded-lg text-sm"
-                      style={{ fontFamily: "Space Mono, monospace", backgroundColor: bg, border: `1px solid ${border}`, color }}
+                      className="flex items-center gap-2 text-left px-4 py-2.5 rounded-xl text-sm"
+                      style={{ fontFamily: fonts.mono, backgroundColor: bg, boxShadow: `0 0 0 1px ${ring}`, color }}
                     >
                       {checked ? <CheckSquare size={16} /> : <Square size={16} />}
                       <MathText text={opt} />
@@ -312,7 +309,7 @@ export default function ChapterRunner({ chapter }) {
               {!feedback ? (
                 <button
                   onClick={submitMulti}
-                  className="w-full py-2 rounded-lg text-sm font-semibold mb-3"
+                  className="w-full py-2.5 rounded-full text-sm font-semibold mb-3"
                   style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                 >
                   Valider
@@ -320,7 +317,7 @@ export default function ChapterRunner({ chapter }) {
               ) : (
                 <button
                   onClick={newExercise}
-                  className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 mb-3"
+                  className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
                   style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                 >
                   Suivant <ArrowRight size={14} />
@@ -334,16 +331,16 @@ export default function ChapterRunner({ chapter }) {
               {exercise.options.map((opt, i) => {
                 const isSelected = selectedOption === opt;
                 const isCorrectOpt = feedback && opt === exercise.answer;
-                let bg = isJeu ? "#0d1729" : "#F7F4EC";
-                let border = isJeu ? "#3a4d76" : "#d5cfbc";
-                let color = isJeu ? "#F7F4EC" : ink;
+                let bg = isJeu ? "#0d1729" : "#F5F5F7";
+                let ring = isJeu ? "#3a4d76" : "rgba(27,42,74,0.08)";
+                let color = isJeu ? "#FFFFFF" : ink;
                 if (feedback && isCorrectOpt) {
-                  bg = `${green}22`;
-                  border = green;
+                  bg = `${green}1c`;
+                  ring = green;
                   color = green;
                 } else if (feedback && isSelected && !isCorrectOpt) {
-                  bg = `${red}22`;
-                  border = red;
+                  bg = `${red}1c`;
+                  ring = red;
                   color = red;
                 }
                 return (
@@ -351,8 +348,8 @@ export default function ChapterRunner({ chapter }) {
                     key={i}
                     disabled={!!feedback}
                     onClick={() => submitQCM(opt)}
-                    className="text-left px-4 py-2.5 rounded-lg text-sm"
-                    style={{ fontFamily: "Space Mono, monospace", backgroundColor: bg, border: `1px solid ${border}`, color }}
+                    className="text-left px-4 py-2.5 rounded-xl text-sm"
+                    style={{ fontFamily: fonts.mono, backgroundColor: bg, boxShadow: `0 0 0 1px ${ring}`, color }}
                   >
                     <MathText text={opt} />
                   </button>
@@ -364,14 +361,14 @@ export default function ChapterRunner({ chapter }) {
           {exercise.type === "numeric" && (
             <>
               <div
-                className="rounded-lg px-3 py-2 mb-3 text-right"
+                className="rounded-xl px-3 py-2 mb-3 text-right"
                 style={{
-                  fontFamily: "Space Mono, monospace",
+                  fontFamily: fonts.mono,
                   fontSize: "1.2rem",
                   minHeight: "2.75rem",
-                  backgroundColor: isJeu ? "#0d1729" : "#F7F4EC",
-                  color: isJeu ? "#F7F4EC" : ink,
-                  border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}`,
+                  backgroundColor: isJeu ? "#0d1729" : "#F5F5F7",
+                  color: isJeu ? "#FFFFFF" : ink,
+                  boxShadow: isJeu ? "0 0 0 1px #3a4d76" : "0 0 0 1px rgba(27,42,74,0.08)",
                 }}
               >
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
@@ -386,12 +383,12 @@ export default function ChapterRunner({ chapter }) {
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
                       else setInput((v) => (v.length < 6 ? v + key : v));
                     }}
-                    className="py-2.5 rounded-lg text-base font-semibold"
+                    className="py-2.5 rounded-xl text-base font-semibold"
                     style={{
-                      fontFamily: "Space Mono, monospace",
-                      backgroundColor: isJeu ? "#0d1729" : "#F7F4EC",
-                      color: isJeu ? "#F7F4EC" : ink,
-                      border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}`,
+                      fontFamily: fonts.mono,
+                      backgroundColor: isJeu ? "#0d1729" : "#F5F5F7",
+                      color: isJeu ? "#FFFFFF" : ink,
+                      boxShadow: isJeu ? "0 0 0 1px #3a4d76" : "0 0 0 1px rgba(27,42,74,0.08)",
                     }}
                   >
                     {key}
@@ -402,7 +399,7 @@ export default function ChapterRunner({ chapter }) {
                 {!feedback ? (
                   <button
                     onClick={submitNumeric}
-                    className="flex-1 py-2 rounded-lg text-sm font-semibold"
+                    className="flex-1 py-2.5 rounded-full text-sm font-semibold"
                     style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                   >
                     Valider
@@ -410,7 +407,7 @@ export default function ChapterRunner({ chapter }) {
                 ) : (
                   <button
                     onClick={newExercise}
-                    className="flex-1 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1"
+                    className="flex-1 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"
                     style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
                   >
                     Suivant <ArrowRight size={14} />
@@ -423,7 +420,7 @@ export default function ChapterRunner({ chapter }) {
           {exercise.type === "qcm" && feedback && (
             <button
               onClick={newExercise}
-              className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 mb-3"
+              className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
               style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
             >
               Suivant <ArrowRight size={14} />
@@ -433,7 +430,7 @@ export default function ChapterRunner({ chapter }) {
           {feedback && (
             <div className="mt-2">
               <div
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm"
                 style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
               >
                 {feedback.correct ? <Check size={16} /> : <X size={16} />}
@@ -444,15 +441,15 @@ export default function ChapterRunner({ chapter }) {
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={retry}
-                    className="flex-1 py-2 rounded-lg text-xs font-semibold"
-                    style={{ backgroundColor: "transparent", color: isJeu ? "#F7F4EC" : ink, border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}` }}
+                    className="flex-1 py-2 rounded-full text-xs font-semibold"
+                    style={{ backgroundColor: "transparent", color: isJeu ? "#FFFFFF" : ink, boxShadow: `0 0 0 1px ${isJeu ? "#3a4d76" : "rgba(27,42,74,0.14)"}` }}
                   >
                     Réessayer
                   </button>
                   <button
                     onClick={() => setShowHelp((s) => !s)}
-                    className="flex-1 py-2 rounded-lg text-xs font-semibold"
-                    style={{ backgroundColor: "transparent", color: isJeu ? gold : ink, border: `1px solid ${isJeu ? gold : ink}` }}
+                    className="flex-1 py-2 rounded-full text-xs font-semibold"
+                    style={{ backgroundColor: "transparent", color: isJeu ? gold : ink, boxShadow: `0 0 0 1px ${isJeu ? gold : ink}` }}
                   >
                     {showHelp ? "Masquer la méthode" : "Voir la méthode"}
                   </button>
@@ -461,11 +458,11 @@ export default function ChapterRunner({ chapter }) {
 
               {!feedback.correct && showHelp && (
                 <ol
-                  className="mt-2 space-y-1.5 text-sm rounded-lg px-4 py-3 list-decimal list-outside ml-4"
+                  className="mt-2 space-y-1.5 text-sm rounded-xl px-4 py-3 list-decimal list-outside ml-4"
                   style={{
-                    backgroundColor: isJeu ? "#0d1729" : "#F7F4EC",
+                    backgroundColor: isJeu ? "#0d1729" : "#F5F5F7",
                     color: isJeu ? "#cdd8ec" : slate,
-                    fontFamily: "Space Mono, monospace",
+                    fontFamily: fonts.mono,
                     fontSize: "0.85rem",
                   }}
                 >

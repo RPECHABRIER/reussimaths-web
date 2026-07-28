@@ -1,26 +1,27 @@
 import { Link } from "react-router-dom";
 import { LEVELS } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
+import { colors, fonts, shadow } from "../theme";
 
 export default function LevelSelect() {
   return (
-    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: "#F7F4EC", fontFamily: "Inter, sans-serif" }}>
+    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <h1 style={{ fontFamily: "Fraunces, serif", color: "#1B2A4A", fontSize: "2rem", fontWeight: 600 }}>
+        <div className="text-center mb-10 pt-4">
+          <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             Reussimaths
           </h1>
-          <p className="text-sm mt-1" style={{ color: "#5C6B7A" }}>
+          <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
             Choisis ton niveau
           </p>
           <div
-            className="inline-flex flex-col items-center gap-0.5 mt-3 px-3 py-2 rounded-xl"
-            style={{ backgroundColor: "#4E8B6B14", border: "1px solid #4E8B6B33" }}
+            className="inline-flex flex-col items-center gap-0.5 mt-4 px-4 py-2.5 rounded-2xl"
+            style={{ backgroundColor: `${colors.green}12` }}
           >
-            <p className="text-xs font-semibold" style={{ color: "#4E8B6B" }}>
+            <p className="text-xs font-semibold" style={{ color: colors.green }}>
               Créé par un professeur agrégé de mathématiques
             </p>
-            <p className="text-xs" style={{ color: "#4E8B6B" }}>
+            <p className="text-xs" style={{ color: colors.green }}>
               Recommandé par les enseignants de mathématiques
             </p>
           </div>
@@ -32,17 +33,17 @@ export default function LevelSelect() {
             return (
               <Link key={level.id} to={`/niveau/${level.id}`}>
                 <div
-                  className="rounded-2xl p-4 flex items-center justify-between"
-                  style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}
+                  className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
+                  style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}
                 >
-                  <p style={{ fontFamily: "Fraunces, serif", color: "#1B2A4A", fontSize: "1.1rem", fontWeight: 600 }}>
+                  <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>
                     {level.label}
                   </p>
                   <span
-                    className="text-xs px-2.5 py-1 rounded-full font-semibold"
+                    className="text-xs px-3 py-1 rounded-full font-semibold"
                     style={{
-                      backgroundColor: available ? "#4E8B6B22" : "#5C6B7A18",
-                      color: available ? "#4E8B6B" : "#5C6B7A",
+                      backgroundColor: available ? `${colors.green}18` : `${colors.slate}14`,
+                      color: available ? colors.green : colors.slate,
                     }}
                   >
                     {available ? "Disponible" : "Bientôt"}
@@ -53,25 +54,19 @@ export default function LevelSelect() {
           })}
         </div>
 
-        <div className="text-center mt-8 flex items-center justify-center gap-4">
-          <Link to="/compte" className="text-sm underline" style={{ color: "#5C6B7A" }}>
+        <div className="text-center mt-10 flex items-center justify-center gap-5">
+          <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
             Mon compte
           </Link>
-          <Link to="/amis" className="text-sm underline" style={{ color: "#5C6B7A" }}>
+          <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
             Amis & défis
           </Link>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 mt-6 pt-4 text-xs" style={{ borderTop: "1px solid #e4dfd0", color: "#5C6B7A" }}>
-          <Link to="/mentions-legales" className="underline">
-            Mentions légales
-          </Link>
-          <Link to="/cgu" className="underline">
-            CGU
-          </Link>
-          <Link to="/confidentialite" className="underline">
-            Confidentialité
-          </Link>
+        <div className="flex flex-wrap justify-center gap-4 mt-8 pt-5 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>
+          <Link to="/mentions-legales">Mentions légales</Link>
+          <Link to="/cgu">CGU</Link>
+          <Link to="/confidentialite">Confidentialité</Link>
         </div>
       </div>
     </div>

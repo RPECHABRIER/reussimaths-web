@@ -15,7 +15,15 @@ export default function LevelSelect() {
             Choisis ton niveau
           </p>
           <div
-            className="inline-flex flex-col items-center gap-0.5 mt-4 px-4 py-2.5 rounded-2xl"
+            className="inline-flex items-center gap-1.5 mt-4 px-3.5 py-1.5 rounded-full"
+            style={{ backgroundColor: `${colors.gold}18` }}
+          >
+            <p className="text-xs font-semibold" style={{ color: colors.gold }}>
+              Conforme aux nouveaux programmes 2026
+            </p>
+          </div>
+          <div
+            className="inline-flex flex-col items-center gap-0.5 mt-3 px-4 py-2.5 rounded-2xl"
             style={{ backgroundColor: `${colors.green}12` }}
           >
             <p className="text-xs font-semibold" style={{ color: colors.green }}>

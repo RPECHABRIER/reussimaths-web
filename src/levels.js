@@ -13,13 +13,13 @@ export const LEVELS = [
   { id: "sixieme", label: "6e", order: 1 },
   { id: "cinquieme", label: "5e", order: 2 },
   { id: "quatrieme", label: "4e", order: 3 },
-  { id: "troisieme", label: "3e (Brevet)", order: 4 },
+  { id: "troisieme", label: "3e et Préparation DNB", order: 4 },
   { id: "seconde", label: "2nde", order: 5 },
-  { id: "premiere-spe", label: "Première Spé (Bac)", order: 6 },
-  { id: "premiere-non-spe", label: "Première Non Spé (Bac)", order: 7 },
-  { id: "premiere-techno", label: "Première technologique (Bac)", order: 8 },
-  { id: "terminale-spe", label: "Terminale Spé (Bac)", order: 9 },
-  { id: "terminale-techno", label: "Terminale technologique", order: 10 },
+  { id: "premiere-spe", label: "Première Spé et Préparation au Bac", order: 6 },
+  { id: "premiere-non-spe", label: "Première Non Spé et Préparation au Bac", order: 7 },
+  { id: "premiere-techno", label: "Première technologique et Préparation au Bac", order: 8 },
+  { id: "terminale-spe", label: "Terminale Spé et Préparation au Bac", order: 9 },
+  { id: "terminale-techno", label: "Terminale technologique et Préparation au Bac", order: 10 },
 ];
 
 export function getLevel(id) {

@@ -19,10 +19,7 @@ export default function LevelSelect() {
             style={{ backgroundColor: `${colors.green}12` }}
           >
             <p className="text-xs font-semibold" style={{ color: colors.green }}>
-              Créé par un professeur agrégé de mathématiques
-            </p>
-            <p className="text-xs" style={{ color: colors.green }}>
-              Recommandé par les enseignants de mathématiques
+              L'application qui te fait progresser en maths en seulement quelques minutes par jour
             </p>
           </div>
         </div>

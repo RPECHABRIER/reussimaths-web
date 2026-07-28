@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, X, Timer } from "lucide-react";
+import { Check, X, Timer, Square, CheckSquare } from "lucide-react";
 import MathText from "./MathText";
+import Figure from "./Figure";
+import { matchesText, matchesMulti } from "../lib/answerMatch";
 
 const ink = "#1B2A4A";
 const paper = "#F7F4EC";
@@ -25,6 +27,7 @@ export default function MiniDuel({ chapter, count, onFinish }) {
   const [exercise, setExercise] = useState(() => chapter.generate());
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState(null);
+  const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef(Date.now());
@@ -45,6 +48,7 @@ export default function MiniDuel({ chapter, count, onFinish }) {
     setExercise(chapter.generate());
     setInput("");
     setSelected(null);
+    setSelectedMulti([]);
     setFeedback(null);
   };
 
@@ -64,6 +68,25 @@ export default function MiniDuel({ chapter, count, onFinish }) {
     setTimeout(() => next(correct), 550);
   };
 
+  const submitText = () => {
+    if (input.trim() === "" || feedback) return;
+    const correct = matchesText(input, exercise.answer);
+    setFeedback({ correct });
+    setTimeout(() => next(correct), 550);
+  };
+
+  const toggleMulti = (i) => {
+    if (feedback) return;
+    setSelectedMulti((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+  };
+
+  const submitMulti = () => {
+    if (feedback) return;
+    const correct = matchesMulti(selectedMulti, exercise.answer);
+    setFeedback({ correct });
+    setTimeout(() => next(correct), 550);
+  };
+
   return (
     <div className="rounded-xl p-4" style={{ backgroundColor: "#ffffff", border: "1px solid #e4dfd0" }}>
       <div className="flex items-center justify-between mb-2">
@@ -77,9 +100,71 @@ export default function MiniDuel({ chapter, count, onFinish }) {
       <MathText
         as="p"
         text={exercise.prompt}
-        className="mb-3 leading-relaxed"
+        className="mb-2 leading-relaxed"
         style={{ fontFamily: "Space Mono, monospace", fontSize: "0.95rem", color: ink }}
       />
+
+      {exercise.figure && <Figure spec={exercise.figure} />}
+
+      {exercise.type === "text" && (
+        <>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={!!feedback}
+            placeholder="Ta réponse"
+            onKeyDown={(e) => e.key === "Enter" && submitText()}
+            className="w-full rounded-lg px-3 py-2 mb-2 text-sm"
+            style={{ fontFamily: "Space Mono, monospace", backgroundColor: paper, color: ink, border: "1px solid #d5cfbc" }}
+          />
+          {!feedback && (
+            <button onClick={submitText} className="w-full py-2 rounded-lg text-sm font-semibold" style={{ backgroundColor: ink, color: paper }}>
+              Valider
+            </button>
+          )}
+        </>
+      )}
+
+      {exercise.type === "multi" && (
+        <>
+          <div className="grid grid-cols-1 gap-2 mb-2">
+            {exercise.options.map((opt, i) => {
+              const checked = selectedMulti.includes(i);
+              const isCorrectOpt = feedback && exercise.answer.includes(i);
+              const isWrongPick = feedback && checked && !exercise.answer.includes(i);
+              let bg = paper;
+              let border = "#d5cfbc";
+              let color = ink;
+              if (feedback && isCorrectOpt) {
+                bg = `${green}22`;
+                border = green;
+                color = green;
+              } else if (isWrongPick) {
+                bg = `${red}22`;
+                border = red;
+                color = red;
+              }
+              return (
+                <button
+                  key={i}
+                  disabled={!!feedback}
+                  onClick={() => toggleMulti(i)}
+                  className="flex items-center gap-2 text-left px-3 py-2 rounded-lg text-sm"
+                  style={{ fontFamily: "Space Mono, monospace", backgroundColor: bg, border: `1px solid ${border}`, color }}
+                >
+                  {checked ? <CheckSquare size={15} /> : <Square size={15} />}
+                  <MathText text={opt} />
+                </button>
+              );
+            })}
+          </div>
+          {!feedback && (
+            <button onClick={submitMulti} className="w-full py-2 rounded-lg text-sm font-semibold" style={{ backgroundColor: ink, color: paper }}>
+              Valider
+            </button>
+          )}
+        </>
+      )}
 
       {exercise.type === "qcm" && (
         <div className="grid grid-cols-1 gap-2">

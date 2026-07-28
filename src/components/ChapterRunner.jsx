@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, X, Flame, Trophy, ArrowRight, Lock } from "lucide-react";
+import { Check, X, Flame, Trophy, ArrowRight, Lock, Square, CheckSquare } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useProgress, useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
 import MathText from "./MathText";
+import Figure from "./Figure";
+import { matchesText, matchesMulti } from "../lib/answerMatch";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : Classique/Jeu, pavé numérique, QCM, aide
@@ -29,6 +31,7 @@ export default function ChapterRunner({ chapter }) {
   const [exercise, setExercise] = useState(() => chapter.generate());
   const [input, setInput] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [score, setScore] = useState(0);
@@ -39,6 +42,7 @@ export default function ChapterRunner({ chapter }) {
     setExercise(chapter.generate());
     setInput("");
     setSelectedOption(null);
+    setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
   }, [chapter]);
@@ -46,6 +50,7 @@ export default function ChapterRunner({ chapter }) {
   const retry = () => {
     setInput("");
     setSelectedOption(null);
+    setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
   };
@@ -79,6 +84,21 @@ export default function ChapterRunner({ chapter }) {
     if (feedback) return;
     setSelectedOption(option);
     registerResult(option === exercise.answer);
+  };
+
+  const submitText = () => {
+    if (input.trim() === "" || feedback) return;
+    registerResult(matchesText(input, exercise.answer));
+  };
+
+  const toggleMulti = (i) => {
+    if (feedback) return;
+    setSelectedMulti((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+  };
+
+  const submitMulti = () => {
+    if (feedback) return;
+    registerResult(matchesMulti(selectedMulti, exercise.answer));
   };
 
   const isJeu = mode === "jeu";
@@ -214,9 +234,100 @@ export default function ChapterRunner({ chapter }) {
           <MathText
             as="p"
             text={exercise.prompt}
-            className="mb-5 leading-relaxed"
+            className="mb-3 leading-relaxed"
             style={{ fontFamily: "Space Mono, monospace", fontSize: "1.05rem", color: isJeu ? "#F7F4EC" : ink }}
           />
+
+          {exercise.figure && <Figure spec={exercise.figure} />}
+
+          {exercise.type === "text" && (
+            <>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={!!feedback}
+                placeholder="Ta réponse"
+                onKeyDown={(e) => e.key === "Enter" && submitText()}
+                className="w-full rounded-lg px-3 py-2.5 mb-3 text-sm"
+                style={{
+                  fontFamily: "Space Mono, monospace",
+                  backgroundColor: isJeu ? "#0d1729" : "#F7F4EC",
+                  color: isJeu ? "#F7F4EC" : ink,
+                  border: `1px solid ${isJeu ? "#3a4d76" : "#d5cfbc"}`,
+                }}
+              />
+              {!feedback ? (
+                <button
+                  onClick={submitText}
+                  className="w-full py-2 rounded-lg text-sm font-semibold mb-3"
+                  style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
+                >
+                  Valider
+                </button>
+              ) : (
+                <button
+                  onClick={newExercise}
+                  className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 mb-3"
+                  style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
+                >
+                  Suivant <ArrowRight size={14} />
+                </button>
+              )}
+            </>
+          )}
+
+          {exercise.type === "multi" && (
+            <>
+              <div className="grid grid-cols-1 gap-2 mb-3">
+                {exercise.options.map((opt, i) => {
+                  const checked = selectedMulti.includes(i);
+                  const isCorrectOpt = feedback && exercise.answer.includes(i);
+                  const isWrongPick = feedback && checked && !exercise.answer.includes(i);
+                  let bg = isJeu ? "#0d1729" : "#F7F4EC";
+                  let border = isJeu ? "#3a4d76" : "#d5cfbc";
+                  let color = isJeu ? "#F7F4EC" : ink;
+                  if (feedback && isCorrectOpt) {
+                    bg = `${green}22`;
+                    border = green;
+                    color = green;
+                  } else if (isWrongPick) {
+                    bg = `${red}22`;
+                    border = red;
+                    color = red;
+                  }
+                  return (
+                    <button
+                      key={i}
+                      disabled={!!feedback}
+                      onClick={() => toggleMulti(i)}
+                      className="flex items-center gap-2 text-left px-4 py-2.5 rounded-lg text-sm"
+                      style={{ fontFamily: "Space Mono, monospace", backgroundColor: bg, border: `1px solid ${border}`, color }}
+                    >
+                      {checked ? <CheckSquare size={16} /> : <Square size={16} />}
+                      <MathText text={opt} />
+                    </button>
+                  );
+                })}
+              </div>
+              {!feedback ? (
+                <button
+                  onClick={submitMulti}
+                  className="w-full py-2 rounded-lg text-sm font-semibold mb-3"
+                  style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
+                >
+                  Valider
+                </button>
+              ) : (
+                <button
+                  onClick={newExercise}
+                  className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 mb-3"
+                  style={{ backgroundColor: isJeu ? gold : ink, color: isJeu ? ink : paper }}
+                >
+                  Suivant <ArrowRight size={14} />
+                </button>
+              )}
+            </>
+          )}
 
           {exercise.type === "qcm" && (
             <div className="grid grid-cols-1 gap-2 mb-3">

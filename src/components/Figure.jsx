@@ -18,7 +18,7 @@
 // };
 //
 // Champs supportés (tous optionnels sauf `points`) :
-//   points       : [{ id, x, y, label?, dx?, dy?, hideDot? }]
+//   points       : [{ id, x, y, label?, dx?, dy?, hideDot?, hideLabel? }]
 //   segments     : [{ from, to, ticks?: 0-3, dashed?: bool }]
 //   lines        : [{ from, to, label?, extend? }]  — droite infinie (tracée
 //                  au-delà des deux points), avec étiquette optionnelle
@@ -149,9 +149,11 @@ export default function Figure({ spec }) {
           spec.points.map((p) => (
             <g key={p.id}>
               {!p.hideDot && <circle cx={p.x} cy={p.y} r="2.2" fill={ink} />}
-              <text x={p.x + (p.dx ?? 8)} y={p.y + (p.dy ?? -8)} fontSize="12" fontWeight="600" fill={ink}>
-                {p.label ?? p.id}
-              </text>
+              {!p.hideLabel && (
+                <text x={p.x + (p.dx ?? 8)} y={p.y + (p.dy ?? -8)} fontSize="12" fontWeight="600" fill={ink}>
+                  {p.label ?? p.id}
+                </text>
+              )}
             </g>
           ))}
 

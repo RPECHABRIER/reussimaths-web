@@ -78,7 +78,8 @@ export default function ChapterRunner({ chapter }) {
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
     const val = parseFloat(input.replace(",", "."));
-    registerResult(Math.abs(val - exercise.answer) < 0.001);
+    const tolerance = exercise.tolerance ?? 0.001;
+    registerResult(Math.abs(val - exercise.answer) < tolerance);
   };
 
   const submitQCM = (option) => {
@@ -374,14 +375,15 @@ export default function ChapterRunner({ chapter }) {
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", "⌫"].map((key) => (
+                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "⌫"].map((key) => (
                   <button
                     key={key}
                     disabled={!!feedback}
                     onClick={() => {
                       if (key === "±") setInput((v) => (v.startsWith("-") ? v.slice(1) : v === "" ? "-" : "-" + v));
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
-                      else setInput((v) => (v.length < 6 ? v + key : v));
+                      else if (key === ",") setInput((v) => (v.includes(",") ? v : v === "" ? "0," : v + ","));
+                      else setInput((v) => (v.length < 8 ? v + key : v));
                     }}
                     className="py-2.5 rounded-xl text-base font-semibold"
                     style={{

@@ -58,7 +58,8 @@ export default function MiniDuel({ chapter, count, onFinish }) {
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
     const val = parseFloat(input.replace(",", "."));
-    const correct = Math.abs(val - exercise.answer) < 0.001;
+    const tolerance = exercise.tolerance ?? 0.001;
+    const correct = Math.abs(val - exercise.answer) < tolerance;
     setFeedback({ correct });
     setTimeout(() => next(correct), 550);
   };
@@ -210,14 +211,15 @@ export default function MiniDuel({ chapter, count, onFinish }) {
             {input || <span style={{ opacity: 0.35 }}>0</span>}
           </div>
           <div className="grid grid-cols-3 gap-2 mb-2">
-            {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", "⌫"].map((key) => (
+            {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "⌫"].map((key) => (
               <button
                 key={key}
                 disabled={!!feedback}
                 onClick={() => {
                   if (key === "±") setInput((v) => (v.startsWith("-") ? v.slice(1) : v === "" ? "-" : "-" + v));
                   else if (key === "⌫") setInput((v) => v.slice(0, -1));
-                  else setInput((v) => (v.length < 6 ? v + key : v));
+                  else if (key === ",") setInput((v) => (v.includes(",") ? v : v === "" ? "0," : v + ","));
+                  else setInput((v) => (v.length < 8 ? v + key : v));
                 }}
                 className="py-2 rounded-xl text-sm font-semibold"
                 style={{ fontFamily: fonts.mono, backgroundColor: field, color: ink, boxShadow: `0 0 0 1px ${ring}` }}

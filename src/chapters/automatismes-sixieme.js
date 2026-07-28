@@ -1898,7 +1898,14 @@ function genMultiplierPar25Auto() {
   };
 }
 
-const GENERATORS = [
+// ---------------------------------------------------------------------------
+// Regroupement par thème (chapitre du manuel) — permet à l'interface de
+// proposer soit un entraînement ciblé sur un chapitre précis, soit un
+// "Mélange" qui pioche dans tous les chapitres (voir
+// src/components/AutomatismesRunner.jsx et `themes` dans l'export par
+// défaut ci-dessous).
+// ---------------------------------------------------------------------------
+const CH1_NOMBRES_DECIMAUX = [
   genNumerationDecimale,
   genEcritureFractionDecimale,
   genCompleterA1,
@@ -1911,6 +1918,9 @@ const GENERATORS = [
   genSuitesDecimales,
   genArrondir,
   genEgaliteATrou,
+];
+
+const CH2_OPERATIONS_DECIMAUX = [
   genMultDiviserPar10_100_1000,
   genMultiplierPar0_1_001_0001,
   genMultiplierDeuxDecimauxAuto,
@@ -1923,6 +1933,9 @@ const GENERATORS = [
   genMultiplierEntierParPuissance,
   genMultiplierPar0_5,
   genDiviserPar4Et8,
+];
+
+const CH3_FRACTIONS = [
   genEcritureDecimaleFractionSimple,
   genMultiplicationATrouDecimale,
   genPrendreFractionDunNombre,
@@ -1935,6 +1948,9 @@ const GENERATORS = [
   genEncadrerFractionAuto,
   genEcritureDecimaleFractionAuto,
   genLexiqueOperationsAuto,
+];
+
+const CH4_GRANDEURS_MESURES = [
   genPerimetreDisqueOuPartieAuto,
   genPerimetreFigureComplexeAuto,
   genConvertirLongueurAuto,
@@ -1947,6 +1963,9 @@ const GENERATORS = [
   genComparerDureesAuto,
   genConvertirDureeSexagesimaleVersDecimaleAuto,
   genConvertirDureeDecimaleVersSexagesimaleAuto,
+];
+
+const CH5_DISTANCES_SYMETRIES = [
   genSymetriqueReciproqueAuto,
   genPositionCercleDisqueAuto,
   genRayonDiametreAuto,
@@ -1956,6 +1975,9 @@ const GENERATORS = [
   genProblemeDureeAuto,
   genComparerLongueursAuto,
   genConvertirContenancesAuto,
+];
+
+const CH6_ANGLES = [
   genEstimerAngleAuto,
   genTroisiemeAngleTriangleAuto,
   genTroisiemeAngleTriangleRectangleAuto,
@@ -1968,12 +1990,18 @@ const GENERATORS = [
   genDistributiviteAuto,
   genCalculsParenthesesAuto,
   genProportionHeureAuto,
+];
+
+const CH7_CONFIGURATIONS_GEOMETRIQUES = [
   genAngleTriangleParticulierAuto,
   genTriangleExisteAuto,
   genDecrireTriangleAuto,
   genTroisiemeCoteAuto,
   genTroisiemeAngleTriangleAutoCh7,
   genVolumeCubesAuto,
+];
+
+const CH8_ORGANISATION_DONNEES = [
   genPourcentageManquantDiagrammeAuto,
   genEstimerPourcentageDiagrammeAuto,
   genFractionVersPourcentageAuto,
@@ -1984,6 +2012,9 @@ const GENERATORS = [
   genNombreDeDiviseursEntierAuto,
   genPGCDDeuxEntiersAuto,
   genPPCMDeuxEntiersAuto,
+];
+
+const CH9_PROPORTIONNALITE = [
   genDoublesMoitiesAuto9,
   genTriplesTiersAuto,
   genQuartAuto,
@@ -1998,7 +2029,31 @@ const GENERATORS = [
   genMultiplierPar25Auto,
 ];
 
-function generate() {
+const THEMES = [
+  { id: "nombres-decimaux", title: "Nombres décimaux", generators: CH1_NOMBRES_DECIMAUX },
+  { id: "operations-decimaux", title: "Opérations sur les décimaux", generators: CH2_OPERATIONS_DECIMAUX },
+  { id: "fractions", title: "Fractions", generators: CH3_FRACTIONS },
+  { id: "grandeurs-mesures", title: "Grandeurs et mesures", generators: CH4_GRANDEURS_MESURES },
+  { id: "distances-symetries", title: "Distances et symétries", generators: CH5_DISTANCES_SYMETRIES },
+  { id: "angles", title: "Angles", generators: CH6_ANGLES },
+  { id: "configurations-geometriques", title: "Configurations géométriques", generators: CH7_CONFIGURATIONS_GEOMETRIQUES },
+  { id: "organisation-gestion-donnees", title: "Organisation et gestion de données", generators: CH8_ORGANISATION_DONNEES },
+  { id: "proportionnalite", title: "Proportionnalité", generators: CH9_PROPORTIONNALITE },
+];
+
+const GENERATORS = THEMES.flatMap((t) => t.generators);
+
+// themeId optionnel : un id de THEMES pour piocher uniquement dans ce
+// thème, ou absent/"mix" pour piocher dans l'ensemble des chapitres (voir
+// AutomatismesRunner.jsx, qui est le seul composant à passer un themeId —
+// generate() reste appelable sans argument pour rester compatible avec tout
+// code générique qui appellerait chapter.generate() sans le savoir, ex. un
+// défi entre amis sur ce chapitre).
+function generate(themeId) {
+  if (themeId && themeId !== "mix") {
+    const theme = THEMES.find((t) => t.id === themeId);
+    if (theme) return pick(theme.generators)();
+  }
   return pick(GENERATORS)();
 }
 
@@ -2010,6 +2065,8 @@ export default {
     level: "sixieme",
     freemiumDaily: 5,
     order: 1,
+    isAutomatismes: true,
   },
+  themes: THEMES.map(({ id, title }) => ({ id, title })),
   generate,
 };

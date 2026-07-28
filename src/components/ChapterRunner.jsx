@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, X, Flame, Trophy, ArrowRight, Lock, Square, CheckSquare } from "lucide-react";
+import { Check, X, Flame, Trophy, ArrowRight, ArrowLeft, Lock, Square, CheckSquare } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useProgress, useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
 import MathText from "./MathText";
 import Figure from "./Figure";
-import { matchesText, matchesMulti } from "../lib/answerMatch";
+import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
@@ -77,9 +77,9 @@ export default function ChapterRunner({ chapter }) {
 
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
-    const val = parseFloat(input.replace(",", "."));
+    const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerResult(Math.abs(val - exercise.answer) < tolerance);
+    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
   };
 
   const submitQCM = (option) => {
@@ -129,13 +129,18 @@ export default function ChapterRunner({ chapter }) {
             Tu as utilisé tes {dailyLimit} questions gratuites du jour sur « {chapter.meta.title} ». Reviens demain,
             ou abonne-toi pour un accès illimité à tous les chapitres.
           </p>
-          <Link
-            to="/compte"
-            className="inline-block py-2.5 px-6 rounded-full text-sm font-semibold"
-            style={{ backgroundColor: ink, color: paper }}
-          >
-            Voir les abonnements
-          </Link>
+          <div className="flex flex-col gap-2 items-center">
+            <Link
+              to="/compte"
+              className="inline-block py-2.5 px-6 rounded-full text-sm font-semibold"
+              style={{ backgroundColor: ink, color: paper }}
+            >
+              Voir les abonnements
+            </Link>
+            <Link to={`/niveau/${chapter.meta.level}`} className="text-sm font-medium" style={{ color: slate }}>
+              ← Retour aux chapitres
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -151,6 +156,13 @@ export default function ChapterRunner({ chapter }) {
       }}
     >
       <div className="w-full max-w-md">
+        <Link
+          to={`/niveau/${chapter.meta.level}`}
+          className="inline-flex items-center gap-1 text-xs font-semibold mb-4"
+          style={{ color: isJeu ? "#8b9ec4" : slate }}
+        >
+          <ArrowLeft size={14} /> Retour aux chapitres
+        </Link>
         <div className="text-center mb-6">
           <p
             className="text-xs tracking-widest uppercase mb-1 font-semibold"
@@ -375,14 +387,15 @@ export default function ChapterRunner({ chapter }) {
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "⌫"].map((key) => (
+                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "⌫"].map((key) => (
                   <button
                     key={key}
                     disabled={!!feedback}
                     onClick={() => {
                       if (key === "±") setInput((v) => (v.startsWith("-") ? v.slice(1) : v === "" ? "-" : "-" + v));
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
-                      else if (key === ",") setInput((v) => (v.includes(",") ? v : v === "" ? "0," : v + ","));
+                      else if (key === ",") setInput((v) => (v.includes(",") || v.includes("/") ? v : v === "" ? "0," : v + ","));
+                      else if (key === "/") setInput((v) => (v === "" || v.includes("/") || v.includes(",") ? v : v + "/"));
                       else setInput((v) => (v.length < 8 ? v + key : v));
                     }}
                     className="py-2.5 rounded-xl text-base font-semibold"

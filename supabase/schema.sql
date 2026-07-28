@@ -96,6 +96,20 @@ create table if not exists public.challenges (
 alter table public.challenges add column if not exists from_duration_ms integer;
 alter table public.challenges add column if not exists to_duration_ms integer;
 
+-- Meilleur temps d'un abonné sur une série de 5 questions d'Automatismes, par
+-- thème (un id de thème par chapitre du manuel, + "mix" pour le mélange de
+-- tous les chapitres) — voir src/hooks/useAutomatismesBestTime.js et
+-- src/components/AutomatismesRunner.jsx. Non-abonnés : jamais de ligne créée
+-- ici (cohérent avec le quota freemium de 5 questions/jour, une série).
+create table if not exists public.automatismes_best_times (
+  user_id uuid references auth.users (id) on delete cascade,
+  theme_id text not null,
+  best_time_ms integer not null,
+  best_score integer not null default 5,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, theme_id)
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -106,6 +120,10 @@ alter table public.friendships enable row level security;
 alter table public.level_votes enable row level security;
 alter table public.referrals enable row level security;
 alter table public.challenges enable row level security;
+alter table public.automatismes_best_times enable row level security;
+
+create policy "automatismes_best_times: self read/write" on public.automatismes_best_times
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create policy "profiles: self read/write" on public.profiles
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

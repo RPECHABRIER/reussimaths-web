@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { getChapter } from "../chapters/registry";
 import ChapterRunner from "../components/ChapterRunner";
+import AutomatismesRunner from "../components/AutomatismesRunner";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
@@ -54,6 +55,10 @@ export default function ChapterPage() {
         </Link>
       </div>
     );
+  }
+
+  if (chapter.meta.isAutomatismes) {
+    return <AutomatismesRunner chapter={chapter} />;
   }
 
   return <ChapterRunner chapter={chapter} />;

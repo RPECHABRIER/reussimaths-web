@@ -16,6 +16,17 @@
 // angle" sont simulés via une figure géométrique (deux demi-droites tracées à
 // l'angle exact), l'élève lit ou estime la mesure directement sur le dessin.
 //
+// Quasiment tous les exercices sur des configurations d'angles (angles
+// supplémentaires, opposés par le sommet, adjacents, bissectrice, angles d'un
+// triangle...) affichent désormais une vraie figure — voir
+// buildRaysFromVertexFigure() (plusieurs demi-droites depuis un même point) et
+// buildTriangleFigure() (triangle construit par loi des sinus à partir de ses
+// 3 angles, avec étiquettes/coche des côtés égaux/angle droit selon le cas).
+// Seuls restent volontairement sans figure : "existence d'un triangle" (les 3
+// angles donnés peuvent être incohérents — un dessin y serait trompeur, soit
+// faux soit révélateur de la réponse) et le classement de 4 angles différents
+// en un seul QCM vrai/faux (aucune figure unique ne les représente tous).
+//
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
@@ -40,6 +51,75 @@ function buildAngleFigure(angleDeg, startAngleDeg) {
   const A = { id: "A", x: rayLen * Math.cos(toRad(startAngleDeg)), y: rayLen * Math.sin(toRad(startAngleDeg)), dy: -8 };
   const B = { id: "B", x: rayLen * Math.cos(toRad(startAngleDeg + angleDeg)), y: rayLen * Math.sin(toRad(startAngleDeg + angleDeg)), dy: -8 };
   return { points: [S, A, B], segments: [{ from: "S", to: "A" }, { from: "S", to: "B" }] };
+}
+
+// Plusieurs demi-droites tracées depuis un même point S — utilisé pour toutes
+// les configurations d'angles autour d'un sommet (supplémentaires, opposés
+// par le sommet, adjacents, bissectrice...). `rays` : [{ id, angleDeg,
+// dashed? }] — angleDeg est absolu (mesuré depuis l'axe horizontal).
+function buildRaysFromVertexFigure(rays) {
+  const rayLen = 60;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const points = [{ id: "S", x: 0, y: 0, dx: -14, dy: 14 }];
+  const segments = [];
+  rays.forEach((r) => {
+    points.push({
+      id: r.id,
+      x: rayLen * Math.cos(toRad(r.angleDeg)),
+      y: rayLen * Math.sin(toRad(r.angleDeg)),
+      dy: -8,
+    });
+    segments.push({ from: "S", to: r.id, dashed: !!r.dashed });
+  });
+  return { points, segments };
+}
+
+// Triangle construit à partir de ses 3 angles (en degrés, somme = 180) via la
+// loi des sinus — permet d'afficher un vrai triangle (proportions correctes)
+// pour n'importe quel triplet d'angles valide. `labels` : { A?, B?, C? }
+// texte à afficher à l'intérieur, près du sommet correspondant (laisser vide
+// l'angle inconnu que l'exercice demande de trouver). `rightAngleAt` :
+// "A"|"B"|"C" pour dessiner le petit carré d'angle droit à ce sommet plutôt
+// que sa valeur en texte. `equalSides` : liste de segments ("AB","AC","BC") à
+// marquer d'un trait (côtés égaux, triangle isocèle/équilatéral).
+function buildTriangleFigure(angA, angB, angC, { labels = {}, rightAngleAt, equalSides = [] } = {}) {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const L = 100;
+  const t = (L * Math.sin(toRad(angC))) / Math.sin(toRad(angA));
+  const A = { x: t * Math.cos(toRad(angB)), y: -t * Math.sin(toRad(angB)) };
+  const B = { x: 0, y: 0 };
+  const C = { x: L, y: 0 };
+  const centroid = { x: (A.x + B.x + C.x) / 3, y: (A.y + B.y + C.y) / 3 };
+  const inset = (P, frac = 0.24) => ({ x: P.x + (centroid.x - P.x) * frac, y: P.y + (centroid.y - P.y) * frac });
+  const points = [
+    { id: "A", x: A.x, y: A.y, dy: -8, hideLabel: true },
+    { id: "B", x: B.x, y: B.y, dy: 16, hideLabel: true },
+    { id: "C", x: C.x, y: C.y, dy: 16, hideLabel: true },
+  ];
+  const tickCount = { AB: 0, BC: 0, CA: 0 };
+  equalSides.forEach((s) => {
+    const key = s === "AB" || s === "BA" ? "AB" : s === "BC" || s === "CB" ? "BC" : "CA";
+    tickCount[key] = 1;
+  });
+  const segments = [
+    { from: "A", to: "B", ticks: tickCount.AB },
+    { from: "B", to: "C", ticks: tickCount.BC },
+    { from: "C", to: "A", ticks: tickCount.CA },
+  ];
+  const freeLabels = [];
+  const vertexByKey = { A, B, C };
+  Object.entries(labels).forEach(([key, text]) => {
+    if (!text) return;
+    const pos = inset(vertexByKey[key]);
+    freeLabels.push({ x: pos.x, y: pos.y, text });
+  });
+  const rightAngles = [];
+  if (rightAngleAt) {
+    const at = rightAngleAt;
+    const others = ["A", "B", "C"].filter((k) => k !== at);
+    rightAngles.push({ at, from: others[0], to: others[1] });
+  }
+  return { points, segments, freeLabels, rightAngles };
 }
 
 // =========================== Mémo 2 : mesures des angles ===========================
@@ -91,6 +171,7 @@ function genNatureAngleQCM() {
     type: "qcm",
     chapter: "Angles — Nature d'un angle",
     prompt: `Un angle mesure ${angle}°. Quelle est sa nature ?`,
+    figure: buildAngleFigure(Math.max(angle, 2), randInt(0, 360)),
     answer: nature,
     options: ["nul", "aigu", "droit", "obtus", "plat"],
     steps: [`Angle ${nature} : ${angle}°.`],
@@ -125,12 +206,19 @@ function genAnglesSupplementaires() {
   const a = randInt(10, 170);
   const b = 180 - a;
   const askB = Math.random() < 0.5;
+  const theta = randInt(0, 360);
+  const figure = buildRaysFromVertexFigure([
+    { id: "A", angleDeg: theta },
+    { id: "C", angleDeg: theta + a },
+    { id: "B", angleDeg: theta + 180 },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Angles supplémentaires",
     prompt: askB
-      ? `Deux angles sont supplémentaires. Le premier mesure ${a}°. Quelle est la mesure du second ?`
-      : `Deux angles supplémentaires mesurent ${b}° et x°. Quelle est la valeur de x ?`,
+      ? `A, S et B sont alignés. L'angle ASC mesure ${a}°. Quelle est la mesure de l'angle CSB (supplémentaire) ?`
+      : `A, S et B sont alignés. L'angle CSB mesure ${b}°. Quelle est la mesure de l'angle ASC (supplémentaire) ?`,
+    figure,
     answer: askB ? b : a,
     steps: [`${a} + ${b} = 180`],
   };
@@ -139,10 +227,18 @@ function genAnglesSupplementaires() {
 // ---------- 6. Angles opposés par le sommet ----------
 function genAnglesOpposesParSommet() {
   const a = randInt(10, 170);
+  const theta = randInt(0, 180);
+  const figure = buildRaysFromVertexFigure([
+    { id: "A", angleDeg: theta },
+    { id: "B", angleDeg: theta + 180 },
+    { id: "C", angleDeg: theta + a },
+    { id: "D", angleDeg: theta + a + 180 },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Angles opposés par le sommet",
-    prompt: `Deux angles sont opposés par le sommet. Le premier mesure ${a}°. Quelle est la mesure du second ?`,
+    prompt: `Les droites (AB) et (CD) se coupent en S. L'angle ASC mesure ${a}°. Quelle est la mesure de l'angle BSD, opposé par le sommet ?`,
+    figure,
     answer: a,
     steps: [`Deux angles opposés par le sommet ont toujours la même mesure.`],
   };
@@ -154,12 +250,19 @@ function genSommeAnglesAdjacents() {
   const part1 = randInt(5, total - 5);
   const part2 = total - part1;
   const askPart2 = Math.random() < 0.5;
+  const theta = randInt(0, 360);
+  const figure = buildRaysFromVertexFigure([
+    { id: "A", angleDeg: theta },
+    { id: "C", angleDeg: theta + part1 },
+    { id: "B", angleDeg: theta + total },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Angles adjacents",
     prompt: askPart2
       ? `L'angle ASB mesure ${total}°. La demi-droite [SC] le partage en deux angles adjacents ASC et CSB. ASC mesure ${part1}°. Quelle est la mesure de CSB ?`
       : `L'angle ASB mesure ${total}°. La demi-droite [SC] le partage en deux angles adjacents ASC et CSB. CSB mesure ${part2}°. Quelle est la mesure de ASC ?`,
+    figure,
     answer: askPart2 ? part2 : part1,
     steps: [`${total} - ${askPart2 ? part1 : part2} = ${askPart2 ? part2 : part1}`],
   };
@@ -172,12 +275,19 @@ function genBissectrice() {
   const half = randInt(5, 89);
   const total = half * 2;
   const askTotal = Math.random() < 0.5;
+  const theta = randInt(0, 360);
+  const figure = buildRaysFromVertexFigure([
+    { id: "A", angleDeg: theta },
+    { id: "d", angleDeg: theta + half, dashed: true },
+    { id: "B", angleDeg: theta + total },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Bissectrice",
     prompt: askTotal
       ? `(d) est la bissectrice de l'angle ASB. Chaque angle formé par (d) mesure ${half}°. Quelle est la mesure de l'angle ASB ?`
       : `(d) est la bissectrice de l'angle ASB, qui mesure ${total}°. Quelle est la mesure de chacun des deux angles formés par (d) ?`,
+    figure,
     answer: askTotal ? total : half,
     steps: [askTotal ? `${half} \\times 2 = ${total}` : `${total} \\div 2 = ${half}`],
   };
@@ -194,6 +304,7 @@ function genTroisiemeAngleTriangle() {
     type: "numeric",
     chapter: "Angles — Angles d'un triangle",
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième angle ?`,
+    figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     answer: c,
     steps: [`180 - (${a} + ${b}) = ${c}`],
   };
@@ -207,6 +318,7 @@ function genTroisiemeAngleTriangleRectangle() {
     type: "numeric",
     chapter: "Angles — Triangle rectangle",
     prompt: `Dans un triangle rectangle, un angle aigu mesure ${a}°. Quelle est la mesure de l'autre angle aigu ?`,
+    figure: buildTriangleFigure(a, b, 90, { labels: { A: `${a}°` }, rightAngleAt: "C" }),
     answer: b,
     steps: [`90 - ${a} = ${b}`],
   };
@@ -234,10 +346,17 @@ function genAnglesAlignesChaine() {
   const a = randInt(10, 60);
   const b = randInt(10, 60);
   const c = 180 - a - b;
+  const figure = buildRaysFromVertexFigure([
+    { id: "C", angleDeg: 0 },
+    { id: "P", angleDeg: a },
+    { id: "Q", angleDeg: a + b },
+    { id: "A", angleDeg: 180 },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Angles et points alignés",
     prompt: `Les points A, B et C sont alignés. Trois demi-droites issues d'un même point de (AC) forment avec elle trois angles adjacents de ${a}°, ${b}° et x°, dont la somme vaut 180° (angle plat). Quelle est la valeur de x ?`,
+    figure,
     answer: c,
     steps: [`180 - (${a} + ${b}) = ${c}`],
   };
@@ -248,6 +367,7 @@ function genAngleExterieurTriangle() {
   const int1 = randInt(20, 80);
   const int2 = randInt(20, 80);
   const ext = int1 + int2;
+  const int3 = 180 - ext;
   const askExt = Math.random() < 0.5;
   return {
     type: "numeric",
@@ -255,6 +375,7 @@ function genAngleExterieurTriangle() {
     prompt: askExt
       ? `Dans un triangle, les deux angles intérieurs non adjacents à un angle extérieur mesurent ${int1}° et ${int2}°. Quelle est la mesure de cet angle extérieur ?`
       : `L'angle extérieur d'un triangle mesure ${ext}°. L'un des deux angles intérieurs non adjacents mesure ${int1}°. Quelle est la mesure de l'autre ?`,
+    figure: buildTriangleFigure(int1, int2, int3, { labels: { A: `${int1}°`, B: `${int2}°` } }),
     answer: askExt ? ext : int2,
     steps: [`Un angle extérieur d'un triangle est égal à la somme des deux angles intérieurs non adjacents : ${int1} + ${int2} = ${ext}`],
   };
@@ -272,10 +393,12 @@ function genProblemeCocheQuestionsAngles() {
     { text: `Quelle est la longueur des côtés du triangle ?`, correct: false },
   ];
   const { options, answer } = shuffleStatements(items);
+  const c = 180 - a - b;
   return {
     type: "multi",
     chapter: "Angles — Problèmes",
     prompt: `Un triangle a deux angles de ${a}° et ${b}°. Coche les questions auxquelles tu pourrais répondre avec cette seule information.`,
+    figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     options,
     answer,
     steps: [`Connaître deux angles permet de déduire le troisième et de savoir si un angle est droit, mais pas les longueurs des côtés.`],
@@ -293,10 +416,17 @@ function genProblemeVraiFauxAngles() {
     { text: `La bissectrice partage l'angle ASB en deux angles adjacents de même mesure.`, correct: true },
   ];
   const { options, answer } = shuffleStatements(items);
+  const theta = randInt(0, 360);
+  const figure = buildRaysFromVertexFigure([
+    { id: "A", angleDeg: theta },
+    { id: "d", angleDeg: theta + half, dashed: true },
+    { id: "B", angleDeg: theta + total },
+  ]);
   return {
     type: "multi",
     chapter: "Angles — Problèmes",
     prompt: `(d) est la bissectrice de l'angle ASB qui mesure ${total}°. Coche les affirmations vraies.`,
+    figure,
     options,
     answer,
     steps: [`${total} \\div 2 = ${half}`],
@@ -309,10 +439,18 @@ function genProblemeBissectriceAngleEntre() {
   let zOy = randInt(10, 80);
   if ((yOx + zOy) % 2 !== 0) zOy += 1;
   const uOv = (yOx + zOy) / 2;
+  const figure = buildRaysFromVertexFigure([
+    { id: "x", angleDeg: 0 },
+    { id: "u", angleDeg: yOx / 2, dashed: true },
+    { id: "y", angleDeg: yOx },
+    { id: "v", angleDeg: yOx + zOy / 2, dashed: true },
+    { id: "z", angleDeg: yOx + zOy },
+  ]);
   return {
     type: "numeric",
     chapter: "Angles — Problèmes",
     prompt: `On considère deux angles adjacents zOy et yOx. yOx mesure ${yOx}°. On trace les bissectrices de ces deux angles : l'angle qu'elles forment entre elles mesure ${uOv}°. Combien mesure zOy ?`,
+    figure,
     answer: zOy,
     steps: [`L'angle entre les deux bissectrices vaut la moitié de (zOy + yOx).`, `zOy = ${uOv} \\times 2 - ${yOx} = ${zOy}`],
   };
@@ -323,12 +461,14 @@ function genProblemeTriangleIsoceleAngles() {
   const baseAngle = randInt(20, 79);
   const sommetAngle = 180 - 2 * baseAngle;
   const askSommet = Math.random() < 0.5;
+  const labels = askSommet ? { B: `${baseAngle}°`, C: `${baseAngle}°` } : { A: `${sommetAngle}°` };
   return {
     type: "numeric",
     chapter: "Angles — Triangle isocèle",
     prompt: askSommet
       ? `Un triangle isocèle a deux angles à la base égaux à ${baseAngle}° chacun. Quelle est la mesure de l'angle au sommet ?`
       : `Un triangle isocèle a un angle au sommet de ${sommetAngle}°. Quelle est la mesure de chacun des deux angles à la base (égaux) ?`,
+    figure: buildTriangleFigure(sommetAngle, baseAngle, baseAngle, { labels, equalSides: ["AB", "CA"] }),
     answer: askSommet ? sommetAngle : baseAngle,
     steps: [`180 - 2 \\times ${baseAngle} = ${sommetAngle}`],
   };

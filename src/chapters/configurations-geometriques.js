@@ -17,6 +17,16 @@
 // côté : les problèmes de patron de dé/cube à colorier ou reproduire en vraie
 // grandeur (ex. 55-58, 60).
 //
+// Les exercices sur les triangles particuliers et leurs angles affichent
+// désormais une vraie figure (triangle construit par loi des sinus, avec
+// coche des côtés égaux et/ou angle droit selon le cas — voir
+// buildTriangleFigure()) et les configurations d'angles autour d'un point
+// affichent les demi-droites correspondantes (buildRaysFromVertexFigure()).
+// Restent volontairement sans figure : l'existence d'un triangle par
+// inégalité triangulaire (un dessin serait trompeur si les longueurs données
+// ne permettent pas de le construire) et les problèmes de dé/volume de cubes
+// (aucun rendu 3D disponible).
+//
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
@@ -31,6 +41,67 @@ function shuffleStatements(items) {
   const options = order.map((i) => items[i].text);
   const answer = order.map((i, newIndex) => (items[i].correct ? newIndex : null)).filter((v) => v !== null);
   return { options, answer };
+}
+
+// Plusieurs demi-droites tracées depuis un même point S — voir la version
+// jumelle dans src/chapters/angles.js (même logique, dupliquée ici par
+// convention : chaque fichier de chapitre est indépendant).
+function buildRaysFromVertexFigure(rays, vertexId = "S") {
+  const rayLen = 60;
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const points = [{ id: vertexId, x: 0, y: 0, dx: -14, dy: 14 }];
+  const segments = [];
+  rays.forEach((r) => {
+    points.push({
+      id: r.id,
+      x: rayLen * Math.cos(toRad(r.angleDeg)),
+      y: rayLen * Math.sin(toRad(r.angleDeg)),
+      dy: -8,
+    });
+    segments.push({ from: vertexId, to: r.id, dashed: !!r.dashed });
+  });
+  return { points, segments };
+}
+
+// Triangle construit à partir de ses 3 angles (loi des sinus) — voir la
+// version jumelle dans src/chapters/angles.js pour le détail des options.
+function buildTriangleFigure(angA, angB, angC, { labels = {}, rightAngleAt, equalSides = [] } = {}) {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const L = 100;
+  const t = (L * Math.sin(toRad(angC))) / Math.sin(toRad(angA));
+  const A = { x: t * Math.cos(toRad(angB)), y: -t * Math.sin(toRad(angB)) };
+  const B = { x: 0, y: 0 };
+  const C = { x: L, y: 0 };
+  const centroid = { x: (A.x + B.x + C.x) / 3, y: (A.y + B.y + C.y) / 3 };
+  const inset = (P, frac = 0.24) => ({ x: P.x + (centroid.x - P.x) * frac, y: P.y + (centroid.y - P.y) * frac });
+  const points = [
+    { id: "A", x: A.x, y: A.y, dy: -8, hideLabel: true },
+    { id: "B", x: B.x, y: B.y, dy: 16, hideLabel: true },
+    { id: "C", x: C.x, y: C.y, dy: 16, hideLabel: true },
+  ];
+  const tickCount = { AB: 0, BC: 0, CA: 0 };
+  equalSides.forEach((s) => {
+    const key = s === "AB" || s === "BA" ? "AB" : s === "BC" || s === "CB" ? "BC" : "CA";
+    tickCount[key] = 1;
+  });
+  const segments = [
+    { from: "A", to: "B", ticks: tickCount.AB },
+    { from: "B", to: "C", ticks: tickCount.BC },
+    { from: "C", to: "A", ticks: tickCount.CA },
+  ];
+  const freeLabels = [];
+  const vertexByKey = { A, B, C };
+  Object.entries(labels).forEach(([key, text]) => {
+    if (!text) return;
+    const pos = inset(vertexByKey[key]);
+    freeLabels.push({ x: pos.x, y: pos.y, text });
+  });
+  const rightAngles = [];
+  if (rightAngleAt) {
+    const others = ["A", "B", "C"].filter((k) => k !== rightAngleAt);
+    rightAngles.push({ at: rightAngleAt, from: others[0], to: others[1] });
+  }
+  return { points, segments, freeLabels, rightAngles };
 }
 
 // =========================== Mémo 1 : construire des triangles ===========================
@@ -82,27 +153,33 @@ function genTroisiemeCoteQCM() {
 // ---------- 3. Identifier la nature d'un triangle décrit ----------
 function genTriangleParticulierNatureQCM() {
   const type = pick(["isocele", "equilateral", "rectangle", "rectangleIsocele", "quelconque"]);
-  let desc, nature;
+  let desc, nature, figure;
   if (type === "isocele") {
     desc = `Le triangle DEF est tel que DE = DF.`;
     nature = "isocèle";
+    figure = buildTriangleFigure(50, 65, 65, { equalSides: ["AB", "CA"] });
   } else if (type === "equilateral") {
     desc = `Le triangle IJK est tel que IJ = JK = KI.`;
     nature = "équilatéral";
+    figure = buildTriangleFigure(60, 60, 60, { equalSides: ["AB", "BC", "CA"] });
   } else if (type === "rectangle") {
     desc = `Le triangle MNP a un angle droit en M.`;
     nature = "rectangle";
+    figure = buildTriangleFigure(90, 35, 55, { rightAngleAt: "A" });
   } else if (type === "rectangleIsocele") {
     desc = `Le triangle RST a un angle droit en R, avec RS = RT.`;
     nature = "rectangle isocèle";
+    figure = buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"] });
   } else {
     desc = `Le triangle UVW n'a ni côtés ni angles particuliers connus.`;
     nature = "quelconque";
+    figure = buildTriangleFigure(50, 60, 70);
   }
   return {
     type: "qcm",
     chapter: "Configurations géométriques — Triangles particuliers",
     prompt: `${desc} Quelle est la nature de ce triangle ?`,
+    figure,
     answer: nature,
     options: ["isocèle", "équilatéral", "rectangle", "rectangle isocèle", "quelconque"],
     steps: [desc],
@@ -115,12 +192,14 @@ function genAngleTriangleIsocele() {
   const sommetAngle = 180 - 2 * baseAngle;
   const askSommet = Math.random() < 0.5;
   const sommetLettre = pick(["D", "F", "H", "K"]);
+  const labels = askSommet ? { B: `${baseAngle}°`, C: `${baseAngle}°` } : { A: `${sommetAngle}°` };
   return {
     type: "numeric",
     chapter: "Configurations géométriques — Triangles particuliers",
     prompt: askSommet
       ? `Un triangle isocèle en ${sommetLettre} a deux angles à la base de ${baseAngle}° chacun. Quelle est la mesure de l'angle en ${sommetLettre} ?`
       : `Un triangle isocèle en ${sommetLettre} a un angle de ${sommetAngle}° en ${sommetLettre}. Quelle est la mesure de chacun des deux angles à la base ?`,
+    figure: buildTriangleFigure(sommetAngle, baseAngle, baseAngle, { labels, equalSides: ["AB", "CA"] }),
     answer: askSommet ? sommetAngle : baseAngle,
     steps: [`180 - 2 \\times ${baseAngle} = ${sommetAngle}`],
   };
@@ -132,6 +211,7 @@ function genAngleTriangleEquilateral() {
     type: "numeric",
     chapter: "Configurations géométriques — Triangles particuliers",
     prompt: `ABC est un triangle équilatéral. Quelle est la mesure de chacun de ses angles ?`,
+    figure: buildTriangleFigure(60, 60, 60, { equalSides: ["AB", "BC", "CA"] }),
     answer: 60,
     steps: [`180 \\div 3 = 60`],
   };
@@ -146,6 +226,7 @@ function genAngleTriangleRectangleIsocele() {
     prompt: askAigu
       ? `Un triangle rectangle isocèle a un angle droit. Quelle est la mesure de chacun des deux autres angles (égaux) ?`
       : `Un triangle a un angle droit et deux angles de 45°. Quelle est la mesure de l'angle droit ?`,
+    figure: buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"], labels: askAigu ? {} : { B: "45°", C: "45°" } }),
     answer: askAigu ? 45 : 90,
     steps: [askAigu ? `(180 - 90) \\div 2 = 45` : `180 - 45 - 45 = 90`],
   };
@@ -159,6 +240,7 @@ function genProblemeIsoceleRectangleCombine() {
       type: "numeric",
       chapter: "Configurations géométriques — Triangles particuliers",
       prompt: `Le triangle FIJ est rectangle isocèle en I. Quelle est la mesure de l'angle F ?`,
+      figure: buildTriangleFigure(45, 90, 45, { rightAngleAt: "B", equalSides: ["AB", "BC"] }),
       answer: 45,
       steps: [`(180 - 90) \\div 2 = 45`],
     };
@@ -167,6 +249,7 @@ function genProblemeIsoceleRectangleCombine() {
     type: "qcm",
     chapter: "Configurations géométriques — Triangles particuliers",
     prompt: `Un triangle a un angle droit et ses deux autres angles mesurent chacun 45°. Quelle est sa nature ?`,
+    figure: buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"] }),
     answer: "Rectangle isocèle",
     options: ["Rectangle", "Isocèle", "Rectangle isocèle", "Équilatéral"],
     steps: [`Angle droit + deux angles égaux de 45° : le triangle est à la fois rectangle et isocèle.`],
@@ -182,6 +265,7 @@ function genTroisiemeAngleTriangleGeneral() {
     type: "numeric",
     chapter: "Configurations géométriques — Angles d'un triangle",
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième ?`,
+    figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     answer: c,
     steps: [`180 - (${a} + ${b}) = ${c}`],
   };
@@ -195,10 +279,20 @@ function genAlignementViaAnglesQCM() {
   const alignedTrue = Math.random() < 0.5;
   const displayedC = alignedTrue ? cAligned : cAligned + pick([-15, 15]);
   const sum = a + b + displayedC;
+  const figure = buildRaysFromVertexFigure(
+    [
+      { id: "E", angleDeg: 0 },
+      { id: "G", angleDeg: a },
+      { id: "H", angleDeg: a + b },
+      { id: "I", angleDeg: a + b + displayedC },
+    ],
+    "F"
+  );
   return {
     type: "qcm",
     chapter: "Configurations géométriques — Alignement",
     prompt: `Les angles EFG, GFH et HFI (trois angles adjacents) mesurent respectivement ${a}°, ${b}° et ${displayedC}°. Les points E, F et I sont-ils alignés ?`,
+    figure,
     answer: sum === 180 ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [`${a} + ${b} + ${displayedC} = ${sum}${sum === 180 ? " = 180°, donc alignés." : ", ce n'est pas 180° donc pas alignés."}`],
@@ -209,7 +303,9 @@ function genAlignementViaAnglesQCM() {
 
 // ---------- 10. Coche les questions auxquelles on peut répondre ----------
 function genProblemeCocheQuestionsTriangle() {
-  const a = randInt(3, 15);
+  const a = randInt(6, 15);
+  const b = a + randInt(1, Math.floor(a / 2));
+  const c = a + randInt(1, Math.floor(a / 2));
   const items = [
     { text: `Ce triangle peut-il exister avec ces longueurs ?`, correct: true },
     { text: `Quelle est la mesure de chacun de ses angles ?`, correct: false },
@@ -219,7 +315,7 @@ function genProblemeCocheQuestionsTriangle() {
   return {
     type: "multi",
     chapter: "Configurations géométriques — Problèmes",
-    prompt: `Un triangle a pour côtés ${a} cm, ${a + randInt(1, 5)} cm et ${a + randInt(1, 5)} cm. Coche les questions auxquelles tu pourrais répondre avec ces seules informations.`,
+    prompt: `Un triangle a pour côtés ${a} cm, ${b} cm et ${c} cm. Coche les questions auxquelles tu pourrais répondre avec ces seules informations.`,
     options,
     answer,
     steps: [`Connaître les 3 côtés permet de vérifier l'existence et de calculer le périmètre, mais pas les angles (sauf cas particulier, comme un triangle équilatéral).`],
@@ -251,10 +347,19 @@ function genProblemeVraiFauxTriangleConstructible() {
 function genProblemeAnglesComplementairesBissectrice() {
   const abc = pick([60, randInt(30, 80)]);
   const answer = 90 - abc;
+  const figure = buildRaysFromVertexFigure(
+    [
+      { id: "A", angleDeg: 0 },
+      { id: "C", angleDeg: abc },
+      { id: "D", angleDeg: 90 },
+    ],
+    "B"
+  );
   return {
     type: "numeric",
     chapter: "Configurations géométriques — Problèmes",
     prompt: `Dans une figure, l'angle ABC mesure ${abc}° et l'angle ABD est droit, avec D situé de sorte que ABD = ABC + CBD. Quelle est la mesure de l'angle CBD ?`,
+    figure,
     answer,
     steps: [`90 - ${abc} = ${answer}`],
   };

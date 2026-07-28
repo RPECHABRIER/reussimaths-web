@@ -21,6 +21,28 @@ export const PLANNED_CHAPTERS = {
     { id: "organisation-gestion-donnees", title: "Organisation et gestion de données", order: 8 },
     { id: "proportionnalite", title: "Proportionnalité", order: 9 },
   ],
+  // Sommaire officiel du manuel de 5e (chapitres 1 à 11, hors "Algorithmique
+  // et tableur" et "C'est logique !" qui ne font pas partie du programme
+  // évalué au même titre, ainsi que les corrigés). Les ids "-cinquieme"
+  // évitent une collision avec les chapitres 6e de même thème (ex:
+  // proportionnalite existe déjà pour la 6e) — voir Niveau.jsx pour la
+  // logique de remplacement planned -> réel. order = ordre d'affichage
+  // interne (décalé de +1 par rapport au numéro du sommaire pour laisser la
+  // place à "Automatismes" en position 1) — voir chaque fichier de chapitre
+  // pour son meta.order réel.
+  cinquieme: [
+    { id: "operations-sur-les-nombres", title: "Opérations sur les nombres", order: 2 },
+    { id: "divisibilite-fractions", title: "Divisibilité, fractions", order: 3 },
+    { id: "puissances", title: "Puissances d'un nombre, carré et cube", order: 4 },
+    { id: "calcul-litteral", title: "Calcul littéral", order: 5 },
+    { id: "nombres-relatifs", title: "Nombres relatifs", order: 6 },
+    { id: "geometrie-espace", title: "Géométrie dans l'espace", order: 7 },
+    { id: "symetrie-centrale-parallelogrammes", title: "Symétrie centrale, parallélogrammes", order: 8 },
+    { id: "triangles", title: "Triangles", order: 9 },
+    { id: "statistiques-probabilites", title: "Statistiques, probabilités", order: 10 },
+    { id: "proportionnalite-cinquieme", title: "Proportionnalité", order: 11 },
+    { id: "fonctions", title: "Fonctions", order: 12 },
+  ],
 };
 
 export function getPlannedChapters(levelId) {

@@ -50,7 +50,7 @@ export const EXAM_CHAPTER_BY_LEVEL = {
   quatrieme: "exercices-fin-annee-quatrieme",
   troisieme: "dossier-brevet-troisieme",
   seconde: "exercices-fin-annee-seconde",
-  "premiere-non-spe": "exercices-rituels-premiere-non-spe",
+  "premiere-non-spe": "preparation-eam-premiere-non-spe",
   "premiere-spe": "preparation-bac-premiere-spe",
   "terminale-spe": "exercices-transversaux-terminale-spe",
 };

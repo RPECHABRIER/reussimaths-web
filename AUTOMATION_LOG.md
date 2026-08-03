@@ -1,5 +1,61 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 15) — Chapitre "Préparation à l'EAM" (Première non spé)
+
+Demande de Romain : "il manque la partie préparation des EAM pour les
+premières non spé [...] en te servant des documents réels tombés au bac
+cette année [...] avec les corrigés que tu trouveras dans le répertoire
+Première non spé". Précision ensuite : "ce sont des sujets du bac, donc on a
+le droit d'utiliser ces énoncés. Tu peux aussi en proposer d'autres basés
+sur les mêmes compétences [...] simplement quand c'est le sujet original tu
+précises que c'est extrait du bac en disant le lieu, la période et l'année."
+
+- Copié et lu 3 sessions complètes (sujet + corrigé) de l'EAM 2026, seul
+  format d'examen des Première SANS spécialité maths : Métropole (12 juin),
+  Antilles-Guyane (12 juin), Centres Étrangers (8 juin). Format confirmé :
+  Partie 1 = 8 à 12 QCM Automatismes (6 pts, sans justification, sans
+  pénalité) ; Partie 2 = 2-3 exercices (14 pts), presque toujours
+  probabilités conditionnelles (tableau croisé ou arbre pondéré) +
+  modélisation par suite arithmétique/géométrique, parfois signe de
+  dérivée et variations.
+- **Nouveau** `src/chapters/preparation-eam-premiere-non-spe.js` (order 9,
+  niveau `premiere-non-spe`) avec 23 générateurs :
+  - **10 générateurs "officiels"** reproduisant fidèlement les questions
+    réelles de ces 3 sessions (une banque de sous-questions réelles tirée
+    au hasard à chaque appel, valeurs et réponses inchangées). Chaque
+    exercice affiche sa source exacte via le champ `chapter` (étiquette
+    au-dessus de l'énoncé), ex. « Préparation EAM — Sujet officiel
+    (Métropole, 12 juin 2026) ». Les 4 questions réelles qui reposaient sur
+    la lecture d'un graphique ont été reformulées en description textuelle
+    des informations du graphique (le composant `<Figure />` du projet ne
+    sait tracer que des figures géométriques, pas de repère cartésien ni de
+    courbes de fonctions) — réponses et options restent celles du sujet
+    officiel.
+  - **13 générateurs "originaux"** sur les mêmes compétences (pourcentages,
+    équations affines, coefficient directeur, identités remarquables,
+    médiane, isoler une variable dans une formule, lecture de tableau de
+    valeurs, probabilités conditionnelles par tableau croisé et par arbre
+    pondéré, suites arithmétique/géométrique en contexte, signe d'une
+    dérivée factorisée), entièrement randomisés à chaque tirage, étiquetés
+    génériquement (« Préparation EAM — Automatismes/Probabilités/Suites/
+    Fonctions », sans mention de source).
+  - Testé à 40 000 itérations (toutes difficultés + sans filtre) : 0 erreur
+    (types valides, réponse QCM toujours présente dans les options, réponse
+    numérique toujours un nombre fini, aucun "undefined"/"NaN" dans les
+    textes). Distribution vérifiée entre les 7 étiquettes de source.
+- `src/lib/access.js` : `EXAM_CHAPTER_BY_LEVEL["premiere-non-spe"]` pointe
+  maintenant vers `"preparation-eam-premiere-non-spe"` (au lieu de
+  `"exercices-rituels-premiere-non-spe"`, qui reste disponible comme
+  chapitre classique de l'abonnement, simplement plus comme "chapitre
+  examen" du Pack Examen).
+- `plannedChapters.js` : aucun changement nécessaire (ce chapitre n'y était
+  pas répertorié comme "à venir" ; le mécanisme d'auto-enregistrement par
+  `import.meta.glob` suffit).
+- Build de production vérifié (`npx vite build`, 0 erreur). Synchronisé
+  dans les deux dossiers (dossier de travail + clone Git
+  `APPLI GITHUB/Sans titre`) ; `git status --short` confirme les diffs
+  attendus (M sur `access.js`, ?? sur le nouveau fichier de chapitre).
+
 ## 2026-08-03 (suite 14) — Panneau admin : prévisualisation par palier + tableau de bord abonnés
 
 Demande de Romain : "j'ai besoin d'un compte gratuit, un compte pack examen

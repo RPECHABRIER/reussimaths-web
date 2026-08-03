@@ -4,6 +4,8 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
 import { useReferrals } from "../hooks/useReferrals";
+import { isAdminUser, isFullAccessSubscription, isPackExamenSubscription } from "../lib/access";
+import PackExamenChoice from "../components/PackExamenChoice";
 import { colors, fonts, shadow } from "../theme";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
@@ -11,10 +13,15 @@ import { colors, fonts, shadow } from "../theme";
 // d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
   const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
-  const { subscription, isActive } = useSubscription(user?.id);
+  const { subscription, isActive, reload: reloadSubscription } = useSubscription(user?.id);
   const { profile } = useProfile(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const admin = isAdminUser(user);
+  const fullAccess = isFullAccessSubscription(subscription);
+  const packExamen = isPackExamenSubscription(subscription);
+  const packExamenNeedsChoice = packExamen && !subscription?.pack_examen_level;
 
   const referralLink = profile?.referral_code
     ? `${window.location.origin}/?ref=${profile.referral_code}`
@@ -67,14 +74,34 @@ export default function Account() {
             {profile?.pseudo ?? "Connecté"}
           </p>
           <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
+            Abonnement : {admin ? "accès complet (admin)" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
-          {isActive && subscription?.plan === "special_examen" && subscription?.current_period_end && (
+          {packExamen && subscription?.plan === "special_examen" && subscription?.current_period_end && (
             <p className="text-xs" style={{ color: colors.slate }}>
               Accès jusqu'au {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")} (offre non
               reconductible)
             </p>
           )}
+
+          {packExamenNeedsChoice && <PackExamenChoice onDone={reloadSubscription} />}
+
+          {packExamen && subscription?.pack_examen_level && (
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
+              <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                Pack Examen — niveau choisi
+              </p>
+              <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                Ton choix est définitif : abonne-toi en complet pour débloquer tous les niveaux.
+              </p>
+            </div>
+          )}
+
+          {fullAccess && (
+            <Link to="/idees" className="text-xs font-medium" style={{ color: colors.gold }}>
+              💡 Proposer une idée d'amélioration
+            </Link>
+          )}
+
           <div className="flex items-center justify-center gap-4">
             <Link to="/pseudo" className="text-xs font-medium" style={{ color: colors.slate }}>
               Changer de pseudo
@@ -90,7 +117,7 @@ export default function Account() {
                 Parrainage — {referralCount}/5 amis
               </p>
               <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                Invite 5 amis pour débloquer le chapitre Probabilités, sans abonnement.
+                Invite des amis à utiliser Reussimaths avec ton lien.
               </p>
               <p
                 className="text-xs mt-2 px-2.5 py-1.5 rounded-lg break-all"
@@ -101,7 +128,7 @@ export default function Account() {
             </div>
           )}
 
-          {!isActive && (
+          {!isActive && !admin && (
             <>
               <button
                 disabled={checkoutLoading}

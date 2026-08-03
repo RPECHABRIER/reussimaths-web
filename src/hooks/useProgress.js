@@ -54,34 +54,30 @@ export function useProgress(userId, chapterId) {
 }
 
 // Statut d'abonnement (mis à jour côté serveur par le webhook Stripe, voir
-// api/stripe-webhook.js). Le front ne fait que le lire.
+// api/stripe-webhook.js — sauf pack_examen_level/pack_examen_bonus_chapters,
+// écrits une seule fois par l'abonné Pack Examen lui-même via la fonction RPC
+// set_pack_examen_choices, voir src/components/PackExamenChoice.jsx). Le
+// front ne fait que le lire.
 export function useSubscription(userId) {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const load = useCallback(async () => {
     if (!userId) {
       setSubscription(null);
       setLoading(false);
       return;
     }
-    let cancelled = false;
     setLoading(true);
-    supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("user_id", userId)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) console.error("[useSubscription] load error:", error.message);
-        setSubscription(data ?? null);
-        setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+    const { data, error } = await supabase.from("subscriptions").select("*").eq("user_id", userId).maybeSingle();
+    if (error) console.error("[useSubscription] load error:", error.message);
+    setSubscription(data ?? null);
+    setLoading(false);
   }, [userId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   // "special_examen" est un paiement unique, non reconductible : sa date de
   // fin (current_period_end, fixée à +3 mois par le webhook) doit être
@@ -90,5 +86,5 @@ export function useSubscription(userId) {
   // "canceled" tout seul, contrairement à un abonnement classique).
   const notExpired = !subscription?.current_period_end || new Date(subscription.current_period_end) > new Date();
   const isActive = (subscription?.status === "active" || subscription?.status === "trialing") && notExpired;
-  return { subscription, isActive, loading };
+  return { subscription, isActive, loading, reload: load };
 }

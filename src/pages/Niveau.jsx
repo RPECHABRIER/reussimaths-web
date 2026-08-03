@@ -7,6 +7,7 @@ import { getParcoursForLevel } from "../parcours";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
+import { canAccessChapter } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 import ComingSoon from "./ComingSoon";
 
@@ -24,7 +25,7 @@ export default function Niveau() {
   const realIds = new Set(realChapters.map((c) => c.meta.id));
   const plannedChapters = getPlannedChapters(levelId).filter((p) => !realIds.has(p.id));
   const { user } = useAuth();
-  const { isActive } = useSubscription(user?.id);
+  const { subscription } = useSubscription(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
 
   if (!level) {
@@ -109,8 +110,7 @@ export default function Niveau() {
 
             const chapter = row.chapter;
             const freemium = !!chapter.meta.freemiumDaily;
-            const referralUnlocked = !!chapter.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals;
-            const locked = !chapter.meta.free && !freemium && !isActive && !referralUnlocked;
+            const locked = !canAccessChapter(chapter, { user, subscription, referralCount });
             const content = (
               <div
                 className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"

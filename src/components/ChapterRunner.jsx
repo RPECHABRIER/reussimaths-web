@@ -4,6 +4,7 @@ import { Check, X, Flame, Trophy, ArrowRight, ArrowLeft, Lock, Square, CheckSqua
 import { useAuth } from "../hooks/useAuth";
 import { useProgress, useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
+import { hasUnlimitedQuota } from "../lib/access";
 import MathText from "./MathText";
 import Figure from "./Figure";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -35,10 +36,10 @@ import { colors, fonts, shadow } from "../theme";
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo }) {
   const { user } = useAuth();
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
-  const { isActive } = useSubscription(user?.id);
+  const { subscription } = useSubscription(user?.id);
   const dailyLimit = chapter.meta.freemiumDaily;
   const quota = useDailyQuota(chapter.meta.id, dailyLimit ?? 5);
-  const quotaApplies = !!dailyLimit && !isActive;
+  const quotaApplies = !!dailyLimit && !hasUnlimitedQuota(chapter, { user, subscription });
   const quotaExhausted = quotaApplies && quota.exhausted;
   const isSession = Number.isFinite(sessionLength) && sessionLength > 0;
 

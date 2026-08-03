@@ -6,6 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
+import { canAccessChapter } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 
 // Détail d'un parcours (/parcours/:parcoursId) : la liste de ses étapes avec
@@ -18,7 +19,7 @@ export default function ParcoursOverview() {
   const { parcoursId } = useParams();
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
-  const { isActive } = useSubscription(user?.id);
+  const { subscription } = useSubscription(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
   const { stepByIndex, completedSteps, loading } = useParcoursProgress(user?.id, parcoursId);
 
@@ -76,9 +77,7 @@ export default function ParcoursOverview() {
         <div className="flex flex-col gap-2.5">
           {parcours.steps.map((step, i) => {
             const chapter = getChapter(step.chapterId);
-            const freemium = !!chapter?.meta.freemiumDaily;
-            const referralUnlocked = !!chapter?.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals;
-            const locked = !parcours.free && chapter && !chapter.meta.free && !freemium && !isActive && !referralUnlocked;
+            const locked = !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralCount });
             const done = !!stepByIndex.get(i)?.completed;
             const isNext = i === nextStepIndex && !done;
 

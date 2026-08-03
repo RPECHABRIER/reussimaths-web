@@ -1,5 +1,80 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 11) — Refonte des paliers d'accès (Pack Examen / abonnement complet / admin / idées)
+
+Décisions actées avec l'utilisateur (clarifications successives) :
+- **Pack Examen** (`plan: "special_examen"`) : n'est plus équivalent à l'abonnement
+  complet. Débloque, pour UN niveau choisi une seule fois à la souscription
+  (`subscriptions.pack_examen_level`) : le chapitre de préparation à l'examen
+  de ce niveau (Dossier Brevet / Préparation au Bac / Exercices de fin
+  d'année selon le niveau — voir `EXAM_CHAPTER_BY_LEVEL` dans
+  `src/lib/access.js`), + Automatismes en illimité pour ce niveau seulement.
+  Débloque aussi 2 chapitres bonus au choix n'importe où dans le catalogue
+  (`subscriptions.pack_examen_bonus_chapters`), fixés une seule fois et non
+  modifiables (il faut l'abonnement complet pour en débloquer d'autres).
+- **Abonnement complet** (`plan: "mensuel"`) : reste à accès total, tous
+  niveaux, sans restriction (retour en arrière sur l'idée initiale de "un
+  seul niveau", abandonnée par l'utilisateur au profit d'une protection
+  anti-partage).
+- **Anti-partage** : une seule session active à la fois par compte abonnement
+  complet (pas Pack Examen). Une nouvelle connexion sur un autre appareil
+  déconnecte automatiquement l'ancienne, avec un message explicite. L'admin
+  (Romain) est exempté pour pouvoir tester sur plusieurs appareils.
+- **Accès admin** : le compte de Romain (`romainpechabrier@gmail.com`) a un
+  accès complet à tout, sans abonnement — vérifié par email, pas de colonne
+  DB dédiée (plus simple, cohérent avec le modèle de confiance déjà en place
+  côté client pour le verrouillage des chapitres).
+- **Onglet "Idées d'amélioration"** (`/idees`) : réservé à l'abonnement
+  complet (pas Pack Examen). Un abonné peut seulement ENVOYER une idée — pas
+  de lecture, ni des siennes ni de celles des autres (pas de policy SELECT
+  pour lui). Seul l'admin voit la liste complète.
+
+### Schéma SQL (déjà collé en chat avant application, voir aussi `supabase/schema.sql`)
+- `subscriptions` : colonnes `pack_examen_level` et
+  `pack_examen_bonus_chapters` (text[]), jamais écrites directement par le
+  client.
+- Fonction RPC `set_pack_examen_choices(p_level, p_bonus_chapters)`
+  (SECURITY DEFINER) : seul moyen pour un abonné Pack Examen de fixer son
+  choix, une seule fois (vérifie plan actif + `pack_examen_level` encore
+  null + exactement 2 chapitres bonus).
+- Table `active_sessions` (clé primaire `user_id`, temps réel activé) :
+  support de l'anti-partage.
+- Table `feature_ideas` (RLS : insert réservé à `plan = 'mensuel'` actif,
+  select réservé à `auth.jwt() ->> 'email' = 'romainpechabrier@gmail.com'`).
+
+### Code
+- **Nouveau** `src/lib/access.js` : logique centralisée (`canAccessChapter`,
+  `hasUnlimitedQuota`, `isAdminUser`, `isFullAccessSubscription`,
+  `isPackExamenSubscription`, `EXAM_CHAPTER_BY_LEVEL`). Remplace la logique
+  de verrouillage auparavant dupliquée (et incohérente entre paliers) dans
+  6 pages + 2 composants.
+- Refactorés pour utiliser `canAccessChapter`/`hasUnlimitedQuota` :
+  `Niveau.jsx`, `ChapterPage.jsx`, `ParcoursOverview.jsx`, `ParcoursStep.jsx`,
+  `Amis.jsx`, `ChapterRunner.jsx`, `AutomatismesRunner.jsx`. (`Home.jsx` non
+  touché : page morte, non routée dans `App.jsx`, superseded par
+  `CycleSelect`/`Niveau`.)
+- **Nouveau** `src/components/PackExamenChoice.jsx` : écran affiché une fois
+  dans `Account.jsx` pour qu'un abonné Pack Examen choisisse son niveau + ses
+  2 chapitres bonus (appelle la RPC `set_pack_examen_choices`).
+- **Nouveau** `src/hooks/useSingleSession.js` + wiring dans `App.jsx` :
+  anti-partage via la table `active_sessions` + Supabase Realtime (pas de
+  révocation serveur du token, une Edge Function avec clé service_role
+  serait nécessaire pour ça — limite documentée dans le hook, jugée
+  suffisante pour dissuader un partage familial normal).
+- **Nouveau** `src/pages/Idees.jsx` + route `/idees` dans `App.jsx`.
+- `useProgress.js` (`useSubscription`) : ajout de `reload` (même pattern que
+  `useProfile`), nécessaire pour rafraîchir après `set_pack_examen_choices`.
+- `Account.jsx` : badge admin, résumé Pack Examen, lien vers `/idees` pour
+  les abonnés complet.
+- **Effet de bord corrigé** : le texte de la carte parrainage promettait de
+  débloquer "le chapitre Probabilités" — supprimé lors du nettoyage des
+  doublons legacy (suite 9/10). Texte neutralisé (ne promet plus rien de
+  précis). **Reste ouvert** : définir une nouvelle récompense de parrainage,
+  ou abandonner ce mécanisme — décision à prendre séparément.
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-access`,
+  0 erreur). 15 fichiers synchronisés vers les deux destinations
+  persistantes.
+
 ## 2026-08-03 (suite 10) — Suppression des 2 derniers doublons legacy (Première Spé)
 
 - Confirmation utilisateur : "on supprime tous les doublons, éventuellement

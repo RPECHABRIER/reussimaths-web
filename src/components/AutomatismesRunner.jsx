@@ -7,6 +7,7 @@ import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
+import { hasUnlimitedQuota } from "../lib/access";
 import { useAutomatismesBestTime } from "../hooks/useAutomatismesBestTime";
 import { colors, fonts, shadow } from "../theme";
 
@@ -34,15 +35,16 @@ function formatDuration(ms) {
 // ---------------------------------------------------------------------------
 export default function AutomatismesRunner({ chapter }) {
   const { user } = useAuth();
-  const { isActive } = useSubscription(user?.id);
+  const { subscription } = useSubscription(user?.id);
+  const unlimited = hasUnlimitedQuota(chapter, { user, subscription });
   const dailyLimit = chapter.meta.freemiumDaily ?? QUESTIONS_PER_SERIES;
   const quota = useDailyQuota(chapter.meta.id, dailyLimit);
-  const quotaApplies = !isActive;
+  const quotaApplies = !unlimited;
   const quotaExhausted = quotaApplies && quota.exhausted;
 
   const [phase, setPhase] = useState("themes"); // themes | running | results
   const [themeId, setThemeId] = useState(null);
-  const { best, saveIfBetter } = useAutomatismesBestTime(isActive ? user?.id : null, themeId);
+  const { best, saveIfBetter } = useAutomatismesBestTime(unlimited ? user?.id : null, themeId);
 
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -65,7 +67,7 @@ export default function AutomatismesRunner({ chapter }) {
   // Sauvegarde automatique du record (abonnés uniquement) dès qu'on arrive
   // sur l'écran de résultat, une seule fois par série.
   useEffect(() => {
-    if (phase !== "results" || !result || !isActive || !user) return;
+    if (phase !== "results" || !result || !unlimited || !user) return;
     let cancelled = false;
     saveIfBetter(result.score, result.timeMs).then(({ saved }) => {
       if (!cancelled) setJustImproved(saved);
@@ -252,7 +254,7 @@ export default function AutomatismesRunner({ chapter }) {
             </p>
             <p className="text-xs mt-1 uppercase tracking-wide" style={{ color: slate }}>{themeTitle}</p>
 
-            {isActive ? (
+            {unlimited ? (
               <p className="text-sm mt-4" style={{ color: justImproved ? green : slate }}>
                 {justImproved
                   ? "Nouveau record enregistré !"

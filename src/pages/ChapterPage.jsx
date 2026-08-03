@@ -5,13 +5,14 @@ import AutomatismesRunner from "../components/AutomatismesRunner";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
+import { canAccessChapter } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 export default function ChapterPage() {
   const { id } = useParams();
   const chapter = getChapter(id);
   const { user } = useAuth();
-  const { isActive, loading } = useSubscription(user?.id);
+  const { subscription, loading } = useSubscription(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
 
   if (!chapter) {
@@ -25,8 +26,7 @@ export default function ChapterPage() {
   }
 
   const freemium = !!chapter.meta.freemiumDaily;
-  const referralUnlocked = !!chapter.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals;
-  const locked = !chapter.meta.free && !freemium && !isActive && !referralUnlocked;
+  const locked = !canAccessChapter(chapter, { user, subscription, referralCount });
 
   if (loading && !chapter.meta.free && !freemium) {
     return (

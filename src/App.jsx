@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import LevelSelect from "./pages/LevelSelect";
 import CycleSelect from "./pages/CycleSelect";
@@ -12,17 +12,34 @@ import ChapterPage from "./pages/ChapterPage";
 import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
 import Amis from "./pages/Amis";
+import Idees from "./pages/Idees";
 import MentionsLegales from "./pages/legal/MentionsLegales";
 import CGU from "./pages/legal/CGU";
 import Confidentialite from "./pages/legal/Confidentialite";
 import { useAuth } from "./hooks/useAuth";
+import { useSubscription } from "./hooks/useProgress";
+import { useSingleSession } from "./hooks/useSingleSession";
+import { isAdminUser, isFullAccessSubscription } from "./lib/access";
+import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 
 export default function App() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
+  const { subscription } = useSubscription(user?.id);
   const location = useLocation();
   const navigate = useNavigate();
   const pathRef = useRef(location.pathname);
+  const [evictedMessage, setEvictedMessage] = useState(false);
+
+  // Anti-partage : un abonnement complet ne peut être utilisé que sur un seul
+  // appareil à la fois (voir src/hooks/useSingleSession.js) — l'admin
+  // (Romain) en est exempté pour pouvoir tester sur plusieurs appareils.
+  const singleSessionEnabled = isFullAccessSubscription(subscription) && !isAdminUser(user);
+  const handleEvicted = useCallback(() => {
+    setEvictedMessage(true);
+    signOut();
+  }, [signOut]);
+  useSingleSession(user?.id, singleSessionEnabled, handleEvicted);
 
   useEffect(() => {
     pathRef.current = location.pathname;
@@ -57,6 +74,33 @@ export default function App() {
     };
   }, [loading, user, navigate]);
 
+  if (evictedMessage) {
+    return (
+      <div
+        className="min-h-screen w-full flex flex-col items-center justify-center gap-4 p-6 text-center"
+        style={{ background: colors.bg, fontFamily: fonts.body }}
+      >
+        <p style={{ fontFamily: fonts.display, fontSize: "1.2rem", fontWeight: 800, color: colors.ink }}>
+          Session terminée
+        </p>
+        <p className="text-sm" style={{ color: colors.slate }}>
+          Une connexion a été détectée sur un autre appareil avec ce compte. L'abonnement complet ne permet qu'un seul
+          appareil connecté à la fois.
+        </p>
+        <button
+          onClick={() => {
+            setEvictedMessage(false);
+            navigate("/compte");
+          }}
+          className="py-2.5 px-6 rounded-full font-semibold text-sm"
+          style={{ backgroundColor: colors.ink, color: colors.bg }}
+        >
+          Se reconnecter
+        </button>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<CycleSelect />} />
@@ -72,6 +116,7 @@ export default function App() {
       <Route path="/compte" element={<Account />} />
       <Route path="/pseudo" element={<Onboarding />} />
       <Route path="/amis" element={<Amis />} />
+      <Route path="/idees" element={<Idees />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
       <Route path="/cgu" element={<CGU />} />
       <Route path="/confidentialite" element={<Confidentialite />} />

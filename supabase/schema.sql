@@ -209,3 +209,115 @@ create policy "challenges: from_user creates" on public.challenges
 create policy "challenges: participants update" on public.challenges
   for update using (auth.uid() = from_user or auth.uid() = to_user)
   with check (auth.uid() = from_user or auth.uid() = to_user);
+
+-- ---------------------------------------------------------------------------
+-- Paliers d'accès (2026-08-03) : Pack Examen restreint (niveau choisi + 2
+-- chapitres bonus fixés une fois), abonnement complet à accès total (tous
+-- niveaux, pas de restriction), anti-partage (1 session active par compte),
+-- et un onglet "Idées d'amélioration" réservé à l'abonnement complet, visible
+-- uniquement par l'admin (romainpechabrier@gmail.com). Voir src/lib/access.js
+-- pour toute la logique côté client.
+-- ---------------------------------------------------------------------------
+
+-- Niveau choisi (Pack Examen) et 2 chapitres bonus au choix, fixés une seule
+-- fois via la fonction set_pack_examen_choices ci-dessous (jamais modifiables
+-- directement par le client — la table subscriptions reste "service_role +
+-- lecture seule pour soi", voir policy "subscriptions: self read" plus haut).
+alter table public.subscriptions add column if not exists pack_examen_level text;
+alter table public.subscriptions add column if not exists pack_examen_bonus_chapters text[];
+
+-- Fonction appelée une seule fois par l'abonné Pack Examen (depuis
+-- src/pages/Account.jsx) pour fixer son niveau + ses 2 chapitres bonus.
+-- SECURITY DEFINER : contourne le RLS de `subscriptions` (normalement
+-- réservé au service_role) mais seulement pour la propre ligne de
+-- l'appelant (auth.uid()), et seulement si le Pack Examen est actif et que le
+-- choix n'a pas déjà été fait — garantit le "fixé une fois, non modifiable".
+create or replace function public.set_pack_examen_choices(p_level text, p_bonus_chapters text[])
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_plan text;
+  v_status text;
+  v_current_level text;
+begin
+  if v_user_id is null then
+    raise exception 'Non authentifié';
+  end if;
+
+  select plan, status, pack_examen_level
+    into v_plan, v_status, v_current_level
+    from public.subscriptions
+    where user_id = v_user_id;
+
+  if v_plan is distinct from 'special_examen' or v_status not in ('active', 'trialing') then
+    raise exception 'Pack Examen non actif';
+  end if;
+
+  if v_current_level is not null then
+    raise exception 'Choix déjà effectué, non modifiable';
+  end if;
+
+  if p_bonus_chapters is null or array_length(p_bonus_chapters, 1) is distinct from 2 then
+    raise exception 'Il faut choisir exactement 2 chapitres bonus';
+  end if;
+
+  update public.subscriptions
+    set pack_examen_level = p_level,
+        pack_examen_bonus_chapters = p_bonus_chapters
+    where user_id = v_user_id;
+end;
+$$;
+
+grant execute on function public.set_pack_examen_choices(text, text[]) to authenticated;
+
+-- Anti-partage : une seule session active par compte abonné (voir
+-- src/hooks/useSingleSession.js). Chaque appareil écrit son
+-- device_session_id ; la clé primaire (user_id) garantit qu'un seul appareil
+-- "gagne" à la fois. Les autres appareils, abonnés au temps réel sur cette
+-- table, se déconnectent dès qu'ils voient un device_session_id différent du
+-- leur.
+create table if not exists public.active_sessions (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  device_session_id uuid not null,
+  updated_at timestamptz not null default now()
+);
+alter table public.active_sessions enable row level security;
+
+create policy "active_sessions: self read/write" on public.active_sessions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Active le temps réel sur cette table pour que les autres appareils soient
+-- notifiés immédiatement (sans ça, ils ne verraient le changement qu'au
+-- prochain rechargement) :
+alter publication supabase_realtime add table public.active_sessions;
+
+-- Idées d'amélioration : réservé à l'abonnement complet ("mensuel") en
+-- écriture, visible uniquement par l'admin en lecture (pas par les autres
+-- abonnés, ni même par l'auteur après envoi — voir src/pages/Idees.jsx).
+create table if not exists public.feature_ideas (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  content text not null,
+  created_at timestamptz not null default now()
+);
+alter table public.feature_ideas enable row level security;
+
+create policy "feature_ideas: abonnement complet can submit" on public.feature_ideas
+  for insert
+  with check (
+    auth.uid() = user_id
+    and exists (
+      select 1 from public.subscriptions s
+      where s.user_id = auth.uid()
+        and s.plan = 'mensuel'
+        and s.status in ('active', 'trialing')
+    )
+  );
+
+-- Seul l'admin (email fixe) peut lire les idées soumises.
+create policy "feature_ideas: admin only read" on public.feature_ideas
+  for select using (auth.jwt() ->> 'email' = 'romainpechabrier@gmail.com');

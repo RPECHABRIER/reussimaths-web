@@ -9,6 +9,7 @@ import { useFriends } from "../hooks/useFriends";
 import { useChallenges, QUESTIONS_PER_CHALLENGE } from "../hooks/useChallenges";
 import { chapters, getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
+import { canAccessChapter } from "../lib/access";
 import MiniDuel from "../components/MiniDuel";
 import { colors, fonts, shadow } from "../theme";
 
@@ -63,7 +64,7 @@ function Card({ children }) {
 export default function Amis() {
   const { user, loading } = useAuth();
   const { profile } = useProfile(user?.id);
-  const { isActive } = useSubscription(user?.id);
+  const { subscription } = useSubscription(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
   const { incoming, outgoing, accepted, profiles, sendRequest, respond, cancelRequest } = useFriends(user?.id);
   const { challenges, createChallenge, submitResponse } = useChallenges(user?.id);
@@ -77,13 +78,8 @@ export default function Amis() {
   const [activeDuel, setActiveDuel] = useState(null); // { mode: "new"|"respond", friendId, chapterId, themeId, topicLabel, challengeId }
 
   const accessibleChapters = useMemo(
-    () =>
-      chapters.filter((c) => {
-        const freemium = !!c.meta.freemiumDaily;
-        const referralUnlocked = !!c.meta.unlockReferrals && referralCount >= c.meta.unlockReferrals;
-        return c.meta.free || freemium || isActive || referralUnlocked;
-      }),
-    [isActive, referralCount]
+    () => chapters.filter((c) => canAccessChapter(c, { user, subscription, referralCount })),
+    [user, subscription, referralCount]
   );
 
   const challengeOptions = useMemo(() => buildChallengeOptions(accessibleChapters), [accessibleChapters]);

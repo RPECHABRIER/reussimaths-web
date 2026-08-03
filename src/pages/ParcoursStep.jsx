@@ -6,6 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
+import { canAccessChapter } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 // Une étape de parcours (/parcours/:parcoursId/etape/:stepIndex) : le chapitre
@@ -20,7 +21,7 @@ export default function ParcoursStep() {
   const idx = Number(stepIndex);
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
-  const { isActive, loading: subLoading } = useSubscription(user?.id);
+  const { subscription, loading: subLoading } = useSubscription(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
   const navigate = useNavigate();
@@ -48,8 +49,7 @@ export default function ParcoursStep() {
   }
 
   const freemium = !!chapter.meta.freemiumDaily;
-  const referralUnlocked = !!chapter.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals;
-  const locked = !parcours.free && !chapter.meta.free && !freemium && !isActive && !referralUnlocked;
+  const locked = !parcours.free && !canAccessChapter(chapter, { user, subscription, referralCount });
 
   if (subLoading && !parcours.free && !chapter.meta.free && !freemium) {
     return (

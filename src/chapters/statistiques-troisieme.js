@@ -89,7 +89,7 @@ function genMedianeImpairNumeric() {
     answer,
     steps: [
       `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.`,
-      `Il y a ${n} valeurs, donc la médiane est la ${(n + 1) / 2}\\text{e}$ valeur, c'est-à-dire ${answer}.`,
+      `Il y a ${n} valeurs, donc la médiane est la ${(n + 1) / 2}\\text{e} valeur, c'est-à-dire ${answer}.`,
     ],
   };
 }
@@ -110,7 +110,7 @@ function genMedianePairNumeric() {
     tolerance: 0.02,
     steps: [
       `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.`,
-      `Il y a ${n} valeurs, donc une médiane se situe entre la ${n / 2}\\text{e}$ et la ${n / 2 + 1}\\text{e}$ valeur, c'est-à-dire entre ${v1} et ${v2}.`,
+      `Il y a ${n} valeurs, donc une médiane se situe entre la ${n / 2}\\text{e} et la ${n / 2 + 1}\\text{e} valeur, c'est-à-dire entre ${v1} et ${v2}.`,
       `\\dfrac{${v1} + ${v2}}{2} = ${fr(answer)}`,
     ],
   };
@@ -314,7 +314,7 @@ function genMedianeClasseQCM() {
     prompt: `Voici un tableau d'effectifs par classes : ${classesTexte}. Dans quelle classe se situe la médiane de cette série ?`,
     answer: options[classeMediane],
     options,
-    steps: [`L'effectif total est ${total}, donc la médiane se situe autour de la ${rangMedian}\\text{e}$ valeur.`, `En cumulant les effectifs classe par classe, on atteint ce rang dans la classe ${options[classeMediane]}.`],
+    steps: [`L'effectif total est ${total}, donc la médiane se situe autour de la ${rangMedian}\\text{e} valeur.`, `En cumulant les effectifs classe par classe, on atteint ce rang dans la classe ${options[classeMediane]}.`],
   };
 }
 

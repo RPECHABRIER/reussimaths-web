@@ -255,7 +255,7 @@ function genReconnaitreModeGenerationQCM() {
   return {
     type: "qcm",
     chapter: "Suites — Modes de génération",
-    prompt: `On définit une suite par : \\(${cas.description}\\). Quel est son mode de génération ?`,
+    prompt: `On définit une suite par : ${cas.description}. Quel est son mode de génération ?`,
     answer: cas.reponse,
     options: ["Formule explicite", "Relation de récurrence"],
     steps: [

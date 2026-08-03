@@ -155,6 +155,30 @@ export const PLANNED_CHAPTERS = {
     { id: "loi-grands-nombres-terminale-spe", title: "Loi des grands nombres", order: 15 },
     { id: "exercices-transversaux-terminale-spe", title: "Exercices transversaux", order: 16 },
   ],
+  // Sommaire officiel du programme de Première (enseignement de spécialité
+  // mathématiques, voie générale), source BO "enseignement de spécialité de
+  // mathématiques de la classe de première de la voie générale" (4 grands
+  // thèmes : Algèbre, Analyse, Géométrie, Probabilités et statistiques),
+  // plus une "Préparation au Bac" (EAM) en fin de niveau, construite à partir
+  // de sujets et corrigés réels de l'épreuve 2026. Le chapitre "Second degré"
+  // (id "second-degre", sans suffixe) existe déjà et est réutilisé tel quel.
+  // Les autres ids "-premiere-spe" évitent toute collision avec les chapitres
+  // d'autres niveaux. order = décalé de +2 par rapport à l'ordre logique du
+  // programme pour laisser la place à "Automatismes" en position 1 (voir
+  // chaque fichier de chapitre pour son meta.order réel).
+  "premiere-spe": [
+    { id: "second-degre", title: "Second degré", order: 2 },
+    { id: "suites-numeriques-premiere-spe", title: "Suites numériques, modèles discrets", order: 3 },
+    { id: "derivation-premiere-spe", title: "Dérivation", order: 4 },
+    { id: "variations-courbes-premiere-spe", title: "Variations et courbes représentatives des fonctions", order: 5 },
+    { id: "fonction-exponentielle-premiere-spe", title: "Fonction exponentielle", order: 6 },
+    { id: "trigonometrie-premiere-spe", title: "Trigonométrie", order: 7 },
+    { id: "vecteurs-produit-scalaire-premiere-spe", title: "Calcul vectoriel et produit scalaire", order: 8 },
+    { id: "geometrie-reperee-premiere-spe", title: "Géométrie repérée", order: 9 },
+    { id: "probabilites-conditionnelles-premiere-spe", title: "Probabilités conditionnelles et indépendance", order: 10 },
+    { id: "variables-aleatoires-premiere-spe", title: "Variables aléatoires réelles", order: 11 },
+    { id: "preparation-bac-premiere-spe", title: "Préparation au Bac (EAM)", order: 12 },
+  ],
 };
 
 export function getPlannedChapters(levelId) {

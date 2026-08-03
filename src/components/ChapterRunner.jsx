@@ -18,8 +18,21 @@ import { colors, fonts, shadow } from "../theme";
 // Chapitres "freemiumDaily" (ex: Automatismes) : un nombre limité de
 // questions par jour est offert sans abonnement (voir useDailyQuota), au-delà
 // un écran invite à s'abonner. Un abonnement actif rend l'accès illimité.
+//
+// Props optionnelles pour une étape de Parcours (voir src/parcours.js,
+// src/pages/ParcoursStep.jsx) — laissées vides, le composant se comporte
+// exactement comme avant (jeu libre sans fin) :
+//   - difficulty : "facile" | "standard" | "expert", transmise à
+//     chapter.generate(difficulty) (repli automatique si le chapitre n'a pas
+//     encore de tags de difficulté — voir la convention DIFFICULTY par
+//     chapitre).
+//   - sessionLength : nombre de questions de la série ; une fois atteint, un
+//     écran de fin de série remplace le prochain exercice.
+//   - onSessionComplete({ correct, total }) : appelé quand la série est
+//     terminée (bouton "Terminer" de l'écran de fin de série).
+//   - backTo : cible du lien "Retour", par défaut /niveau/:level.
 // ---------------------------------------------------------------------------
-export default function ChapterRunner({ chapter }) {
+export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo }) {
   const { user } = useAuth();
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
   const { isActive } = useSubscription(user?.id);
@@ -27,9 +40,10 @@ export default function ChapterRunner({ chapter }) {
   const quota = useDailyQuota(chapter.meta.id, dailyLimit ?? 5);
   const quotaApplies = !!dailyLimit && !isActive;
   const quotaExhausted = quotaApplies && quota.exhausted;
+  const isSession = Number.isFinite(sessionLength) && sessionLength > 0;
 
   const [mode, setMode] = useState("classique");
-  const [exercise, setExercise] = useState(() => chapter.generate());
+  const [exercise, setExercise] = useState(() => chapter.generate(difficulty));
   const [input, setInput] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedMulti, setSelectedMulti] = useState([]);
@@ -38,15 +52,22 @@ export default function ChapterRunner({ chapter }) {
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [best, setBest] = useState(0);
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [sessionDone, setSessionDone] = useState(false);
 
   const newExercise = useCallback(() => {
-    setExercise(chapter.generate());
+    if (isSession && answeredCount >= sessionLength) {
+      setSessionDone(true);
+      return;
+    }
+    setExercise(chapter.generate(difficulty));
     setInput("");
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
-  }, [chapter]);
+  }, [chapter, difficulty, isSession, answeredCount, sessionLength]);
 
   const retry = () => {
     setInput("");
@@ -59,6 +80,10 @@ export default function ChapterRunner({ chapter }) {
   const registerResult = (correct) => {
     setFeedback({ correct });
     if (quotaApplies) quota.consume();
+    if (isSession) {
+      setAnsweredCount((c) => c + 1);
+      if (correct) setCorrectCount((c) => c + 1);
+    }
     if (correct) {
       const newStreak = streak + 1;
       const bonus = newStreak % 5 === 0 ? 20 : 0;
@@ -137,10 +162,41 @@ export default function ChapterRunner({ chapter }) {
             >
               Voir les abonnements
             </Link>
-            <Link to={`/niveau/${chapter.meta.level}`} className="text-sm font-medium" style={{ color: slate }}>
+            <Link to={backTo ?? `/niveau/${chapter.meta.level}`} className="text-sm font-medium" style={{ color: slate }}>
               ← Retour aux chapitres
             </Link>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (sessionDone) {
+    const ratio = sessionLength > 0 ? correctCount / sessionLength : 0;
+    return (
+      <div
+        className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
+        style={{ background: paper, fontFamily: fonts.body }}
+      >
+        <div
+          className="max-w-md w-full text-center rounded-3xl p-7"
+          style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}
+        >
+          <Trophy size={26} color={gold} className="mx-auto mb-3" />
+          <p style={{ fontFamily: fonts.display, color: ink, fontSize: "1.3rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
+            Série terminée !
+          </p>
+          <p className="text-sm mt-2 mb-5" style={{ color: slate }}>
+            {correctCount} bonne{correctCount > 1 ? "s" : ""} réponse{correctCount > 1 ? "s" : ""} sur {sessionLength} (
+            {Math.round(ratio * 100)} %)
+          </p>
+          <button
+            onClick={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}
+            className="inline-block py-2.5 px-6 rounded-full text-sm font-semibold"
+            style={{ backgroundColor: ink, color: paper }}
+          >
+            Terminer
+          </button>
         </div>
       </div>
     );
@@ -157,7 +213,7 @@ export default function ChapterRunner({ chapter }) {
     >
       <div className="w-full max-w-md">
         <Link
-          to={`/niveau/${chapter.meta.level}`}
+          to={backTo ?? `/niveau/${chapter.meta.level}`}
           className="inline-flex items-center gap-1 text-xs font-semibold mb-4"
           style={{ color: isJeu ? "#8b9ec4" : slate }}
         >

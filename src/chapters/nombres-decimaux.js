@@ -557,7 +557,41 @@ const GENERATORS = [
   genProblemeArgentSuffisant,
 ];
 
-function generate() {
+// ---------- Difficulté (pour les Parcours — voir src/parcours.js) ----------
+// Classe chaque générateur en "facile" / "standard" / "expert" SANS toucher à
+// son code : une simple table de correspondance nom de fonction -> niveau.
+// generate(difficulty) pioche alors dans le sous-ensemble correspondant ; sans
+// argument (usage historique, hors Parcours), le comportement est inchangé
+// (pioche uniforme dans tous les générateurs). Un générateur absent de la
+// table est traité comme "standard" par défaut.
+const DIFFICULTY = {
+  genChiffrePositionDecimal: "facile",
+  genFractionDecimaleVersDecimal: "standard",
+  genDecompositionSommeDecimale: "facile",
+  genLireAbscisseDecimale: "standard",
+  genPlacerPointQCM: "standard",
+  genComparerDecimaux: "facile",
+  genEncadrerEntierConsecutif: "facile",
+  genRangerDecimaux: "standard",
+  genEcritureLettresDecimal: "standard",
+  genVraiFauxComparaison: "facile",
+  genProblemeCocheQuestions: "expert",
+  genProblemeVraiFauxAffirmations: "expert",
+  genProblemeRecetteSuffisante: "expert",
+  genProblemeCompletePhrase: "standard",
+  genProblemeDifferenceLongueur: "standard",
+  genProblemeTrouverPlusGrand: "standard",
+  genProblemeTrouverPlusPetit: "standard",
+  genProblemeTarifPoids: "expert",
+  genProblemeRubanRestant: "standard",
+  genProblemeArgentSuffisant: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

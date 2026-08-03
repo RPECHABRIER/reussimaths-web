@@ -1,7 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import LevelSelect from "./pages/LevelSelect";
+import CycleSelect from "./pages/CycleSelect";
+import CycleLevels from "./pages/CycleLevels";
 import Niveau from "./pages/Niveau";
+import ParcoursSelect from "./pages/ParcoursSelect";
+import ParcoursDiagnostic from "./pages/ParcoursDiagnostic";
+import ParcoursOverview from "./pages/ParcoursOverview";
+import ParcoursStep from "./pages/ParcoursStep";
 import ChapterPage from "./pages/ChapterPage";
 import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
@@ -53,8 +59,15 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LevelSelect />} />
+      <Route path="/" element={<CycleSelect />} />
+      <Route path="/niveaux" element={<LevelSelect />} />
+      <Route path="/college" element={<CycleLevels />} />
+      <Route path="/lycee" element={<CycleLevels />} />
       <Route path="/niveau/:levelId" element={<Niveau />} />
+      <Route path="/parcours/niveau/:levelId/diagnostic" element={<ParcoursDiagnostic />} />
+      <Route path="/parcours/niveau/:levelId" element={<ParcoursSelect />} />
+      <Route path="/parcours/:parcoursId/etape/:stepIndex" element={<ParcoursStep />} />
+      <Route path="/parcours/:parcoursId" element={<ParcoursOverview />} />
       <Route path="/chapitre/:id" element={<ChapterPage />} />
       <Route path="/compte" element={<Account />} />
       <Route path="/pseudo" element={<Onboarding />} />

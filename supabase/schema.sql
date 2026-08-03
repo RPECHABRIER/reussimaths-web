@@ -110,6 +110,23 @@ create table if not exists public.automatismes_best_times (
   primary key (user_id, theme_id)
 );
 
+-- Progression par étape de parcours (voir src/parcours.js pour la définition
+-- des parcours eux-mêmes — débutant/avancé/expert par niveau + "découverte" —
+-- qui vit en dur dans le code, pas en base, pour rester facile à ajuster
+-- sans migration). Une ligne = une étape (chapitre joué en série notée)
+-- terminée. Voir src/hooks/useParcoursProgress.js.
+create table if not exists public.parcours_progress (
+  user_id uuid references auth.users (id) on delete cascade,
+  parcours_id text not null,
+  step_index integer not null,
+  completed boolean not null default false,
+  score integer not null default 0,
+  total integer not null default 0,
+  completed_at timestamptz,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, parcours_id, step_index)
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -121,8 +138,12 @@ alter table public.level_votes enable row level security;
 alter table public.referrals enable row level security;
 alter table public.challenges enable row level security;
 alter table public.automatismes_best_times enable row level security;
+alter table public.parcours_progress enable row level security;
 
 create policy "automatismes_best_times: self read/write" on public.automatismes_best_times
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create policy "parcours_progress: self read/write" on public.parcours_progress
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create policy "profiles: self read/write" on public.profiles

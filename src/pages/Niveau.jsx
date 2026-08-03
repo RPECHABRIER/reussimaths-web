@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { getChaptersByLevel } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { getPlannedChapters } from "../plannedChapters";
+import { getParcoursForLevel } from "../parcours";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferrals } from "../hooks/useReferrals";
@@ -19,6 +20,7 @@ export default function Niveau() {
   const { levelId } = useParams();
   const level = getLevel(levelId);
   const realChapters = getChaptersByLevel(levelId);
+  const parcoursList = getParcoursForLevel(levelId);
   const realIds = new Set(realChapters.map((c) => c.meta.id));
   const plannedChapters = getPlannedChapters(levelId).filter((p) => !realIds.has(p.id));
   const { user } = useAuth();
@@ -48,7 +50,7 @@ export default function Niveau() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
-        <Link to="/" className="text-sm font-medium" style={{ color: colors.ink }}>
+        <Link to={level.cycle ? `/${level.cycle}` : "/"} className="text-sm font-medium" style={{ color: colors.ink }}>
           ← Changer de niveau
         </Link>
 
@@ -57,6 +59,30 @@ export default function Niveau() {
             {level.label}
           </h1>
         </div>
+
+        {parcoursList.length > 0 && (
+          <Link to={`/parcours/niveau/${levelId}`}>
+            <div
+              className="rounded-3xl px-5 py-4 flex items-center gap-3 mb-5 transition-transform active:scale-[0.98]"
+              style={{ backgroundColor: colors.card, boxShadow: shadow.raised }}
+            >
+              <div
+                className="flex items-center justify-center rounded-2xl flex-shrink-0"
+                style={{ width: 44, height: 44, backgroundColor: `${colors.gold}18` }}
+              >
+                <Sparkles size={20} color={colors.gold} />
+              </div>
+              <div>
+                <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>
+                  Suivre un parcours
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
+                  Débutant, avancé, expert — avec ta progression en %
+                </p>
+              </div>
+            </div>
+          </Link>
+        )}
 
         <div className="flex flex-col gap-3">
           {rows.map((row) => {

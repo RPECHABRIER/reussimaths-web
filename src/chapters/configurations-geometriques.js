@@ -409,7 +409,28 @@ const GENERATORS = [
   genProblemeVolumeCubesSimple,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTroisiemeCoteQCM: "facile",
+  genTriangleParticulierNatureQCM: "facile",
+  genAngleTriangleIsocele: "facile",
+  genAngleTriangleEquilateral: "facile",
+  genTriangleExisteInegalite: "standard",
+  genAngleTriangleRectangleIsocele: "standard",
+  genTroisiemeAngleTriangleGeneral: "standard",
+  genAlignementViaAnglesQCM: "standard",
+  genProblemeIsoceleRectangleCombine: "expert",
+  genProblemeCocheQuestionsTriangle: "expert",
+  genProblemeVraiFauxTriangleConstructible: "expert",
+  genProblemeAnglesComplementairesBissectrice: "expert",
+  genProblemeDeNombrePoints: "expert",
+  genProblemeVolumeCubesSimple: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

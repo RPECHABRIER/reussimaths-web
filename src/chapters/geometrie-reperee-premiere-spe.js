@@ -369,7 +369,29 @@ const GENERATORS = [
   genDistancePointDroiteAxeNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genLireVecteurNormalNumeric: "facile",
+  genEquationCercleR2Numeric: "facile",
+  genCentreRayonCanoniqueNumeric: "facile",
+  genProjectionDroiteHorizontaleNumeric: "facile",
+  genProjectionDroiteVerticaleNumeric: "facile",
+  genEquationDroitePointVecteurNormalNumeric: "standard",
+  genVerifierVecteurNormalQCM: "standard",
+  genAppartenanceCercleQCM: "standard",
+  genVecteurNormalDepuisDirecteurNumeric: "standard",
+  genRayonCerclePassantParPointNumeric: "standard",
+  genVraiFauxGeometrieRepereeQCM: "standard",
+  genCentreEquationDeveloppeeNumeric: "expert",
+  genRayonEquationDeveloppeeNumeric: "expert",
+  genReconnaitreEquationCercleQCM: "expert",
+  genDistancePointDroiteAxeNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

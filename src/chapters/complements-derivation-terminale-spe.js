@@ -321,7 +321,29 @@ const GENERATORS = [
   genBorneDomaineDeriveeNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genDeriveePuissanceNumeric: "facile",
+  genDeriveeRacineNumeric: "facile",
+  genTangenteValeurNumeric: "facile",
+  genDeriveeRacineFormuleQCM: "facile",
+  genDeriveePuissanceFormuleQCM: "facile",
+  genDeriveeExponentielleAffineQCM: "standard",
+  genDeriveeSecondeNumeric: "standard",
+  genSigneConvexiteQCM: "standard",
+  genPositionRelativeQCM: "standard",
+  genVraiFauxConvexiteQCM: "standard",
+  genValeurDeriveeProduitSimpleNumeric: "standard",
+  genPointInflexionNumeric: "expert",
+  genNombrePointsInflexionQCM: "expert",
+  genLienDeriveeSecondeVariationDeriveeQCM: "expert",
+  genBorneDomaineDeriveeNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

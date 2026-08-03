@@ -347,7 +347,29 @@ const GENERATORS = [
   genEffectifDepuisProbabiliteConditionnelleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genFrequenceMarginaleNumeric: "facile",
+  genCompleterCaseTableauNumeric: "facile",
+  genProbabiliteContraireNumeric: "facile",
+  genFrequenceConditionnelleNumeric: "standard",
+  genProbabiliteConditionnelleNumeric: "standard",
+  genProbabiliteIntersectionNumeric: "standard",
+  genProbabiliteCheminArbreNumeric: "standard",
+  genProbabiliteManquanteBrancheNumeric: "standard",
+  genVraiFauxProbabilitesQCM: "standard",
+  genEffectifDepuisProbabiliteConditionnelleNumeric: "standard",
+  genVerifierIndependanceQCM: "expert",
+  genProbabiliteTotaleNumeric: "expert",
+  genRepetitionExperiencesNumeric: "expert",
+  genProbabiliteAuMoinsUnNumeric: "expert",
+  genComparerFrequenceMarginaleConditionnelleQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

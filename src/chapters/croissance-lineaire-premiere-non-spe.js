@@ -331,7 +331,29 @@ const GENERATORS = [
   genLectureGraphiqueImageNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genSigneRaisonQCM: "facile",
+  genRaisonDepuisDeuxTermesNumeric: "facile",
+  genTermeSuivantRecurrenceNumeric: "facile",
+  genDiscretOuContinuQCM: "facile",
+  genLectureGraphiqueImageNumeric: "facile",
+  genTermeExpressionExpliciteNumeric: "standard",
+  genPremierTermeDepuisRaisonNumeric: "standard",
+  genModeliserRaisonContexteNumeric: "standard",
+  genModeliserCalculerTermeNumeric: "standard",
+  genCoefficientDirecteurDeuxPointsNumeric: "standard",
+  genEcrireExpressionExpliciteQCM: "standard",
+  genVraiFauxSuitesQCM: "standard",
+  genResoudreInequationSeuilNumeric: "expert",
+  genModeliserResoudreInequationNumeric: "expert",
+  genRaisonDepuisDeuxTermesNonConsecutifsNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -317,7 +317,29 @@ const GENERATORS = [
   genVraiFauxCalculQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genEcritureScientifiqueQCM: "facile",
+  genVolumeConeNumeric: "facile",
+  genProgrammeCalculNumeric: "standard",
+  genProgrammeLitteralNumeric: "standard",
+  genIdentiteRemarquableNumeric: "standard",
+  genCompararTarifsEgaliteNumeric: "standard",
+  genFonctionAffineImageAntecedentNumeric: "standard",
+  genMoyennePondereeBrevetNumeric: "standard",
+  genProbabiliteBrevetNumeric: "standard",
+  genEquationParenthesesNumeric: "standard",
+  genVraiFauxCalculQCM: "standard",
+  genAireComposeeEquationNumeric: "expert",
+  genCompararTarifsBudgetNumeric: "expert",
+  genPythagoreTrigoBrevetNumeric: "expert",
+  genPourcentageEvolutionBrevetNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

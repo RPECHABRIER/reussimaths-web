@@ -317,7 +317,28 @@ const GENERATORS = [
   genSymetriquePointEspaceNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genVolumePyramideNumeric: "facile",
+  genVolumeConeNumeric: "facile",
+  genVocabulaireConeQCM: "facile",
+  genElementsPyramideNumeric: "facile",
+  genOrdreCoordonneesQCM: "facile",
+  genAireBaseConeNumeric: "standard",
+  genGeneratriceConeNumeric: "standard",
+  genComparerVolumesQCM: "standard",
+  genCoordonneesSommetPaveNumeric: "standard",
+  genMilieuSegmentEspaceNumeric: "standard",
+  genSymetriquePointEspaceNumeric: "standard",
+  genProblemeVolumeConeContextualiseNumeric: "expert",
+  genPatronConeArcNumeric: "expert",
+  genPatronConeAngleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

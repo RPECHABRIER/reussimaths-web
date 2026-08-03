@@ -313,7 +313,29 @@ const GENERATORS = [
   genEcartInterquartileReviewNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genFonctionAffineReviewNumeric: "facile",
+  genResoudreEquationAffineReviewNumeric: "facile",
+  genComparerCarresReviewQCM: "facile",
+  genDistanceReviewNumeric: "facile",
+  genCoordonneesVecteurReviewNumeric: "facile",
+  genMilieuReviewNumeric: "facile",
+  genColineariteReviewQCM: "standard",
+  genPointSurDroiteReviewQCM: "standard",
+  genTauxEvolutionReviewNumeric: "standard",
+  genMedianeReviewNumeric: "standard",
+  genProbabiliteReviewNumeric: "standard",
+  genSensVariationReviewQCM: "standard",
+  genAntecedentsCarreReviewQCM: "standard",
+  genEvolutionsSuccessivesReviewNumeric: "expert",
+  genEcartInterquartileReviewNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

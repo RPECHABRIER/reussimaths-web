@@ -184,7 +184,21 @@ const GENERATORS = [
   genValeurExpressionLitteraleSimplePuissance,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerCarreCube: "facile",
+  genEcriturePuissance: "facile",
+  genPuissanceDeDixEcriture: "facile",
+  genAireCarreCote: "facile",
+  genVolumeCubeArete: "facile",
+  genCalculerExpressionPuissancesPriorites: "standard",
+  genValeurExpressionLitteraleSimplePuissance: "standard",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

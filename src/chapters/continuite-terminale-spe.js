@@ -301,7 +301,29 @@ const GENERATORS = [
   genEtapeDichotomieQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTVIGarantieSolutionQCM: "facile",
+  genContinuiteFonctionsUsuellesQCM: "facile",
+  genIntervalleContientSolutionQCM: "facile",
+  genInitialisationRecurrenceQCM: "facile",
+  genCalculerProduitImagesNumeric: "facile",
+  genCorollaireTVIUniciteQCM: "standard",
+  genOperationsFonctionsContinuesQCM: "standard",
+  genNombreSolutionsTableauVariationsNumeric: "standard",
+  genNombreSolutionsTableauEnVNumeric: "standard",
+  genVraiFauxTVIQCM: "standard",
+  genEtapeDichotomieQCM: "standard",
+  genSigneProduitDichotomieQCM: "expert",
+  genPointFixeSuiteRecurrenteNumeric: "expert",
+  genContinueNonDerivableQCM: "expert",
+  genNombreSolutionsDeuxIntervallesNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

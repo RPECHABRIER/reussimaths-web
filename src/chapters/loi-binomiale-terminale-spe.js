@@ -291,7 +291,29 @@ const GENERATORS = [
   genRelationVarianceEsperanceNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genParametresLoiBinomialeNumeric: "facile",
+  genEsperanceNumeric: "facile",
+  genFormuleProbabiliteQCM: "facile",
+  genIdentifierSuccesQCM: "facile",
+  genProbabiliteComplementaireNumeric: "facile",
+  genVarianceNumeric: "standard",
+  genEcartTypeNumeric: "standard",
+  genProbabilitePonctuelleNumeric: "standard",
+  genCoefficientBinomialSymetrieNumeric: "standard",
+  genVraiFauxLoiBinomialeQCM: "standard",
+  genIdentifierLoiBinomialeQCM: "standard",
+  genTrouverNNumeric: "expert",
+  genTrouverPNumeric: "expert",
+  genFormuleVarianceQCM: "expert",
+  genRelationVarianceEsperanceNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

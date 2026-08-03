@@ -506,7 +506,36 @@ const GENERATORS = [
   genProblemeSegmentPointFractionAB,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genNombreEstPremierQCM: "facile",
+  genNombreDiviseursDunPremier: "facile",
+  genDiviseurDunNombrePremierQCM: "facile",
+  genSimplifierFractionAuMaximum: "facile",
+  genComparerFractionUniteEtDemiQCM: "facile",
+  genCarsEtPlaces: "standard",
+  genRemplirBoites: "standard",
+  genPartageEquitableAvecReste: "standard",
+  genNombreEntreBornesDivisible: "standard",
+  genPlusGrandMultipleSousContrainte: "standard",
+  genFormuleCalculPrimalite: "standard",
+  genTransformerDivisionDecimaleEnEntiere: "standard",
+  genFacteurAgrandissementRectangle: "standard",
+  genComparerFractionsDenominateursDifferentsQCM: "standard",
+  genRangerFractionsCroissantQCM: "standard",
+  genAdditionnerFractionsDenominateursDifferentsLCM: "standard",
+  genSoustraireFractionsDenominateursDifferentsLCM: "standard",
+  genMosaiqueCarreauxPgcd: "expert",
+  genRubanDiviseurDecimal: "expert",
+  genNombreStylosAchetes: "expert",
+  genProblemeSachetsFractionSomme: "expert",
+  genProblemeSegmentPointFractionAB: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

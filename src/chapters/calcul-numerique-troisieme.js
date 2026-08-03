@@ -386,7 +386,30 @@ const GENERATORS = [
   genEcritureScientifiqueExposantNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genAdditionSoustractionFractionsNumeric: "facile",
+  genMultiplicationFractionsNumeric: "facile",
+  genDivisionFractionsNumeric: "facile",
+  genCalculerPuissanceSimpleNumeric: "facile",
+  genEstCarreParfaitQCM: "facile",
+  genPrioriteFractionsNumeric: "standard",
+  genPuissanceNegativeNumeric: "standard",
+  genPrioritePuissanceSommeNumeric: "standard",
+  genPrioritePuissanceProduitNumeric: "standard",
+  genProduitPuissancesMemeBaseNumeric: "standard",
+  genQuotientPuissancesMemeBaseNumeric: "standard",
+  genPuissanceDePuissanceNumeric: "standard",
+  genProduitMemeExposantNumeric: "standard",
+  genEncadrementRacineCarreeNumeric: "standard",
+  genFractionResteProblemeNumeric: "expert",
+  genEcritureScientifiqueExposantNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

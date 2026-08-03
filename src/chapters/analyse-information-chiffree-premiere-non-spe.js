@@ -316,7 +316,29 @@ const GENERATORS = [
   genComparerProportionsQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTotalMarginalTableauCroiseNumeric: "facile",
+  genTauxReussiteNumeric: "facile",
+  genVerifierDiagrammeCirculaireQCM: "facile",
+  genVerifierDiagrammeBatonsQCM: "facile",
+  genEffectifDepuisPourcentageNumeric: "facile",
+  genCompleterCaseTableauCroiseNumeric: "standard",
+  genProportionTableauCroiseNumeric: "standard",
+  genProportionConditionnelleNumeric: "standard",
+  genAngleSecteurCirculaireNumeric: "standard",
+  genQualifierCorrelationQCM: "standard",
+  genTauxEvolutionContexteNumeric: "standard",
+  genVraiFauxTableauCroiseQCM: "standard",
+  genEcartPointsDePourcentageNumeric: "expert",
+  genPourcentageOuPointDePourcentageQCM: "expert",
+  genComparerProportionsQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

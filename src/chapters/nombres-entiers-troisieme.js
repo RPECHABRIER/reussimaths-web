@@ -471,7 +471,32 @@ const GENERATORS = [
   genConjectureNombrePremierQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genDivisionEuclidienneNumeric: "facile",
+  genVerifierDivisionEuclidienneQCM: "facile",
+  genCritereDivisibiliteQCM: "facile",
+  genCompterNombresPremiersListeNumeric: "facile",
+  genEstPremierQCM: "facile",
+  genPGCDNumeric: "facile",
+  genFractionIrreductibleQCM: "facile",
+  genPlusPetitNombreAAjouterNumeric: "standard",
+  genPlusPetitDiviseurPremierNumeric: "standard",
+  genCalculerProduitFacteursPremiersNumeric: "standard",
+  genExposantDecompositionNumeric: "standard",
+  genSimplifierFractionDecompositionNumeric: "standard",
+  genConjectureNombrePremierQCM: "standard",
+  genDivisionEuclidienneProblemeNumeric: "expert",
+  genNombreDeDiviseursNumeric: "expert",
+  genPGCDProblemeNumeric: "expert",
+  genPGCDCarrelageNumeric: "expert",
+  genProgrammeCalculPariteGeneraleQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

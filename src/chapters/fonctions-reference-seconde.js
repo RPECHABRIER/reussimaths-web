@@ -371,7 +371,29 @@ const GENERATORS = [
   genPariteFonctionReferenceQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genImageFonctionReferenceNumeric: "facile",
+  genSensVariationCarreQCM: "facile",
+  genSensVariationInverseQCM: "facile",
+  genIdentifierFonctionProprieteQCM: "facile",
+  genAntecedentsCarreQCM: "standard",
+  genAntecedentsAutresFonctionsQCM: "standard",
+  genComparerCarresQCM: "standard",
+  genComparerRacinesQCM: "standard",
+  genComparerInversesQCM: "standard",
+  genComparerCubesQCM: "standard",
+  genResoudreEquationCarreQCM: "standard",
+  genResoudreEquationCubeNumeric: "standard",
+  genResoudreEquationInverseNumeric: "standard",
+  genResoudreInequationCarreQCM: "expert",
+  genPariteFonctionReferenceQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

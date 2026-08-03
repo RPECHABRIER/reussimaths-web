@@ -639,7 +639,43 @@ const GENERATORS = [
   genEstimationAireRecouvrementParallelogrammeNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genSymetriqueConservationLongueur: "facile",
+  genSymetriqueConservationAire: "facile",
+  genSymetriqueConservationAngle: "facile",
+  genCentresDeSymetrieFigureUsuelleQCM: "facile",
+  genAnglesOpposesParSommetNumeric: "facile",
+  genAnglesAdjacentsSupplementairesNumeric: "facile",
+  genCultureEuclideQCM: "facile",
+  genParallelogrammeCotesOpposesEgauxNumeric: "facile",
+  genParallelogrammeDiagonalesMilieuNumeric: "facile",
+  genParallelogrammeAnglesOpposesEgauxNumeric: "facile",
+  genAireParallelogrammeBaseHauteur: "facile",
+  genPerimetreParallelogramme: "facile",
+  genSymetriqueCoordonneesAbscisseOrdonnee: "standard",
+  genFiguresAvecCentreDeSymetrieMulti: "standard",
+  genBissectriceMoitieNumeric: "standard",
+  genAnglesAlternesInternesNumeric: "standard",
+  genAnglesCorrespondantsNumeric: "standard",
+  genDroitesParallelesTestAnglesQCM: "standard",
+  genPerpendiculairesMemeDroiteParallelesQCM: "standard",
+  genParallelogrammeAnglesConsecutifsSupplementairesNumeric: "standard",
+  genReconnaitreParallelogrammeCritereQCM: "standard",
+  genCasParticulierParallelogrammeQCM: "standard",
+  genAireParallelogrammeTrouverHauteur: "standard",
+  genReconnaitreCasParticulierViaDiagonalesQCM: "standard",
+  genDemonstrationLosangeCotesEgauxQCM: "expert",
+  genDemonstrationRectangleAngleDroitQCM: "expert",
+  genDemonstrationTriangleIsocelesDiagonalesRectangleQCM: "expert",
+  genAireParallelogrammeDemiDisquesComposeeNumeric: "expert",
+  genEstimationAireRecouvrementParallelogrammeNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

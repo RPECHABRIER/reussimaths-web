@@ -334,7 +334,30 @@ const GENERATORS = [
   genAireRectangleLitteralNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genEvaluerExpressionLineaireNumeric: "facile",
+  genReduireExpressionLineaireCoefficientNumeric: "facile",
+  genDevelopperSimpleDistributiviteConstanteNumeric: "facile",
+  genEvaluerExpressionSigneQCM: "facile",
+  genTraduireExpressionLitteraleQCM: "standard",
+  genEvaluerExpressionQuadratiqueNumeric: "standard",
+  genProgrammeCalculLitteralQCM: "standard",
+  genProgrammeCalculEvaluerNumeric: "standard",
+  genReduireExpressionQuadratiqueCoefficientNumeric: "standard",
+  genDevelopperSigneDevantParentheseQCM: "standard",
+  genFactoriserFacteurCommunNumeric: "standard",
+  genFactoriserParentheseCommuneNumeric: "standard",
+  genVraiFauxFactorisationQCM: "standard",
+  genPerimetreRectangleLitteralNumeric: "standard",
+  genAireRectangleLitteralNumeric: "standard",
+  genDevelopperDoubleDistributiviteCoefficientNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

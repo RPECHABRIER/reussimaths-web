@@ -257,7 +257,26 @@ const GENERATORS = [
   genFonctionPourcentageReductionNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genImageParFormuleLineaireNumeric: "facile",
+  genFonctionDepuisTableauLireNumeric: "facile",
+  genImageParFormuleQuadratiqueNumeric: "standard",
+  genAntecedentParFormuleLineaireNumeric: "standard",
+  genAppartientCourbeQCM: "standard",
+  genImageFormuleCubeNumeric: "standard",
+  genFonctionDepuisTableauAntecedentNumeric: "standard",
+  genProportionnaliteOuNonQCM: "standard",
+  genPerimetreAireRectangleFonctionNumeric: "standard",
+  genErreurCalculImageQCM: "expert",
+  genQuelleFormuleCorrespondQCM: "expert",
+  genFonctionPourcentageReductionNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

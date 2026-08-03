@@ -282,7 +282,29 @@ const GENERATORS = [
   genPenteSecanteNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTauxVariationCarreNumeric: "facile",
+  genNombreDeriveNumeric: "facile",
+  genDeriveePuissanceFormuleQCM: "facile",
+  genDeriveeInverseQCM: "facile",
+  genDeriveeRacineCarreeQCM: "facile",
+  genTauxVariationImagesNumeric: "standard",
+  genEquationTangenteNumeric: "standard",
+  genDeriveeSommeNumeric: "standard",
+  genDeriveeProduitFormuleQCM: "standard",
+  genSensVariationDeriveeQCM: "standard",
+  genExtremumTangenteHorizontaleQCM: "standard",
+  genPenteSecanteNumeric: "standard",
+  genApproximationLineaireNumeric: "expert",
+  genDeriveeQuotientFormuleQCM: "expert",
+  genVraiFauxDerivationQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

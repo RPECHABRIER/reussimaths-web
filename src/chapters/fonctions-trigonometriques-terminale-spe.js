@@ -321,7 +321,29 @@ const GENERATORS = [
   genValeurCarreSinCosNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genValeurRemarquableQCM: "facile",
+  genSigneCosSinQCM: "facile",
+  genDeriveeSinAffineFormuleQCM: "facile",
+  genDeriveeCosAffineFormuleQCM: "facile",
+  genValeurCarreSinCosNumeric: "facile",
+  genPariteQCM: "standard",
+  genPeriodeFormuleQCM: "standard",
+  genComparerCosCroissanceQCM: "standard",
+  genVraiFauxTrigGeneralQCM: "standard",
+  genNombreDeriveeEnZeroNumeric: "standard",
+  genValeurFonctionPeriodiqueNumeric: "standard",
+  genFormuleReductionQCM: "expert",
+  genDeriveeProduitTrigQCM: "expert",
+  genLimiteRemarquableTrigQCM: "expert",
+  genFormuleAdditionQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -423,7 +423,29 @@ const GENERATORS = [
   genDistanceSegmentAxeAligneNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCoordonneesMilieuNumeric: "facile",
+  genCalculDistanceNumeric: "facile",
+  genTypeRepereDepuisDescriptionQCM: "facile",
+  genDistanceOrigineNumeric: "facile",
+  genSymetriqueOrigineNumeric: "facile",
+  genReconnaitreAlignementQCM: "standard",
+  genReconnaitreParallelogrammeQCM: "standard",
+  genVraiFauxParalleleAxeQCM: "standard",
+  genTriangleRectangleReciproquePythagoreQCM: "standard",
+  genPerimetreTriangleNumeric: "standard",
+  genComparerDistancesQCM: "standard",
+  genCentreGraviteNumeric: "standard",
+  genTroisiemeSommetParallelogrammeNumeric: "expert",
+  genPointMilieuVersACoordinateNumeric: "expert",
+  genDistanceSegmentAxeAligneNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

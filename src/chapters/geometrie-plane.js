@@ -255,7 +255,26 @@ const GENERATORS = [
   genPavageAireTotaleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genAngleInconnuTriangleNumeric: "facile",
+  genTranslationConserveLongueurNumeric: "facile",
+  genTranslationConserveAngleNumeric: "facile",
+  genTranslationConserveAireNumeric: "facile",
+  genTransformationTypeQCM: "facile",
+  genAngleInconnuTriangleIsoceleNumeric: "standard",
+  genCritereEgaliteTrianglesQCM: "standard",
+  genTriangleEgalNecessaireQCM: "standard",
+  genQuadrilatereTranslationQCM: "standard",
+  genImageHexagoneReguliereNumeric: "standard",
+  genProblemeFriseTranslationNumeric: "expert",
+  genPavageAireTotaleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

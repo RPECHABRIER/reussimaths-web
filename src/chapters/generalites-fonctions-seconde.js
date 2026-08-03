@@ -333,7 +333,29 @@ const GENERATORS = [
   genResoudreFEgalGTableauNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genImageFormuleAffineNumeric: "facile",
+  genVocabulaireImageQCM: "facile",
+  genVocabulaireAntecedentQCM: "facile",
+  genLectureTableauImageNumeric: "facile",
+  genModeRepresentationQCM: "facile",
+  genImageFormuleQuadratiqueNumeric: "standard",
+  genAntecedentFormuleAffineNumeric: "standard",
+  genNombreAntecedentsTableauQCM: "standard",
+  genEnsembleDefinitionFractionQCM: "standard",
+  genEnsembleDefinitionRacineQCM: "standard",
+  genFonctionPaireQCM: "standard",
+  genFonctionImpaireQCM: "standard",
+  genPointAppartientCourbeQCM: "standard",
+  genResoudreFactorisationCubiqueQCM: "expert",
+  genResoudreFEgalGTableauNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

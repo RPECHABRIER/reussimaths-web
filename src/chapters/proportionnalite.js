@@ -413,7 +413,32 @@ const GENERATORS = [
   genPourcentageInverseTrouverNombreInitial,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCoefficientDeProportionnalite: "facile",
+  genEstTableauProportionnel: "facile",
+  genCompleterTableauProportionnaliteManquant: "facile",
+  genQuatriemeProportionnelleGenerique: "standard",
+  genPourcentageEffectifCombien: "standard",
+  genProportionEnPourcentageDepuisEffectifs: "standard",
+  genRemisePourcentagePrixFinal: "standard",
+  genEchelleCarteDistance: "standard",
+  genConsommationEssenceProportionnelle: "standard",
+  genVraiFauxProportionnaliteConceptuel: "standard",
+  genRemiseAchatMultiple: "expert",
+  genRecetteProportionnelle: "expert",
+  genPeintureSurfaceTotale: "expert",
+  genPartageEquitableLots: "expert",
+  genMeilleurLotAchat: "expert",
+  genPourcentageResultatMultiStatements: "expert",
+  genPourcentageComparerDeuxEcoles: "expert",
+  genPourcentageInverseTrouverNombreInitial: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

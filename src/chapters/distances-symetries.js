@@ -404,7 +404,30 @@ const GENERATORS = [
   genProblemeDureeSimple,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genRayonDiametre: "facile",
+  genPositionCercleDisque: "facile",
+  genCerclePointsSurCercle: "facile",
+  genProprieteSymetrieLongueur: "facile",
+  genProprieteSymetrieAngle: "facile",
+  genComparerLongueursQCM: "facile",
+  genConvertirContenances: "facile",
+  genMilieuSegmentAdditivite: "standard",
+  genAdditiviteAlignes: "standard",
+  genMediatriceEquidistance: "standard",
+  genTriangleIsocelesMediatrice: "standard",
+  genVraiFauxSymetrieMediatrice: "standard",
+  genSymetriqueReciproque: "standard",
+  genFigureCodageSegmentsEgaux: "standard",
+  genProblemeCocheQuestionsDistances: "expert",
+  genProblemeDureeSimple: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -339,7 +339,29 @@ const GENERATORS = [
   genMoyennePondereeSousGroupesNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genMoyennePondereeSimpleNumeric: "facile",
+  genMedianeEffectifImpairNumeric: "facile",
+  genCaracterePopulationQCM: "facile",
+  genEffectifTotalTableauNumeric: "facile",
+  genFrequenceNumeric: "facile",
+  genCategorieExtremeQCM: "facile",
+  genMoyennePondereeCoefficientsNumeric: "standard",
+  genComparerMoyennesQCM: "standard",
+  genMedianeEffectifPairNumeric: "standard",
+  genInterpreterMedianeQCM: "standard",
+  genAngleSecteurCirculaireNumeric: "standard",
+  genEffectifDepuisAngleNumeric: "standard",
+  genPourcentageDepuisAngleNumeric: "standard",
+  genAngleManquantCercleNumeric: "standard",
+  genMoyennePondereeSousGroupesNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

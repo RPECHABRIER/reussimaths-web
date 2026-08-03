@@ -304,7 +304,29 @@ const GENERATORS = [
   genCoefficientMultiplicateurReciproqueNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genAutoTermeSuivantGeometriqueNumeric: "facile",
+  genSensVariationSuiteGeometriqueQCM: "facile",
+  genSensVariationExponentielleQCM: "facile",
+  genTermeAnterieurNumeric: "facile",
+  genPremierTermeGraphiqueNumeric: "facile",
+  genRaisonDepuisDeuxTermesGeometriqueNumeric: "standard",
+  genTermeExpressionExpliciteGeometriqueNumeric: "standard",
+  genCoefficientMultiplicateurGlobalNumeric: "standard",
+  genModeliserRaisonEvolutionNumeric: "standard",
+  genModeliserCalculerTermeGeometriqueNumeric: "standard",
+  genVraiFauxGeometriqueQCM: "standard",
+  genTauxMoyenParPeriodeNumeric: "expert",
+  genPiegeTauxGlobalQCM: "expert",
+  genComparerCroissanceQCM: "expert",
+  genCoefficientMultiplicateurReciproqueNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

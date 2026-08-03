@@ -521,7 +521,37 @@ const GENERATORS = [
   genProblemePrixUnitaireSaucisses,
 ];
 
-function generate() {
+// Tag de difficulté par générateur (voir nombres-decimaux.js pour la
+// convention complète) — utilisé par les Parcours (débutant/avancé/expert).
+const DIFFICULTY = {
+  genMultiplierDiviserPuissanceDix: "facile",
+  genMultiplierParDecimalPuissance: "facile",
+  genFoisPlusGrandPetit: "standard",
+  genComparerAvantApresMultiplication: "standard",
+  genConversionLongueurs: "standard",
+  genMultiplierDeuxDecimaux: "facile",
+  genChoisirBonneReponseVirgule: "facile",
+  genRectangleDecimal: "standard",
+  genOrdreDeGrandeurProduitDecimaux: "standard",
+  genProblemePrixTotal: "standard",
+  genDiviserDecimalParEntier: "facile",
+  genDivisionEuclidienneQuotientReste: "standard",
+  genPerimetreDiviserCote: "standard",
+  genPartageArgentEquitable: "standard",
+  genPartageObjetsAvecReste: "standard",
+  genConversionDureeSecondes: "standard",
+  genProgrammeCalcul: "standard",
+  genProblemeCocheQuestionsEssence: "expert",
+  genProblemeComparaisonFoisMoins: "expert",
+  genProblemeConsommationJours: "expert",
+  genProblemePrixUnitaireSaucisses: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

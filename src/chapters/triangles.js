@@ -476,7 +476,36 @@ const GENERATORS = [
   genCultureCercleNeufPointsQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genAngleManquantTriangleSomme: "facile",
+  genClassifierTriangleAnglesQCM: "facile",
+  genTriangleIsoceleAnglesEgaux: "facile",
+  genAireTriangleBaseHauteur: "facile",
+  genOrthocentreDefinitionQCM: "facile",
+  genMedianeMilieuNumeric: "facile",
+  genCentreDeGraviteDefinitionQCM: "facile",
+  genAireTrapezeNumeric: "facile",
+  genCultureDroiteEulerQCM: "facile",
+  genCultureCercleNeufPointsQCM: "facile",
+  genAngleExterieurTriangle: "standard",
+  genMediatriceEquidistanceNumeric: "standard",
+  genCercleCirconscritRayonDiametre: "standard",
+  genTriangleRectangleHypotenuseDiametre: "standard",
+  genReconnaitreTriangleRectangleViaCercleQCM: "standard",
+  genAireTriangleTrouverBaseOuHauteur: "standard",
+  genHauteurTriangleRectangleParticulariteQCM: "standard",
+  genCentreDeGraviteRatioNumeric: "standard",
+  genMedianePartageAireMoitieNumeric: "standard",
+  genAireDiagonalesPerpendiculairesNumeric: "standard",
+  genDemonstrationSommeAnglesQCM: "expert",
+  genFigureComposeeRectangleTriangleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

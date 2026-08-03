@@ -321,7 +321,29 @@ const GENERATORS = [
   genLireTableauFonctionCroissanceQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genVocabulaireEnFonctionDeQCM: "facile",
+  genEvaluerFonctionAffineNumeric: "facile",
+  genNotationFlecheeNumeric: "facile",
+  genCompleterTableauValeursNumeric: "facile",
+  genAireCarreFonctionCoteNumeric: "facile",
+  genTrouverAntecedentNumeric: "standard",
+  genProgrammeCalculFonctionNumeric: "standard",
+  genRetrouverDepartFonctionNumeric: "standard",
+  genRelationDependanceProportionnelleQCM: "standard",
+  genPuissanceEolienneNumeric: "standard",
+  genDiametreEolienneNumeric: "standard",
+  genTemperatureRessentieNumeric: "standard",
+  genVolumeCylindreFonctionHauteurNumeric: "standard",
+  genLireTableauFonctionCroissanceQCM: "standard",
+  genDistanceFreinageNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

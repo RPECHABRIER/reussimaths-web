@@ -327,7 +327,27 @@ const GENERATORS = [
   genProblemeContextualiseCosinusNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerHypotenuseNumeric: "facile",
+  genCalculerCoteAngleDroitNumeric: "facile",
+  genCosinusValideQCM: "facile",
+  genSommeAnglesTriangleRectangleNumeric: "facile",
+  genCalculerHypotenuseExacteNumeric: "standard",
+  genCalculerCoteAngleDroitApprocheNumeric: "standard",
+  genReciproquePythagoreQCM: "standard",
+  genReciproqueSommetQCM: "standard",
+  genCalculerAngleCosinusNumeric: "standard",
+  genCalculerLongueurCosinusAdjacentNumeric: "standard",
+  genCalculerHypotenuseCosinusNumeric: "standard",
+  genProblemeContextualisePythagoreNumeric: "expert",
+  genProblemeContextualiseCosinusNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

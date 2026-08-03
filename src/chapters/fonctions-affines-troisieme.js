@@ -302,7 +302,28 @@ const GENERATORS = [
   genResoudreAntecedentContexteTarifNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genIdentifierABFormeSimpleNumeric: "facile",
+  genComparerCoefficientsDirecteursQCM: "facile",
+  genCroissanteDecroissanteQCM: "facile",
+  genPasseParOrigineQCM: "facile",
+  genMettreSousFormeFractionNumeric: "standard",
+  genMettreSousFormeDoubleDistributiviteNumeric: "standard",
+  genPointAppartientDroiteQCM: "standard",
+  genFonctionLineaireVsAffineQCM: "standard",
+  genResoudreFxEgaleCibleNumeric: "standard",
+  genCalculerImageContexteTarifNumeric: "standard",
+  genResoudreAntecedentContexteTarifNumeric: "standard",
+  genMettreSousFormeDifferenceCarresNumeric: "expert",
+  genDeterminerAffineDeuxConditionsNumeric: "expert",
+  genCompareDeuxTarifsSeuilNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

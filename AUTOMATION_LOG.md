@@ -1,5 +1,315 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 10) — Suppression des 2 derniers doublons legacy (Première Spé)
+
+- Confirmation utilisateur : "on supprime tous les doublons, éventuellement
+  quand il y a des exercices intéressants on les bascule sur l'autre pour
+  les conserver" → vérification du contenu de `automatismes.js` et
+  `suites.js` avant suppression.
+- `automatismes.js` : placeholder à un seul générateur ("calcul mental,
+  multiplication de deux nombres 2-20"). Le vrai chapitre
+  `automatismes-premiere-spe.js` couvre déjà très largement le calcul
+  mental via ~49 générateurs `*Mental` organisés par thème (discriminant,
+  suites, dérivation, exponentielle, trigonométrie, produit scalaire,
+  géométrie repérée, probabilités conditionnelles, variables aléatoires).
+  Rien d'unique à préserver → supprimé tel quel.
+- `suites.js` : placeholder à un seul générateur (calcul de \(u_3\) à partir
+  de \(u_0\) et \(r\) pour une suite arithmétique, plage étroite : \(u_0 \in
+  [1,10]\), \(r \in [2,5]\)). Le vrai chapitre
+  `suites-numeriques-premiere-spe.js` couvre exactement le même exercice
+  via `genTermeRecurrenceArithmetiqueNumeric`, avec une plage plus large
+  (\(u_0 \in [-15,15]\), \(r\) non nul dans \([-9,9]\), n variable). Rien
+  d'unique à préserver → supprimé tel quel.
+- Les 2 fichiers supprimés des 3 emplacements (scratchpad, dossier
+  persistant, clone Git imbriqué). Suppression déjà autorisée par
+  `allow_cowork_file_delete` lors du nettoyage précédent.
+- Build revérifié (`npx vite build --outDir /tmp/dist-verify-dupfix`) :
+  0 erreur.
+- **Les 3 doublons legacy de Première Spé (`probabilites.js`,
+  `automatismes.js`, `suites.js`) sont désormais tous supprimés.** Le
+  sommaire de Première Spé ne référence plus qu'un seul chapitre par
+  thème.
+
+## 2026-08-03 (suite 9) — Suppression du chapitre "Probabilités" legacy dupliqué (Première Spé)
+
+- Suite à la découverte documentée en "suite 7" : `probabilites.js` était un
+  placeholder à un seul générateur (commentaire interne explicite), antérieur
+  au vrai chapitre `probabilites-conditionnelles-premiere-spe.js`, et créait
+  un doublon "Probabilités" dans le sommaire de Première Spé (débloqué par
+  parrainage, `unlockReferrals: 5`, alors que le vrai chapitre est sous
+  abonnement).
+- Confirmation utilisateur : "on ne garde qu'un seul chapitre sur les
+  probabilités" → `probabilites.js` supprimé des 3 emplacements (scratchpad,
+  dossier persistant, clone Git imbriqué). Suppression autorisée via
+  `allow_cowork_file_delete` (le dossier `Application TOP` protège les
+  suppressions par défaut).
+- Build revérifié après suppression (`npx vite build --outDir
+  /tmp/dist-verify-probafix`) : 0 erreur, le registre auto-découverte ne
+  référence plus ce fichier.
+- **Restent en suspens (mêmes doublons legacy, non confirmés par
+  l'utilisateur) :** `automatismes.js` (doublon de
+  `automatismes-premiere-spe.js`) et `suites.js` (doublon de
+  `suites-numeriques-premiere-spe.js`), tous deux dans Première Spé. À
+  traiter si l'utilisateur confirme vouloir les supprimer aussi.
+
+## 2026-08-03 (suite 8) — Retaggage difficulté : Terminale Spé terminée — TÂCHE #183 COMPLÈTE
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 15 chapitres
+  d'abonnement de Terminale Spé : `combinatoire-denombrement-terminale-spe.js`
+  (15), `vecteurs-droites-plans-espace-terminale-spe.js` (15),
+  `orthogonalite-distances-espace-terminale-spe.js` (15), `suites-terminale-spe.js`
+  (15), `limites-fonctions-terminale-spe.js` (15), `continuite-terminale-spe.js`
+  (15), `complements-derivation-terminale-spe.js` (15), `logarithme-neperien-terminale-spe.js`
+  (15), `fonctions-trigonometriques-terminale-spe.js` (15),
+  `primitives-equations-differentielles-terminale-spe.js` (15),
+  `calcul-integral-terminale-spe.js` (15), `loi-binomiale-terminale-spe.js`
+  (15), `sommes-variables-aleatoires-terminale-spe.js` (15),
+  `loi-grands-nombres-terminale-spe.js` (15, volontairement plus expert —
+  dernier chapitre du programme, inégalités de concentration), et
+  `exercices-transversaux-terminale-spe.js` (15, chapitre de révision
+  transversale, skew standard/expert).
+- `automatismes-terminale-spe.js` (`freemiumDaily: 5`) et
+  `reviser-les-bases-terminale-spe.js` (`free: true`) confirmés exclus du
+  système Parcours, non retaggés.
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-ts`) : premier
+  essai en échec (`EMFILE: too many open files` sur un icône lucide-react),
+  résolu avec `ulimit -n 65536`, build réussi ensuite.
+- Les 15 fichiers synchronisés vers les deux destinations persistantes.
+- **Tâche #183 terminée : tous les niveaux sont désormais retaggés**
+  (6e, 5e, 4e, 3e, 2nde, Première non spé, Première Spé, Terminale Spé).
+- Rappel : la découverte de fichiers legacy dupliqués dans Première Spé
+  (`automatismes.js`, `probabilites.js`, `suites.js` — voir entrée
+  "suite 7") reste un sujet ouvert distinct, non traité ici.
+- Rappel : aucun zip final ne sera produit tant que Première technologique
+  et Terminale technologique ne sont pas construites (reporté par
+  l'utilisateur — "on fera cela plus tard").
+
+## 2026-08-03 (suite 7) — Retaggage difficulté : Première Spé terminée
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 10 chapitres
+  d'abonnement de Première Spé (générateurs multiples) : `derivation-premiere-spe.js`
+  (15), `fonction-exponentielle-premiere-spe.js` (15), `geometrie-reperee-premiere-spe.js`
+  (15), `preparation-bac-premiere-spe.js` (15, chapitre de révision, skew
+  standard/expert), `probabilites-conditionnelles-premiere-spe.js` (15),
+  `suites-numeriques-premiere-spe.js` (15), `trigonometrie-premiere-spe.js`
+  (15), `variables-aleatoires-premiere-spe.js` (15), `variations-courbes-premiere-spe.js`
+  (15), `vecteurs-produit-scalaire-premiere-spe.js` (15).
+- `automatismes-premiere-spe.js`/`automatismes.js` (`freemiumDaily: 5`),
+  `reviser-les-bases-premiere-spe.js`/`second-degre.js` (`free: true`)
+  confirmés exclus du système Parcours, non retaggés.
+- **Découverte (hors-scope tagging, signalée à l'utilisateur) :** le registre
+  de chapitres (`src/chapters/registry.js`) charge TOUS les fichiers `.js` du
+  dossier via `import.meta.glob`, sans liste blanche. Trois fichiers legacy
+  (`automatismes.js`, `probabilites.js`, `suites.js`) sont des placeholders à
+  UN SEUL générateur (commentaires internes : "Placeholder minimal pour
+  valider le registre"), antérieurs aux vrais chapitres `-premiere-spe.js`
+  correspondants. Ils sont donc toujours actifs en prod et créent des
+  chapitres dupliqués dans le niveau Première Spé (ex : "Probabilités"
+  ≠ "Probabilités conditionnelles et indépendance", "Suites numériques" ≠
+  "Suites numériques, modèles discrets"). N'ayant qu'un seul générateur,
+  aucun tag `DIFFICULTY` ne s'applique à ces 3 fichiers — ils sont laissés
+  tels quels, sujet distinct du retaggage difficulté, à traiter séparément
+  si souhaité (probablement suppression des 3 fichiers legacy).
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-ps`, 0 erreur).
+- Les 10 fichiers synchronisés vers les deux destinations persistantes.
+- Prochaine étape : Terminale Spé (dernier niveau restant pour la tâche #183).
+
+## 2026-08-03 (suite 6) — Retaggage difficulté : Première non spé terminée
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 7 chapitres
+  d'abonnement de Première non spé : `analyse-information-chiffree-premiere-non-spe.js`
+  (15 générateurs), `croissance-lineaire-premiere-non-spe.js` (15),
+  `croissance-exponentielle-premiere-non-spe.js` (15),
+  `variations-instantanees-premiere-non-spe.js` (15),
+  `variations-globales-premiere-non-spe.js` (15),
+  `statistique-probabilites-premiere-non-spe.js` (15, volontairement plus
+  expert compte tenu du chapitre probabilités conditionnelles), et
+  `exercices-rituels-premiere-non-spe.js` (15, chapitre de révision, skew
+  standard/expert comme les autres chapitres de synthèse).
+- `automatismes-premiere-non-spe.js` (`freemiumDaily: 5`) et
+  `reviser-les-bases-premiere-non-spe.js` (`free: true`) confirmés exclus du
+  système Parcours (filtre `levelChapters()`), donc non retaggés.
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-pns`, 0 erreur).
+- Les 7 fichiers synchronisés vers les deux destinations persistantes.
+- Prochaine étape : Première Spé, puis Terminale Spé.
+
+## 2026-08-03 (suite 5) — Retaggage difficulté : 2nde terminée
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 13 chapitres 2nde
+  d'abonnement : `nombres-calculs-seconde.js` (15 générateurs),
+  `generalites-fonctions-seconde.js` (15), `variations-fonctions-seconde.js`
+  (15), `fonctions-affines-seconde.js` (15), `fonctions-reference-seconde.js`
+  (15), `reperage-configurations-seconde.js` (15), `vecteurs-seconde.js`
+  (15), `colinearite-vecteurs-seconde.js` (15), `equations-droites-seconde.js`
+  (15), `informations-chiffrees-seconde.js` (15),
+  `statistiques-descriptives-seconde.js` (15),
+  `probabilites-echantillonnage-seconde.js` (15),
+  `exercices-fin-annee-seconde.js` (15).
+- **Niveau 2nde entièrement retaggé.** Un `Rollup failed to resolve
+  @supabase/auth-js` est apparu au premier essai de build (résolu par un
+  simple `rm -rf node_modules/.vite` — cache Vite corrompu, pas un vrai
+  problème de dépendances). Build ensuite vérifié 0 erreur, synchronisé
+  vers le dossier de référence et le clone Git.
+- Prochaine étape : Première non spé (6 chapitres + exercices rituels).
+
+## 2026-08-03 (suite 4) — Retaggage difficulté : 3e terminée
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 15 chapitres 3e
+  d'abonnement : `nombres-entiers-troisieme.js` (18 générateurs),
+  `calcul-numerique-troisieme.js` (16), `calcul-litteral-troisieme.js` (16),
+  `equations-troisieme.js` (16), `fonctions-affines-troisieme.js` (14),
+  `notion-fonction-troisieme.js` (14), `statistiques-troisieme.js` (15),
+  `probabilites-troisieme.js` (15), `proportionnalite-troisieme.js` (14),
+  `thales-triangles-semblables-troisieme.js` (15),
+  `trigonometrie-triangle-rectangle-troisieme.js` (15),
+  `transformations-plan-troisieme.js` (15),
+  `geometrie-espace-troisieme.js` (15), `mesures-grandeurs-troisieme.js`
+  (15), `dossier-brevet-troisieme.js` (15, orienté standard/expert car
+  chapitre de révision Brevet).
+- **Niveau 3e entièrement retaggé.** Build vérifié (0 erreur — un
+  `EMFILE: too many open files` transitoire a nécessité un `ulimit -n
+  16384` avant de relancer), synchronisé vers le dossier de référence et
+  le clone Git.
+- Prochaine étape : niveau 2nde (12 chapitres + exercices transversaux).
+
+## 2026-08-03 (suite 3) — Retaggage difficulté : 4e terminée
+
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 15 chapitres 4e
+  d'abonnement : `nombres-relatifs-quatrieme.js` (22 générateurs),
+  `addition-soustraction-rationnels.js` (18),
+  `multiplication-division-rationnels.js` (15), `puissances-quatrieme.js`
+  (18), `calcul-litteral-quatrieme.js` (16), `resolution-equations.js` (14),
+  `statistiques-quatrieme.js` (15), `probabilites-quatrieme.js` (13),
+  `notion-fonctions.js` (12), `proportionnalite-quatrieme.js` (16),
+  `theoreme-thales.js` (9), `triangles-rectangles-quatrieme.js` (13),
+  `geometrie-plane.js` (12), `geometrie-espace-quatrieme.js` (14),
+  `exercices-fin-annee-quatrieme.js` (15, orienté standard/expert car
+  c'est un chapitre de révision de synthèse).
+- **Niveau 4e entièrement retaggé.** Build vérifié (0 erreur), synchronisé
+  vers le dossier de référence et le clone Git.
+- Prochaine étape : niveau 3e (14 chapitres + Dossier Brevet).
+
+## 2026-08-03 (suite 2) — Retaggage difficulté : 5e terminée
+
+- Tâche #183 (suite) : identifié que `automatismes-cinquieme.js` et
+  `reviser-les-bases-cinquieme.js` sont exclus des paliers Parcours
+  (`levelChapters()` dans `src/parcours.js` filtre `meta.free` et
+  `meta.freemiumDaily`) — donc pas besoin de leur ajouter `DIFFICULTY`,
+  seulement aux 11 vrais chapitres d'abonnement de la 5e.
+- Tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 11 chapitres 5e :
+  `calcul-numerique.js` (9 générateurs), `nombres-relatifs.js` (29),
+  `puissances.js` (7), `calcul-litteral.js` (17),
+  `divisibilite-fractions.js` (22),
+  `symetrie-centrale-parallelogrammes.js` (29), `triangles.js` (22),
+  `geometrie-espace.js` (17), `statistiques-probabilites.js` (20),
+  `proportionnalite-cinquieme.js` (20), `fonctions.js` (15).
+- **Niveau 5e entièrement retaggé.** Build vérifié (0 erreur), synchronisé
+  vers le dossier de référence et le clone Git.
+- Prochaine étape : niveau 4e (14 chapitres + exercices fin d'année).
+
+## 2026-08-03 (suite) — Retaggage difficulté : 6e terminée
+
+- Tâche #183 : tag `DIFFICULTY` + `generate(difficulty)` appliqué aux 8
+  chapitres 6e restants (`nombres-decimaux.js` était déjà fait comme pilote) :
+  `operations-decimaux.js` (21 générateurs), `fractions.js` (25),
+  `grandeurs-mesures.js` (22), `distances-symetries.js` (16), `angles.js`
+  (17), `configurations-geometriques.js` (14),
+  `organisation-gestion-donnees.js` (18), `proportionnalite.js` (18).
+  Classification facile/standard/expert faite à la main par lecture de
+  chaque générateur (règle générale : les fonctions préfixées
+  `genProbleme*` = expert, sinon facile/standard selon nombre d'étapes de
+  raisonnement).
+- **Niveau 6e entièrement retaggé** (9/9 chapitres) — les paliers
+  Débutant/Avancé/Expert des Parcours sont maintenant vraiment différenciés
+  sur ce niveau, pas seulement sur le chapitre pilote.
+- Build vérifié (`vite build`, 0 erreur — juste un avertissement taille de
+  bundle, sans rapport) puis synchronisé vers le dossier de référence et le
+  clone Git (`APPLI GITHUB/Sans titre`).
+- Prochaine étape : 5e (chapitres à identifier), puis 4e → 3e → 2nde →
+  Première non spé → Première Spé → Terminale Spé, dans cet ordre.
+
+## 2026-08-03 — Première Spé finished, Parcours feature, LaTeX fix, défis par thème
+
+**Contexte :** reprise après plusieurs jours ; Romain a demandé de tenir ce
+journal à jour à chaque session à partir de maintenant (trace rapide, pas un
+compte-rendu exhaustif).
+
+**Première Spé (dernier niveau de contenu en attente) :**
+- Fini les 2 derniers bugs de QCM à doublons dans `preparation-bac-premiere-spe.js`
+  (`genLectureGraphiqueAffineQCM` : b=0 faisait coïncider deux options ;
+  `genPuissancesDix10QCM` : distracteurs `10^{-exp}` retombaient sur la bonne
+  réponse ou un autre distracteur pour exp∈{0,1}). Testé 40 000 itérations, 0
+  erreur. Niveau Première Spé désormais **complet** (11 chapitres + Réviser
+  les bases + Automatismes) — il ne reste plus que Première techno et
+  Terminale techno comme niveaux sans contenu (report explicite de Romain,
+  pas de source fournie).
+
+**Refonte structure du site (demande de Romain) :**
+- Accueil (`/`) : choix Collège / Lycée uniquement (`CycleSelect.jsx`), puis
+  liste des niveaux du cycle (`CycleLevels.jsx`, `/college` ou `/lycee`).
+  Ajout du champ `cycle` sur chaque niveau (`levels.js`).
+- **Système de Parcours** (`src/parcours.js`) : 3 paliers par niveau
+  (Débutant/Avancé/Expert), dérivés automatiquement du registre de chapitres
+  (pas de duplication en base) ; parcours gratuit "Découverte" (avant-goût
+  multi-niveaux, contourne le mur d'abonnement pour ses étapes précises).
+  Chaque étape = un chapitre joué en série notée de 8 questions
+  (`ChapterRunner` étendu en "mode session" : `difficulty`, `sessionLength`,
+  `onSessionComplete`, `backTo`, rétrocompatible). Progression stockée dans
+  la nouvelle table Supabase `parcours_progress`. Pages :
+  `ParcoursSelect.jsx`, `ParcoursOverview.jsx`, `ParcoursStep.jsx`.
+- **Mini-diagnostic** (`ParcoursDiagnostic.jsx`) : 6 questions réparties sur
+  le programme du niveau, recommande un palier en fin de série.
+- Convention de tag de difficulté par générateur : objet `DIFFICULTY` en fin
+  de fichier de chapitre (nom de générateur → facile/standard/expert) +
+  `generate(difficulty)` qui filtre `GENERATORS`, repli sur le pool complet
+  si non tagué ou vide. Pilote sur `nombres-decimaux.js` (6e) uniquement pour
+  l'instant — **le reste des ~115 fichiers de chapitres reste à tagger,
+  niveau par niveau (tâche en cours, voir plus bas)**.
+
+**Bug LaTeX non compilé (signalé par Romain) :** ~109/115 fichiers de
+chapitres avaient des `steps` (aide/correction) contenant du LaTeX brut
+(`\dfrac`, `\times`, `^{...}`...) SANS l'enrobage `\( \)` que KaTeX exige —
+affiché en code brut au lieu d'être compilé. Fix centralisé dans
+`MathText.jsx` : détecte la syntaxe LaTeX sans délimiteur et l'enrobe
+automatiquement. Vérifié à grande échelle (7600+ chaînes, tous chapitres) :
+0 régression, ~3600 lignes corrigées. Corrigé au passage 2 coquilles
+préexistantes sans rapport (`statistiques-troisieme.js` : `$` en trop ;
+`suites-numeriques-premiere-spe.js` : double enrobage). Trouvé et fixé aussi
+un souci d'environnement : `@supabase/supabase-js` non épinglé strictement
+cassait le build avec sa dernière version publiée → épinglé sur `2.45.4`.
+
+**Défier un ami : clarté des thèmes (signalé par Romain) :** le sélecteur de
+défi affichait "Automatismes" identique pour chaque niveau (aucune
+différenciation), et un défi sur un chapitre Automatismes mélangeait tous
+les thèmes au hasard indépendamment pour chaque joueur. Fix : chaque option
+du sélecteur précise le niveau (ex: "Réviser les bases (6e)"), et les
+chapitres Automatismes sont éclatés en une option par vrai thème (ex:
+"Automatismes (6e) — Fractions"). Nouvelle colonne `theme_id` sur
+`challenges`, transmise à `chapter.generate(themeId)` des deux côtés du duel
+pour un vrai duel sur le même sujet. Vérifié : 197 options générées, 0
+doublon de libellé.
+
+**Email de notification de défi : mis en pause à la demande de Romain** — pas
+de solution d'adresse d'envoi gratuite qui lui convient pour l'instant
+(Gmail bloqué à la création, domaine payant non voulu, adresse perso pas
+souhaitée). Le code (`api/notify-challenge.js`, appel best-effort depuis
+`useChallenges.createChallenge`) existe déjà et est inoffensif sans
+identifiants — à reprendre plus tard.
+
+**SQL exécuté par Romain aujourd'hui (les deux d'un coup, en une requête) :**
+table `parcours_progress` + RLS, et `challenges.theme_id`. Confirmé fait.
+
+**Git :** tout syncé et pushé dans le clone `APPLI GITHUB/Sans titre`
+(remote `RPECHABRIER/reussimaths-web`, branche `main`) via GitHub Desktop.
+
+**Prochaine étape (en cours) :** tâche #183 — retagger la difficulté de tous
+les générateurs, niveau par niveau, dans le même ordre que la construction
+du contenu (6e → 5e → 4e → 3e → 2nde → Première non spé → Première Spé →
+Terminale Spé). Démarrage par les 7 chapitres 6e restants (nombres-decimaux
+déjà fait) : operations-decimaux, fractions, grandeurs-mesures,
+distances-symetries, angles, configurations-geometriques,
+organisation-gestion-donnees, proportionnalite.
+
 ## 2026-07-28, run starting ~20:19 (session ee0dc5a3…)
 
 **Folder-naming anomaly found at start of run.** The connected folder

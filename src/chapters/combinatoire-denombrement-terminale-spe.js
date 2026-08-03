@@ -281,7 +281,29 @@ const GENERATORS = [
   genPermutationsObjetsNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genPrincipeMultiplicatifNumeric: "facile",
+  genTirageAvecRemiseNumeric: "facile",
+  genFactorielleNumeric: "facile",
+  genCoefficientBinomialNumeric: "facile",
+  genCasParticuliersBinomialNumeric: "facile",
+  genTirageSansRemiseAvecOrdreNumeric: "standard",
+  genSymetrieCoefficientBinomialNumeric: "standard",
+  genRelationPascalNumeric: "standard",
+  genNombrePartiesEnsembleNumeric: "standard",
+  genTirageSansRemiseSansOrdreNumeric: "standard",
+  genVraiFauxBinomialQCM: "standard",
+  genPermutationsObjetsNumeric: "standard",
+  genIdentifierTypeTirageQCM: "expert",
+  genNombresPairsContrainteNumeric: "expert",
+  genDenombrementAvecExclusionNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

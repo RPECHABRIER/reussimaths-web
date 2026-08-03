@@ -345,7 +345,29 @@ const GENERATORS = [
   genFactorisationExpressionQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genDiagrammeCirculaireAngleNumeric: "facile",
+  genPythagoreFormuleRearrangementQCM: "facile",
+  genTrianglesEgauxHypotenuseNumeric: "standard",
+  genPerimetreTriangleFractionNumeric: "standard",
+  genComparerCalculsIdentiteQCM: "standard",
+  genThalesReciproqueContexteQCM: "standard",
+  genAjouterValeurMoyenneNumeric: "standard",
+  genVolumePyramideAireDonneeNumeric: "standard",
+  genTranslationQuadrilatereContexteQCM: "standard",
+  genFactorisationExpressionQCM: "standard",
+  genProgrammeCalculPointFixeNumeric: "expert",
+  genFonctionTropheesNumeric: "expert",
+  genProbabiliteDeuxDesSommeNumeric: "expert",
+  genAjouterValeurMedianeNumeric: "expert",
+  genPatronConeAngleSecteurNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

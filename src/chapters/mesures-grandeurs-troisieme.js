@@ -304,7 +304,29 @@ const GENERATORS = [
   genDureeTrajetAvecPausesNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genVitesseNumeric: "facile",
+  genDistanceDepuisVitesseNumeric: "facile",
+  genTempsDepuisVitesseNumeric: "facile",
+  genConversionKmhVersMsNumeric: "standard",
+  genConversionMsVersKmhNumeric: "standard",
+  genEnergiePuissanceTempsNumeric: "standard",
+  genDebitNumeric: "standard",
+  genEchelleDistanceReelleNumeric: "standard",
+  genEchelleDistancePlanNumeric: "standard",
+  genEchelleSurfaceNumeric: "expert",
+  genRemplissagePiscineNumeric: "expert",
+  genAutonomieVehiculeNumeric: "expert",
+  genVitesseMoyenneAvecMinutesNumeric: "expert",
+  genEchelleVolumeNumeric: "expert",
+  genDureeTrajetAvecPausesNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

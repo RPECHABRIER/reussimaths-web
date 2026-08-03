@@ -313,7 +313,29 @@ const GENERATORS = [
   genOrdonneeOrigineTangenteNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTangenteHorizontaleQCM: "facile",
+  genNombreDeriveFonctionAffineNumeric: "facile",
+  genSigneNombreDeriveQCM: "facile",
+  genLectureTableauNombreDeriveNumeric: "facile",
+  genIdentifierTangenteHorizontaleQCM: "facile",
+  genNombreDeriveDeuxPointsNumeric: "standard",
+  genNombreDeriveDeplacementNumeric: "standard",
+  genEquationTangenteNumeric: "standard",
+  genComparerNombresDerivesQCM: "standard",
+  genVraiFauxNombreDeriveQCM: "standard",
+  genTauxAccroissementApprocheNumeric: "standard",
+  genVitesseDeriveePositionNumeric: "expert",
+  genAccelerationDeriveeVitesseNumeric: "expert",
+  genDistinguerImageEtNombreDeriveQCM: "expert",
+  genOrdonneeOrigineTangenteNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

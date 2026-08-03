@@ -432,7 +432,31 @@ const GENERATORS = [
   genProblemeHeritageAlKhwarizmi,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genValeurExpressionLitteraleBasique: "facile",
+  genTesterEgaliteQCM: "facile",
+  genResoudreEquationAdditionSoustraction: "facile",
+  genResoudreEquationMultiplicationDivision: "facile",
+  genVerifierSiSolutionEquationQCM: "facile",
+  genTraduirePhraseEnExpressionQCM: "standard",
+  genPerimetreRectangleEnFonctionDeX: "standard",
+  genTrouverValeurXEgaliteVraieQCM: "standard",
+  genDevelopperTrouverCoefficient: "standard",
+  genFactoriserTrouverFacteurCommun: "standard",
+  genTesterVraiFauxDeveloppementQCM: "standard",
+  genAireRectangleFactoriseDeveloppe: "standard",
+  genVerifierIdentiteAlgebriqueQCM: "standard",
+  genResoudreEquationDeuxEtapes: "standard",
+  genEquationContexteSchemaBarres: "standard",
+  genProblemeAssembleeEffectifEnFonctionDeX: "expert",
+  genProblemeHeritageAlKhwarizmi: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

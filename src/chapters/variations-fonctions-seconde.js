@@ -333,7 +333,29 @@ const GENERATORS = [
   genMaxMinSousIntervalleQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genLireImageBorneNumeric: "facile",
+  genMaximumFonctionNumeric: "facile",
+  genMinimumFonctionNumeric: "facile",
+  genValeurXpourMaximumNumeric: "facile",
+  genValeurXpourMinimumNumeric: "facile",
+  genLireSensVariationQCM: "facile",
+  genComparerImagesMemeSensQCM: "standard",
+  genEncadrerImageQCM: "standard",
+  genNombreSolutionsExtremumQCM: "standard",
+  genVraiFauxSensVariationQCM: "standard",
+  genTableauVersPhraseQCM: "standard",
+  genIntervalleDeDefinitionNumeric: "standard",
+  genNombreChangementsSensQCM: "standard",
+  genCompareExtremumsLocauxGlobalQCM: "expert",
+  genMaxMinSousIntervalleQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

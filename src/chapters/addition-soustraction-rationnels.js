@@ -478,7 +478,32 @@ const GENERATORS = [
   genConstructibiliteTriangleFractionsQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genPlacerFractionSurDroiteGradueeNumeric: "facile",
+  genAdditionnerRationnelsMemeDenominateurSigne: "facile",
+  genSoustraireRationnelsMemeDenominateurSigne: "facile",
+  genSommeFractionEtEntierSigne: "facile",
+  genDecompositionFacteursPremiersQCM: "standard",
+  genSimplifierFractionCriteresDivisibilite: "standard",
+  genComparerDeuxFractionsSigneesQCM: "standard",
+  genPlusGrandDiviseurCommunNumeric: "standard",
+  genRangerRationnelsCroissantQCM: "standard",
+  genAdditionnerRationnelsDenominateursDifferentsSigne: "standard",
+  genSoustraireRationnelsDenominateursDifferentsSigne: "standard",
+  genProgrammeDeCalculFractionNumeric: "standard",
+  genErreurSimplificationAdditiveQCM: "expert",
+  genChaineTroisFractionsAdditionSoustraction: "expert",
+  genExpressionParenthesesFractionsSignees: "expert",
+  genProportionEleveTransportNumeric: "expert",
+  genComparerDeuxProportionsChoixQCM: "expert",
+  genConstructibiliteTriangleFractionsQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -264,7 +264,29 @@ const GENERATORS = [
   genVraiFauxInegalitesQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genFormuleMarkovQCM: "facile",
+  genFormuleBienaymeTchebychevQCM: "facile",
+  genFormuleConcentrationQCM: "facile",
+  genEsperanceMoyenneEmpiriqueQCM: "facile",
+  genInegaliteMarkovNumeric: "standard",
+  genInegaliteBienaymeTchebychevNumeric: "standard",
+  genVarianceMoyenneEmpiriqueNumeric: "standard",
+  genVraiFauxLGNQCM: "standard",
+  genConditionMarkovQCM: "standard",
+  genChebyshevKEcartTypeNumeric: "standard",
+  genInegaliteBienaymeTchebychevComplementaireNumeric: "expert",
+  genInegaliteConcentrationNumeric: "expert",
+  genInegaliteConcentrationComplementaireNumeric: "expert",
+  genResoudreNConcentrationNumeric: "expert",
+  genVraiFauxInegalitesQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

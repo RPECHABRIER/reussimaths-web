@@ -312,7 +312,29 @@ const GENERATORS = [
   genComparerCoefficientsMultiplicateursQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerProportionNumeric: "facile",
+  genCalculerPartieDepuisProportionNumeric: "facile",
+  genCoefficientMultiplicateurDepuisTauxNumeric: "facile",
+  genValeurFinaleApresEvolutionNumeric: "facile",
+  genVariationAbsolueNumeric: "facile",
+  genIdentifierProportionOuEvolutionQCM: "facile",
+  genCalculerTotalDepuisProportionEtPartieNumeric: "standard",
+  genTauxDepuisCoefficientMultiplicateurNumeric: "standard",
+  genValeurInitialeDepuisValeurFinaleNumeric: "standard",
+  genVariationRelativeNumeric: "standard",
+  genComparerCoefficientsMultiplicateursQCM: "standard",
+  genProportionDeProportionNumeric: "expert",
+  genCoefficientGlobalEvolutionsSuccessivesNumeric: "expert",
+  genTauxGlobalEvolutionsSuccessivesNumeric: "expert",
+  genEvolutionReciproqueNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

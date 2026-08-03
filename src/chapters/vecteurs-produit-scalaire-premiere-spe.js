@@ -342,7 +342,29 @@ const GENERATORS = [
   genTriangleRectangleProduitScalaireQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genProduitScalaireCoordonneesNumeric: "facile",
+  genNormeVecteurNumeric: "facile",
+  genOrthogonaliteCoordonneesQCM: "facile",
+  genSymetrieQCM: "facile",
+  genProduitScalaireAvecLuiMemeNumeric: "facile",
+  genProduitScalaireNormesAngleNumeric: "standard",
+  genDeveloppementSommeNumeric: "standard",
+  genDeveloppementDifferenceNumeric: "standard",
+  genParametreOrthogonaliteNumeric: "standard",
+  genProduitScalairePointsNumeric: "standard",
+  genVraiFauxProduitScalaireQCM: "standard",
+  genAlKashiNumeric: "expert",
+  genBilinaeariteNumeric: "expert",
+  genAngleViaProduitScalaireQCM: "expert",
+  genTriangleRectangleProduitScalaireQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -432,7 +432,34 @@ const GENERATORS = [
   genClassementProbabilitesQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerFrequencePourcentageNumeric: "facile",
+  genCalculerEffectifTotalNumeric: "facile",
+  genLireTableauEffectifsQCM: "facile",
+  genCalculerMoyenneSimpleNumeric: "facile",
+  genQualifierEvenementQCM: "facile",
+  genProbabiliteDeNumeric: "facile",
+  genExperienceAleatoireQCM: "facile",
+  genAngleDiagrammeCirculaireNumeric: "standard",
+  genEcartALaMoyenneNumeric: "standard",
+  genMoyennePondereeNumeric: "standard",
+  genExclureValeursExtremesMoyenneNumeric: "standard",
+  genComparerMoyennesQCM: "standard",
+  genProbabiliteUrneTirageNumeric: "standard",
+  genProbabiliteEvenementContraireNumeric: "standard",
+  genComparerProbabilitesSacsQCM: "standard",
+  genFrequenceVersProbabiliteQCM: "standard",
+  genProbabiliteRoueSecteursInegauxNumeric: "standard",
+  genProbabiliteFractionSimplifieeNumeric: "standard",
+  genClassementProbabilitesQCM: "standard",
+  genSommeDeuxDesProbabiliteNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

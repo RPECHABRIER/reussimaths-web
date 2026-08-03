@@ -237,7 +237,23 @@ const GENERATORS = [
   genProblemeCordesEtendoirNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerLongueurThalesANNumeric: "facile",
+  genFormeCorrecteEgaliteThalesQCM: "facile",
+  genCalculerLongueurThalesMNNumeric: "standard",
+  genResoudreProportionThalesNumeric: "standard",
+  genReciproqueThalesParallelesQCM: "standard",
+  genVerifierConditionsApplicationQCM: "standard",
+  genRapportAgrandissementReductionThalesQCM: "standard",
+  genProblemeHauteurAvecViseeNumeric: "expert",
+  genProblemeCordesEtendoirNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

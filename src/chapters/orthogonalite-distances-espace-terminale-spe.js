@@ -371,7 +371,29 @@ const GENERATORS = [
   genComparerDistancesQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genProduitScalaireEspaceNumeric: "facile",
+  genVecteurNormalDepuisEquationNumeric: "facile",
+  genNormeCarreVecteurNormalNumeric: "facile",
+  genDistanceDeuxPointsNumeric: "facile",
+  genDistanceOrigineNumeric: "facile",
+  genVerifierOrthogonaliteQCM: "standard",
+  genCalculerDEquationPlanNumeric: "standard",
+  genPointAppartientPlanQCM: "standard",
+  genVecteursNormauxColineairesQCM: "standard",
+  genTrouverParametreOrthogonaliteNumeric: "standard",
+  genPlanOrthogonalDroiteQCM: "standard",
+  genVecteurDansLePlanQCM: "standard",
+  genDistancePointPlanNumeric: "expert",
+  genVraiFauxPositionsRelativesQCM: "expert",
+  genComparerDistancesQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

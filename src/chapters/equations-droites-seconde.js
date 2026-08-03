@@ -424,7 +424,29 @@ const GENERATORS = [
   genVecteurDirecteurDepuisDeuxPointsQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genPointAppartientDroiteCartesienneQCM: "facile",
+  genDroiteVerticaleHorizontaleQCM: "facile",
+  genEquationDroiteVerticaleHorizontaleNumeric: "facile",
+  genVecteurDirecteurValideQCM: "facile",
+  genVecteurDirecteurDepuisDeuxPointsQCM: "facile",
+  genVecteurDirecteurDepuisCartesienneNumeric: "standard",
+  genEquationCartesienneDepuisPointVecteurNumeric: "standard",
+  genEquationCartesienneDepuisDeuxPointsNumeric: "standard",
+  genPositionRelativeDroitesQCM: "standard",
+  genResoudreSystemeSubstitutionNumeric: "standard",
+  genResoudreSystemeCombinaisonNumeric: "standard",
+  genConvertirCartesienneVersReduiteQCM: "standard",
+  genConvertirReduiteVersCartesienneNumeric: "standard",
+  genIntersectionDeuxDroitesNumeric: "expert",
+  genNombreSolutionsSystemeQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

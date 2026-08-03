@@ -295,7 +295,29 @@ const GENERATORS = [
   genRetrouverEsperanceNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genLoiProbabiliteCompleterNumeric: "facile",
+  genEsperanceNumeric: "facile",
+  genLecturePXEgalANumeric: "facile",
+  genInterpreterNotationsQCM: "facile",
+  genEcartTypeNumeric: "standard",
+  genLineariteEsperanceNumeric: "standard",
+  genJeuEquitableNumeric: "standard",
+  genPXInferieurEgalNumeric: "standard",
+  genEsperanceJeuNumeric: "standard",
+  genVraiFauxVariablesAleatoiresQCM: "standard",
+  genVarianceLoiDeuxValeursNumeric: "standard",
+  genVarianceKonigHuygensNumeric: "expert",
+  genLineariteVarianceNumeric: "expert",
+  genComparerJeuxQCM: "expert",
+  genRetrouverEsperanceNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

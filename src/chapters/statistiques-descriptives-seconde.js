@@ -331,7 +331,29 @@ const GENERATORS = [
   genDiagrammeTronqueQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genMoyenneSimpleNumeric: "facile",
+  genMedianeImpairNumeric: "facile",
+  genRangMedianeQCM: "facile",
+  genLectureTableauEffectifsQCM: "facile",
+  genSignificationMedianeQCM: "facile",
+  genMoyennePondereeNumeric: "standard",
+  genMedianePairNumeric: "standard",
+  genQuartile1Numeric: "standard",
+  genQuartile3Numeric: "standard",
+  genEcartInterquartileNumeric: "standard",
+  genEffectifCumuleNumeric: "standard",
+  genComparerMedianesQCM: "standard",
+  genComparerDispersionQCM: "expert",
+  genLineariteMoyenneNumeric: "expert",
+  genDiagrammeTronqueQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -452,7 +452,36 @@ const GENERATORS = [
   genTrouverDepartSchemaNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genAdditionnerRelatifsMemeSigneNumeric: "facile",
+  genSoustraireViaOpposeNumeric: "facile",
+  genMultiplierRelatifsNumeric: "facile",
+  genDiviserRelatifsNumeric: "facile",
+  genCarreDunRelatifNumeric: "facile",
+  genAdditionnerRelatifsSignesDifferentsNumeric: "standard",
+  genCompleterDifferenceTrouNumeric: "standard",
+  genProgrammeCalculAdditionSoustractionNumeric: "standard",
+  genChaineAdditionsSoustractionsNumeric: "standard",
+  genSigneProduitPlusieursFacteursQCM: "standard",
+  genProduitFacteursEgauxNumeric: "standard",
+  genProgrammeCalculMultiplicationNumeric: "standard",
+  genPrioriteCalculDecimalNumeric: "standard",
+  genCompleterChaineCalculsNumeric: "standard",
+  genPrioriteReseauSocialQCM: "standard",
+  genSigneFacteurInconnuProduitQCM: "standard",
+  genSigneQuotientInconnuQCM: "standard",
+  genErreurCalculatriceQCM: "expert",
+  genComparerDeuxProgrammesQCM: "expert",
+  genDureeEntreDeuxAnneesNumeric: "expert",
+  genBaremeQCMNumeric: "expert",
+  genTrouverDepartSchemaNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

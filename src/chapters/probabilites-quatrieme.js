@@ -328,7 +328,27 @@ const GENERATORS = [
   genComparerDeuxGroupesProbabiliteNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genProbabiliteEquiprobableNumeric: "facile",
+  genProbabiliteDepuisEffectifsNumeric: "facile",
+  genPeutEtreProbabiliteQCM: "facile",
+  genProbabiliteEnPourcentageNumeric: "facile",
+  genTypeEvenementQCM: "facile",
+  genEvenementContraireDescriptionQCM: "facile",
+  genNombreIssuesFavorablesDepuisProbabiliteNumeric: "standard",
+  genProbabiliteDeuxEvenementsReunisNumeric: "standard",
+  genEstEquiprobableQCM: "standard",
+  genProbabiliteEvenementContraireNumeric: "standard",
+  genSommeProbabilitesVerificationQCM: "standard",
+  genCompleterTableauProbabiliteNumeric: "standard",
+  genComparerDeuxGroupesProbabiliteNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

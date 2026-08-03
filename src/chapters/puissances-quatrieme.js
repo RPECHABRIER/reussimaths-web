@@ -338,7 +338,32 @@ const GENERATORS = [
   genCoteCarreDepuisAireNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genEcrireProduitCommePuissanceNumeric: "facile",
+  genValeurPuissanceNumeric: "facile",
+  genPuissanceDixValeurNumeric: "facile",
+  genExposantZeroQCM: "facile",
+  genSignePuissanceQCM: "facile",
+  genConvertirScientifiqueVersDecimalNumeric: "facile",
+  genEstNotationScientifiqueQCM: "facile",
+  genPrefixeMetriqueQCM: "facile",
+  genCarreParfaitQCM: "facile",
+  genRacineCarreeExacteNumeric: "facile",
+  genRegleProduitPuissancesMemeBaseNumeric: "standard",
+  genRegleQuotientPuissancesMemeBaseNumeric: "standard",
+  genReglePuissanceDePuissanceNumeric: "standard",
+  genEcritureScientifiqueQCM: "standard",
+  genProduitNotationScientifiqueNumeric: "standard",
+  genRacineCarreeApprocheeNumeric: "standard",
+  genEncadrementRacineCarreeNumeric: "expert",
+  genCoteCarreDepuisAireNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

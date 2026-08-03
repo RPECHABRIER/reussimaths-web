@@ -318,7 +318,30 @@ const GENERATORS = [
   genProblemeEchelleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genVerifierTableauProportionnaliteQCM: "facile",
+  genDistanceDepuisVitesseTempsNumeric: "facile",
+  genAgrandissementReductionRapportNumeric: "facile",
+  genLongueurApresAgrandissementNumeric: "facile",
+  genEstAgrandissementOuReductionQCM: "facile",
+  genQuatriemeProportionnelleNumeric: "standard",
+  genVitesseMoyenneNumeric: "standard",
+  genConversionVitesseKmhMsNumeric: "standard",
+  genDebitNumeric: "standard",
+  genDensitePopulationNumeric: "standard",
+  genGrandeurProduitOuQuotientQCM: "standard",
+  genPointsAlignesOrigineQCM: "standard",
+  genAireApresAgrandissementNumeric: "standard",
+  genVolumeApresAgrandissementNumeric: "standard",
+  genProblemeRecetteNumeric: "expert",
+  genProblemeEchelleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

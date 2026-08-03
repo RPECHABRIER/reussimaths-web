@@ -265,7 +265,29 @@ const GENERATORS = [
   genSimplifierProduitTripleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genProduitExponentiellesNumeric: "facile",
+  genProduitOpposesQCM: "facile",
+  genQuotientExponentiellesNumeric: "facile",
+  genSigneExponentielleQCM: "facile",
+  genSensVariationExponentielleQCM: "facile",
+  genValeurExponentielleZeroNumeric: "facile",
+  genPuissanceExponentielleNumeric: "standard",
+  genDeriveeExponentielleAffineQCM: "standard",
+  genResoudreEgaliteExponentiellesNumeric: "standard",
+  genComparerExponentiellesQCM: "standard",
+  genSimplifierProduitTripleNumeric: "standard",
+  genDeriveeExponentielleComposeeQCM: "expert",
+  genResoudreEquationAffineExponentielleNumeric: "expert",
+  genResoudreInequationExponentielleQCM: "expert",
+  genModeliserCroissanceDecroissanceQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

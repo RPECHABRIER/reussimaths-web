@@ -343,7 +343,29 @@ const GENERATORS = [
   genSensVecteursColineairesQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCoordonneesVecteurNumeric: "facile",
+  genNormeVecteurNumeric: "facile",
+  genVecteursEgauxQCM: "facile",
+  genImageTranslationNumeric: "facile",
+  genVecteurOpposeNumeric: "facile",
+  genSommeDeuxVecteursNumeric: "facile",
+  genMultiplierVecteurParScalaireNumeric: "facile",
+  genAntecedentTranslationNumeric: "standard",
+  genVecteurTranslationDepuisImageNumeric: "standard",
+  genRelationChaslesNumeric: "standard",
+  genSommetParallelogrammeVecteurNumeric: "standard",
+  genComparerNormesQCM: "standard",
+  genIdentifierProprieteVecteurQCM: "standard",
+  genResoudreEquationVectorielleNumeric: "expert",
+  genSensVecteursColineairesQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

@@ -291,7 +291,29 @@ const GENERATORS = [
   genValeurSolutionNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genPrimitivePolynomeConstanteNumeric: "facile",
+  genPrimitivePuissanceQCM: "facile",
+  genIdentifierCoefficientANumeric: "facile",
+  genNombrePrimitivesQCM: "facile",
+  genPrimitiveExponentielleAffineQCM: "standard",
+  genPrimitiveCosAffineQCM: "standard",
+  genPrimitiveSinAffineQCM: "standard",
+  genEquationDiffHomogeneQCM: "standard",
+  genDeterminerConstanteHomogeneNumeric: "standard",
+  genVraiFauxEquationDiffQCM: "standard",
+  genVraiFauxPrimitivesQCM: "standard",
+  genPrimitiveExpCompositionCoefficientNumeric: "expert",
+  genEquationDiffAvecSecondMembreQCM: "expert",
+  genDeterminerConstanteAvecSecondMembreNumeric: "expert",
+  genValeurSolutionNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

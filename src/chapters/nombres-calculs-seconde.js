@@ -354,7 +354,29 @@ const GENERATORS = [
   genComparerValeurAbsolueQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genConvertirInegaliteIntervalleQCM: "facile",
+  genAppartientIntervalleQCM: "facile",
+  genValeurAbsolueNumeric: "facile",
+  genDistanceDeuxReelsNumeric: "facile",
+  genSimplifierRacineCarreNumeric: "facile",
+  genPuissanceNegativeNumeric: "facile",
+  genComparerPuissanceZeroQCM: "facile",
+  genAdditionFractionsNumeric: "facile",
+  genEncadrementOperationNumeric: "standard",
+  genResoudreValeurAbsolueEgaliteNumeric: "standard",
+  genSimplifierRacineFacteurCarreNumeric: "standard",
+  genSommeRacinesCarreesNumeric: "standard",
+  genEcritureScientifiqueNumeric: "standard",
+  genComparerValeurAbsolueQCM: "standard",
+  genResoudreInequationValeurAbsolueQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

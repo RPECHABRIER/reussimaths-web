@@ -435,7 +435,30 @@ const GENERATORS = [
   genPerimetreCarreEgalRectangleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genDevelopperSimpleDistributiviteGeneraleNumeric: "facile",
+  genDevelopperSigneDevantParentheseNumeric: "facile",
+  genFactoriserFacteurCommunXNumeric: "facile",
+  genDevelopperDoubleDistributiviteGeneraleNumeric: "standard",
+  genFactoriserPlusGrandFacteurCommunQCM: "standard",
+  genDevelopperDifferenceCarresNumeric: "standard",
+  genFactoriserDifferenceCarresNumeric: "standard",
+  genIdentiteRemarquableCarreNumeric: "standard",
+  genAireRectangleDifferenceCarresNumeric: "standard",
+  genQCMReconnaitreDeveloppementQCM: "standard",
+  genCorrigerErreurEleveQCM: "expert",
+  genFactoriserFacteurCommunBinomeGeneraleNumeric: "expert",
+  genProgrammeResoudreEquationNumeric: "expert",
+  genProgrammeMultipleDeKNumeric: "expert",
+  genProgrammeCarreToujoursNumeric: "expert",
+  genPerimetreCarreEgalRectangleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

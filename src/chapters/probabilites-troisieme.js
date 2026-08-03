@@ -373,7 +373,29 @@ const GENERATORS = [
   genProbabiliteMultipleNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genIdentifierEvenementQCM: "facile",
+  genNombreIssuesQCM: "facile",
+  genProbabiliteUrneNumeric: "facile",
+  genProbabiliteDeNumeric: "facile",
+  genEquiprobabiliteQCM: "facile",
+  genValeurProbabiliteQCM: "facile",
+  genEvenementContraireNumeric: "standard",
+  genSommeProbabilitesNumeric: "standard",
+  genEffectifAttenduNumeric: "standard",
+  genComparerProbabilitesQCM: "standard",
+  genProbabiliteCarteQCM: "standard",
+  genProbabiliteDepuisPourcentageNumeric: "standard",
+  genVerifierLoiProbabiliteQCM: "standard",
+  genProbabiliteApresRetraitNumeric: "expert",
+  genProbabiliteMultipleNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

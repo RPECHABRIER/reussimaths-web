@@ -296,7 +296,28 @@ const GENERATORS = [
   genVraiFauxImageQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genImageFonctionLineaireNumeric: "facile",
+  genVocabulaireImageAntecedentQCM: "facile",
+  genLectureTableauImageNumeric: "facile",
+  genLectureTableauAntecedentNumeric: "facile",
+  genImageFonctionQuadratiqueNumeric: "standard",
+  genImageFonctionCubiqueNumeric: "standard",
+  genAntecedentFonctionLineaireNumeric: "standard",
+  genPuissanceDixAntecedentNumeric: "standard",
+  genFonctionConstanteAntecedentsQCM: "standard",
+  genProgrammeCalculExpressionFonctionNumeric: "standard",
+  genVraiFauxImageQCM: "standard",
+  genAntecedentFonctionQuadratiqueNumeric: "expert",
+  genProgrammeCalculAntecedentNumeric: "expert",
+  genEgaliteDeuxFonctionsNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

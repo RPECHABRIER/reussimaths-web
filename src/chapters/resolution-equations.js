@@ -298,7 +298,28 @@ const GENERATORS = [
   genPrixEquationContexteNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTesterSolutionEquationQCM: "facile",
+  genResoudreEquationAdditionSoustractionNumeric: "facile",
+  genResoudreEquationMultiplicationNumeric: "facile",
+  genOperationInverseQCM: "facile",
+  genResoudreEquationDeuxEtapesNumeric: "standard",
+  genResoudreEquationDesDeuxCotesNumeric: "standard",
+  genResoudreEquationAvecParenthesesNumeric: "standard",
+  genPerimetreEquationNumeric: "standard",
+  genProgrammeCalculTrouverEntreeNumeric: "standard",
+  genTraduireProblemeAgeQCM: "expert",
+  genProblemeSommeMultiplesNumeric: "expert",
+  genProblemeDoubleTripleAgeNumeric: "expert",
+  genDeuxProgrammesMemeResultatNumeric: "expert",
+  genPrixEquationContexteNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

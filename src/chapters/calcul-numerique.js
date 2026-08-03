@@ -253,7 +253,23 @@ const GENERATORS = [
   genChoisirOperationProblemeQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genIdentifierSommeOuProduit: "facile",
+  genCalculerExpressionPriorites: "standard",
+  genAssocierExpressionResultat: "standard",
+  genReconnaitreExpressionsEgalesDistributivite: "standard",
+  genAireRectangleDecompose: "standard",
+  genProgrammeCalculTexte: "standard",
+  genCalculAstucieuxFacteurCommun: "expert",
+  genRetrouverNombreDepartProgramme: "expert",
+  genChoisirOperationProblemeQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

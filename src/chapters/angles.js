@@ -494,7 +494,31 @@ const GENERATORS = [
   genProblemeTriangleIsoceleAngles,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genEstimerAngleQCM: "facile",
+  genMesurerAngleFigure: "facile",
+  genNatureAngleQCM: "facile",
+  genTroisiemeAngleTriangle: "facile",
+  genTroisiemeAngleTriangleRectangle: "facile",
+  genClassifierAngleMulti: "standard",
+  genAnglesSupplementaires: "standard",
+  genAnglesOpposesParSommet: "standard",
+  genSommeAnglesAdjacents: "standard",
+  genBissectrice: "standard",
+  genTriangleExisteQCM: "standard",
+  genAnglesAlignesChaine: "standard",
+  genAngleExterieurTriangle: "standard",
+  genProblemeCocheQuestionsAngles: "expert",
+  genProblemeVraiFauxAngles: "expert",
+  genProblemeBissectriceAngleEntre: "expert",
+  genProblemeTriangleIsoceleAngles: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

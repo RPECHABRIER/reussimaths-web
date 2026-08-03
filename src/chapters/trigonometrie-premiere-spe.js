@@ -296,7 +296,29 @@ const GENERATORS = [
   genLienTriangleRectangleQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genConversionDegresRadiansQCM: "facile",
+  genConversionRadiansDegresNumeric: "facile",
+  genValeurCosinusQCM: "facile",
+  genValeurSinusQCM: "facile",
+  genIdentifierAngleQCM: "facile",
+  genLongueurArcNumeric: "standard",
+  genRelationFondamentaleNumeric: "standard",
+  genPariteCosinusQCM: "standard",
+  genImparitéSinusQCM: "standard",
+  genSigneQuadrantQCM: "standard",
+  genLienTriangleRectangleQCM: "standard",
+  genAngleAssocieCosPiMoinsXQCM: "expert",
+  genAngleAssocieSinPiMoinsXQCM: "expert",
+  genAngleAssocieCosPiPlusXQCM: "expert",
+  genAngleAssocieSinPiPlusXQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

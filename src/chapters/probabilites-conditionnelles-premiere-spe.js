@@ -311,7 +311,29 @@ const GENERATORS = [
   genReconnaitrePartitionQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculerIntersectionIndependantsNumeric: "facile",
+  genPartitionCompleterNumeric: "facile",
+  genProbabiliteBrancheArbreNumeric: "facile",
+  genBernoulliTousSuccesNumeric: "facile",
+  genRetrouverPANumeric: "standard",
+  genUnionIndependantsNumeric: "standard",
+  genProbabilitesTotalesNumeric: "standard",
+  genProbabiliteTotaleArbreNumeric: "standard",
+  genBernoulliCheminParticulierNumeric: "standard",
+  genNombreCheminsNumeric: "standard",
+  genReconnaitrePartitionQCM: "standard",
+  genVerifierIndependanceQCM: "expert",
+  genBernoulliAuMoinsUnSuccesNumeric: "expert",
+  genProbabiliteExactementKSuccesNumeric: "expert",
+  genVraiFauxIndependanceQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

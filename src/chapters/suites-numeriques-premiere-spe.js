@@ -299,7 +299,29 @@ const GENERATORS = [
   genTermeExpliciteNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genTermeRecurrenceArithmetiqueNumeric: "facile",
+  genTermeRecurrenceGeometriqueNumeric: "facile",
+  genRaisonArithmetiqueNumeric: "facile",
+  genRaisonGeometriqueNumeric: "facile",
+  genSommeEntiersNumeric: "facile",
+  genTermeGeneralArithmetiqueNumeric: "standard",
+  genTermeGeneralGeometriqueNumeric: "standard",
+  genSommeArithmetiqueNumeric: "standard",
+  genSensVariationArithmetiqueQCM: "standard",
+  genSensVariationGeometriqueQCM: "standard",
+  genTermeExpliciteNumeric: "standard",
+  genSommeGeometriqueNumeric: "expert",
+  genModeliserPhenomeneQCM: "expert",
+  genLimiteGeometriqueQCM: "expert",
+  genReconnaitreModeGenerationQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

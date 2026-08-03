@@ -354,7 +354,29 @@ const GENERATORS = [
   genResoudreEquationColineaireAutreInconnueNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genCalculDeterminantNumeric: "facile",
+  genVecteursColineaireQCM: "facile",
+  genReconnaitreColineaireMultipleQCM: "facile",
+  genVecteurColineaireAxeQCM: "facile",
+  genColineaireAvecVecteurNulQCM: "facile",
+  genAlignementViaDeterminantQCM: "standard",
+  genParallelismeDroitesQCM: "standard",
+  genTrouverParametreColinéaireNumeric: "standard",
+  genVraiFauxColinéariteQCM: "standard",
+  genCoefficientColinéaireNumeric: "standard",
+  genDroitesParallelesOuSecantesQCM: "standard",
+  genVecteurDirecteurDroiteQCM: "standard",
+  genCoordonneeInconnuePourAlignementNumeric: "expert",
+  genConstruireVecteurColineaireDeterminantNumeric: "expert",
+  genResoudreEquationColineaireAutreInconnueNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

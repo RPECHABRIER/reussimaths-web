@@ -588,7 +588,41 @@ const GENERATORS = [
   genRubanNoeuds,
 ];
 
-function generate() {
+// Tag de difficulté par générateur (voir nombres-decimaux.js pour la
+// convention complète) — utilisé par les Parcours (débutant/avancé/expert).
+const DIFFICULTY = {
+  genFractionDunNombreEntier: "facile",
+  genFractionQuotientDecimal: "facile",
+  genLireAbscisseFraction: "standard",
+  genFractionsEgalesTrouver: "facile",
+  genDecomposerFractionEntierFraction: "standard",
+  genComparerFractionUniteDemi: "facile",
+  genComparerDeuxFractions: "standard",
+  genEncadrerFraction: "standard",
+  genRangerFractions: "standard",
+  genAdditionMemeDenominateur: "facile",
+  genSoustractionMemeDenominateur: "facile",
+  genAdditionDenominateursMultiples: "standard",
+  genMultiplierEntierParFraction: "standard",
+  genMultiplierDeuxFractions: "standard",
+  genAppliquerPourcentageNombre: "standard",
+  genPourcentageReductionBidirectionnel: "standard",
+  genChaineMoitieReserve: "expert",
+  genProblemeCocheQuestionsFractions: "expert",
+  genProblemeCompletePhraseFraction: "expert",
+  genProblemePartageArgentFractions: "expert",
+  genProblemeReductionVraiFaux: "expert",
+  genProblemeGroupeElevesFraction: "expert",
+  genProblemeDistanceParcourueFraction: "expert",
+  genProblemeVraiFauxSucreTablette: "expert",
+  genRubanNoeuds: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

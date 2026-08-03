@@ -325,7 +325,29 @@ const GENERATORS = [
   genCalculerHypotenuseTrigoNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genIdentifierRatioQCM: "facile",
+  genIdentifierCoteQCM: "facile",
+  genCalculerLongueurCosinusNumeric: "facile",
+  genCalculerLongueurSinusNumeric: "facile",
+  genCalculerLongueurTangenteNumeric: "facile",
+  genCalculerAngleArccosNumeric: "standard",
+  genCalculerAngleArcsinNumeric: "standard",
+  genCalculerAngleArctanNumeric: "standard",
+  genValeurTrigoValideQCM: "standard",
+  genAnglesComplementairesNumeric: "standard",
+  genCalculerHypotenuseTrigoNumeric: "standard",
+  genProblemeHauteurTangenteNumeric: "expert",
+  genProblemePenteAngleNumeric: "expert",
+  genPythagoreEtTrigoNumeric: "expert",
+  genProblemeHauteurSinusNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

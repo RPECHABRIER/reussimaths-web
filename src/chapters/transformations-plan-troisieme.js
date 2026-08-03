@@ -302,7 +302,29 @@ const GENERATORS = [
   genRapportAireHomothetieNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genImageTranslationCoordNumeric: "facile",
+  genImageSymetrieCentraleCoordNumeric: "facile",
+  genImageSymetrieAxialeCoordNumeric: "facile",
+  genCoefficientHomothetieNumeric: "facile",
+  genProprietesConserveesQCM: "facile",
+  genAngleConserveTransformationQCM: "facile",
+  genImageRotationCoordNumeric: "standard",
+  genOMPrimeHomothetieNumeric: "standard",
+  genLongueurHomothetieNumeric: "standard",
+  genPerimetreHomothetieNumeric: "standard",
+  genAireHomothetieNumeric: "standard",
+  genOrdreAlignementHomothetieQCM: "standard",
+  genIdentifierTransformationQCM: "standard",
+  genImageMilieuSegmentQCM: "standard",
+  genRapportAireHomothetieNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

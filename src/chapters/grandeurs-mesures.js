@@ -593,7 +593,36 @@ const GENERATORS = [
   genProblemeCocheQuestionsGrandeurs,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genPerimetreCercle: "facile",
+  genConvertirUnitesLongueur: "facile",
+  genLireHeureHorloge: "facile",
+  genConvertirDureeMinutesHeures: "facile",
+  genConvertirDureeJoursHeures: "facile",
+  genRectangleGrandeurs: "standard",
+  genPerimetreDemiCercle: "standard",
+  genVolumePave: "standard",
+  genConvertirUnitesAire: "standard",
+  genComparerAiresQCM: "standard",
+  genConvertirDureeSexagesimaleDecimale: "standard",
+  genComparerDureesQCM: "standard",
+  genFigureComposeeRectangles: "expert",
+  genProblemeDureeHebdomadaireTravail: "expert",
+  genProblemeHeureArriveeTexte: "expert",
+  genProblemeDureeEntreDeuxHeures: "expert",
+  genProblemeGrillagePerimetre: "expert",
+  genProblemeMoquetteAire: "expert",
+  genProblemeComparaisonSurfaces: "expert",
+  genProblemeFrequenceTotal: "expert",
+  genProblemeSommeDistances: "expert",
+  genProblemeCocheQuestionsGrandeurs: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

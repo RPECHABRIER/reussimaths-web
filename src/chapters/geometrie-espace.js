@@ -428,7 +428,31 @@ const GENERATORS = [
   genCultureEscherQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genNombreFacesLateralesPrismeNumeric: "facile",
+  genPerspectiveCavaliereProprieteQCM: "facile",
+  genFacesSommetsAretesPrismeNumeric: "facile",
+  genVolumePaveDroitNumeric: "facile",
+  genVolumeCubeNumeric: "facile",
+  genConversionUnitesVolumeNumeric: "facile",
+  genAireDisqueNumeric: "facile",
+  genCultureSolidesPlatonFacesQCM: "facile",
+  genCultureEscherQCM: "facile",
+  genVolumePrismeDroitBaseTriangleNumeric: "standard",
+  genVolumeCylindreRevolutionNumeric: "standard",
+  genTrouverHauteurPaveNumeric: "standard",
+  genConversionVolumeCapaciteNumeric: "standard",
+  genCultureFormuleEulerNumeric: "standard",
+  genVolumePaveTroueParCylindreNumeric: "expert",
+  genVolumeComposePaveDemiCylindreNumeric: "expert",
+  genCapaciteBouteillesMinimumNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

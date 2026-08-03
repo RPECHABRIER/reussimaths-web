@@ -297,7 +297,29 @@ const GENERATORS = [
   genLnExponentielleReciproqueNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genLnProduitQCM: "facile",
+  genLnQuotientQCM: "facile",
+  genLnRacineFormuleQCM: "facile",
+  genLnValeurRemarquableQCM: "facile",
+  genDeriveeLnFormuleQCM: "facile",
+  genLnPuissanceCoefficientNumeric: "standard",
+  genDomaineDefinitionLnNumeric: "standard",
+  genDeriveeLnAffineNumeric: "standard",
+  genResoudreEquationLnNumeric: "standard",
+  genSigneLnQCM: "standard",
+  genComparerLnQCM: "standard",
+  genResoudreEquationLnEgaliteNumeric: "expert",
+  genLimiteLnQCM: "expert",
+  genVraiFauxProprietesLnQCM: "expert",
+  genLnExponentielleReciproqueNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

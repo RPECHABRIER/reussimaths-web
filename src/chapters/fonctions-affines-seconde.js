@@ -365,7 +365,29 @@ const GENERATORS = [
   genTarifInverseNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genIdentifierCoefficientsNumeric: "facile",
+  genSensVariationSigneAQCM: "facile",
+  genImageAffineNumeric: "facile",
+  genClasserFonctionQCM: "facile",
+  genPointAppartientDroiteQCM: "facile",
+  genCalculTauxVariationNumeric: "standard",
+  genDeterminerFonctionDeuxPointsNumeric: "standard",
+  genVraiFauxAffineQCM: "standard",
+  genComparerImagesSigneAQCM: "standard",
+  genIdentifierDroiteQCM: "standard",
+  genResoudreEquationAffineNumeric: "standard",
+  genTarifContexteNumeric: "standard",
+  genResoudreInequationAffineQCM: "expert",
+  genIntersectionDeuxDroitesNumeric: "expert",
+  genTarifInverseNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

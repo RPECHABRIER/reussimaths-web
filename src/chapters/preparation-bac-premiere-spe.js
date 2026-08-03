@@ -368,7 +368,29 @@ const GENERATORS = [
   genNombreSolutionsEquationAffineQCM,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genDeveloppementIdentiteQCM: "facile",
+  genLectureGraphiqueAffineQCM: "facile",
+  genProportionComplementaireQCM: "facile",
+  genCoefficientMultiplicateurQCM: "facile",
+  genOrdreGrandeurQCM: "facile",
+  genPuissancesDix10QCM: "facile",
+  genDebitQCM: "standard",
+  genAppartenanceCourbeQCM: "standard",
+  genTableauSignesProduitQCM: "standard",
+  genVraiFauxSuiteGeometriqueQCM: "standard",
+  genNombreSolutionsEquationAffineQCM: "standard",
+  genProbabiliteConditionnelleDenombrementNumeric: "expert",
+  genArbrePondereIntersectionNumeric: "expert",
+  genProbabiliteSachantComplementaireNumeric: "expert",
+  genVraiFauxDiscriminantParametreQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

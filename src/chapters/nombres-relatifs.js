@@ -622,7 +622,43 @@ const GENERATORS = [
   genMilieuSegmentAbscisse,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genOpposeDunNombre: "facile",
+  genValeurAbsolueDunNombre: "facile",
+  genSigneDunNombreQCM: "facile",
+  genRetrouverNombreDepuisOppose: "facile",
+  genAbscisseSurDroiteGraduee: "facile",
+  genComparerDeuxRelatifsQCM: "facile",
+  genAdditionnerDeuxRelatifsMemeSigne: "facile",
+  genCompleterGraduationDemiDroite: "facile",
+  genLireCoordonneePointRepere: "facile",
+  genQuadrantSigneCoordonneesQCM: "facile",
+  genTraduireOperationAvecZero: "facile",
+  genContexteAscenseurNiveauQCM: "standard",
+  genContexteProfondeurHauteurEcriture: "standard",
+  genComparerDistancesAZeroQCM: "standard",
+  genClasserDatesFrise: "standard",
+  genEncadrerParEntiersRelatifsConsecutifs: "standard",
+  genRangerRelatifsOrdreCroissantDecroissant: "standard",
+  genAdditionnerDeuxRelatifsSignesContraires: "standard",
+  genSoustraireDeuxRelatifs: "standard",
+  genTransformerSoustractionEnAddition: "standard",
+  genEcartEffectifsEvolution: "standard",
+  genSymetriqueParRapportOrigineCoordonnees: "standard",
+  genSymetriqueParRapportAxeCoordonnees: "standard",
+  genMilieuSegmentAbscisse: "standard",
+  genProblemeTemperatureAddition: "expert",
+  genDureeVieHistorique: "expert",
+  genVariationMasseSemaine: "expert",
+  genCalculerExpressionRelatifsEnchainee: "expert",
+  genBilanCarboneAdditionSoustraction: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

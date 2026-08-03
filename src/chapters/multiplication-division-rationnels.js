@@ -347,7 +347,29 @@ const GENERATORS = [
   genAireRectangleFractionsNumeric,
 ];
 
-function generate() {
+const DIFFICULTY = {
+  genMultiplierDeuxFractionsSigneesNumeric: "facile",
+  genFractionDUnNombreNumeric: "facile",
+  genInverseDUneFractionQCM: "facile",
+  genDiviserParUneFractionNumeric: "facile",
+  genPourcentageEffectifNumeric: "facile",
+  genChaineMultiplicationsSigneesNumeric: "standard",
+  genTraduireExpressionQCM: "standard",
+  genDistinguerOpposeInverseQCM: "standard",
+  genInverseOpposeDoubleQCM: "standard",
+  genDiviserNombreDecimalParFractionNumeric: "standard",
+  genPrioriteOperatoireFractionsNumeric: "standard",
+  genProgrammeCalculAvecInverseNumeric: "standard",
+  genComparerDeuxPourcentagesQCM: "standard",
+  genProportionDeuxEtapesNumeric: "expert",
+  genAireRectangleFractionsNumeric: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
   return pick(GENERATORS)();
 }
 

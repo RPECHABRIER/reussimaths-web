@@ -52,7 +52,9 @@ export const EXAM_CHAPTER_BY_LEVEL = {
   seconde: "exercices-fin-annee-seconde",
   "premiere-non-spe": "preparation-eam-premiere-non-spe",
   "premiere-spe": "preparation-bac-premiere-spe",
+  "premiere-techno": "preparation-eam-premiere-techno",
   "terminale-spe": "exercices-transversaux-terminale-spe",
+  "terminale-techno": null,
 };
 
 // Vérifie l'identité RÉELLE (jamais influencée par la préviz) — c'est le

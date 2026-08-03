@@ -179,6 +179,41 @@ export const PLANNED_CHAPTERS = {
     { id: "variables-aleatoires-premiere-spe", title: "Variables aléatoires réelles", order: 11 },
     { id: "preparation-bac-premiere-spe", title: "Préparation au Bac (EAM)", order: 12 },
   ],
+  // Sommaire du programme 2026 de Première technologique (voie STMG et
+  // proches) : Suites numériques, Fonctions polynômes de degré 2 (sans
+  // discriminant), Dérivation, Statistiques à deux variables (ajustement
+  // affine), Probabilités conditionnelles et indépendance, Épreuves
+  // indépendantes/Bernoulli, Variables aléatoires, plus une "Préparation à
+  // l'EAM" construite à partir des 4 sujets réels 2026 (Métropole,
+  // Antilles-Guyane, Centres étrangers, Polynésie). Les ids "-premiere-techno"
+  // évitent toute collision avec les chapitres d'autres niveaux.
+  "premiere-techno": [
+    { id: "suites-numeriques-premiere-techno", title: "Suites numériques", order: 2 },
+    { id: "fonctions-second-degre-premiere-techno", title: "Fonctions polynômes de degré 2", order: 3 },
+    { id: "derivation-premiere-techno", title: "Dérivation", order: 4 },
+    { id: "statistiques-deux-variables-premiere-techno", title: "Statistiques à deux variables", order: 5 },
+    { id: "probabilites-conditionnelles-premiere-techno", title: "Probabilités conditionnelles et indépendance", order: 6 },
+    { id: "epreuves-independantes-premiere-techno", title: "Épreuves indépendantes et répétition de Bernoulli", order: 7 },
+    { id: "variables-aleatoires-premiere-techno", title: "Variables aléatoires", order: 8 },
+    { id: "preparation-eam-premiere-techno", title: "Préparation à l'EAM", order: 9 },
+  ],
+  // Sommaire du programme 2026 de Terminale technologique (voie STMG),
+  // construit à partir de la progression annuelle et des fiches de séance de
+  // Romain (dossier "Terminale STMG/2026-2027"). Pas de "Préparation EAM" :
+  // il n'y a pas d'épreuve écrite du bac de mathématiques en Terminale STMG.
+  // "Fonction inverse" (bloc G) et "Thème d'étude et synthèse" (bloc H) sont
+  // prévus au programme mais leurs fiches sources ne sont pas encore
+  // rédigées — laissés en "Bientôt disponible" en attendant.
+  "terminale-techno": [
+    { id: "suites-terminale-techno", title: "Suites numériques", order: 2 },
+    { id: "fonctions-exponentielles-terminale-techno", title: "Fonctions exponentielles", order: 3 },
+    { id: "logarithme-decimal-terminale-techno", title: "Fonction logarithme décimal", order: 4 },
+    { id: "fonction-inverse-terminale-techno", title: "Fonction inverse", order: 5 },
+    { id: "statistiques-deux-variables-terminale-techno", title: "Statistiques à deux variables (ajustement non affine)", order: 6 },
+    { id: "probabilites-conditionnelles-terminale-techno", title: "Probabilités conditionnelles et probabilités totales", order: 7 },
+    { id: "variables-aleatoires-terminale-techno", title: "Variables aléatoires et loi binomiale", order: 8 },
+    { id: "theme-etude-terminale-techno", title: "Thème d'étude et synthèse", order: 9 },
+  ],
 };
 
 export function getPlannedChapters(levelId) {

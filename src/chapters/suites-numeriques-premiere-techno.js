@@ -1,0 +1,270 @@
+// ---------------------------------------------------------------------------
+// Chapitre : Suites numériques (Première technologique)
+// Programme 2026 : modes de génération d'une suite, sens de variation,
+// représentation graphique (nuage de points (n, u(n))), suites arithmétiques
+// ("croissance linéaire") et suites géométriques à termes positifs
+// ("croissance exponentielle") : relation de récurrence, terme de rang n,
+// sens de variation. Capacités : modéliser une situation, reconnaître le
+// type de suite, calculer un terme, déterminer le sens de variation.
+// ---------------------------------------------------------------------------
+
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const nonZero = (min, max) => {
+  let n = 0;
+  while (n === 0) n = randInt(min, max);
+  return n;
+};
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
+const roundTo = (n, d) => Math.round(n * 10 ** d) / 10 ** d;
+const fr = (n) => String(n).replace(".", ",");
+
+// ---------- 1. Terme via une relation de récurrence arithmétique ----------
+function genTermeRecurrenceArithmetiqueNumeric() {
+  const u0 = randInt(-15, 15);
+  const r = nonZero(-9, 9);
+  const n = randInt(1, 4);
+  const answer = u0 + n * r;
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Récurrence arithmétique",
+    prompt: `Une suite \\((u_n)\\) est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = u_n ${r >= 0 ? "+" : "-"} ${Math.abs(r)}\\). Calcule \\(u_{${n}}\\).`,
+    answer,
+    steps: [`\\text{On ajoute } ${r} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}`, `u_{${n}} = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${n} = ${answer}`],
+  };
+}
+
+// ---------- 2. Terme via une relation de récurrence géométrique (termes positifs) ----------
+function genTermeRecurrenceGeometriqueNumeric() {
+  const u0 = pick([1, 2, 3, 4, 5]);
+  const q = pick([2, 3, 1.5, 0.5]);
+  const n = randInt(1, 4);
+  const answer = roundTo(u0 * q ** n, 3);
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Récurrence géométrique",
+    prompt: `Une suite \\((u_n)\\), à termes positifs, est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = ${fr(q)} \\times u_n\\). Calcule \\(u_{${n}}\\).`,
+    answer,
+    tolerance: 0.005,
+    steps: [`\\text{On multiplie par } ${fr(q)} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}`, `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+  };
+}
+
+// ---------- 3. Terme général d'une suite arithmétique ----------
+function genTermeGeneralArithmetiqueNumeric() {
+  const u0 = randInt(-20, 20);
+  const r = nonZero(-8, 8);
+  const n = randInt(5, 30);
+  const answer = u0 + n * r;
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Terme général (arithmétique)",
+    prompt: `\\((u_n)\\) est une suite arithmétique de premier terme \\(u_0 = ${u0}\\) et de raison \\(r = ${r}\\). Calcule \\(u_{${n}}\\) en utilisant la formule \\(u_n = u_0 + nr\\).`,
+    answer,
+    steps: [`u_{${n}} = u_0 + ${n} \\times r = ${u0} + ${n} \\times (${r}) = ${answer}`],
+  };
+}
+
+// ---------- 4. Terme général d'une suite géométrique (positive) ----------
+function genTermeGeneralGeometriqueNumeric() {
+  const u0 = pick([1, 2, 3, 4, 5]);
+  const q = pick([2, 3, 1.5]);
+  const n = randInt(2, 6);
+  const answer = roundTo(u0 * q ** n, 3);
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Terme général (géométrique)",
+    prompt: `\\((u_n)\\) est une suite géométrique à termes positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Calcule \\(u_{${n}}\\) en utilisant la formule \\(u_n = u_0 \\times q^n\\).`,
+    answer,
+    tolerance: 0.005,
+    steps: [`u_{${n}} = u_0 \\times q^{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+  };
+}
+
+// ---------- 5. Déterminer la raison d'une suite arithmétique ----------
+function genRaisonArithmetiqueNumeric() {
+  const r = nonZero(-12, 12);
+  const uA = randInt(-30, 30);
+  const uB = uA + r;
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Raison arithmétique",
+    prompt: `\\((u_n)\\) est une suite arithmétique telle que \\(u_5 = ${uA}\\) et \\(u_6 = ${uB}\\). Détermine la raison \\(r\\) de cette suite.`,
+    answer: r,
+    steps: [`r = u_6 - u_5 = ${uB} - (${uA}) = ${r}`],
+  };
+}
+
+// ---------- 6. Déterminer la raison d'une suite géométrique (positive) ----------
+function genRaisonGeometriqueNumeric() {
+  const q = pick([2, 3, 4, 1.5, 0.5]);
+  const uA = randInt(2, 12);
+  const uB = roundTo(uA * q, 3);
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Raison géométrique",
+    prompt: `\\((u_n)\\) est une suite géométrique à termes positifs telle que \\(u_3 = ${uA}\\) et \\(u_4 = ${fr(uB)}\\). Détermine la raison \\(q\\) de cette suite.`,
+    answer: q,
+    tolerance: 0.005,
+    steps: [`q = \\dfrac{u_4}{u_3} = \\dfrac{${fr(uB)}}{${uA}} = ${fr(q)}`],
+  };
+}
+
+// ---------- 7. Sens de variation d'une suite arithmétique ----------
+function genSensVariationArithmetiqueQCM() {
+  const r = nonZero(-9, 9);
+  const answer = r > 0 ? "croissante" : "décroissante";
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Sens de variation",
+    prompt: `\\((u_n)\\) est une suite arithmétique de raison \\(r = ${r}\\). Quel est son sens de variation ?`,
+    answer,
+    options: ["croissante", "décroissante"],
+    steps: [r > 0 ? `\\text{Comme } r > 0, \\text{ chaque terme s'obtient en ajoutant un nombre positif : la suite est croissante.}` : `\\text{Comme } r < 0, \\text{ chaque terme s'obtient en ajoutant un nombre négatif : la suite est décroissante.}`],
+  };
+}
+
+// ---------- 8. Sens de variation d'une suite géométrique à termes positifs ----------
+function genSensVariationGeometriqueQCM() {
+  const u0 = randInt(1, 10);
+  const q = pick([0.5, 0.25, 0.2, 1.5, 2, 3, 4]);
+  const answer = q > 1 ? "croissante" : "décroissante";
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Sens de variation",
+    prompt: `\\((u_n)\\) est une suite géométrique à termes strictement positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Quel est son sens de variation ?`,
+    answer,
+    options: ["croissante", "décroissante"],
+    steps: [q > 1 ? `\\text{Comme } q > 1 \\text{ et les termes sont positifs, la suite est croissante.}` : `\\text{Comme } 0 < q < 1 \\text{ et les termes sont positifs, la suite est décroissante.}`],
+  };
+}
+
+// ---------- 9. Reconnaître arithmétique vs géométrique (modélisation) ----------
+function genModeliserPhenomeneQCM() {
+  const cas = pick([
+    { description: "Un capital augmente chaque année du même montant fixe.", reponse: "Croissance linéaire (suite arithmétique)" },
+    { description: "Un capital augmente chaque année du même pourcentage.", reponse: "Croissance exponentielle (suite géométrique)" },
+    { description: "Un loyer augmente du même montant en euros chaque année.", reponse: "Croissance linéaire (suite arithmétique)" },
+    { description: "Un loyer augmente au même taux d'évolution chaque année.", reponse: "Croissance exponentielle (suite géométrique)" },
+    { description: "Une entreprise embauche le même nombre de salariés chaque année.", reponse: "Croissance linéaire (suite arithmétique)" },
+    { description: "Le nombre d'utilisateurs d'une application augmente du même pourcentage chaque mois.", reponse: "Croissance exponentielle (suite géométrique)" },
+  ]);
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Modélisation",
+    prompt: `On modélise l'évolution suivante par une suite : « ${cas.description} » Quel type de croissance convient ?`,
+    answer: cas.reponse,
+    options: ["Croissance linéaire (suite arithmétique)", "Croissance exponentielle (suite géométrique)"],
+    steps: [cas.reponse.includes("linéaire") ? `\\text{Accroissement constant} \\Rightarrow \\text{croissance linéaire.}` : `\\text{Taux d'évolution constant} \\Rightarrow \\text{croissance exponentielle.}`],
+  };
+}
+
+// ---------- 10. Lecture d'un nuage de points (n, u(n)) ----------
+function genLectureNuagePointsQCM() {
+  const arithmetique = Math.random() < 0.5;
+  const u0 = randInt(2, 8);
+  const points = [];
+  if (arithmetique) {
+    const r = pick([1, 1.5, 2, 2.5, 3]);
+    for (let n = 0; n <= 6; n++) points.push({ x: n, y: roundTo(u0 + n * r, 2) });
+  } else {
+    const q = pick([1.2, 1.3, 1.5]);
+    for (let n = 0; n <= 6; n++) points.push({ x: n, y: roundTo(u0 * q ** n, 2) });
+  }
+  const answer = arithmetique ? "Suite arithmétique" : "Suite géométrique";
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Représentation graphique",
+    prompt: `On donne ci-dessous le nuage de points \\((n \\, ; \\, u_n)\\) d'une suite. Quel type de suite semble représentée ?`,
+    answer,
+    options: ["Suite arithmétique", "Suite géométrique"],
+    steps: [
+      arithmetique
+        ? `\\text{Les points semblent alignés : les termes progressent d'une valeur constante, c'est une suite arithmétique.}`
+        : `\\text{Les points suivent une courbe qui s'accentue : la suite croît de plus en plus vite, c'est une suite géométrique.}`,
+    ],
+    graph: { xMin: -0.5, xMax: 6.5, yMin: 0, yMax: Math.max(...points.map((p) => p.y)) + 2, points: points.map((p, i) => ({ x: p.x, y: p.y, label: i === 0 ? "u₀" : "" })) },
+  };
+}
+
+// ---------- 11. Reconnaître le mode de génération d'une suite ----------
+function genReconnaitreModeGenerationQCM() {
+  const cas = pick([
+    { description: "\\(u_n = 3n - 2\\)", reponse: "Formule explicite" },
+    { description: "\\(u_{n+1} = u_n + 5\\), avec \\(u_0\\) donné", reponse: "Relation de récurrence" },
+    { description: "\\(u_n = 2^n\\)", reponse: "Formule explicite" },
+    { description: "\\(u_{n+1} = 1{,}2 \\times u_n\\), avec \\(u_0\\) donné", reponse: "Relation de récurrence" },
+  ]);
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Modes de génération",
+    prompt: `On définit une suite par : ${cas.description}. Quel est son mode de génération ?`,
+    answer: cas.reponse,
+    options: ["Formule explicite", "Relation de récurrence"],
+    steps: [cas.reponse === "Formule explicite" ? `\\text{On peut calculer } u_n \\text{ directement en fonction de } n.` : `\\text{Chaque terme se calcule à partir du précédent.}`],
+  };
+}
+
+// ---------- 12. Terme d'une suite définie explicitement ----------
+function genTermeExpliciteNumeric() {
+  const a = nonZero(-6, 6);
+  const b = randInt(-10, 10);
+  const n = randInt(3, 15);
+  const answer = a * n + b;
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Formule explicite",
+    prompt: `Une suite \\((u_n)\\) est définie pour tout entier naturel \\(n\\) par \\(u_n = ${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(u_{${n}}\\).`,
+    answer,
+    steps: [`u_{${n}} = ${a} \\times ${n} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+  };
+}
+
+const GENERATORS = [
+  genTermeRecurrenceArithmetiqueNumeric,
+  genTermeRecurrenceGeometriqueNumeric,
+  genTermeGeneralArithmetiqueNumeric,
+  genTermeGeneralGeometriqueNumeric,
+  genRaisonArithmetiqueNumeric,
+  genRaisonGeometriqueNumeric,
+  genSensVariationArithmetiqueQCM,
+  genSensVariationGeometriqueQCM,
+  genModeliserPhenomeneQCM,
+  genLectureNuagePointsQCM,
+  genReconnaitreModeGenerationQCM,
+  genTermeExpliciteNumeric,
+];
+
+const DIFFICULTY = {
+  genTermeRecurrenceArithmetiqueNumeric: "facile",
+  genTermeRecurrenceGeometriqueNumeric: "facile",
+  genRaisonArithmetiqueNumeric: "facile",
+  genTermeExpliciteNumeric: "facile",
+  genTermeGeneralArithmetiqueNumeric: "standard",
+  genTermeGeneralGeometriqueNumeric: "standard",
+  genRaisonGeometriqueNumeric: "standard",
+  genSensVariationArithmetiqueQCM: "standard",
+  genSensVariationGeometriqueQCM: "standard",
+  genReconnaitreModeGenerationQCM: "standard",
+  genModeliserPhenomeneQCM: "expert",
+  genLectureNuagePointsQCM: "expert",
+};
+
+function generate(difficulty) {
+  if (difficulty) {
+    const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
+    if (pool.length) return pick(pool)();
+  }
+  return pick(GENERATORS)();
+}
+
+export default {
+  meta: {
+    id: "suites-numeriques-premiere-techno",
+    title: "Suites numériques",
+    description: "Modes de génération, suites arithmétiques (croissance linéaire) et géométriques (croissance exponentielle), sens de variation, nuage de points.",
+    level: "premiere-techno",
+    order: 2,
+  },
+  generate,
+};

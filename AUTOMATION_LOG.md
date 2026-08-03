@@ -1,5 +1,134 @@
 # Automation log — Reussimaths content pipeline
 
+## Règle permanente — plus de "zip final"
+
+Romain confirme (2026-08-03) que le zip final n'est plus nécessaire : le
+dossier `Application TOP/reussimaths-web/APPLI GITHUB/Sans titre` est
+directement le clone git à jour, poussé sur GitHub. Chaque unité de travail
+doit continuer à être synchronisée dans les deux dossiers
+(`Application TOP/reussimaths-web/` et `.../APPLI GITHUB/Sans titre`) et
+vérifiée via `git status --short`, mais aucun zip n'est à produire.
+
+## 2026-08-03 (suite 17) — Niveaux Première technologique et Terminale STMG (complets)
+
+Demande de Romain : construire Première technologique à partir du dossier
+"première technologique" (Application TOP — sujets 2026, corrigés, nouveau
+programme 2026) et Terminale STMG à partir du dossier "Terminale STMG"
+(Lycée — progression annuelle + fiches de séance 2026-2027). Exploration
+complète d'abord (lecture des 2 annexes de programme officielles, des 4
+sujets EAM technologique réels 2026, listing des fiches par bloc), proposition
+envoyée en chat, confirmation de Romain reçue avec une seule précision :
+construire quand même les chapitres "Fonction inverse" et "Thème d'étude et
+synthèse" (Terminale STMG, blocs G/H) comme "Bientôt disponible" — Romain
+rédige leurs fiches sources de son côté, à intégrer plus tard.
+
+**Découverte importante** : `src/levels.js` contenait déjà les entrées
+`"premiere-techno"` et `"terminale-techno"` (placeholders "Bientôt" créés lors
+d'une session antérieure) — réutilisées telles quelles, aucune modification de
+`levels.js` nécessaire.
+
+### Première technologique (`level: "premiere-techno"`, 10 chapitres)
+
+Sommaire construit comme pour Première Spé : `reviser-les-bases-premiere-techno`
+(gratuit) + `automatismes-premiere-techno` (4 thèmes : évolutions, équations/
+signe, lecture graphique, probabilités) + 7 chapitres de programme +
+`preparation-eam-premiere-techno`. Programme 2026 confirmé par lecture de
+l'annexe officielle : suites (croissance linéaire/exponentielle), fonctions
+polynômes de degré 2 **sans discriminant** (forme factorisée uniquement,
+allure/sommet/axe de symétrie par lecture), dérivation (sécantes, tangente,
+nombre dérivé, dérivée d'un polynôme degré ⩽ 3), statistiques à deux variables
+(ajustement affine uniquement), probabilités conditionnelles et indépendance
+(via P_A(B)=P(B)), épreuves indépendantes/Bernoulli (n ⩽ 4), variables
+aléatoires (loi de Bernoulli, espérance, fluctuation d'échantillonnage).
+Fichiers : `suites-numeriques-premiere-techno.js`,
+`fonctions-second-degre-premiere-techno.js`, `derivation-premiere-techno.js`,
+`statistiques-deux-variables-premiere-techno.js`,
+`probabilites-conditionnelles-premiere-techno.js`,
+`epreuves-independantes-premiere-techno.js`,
+`variables-aleatoires-premiere-techno.js`. Usage systématique de `exercise.graph`
+(jamais de description texte) pour toute lecture graphique.
+
+`preparation-eam-premiere-techno.js` : construit à partir des 4 sujets réels de
+l'EAM technologique du 12 juin 2026 (Métropole, Antilles-Guyane, 8 juin pour
+Centres étrangers, Polynésie) — lus intégralement (QCM automatismes +
+exercices de suites/fonctions/probabilités). Vérification faite : ces sujets
+collent bien au nouveau programme 2026 (aucune trace de discriminant ou de
+notion supprimée), donc pas d'adaptation majeure nécessaire, seulement des
+reformulations mineures. Citation systématique via le champ `chapter`
+("Préparation EAM — Sujet officiel (Métropole, 12 juin 2026)", etc.), plus des
+générateurs originaux sur les mêmes compétences (automatismes, suites,
+fonctions/dérivation, probabilités) sans citation.
+
+### Terminale STMG (`level: "terminale-techno"`, 8 chapitres réels + 2 "Bientôt")
+
+Pas de chapitre "Préparation EAM" (confirmé : pas d'épreuve écrite du bac de
+maths en Terminale STMG — `EXAM_CHAPTER_BY_LEVEL["terminale-techno"] = null`).
+Sommaire et contenu construits à partir de la progression de Romain
+(`Progression_globale_TSTMG.pdf`) et des fiches de séance
+(`Terminale STMG/2026-2027/files_bloc*`), après avoir confirmé la
+correspondance bloc → thème via les noms de fichiers de séance :
+bloc0+A (S1-5) = Suites, blocB (S6-8) = Statistiques à deux variables
+(changement de variable), blocC (S9-11) = Probabilités conditionnelles,
+blocE (S12-16) = Fonctions exponentielles, blocD-postE (S18-20) = Variables
+aléatoires/loi binomiale, blocF (S21-23) = Logarithme décimal. Lecture de 4
+fiches de cours (exponentielle base e, taux d'évolution moyen, définition du
+log, loi binomiale) pour reprendre les notations exactes de Romain
+(X ∼ 𝓑(n;p), CM_moyen = CM_global^(1/n), log(b) défini par 10^x=b).
+
+Fichiers créés : `reviser-les-bases-terminale-techno.js` (gratuit),
+`automatismes-terminale-techno.js` (6 thèmes, un par bloc),
+`suites-terminale-techno.js` (moyennes arithmétique/géométrique, sommes,
+preuve de suites consécutives, versements réguliers à intérêts composés),
+`fonctions-exponentielles-terminale-techno.js` (x↦a^x, sens de variation/
+allure selon a, propriétés algébriques, taux d'évolution moyen),
+`logarithme-decimal-terminale-techno.js` (définition, valeurs immédiates,
+propriétés algébriques, résolution a^x=b et x^a=b, nombre de chiffres d'un
+entier), `statistiques-deux-variables-terminale-techno.js` (changement de
+variable pour ajustement non affine, retour au modèle d'origine),
+`probabilites-conditionnelles-terminale-techno.js` (partitions à 3+
+évènements, probabilités totales, arbres à plusieurs niveaux),
+`variables-aleatoires-terminale-techno.js` (coefficients binomiaux/triangle
+de Pascal n⩽10, loi binomiale, cas particuliers P(X=0)/P(X=n)/P(X=n-1),
+espérance).
+
+**Bloc G (Fonction inverse) et Bloc H (Thème d'étude et synthèse)** : prévus
+dans la progression de Romain mais sans dossier de fiches sur le disque
+(confirmé par `find`/`grep`, aucun `files_blocG`/`files_blocH`). Sur demande
+explicite de Romain, laissés en "Bientôt disponible" : ajoutés uniquement à
+`plannedChapters["terminale-techno"]` (`fonction-inverse-terminale-techno`,
+`theme-etude-terminale-techno`), sans fichier `src/chapters/*.js` — à
+construire quand Romain aura rédigé ses fiches sources (ou sur nouvelle
+demande explicite).
+
+### Modifications transverses
+
+- `src/lib/access.js` — `EXAM_CHAPTER_BY_LEVEL` : ajout de
+  `"premiere-techno": "preparation-eam-premiere-techno"` et
+  `"terminale-techno": null`.
+- `src/plannedChapters.js` — ajout des clés `"premiere-techno"` (10 entrées,
+  toutes déjà réelles) et `"terminale-techno"` (8 entrées réelles + les 2
+  placeholders G/H).
+- Aucune modification nécessaire à `src/levels.js`, au routage (`App.jsx`), ni
+  à la tarification/Stripe (tout est dérivé automatiquement de `meta.level`
+  sur les chapitres, confirmé par exploration du code avant de commencer).
+
+### Vérification
+
+- `test-premiere-techno.mjs` (9 chapitres × 6000 tirages + variantes de
+  difficulté + thèmes Automatismes) : 0 erreur, 10956 exercices avec un
+  `graph` valide observés.
+- `test-eam-techno.mjs` (40 000 tirages du chapitre EAM) : 0 erreur, 9
+  sources de citation distinctes observées (4 sujets officiels + 5 catégories
+  originales), 11 469 exercices avec un `graph` valide.
+- `test-terminale-stmg.mjs` (8 chapitres × 6000 tirages + variantes +
+  thèmes) : 0 erreur, 2042 exercices avec un `graph` valide.
+- `npx vite build` : 0 erreur (seul l'avertissement pré-existant sur la
+  taille du chunk principal, sans rapport avec ce travail).
+- Synchronisation vérifiée par `git status --short` dans
+  `Application TOP/reussimaths-web/APPLI GITHUB/Sans titre` : 18 nouveaux
+  fichiers de chapitres + 2 fichiers modifiés (`access.js`,
+  `plannedChapters.js`), rien d'autre.
+
 ## 2026-08-03 (suite 16) — Vrai rendu de graphiques (repère cartésien) : Graph.jsx
 
 Remarque de Romain après la suite 15 : "cela m'embête quand même cette

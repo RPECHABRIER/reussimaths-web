@@ -1,5 +1,78 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 12) — Récompenses de parrainage (chapitre au choix + mois gratuit)
+
+Suite ouverte en "suite 11" (carte de parrainage neutralisée après suppression
+de `probabilites.js`). Décision de Romain : "la récompense pour le parrainage
+est de pouvoir débloquer un chapitre supplémentaire au choix. Pour les
+abonnés qui ont accès à tout, ils peuvent avoir un mois gratuit si une
+personne parrainée s'abonne." Deux mécaniques indépendantes, cumulables :
+
+- **Chapitre bonus au choix** (tous paliers non-complet, seuil 5 amis comme
+  l'ancien `unlockReferrals`) : remplace l'ancien mécanisme (chapitre fixe
+  imposé par `meta.unlockReferrals`, abandonné avec `probabilites.js`).
+  L'utilisateur choisit librement N'IMPORTE QUEL chapitre du catalogue une
+  fois qu'il a parrainé 5 amis, fixé une seule fois (même schéma que
+  `PackExamenChoice.jsx`/`set_pack_examen_choices`).
+- **Mois gratuit** (abonnés complet uniquement) : si un filleul s'abonne
+  (n'importe quel palier, mensuel ou Pack Examen), le parrain — SI il a un
+  abonnement complet actif au moment où ça arrive — reçoit un mois gratuit,
+  crédité automatiquement côté serveur (webhook Stripe), une seule fois par
+  filleul (pas à chaque renouvellement).
+
+### Schéma SQL (déjà collé en chat avant application, voir `supabase/schema.sql`)
+- `referrals` : nouvelle colonne `subscription_reward_granted_at` (empêche de
+  créditer deux fois le même filleul, ex: désabonnement puis réabonnement).
+- Nouvelle table `referral_bonus_chapter` (`user_id` PK, `chapter_id`,
+  `granted_at`), RLS lecture seule pour soi (écriture SEULEMENT via la RPC
+  ci-dessous — volontairement pas de policy insert/update directe, pour
+  empêcher un client de contourner la règle des 5 amis en écrivant
+  directement dans la table).
+- Fonction RPC `set_referral_bonus_chapter(p_chapter_id)` (SECURITY DEFINER) :
+  vérifie elle-même `count(referrals où referrer_id = auth.uid()) >= 5` et
+  qu'aucun choix n'existe déjà, avant d'insérer.
+
+### Code
+- **Nouveau** `src/hooks/useReferralBonus.js` : charge le chapitre bonus déjà
+  choisi (ou `null`) depuis `referral_bonus_chapter`.
+- **Nouveau** `src/components/ReferralBonusChoice.jsx` : UI de choix (menu
+  déroulant, choix définitif), affichée dans `Account.jsx` dès que
+  `referralCount >= 5` et pas encore de choix fait (masquée pour l'admin et
+  l'abonnement complet, qui ont déjà tout).
+- `src/lib/access.js` (`canAccessChapter`) : le paramètre de contexte
+  `referralCount` + le check `meta.unlockReferrals` sont remplacés par
+  `referralBonusChapterId` (le chapitre concrètement choisi). Répercuté dans
+  tous les points d'accès qui construisaient ce contexte : `Niveau.jsx`,
+  `ChapterPage.jsx`, `ParcoursOverview.jsx`, `ParcoursStep.jsx`, `Amis.jsx`
+  (tous passés de `useReferrals` à `useReferralBonus` pour ce usage précis —
+  `Account.jsx` garde `useReferrals` en plus, pour l'affichage "X/5 amis").
+  Les messages de verrouillage par chapitre qui mentionnaient
+  `meta.unlockReferrals` (Niveau.jsx, ChapterPage.jsx) sont simplifiés,
+  ce champ n'existant plus sur aucun chapitre.
+- `api/stripe-webhook.js` : nouvelle fonction
+  `grantReferralFreeMonthIfEligible(referredUserId)`, appelée après chaque
+  `checkout.session.completed` réussi. Cherche le parrain via `referrals`,
+  vérifie qu'il a `plan = 'mensuel'` actif et n'a pas déjà été crédité pour ce
+  filleul, retrouve son abonnement Stripe actif (`stripe.subscriptions.list`
+  par `customer`), et repousse `trial_end` de 30 jours
+  (`proration_behavior: "none"`) — aucune facture émise pendant cette
+  période, la facturation normale reprend ensuite automatiquement (le webhook
+  `customer.subscription.updated` existant reflète le nouveau
+  `current_period_end` sans changement de code). Marque
+  `subscription_reward_granted_at` seulement si l'appel Stripe réussit.
+  N'échoue jamais bruyamment (try/catch dédié, ne bloque pas le traitement du
+  paiement du filleul).
+- `src/pages/Account.jsx` : carte de parrainage avec texte différencié selon
+  le palier (abonnement complet → "tu reçois un mois gratuit" ; sinon →
+  progression vers le chapitre bonus, ou confirmation une fois choisi) +
+  affichage de `ReferralBonusChoice` quand éligible.
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-referral`,
+  0 erreur). 12 fichiers synchronisés vers les deux destinations
+  persistantes (le clone Git imbriqué a été retrouvé sous
+  `Application TOP/Première Spé/reussimaths-web-github`, pas
+  `APPLI GITHUB/Sans titre` comme dans les entrées précédentes — chemin à
+  vérifier/confirmer par Romain si ce n'est pas le bon clone actif).
+
 ## 2026-08-03 (suite 11) — Refonte des paliers d'accès (Pack Examen / abonnement complet / admin / idées)
 
 Décisions actées avec l'utilisateur (clarifications successives) :

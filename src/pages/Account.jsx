@@ -4,8 +4,10 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
 import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { isAdminUser, isFullAccessSubscription, isPackExamenSubscription } from "../lib/access";
 import PackExamenChoice from "../components/PackExamenChoice";
+import ReferralBonusChoice from "../components/ReferralBonusChoice";
 import { colors, fonts, shadow } from "../theme";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
@@ -16,6 +18,7 @@ export default function Account() {
   const { subscription, isActive, reload: reloadSubscription } = useSubscription(user?.id);
   const { profile } = useProfile(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId, reload: reloadReferralBonus } = useReferralBonus(user?.id);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const admin = isAdminUser(user);
@@ -112,19 +115,29 @@ export default function Account() {
           </div>
 
           {referralLink && (
-            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
-              <p className="text-xs font-semibold" style={{ color: colors.ink }}>
-                Parrainage — {referralCount}/5 amis
-              </p>
-              <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                Invite des amis à utiliser Reussimaths avec ton lien.
-              </p>
-              <p
-                className="text-xs mt-2 px-2.5 py-1.5 rounded-lg break-all"
-                style={{ backgroundColor: colors.card, color: colors.ink, fontFamily: fonts.mono }}
-              >
-                {referralLink}
-              </p>
+            <div className="rounded-2xl p-4 text-left flex flex-col gap-3" style={{ backgroundColor: colors.bg }}>
+              <div>
+                <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                  Parrainage — {referralCount}/5 amis
+                </p>
+                <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                  {fullAccess
+                    ? "Si un ami que tu parraines s'abonne, tu reçois un mois gratuit."
+                    : referralBonusChapterId
+                    ? "Chapitre bonus débloqué grâce à tes 5 filleuls."
+                    : "Parraine 5 amis pour débloquer un chapitre supplémentaire au choix."}
+                </p>
+                <p
+                  className="text-xs mt-2 px-2.5 py-1.5 rounded-lg break-all"
+                  style={{ backgroundColor: colors.card, color: colors.ink, fontFamily: fonts.mono }}
+                >
+                  {referralLink}
+                </p>
+              </div>
+
+              {!fullAccess && !admin && referralCount >= 5 && !referralBonusChapterId && (
+                <ReferralBonusChoice onDone={reloadReferralBonus} />
+              )}
             </div>
           )}
 

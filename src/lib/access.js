@@ -66,18 +66,24 @@ export function isPackExamenSubscription(subscription) {
 }
 
 // Un chapitre est-il accessible pour cet utilisateur ? ctx = { user,
-// subscription, referralCount }. Tous les points d'accès (Niveau, ChapterPage,
-// ParcoursOverview, ParcoursStep, Amis) doivent passer par cette fonction
-// plutôt que de recalculer la règle localement.
+// subscription, referralBonusChapterId }. Tous les points d'accès (Niveau,
+// ChapterPage, ParcoursOverview, ParcoursStep, Amis) doivent passer par cette
+// fonction plutôt que de recalculer la règle localement.
+//
+// referralBonusChapterId : le chapitre choisi via la récompense de parrainage
+// (5 amis parrainés -> 1 chapitre au choix, fixé une fois — voir
+// src/hooks/useReferralBonus.js et src/components/ReferralBonusChoice.jsx).
+// Remplace l'ancien mécanisme meta.unlockReferrals (chapitre fixe imposé,
+// abandonné avec la suppression de probabilites.js).
 export function canAccessChapter(chapter, ctx = {}) {
   if (!chapter) return false;
-  const { user, subscription, referralCount = 0 } = ctx;
+  const { user, subscription, referralBonusChapterId } = ctx;
 
   if (chapter.meta.free) return true;
   if (chapter.meta.freemiumDaily) return true; // ouvert à tous, quota séparé (useDailyQuota) — pas un verrou d'accès
   if (isAdminUser(user)) return true;
   if (isFullAccessSubscription(subscription)) return true;
-  if (chapter.meta.unlockReferrals && referralCount >= chapter.meta.unlockReferrals) return true;
+  if (referralBonusChapterId && chapter.meta.id === referralBonusChapterId) return true;
 
   if (isPackExamenSubscription(subscription)) {
     const examChapterId = EXAM_CHAPTER_BY_LEVEL[subscription.pack_examen_level];

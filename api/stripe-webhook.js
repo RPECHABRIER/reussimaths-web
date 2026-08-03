@@ -26,6 +26,57 @@ async function buffer(readable) {
   return Buffer.concat(chunks);
 }
 
+// Récompense de parrainage : si l'utilisateur qui vient de payer (referredUserId)
+// a été parrainé (table `referrals`) et que son parrain a un abonnement
+// complet ("mensuel") actif, on crédite un mois gratuit au parrain — voir
+// supabase/schema.sql (colonne subscription_reward_granted_at, qui empêche de
+// créditer deux fois le même filleul, par ex. s'il se désabonne puis se
+// réabonne). Le "mois gratuit" est implémenté en repoussant trial_end de 30
+// jours sur l'abonnement Stripe du parrain (proration_behavior: "none") :
+// aucune facture n'est émise pendant cette période, puis la facturation
+// normale reprend. N'échoue jamais bruyamment : une erreur ici ne doit pas
+// faire échouer le traitement du paiement du filleul.
+async function grantReferralFreeMonthIfEligible(referredUserId) {
+  try {
+    const { data: referral } = await supabaseAdmin
+      .from("referrals")
+      .select("referrer_id, subscription_reward_granted_at")
+      .eq("referred_id", referredUserId)
+      .maybeSingle();
+    if (!referral || referral.subscription_reward_granted_at) return;
+
+    const { data: referrerSub } = await supabaseAdmin
+      .from("subscriptions")
+      .select("plan, status, stripe_customer_id")
+      .eq("user_id", referral.referrer_id)
+      .maybeSingle();
+    if (!referrerSub || referrerSub.plan !== "mensuel") return;
+    if (!["active", "trialing"].includes(referrerSub.status)) return;
+    if (!referrerSub.stripe_customer_id) return;
+
+    const existing = await stripe.subscriptions.list({
+      customer: referrerSub.stripe_customer_id,
+      status: "active",
+      limit: 1,
+    });
+    const stripeSub = existing.data[0];
+    if (!stripeSub) return;
+
+    const oneMonthLater = stripeSub.current_period_end + 30 * 24 * 60 * 60;
+    await stripe.subscriptions.update(stripeSub.id, {
+      trial_end: oneMonthLater,
+      proration_behavior: "none",
+    });
+
+    await supabaseAdmin
+      .from("referrals")
+      .update({ subscription_reward_granted_at: new Date().toISOString() })
+      .eq("referred_id", referredUserId);
+  } catch (err) {
+    console.error("[stripe-webhook] échec du mois gratuit parrainage:", err.message);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).end();
@@ -67,6 +118,9 @@ export default async function handler(req, res) {
             row.current_period_end = threeMonthsLater.toISOString();
           }
           await supabaseAdmin.from("subscriptions").upsert(row);
+          // Ce filleul vient de payer (mensuel ou special_examen) : son
+          // éventuel parrain abonné complet reçoit un mois gratuit.
+          await grantReferralFreeMonthIfEligible(userId);
         }
         break;
       }

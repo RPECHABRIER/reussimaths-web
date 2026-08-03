@@ -4,7 +4,7 @@ import ChapterRunner from "../components/ChapterRunner";
 import AutomatismesRunner from "../components/AutomatismesRunner";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
-import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter } from "../lib/access";
 import { colors, fonts } from "../theme";
 
@@ -13,7 +13,7 @@ export default function ChapterPage() {
   const chapter = getChapter(id);
   const { user } = useAuth();
   const { subscription, loading } = useSubscription(user?.id);
-  const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
 
   if (!chapter) {
     return (
@@ -26,7 +26,7 @@ export default function ChapterPage() {
   }
 
   const freemium = !!chapter.meta.freemiumDaily;
-  const locked = !canAccessChapter(chapter, { user, subscription, referralCount });
+  const locked = !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
 
   if (loading && !chapter.meta.free && !freemium) {
     return (
@@ -43,15 +43,13 @@ export default function ChapterPage() {
         style={{ background: colors.bg, fontFamily: fonts.body }}
       >
         <p style={{ fontFamily: fonts.display, fontSize: "1.3rem", fontWeight: 800, color: colors.ink, letterSpacing: "-0.01em" }}>
-          {chapter.meta.title} est {chapter.meta.unlockReferrals ? "un chapitre à débloquer" : "un chapitre sous abonnement"}
+          {chapter.meta.title} est un chapitre sous abonnement
         </p>
         <p className="text-sm" style={{ color: colors.slate }}>
-          {chapter.meta.unlockReferrals
-            ? `Encore ${chapter.meta.unlockReferrals - referralCount} ami(s) à parrainer pour débloquer ce chapitre.`
-            : chapter.meta.unlockHint ?? "Abonne-toi pour y accéder."}
+          {chapter.meta.unlockHint ?? "Abonne-toi, ou débloque-le en parrainant 5 amis (voir Mon compte)."}
         </p>
         <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-          {chapter.meta.unlockReferrals ? "Voir mon lien de parrainage" : "Gérer mon abonnement"}
+          Gérer mon abonnement
         </Link>
       </div>
     );

@@ -4,7 +4,7 @@ import { getChapter } from "../chapters/registry";
 import ChapterRunner from "../components/ChapterRunner";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
-import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter } from "../lib/access";
 import { colors, fonts } from "../theme";
@@ -22,7 +22,7 @@ export default function ParcoursStep() {
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
   const { subscription, loading: subLoading } = useSubscription(user?.id);
-  const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
   const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ export default function ParcoursStep() {
   }
 
   const freemium = !!chapter.meta.freemiumDaily;
-  const locked = !parcours.free && !canAccessChapter(chapter, { user, subscription, referralCount });
+  const locked = !parcours.free && !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
 
   if (subLoading && !parcours.free && !chapter.meta.free && !freemium) {
     return (

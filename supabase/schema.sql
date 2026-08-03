@@ -60,7 +60,9 @@ create table if not exists public.level_votes (
 
 -- Parrainage : un ami parrainé (referred_id) ne peut être enregistré qu'une
 -- fois (clé primaire), ce qui empêche de compter deux fois le même compte.
--- Débloque certains chapitres via meta.unlockReferrals (ex: probabilites.js).
+-- Débloque un chapitre au choix (voir referral_bonus_chapter plus bas) et,
+-- pour un parrain abonné complet, un mois gratuit si le filleul s'abonne
+-- (colonne subscription_reward_granted_at, ajoutée plus bas).
 create table if not exists public.referrals (
   referrer_id uuid references auth.users (id) on delete cascade,
   referred_id uuid primary key references auth.users (id) on delete cascade,
@@ -321,3 +323,76 @@ create policy "feature_ideas: abonnement complet can submit" on public.feature_i
 -- Seul l'admin (email fixe) peut lire les idées soumises.
 create policy "feature_ideas: admin only read" on public.feature_ideas
   for select using (auth.jwt() ->> 'email' = 'romainpechabrier@gmail.com');
+
+-- ---------------------------------------------------------------------------
+-- Récompenses de parrainage (2026-08-03) : remplace l'ancien mécanisme
+-- meta.unlockReferrals (chapitre fixe imposé, ex probabilites.js, supprimé).
+-- Deux récompenses indépendantes, voir src/lib/access.js et
+-- api/stripe-webhook.js :
+--   1. N'importe quel utilisateur (gratuit ou Pack Examen) qui parraine 5
+--      amis peut choisir UN chapitre supplémentaire, fixé une seule fois
+--      (table + fonction ci-dessous, même schéma que
+--      set_pack_examen_choices).
+--   2. Un abonné complet ("mensuel") dont un filleul s'abonne (n'importe quel
+--      palier) reçoit un mois gratuit, crédité automatiquement par le webhook
+--      Stripe (une seule fois par filleul, voir subscription_reward_granted_at
+--      ci-dessous et grantReferralFreeMonthIfEligible dans stripe-webhook.js).
+-- ---------------------------------------------------------------------------
+
+-- Empêche de créditer deux fois le même parrain pour le même filleul (par ex.
+-- si le filleul se désabonne puis se réabonne plus tard).
+alter table public.referrals add column if not exists subscription_reward_granted_at timestamptz;
+
+-- Chapitre bonus choisi via le parrainage (5 amis), fixé une seule fois via
+-- set_referral_bonus_chapter ci-dessous. Table séparée (plutôt qu'une colonne
+-- sur `profiles`, où le client a déjà un accès self read/write complet) pour
+-- que ce choix ne soit modifiable QUE via la fonction RPC, jamais en écriture
+-- directe.
+create table if not exists public.referral_bonus_chapter (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  chapter_id text not null,
+  granted_at timestamptz not null default now()
+);
+alter table public.referral_bonus_chapter enable row level security;
+
+create policy "referral_bonus_chapter: self read" on public.referral_bonus_chapter
+  for select using (auth.uid() = user_id);
+
+-- Fonction appelée une seule fois par l'utilisateur (depuis
+-- src/components/ReferralBonusChoice.jsx, affiché dans Account.jsx) pour
+-- fixer son chapitre bonus. SECURITY DEFINER : vérifie elle-même le seuil de
+-- 5 amis parrainés (comptés dans `referrals`) et qu'aucun choix n'a déjà été
+-- fait, avant d'insérer.
+create or replace function public.set_referral_bonus_chapter(p_chapter_id text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_referral_count integer;
+  v_already boolean;
+begin
+  if v_user_id is null then
+    raise exception 'Non authentifié';
+  end if;
+
+  select count(*) into v_referral_count
+    from public.referrals
+    where referrer_id = v_user_id;
+
+  if v_referral_count < 5 then
+    raise exception 'Il faut avoir parrainé au moins 5 amis';
+  end if;
+
+  select exists(select 1 from public.referral_bonus_chapter where user_id = v_user_id) into v_already;
+  if v_already then
+    raise exception 'Chapitre bonus déjà choisi, non modifiable';
+  end if;
+
+  insert into public.referral_bonus_chapter (user_id, chapter_id) values (v_user_id, p_chapter_id);
+end;
+$$;
+
+grant execute on function public.set_referral_bonus_chapter(text) to authenticated;

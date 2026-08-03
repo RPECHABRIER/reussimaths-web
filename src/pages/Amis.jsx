@@ -4,7 +4,7 @@ import { Check, X, Swords, Clock } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useProfile } from "../hooks/useProfile";
 import { useSubscription } from "../hooks/useProgress";
-import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useFriends } from "../hooks/useFriends";
 import { useChallenges, QUESTIONS_PER_CHALLENGE } from "../hooks/useChallenges";
 import { chapters, getChapter } from "../chapters/registry";
@@ -65,7 +65,7 @@ export default function Amis() {
   const { user, loading } = useAuth();
   const { profile } = useProfile(user?.id);
   const { subscription } = useSubscription(user?.id);
-  const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { incoming, outgoing, accepted, profiles, sendRequest, respond, cancelRequest } = useFriends(user?.id);
   const { challenges, createChallenge, submitResponse } = useChallenges(user?.id);
 
@@ -78,8 +78,8 @@ export default function Amis() {
   const [activeDuel, setActiveDuel] = useState(null); // { mode: "new"|"respond", friendId, chapterId, themeId, topicLabel, challengeId }
 
   const accessibleChapters = useMemo(
-    () => chapters.filter((c) => canAccessChapter(c, { user, subscription, referralCount })),
-    [user, subscription, referralCount]
+    () => chapters.filter((c) => canAccessChapter(c, { user, subscription, referralBonusChapterId })),
+    [user, subscription, referralBonusChapterId]
   );
 
   const challengeOptions = useMemo(() => buildChallengeOptions(accessibleChapters), [accessibleChapters]);

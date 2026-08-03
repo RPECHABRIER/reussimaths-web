@@ -6,7 +6,7 @@ import { getPlannedChapters } from "../plannedChapters";
 import { getParcoursForLevel } from "../parcours";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
-import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 import ComingSoon from "./ComingSoon";
@@ -26,7 +26,7 @@ export default function Niveau() {
   const plannedChapters = getPlannedChapters(levelId).filter((p) => !realIds.has(p.id));
   const { user } = useAuth();
   const { subscription } = useSubscription(user?.id);
-  const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
 
   if (!level) {
     return (
@@ -110,7 +110,7 @@ export default function Niveau() {
 
             const chapter = row.chapter;
             const freemium = !!chapter.meta.freemiumDaily;
-            const locked = !canAccessChapter(chapter, { user, subscription, referralCount });
+            const locked = !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
             const content = (
               <div
                 className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
@@ -122,9 +122,7 @@ export default function Niveau() {
                   </p>
                   <p className="text-xs mt-1" style={{ color: colors.slate }}>
                     {locked
-                      ? chapter.meta.unlockReferrals
-                        ? `${chapter.meta.unlockReferrals - referralCount} ami(s) à parrainer pour débloquer`
-                        : chapter.meta.unlockHint ?? "Chapitre sous abonnement"
+                      ? chapter.meta.unlockHint ?? "Chapitre sous abonnement"
                       : freemium
                       ? `${chapter.meta.description} — ${chapter.meta.freemiumDaily} questions gratuites/jour`
                       : chapter.meta.description}

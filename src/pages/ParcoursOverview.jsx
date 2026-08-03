@@ -4,7 +4,7 @@ import { getParcours } from "../parcours";
 import { getChapter } from "../chapters/registry";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
-import { useReferrals } from "../hooks/useReferrals";
+import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
@@ -20,7 +20,7 @@ export default function ParcoursOverview() {
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
   const { subscription } = useSubscription(user?.id);
-  const { count: referralCount } = useReferrals(user?.id);
+  const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { stepByIndex, completedSteps, loading } = useParcoursProgress(user?.id, parcoursId);
 
   if (!parcours) {
@@ -77,7 +77,7 @@ export default function ParcoursOverview() {
         <div className="flex flex-col gap-2.5">
           {parcours.steps.map((step, i) => {
             const chapter = getChapter(step.chapterId);
-            const locked = !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralCount });
+            const locked = !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
             const done = !!stepByIndex.get(i)?.completed;
             const isNext = i === nextStepIndex && !done;
 

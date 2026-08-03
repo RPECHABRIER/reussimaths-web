@@ -53,12 +53,26 @@ function genNombreDeriveDeuxPointsNumeric() {
   const p = randInt(-10, 10);
   const yA = m * xA + p;
   const yB = m * xB + p;
+  const yTangence = m * a + p;
+  const xs = [xA, xB, a];
+  const ys = [yA, yB, yTangence];
   return {
     type: "numeric",
     chapter: "Variations instantanées — Nombre dérivé",
-    prompt: `La tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a} passe par les points \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule \\(${nomFonction}'(${a})\\).`,
+    prompt: `On donne ci-dessous la tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a}, ainsi que deux points \\(A\\) et \\(B\\) de cette tangente. Calcule \\(${nomFonction}'(${a})\\).`,
     answer: m,
     steps: [`${nomFonction}'(${a}) = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}`],
+    graph: {
+      xMin: Math.min(...xs) - 2,
+      xMax: Math.max(...xs) + 2,
+      yMin: Math.min(...ys) - 2,
+      yMax: Math.max(...ys) + 2,
+      lines: [{ a: m, b: p, label: "tangente" }],
+      points: [
+        { x: xA, y: yA, label: "A" },
+        { x: xB, y: yB, label: "B" },
+      ],
+    },
   };
 }
 
@@ -67,12 +81,24 @@ function genNombreDeriveDeplacementNumeric() {
   const nomFonction = pick(["f", "g", "h"]);
   const a = randInt(-5, 5);
   const variation = nonZero(-8, 8);
+  const bIntercept = -variation * a;
   return {
     type: "numeric",
     chapter: "Variations instantanées — Nombre dérivé",
-    prompt: `Sur la tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a}, lorsqu'on se déplace d'une unité vers la droite, l'ordonnée ${variation >= 0 ? "augmente" : "diminue"} de ${Math.abs(variation)}. Calcule \\(${nomFonction}'(${a})\\).`,
+    prompt: `On donne ci-dessous la tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a}. Lorsqu'on se déplace d'une unité vers la droite sur cette tangente, l'ordonnée ${variation >= 0 ? "augmente" : "diminue"} de ${Math.abs(variation)}. Calcule \\(${nomFonction}'(${a})\\).`,
     answer: variation,
     steps: [`${nomFonction}'(${a}) = ${variation}`],
+    graph: {
+      xMin: a - 4,
+      xMax: a + 4,
+      yMin: Math.min(0, variation) - 3,
+      yMax: Math.max(0, variation) + 3,
+      lines: [{ a: variation, b: bIntercept, label: "tangente" }],
+      points: [
+        { x: a, y: 0, label: "M", project: true },
+        { x: a + 1, y: variation, label: "" },
+      ],
+    },
   };
 }
 

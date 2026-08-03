@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, X, Timer, Square, CheckSquare } from "lucide-react";
 import MathText from "./MathText";
 import Figure from "./Figure";
+import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
 
@@ -114,6 +115,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
       />
 
       {exercise.figure && <Figure spec={exercise.figure} />}
+      {exercise.graph && <Graph spec={exercise.graph} />}
 
       {exercise.type === "text" && (
         <>

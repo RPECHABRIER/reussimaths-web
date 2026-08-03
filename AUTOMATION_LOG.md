@@ -1,5 +1,60 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 16) — Vrai rendu de graphiques (repère cartésien) : Graph.jsx
+
+Remarque de Romain après la suite 15 : "cela m'embête quand même cette
+difficulté avec les graphiques qui nous oblige à des descriptions
+textuelles. Pour une bonne application mathématiques on doit pouvoir
+afficher tous les types de graphiques. Que peut-on faire pour régler ce
+problème une bonne fois pour toutes ?" → confirmé de construire le
+composant tout de suite, avec retrofit complet (voir question posée en
+chat, réponse "Oui, tout de suite, avec retrofit complet").
+
+- **Nouveau** `src/components/Graph.jsx`, le pendant de `Figure.jsx` (qui
+  reste dédié à la géométrie pure) mais pour tout ce qui se lit sur un
+  repère cartésien : axes + grille avec graduations, tracé de courbes de
+  fonctions (échantillonnage d'une vraie fonction JS fournie par le
+  générateur, pas de parsing symbolique), tracé de droites `y = a x + b`
+  automatiquement découpées aux bords du repère, points avec projection en
+  pointillés sur les axes (lecture d'image/antécédent), bandes verticales
+  surlignées (ensemble solution d'une inéquation). Spec déclarative
+  `{xMin,xMax,yMin,yMax,curves,lines,points,shade}`, cohérente avec le
+  style de `Figure.jsx` (spec objet + rendu SVG, pas de dépendance externe).
+- Branché `{exercise.graph && <Graph spec={exercise.graph} />}` dans les 3
+  lecteurs d'exercices, à côté du `<Figure />` existant : `ChapterRunner.jsx`,
+  `AutomatismesRunner.jsx`, `MiniDuel.jsx`.
+- **Retrofit des 4 questions EAM texte-only de la suite 15** (chapitre
+  `preparation-eam-premiere-non-spe.js`) : Métropole Q3 (antécédent sur une
+  courbe), Antilles-Guyane Q3 (identifier une droite parmi 4), Centres
+  Étrangers Q5 (droite (AB) par deux points) et Q8 (ensemble solution d'une
+  inéquation sur une courbe) affichent maintenant un vrai graphique ; les
+  réponses/options du sujet officiel sont inchangées, seule la présentation
+  passe du texte au visuel.
+- **Scan des autres niveaux** pour d'autres contournements du même genre
+  (question qui parle d'un graphique sans jamais en afficher un) : trouvé et
+  corrigé 4 générateurs supplémentaires, tous passés en `graph:` réel :
+  - `genLectureGraphiqueAffineQCM` (`preparation-bac-premiere-spe.js`,
+    Première Spé) — droite affine à lire au lieu d'être décrite.
+  - `genNombreDeriveDeuxPointsNumeric` et `genNombreDeriveDeplacementNumeric`
+    (`variations-instantanees-premiere-non-spe.js`, Première non spé) —
+    tangente et points A/B, ou triangle des pentes (avancer de 1, monter de
+    m), désormais tracés.
+  - `genPenteSecanteNumeric` (`derivation-premiere-spe.js`, Première Spé) —
+    sécante (AB) entre deux points d'une courbe.
+  - `genPointsAlignesOrigineQCM` (`proportionnalite-quatrieme.js`, 4e) —
+    points à juger alignés (ou non) avec l'origine, désormais placés sur un
+    vrai repère au lieu d'une liste de coordonnées en texte.
+- Testé : `test-eam-chapter.mjs` (40 000 itérations, désormais avec
+  validation des specs `graph` — bornes finies, `fn` majoritairement fini
+  sur le domaine, droites/points numériques cohérents) et un second script
+  `test-graph-retrofit.mjs` sur les 4 fichiers retouchés (20 000 itérations
+  chacun, 80 000 au total) : 0 erreur, 6707 exercices avec un `graph` valide
+  observés sur l'échantillon.
+- Build de production vérifié (`npx vite build`, 0 erreur). Synchronisé
+  dans les deux dossiers ; `git status --short` confirme les diffs attendus
+  (?? sur `Graph.jsx`, M sur les 3 lecteurs d'exercices et les 5 fichiers de
+  chapitres retouchés).
+
 ## 2026-08-03 (suite 15) — Chapitre "Préparation à l'EAM" (Première non spé)
 
 Demande de Romain : "il manque la partie préparation des EAM pour les

@@ -60,10 +60,19 @@ function genQCMOfficielMetropole() {
       steps: [`30\\% \\times 150 = \\dfrac{30}{100} \\times 150 = 45`],
     },
     {
-      prompt: `On donne la représentation graphique d'une fonction \\(f\\). Sur cette courbe, on lit que \\(f(1) = 3\\), et que 3 est aussi l'image de deux autres nombres par \\(f\\) (l'un compris entre 0 et 1, l'autre supérieur à 2). Parmi les nombres suivants, lequel est un antécédent de 3 par \\(f\\) ?`,
+      prompt: `On donne ci-dessous la représentation graphique d'une fonction \\(f\\). Parmi les nombres suivants, lequel est un antécédent de 3 par \\(f\\) ?`,
       options: ["0,5", "1", "1,5", "2"],
       answer: "1",
-      steps: [`\\text{Un antécédent de 3 est un nombre } x \\text{ tel que } f(x) = 3 : \\text{c'est le cas de } x = 1 \\text{ d'après l'énoncé.}`],
+      steps: [`\\text{Un antécédent de 3 est un nombre } x \\text{ tel que } f(x) = 3 : \\text{d'après le graphique, c'est le cas de } x = 1 \\text{ (ainsi que de deux autres valeurs, non proposées ici).}`],
+      graph: {
+        xMin: -1,
+        xMax: 4,
+        yMin: -2,
+        yMax: 6,
+        curves: [{ fn: (x) => 3 - 0.25 * (x - 0.3) * (x - 1) * (x - 2.6), label: "Cf" }],
+        lines: [{ a: 0, b: 3, color: "#6E7787", dashed: true, label: "y = 3" }],
+        points: [{ x: 1, y: 3, label: "f(1) = 3", project: true }],
+      },
     },
     {
       prompt: `La solution de l'équation \\(7x + 4 = 5x + 6\\) est :`,
@@ -104,6 +113,7 @@ function genQCMOfficielMetropole() {
     answer: q.answer,
     options: q.options,
     steps: q.steps,
+    ...(q.graph ? { graph: q.graph } : {}),
   };
 }
 
@@ -123,10 +133,22 @@ function genQCMOfficielAntilles() {
       steps: [`\\text{Seule une fonction affine } x \\mapsto ax+b \\text{ est représentée par une droite : c'est le cas de } f.`],
     },
     {
-      prompt: `Dans un repère, quatre droites \\((d_1)\\), \\((d_2)\\), \\((d_3)\\) et \\((d_4)\\) sont tracées : \\((d_1)\\) et \\((d_2)\\) ont un coefficient directeur positif, \\((d_3)\\) est horizontale, et \\((d_4)\\) a un coefficient directeur négatif. Parmi ces droites, celle d'équation réduite \\(y = -\\dfrac{1}{2}x + 1\\) est :`,
+      prompt: `Dans le repère ci-dessous sont tracées quatre droites \\((d_1)\\), \\((d_2)\\), \\((d_3)\\) et \\((d_4)\\). Celle d'équation réduite \\(y = -\\dfrac{1}{2}x + 1\\) est :`,
       options: ["(d1)", "(d2)", "(d3)", "(d4)"],
       answer: "(d4)",
-      steps: [`\\text{Le coefficient directeur } -\\dfrac{1}{2} \\text{ est négatif : c'est la seule droite décroissante, } (d_4).`],
+      steps: [`\\text{Le coefficient directeur } -\\dfrac{1}{2} \\text{ est négatif : c'est la seule droite décroissante du graphique, } (d_4).`],
+      graph: {
+        xMin: -4,
+        xMax: 4,
+        yMin: -4,
+        yMax: 4,
+        lines: [
+          { a: 1, b: -2, label: "d1" },
+          { a: 2, b: 1, label: "d2" },
+          { a: 0, b: -1, label: "d3" },
+          { a: -0.5, b: 1, label: "d4" },
+        ],
+      },
     },
     {
       prompt: `Un automobiliste roule à une vitesse moyenne de 60 km/h pendant 2 h 30 min. La distance parcourue est :`,
@@ -167,6 +189,7 @@ function genQCMOfficielAntilles() {
     answer: q.answer,
     options: q.options,
     steps: q.steps,
+    ...(q.graph ? { graph: q.graph } : {}),
   };
 }
 
@@ -198,10 +221,21 @@ function genQCMOfficielCentresEtrangers() {
       steps: [`\\text{Baisser de 15 \\% revient à multiplier par } 1 - 0,15 = 0,85`],
     },
     {
-      prompt: `Dans un repère, la droite \\((AB)\\) passe par les points \\(A(0 ; 2)\\) et \\(B(4 ; 0)\\). Son équation réduite est :`,
+      prompt: `Dans le repère ci-dessous, la droite \\((AB)\\) passe par les points \\(A\\) et \\(B\\). Son équation réduite est :`,
       options: ["y = 4x + 2", "y = -2x + 2", "y = 2x + 4", "y = -0,5x + 2"],
       answer: "y = -0,5x + 2",
       steps: [`a = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{0-2}{4-0} = -0,5`, `\\text{L'ordonnée à l'origine est } y_A = 2, \\text{ donc } y = -0,5x + 2.`],
+      graph: {
+        xMin: -1,
+        xMax: 5,
+        yMin: -1,
+        yMax: 3,
+        points: [
+          { x: 0, y: 2, label: "A" },
+          { x: 4, y: 0, label: "B" },
+        ],
+        lines: [{ a: -0.5, b: 2, label: "(AB)" }],
+      },
     },
     {
       prompt: `La valeur de \\(2x^2 - 3x - 4\\) pour \\(x = -1\\) est :`,
@@ -216,10 +250,18 @@ function genQCMOfficielCentresEtrangers() {
       steps: [`(x-4)^2 = x^2 - 2\\times 4x + 16 = x^2 - 8x + 16`],
     },
     {
-      prompt: `Une fonction \\(f\\) est définie sur \\([-6 ; 5]\\). Sa courbe représentative dépasse la valeur 3 uniquement sur un unique pic, exactement entre les abscisses \\(-5\\) et \\(-2\\) (bornes comprises), et reste strictement inférieure à 3 partout ailleurs. L'ensemble des solutions de l'inéquation \\(f(x) \\geq 3\\) est :`,
+      prompt: `Une fonction \\(f\\) est définie sur \\([-6 ; 5]\\). On donne ci-dessous sa représentation graphique, ainsi que la droite d'équation \\(y = 3\\). L'ensemble des solutions de l'inéquation \\(f(x) \\geq 3\\) est :`,
       options: ["[-6 ; -5] \\cup [-2 ; 5]", "\\{-5 ; -2\\}", "[-5 ; -2]", "\\{-3\\}"],
       answer: "[-5 ; -2]",
-      steps: [`\\text{D'après la courbe, } f(x) \\geq 3 \\text{ exactement pour } x \\in [-5 ; -2].`],
+      steps: [`\\text{D'après le graphique, la courbe de } f \\text{ est au-dessus de la droite } y=3 \\text{ exactement pour } x \\in [-5 ; -2].`],
+      graph: {
+        xMin: -6,
+        xMax: 5,
+        yMin: -3,
+        yMax: 6,
+        curves: [{ fn: (x) => 3 - 1 * (x + 5) * (x + 2), label: "Cf" }],
+        lines: [{ a: 0, b: 3, color: "#6E7787", dashed: true, label: "y = 3" }],
+      },
     },
     {
       prompt: `L'ensemble des solutions de l'équation \\((2x+4)(-3x-9) = 0\\) est :`,
@@ -254,6 +296,7 @@ function genQCMOfficielCentresEtrangers() {
     answer: q.answer,
     options: q.options,
     steps: q.steps,
+    ...(q.graph ? { graph: q.graph } : {}),
   };
 }
 

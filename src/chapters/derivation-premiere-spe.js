@@ -257,10 +257,21 @@ function genPenteSecanteNumeric() {
   return {
     type: "numeric",
     chapter: "Dérivation — Taux de variation",
-    prompt: `Sur la courbe représentative d'une fonction \\(f\\), on repère les points \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule la pente (coefficient directeur) de la sécante \\((AB)\\) (valeur arrondie au millième si besoin).`,
+    prompt: `On donne ci-dessous deux points \\(A\\) et \\(B\\) d'une courbe représentative d'une fonction \\(f\\). Calcule la pente (coefficient directeur) de la sécante \\((AB)\\) (valeur arrondie au millième si besoin).`,
     answer,
     tolerance: 0.002,
     steps: [`\\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} \\approx ${fr(answer)}`],
+    graph: {
+      xMin: Math.min(xA, xB) - 2,
+      xMax: Math.max(xA, xB) + 2,
+      yMin: Math.min(yA, yB) - 2,
+      yMax: Math.max(yA, yB) + 2,
+      lines: [{ a: roundTo((yB - yA) / (xB - xA), 4), b: roundTo(yA - ((yB - yA) / (xB - xA)) * xA, 4), label: "(AB)" }],
+      points: [
+        { x: xA, y: yA, label: "A" },
+        { x: xB, y: yB, label: "B" },
+      ],
+    },
   };
 }
 

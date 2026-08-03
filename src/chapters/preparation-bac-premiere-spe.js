@@ -62,10 +62,18 @@ function genLectureGraphiqueAffineQCM() {
   return {
     type: "qcm",
     chapter: "Préparation au Bac — Automatismes",
-    prompt: `Une fonction affine \\(f\\) est représentée par une droite passant par le point \\((0 ; ${b})\\), avec un coefficient directeur égal à ${a}. Quelle est l'expression algébrique de \\(f\\) ?`,
+    prompt: `On donne ci-dessous la représentation graphique d'une fonction affine \\(f\\). Quelle est son expression algébrique ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{L'ordonnée à l'origine est } ${b}, \\text{ le coefficient directeur est } ${a}.`, correctRaw],
+    steps: [`\\text{D'après le graphique, l'ordonnée à l'origine est } ${b}, \\text{ le coefficient directeur est } ${a}.`, correctRaw],
+    graph: {
+      xMin: -5,
+      xMax: 5,
+      yMin: Math.min(-12, b - 2, a * -5 + b - 2),
+      yMax: Math.max(12, b + 2, a * 5 + b + 2),
+      lines: [{ a, b, label: "f" }],
+      points: [{ x: 0, y: b, label: `(0 ; ${b})`, project: true }],
+    },
   };
 }
 

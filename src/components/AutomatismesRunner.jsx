@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Check, X, Timer, ArrowLeft, ArrowRight, Trophy, Lock, Square, CheckSquare, Shuffle } from "lucide-react";
 import MathText from "./MathText";
 import Figure from "./Figure";
+import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
@@ -320,6 +321,7 @@ export default function AutomatismesRunner({ chapter }) {
           />
 
           {exercise.figure && <Figure spec={exercise.figure} />}
+          {exercise.graph && <Graph spec={exercise.graph} />}
 
           {exercise.type === "text" && (
             <>

@@ -7,6 +7,7 @@ import { useDailyQuota } from "../hooks/useDailyQuota";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import MathText from "./MathText";
 import Figure from "./Figure";
+import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
 
@@ -307,6 +308,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           />
 
           {exercise.figure && <Figure spec={exercise.figure} />}
+          {exercise.graph && <Graph spec={exercise.graph} />}
 
           {exercise.type === "text" && (
             <>

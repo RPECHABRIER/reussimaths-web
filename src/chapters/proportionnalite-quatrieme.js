@@ -179,10 +179,21 @@ function genPointsAlignesOrigineQCM() {
   return {
     type: "qcm",
     chapter: "Proportionnalité — Représentation graphique",
-    prompt: `On a placé les points de coordonnées suivantes dans un repère : ${xs.map((x, i) => `(${x} ; ${fr(ys[i])})`).join(", ")}. Ces points peuvent-ils être alignés avec l'origine du repère (situation de proportionnalité) ?`,
+    prompt: `On a placé ci-dessous les points \\(A\\), \\(B\\) et \\(C\\) dans un repère. Ces points peuvent-ils être alignés avec l'origine du repère (situation de proportionnalité) ?`,
     answer: isAligned ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [`On vérifie si y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.`],
+    graph: {
+      xMin: 0,
+      xMax: Math.max(...xs) + 2,
+      yMin: 0,
+      yMax: Math.max(...ys) + 2,
+      points: [
+        { x: xs[0], y: ys[0], label: "A" },
+        { x: xs[1], y: ys[1], label: "B" },
+        { x: xs[2], y: ys[2], label: "C" },
+      ],
+    },
   };
 }
 

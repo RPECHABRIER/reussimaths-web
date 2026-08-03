@@ -15,8 +15,19 @@ export function useAuth() {
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      // Compteur de connexions (voir supabase/schema.sql : table
+      // user_login_stats + RPC record_login), utilisé par le tableau de bord
+      // admin (/admin, src/pages/AdminPreview.jsx). "SIGNED_IN" ne se
+      // déclenche que sur une vraie nouvelle connexion (pas sur un simple
+      // rechargement de page ou un refresh de token), donc pas de
+      // sur-comptage.
+      if (event === "SIGNED_IN") {
+        supabase.rpc("record_login").then(({ error }) => {
+          if (error) console.error("[useAuth] record_login:", error.message);
+        });
+      }
     });
 
     return () => listener.subscription.unsubscribe();

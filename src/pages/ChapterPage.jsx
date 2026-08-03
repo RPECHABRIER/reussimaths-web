@@ -5,14 +5,15 @@ import AutomatismesRunner from "../components/AutomatismesRunner";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
-import { canAccessChapter } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 export default function ChapterPage() {
   const { id } = useParams();
   const chapter = getChapter(id);
   const { user } = useAuth();
-  const { subscription, loading } = useSubscription(user?.id);
+  const { subscription: rawSubscription, loading } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
 
   if (!chapter) {

@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
-import { canAccessChapter } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 
 // Détail d'un parcours (/parcours/:parcoursId) : la liste de ses étapes avec
@@ -19,7 +19,8 @@ export default function ParcoursOverview() {
   const { parcoursId } = useParams();
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
-  const { subscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { stepByIndex, completedSteps, loading } = useParcoursProgress(user?.id, parcoursId);
 

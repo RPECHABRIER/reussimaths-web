@@ -1,5 +1,97 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 14) — Panneau admin : prévisualisation par palier + tableau de bord abonnés
+
+Demande de Romain : "j'ai besoin d'un compte gratuit, un compte pack examen
+[...] et un compte abonné [...] afin de voir ce que chaque utilisateur voit"
+→ reformulée ensuite en "une page réservée uniquement à l'admin qui me permet
+de switcher sur les différents types de compte sans avoir à créer ces
+comptes [...] avec le nombre d'abonnés, leur nom, leur nombre de connexion,
+leur type d'abonnement". Impossible de créer de vrais comptes de test à la
+place de Romain (connexion Google/Apple uniquement) → implémenté comme un
+mode de prévisualisation + un tableau de bord, tous deux réservés à l'admin.
+
+### 1. Mode prévisualisation ("view as"), purement client, aucune donnée en base touchée
+- **Nouveau** `src/lib/adminPreview.js` : get/set d'un état de préviz
+  (`{mode: "gratuit"|"special_examen"|"mensuel", packExamenLevel?,
+  packExamenBonusChapters?}`) en `localStorage`, aucune vérification
+  d'identité ici (volontaire, voir garde-fou ci-dessous).
+- `src/lib/access.js` : ajout de `isRealAdmin(user)` (identité RÉELLE, jamais
+  influencée par la préviz — sert de garde-fou) ; `isAdminUser(user)` devient
+  sensible à la préviz (renvoie `false` pendant une préviz active, sinon
+  `canAccessChapter`/`hasUnlimitedQuota` court-circuiteraient dessus avant
+  même de regarder l'abonnement simulé) ; nouvelle fonction
+  `getEffectiveSubscription(user, subscription)` qui renvoie un objet
+  `subscription` simulé (plan/status/pack_examen_level/bonus_chapters selon
+  le mode) si et seulement si `isRealAdmin(user)` est vrai ET qu'une préviz
+  est active — sinon elle renvoie la ligne réelle telle quelle. **Garde-fou
+  sécurité documenté dans les deux fichiers** : un utilisateur normal qui
+  bidouillerait ce `localStorage` dans sa console n'obtient RIEN de plus que
+  son accès réel, car `getEffectiveSubscription`/`isAdminUser` ne consultent
+  jamais la préviz sans avoir d'abord vérifié `isRealAdmin(user)` sur l'objet
+  utilisateur réellement authentifié par Supabase.
+- Câblage dans les 10 points de consommation de `useSubscription`/
+  `isAdminUser` (`Niveau.jsx`, `ChapterPage.jsx`, `ParcoursOverview.jsx`,
+  `ParcoursStep.jsx`, `Amis.jsx`, `Account.jsx`, `Idees.jsx`,
+  `ChapterRunner.jsx`, `AutomatismesRunner.jsx`, `App.jsx`) : chacun
+  récupère désormais la ligne brute puis appelle
+  `getEffectiveSubscription(user, rawSubscription)` avant de l'utiliser —
+  `canAccessChapter`/`hasUnlimitedQuota` n'ont eux-mêmes pas changé, ils
+  continuent de raisonner normalement sur ce qu'on leur donne.
+- `App.jsx` : anti-partage (`useSingleSession`) exempté sur `isRealAdmin`
+  (pas `isAdminUser`) pour que "prévisualiser abonnement complet" ne
+  déclenche jamais l'éviction multi-appareils sur le vrai compte de Romain.
+  Ajout d'un bandeau doré fixe en haut de l'app quand une préviz est active
+  ("⚠ Prévisualisation admin en cours — vue X" + bouton "Quitter"), pour ne
+  jamais laisser Romain se demander pourquoi l'accès a changé.
+- `Account.jsx` : lien "Panneau admin" (visible seulement pour l'admin réel,
+  même pendant une préviz), qui devient "⚠ Prévisualisation active — gérer"
+  en doré quand une préviz tourne. `isActive` de la page recalculé sur la
+  subscription EFFECTIVE plutôt que sur celle du hook (cohérent avec la
+  préviz).
+- **Nouveau** `src/pages/AdminPreview.jsx` (route `/admin`, réservée à
+  `isRealAdmin`) : sélecteur de palier (Vue réelle / Gratuit / Pack Examen /
+  Abonnement complet). Pour Pack Examen : soit laisser le niveau vide pour
+  tester le VRAI écran de choix (`PackExamenChoice`, en simulant juste le
+  statut d'abonnement), soit choisir un niveau + optionnellement les 2
+  chapitres bonus (filtrés au niveau choisi, même logique que
+  `PackExamenChoice`/suite 13). Le bouton "Activer cette vue" sauvegarde en
+  `localStorage` puis recharge la page.
+
+### 2. Tableau de bord abonnés (lecture seule sur les vraies données)
+- Nouvelle policy RLS `subscriptions: admin can read all` (en plus de "self
+  read" existante, les deux policies SELECT se cumulent en OR).
+- **Nouvelle table** `user_login_stats` (user_id PK, login_count,
+  last_login_at) — SÉPARÉE de `profiles` volontairement : `profiles` a une
+  policy de lecture PUBLIQUE (nécessaire pour pseudos/parrainage/défis), on
+  ne veut surtout pas que le nombre de connexions de chacun devienne visible
+  par tout le monde. RLS : self peut lire sa propre ligne, admin lit tout.
+- Nouvelle fonction RPC `record_login()` (SECURITY DEFINER), incrémente
+  `login_count` et met à jour `last_login_at` pour `auth.uid()`. Appelée
+  depuis `src/hooks/useAuth.js` sur l'évènement Supabase `"SIGNED_IN"`
+  uniquement (pas sur un simple rechargement de page / refresh de token —
+  évite le sur-comptage).
+- `AdminPreview.jsx` charge séparément `profiles` (public), `subscriptions`
+  (admin-read-all) et `user_login_stats` (admin-read-all), et fait la
+  jointure côté client par `user_id` (pas de relation FK directe entre ces 3
+  tables exploitable par l'auto-embedding PostgREST, elles ne sont reliées
+  qu'via `auth.users`). Affiche : nombre total de comptes + répartition par
+  palier, puis un tableau (pseudo, palier déduit de plan+status, nombre de
+  connexions, dernière connexion) trié par nombre de connexions décroissant.
+  Aucun email ni nom réel affiché (cohérent avec le principe d'anonymat déjà
+  en place ailleurs dans l'app).
+
+### Schéma SQL (déjà collé en chat avant application, voir `supabase/schema.sql`)
+- Policy `subscriptions: admin can read all`.
+- Table `user_login_stats` + ses 2 policies RLS.
+- Fonction RPC `record_login()`.
+
+Build vérifié (`npx vite build --outDir /tmp/dist-verify-adminpreview`,
+0 erreur). 15 fichiers modifiés/ajoutés synchronisés vers le dossier
+persistant ET le clone Git de référence (`reussimaths-web/APPLI GITHUB/Sans
+titre/` — voir correction de chemin en suite 13, `git status` y confirme
+tous les fichiers attendus, prêt pour commit/push depuis GitHub Desktop).
+
 ## 2026-08-03 (suite 13) — Correction du clone Git actif + chapitres bonus Pack Examen restreints au niveau choisi
 
 - **Correction d'un mauvais chemin de sync (signalé par Romain : "github ne

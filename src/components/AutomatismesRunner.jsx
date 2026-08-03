@@ -7,7 +7,7 @@ import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
-import { hasUnlimitedQuota } from "../lib/access";
+import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import { useAutomatismesBestTime } from "../hooks/useAutomatismesBestTime";
 import { colors, fonts, shadow } from "../theme";
 
@@ -35,7 +35,8 @@ function formatDuration(ms) {
 // ---------------------------------------------------------------------------
 export default function AutomatismesRunner({ chapter }) {
   const { user } = useAuth();
-  const { subscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const unlimited = hasUnlimitedQuota(chapter, { user, subscription });
   const dailyLimit = chapter.meta.freemiumDaily ?? QUESTIONS_PER_SERIES;
   const quota = useDailyQuota(chapter.meta.id, dailyLimit);

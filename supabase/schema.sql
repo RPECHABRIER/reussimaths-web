@@ -396,3 +396,67 @@ end;
 $$;
 
 grant execute on function public.set_referral_bonus_chapter(text) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Panneau admin (2026-08-03) : voir src/pages/AdminPreview.jsx (/admin,
+-- réservé à romainpechabrier@gmail.com). Deux besoins :
+--   1. Un mode "prévisualisation" (gratuit / Pack Examen / abonnement
+--      complet) purement CLIENT (localStorage, voir src/lib/adminPreview.js)
+--      pour que l'admin voie l'app comme chaque palier sans créer de vrais
+--      comptes de test. Ne touche à AUCUNE donnée en base, donc rien à
+--      ajouter ici pour ça.
+--   2. Un tableau de bord listant tous les abonnés (pseudo, palier, statut,
+--      nombre de connexions) — nécessite que l'admin puisse lire TOUTES les
+--      lignes de `subscriptions` (actuellement "self read" seulement) et une
+--      nouvelle table de suivi des connexions.
+-- ---------------------------------------------------------------------------
+
+-- L'admin peut lire tous les abonnements (en plus de la policy existante qui
+-- permet à chacun de lire seulement le sien) — utilisé par le tableau de bord
+-- de /admin.
+create policy "subscriptions: admin can read all" on public.subscriptions
+  for select using (auth.jwt() ->> 'email' = 'romainpechabrier@gmail.com');
+
+-- Suivi du nombre de connexions par utilisateur. Table séparée de `profiles`
+-- (plutôt qu'une colonne dessus) car `profiles` a une policy de lecture
+-- PUBLIQUE (nécessaire pour les pseudos/parrainage) — on ne veut surtout pas
+-- que le nombre de connexions de chacun devienne visible par tout le monde.
+create table if not exists public.user_login_stats (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  login_count integer not null default 0,
+  last_login_at timestamptz
+);
+alter table public.user_login_stats enable row level security;
+
+create policy "user_login_stats: self read" on public.user_login_stats
+  for select using (auth.uid() = user_id);
+
+create policy "user_login_stats: admin read all" on public.user_login_stats
+  for select using (auth.jwt() ->> 'email' = 'romainpechabrier@gmail.com');
+
+-- Appelée depuis src/hooks/useAuth.js à chaque évènement Supabase "SIGNED_IN"
+-- (une vraie connexion, pas juste un rechargement de page / refresh de
+-- token). SECURITY DEFINER pour pouvoir upsert sans policy d'écriture
+-- publique sur la table.
+create or replace function public.record_login()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+begin
+  if v_user_id is null then
+    return;
+  end if;
+
+  insert into public.user_login_stats (user_id, login_count, last_login_at)
+  values (v_user_id, 1, now())
+  on conflict (user_id) do update
+    set login_count = public.user_login_stats.login_count + 1,
+        last_login_at = now();
+end;
+$$;
+
+grant execute on function public.record_login() to authenticated;

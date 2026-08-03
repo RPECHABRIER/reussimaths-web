@@ -24,7 +24,19 @@
 //                       1 seule session active, src/hooks/useSingleSession.js).
 //   - Admin           : le compte de Romain (ADMIN_EMAIL) bypass tout, sans
 //                       abonnement.
+//
+// Mode prévisualisation admin (voir src/pages/AdminPreview.jsx, route
+// /admin) : l'admin peut se faire passer pour un compte gratuit / Pack
+// Examen / abonnement complet, purement côté client (voir
+// src/lib/adminPreview.js), pour tester l'app à tous les paliers sans créer
+// de vrais comptes. isAdminUser() et getEffectiveSubscription() ci-dessous
+// sont les deux seuls points d'entrée qui en tiennent compte — tout le reste
+// du fichier (canAccessChapter, hasUnlimitedQuota...) continue de raisonner
+// normalement sur le `user`/`subscription` qu'on lui donne, sans rien savoir
+// de la préviz.
 // ---------------------------------------------------------------------------
+
+import { getAdminPreview } from "./adminPreview";
 
 export const ADMIN_EMAIL = "romainpechabrier@gmail.com";
 
@@ -43,8 +55,59 @@ export const EXAM_CHAPTER_BY_LEVEL = {
   "terminale-spe": "exercices-transversaux-terminale-spe",
 };
 
-export function isAdminUser(user) {
+// Vérifie l'identité RÉELLE (jamais influencée par la préviz) — c'est le
+// garde-fou : isAdminUser()/getEffectiveSubscription() ci-dessous ne
+// consultent le localStorage de préviz que si isRealAdmin(user) est vrai,
+// donc un utilisateur normal qui bidouillerait ce localStorage n'obtient
+// jamais rien de plus que son accès réel.
+export function isRealAdmin(user) {
   return !!user && user.email === ADMIN_EMAIL;
+}
+
+// Préviz active pour l'admin réel ? Renvoie l'objet préviz ({mode, ...}) ou
+// null (vue réelle / pas admin).
+function activePreviewFor(user) {
+  if (!isRealAdmin(user)) return null;
+  const preview = getAdminPreview();
+  if (!preview || !preview.mode || preview.mode === "admin") return null;
+  return preview;
+}
+
+// Pendant une préviz "gratuit"/"special_examen"/"mensuel", l'admin doit
+// vraiment perdre son statut admin (sinon canAccessChapter/hasUnlimitedQuota
+// court-circuiteraient dessus avant même de regarder l'abonnement simulé).
+export function isAdminUser(user) {
+  if (activePreviewFor(user)) return false;
+  return isRealAdmin(user);
+}
+
+function buildPreviewSubscription(preview) {
+  if (preview.mode === "gratuit") return null;
+  if (preview.mode === "special_examen") {
+    const periodEnd = new Date();
+    periodEnd.setMonth(periodEnd.getMonth() + 3);
+    return {
+      plan: "special_examen",
+      status: "active",
+      current_period_end: periodEnd.toISOString(),
+      pack_examen_level: preview.packExamenLevel ?? null,
+      pack_examen_bonus_chapters: preview.packExamenBonusChapters ?? [],
+    };
+  }
+  if (preview.mode === "mensuel") {
+    return { plan: "mensuel", status: "active", current_period_end: null };
+  }
+  return null;
+}
+
+// À appeler juste après useSubscription() dans toute page qui vérifie
+// l'accès, et à utiliser ensuite PARTOUT à la place de la ligne brute
+// (canAccessChapter, hasUnlimitedQuota, isFullAccessSubscription,
+// isPackExamenSubscription...). Ne change rien si l'utilisateur réel n'est
+// pas l'admin, ou si aucune préviz n'est active.
+export function getEffectiveSubscription(user, subscription) {
+  const preview = activePreviewFor(user);
+  return preview ? buildPreviewSubscription(preview) : subscription;
 }
 
 function planIsCurrentlyValid(subscription) {

@@ -13,28 +13,35 @@ import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
 import Amis from "./pages/Amis";
 import Idees from "./pages/Idees";
+import AdminPreview from "./pages/AdminPreview";
 import MentionsLegales from "./pages/legal/MentionsLegales";
 import CGU from "./pages/legal/CGU";
 import Confidentialite from "./pages/legal/Confidentialite";
 import { useAuth } from "./hooks/useAuth";
 import { useSubscription } from "./hooks/useProgress";
 import { useSingleSession } from "./hooks/useSingleSession";
-import { isAdminUser, isFullAccessSubscription } from "./lib/access";
+import { isRealAdmin, isFullAccessSubscription, getEffectiveSubscription } from "./lib/access";
+import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 
 export default function App() {
   const { user, loading, signOut } = useAuth();
-  const { subscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const location = useLocation();
   const navigate = useNavigate();
   const pathRef = useRef(location.pathname);
   const [evictedMessage, setEvictedMessage] = useState(false);
+  const preview = isRealAdmin(user) ? getAdminPreview() : null;
+  const previewing = !!preview?.mode && preview.mode !== "admin";
 
   // Anti-partage : un abonnement complet ne peut être utilisé que sur un seul
   // appareil à la fois (voir src/hooks/useSingleSession.js) — l'admin
-  // (Romain) en est exempté pour pouvoir tester sur plusieurs appareils.
-  const singleSessionEnabled = isFullAccessSubscription(subscription) && !isAdminUser(user);
+  // (Romain) en est TOUJOURS exempté, y compris pendant une prévisualisation
+  // (sinon activer "prévisualiser abonnement complet" déclencherait l'anti-
+  // partage sur son propre compte réel).
+  const singleSessionEnabled = isFullAccessSubscription(subscription) && !isRealAdmin(user);
   const handleEvicted = useCallback(() => {
     setEvictedMessage(true);
     signOut();
@@ -102,24 +109,51 @@ export default function App() {
   }
 
   return (
-    <Routes>
-      <Route path="/" element={<CycleSelect />} />
-      <Route path="/niveaux" element={<LevelSelect />} />
-      <Route path="/college" element={<CycleLevels />} />
-      <Route path="/lycee" element={<CycleLevels />} />
-      <Route path="/niveau/:levelId" element={<Niveau />} />
-      <Route path="/parcours/niveau/:levelId/diagnostic" element={<ParcoursDiagnostic />} />
-      <Route path="/parcours/niveau/:levelId" element={<ParcoursSelect />} />
-      <Route path="/parcours/:parcoursId/etape/:stepIndex" element={<ParcoursStep />} />
-      <Route path="/parcours/:parcoursId" element={<ParcoursOverview />} />
-      <Route path="/chapitre/:id" element={<ChapterPage />} />
-      <Route path="/compte" element={<Account />} />
-      <Route path="/pseudo" element={<Onboarding />} />
-      <Route path="/amis" element={<Amis />} />
-      <Route path="/idees" element={<Idees />} />
-      <Route path="/mentions-legales" element={<MentionsLegales />} />
-      <Route path="/cgu" element={<CGU />} />
-      <Route path="/confidentialite" element={<Confidentialite />} />
-    </Routes>
+    <>
+      {previewing && (
+        <div
+          className="w-full flex items-center justify-center gap-3 py-2 px-4 text-xs font-semibold text-center"
+          style={{ backgroundColor: colors.gold, color: colors.ink }}
+        >
+          <span>
+            ⚠ Prévisualisation admin en cours —{" "}
+            {preview.mode === "gratuit"
+              ? "vue Gratuit"
+              : preview.mode === "special_examen"
+              ? "vue Pack Examen"
+              : "vue Abonnement complet"}
+          </span>
+          <button
+            onClick={() => {
+              setAdminPreview(null);
+              window.location.reload();
+            }}
+            className="underline"
+          >
+            Quitter
+          </button>
+        </div>
+      )}
+      <Routes>
+        <Route path="/" element={<CycleSelect />} />
+        <Route path="/niveaux" element={<LevelSelect />} />
+        <Route path="/college" element={<CycleLevels />} />
+        <Route path="/lycee" element={<CycleLevels />} />
+        <Route path="/niveau/:levelId" element={<Niveau />} />
+        <Route path="/parcours/niveau/:levelId/diagnostic" element={<ParcoursDiagnostic />} />
+        <Route path="/parcours/niveau/:levelId" element={<ParcoursSelect />} />
+        <Route path="/parcours/:parcoursId/etape/:stepIndex" element={<ParcoursStep />} />
+        <Route path="/parcours/:parcoursId" element={<ParcoursOverview />} />
+        <Route path="/chapitre/:id" element={<ChapterPage />} />
+        <Route path="/compte" element={<Account />} />
+        <Route path="/pseudo" element={<Onboarding />} />
+        <Route path="/amis" element={<Amis />} />
+        <Route path="/idees" element={<Idees />} />
+        <Route path="/admin" element={<AdminPreview />} />
+        <Route path="/mentions-legales" element={<MentionsLegales />} />
+        <Route path="/cgu" element={<CGU />} />
+        <Route path="/confidentialite" element={<Confidentialite />} />
+      </Routes>
+    </>
   );
 }

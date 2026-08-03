@@ -7,7 +7,7 @@ import { getParcoursForLevel } from "../parcours";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
-import { canAccessChapter } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 import ComingSoon from "./ComingSoon";
 
@@ -25,7 +25,8 @@ export default function Niveau() {
   const realIds = new Set(realChapters.map((c) => c.meta.id));
   const plannedChapters = getPlannedChapters(levelId).filter((p) => !realIds.has(p.id));
   const { user } = useAuth();
-  const { subscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
 
   if (!level) {

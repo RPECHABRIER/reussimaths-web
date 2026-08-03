@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
-import { canAccessChapter } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 // Une étape de parcours (/parcours/:parcoursId/etape/:stepIndex) : le chapitre
@@ -21,7 +21,8 @@ export default function ParcoursStep() {
   const idx = Number(stepIndex);
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
-  const { subscription, loading: subLoading } = useSubscription(user?.id);
+  const { subscription: rawSubscription, loading: subLoading } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
   const navigate = useNavigate();

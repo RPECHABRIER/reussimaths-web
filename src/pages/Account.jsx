@@ -5,7 +5,14 @@ import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
 import { useReferrals } from "../hooks/useReferrals";
 import { useReferralBonus } from "../hooks/useReferralBonus";
-import { isAdminUser, isFullAccessSubscription, isPackExamenSubscription } from "../lib/access";
+import {
+  isAdminUser,
+  isRealAdmin,
+  isFullAccessSubscription,
+  isPackExamenSubscription,
+  getEffectiveSubscription,
+} from "../lib/access";
+import { getAdminPreview } from "../lib/adminPreview";
 import PackExamenChoice from "../components/PackExamenChoice";
 import ReferralBonusChoice from "../components/ReferralBonusChoice";
 import { colors, fonts, shadow } from "../theme";
@@ -15,7 +22,8 @@ import { colors, fonts, shadow } from "../theme";
 // d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
   const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
-  const { subscription, isActive, reload: reloadSubscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription, reload: reloadSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { profile } = useProfile(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
   const { chapterId: referralBonusChapterId, reload: reloadReferralBonus } = useReferralBonus(user?.id);
@@ -25,6 +33,11 @@ export default function Account() {
   const fullAccess = isFullAccessSubscription(subscription);
   const packExamen = isPackExamenSubscription(subscription);
   const packExamenNeedsChoice = packExamen && !subscription?.pack_examen_level;
+  // isActive recalculé sur la subscription EFFECTIVE (donc cohérent avec une
+  // préviz admin en cours) plutôt que de reprendre isActive du hook, qui
+  // porte toujours sur la vraie ligne en base.
+  const isActive = fullAccess || packExamen;
+  const previewing = isRealAdmin(user) && !!getAdminPreview()?.mode && getAdminPreview()?.mode !== "admin";
 
   const referralLink = profile?.referral_code
     ? `${window.location.origin}/?ref=${profile.referral_code}`
@@ -79,6 +92,17 @@ export default function Account() {
           <p className="text-sm" style={{ color: colors.slate }}>
             Abonnement : {admin ? "accès complet (admin)" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
+
+          {isRealAdmin(user) && (
+            <Link
+              to="/admin"
+              className="text-xs font-medium py-1.5 rounded-full"
+              style={{ color: previewing ? colors.gold : colors.slate }}
+            >
+              {previewing ? "⚠ Prévisualisation active — gérer" : "Panneau admin"}
+            </Link>
+          )}
+
           {packExamen && subscription?.plan === "special_examen" && subscription?.current_period_end && (
             <p className="text-xs" style={{ color: colors.slate }}>
               Accès jusqu'au {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")} (offre non

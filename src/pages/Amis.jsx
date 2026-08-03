@@ -9,7 +9,7 @@ import { useFriends } from "../hooks/useFriends";
 import { useChallenges, QUESTIONS_PER_CHALLENGE } from "../hooks/useChallenges";
 import { chapters, getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
-import { canAccessChapter } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import MiniDuel from "../components/MiniDuel";
 import { colors, fonts, shadow } from "../theme";
 
@@ -64,7 +64,8 @@ function Card({ children }) {
 export default function Amis() {
   const { user, loading } = useAuth();
   const { profile } = useProfile(user?.id);
-  const { subscription } = useSubscription(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { incoming, outgoing, accepted, profiles, sendRequest, respond, cancelRequest } = useFriends(user?.id);
   const { challenges, createChallenge, submitResponse } = useChallenges(user?.id);

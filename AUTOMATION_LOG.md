@@ -1,5 +1,35 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-03 (suite 13) — Correction du clone Git actif + chapitres bonus Pack Examen restreints au niveau choisi
+
+- **Correction d'un mauvais chemin de sync (signalé par Romain : "github ne
+  voit pas ce que tu as ajouté").** Le vrai dépôt Git connecté à GitHub
+  Desktop (remote `RPECHABRIER/reussimaths-web`, historique cohérent avec les
+  commits précédents de Romain) est en fait imbriqué à
+  `Application TOP/reussimaths-web/APPLI GITHUB/Sans titre/` — PAS
+  `Application TOP/Première Spé/reussimaths-web-github` (ce dossier-là n'est
+  pas un dépôt Git, une copie sans rapport). Les fichiers de la suite 12
+  (récompenses de parrainage) ont été recopiés au bon endroit ; `git status`
+  y confirme désormais les bons fichiers modifiés/ajoutés. **Pour toute
+  synchronisation future : le clone Git de référence est bien
+  `reussimaths-web/APPLI GITHUB/Sans titre/`.**
+- Adresse du site en production communiquée par Romain :
+  https://reussimaths-web.vercel.app/ — ajoutée en haut du `README.md`.
+- **Bug signalé par Romain :** dans le choix des 2 chapitres bonus du Pack
+  Examen (`PackExamenChoice.jsx`), les menus déroulants proposaient TOUS les
+  chapitres de la plateforme, pas seulement ceux du niveau choisi — un
+  abonné Pack Examen pouvait donc piocher un chapitre bonus dans n'importe
+  quel autre niveau que celui qu'il paie. Corrigé : `bonusOptions` filtre
+  désormais sur `c.meta.level === level` (recalculé dès que le niveau
+  change, avec reset de `bonusA`/`bonusB` si le niveau est modifié avant
+  validation), en excluant aussi le chapitre d'examen du niveau (déjà
+  débloqué par le Pack Examen, doublon inutile). Les 2 menus bonus sont
+  désactivés tant qu'aucun niveau n'est choisi, avec un message si un niveau
+  n'a pas encore de chapitre bonus disponible.
+- Build vérifié (`npx vite build --outDir /tmp/dist-verify-packbonus`,
+  0 erreur). Synchronisé vers le dossier persistant et le clone Git (au bon
+  emplacement, voir ci-dessus).
+
 ## 2026-08-03 (suite 12) — Récompenses de parrainage (chapitre au choix + mois gratuit)
 
 Suite ouverte en "suite 11" (carte de parrainage neutralisée après suppression

@@ -1,5 +1,7 @@
 # Reussimaths — web app
 
+**Site en production :** https://reussimaths-web.vercel.app/
+
 App de révision (brevet/bac), lancée en web-first : une page web (PWA installable),
 paiement direct via Stripe pour l'abonnement, comptes individualisés via Supabase.
 Une coque native (Capacitor ou équivalent) pourra être ajoutée plus tard sans

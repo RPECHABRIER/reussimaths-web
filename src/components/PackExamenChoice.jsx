@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
+import { EXAM_CHAPTER_BY_LEVEL } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 // Affiché une seule fois à un abonné Pack Examen tant qu'il n'a pas encore
@@ -16,21 +17,34 @@ export default function PackExamenChoice({ onDone }) {
     () => LEVELS.filter((l) => chapters.some((c) => c.meta.level === l.id)),
     []
   );
-  // Les 2 chapitres bonus n'ont d'intérêt que sur du contenu normalement sous
-  // abonnement (pas la peine de "choisir" un chapitre déjà gratuit).
-  const bonusOptions = useMemo(
-    () =>
-      chapters
-        .filter((c) => !c.meta.free && !c.meta.freemiumDaily)
-        .sort((a, b) => a.meta.title.localeCompare(b.meta.title)),
-    []
-  );
 
   const [level, setLevel] = useState("");
   const [bonusA, setBonusA] = useState("");
   const [bonusB, setBonusB] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+
+  // Les 2 chapitres bonus ne doivent proposer QUE le niveau choisi (pas
+  // l'ensemble du catalogue) — sinon le Pack Examen finirait par donner accès
+  // à des niveaux entiers non payés. On exclut aussi le chapitre gratuit et
+  // le chapitre d'examen du niveau (déjà débloqué par le Pack Examen, pas la
+  // peine de "choisir" un chapitre déjà accessible).
+  const bonusOptions = useMemo(() => {
+    if (!level) return [];
+    const examChapterId = EXAM_CHAPTER_BY_LEVEL[level];
+    return chapters
+      .filter((c) => c.meta.level === level)
+      .filter((c) => !c.meta.free && !c.meta.freemiumDaily)
+      .filter((c) => c.meta.id !== examChapterId)
+      .sort((a, b) => a.meta.title.localeCompare(b.meta.title));
+  }, [level]);
+
+  // Si le niveau change, les chapitres bonus déjà sélectionnés ne sont plus
+  // forcément valides (autre niveau) — on repart de zéro.
+  useEffect(() => {
+    setBonusA("");
+    setBonusB("");
+  }, [level]);
 
   const canSubmit = !!level && !!bonusA && !!bonusB && bonusA !== bonusB;
 
@@ -77,10 +91,11 @@ export default function PackExamenChoice({ onDone }) {
       <select
         value={bonusA}
         onChange={(e) => setBonusA(e.target.value)}
+        disabled={!level}
         className="text-xs rounded-lg px-2.5 py-2"
-        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }}
+        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card, opacity: level ? 1 : 0.5 }}
       >
-        <option value="">— 1er chapitre bonus —</option>
+        <option value="">— 1er chapitre bonus ({levelsWithContent.find((l) => l.id === level)?.label ?? "choisis d'abord un niveau"}) —</option>
         {bonusOptions.map((c) => (
           <option key={c.meta.id} value={c.meta.id} disabled={c.meta.id === bonusB}>
             {c.meta.title}
@@ -91,16 +106,23 @@ export default function PackExamenChoice({ onDone }) {
       <select
         value={bonusB}
         onChange={(e) => setBonusB(e.target.value)}
+        disabled={!level}
         className="text-xs rounded-lg px-2.5 py-2"
-        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }}
+        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card, opacity: level ? 1 : 0.5 }}
       >
-        <option value="">— 2e chapitre bonus —</option>
+        <option value="">— 2e chapitre bonus ({levelsWithContent.find((l) => l.id === level)?.label ?? "choisis d'abord un niveau"}) —</option>
         {bonusOptions.map((c) => (
           <option key={c.meta.id} value={c.meta.id} disabled={c.meta.id === bonusA}>
             {c.meta.title}
           </option>
         ))}
       </select>
+
+      {level && bonusOptions.length === 0 && (
+        <p className="text-xs" style={{ color: colors.slate }}>
+          Ce niveau n'a pas encore de chapitre bonus disponible.
+        </p>
+      )}
 
       {error && (
         <p className="text-xs" style={{ color: colors.red }}>

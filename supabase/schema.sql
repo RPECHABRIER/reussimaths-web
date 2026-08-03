@@ -96,6 +96,13 @@ create table if not exists public.challenges (
 alter table public.challenges add column if not exists from_duration_ms integer;
 alter table public.challenges add column if not exists to_duration_ms integer;
 
+-- theme_id : pour un défi sur un chapitre "Automatismes" (qui mélange
+-- plusieurs thèmes, voir meta.isAutomatismes), précise sur QUEL thème porte
+-- le défi (ex: "fractions"), pour que les deux joueurs soient interrogés sur
+-- le même sujet au lieu d'un mélange aléatoire indépendant de chaque côté.
+-- NULL pour un défi sur un chapitre classique (un seul sujet, pas d'ambiguïté).
+alter table public.challenges add column if not exists theme_id text;
+
 -- Meilleur temps d'un abonné sur une série de 5 questions d'Automatismes, par
 -- thème (un id de thème par chapitre du manuel, + "mix" pour le mélange de
 -- tous les chapitres) — voir src/hooks/useAutomatismesBestTime.js et

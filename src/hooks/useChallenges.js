@@ -33,16 +33,27 @@ export function useChallenges(userId) {
   }, [load]);
 
   const createChallenge = useCallback(
-    async (toUserId, chapterId, score, durationMs) => {
+    async (toUserId, chapterId, score, durationMs, themeId, topicLabel) => {
       const { error } = await supabase.from("challenges").insert({
         from_user: userId,
         to_user: toUserId,
         chapter_id: chapterId,
+        theme_id: themeId ?? null,
         from_score: score,
         from_duration_ms: durationMs ?? null,
         from_played_at: new Date().toISOString(),
       });
-      if (!error) await load();
+      if (!error) {
+        await load();
+        // Best-effort : l'échec de l'email ne doit jamais faire échouer la
+        // création du défi (déjà enregistré en base à ce stade). Voir
+        // api/notify-challenge.js.
+        fetch("/api/notify-challenge", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fromUserId: userId, toUserId, topicLabel }),
+        }).catch((e) => console.error("[useChallenges] notification email:", e.message));
+      }
       return { error };
     },
     [userId, load]

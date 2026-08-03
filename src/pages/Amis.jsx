@@ -8,8 +8,42 @@ import { useReferrals } from "../hooks/useReferrals";
 import { useFriends } from "../hooks/useFriends";
 import { useChallenges, QUESTIONS_PER_CHALLENGE } from "../hooks/useChallenges";
 import { chapters, getChapter } from "../chapters/registry";
+import { getLevel } from "../levels";
 import MiniDuel from "../components/MiniDuel";
 import { colors, fonts, shadow } from "../theme";
+
+// Construit un libellé sans ambiguïté pour un défi : précise le niveau (deux
+// niveaux différents peuvent avoir un chapitre au même nom, ex: "Réviser les
+// bases"), et pour un chapitre Automatismes (qui mélange plusieurs thèmes),
+// précise LEQUEL est défié plutôt que de laisser deviner (voir meta.themes).
+function describeChallenge(chapterId, themeId) {
+  const chapter = getChapter(chapterId);
+  if (!chapter) return chapterId;
+  const level = getLevel(chapter.meta.level);
+  const levelLabel = level?.label ?? chapter.meta.level;
+  if (chapter.meta.isAutomatismes && themeId) {
+    const theme = chapter.themes?.find((t) => t.id === themeId);
+    return `${chapter.meta.title} (${levelLabel}) — ${theme?.title ?? themeId}`;
+  }
+  return `${chapter.meta.title} (${levelLabel})`;
+}
+
+// Options du sélecteur "Défier" : un chapitre classique = une option, un
+// chapitre Automatismes = une option PAR THÈME (pas un mélange aléatoire non
+// identifiable). Voir describeChallenge ci-dessus pour l'affichage.
+function buildChallengeOptions(accessibleChapters) {
+  const options = [];
+  for (const c of accessibleChapters) {
+    if (c.meta.isAutomatismes && Array.isArray(c.themes) && c.themes.length > 0) {
+      for (const theme of c.themes) {
+        options.push({ key: `${c.meta.id}::${theme.id}`, chapterId: c.meta.id, themeId: theme.id, label: describeChallenge(c.meta.id, theme.id) });
+      }
+    } else {
+      options.push({ key: c.meta.id, chapterId: c.meta.id, themeId: null, label: describeChallenge(c.meta.id, null) });
+    }
+  }
+  return options;
+}
 
 const ink = colors.ink;
 const paper = colors.card;
@@ -39,8 +73,8 @@ export default function Amis() {
   const [sending, setSending] = useState(false);
 
   const [duelFriendId, setDuelFriendId] = useState(null);
-  const [duelChapterId, setDuelChapterId] = useState("");
-  const [activeDuel, setActiveDuel] = useState(null); // { mode: "new"|"respond", friendId, chapterId, challengeId }
+  const [duelOptionKey, setDuelOptionKey] = useState("");
+  const [activeDuel, setActiveDuel] = useState(null); // { mode: "new"|"respond", friendId, chapterId, themeId, topicLabel, challengeId }
 
   const accessibleChapters = useMemo(
     () =>
@@ -51,6 +85,8 @@ export default function Amis() {
       }),
     [isActive, referralCount]
   );
+
+  const challengeOptions = useMemo(() => buildChallengeOptions(accessibleChapters), [accessibleChapters]);
 
   if (loading) {
     return (
@@ -83,22 +119,30 @@ export default function Amis() {
 
   const startNewDuel = (friendId) => {
     setDuelFriendId(friendId);
-    setDuelChapterId(accessibleChapters[0]?.meta.id ?? "");
+    setDuelOptionKey(challengeOptions[0]?.key ?? "");
   };
 
   const launchDuel = () => {
-    if (!duelChapterId) return;
-    setActiveDuel({ mode: "new", friendId: duelFriendId, chapterId: duelChapterId });
+    const option = challengeOptions.find((o) => o.key === duelOptionKey);
+    if (!option) return;
+    setActiveDuel({ mode: "new", friendId: duelFriendId, chapterId: option.chapterId, themeId: option.themeId, topicLabel: option.label });
     setDuelFriendId(null);
   };
 
   const launchResponse = (challenge) => {
-    setActiveDuel({ mode: "respond", challengeId: challenge.id, chapterId: challenge.chapter_id, friendId: challenge.from_user });
+    setActiveDuel({
+      mode: "respond",
+      challengeId: challenge.id,
+      chapterId: challenge.chapter_id,
+      themeId: challenge.theme_id ?? null,
+      topicLabel: describeChallenge(challenge.chapter_id, challenge.theme_id),
+      friendId: challenge.from_user,
+    });
   };
 
   const onDuelFinish = async (score, durationMs) => {
     if (activeDuel.mode === "new") {
-      await createChallenge(activeDuel.friendId, activeDuel.chapterId, score, durationMs);
+      await createChallenge(activeDuel.friendId, activeDuel.chapterId, score, durationMs, activeDuel.themeId, activeDuel.topicLabel);
     } else {
       await submitResponse(activeDuel.challengeId, score, durationMs);
     }
@@ -135,9 +179,9 @@ export default function Amis() {
         {activeDuel && (
           <div className="mb-6">
             <p className="text-sm mb-2 font-semibold" style={{ color: ink }}>
-              Défi — {getChapter(activeDuel.chapterId)?.meta.title}
+              Défi — {activeDuel.topicLabel}
             </p>
-            <MiniDuel chapter={getChapter(activeDuel.chapterId)} count={QUESTIONS_PER_CHALLENGE} onFinish={onDuelFinish} />
+            <MiniDuel chapter={getChapter(activeDuel.chapterId)} themeId={activeDuel.themeId} count={QUESTIONS_PER_CHALLENGE} onFinish={onDuelFinish} />
           </div>
         )}
 
@@ -228,7 +272,7 @@ export default function Amis() {
                         <div>
                           <p style={{ color: ink }}>{profiles[c.from_user]?.pseudo ?? "Un ami"}</p>
                           <p className="text-xs" style={{ color: slate }}>
-                            {getChapter(c.chapter_id)?.meta.title ?? c.chapter_id} — score à battre : {c.from_score}/{QUESTIONS_PER_CHALLENGE}
+                            {describeChallenge(c.chapter_id, c.theme_id)} — score à battre : {c.from_score}/{QUESTIONS_PER_CHALLENGE}
                           </p>
                         </div>
                         <button
@@ -257,7 +301,7 @@ export default function Amis() {
                         <div>
                           <p style={{ color: ink }}>{profiles[c.to_user]?.pseudo ?? "Un ami"}</p>
                           <p className="text-xs" style={{ color: slate }}>
-                            {getChapter(c.chapter_id)?.meta.title ?? c.chapter_id} — ton score : {c.from_score}/{QUESTIONS_PER_CHALLENGE}
+                            {describeChallenge(c.chapter_id, c.theme_id)} — ton score : {c.from_score}/{QUESTIONS_PER_CHALLENGE}
                           </p>
                         </div>
                         <Clock size={16} color={slate} />
@@ -294,7 +338,7 @@ export default function Amis() {
                       <Card key={c.id}>
                         <p style={{ color: ink }}>{profiles[otherId]?.pseudo ?? "Un ami"}</p>
                         <p className="text-xs" style={{ color: slate }}>
-                          {getChapter(c.chapter_id)?.meta.title ?? c.chapter_id} — toi {meScore}/{QUESTIONS_PER_CHALLENGE} vs{" "}
+                          {describeChallenge(c.chapter_id, c.theme_id)} — toi {meScore}/{QUESTIONS_PER_CHALLENGE} vs{" "}
                           {otherScore}/{QUESTIONS_PER_CHALLENGE} — {result}
                         </p>
                         {hasDurations && (
@@ -335,21 +379,21 @@ export default function Amis() {
                       </div>
                       {duelFriendId === otherId && (
                         <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${colors.hairline}` }}>
-                          {accessibleChapters.length === 0 ? (
+                          {challengeOptions.length === 0 ? (
                             <p className="text-xs" style={{ color: slate }}>
                               Débloque au moins un chapitre pour lancer un défi.
                             </p>
                           ) : (
                             <>
                               <select
-                                value={duelChapterId}
-                                onChange={(e) => setDuelChapterId(e.target.value)}
+                                value={duelOptionKey}
+                                onChange={(e) => setDuelOptionKey(e.target.value)}
                                 className="w-full rounded-xl px-2 py-1.5 text-sm mb-2"
                                 style={{ color: ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
                               >
-                                {accessibleChapters.map((c) => (
-                                  <option key={c.meta.id} value={c.meta.id}>
-                                    {c.meta.title}
+                                {challengeOptions.map((o) => (
+                                  <option key={o.key} value={o.key}>
+                                    {o.label}
                                   </option>
                                 ))}
                               </select>

@@ -140,6 +140,25 @@ vers Stripe Checkout → paiement → Stripe appelle `/api/stripe-webhook` → l
 table `subscriptions` est mise à jour → le front lit cette table (jamais
 Stripe directement) pour savoir si un chapitre est débloqué.
 
+## Notification email des défis entre amis
+
+Quand un défi est lancé (voir `src/pages/Amis.jsx` / `src/hooks/useChallenges.js`),
+`/api/notify-challenge` envoie un email à l'ami défié via un compte Gmail dédié.
+
+1. Crée un compte Gmail dédié au site (pas ton adresse perso).
+2. Sur ce compte : active la validation en deux étapes, puis dans les
+   paramètres de sécurité Google, génère un "mot de passe d'application"
+   (App Password) pour "Mail" — c'est un code à 16 caractères, différent du
+   mot de passe normal du compte.
+3. Renseigne sur Vercel : `GMAIL_USER` (l'adresse Gmail) et
+   `GMAIL_APP_PASSWORD` (le mot de passe d'application). Réutilise
+   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` et `PUBLIC_APP_URL`, déjà
+   nécessaires pour Stripe ci-dessus.
+
+Limite connue : Gmail plafonne l'envoi à ~500 emails/jour par ce biais — large
+pour des notifications de défi, à revoir si l'appli grossit beaucoup (passer
+à un service d'emails transactionnels dédié, ex. Resend).
+
 ## Déploiement
 
 Recommandé : **Vercel** plutôt que du pur GitHub Pages, car il faut exécuter le

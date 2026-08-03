@@ -24,10 +24,15 @@ function formatDuration(ms) {
 // sert de départage entre amis en cas d'égalité de score (voir Amis.jsx).
 // Volontairement plus sobre que <ChapterRunner /> (pas de mode Jeu, pas de
 // sauvegarde de progression) : c'est une mécanique à part, le duel.
-export default function MiniDuel({ chapter, count, onFinish }) {
+//
+// themeId (optionnel) : pour un défi sur un chapitre Automatismes (qui
+// mélange plusieurs thèmes), transmis à chapter.generate(themeId) pour que
+// LES DEUX joueurs soient interrogés sur le même thème plutôt qu'un mélange
+// aléatoire indépendant de chaque côté (voir Amis.jsx, describeChallenge).
+export default function MiniDuel({ chapter, count, themeId, onFinish }) {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [exercise, setExercise] = useState(() => chapter.generate());
+  const [exercise, setExercise] = useState(() => chapter.generate(themeId));
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState(null);
   const [selectedMulti, setSelectedMulti] = useState([]);
@@ -48,7 +53,7 @@ export default function MiniDuel({ chapter, count, onFinish }) {
       return;
     }
     setIndex((i) => i + 1);
-    setExercise(chapter.generate());
+    setExercise(chapter.generate(themeId));
     setInput("");
     setSelected(null);
     setSelectedMulti([]);

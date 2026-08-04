@@ -61,7 +61,10 @@ function genPrincipeMultiplicatifNumeric() {
     chapter: "Combinatoire et dénombrement — Principe multiplicatif",
     prompt: `Un restaurant propose ${contexte.choix1} ${contexte.sujet}, ${contexte.choix2} ${contexte.sujet2} et ${contexte.choix3} ${contexte.sujet3}. Combien de menus différents (une entrée, un plat et un dessert) peut-on composer ?`,
     answer: total,
-    steps: [`${contexte.choix1} \\times ${contexte.choix2} \\times ${contexte.choix3} = ${total}`],
+    steps: [
+      { type: "regle", text: `\\text{Principe multiplicatif : quand des choix sont indépendants et successifs, on multiplie le nombre de possibilités de chaque étape.}` },
+      { type: "resultat", text: `${contexte.choix1} \\times ${contexte.choix2} \\times ${contexte.choix3} = ${total}` },
+    ],
   };
 }
 
@@ -75,7 +78,10 @@ function genTirageAvecRemiseNumeric() {
     chapter: "Combinatoire et dénombrement — Dénombrement de tirages",
     prompt: `On tire successivement ${k} fois une boule avec remise dans une urne contenant ${n} boules numérotées. Combien de tirages ordonnés différents peut-on obtenir ?`,
     answer,
-    steps: [`${n}^{${k}} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Tirage avec remise et avec ordre : à chaque tirage on a } n \\text{ choix possibles, répété } k \\text{ fois, donc } n^k \\text{ tirages possibles.}` },
+      { type: "resultat", text: `${n}^{${k}} = ${answer}` },
+    ],
   };
 }
 
@@ -90,7 +96,10 @@ function genTirageSansRemiseAvecOrdreNumeric() {
     chapter: "Combinatoire et dénombrement — Dénombrement de tirages",
     prompt: `On tire successivement et sans remise ${k} cartes parmi ${n} cartes numérotées. Combien de tirages ordonnés différents peut-on obtenir ?`,
     answer,
-    steps: [`${facteurs} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Tirage sans remise et avec ordre (arrangement) : le nombre de choix diminue de 1 à chaque tirage car une carte déjà tirée ne peut plus être reprise.}` },
+      { type: "resultat", text: `${facteurs} = ${answer}` },
+    ],
   };
 }
 
@@ -102,7 +111,10 @@ function genFactorielleNumeric() {
     chapter: "Combinatoire et dénombrement — Factorielles",
     prompt: `Calcule \\(${n}!\\)`,
     answer: factorielle(n),
-    steps: [`${Array.from({ length: n }, (_, i) => i + 1).join(" \\times ")} = ${factorielle(n)}`],
+    steps: [
+      { type: "regle", text: `\\text{Par définition, } n! = n \\times (n-1) \\times \\dots \\times 2 \\times 1.` },
+      { type: "resultat", text: `${Array.from({ length: n }, (_, i) => i + 1).join(" \\times ")} = ${factorielle(n)}` },
+    ],
   };
 }
 
@@ -115,7 +127,10 @@ function genCoefficientBinomialNumeric() {
     chapter: "Combinatoire et dénombrement — Coefficients binomiaux",
     prompt: `Calcule \\(\\dbinom{${n}}{${k}}\\)`,
     answer: combinaison(n, k),
-    steps: [`\\dbinom{${n}}{${k}} = \\dfrac{${n}!}{${k}!(${n}-${k})!} = ${combinaison(n, k)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } \\dbinom{n}{k} = \\dfrac{n!}{k!(n-k)!}.` },
+      { type: "resultat", text: `\\dbinom{${n}}{${k}} = \\dfrac{${n}!}{${k}!(${n}-${k})!} = ${combinaison(n, k)}` },
+    ],
   };
 }
 
@@ -128,7 +143,7 @@ function genSymetrieCoefficientBinomialNumeric() {
     chapter: "Combinatoire et dénombrement — Coefficients binomiaux",
     prompt: `Sachant que \\(\\dbinom{${n}}{${k}} = ${combinaison(n, k)}\\), et que \\(\\dbinom{n}{k} = \\dbinom{n}{n-k}\\), donne la valeur de \\(\\dbinom{${n}}{${n - k}}\\).`,
     answer: combinaison(n, k),
-    steps: [`\\dbinom{${n}}{${n - k}} = \\dbinom{${n}}{${k}} = ${combinaison(n, k)}`],
+    steps: [{ type: "resultat", text: `\\dbinom{${n}}{${n - k}} = \\dbinom{${n}}{${k}} = ${combinaison(n, k)}` }],
   };
 }
 
@@ -142,7 +157,7 @@ function genRelationPascalNumeric() {
     chapter: "Combinatoire et dénombrement — Coefficients binomiaux",
     prompt: `On sait que \\(\\dbinom{${n}}{${k}} = ${combinaison(n, k)}\\) et \\(\\dbinom{${n}}{${k + 1}} = ${combinaison(n, k + 1)}\\). En utilisant la relation de Pascal, calcule \\(\\dbinom{${n + 1}}{${k + 1}}\\).`,
     answer,
-    steps: [`\\dbinom{${n + 1}}{${k + 1}} = \\dbinom{${n}}{${k}} + \\dbinom{${n}}{${k + 1}} = ${combinaison(n, k)} + ${combinaison(n, k + 1)} = ${answer}`],
+    steps: [{ type: "resultat", text: `\\dbinom{${n + 1}}{${k + 1}} = \\dbinom{${n}}{${k}} + \\dbinom{${n}}{${k + 1}} = ${combinaison(n, k)} + ${combinaison(n, k + 1)} = ${answer}` }],
   };
 }
 
@@ -154,7 +169,10 @@ function genNombrePartiesEnsembleNumeric() {
     chapter: "Combinatoire et dénombrement — Parties d'un ensemble",
     prompt: `Combien un ensemble de ${n} éléments possède-t-il de parties (sous-ensembles), y compris l'ensemble vide et l'ensemble entier ?`,
     answer: 2 ** n,
-    steps: [`2^{${n}} = ${2 ** n}`],
+    steps: [
+      { type: "regle", text: `\\text{Nombre de parties d'un ensemble à } n \\text{ éléments : chaque élément est soit inclus, soit exclu (2 choix indépendants par élément), donc } 2^n \\text{ parties possibles.}` },
+      { type: "resultat", text: `2^{${n}} = ${2 ** n}` },
+    ],
   };
 }
 
@@ -167,16 +185,19 @@ function genTirageSansRemiseSansOrdreNumeric() {
     chapter: "Combinatoire et dénombrement — Dénombrement de tirages",
     prompt: `On tire simultanément ${k} boules parmi ${n} boules numérotées (l'ordre n'a pas d'importance). Combien de tirages différents peut-on obtenir ?`,
     answer: combinaison(n, k),
-    steps: [`\\dbinom{${n}}{${k}} = ${combinaison(n, k)}`],
+    steps: [
+      { type: "regle", text: `\\text{Tirage sans remise et sans ordre (combinaison) : } \\dbinom{n}{k}.` },
+      { type: "resultat", text: `\\dbinom{${n}}{${k}} = ${combinaison(n, k)}` },
+    ],
   };
 }
 
 // ---------- 10. Identifier le type de tirage adapté (QCM) ----------
 function genIdentifierTypeTirageQCM() {
   const cas = pick([
-    { description: "On tire successivement 3 cartes d'un jeu, sans les remettre, et l'ordre du tirage compte pour former un code.", reponse: "Arrangement (sans remise, avec ordre)" },
-    { description: "On choisit un comité de 3 personnes parmi 10 candidats (l'ordre de sélection n'a pas d'importance).", reponse: "Combinaison (sans remise, sans ordre)" },
-    { description: "On compose un code à 4 chiffres, chaque chiffre pouvant être répété.", reponse: "n-uplet (avec remise, avec ordre)" },
+    { description: "On tire successivement 3 cartes d'un jeu, sans les remettre, et l'ordre du tirage compte pour former un code.", reponse: "Arrangement (sans remise, avec ordre)", explication: "On tire sans remise (une carte déjà tirée ne peut plus l'être) et l'ordre compte (un code dépend de l'ordre des cartes) : c'est donc un arrangement." },
+    { description: "On choisit un comité de 3 personnes parmi 10 candidats (l'ordre de sélection n'a pas d'importance).", reponse: "Combinaison (sans remise, sans ordre)", explication: "On choisit sans remise (une personne ne peut être choisie deux fois) mais l'ordre de sélection n'a pas d'importance (ce n'est pas un classement) : c'est donc une combinaison." },
+    { description: "On compose un code à 4 chiffres, chaque chiffre pouvant être répété.", reponse: "n-uplet (avec remise, avec ordre)", explication: "Chaque chiffre peut être répété (avec remise) et l'ordre des chiffres compte (un code dépend de l'ordre) : c'est donc un n-uplet." },
   ]);
   return {
     type: "qcm",
@@ -184,7 +205,7 @@ function genIdentifierTypeTirageQCM() {
     prompt: `« ${cas.description} » Quel type de dénombrement correspond à cette situation ?`,
     answer: cas.reponse,
     options: ["Arrangement (sans remise, avec ordre)", "Combinaison (sans remise, sans ordre)", "n-uplet (avec remise, avec ordre)"],
-    steps: [`\\text{Cette situation correspond à un(e) : ${cas.reponse}}`],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -199,18 +220,23 @@ function genNombresPairsContrainteNumeric() {
     chapter: "Combinatoire et dénombrement — Applications",
     prompt: `On forme des nombres à 3 chiffres en utilisant les chiffres de 1 à ${chiffresDisponibles} (chaque chiffre peut être répété). Combien de ces nombres sont pairs ?`,
     answer,
-    steps: [`\\text{Choix libres pour les deux premiers chiffres : } ${chiffresDisponibles} \\times ${chiffresDisponibles}`, `\\text{${nbChiffresPairs} choix possibles pour le dernier chiffre (les chiffres pairs entre 1 et ${chiffresDisponibles})}`, `${chiffresDisponibles} \\times ${chiffresDisponibles} \\times ${nbChiffresPairs} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Un nombre est pair si et seulement si son dernier chiffre est pair. On applique le principe multiplicatif chiffre par chiffre.}` },
+      { type: "donnee", text: `\\text{Choix libres pour les deux premiers chiffres : } ${chiffresDisponibles} \\times ${chiffresDisponibles}` },
+      { type: "donnee", text: `\\text{${nbChiffresPairs} choix possibles pour le dernier chiffre (les chiffres pairs entre 1 et ${chiffresDisponibles})}` },
+      { type: "resultat", text: `${chiffresDisponibles} \\times ${chiffresDisponibles} \\times ${nbChiffresPairs} = ${answer}` },
+    ],
   };
 }
 
 // ---------- 12. Vrai ou faux sur les propriétés des coefficients binomiaux ----------
 function genVraiFauxBinomialQCM() {
   const cas = pick([
-    { description: "Pour tout entier naturel n, \\binom{n}{0} = 1.", reponse: "Vrai" },
-    { description: "Pour tout entier naturel n, \\binom{n}{n} = 1.", reponse: "Vrai" },
-    { description: "Pour tout entier naturel n et tout k compris entre 0 et n, \\binom{n}{k} = \\binom{n}{n-k}.", reponse: "Vrai" },
-    { description: "Le nombre de combinaisons est toujours supérieur au nombre d'arrangements correspondants.", reponse: "Faux" },
-    { description: "n! croît strictement plus vite que n² lorsque n devient grand.", reponse: "Vrai" },
+    { description: "Pour tout entier naturel n, \\binom{n}{0} = 1.", reponse: "Vrai", explication: "C'est vrai : il n'y a qu'une seule façon de choisir 0 élément parmi n, celle de ne rien choisir. Donc \\binom{n}{0} = 1." },
+    { description: "Pour tout entier naturel n, \\binom{n}{n} = 1.", reponse: "Vrai", explication: "C'est vrai : il n'y a qu'une seule façon de choisir les n éléments parmi n, celle de tous les prendre. Donc \\binom{n}{n} = 1." },
+    { description: "Pour tout entier naturel n et tout k compris entre 0 et n, \\binom{n}{k} = \\binom{n}{n-k}.", reponse: "Vrai", explication: "C'est vrai : choisir k éléments à garder revient exactement à choisir les n-k éléments restants à écarter. Ces deux choix sont en bijection, donc \\binom{n}{k} = \\binom{n}{n-k}." },
+    { description: "Le nombre de combinaisons est toujours supérieur au nombre d'arrangements correspondants.", reponse: "Faux", explication: "C'est faux : c'est l'inverse. On a la relation A(n,k) = \\binom{n}{k} \\times k!, donc le nombre d'arrangements est toujours supérieur ou égal au nombre de combinaisons (chaque combinaison peut être ordonnée de k! façons différentes)." },
+    { description: "n! croît strictement plus vite que n² lorsque n devient grand.", reponse: "Vrai", explication: "C'est vrai : n! multiplie n facteurs de plus en plus grands, alors que n² n'en multiplie que deux égaux à n. Par exemple pour n = 10 : n² = 100 alors que 10! = 3 628 800." },
   ]);
   return {
     type: "qcm",
@@ -218,7 +244,7 @@ function genVraiFauxBinomialQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -232,7 +258,18 @@ function genCasParticuliersBinomialNumeric() {
     chapter: "Combinatoire et dénombrement — Coefficients binomiaux",
     prompt: `Calcule \\(\\dbinom{${n}}{${k}}\\)`,
     answer: combinaison(n, k),
-    steps: [cas === "0" ? `\\dbinom{n}{0} = 1` : cas === "n" ? `\\dbinom{n}{n} = 1` : `\\dbinom{n}{1} = n = ${n}`],
+    steps: [
+      {
+        type: "regle",
+        text:
+          cas === "0"
+            ? `\\text{Cas particulier à connaître : } \\dbinom{n}{0} = 1 \\text{ (une seule façon de ne rien choisir).}`
+            : cas === "n"
+            ? `\\text{Cas particulier à connaître : } \\dbinom{n}{n} = 1 \\text{ (une seule façon de tout choisir).}`
+            : `\\text{Cas particulier à connaître : } \\dbinom{n}{1} = n \\text{ (n façons de choisir 1 élément parmi n).}`,
+      },
+      { type: "resultat", text: cas === "0" ? `\\dbinom{${n}}{0} = 1` : cas === "n" ? `\\dbinom{${n}}{${n}} = 1` : `\\dbinom{${n}}{1} = ${n}` },
+    ],
   };
 }
 
@@ -247,7 +284,11 @@ function genDenombrementAvecExclusionNumeric() {
     chapter: "Combinatoire et dénombrement — Applications",
     prompt: `On dispose de ${n} boules numérotées de 1 à ${n}. On tire simultanément ${k} boules, en interdisant ${nbExclus === 1 ? "le numéro 1" : `les ${nbExclus} premiers numéros`}. Combien de tirages différents sont possibles ?`,
     answer: combinaison(nRestant, k),
-    steps: [`\\text{Il reste } ${nRestant} \\text{ numéros autorisés.}`, `\\dbinom{${nRestant}}{${k}} = ${combinaison(nRestant, k)}`],
+    steps: [
+      { type: "regle", text: `\\text{On retire d'abord les éléments interdits de l'ensemble total, puis on applique la formule des combinaisons sur les éléments restants.}` },
+      { type: "donnee", text: `\\text{Il reste } ${nRestant} \\text{ numéros autorisés.}` },
+      { type: "resultat", text: `\\dbinom{${nRestant}}{${k}} = ${combinaison(nRestant, k)}` },
+    ],
   };
 }
 
@@ -259,7 +300,10 @@ function genPermutationsObjetsNumeric() {
     chapter: "Combinatoire et dénombrement — Applications",
     prompt: `De combien de façons différentes peut-on ranger ${n} livres tous différents sur une étagère ?`,
     answer: factorielle(n),
-    steps: [`${n}! = ${factorielle(n)}`],
+    steps: [
+      { type: "regle", text: `\\text{Nombre de façons de ranger } n \\text{ objets tous distincts (permutation) : } n!.` },
+      { type: "resultat", text: `${n}! = ${factorielle(n)}` },
+    ],
   };
 }
 

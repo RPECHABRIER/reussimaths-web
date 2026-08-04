@@ -1794,3 +1794,30 @@ vérifié) vers les deux copies Application TOP.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain (pas
 d'identifiants dans ce sandbox).
+
+
+## 2026-08-04 (suite 6) — Icône PWA (écran d'accueil) remplacée par la mascotte full access
+
+Romain a demandé de garder la version "full access" (avec étoiles) de la
+nouvelle mascotte comme icône fixe de l'app sur l'écran d'accueil du
+téléphone — contrairement à la mascotte in-app (tâche #301) qui varie par
+utilisateur, cette icône PWA est unique et figée pour tout le monde (pas
+de personnalisation possible côté OS), donc c'est la version la plus
+"aboutie" (étoiles, abonnement complet) qui a été choisie.
+
+Régénéré à partir de l'image source haute résolution (pas de la version
+déjà réduite à 400px utilisée in-app) : aplati sur fond marine uni
+(#1B2A4A, plus de transparence dans les coins), recadré en carré, puis
+exporté aux 4 tailles attendues par public/icons/ : favicon-32.png (32px),
+icon-192.png, icon-512.png (icônes standards, contenu plein cadre) et
+icon-512-maskable.png (zone de sécurité ~78% pour ne pas être rogné par
+un masque circulaire/squircle Android).
+
+Build vérifié avec succès. Fichiers synchronisés (diff vide vérifié) vers
+les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox). Sur les téléphones où l'app est DÉJÀ
+installée sur l'écran d'accueil, l'icône ne se mettra pas à jour
+automatiquement (comportement standard des PWA) — il faudra retirer puis
+réajouter l'app à l'écran d'accueil pour voir la nouvelle icône.

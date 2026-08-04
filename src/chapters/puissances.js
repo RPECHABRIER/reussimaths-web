@@ -93,7 +93,10 @@ function genPuissanceDeDixEcriture() {
       chapter: "Puissances — Notion de puissance",
       prompt: `Quelle est l'écriture décimale de \\(10^{${n}}\\) ?`,
       answer: 10 ** n,
-      steps: [{ type: "calcul", text: `10^{${n}} = ${10 ** n}` }],
+      steps: [
+        { type: "regle", text: `\\(10^{${n}}\\) s'écrit 1 suivi de ${n} zéro${n > 1 ? "s" : ""}.` },
+        { type: "resultat", text: `10^{${n}} = ${10 ** n}` },
+      ],
     };
   }
   const value = 10 ** n;
@@ -102,7 +105,10 @@ function genPuissanceDeDixEcriture() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Écris ${value} sous la forme \\(10^{?}\\). Quel est l'exposant ?`,
     answer: n,
-    steps: [{ type: "calcul", text: `${value} = 10^{${n}}` }],
+    steps: [
+      { type: "regle", text: `L'exposant correspond au nombre de zéros après le 1.` },
+      { type: "resultat", text: `${value} = 10^{${n}}` },
+    ],
   };
 }
 
@@ -116,7 +122,10 @@ function genAireCarreCote() {
     prompt: `ABCD est un carré de côté ${c} cm. Quelle est son aire, en cm² ?`,
     figure: buildRectangleFigure(c, c),
     answer: aire,
-    steps: [{ type: "calcul", text: `${c}^2 = ${aire}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un carré = côté², c'est-à-dire côté × côté.` },
+      { type: "calcul", text: `${c}^2 = ${aire}` },
+    ],
   };
 }
 
@@ -129,7 +138,10 @@ function genVolumeCubeArete() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Un cube a une arête de ${c} cm. Quel est son volume, en cm³ ?`,
     answer: volume,
-    steps: [{ type: "calcul", text: `${c}^3 = ${volume}` }],
+    steps: [
+      { type: "regle", text: `Volume d'un cube = arête³, c'est-à-dire arête × arête × arête.` },
+      { type: "calcul", text: `${c}^3 = ${volume}` },
+    ],
   };
 }
 

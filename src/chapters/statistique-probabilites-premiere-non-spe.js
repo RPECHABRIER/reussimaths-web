@@ -79,7 +79,10 @@ function genFrequenceMarginaleNumeric() {
     prompt: `Un tableau croisé d'effectifs sur ${ctx.sujet} donne les quatre cases : ${t.a} (${ctx.ligne}/${ctx.colonne}), ${t.b} (${ctx.ligne}/${ctx.colonne2}), ${t.c} (${ctx.ligne2}/${ctx.colonne}), ${t.d} (${ctx.ligne2}/${ctx.colonne2}). Calcule la fréquence marginale de « ${nom} » (arrondie au millième).`,
     answer,
     tolerance: 0.001,
-    steps: [`\\dfrac{${effectif}}{${t.total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{La fréquence marginale d'une catégorie s'obtient en divisant son effectif (total de ligne ou de colonne) par l'effectif total.}` },
+      { type: "resultat", text: `\\dfrac{${effectif}}{${t.total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -94,7 +97,11 @@ function genFrequenceConditionnelleNumeric() {
     prompt: `Un tableau croisé d'effectifs sur ${ctx.sujet} donne, pour la catégorie « ${ctx.ligne} » : ${t.a} en « ${ctx.colonne} » et ${t.b} en « ${ctx.colonne2} ». Parmi les individus « ${ctx.ligne} », quelle est la fréquence de « ${ctx.colonne} » (arrondie au millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`\\text{Total de la catégorie } ${ctx.ligne} = ${t.a} + ${t.b} = ${t.totalL1}`, `\\dfrac{${t.a}}{${t.totalL1}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une fréquence } \\textbf{conditionnelle} \\text{ se calcule par rapport au total de la sous-catégorie concernée, et non par rapport au total général.}` },
+      { type: "calcul", text: `\\text{Total de la catégorie } ${ctx.ligne} = ${t.a} + ${t.b} = ${t.totalL1}` },
+      { type: "resultat", text: `\\dfrac{${t.a}}{${t.totalL1}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -111,7 +118,7 @@ function genProbabiliteConditionnelleNumeric() {
     prompt: `On considère deux événements A et B tels que \\(P(A) = ${fr(pA)}\\) et \\(P(A \\cap B) = ${fr(pAB)}\\). Calcule \\(P_A(B)\\) (arrondi au millième).`,
     answer: roundTo(answer, 3),
     tolerance: 0.001,
-    steps: [`P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} = \\dfrac{${fr(pAB)}}{${fr(pA)}} \\approx ${fr(roundTo(answer, 3))}`],
+    steps: [{ type: "resultat", text: `P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} = \\dfrac{${fr(pAB)}}{${fr(pA)}} \\approx ${fr(roundTo(answer, 3))}` }],
   };
 }
 
@@ -126,7 +133,7 @@ function genProbabiliteIntersectionNumeric() {
     prompt: `On considère deux événements A et B tels que \\(P(A) = ${fr(pA)}\\) et \\(P_A(B) = ${fr(pAB_cond)}\\). Calcule \\(P(A \\cap B)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(A \\cap B) = P(A) \\times P_A(B) = ${fr(pA)} \\times ${fr(pAB_cond)} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `P(A \\cap B) = P(A) \\times P_A(B) = ${fr(pA)} \\times ${fr(pAB_cond)} = ${fr(answer)}` }],
   };
 }
 
@@ -166,7 +173,11 @@ function genVerifierIndependanceQCM() {
     prompt: `Un tableau croisé d'effectifs sur ${ctx.sujet} donne, pour « ${ctx.ligne} » : ${t.a} en « ${ctx.colonne} » sur un total de ${t.totalL1} ; et pour « ${ctx.ligne2} » : ${t.c} en « ${ctx.colonne} » sur un total de ${t.totalL2}. Les événements « ${ctx.ligne} » et « ${ctx.colonne} » sont-ils indépendants ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`\\text{Fréquence de « ${ctx.colonne} » parmi « ${ctx.ligne} » } = \\dfrac{${t.a}}{${t.totalL1}} \\approx ${fr(pColonneGlobale)}`, `\\text{Fréquence de « ${ctx.colonne} » parmi « ${ctx.ligne2} » } = \\dfrac{${t.c}}{${t.totalL2}} \\approx ${fr(pColonneAutre)}`, reponse === "Oui" ? "Les deux fréquences sont égales : les événements sont indépendants." : "Les deux fréquences sont différentes : les événements ne sont pas indépendants."],
+    steps: [
+      { type: "regle", text: `\\text{Deux événements sont indépendants si la fréquence de l'un ne change pas selon que l'autre est réalisé ou non : on compare donc les fréquences conditionnelles.}` },
+      { type: "calcul", text: `\\text{Fréquence de « ${ctx.colonne} » parmi « ${ctx.ligne} » } = \\dfrac{${t.a}}{${t.totalL1}} \\approx ${fr(pColonneGlobale)}, \\quad \\text{parmi « ${ctx.ligne2} » } = \\dfrac{${t.c}}{${t.totalL2}} \\approx ${fr(pColonneAutre)}` },
+      { type: "resultat", text: reponse === "Oui" ? "Les deux fréquences sont égales : les événements sont indépendants." : "Les deux fréquences sont différentes : les événements ne sont pas indépendants." },
+    ],
   };
 }
 
@@ -181,7 +192,10 @@ function genProbabiliteCheminArbreNumeric() {
     prompt: `Un arbre pondéré modélise une expérience en deux étapes. Sur la première branche, \\(P(A) = ${fr(pA)}\\) ; sur la branche suivante, \\(P_A(B) = ${fr(pB_A)}\\). Calcule la probabilité du chemin correspondant à \\(A \\cap B\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(A \\cap B) = P(A) \\times P_A(B) = ${fr(pA)} \\times ${fr(pB_A)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un arbre pondéré, la probabilité d'un chemin est le produit des probabilités portées par les branches qui le composent (règle du produit).}` },
+      { type: "resultat", text: `P(A \\cap B) = P(A) \\times P_A(B) = ${fr(pA)} \\times ${fr(pB_A)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -195,7 +209,10 @@ function genProbabiliteManquanteBrancheNumeric() {
     prompt: `Sur un nœud d'un arbre pondéré, deux branches partent vers des événements contraires E et \\(\\overline{E}\\). On lit \\(P(E) = ${fr(p)}\\). Quelle est la probabilité portée par la branche \\(\\overline{E}\\) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`P(\\overline{E}) = 1 - P(E) = 1 - ${fr(p)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{À un même nœud d'un arbre pondéré, la somme des probabilités portées par toutes les branches vaut } 1.` },
+      { type: "resultat", text: `P(\\overline{E}) = 1 - P(E) = 1 - ${fr(p)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -212,7 +229,11 @@ function genProbabiliteTotaleNumeric() {
     prompt: `Un arbre pondéré donne : \\(P(A) = ${fr(pA)}\\), \\(P_A(B) = ${fr(pB_A)}\\) et \\(P_{\\overline{A}}(B) = ${fr(pB_Abar)}\\). Calcule \\(P(B)\\) grâce à la formule des probabilités totales.`,
     answer,
     tolerance: 0.001,
-    steps: [`P(B) = P(A) \\times P_A(B) + P(\\overline{A}) \\times P_{\\overline{A}}(B)`, `P(B) = ${fr(pA)} \\times ${fr(pB_A)} + ${fr(pAbar)} \\times ${fr(pB_Abar)} = ${fr(roundTo(pA * pB_A, 4))} + ${fr(roundTo(pAbar * pB_Abar, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule des probabilités totales : on additionne les probabilités de tous les chemins qui mènent à } B.` },
+      { type: "calcul", text: `P(B) = P(A) \\times P_A(B) + P(\\overline{A}) \\times P_{\\overline{A}}(B)` },
+      { type: "resultat", text: `P(B) = ${fr(pA)} \\times ${fr(pB_A)} + ${fr(pAbar)} \\times ${fr(pB_Abar)} = ${fr(roundTo(pA * pB_A, 4))} + ${fr(roundTo(pAbar * pB_Abar, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -228,7 +249,10 @@ function genRepetitionExperiencesNumeric() {
     prompt: `Une urne contient des boules dont une proportion \\(\\dfrac{${num}}{${den}}\\) sont rouges. On tire une boule, on note sa couleur, on la remet dans l'urne, puis on recommence, au total ${n} fois. Calcule la probabilité que les ${n} boules tirées soient toutes rouges (arrondie au dix-millième).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\left(\\dfrac{${num}}{${den}}\\right)^{${n}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Comme les tirages sont indépendants (avec remise), la probabilité de succès à chaque répétition se } \\textbf{multiplie} \\text{ : c'est le produit de la même probabilité } ${n} \\text{ fois, soit une puissance.}` },
+      { type: "resultat", text: `\\left(\\dfrac{${num}}{${den}}\\right)^{${n}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -243,7 +267,10 @@ function genProbabiliteAuMoinsUnNumeric() {
     prompt: `Un tireur atteint sa cible avec une probabilité de ${fr(p)} à chaque tir. Il effectue ${n} tirs indépendants. Calcule la probabilité qu'il atteigne la cible au moins une fois (arrondie au millième).`,
     answer,
     tolerance: 0.001,
-    steps: [`P(\\text{au moins une fois}) = 1 - P(\\text{jamais}) = 1 - (1 - ${fr(p)})^{${n}} = 1 - ${fr(roundTo((1 - p) ** n, 4))} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'événement contraire de « au moins une fois » est « jamais » : on passe donc par le contraire, qui se calcule facilement par produit d'échecs indépendants.}` },
+      { type: "resultat", text: `P(\\text{au moins une fois}) = 1 - P(\\text{jamais}) = 1 - (1 - ${fr(p)})^{${n}} = 1 - ${fr(roundTo((1 - p) ** n, 4))} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -252,24 +279,53 @@ function genCompleterCaseTableauNumeric() {
   const ctx = pick(CONTEXTES_TABLEAU);
   const t = tableauCroise2x2();
   const caseChoisie = pick(["a", "b", "c", "d"]);
+  const autresCases = ["a", "b", "c", "d"].filter((k) => k !== caseChoisie);
   return {
     type: "numeric",
     chapter: "De la statistique aux probabilités — Fréquences",
     prompt: `On étudie ${ctx.sujet} à l'aide d'un tableau croisé. On sait que : ${ctx.ligne} et ${ctx.colonne} : ${caseChoisie === "a" ? "?" : t.a} ; ${ctx.ligne} et ${ctx.colonne2} : ${caseChoisie === "b" ? "?" : t.b} ; ${ctx.ligne2} et ${ctx.colonne} : ${caseChoisie === "c" ? "?" : t.c} ; ${ctx.ligne2} et ${ctx.colonne2} : ${caseChoisie === "d" ? "?" : t.d}. Le total de la ligne « ${ctx.ligne} » est ${t.totalL1} et le total général est ${t.total}. Détermine la case manquante (« ? »).`,
     answer: t[caseChoisie],
-    steps: [`\\text{Case manquante} = ${t[caseChoisie]}`],
+    steps: [
+      { type: "regle", text: `\\text{La somme des trois cases connues et de la case manquante doit être égale au total général : la case manquante s'obtient donc par soustraction.}` },
+      { type: "calcul", text: `${t.total} - (${autresCases.map((k) => t[k]).join(" + ")}) = ${t.total} - ${autresCases.reduce((s, k) => s + t[k], 0)}` },
+      { type: "resultat", text: `\\text{Case manquante} = ${t[caseChoisie]}` },
+    ],
   };
 }
 
 // ---------- 12. Vrai ou faux sur les probabilités conditionnelles ----------
 function genVraiFauxProbabilitesQCM() {
   const cas = pick([
-    { description: "Pour deux événements A et B, on a toujours \\(P_A(B) + P_A(\\overline{B}) = 1\\).", reponse: "Vrai" },
-    { description: "Pour deux événements A et B, on a toujours \\(P_A(B) = P_B(A)\\).", reponse: "Faux" },
-    { description: "Si A et B sont indépendants, alors \\(P(A \\cap B) = P(A) \\times P(B)\\).", reponse: "Vrai" },
-    { description: "Si \\(P_A(B) = P(B)\\), alors les événements A et B sont indépendants.", reponse: "Vrai" },
-    { description: "La probabilité conditionnelle \\(P_A(B)\\) peut se calculer même si \\(P(A) = 0\\).", reponse: "Faux" },
-    { description: "Dans un arbre pondéré, la somme des probabilités portées par les branches issues d'un même nœud vaut toujours 1.", reponse: "Vrai" },
+    {
+      description: "Pour deux événements A et B, on a toujours \\(P_A(B) + P_A(\\overline{B}) = 1\\).",
+      reponse: "Vrai",
+      explication: `\\text{Sachant A réalisé, B et son contraire } \\overline{B} \\text{ recouvrent à eux deux tout l'univers restreint à A : leurs probabilités conditionnelles s'additionnent donc à } 1.`,
+    },
+    {
+      description: "Pour deux événements A et B, on a toujours \\(P_A(B) = P_B(A)\\).",
+      reponse: "Faux",
+      explication: `P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} \\text{ et } P_B(A) = \\dfrac{P(A \\cap B)}{P(B)} : \\text{ ces deux quantités ne sont égales que si } P(A) = P(B), \\text{ ce qui n'est pas toujours le cas.}`,
+    },
+    {
+      description: "Si A et B sont indépendants, alors \\(P(A \\cap B) = P(A) \\times P(B)\\).",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même de l'indépendance de deux événements.}`,
+    },
+    {
+      description: "Si \\(P_A(B) = P(B)\\), alors les événements A et B sont indépendants.",
+      reponse: "Vrai",
+      explication: `\\text{Si connaître A ne change pas la probabilité de B, cela signifie précisément que A et B sont indépendants.}`,
+    },
+    {
+      description: "La probabilité conditionnelle \\(P_A(B)\\) peut se calculer même si \\(P(A) = 0\\).",
+      reponse: "Faux",
+      explication: `P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} \\text{ n'est pas définie si } P(A) = 0 \\text{ (division par zéro).}`,
+    },
+    {
+      description: "Dans un arbre pondéré, la somme des probabilités portées par les branches issues d'un même nœud vaut toujours 1.",
+      reponse: "Vrai",
+      explication: `\\text{Les branches issues d'un même nœud représentent toutes les possibilités à cette étape : leurs probabilités doivent donc totaliser } 1.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -277,7 +333,7 @@ function genVraiFauxProbabilitesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -292,7 +348,10 @@ function genProbabiliteContraireNumeric() {
     prompt: `On sait que \\(P(E) = \\dfrac{${num}}{${den}}\\). Calcule \\(P(\\overline{E})\\) (arrondie au millième si nécessaire).`,
     answer,
     tolerance: 0.001,
-    steps: [`P(\\overline{E}) = 1 - \\dfrac{${num}}{${den}} = \\dfrac{${den - num}}{${den}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'événement contraire } \\overline{E} \\text{ regroupe toutes les issues qui ne réalisent pas } E, \\text{ donc } P(\\overline{E}) = 1 - P(E).` },
+      { type: "resultat", text: `P(\\overline{E}) = 1 - \\dfrac{${num}}{${den}} = \\dfrac{${den - num}}{${den}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -311,7 +370,10 @@ function genComparerFrequenceMarginaleConditionnelleQCM() {
     prompt: `Dans un tableau croisé d'effectifs, la fréquence marginale d'un événement B est de ${fr(freqMarginale)} (soit \\(\\dfrac{${t.totalC1}}{${t.total}}\\)) et sa fréquence conditionnelle sachant A est de ${fr(freqConditionnelle)} (soit \\(\\dfrac{${t.a}}{${t.totalL1}}\\)). La fréquence conditionnelle est-elle supérieure, inférieure ou égale à la fréquence marginale ?`,
     answer: comparaison,
     options: ["supérieure", "inférieure", "égale"],
-    steps: [`${fr(freqConditionnelle)} \\text{ est ${comparaison === "égale" ? "égale à" : comparaison + " à"} } ${fr(freqMarginale)}`],
+    steps: [
+      { type: "regle", text: `\\text{Si la fréquence conditionnelle sachant A diffère de la fréquence marginale de B, cela signifie que A a une influence sur B : les deux événements ne sont pas indépendants.}` },
+      { type: "resultat", text: `${fr(freqConditionnelle)} \\text{ est ${comparaison === "égale" ? "égale à" : comparaison + " à"} } ${fr(freqMarginale)}` },
+    ],
   };
 }
 
@@ -325,7 +387,10 @@ function genEffectifDepuisProbabiliteConditionnelleNumeric() {
     chapter: "De la statistique aux probabilités — Fréquences",
     prompt: `Dans un groupe de ${totalCategorie} personnes appartenant à une même catégorie, la fréquence conditionnelle d'un événement E est de ${fr(roundTo(proportion, 4))}. Combien de personnes de ce groupe réalisent l'événement E ?`,
     answer: effectif,
-    steps: [`${totalCategorie} \\times ${fr(roundTo(proportion, 4))} = ${effectif}`],
+    steps: [
+      { type: "regle", text: `\\text{L'effectif correspondant à une fréquence conditionnelle s'obtient en multipliant l'effectif du groupe par cette fréquence.}` },
+      { type: "resultat", text: `${totalCategorie} \\times ${fr(roundTo(proportion, 4))} = ${effectif}` },
+    ],
   };
 }
 

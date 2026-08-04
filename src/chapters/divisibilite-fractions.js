@@ -325,6 +325,7 @@ function genSimplifierFractionAuMaximum() {
     prompt: `Simplifie au maximum : \\(\\dfrac{${num}}{${den}} = \\dfrac{?}{${b0}}\\)`,
     answer: a0,
     steps: [
+      { type: "regle", text: `Pour simplifier une fraction, on divise le numérateur et le dénominateur par un même nombre (ici ${k}).` },
       { type: "calcul", text: `${num} \\div ${k} = ${a0}` },
       { type: "calcul", text: `${den} \\div ${k} = ${b0}` },
     ],
@@ -471,7 +472,10 @@ function genProblemeSachetsFractionSomme() {
     prompt: `Dans chaque ${contenant}, on met \\(\\dfrac{1}{${d1}}\\) de ${premier}, et \\(\\dfrac{2}{${d2}}\\) de ${second}. Quelle fraction du ${contenant} (en écriture décimale, arrondie au centième) représentent ces deux catégories réunies ?`,
     answer: total,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `\\dfrac{1}{${d1}} + \\dfrac{2}{${d2}} \\approx ${fr(total)}` }],
+    steps: [
+      { type: "regle", text: `On convertit chaque fraction en écriture décimale avant de les additionner.` },
+      { type: "calcul", text: `\\dfrac{1}{${d1}} + \\dfrac{2}{${d2}} \\approx ${fr(total)}` },
+    ],
   };
 }
 
@@ -489,7 +493,10 @@ function genProblemeSegmentPointFractionAB() {
     prompt: `On trace un segment [AB] de ${ab} mm. On place le point C sur [AB] tel que AC mesure les \\(\\dfrac{${p}}{${q}}\\) de AB. Quelle est la longueur AC, en mm ?`,
     figure: buildSegmentAlignedFigure(ac, cb),
     answer: ac,
-    steps: [{ type: "calcul", text: `\\dfrac{${p}}{${q}} \\times ${ab} = ${ac}` }],
+    steps: [
+      { type: "regle", text: `Prendre les \\(\\dfrac{${p}}{${q}}\\) d'une longueur, c'est la multiplier par \\(\\dfrac{${p}}{${q}}\\).` },
+      { type: "calcul", text: `\\dfrac{${p}}{${q}} \\times ${ab} = ${ac}` },
+    ],
   };
 }
 

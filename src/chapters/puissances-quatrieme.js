@@ -65,7 +65,16 @@ function genPuissanceDixValeurNumeric() {
     prompt: `Calcule : \\(10^{${n}}\\) (donne l'écriture décimale)`,
     answer,
     tolerance: Math.abs(answer) < 1 ? 0.00001 : 0.5,
-    steps: [{ type: "calcul", text: `10^{${n}} = ${fr(answer)}` }],
+    steps: [
+      {
+        type: "regle",
+        text:
+          n >= 0
+            ? `\\(10^{${n}}\\) s'écrit 1 suivi de ${n} zéro${n > 1 ? "s" : ""}.`
+            : `\\(10^{${n}} = \\dfrac{1}{10^{${-n}}}\\) : on décale la virgule de ${-n} rang(s) vers la gauche à partir de 1.`,
+      },
+      { type: "resultat", text: `10^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -79,7 +88,10 @@ function genRegleProduitPuissancesMemeBaseNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(${a}^{${m}} \\times ${a}^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m + n,
-    steps: [{ type: "calcul", text: `${m} + ${n} = ${m + n}` }],
+    steps: [
+      { type: "regle", text: `Pour multiplier deux puissances de même base, on additionne les exposants : \\(a^m \\times a^n = a^{m+n}\\).` },
+      { type: "calcul", text: `${m} + ${n} = ${m + n}` },
+    ],
   };
 }
 
@@ -93,7 +105,10 @@ function genRegleQuotientPuissancesMemeBaseNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(${a}^{${m}} \\div ${a}^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m - n,
-    steps: [{ type: "calcul", text: `${m} - ${n} = ${m - n}` }],
+    steps: [
+      { type: "regle", text: `Pour diviser deux puissances de même base, on soustrait les exposants : \\(a^m \\div a^n = a^{m-n}\\).` },
+      { type: "calcul", text: `${m} - ${n} = ${m - n}` },
+    ],
   };
 }
 
@@ -107,7 +122,10 @@ function genReglePuissanceDePuissanceNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(\\left(${a}^{${m}}\\right)^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m * n,
-    steps: [{ type: "calcul", text: `${m} \\times ${n} = ${m * n}` }],
+    steps: [
+      { type: "regle", text: `Pour élever une puissance à une puissance, on multiplie les exposants : \\(\\left(a^m\\right)^n = a^{m \\times n}\\).` },
+      { type: "calcul", text: `${m} \\times ${n} = ${m * n}` },
+    ],
   };
 }
 
@@ -166,7 +184,10 @@ function genEcritureScientifiqueQCM() {
     prompt: `Quelle est la notation scientifique du nombre ${fr(nombre)} ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [{ type: "calcul", text: `${fr(nombre)} = ${correct}` }],
+    steps: [
+      { type: "regle", text: `La notation scientifique s'écrit \\(a \\times 10^{n}\\) avec \\(1 \\leqslant a < 10\\) : on décale la virgule jusqu'à n'avoir qu'un seul chiffre non nul avant elle.` },
+      { type: "resultat", text: `${fr(nombre)} = ${correct}` },
+    ],
   };
 }
 
@@ -181,7 +202,10 @@ function genConvertirScientifiqueVersDecimalNumeric() {
     prompt: `Donne l'écriture décimale du nombre \\(${fr(aMantisse)} \\times 10^{${n}}\\).`,
     answer,
     tolerance: Math.max(0.00001, Math.abs(answer) * 0.001),
-    steps: [{ type: "calcul", text: `${fr(aMantisse)} \\times 10^{${n}} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Multiplier par \\(10^{${n}}\\) déplace la virgule de ${Math.abs(n)} rang(s) vers ${n >= 0 ? "la droite" : "la gauche"}.` },
+      { type: "resultat", text: `${fr(aMantisse)} \\times 10^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -333,7 +357,10 @@ function genCoteCarreDepuisAireNumeric() {
     chapter: "Puissances — Racine carrée",
     prompt: `Un carré a une aire de ${aire} cm². Quel est son côté, en cm ?`,
     answer: cote,
-    steps: [{ type: "calcul", text: `\\sqrt{${aire}} = ${cote}` }],
+    steps: [
+      { type: "regle", text: `Le côté est le nombre qui, multiplié par lui-même, donne l'aire : c'est la racine carrée de l'aire.` },
+      { type: "resultat", text: `\\sqrt{${aire}} = ${cote}` },
+    ],
   };
 }
 

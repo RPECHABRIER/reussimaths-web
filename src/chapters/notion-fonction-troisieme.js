@@ -193,7 +193,16 @@ function genPuissanceDixAntecedentNumeric() {
     chapter: "Notion de fonction — Cas particuliers",
     prompt: `On définit la fonction m par \\(m(x) = 10^{x}\\). Quel est l'antécédent de ${pow10Display(k)} par m ?`,
     answer: k,
-    steps: [{ type: "calcul", text: `10^{${k}} = ${pow10Display(k)}` }],
+    steps: [
+      {
+        type: "regle",
+        text:
+          k >= 0
+            ? `10^{n} \\text{ s'écrit 1 suivi de n zéros.}`
+            : `10^{n} \\text{ avec n négatif s'écrit } 0,\\underbrace{0\\ldots0}_{(-n-1) \\text{ zéros}}1 \\text{ (le chiffre 1 est en } (-n)\\text{-ième position après la virgule).}`,
+      },
+      { type: "calcul", text: `10^{${k}} = ${pow10Display(k)}` },
+    ],
   };
 }
 
@@ -270,7 +279,8 @@ function genEgaliteDeuxFonctionsNumeric() {
       { type: "donnee", text: `${a}x = x^{2} ${sgn(c)} ${abs(c)}x` },
       { type: "calcul", text: `0 = x^{2} ${sgn(diff)} ${abs(diff)}x` },
       { type: "calcul", text: `0 = x\\left(x ${sgn(diff)} ${abs(diff)}\\right)` },
-      { type: "calcul", text: `x = 0 \\text{ ou } x = ${r}` },
+      { type: "regle", text: `\\text{Un produit de deux facteurs est nul si (et seulement si) l'un au moins des facteurs est nul.}` },
+      { type: "calcul", text: `x = 0 \\text{ ou } x ${sgn(diff)} ${abs(diff)} = 0 \\text{, donc } x = 0 \\text{ ou } x = ${r}` },
       { type: "resultat", text: `\\text{La valeur non nulle est } x = ${r}` },
     ],
   };

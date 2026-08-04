@@ -62,7 +62,10 @@ function genProduitScalaireEspaceNumeric() {
     chapter: "Orthogonalité et distances — Produit scalaire",
     prompt: `On considère \\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\) et \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\). Calcule \\(\\vec{u} \\cdot \\vec{v}\\).`,
     answer,
-    steps: [`${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } \\vec{u} \\cdot \\vec{v} = x_u x_v + y_u y_v + z_u z_v.` },
+      { type: "resultat", text: `${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${answer}` },
+    ],
   };
 }
 
@@ -93,7 +96,11 @@ function genVerifierOrthogonaliteQCM() {
     prompt: `On considère \\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\) et \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\). Ces deux vecteurs sont-ils orthogonaux ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`\\vec{u} \\cdot \\vec{v} = ${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${produit}`, reponse === "Oui" ? "Le produit scalaire est nul : les vecteurs sont orthogonaux." : "Le produit scalaire est non nul : les vecteurs ne sont pas orthogonaux."],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs sont orthogonaux si et seulement si leur produit scalaire est nul.}` },
+      { type: "donnee", text: `\\vec{u} \\cdot \\vec{v} = ${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${produit}` },
+      { type: "resultat", text: reponse === "Oui" ? "Le produit scalaire est nul : les vecteurs sont orthogonaux." : "Le produit scalaire est non nul : les vecteurs ne sont pas orthogonaux." },
+    ],
   };
 }
 
@@ -110,7 +117,10 @@ function genVecteurNormalDepuisEquationNumeric() {
     chapter: "Orthogonalité et distances — Vecteur normal",
     prompt: `Un plan a pour équation cartésienne \\(${texPlan(a, b, c, d)}\\). Donne la coordonnée en ${composante} d'un vecteur normal à ce plan.`,
     answer,
-    steps: [`\\text{Un vecteur normal a pour coordonnées } (${a} ; ${b} ; ${c})`],
+    steps: [
+      { type: "regle", text: `\\text{Dans une équation cartésienne } ax+by+cz+d=0, \\text{ les coefficients a, b, c sont directement les coordonnées d'un vecteur normal au plan.}` },
+      { type: "resultat", text: `\\vec{n}(${a} ; ${b} ; ${c})` },
+    ],
   };
 }
 
@@ -126,7 +136,11 @@ function genCalculerDEquationPlanNumeric() {
     chapter: "Orthogonalité et distances — Équation d'un plan",
     prompt: `Un plan a pour vecteur normal \\(\\vec{n}(${a} ; ${b} ; ${c})\\) et passe par le point \\(M(${M.x} ; ${M.y} ; ${M.z})\\). Son équation est de la forme \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}y ${c >= 0 ? "+" : "-"} ${Math.abs(c)}z + d = 0\\). Calcule d.`,
     answer: d,
-    steps: [`${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + d = 0`, `d = ${d}`],
+    steps: [
+      { type: "regle", text: `\\text{M appartient au plan si ses coordonnées vérifient l'équation : on substitue les coordonnées de M, puis on isole d.}` },
+      { type: "calcul", text: `${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + d = 0` },
+      { type: "resultat", text: `d = ${d}` },
+    ],
   };
 }
 
@@ -151,7 +165,10 @@ function genDistancePointPlanNumeric() {
     chapter: "Orthogonalité et distances — Distance point-plan",
     prompt: `Un plan a pour équation \\(${texPlan(a, b, c, d)}\\). Calcule la distance du point \\(M(${M.x} ; ${M.y} ; ${M.z})\\) à ce plan.`,
     answer: distance,
-    steps: [`d(M, \\mathcal{P}) = \\dfrac{|${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + (${d})|}{\\sqrt{${a}^2+${b}^2+${c}^2}} = \\dfrac{${Math.abs(kEcart * norme0)}}{${norme0}} = ${distance}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } d(M, \\mathcal{P}) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}} \\text{ où } (a;b;c) \\text{ est un vecteur normal du plan.}` },
+      { type: "resultat", text: `d(M, \\mathcal{P}) = \\dfrac{|${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + (${d})|}{\\sqrt{${a}^2+${b}^2+${c}^2}} = \\dfrac{${Math.abs(kEcart * norme0)}}{${norme0}} = ${distance}` },
+    ],
   };
 }
 
@@ -170,7 +187,11 @@ function genPointAppartientPlanQCM() {
     prompt: `Un plan a pour équation \\(${texPlan(a, b, c, d)}\\). Le point \\(M(${M.x} ; ${M.y} ; ${M.z})\\) appartient-il à ce plan ?`,
     answer: valeur === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + (${d}) = ${valeur}`, valeur === 0 ? "Le résultat est nul : M appartient au plan." : "Le résultat n'est pas nul : M n'appartient pas au plan."],
+    steps: [
+      { type: "regle", text: `\\text{M appartient au plan si et seulement si ses coordonnées vérifient l'équation cartésienne (le résultat de la substitution vaut 0).}` },
+      { type: "donnee", text: `${a} \\times ${M.x} + ${b} \\times ${M.y} + ${c} \\times ${M.z} + (${d}) = ${valeur}` },
+      { type: "resultat", text: valeur === 0 ? "Le résultat est nul : M appartient au plan." : "Le résultat n'est pas nul : M n'appartient pas au plan." },
+    ],
   };
 }
 
@@ -194,7 +215,10 @@ function genVecteursNormauxColineairesQCM() {
     prompt: `Un plan \\(\\mathcal{P}\\) a pour vecteur normal \\(\\vec{n}(${a} ; ${b} ; ${c})\\) et un plan \\(\\mathcal{P}'\\) a pour vecteur normal \\(\\vec{n'}(${n2.x} ; ${n2.y} ; ${n2.z})\\). Les plans \\(\\mathcal{P}\\) et \\(\\mathcal{P}'\\) sont-ils nécessairement parallèles ?`,
     answer: colineaires ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [colineaires ? "Les deux vecteurs normaux sont colinéaires : les plans sont parallèles." : "Les deux vecteurs normaux ne sont pas colinéaires : les plans ne sont pas parallèles."],
+    steps: [
+      { type: "regle", text: `\\text{Deux plans sont parallèles si et seulement si leurs vecteurs normaux sont colinéaires (l'un est un multiple de l'autre).}` },
+      { type: "resultat", text: colineaires ? "Les deux vecteurs normaux sont colinéaires : les plans sont parallèles." : "Les deux vecteurs normaux ne sont pas colinéaires : les plans ne sont pas parallèles." },
+    ],
   };
 }
 
@@ -208,18 +232,21 @@ function genNormeCarreVecteurNormalNumeric() {
     chapter: "Orthogonalité et distances — Distance point-plan",
     prompt: `Un plan a pour vecteur normal \\(\\vec{n}(${a} ; ${b} ; ${c})\\). Calcule \\(a^2+b^2+c^2\\) (le carré de la norme de \\(\\vec{n}\\)), utile dans la formule de distance.`,
     answer: a * a + b * b + c * c,
-    steps: [`${a}^2 + ${b}^2 + ${c}^2 = ${a * a + b * b + c * c}`],
+    steps: [
+      { type: "regle", text: `\\|\\vec{n}(a;b;c)\\|^2 = a^2+b^2+c^2.` },
+      { type: "resultat", text: `${a}^2 + ${b}^2 + ${c}^2 = ${a * a + b * b + c * c}` },
+    ],
   };
 }
 
 // ---------- 9. Vrai ou faux sur les positions relatives droites/plans dans l'espace ----------
 function genVraiFauxPositionsRelativesQCM() {
   const cas = pick([
-    { description: "Une droite orthogonale à un plan est orthogonale à toutes les droites de ce plan.", reponse: "Vrai" },
-    { description: "Deux droites orthogonales à un même plan sont parallèles entre elles.", reponse: "Vrai" },
-    { description: "Deux plans dont les vecteurs normaux sont orthogonaux sont nécessairement perpendiculaires.", reponse: "Vrai" },
-    { description: "Une droite orthogonale à deux droites sécantes d'un plan est orthogonale à ce plan.", reponse: "Vrai" },
-    { description: "Un vecteur normal à un plan est nécessairement unique.", reponse: "Faux" },
+    { description: "Une droite orthogonale à un plan est orthogonale à toutes les droites de ce plan.", reponse: "Vrai", explication: "C'est vrai : c'est la définition même d'une droite orthogonale à un plan — elle est orthogonale à toutes les droites de ce plan, pas seulement à deux d'entre elles." },
+    { description: "Deux droites orthogonales à un même plan sont parallèles entre elles.", reponse: "Vrai", explication: "C'est vrai : deux droites orthogonales à un même plan ont toutes deux la direction du vecteur normal de ce plan, elles sont donc colinéaires, donc parallèles." },
+    { description: "Deux plans dont les vecteurs normaux sont orthogonaux sont nécessairement perpendiculaires.", reponse: "Vrai", explication: "C'est vrai : c'est la caractérisation du cours — deux plans sont perpendiculaires si et seulement si leurs vecteurs normaux sont orthogonaux." },
+    { description: "Une droite orthogonale à deux droites sécantes d'un plan est orthogonale à ce plan.", reponse: "Vrai", explication: "C'est vrai : c'est le théorème d'orthogonalité du cours — il suffit qu'une droite soit orthogonale à deux droites sécantes (non parallèles) d'un plan pour être orthogonale à ce plan tout entier." },
+    { description: "Un vecteur normal à un plan est nécessairement unique.", reponse: "Faux", explication: "C'est faux : tout vecteur colinéaire à un vecteur normal est lui aussi normal au plan. Il existe une infinité de vecteurs normaux à un même plan, tous colinéaires entre eux (par exemple (1;2;3) et (2;4;6))." },
   ]);
   return {
     type: "qcm",
@@ -227,7 +254,7 @@ function genVraiFauxPositionsRelativesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -246,7 +273,11 @@ function genTrouverParametreOrthogonaliteNumeric() {
     chapter: "Orthogonalité et distances — Produit scalaire",
     prompt: `On considère \\(\\vec{u}(${ux} ; ${uy} ; 1)\\) et \\(\\vec{v}(${vx} ; ${vy} ; m)\\). Détermine la valeur de m pour que \\(\\vec{u}\\) et \\(\\vec{v}\\) soient orthogonaux.`,
     answer: m,
-    steps: [`${ux} \\times ${vx} + ${uy} \\times ${vy} + 1 \\times m = 0`, `m = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs sont orthogonaux si et seulement si leur produit scalaire est nul : on pose } \\vec{u} \\cdot \\vec{v} = 0 \\text{ puis on résout.}` },
+      { type: "calcul", text: `${ux} \\times ${vx} + ${uy} \\times ${vy} + 1 \\times m = 0` },
+      { type: "resultat", text: `m = ${m}` },
+    ],
   };
 }
 
@@ -268,7 +299,10 @@ function genDistanceDeuxPointsNumeric() {
     chapter: "Orthogonalité et distances — Distances",
     prompt: `Calcule la distance AB, avec \\(A(${A.x} ; ${A.y} ; ${A.z})\\) et \\(B(${B.x} ; ${B.y} ; ${B.z})\\).`,
     answer: norme0,
-    steps: [`AB = \\sqrt{(${B.x - A.x})^2 + (${B.y - A.y})^2 + (${B.z - A.z})^2} = \\sqrt{${norme0 * norme0}} = ${norme0}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } AB = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2+(z_B-z_A)^2}.` },
+      { type: "resultat", text: `AB = \\sqrt{(${B.x - A.x})^2 + (${B.y - A.y})^2 + (${B.z - A.z})^2} = \\sqrt{${norme0 * norme0}} = ${norme0}` },
+    ],
   };
 }
 
@@ -283,7 +317,10 @@ function genPlanOrthogonalDroiteQCM() {
     prompt: `Une droite a pour vecteur directeur \\(\\vec{u}(${dir.x} ; ${dir.y} ; ${dir.z})\\). Un plan orthogonal à cette droite a pour vecteur normal \\(\\vec{n}(${nPlan.x} ; ${nPlan.y} ; ${nPlan.z})\\). Est-ce cohérent ?`,
     answer: correspondance ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [correspondance ? "Le vecteur directeur de la droite est bien un vecteur normal du plan orthogonal : c'est cohérent." : "Le vecteur normal donné n'est pas égal (ni colinéaire) au vecteur directeur de la droite : ce n'est pas cohérent."],
+    steps: [
+      { type: "regle", text: `\\text{Un plan est orthogonal à une droite si et seulement si le vecteur directeur de la droite est un vecteur normal du plan (colinéaire à celui-ci).}` },
+      { type: "resultat", text: correspondance ? "Le vecteur directeur de la droite est bien un vecteur normal du plan orthogonal : c'est cohérent." : "Le vecteur normal donné n'est pas égal (ni colinéaire) au vecteur directeur de la droite : ce n'est pas cohérent." },
+    ],
   };
 }
 
@@ -312,7 +349,11 @@ function genVecteurDansLePlanQCM() {
     prompt: `Un plan a pour vecteur normal \\(\\vec{n}(${n.x} ; ${n.y} ; ${n.z})\\). Le vecteur \\(\\vec{w}(${w.x} ; ${w.y} ; ${w.z})\\) est-il un vecteur directeur possible de ce plan (c'est-à-dire orthogonal à \\(\\vec{n}\\)) ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`\\vec{n} \\cdot \\vec{w} = ${produit}`, reponse === "Oui" ? "Le produit scalaire est nul : le vecteur est bien dans la direction du plan." : "Le produit scalaire n'est pas nul : ce vecteur n'est pas dans la direction du plan."],
+    steps: [
+      { type: "regle", text: `\\text{Un vecteur est dans la direction du plan si et seulement s'il est orthogonal au vecteur normal, donc si leur produit scalaire est nul.}` },
+      { type: "donnee", text: `\\vec{n} \\cdot \\vec{w} = ${produit}` },
+      { type: "resultat", text: reponse === "Oui" ? "Le produit scalaire est nul : le vecteur est bien dans la direction du plan." : "Le produit scalaire n'est pas nul : ce vecteur n'est pas dans la direction du plan." },
+    ],
   };
 }
 
@@ -329,7 +370,10 @@ function genDistanceOrigineNumeric() {
     chapter: "Orthogonalité et distances — Distance point-plan",
     prompt: `Un plan a pour équation \\(${texPlan(a0, b0, c0, d)}\\). Calcule la distance de l'origine O à ce plan.`,
     answer: kEcart,
-    steps: [`d(O, \\mathcal{P}) = \\dfrac{|${d}|}{\\sqrt{${a0}^2+${b0}^2+${c0}^2}} = \\dfrac{${d}}{${norme0}} = ${kEcart}`],
+    steps: [
+      { type: "regle", text: `\\text{On applique la formule de distance point-plan (cas particulier de l'origine } O(0;0;0)\\text{).}` },
+      { type: "resultat", text: `d(O, \\mathcal{P}) = \\dfrac{|${d}|}{\\sqrt{${a0}^2+${b0}^2+${c0}^2}} = \\dfrac{${d}}{${norme0}} = ${kEcart}` },
+    ],
   };
 }
 
@@ -349,7 +393,12 @@ function genComparerDistancesQCM() {
     prompt: `Pour un même plan de vecteur normal de norme ${norme}, on calcule \\(|a x_{M_1} + b y_{M_1} + c z_{M_1} + d| = ${k1 * norme}\\) pour M1, et \\(|a x_{M_2} + b y_{M_2} + c z_{M_2} + d| = ${k2 * norme}\\) pour M2. Quel point est le plus éloigné du plan ?`,
     answer: plusLoin,
     options: ["M1", "M2"],
-    steps: [`d(M_1) = \\dfrac{${k1 * norme}}{${norme}} = ${k1}`, `d(M_2) = \\dfrac{${k2 * norme}}{${norme}} = ${k2}`, `\\text{Le plus éloigné est } ${plusLoin}.`],
+    steps: [
+      { type: "regle", text: `\\text{Pour un même plan, le dénominateur (norme du vecteur normal) est identique pour les deux points : on compare directement les numérateurs, puis on divise.}` },
+      { type: "donnee", text: `d(M_1) = \\dfrac{${k1 * norme}}{${norme}} = ${k1}` },
+      { type: "donnee", text: `d(M_2) = \\dfrac{${k2 * norme}}{${norme}} = ${k2}` },
+      { type: "resultat", text: `\\text{Le plus éloigné est } ${plusLoin}.` },
+    ],
   };
 }
 

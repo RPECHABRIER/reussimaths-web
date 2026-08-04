@@ -120,7 +120,7 @@ function genAireComposeeEquationNumeric() {
     steps: [
       { type: "donnee", text: `${largeur}x + ${fr(aireTriangle)} = ${fr(aireCible)}` },
       { type: "calcul", text: `${largeur}x = ${fr(roundTo(aireCible - aireTriangle, 2))}` },
-      { type: "resultat", text: `x = ${xSol}` },
+      { type: "resultat", text: `x = \\dfrac{${fr(roundTo(aireCible - aireTriangle, 2))}}{${largeur}} = ${xSol}` },
     ],
   };
 }
@@ -138,8 +138,9 @@ function genCompararTarifsEgaliteNumeric() {
     answer: xSol,
     steps: [
       { type: "donnee", text: `${a}x = ${b} + ${c}x` },
+      { type: "regle", text: `\\text{On regroupe les termes en x d'un côté en soustrayant } ${c}x \\text{ des deux côtés.}` },
       { type: "calcul", text: `${a - c}x = ${b}` },
-      { type: "resultat", text: `x = ${xSol}` },
+      { type: "resultat", text: `x = \\dfrac{${b}}{${a - c}} = ${xSol}` },
     ],
   };
 }
@@ -186,7 +187,7 @@ function genFonctionAffineImageAntecedentNumeric() {
       : [
           { type: "donnee", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}` },
           { type: "calcul", text: `${a}x = ${y - b}` },
-          { type: "resultat", text: `x = ${x}` },
+          { type: "resultat", text: `x = \\dfrac{${y - b}}{${a}} = ${x}` },
         ],
   };
 }
@@ -206,7 +207,10 @@ function genMoyennePondereeBrevetNumeric() {
     prompt: `${prenom} a obtenu les notes suivantes, avec leurs coefficients : ${notes.map((n, i) => `${n} (coefficient ${shuffled[i]})`).join(", ")}. Calcule sa moyenne pondérée (arrondie au centième).`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `\\dfrac{${notes.map((n, i) => `${n} \\times ${shuffled[i]}`).join(" + ")}}{${totalCoeffs}} = \\dfrac{${sommeProduits}}{${totalCoeffs}} \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `\\text{Pour une moyenne pondérée, on multiplie chaque note par son coefficient, on additionne ces produits, puis on divise par la somme des coefficients.}` },
+      { type: "calcul", text: `\\dfrac{${notes.map((n, i) => `${n} \\times ${shuffled[i]}`).join(" + ")}}{${totalCoeffs}} = \\dfrac{${sommeProduits}}{${totalCoeffs}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -274,6 +278,7 @@ function genEquationParenthesesNumeric() {
     prompt: `Résous l'équation : \\(${a}(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${c}\\)`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `\\text{Pour isoler x, on annule d'abord ce qui a été fait en dernier : on divise les deux côtés par } ${a}, \\text{ puis on soustrait } ${Math.abs(b)}.` },
       { type: "calcul", text: `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c} \\div ${a} = ${c / a}` },
       { type: "resultat", text: `x = ${c / a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${xSol}` },
     ],
@@ -293,7 +298,15 @@ function genPourcentageEvolutionBrevetNumeric() {
     prompt: `Un article coûte ${prixInitial} €. Son prix ${hausse ? "augmente" : "diminue"} de ${p} %. Calcule le nouveau prix (en €, arrondi au centime).`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${prixInitial} \\times ${fr(roundTo(coefficient, 3))} = ${fr(answer)}` }],
+    steps: [
+      {
+        type: "regle",
+        text: hausse
+          ? `\\text{Augmenter de } ${p}\\% \\text{ revient à multiplier par } 1 + \\dfrac{${p}}{100} = ${fr(roundTo(coefficient, 3))}.`
+          : `\\text{Diminuer de } ${p}\\% \\text{ revient à multiplier par } 1 - \\dfrac{${p}}{100} = ${fr(roundTo(coefficient, 3))}.`,
+      },
+      { type: "calcul", text: `${prixInitial} \\times ${fr(roundTo(coefficient, 3))} = ${fr(answer)}` },
+    ],
   };
 }
 

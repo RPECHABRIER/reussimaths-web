@@ -140,7 +140,10 @@ function genFractionsEgalesTrouver() {
       chapter: "Fractions — Fractions égales",
       prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{?}{${b * m}}\\)`,
       answer: a * m,
-      steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
+      steps: [
+        { type: "regle", text: `Le dénominateur est passé de ${b} à ${b * m}, donc de ${b} \\times ${m}. On multiplie donc aussi le numérateur par ${m}.` },
+        { type: "resultat", text: `${a} \\times ${m} = ${a * m}` },
+      ],
     };
   }
   return {
@@ -148,7 +151,10 @@ function genFractionsEgalesTrouver() {
     chapter: "Fractions — Fractions égales",
     prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{${a * m}}{?}\\)`,
     answer: b * m,
-    steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
+    steps: [
+      { type: "regle", text: `Le numérateur est passé de ${a} à ${a * m}, donc de ${a} \\times ${m}. On multiplie donc aussi le dénominateur par ${m}.` },
+      { type: "resultat", text: `${b} \\times ${m} = ${b * m}` },
+    ],
   };
 }
 
@@ -163,7 +169,11 @@ function genDecomposerFractionEntierFraction() {
     chapter: "Fractions — Décomposition",
     prompt: `Donne l'écriture décimale de \\(${q} + \\dfrac{${r}}{${den}}\\).`,
     answer: roundTo(q + r / den, 4),
-    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${q} + \\dfrac{${r}}{${den}} = ${frTex(roundTo(q + r / den, 4))}\\)` }],
+    steps: [
+      { type: "regle", text: `${den} rentre ${q} fois dans ${num} (reste ${r}) : ${num} = ${den} \\times ${q} + ${r}.` },
+      { type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${q} + \\dfrac{${r}}{${den}}\\)` },
+      { type: "resultat", text: `${q} + \\dfrac{${r}}{${den}} = ${frTex(roundTo(q + r / den, 4))}` },
+    ],
   };
 }
 
@@ -265,7 +275,10 @@ function genAdditionMemeDenominateur() {
     chapter: "Fractions — Additionner",
     prompt: `\\(\\dfrac{${n1}}{${den}} + \\dfrac{${n2}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer: n1 + n2,
-    steps: [{ type: "calcul", text: `${n1} + ${n2} = ${n1 + n2}` }],
+    steps: [
+      { type: "regle", text: `Même dénominateur : il ne change pas, on additionne seulement les numérateurs.` },
+      { type: "resultat", text: `${n1} + ${n2} = ${n1 + n2}` },
+    ],
   };
 }
 
@@ -279,7 +292,10 @@ function genSoustractionMemeDenominateur() {
     chapter: "Fractions — Soustraire",
     prompt: `\\(\\dfrac{${n1}}{${den}} - \\dfrac{${n2}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer: n1 - n2,
-    steps: [{ type: "calcul", text: `${n1} - ${n2} = ${n1 - n2}` }],
+    steps: [
+      { type: "regle", text: `Même dénominateur : il ne change pas, on soustrait seulement les numérateurs.` },
+      { type: "resultat", text: `${n1} - ${n2} = ${n1 - n2}` },
+    ],
   };
 }
 
@@ -298,8 +314,9 @@ function genAdditionDenominateursMultiples() {
     prompt: `\\(\\dfrac{${num1}}{${den1}} + \\dfrac{${num2}}{${den2}} = \\dfrac{?}{${den2}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
+      { type: "regle", text: `${den2} = ${den1} \\times ${k}, donc on multiplie aussi le numérateur de la première fraction par ${k} pour la mettre au même dénominateur.` },
       { type: "calcul", text: `\\(\\dfrac{${num1}}{${den1}} = \\dfrac{${num1Converti}}{${den2}}\\)` },
-      { type: "calcul", text: `${num1Converti} + ${num2} = ${answer}` },
+      { type: "resultat", text: `${num1Converti} + ${num2} = ${answer}` },
     ],
   };
 }
@@ -315,7 +332,10 @@ function genMultiplierEntierParFraction() {
     chapter: "Fractions — Multiplier",
     prompt: `${k} × \\(\\dfrac{${num}}{${den}}\\) = \\(\\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [{ type: "calcul", text: `${k} \\times ${num} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Multiplier une fraction par un nombre entier : on multiplie le numérateur, le dénominateur ne change pas.` },
+      { type: "resultat", text: `${k} \\times ${num} = ${answer}` },
+    ],
   };
 }
 
@@ -551,7 +571,10 @@ function genProblemeVraiFauxSucreTablette() {
     prompt: `La tablette de chocolat de ${p1} contient ${pct1} % de sucre. La tablette de ${p2} contient \\(\\dfrac{${num2}}{${den2}}\\) de sucre. Quelle tablette est la plus sucrée ?`,
     answer: correct,
     options: [optA, optB, optEq],
-    steps: [{ type: "calcul", text: `${p1} : ${pct1} % ; ${p2} : environ ${pct2} %.` }],
+    steps: [
+      { type: "regle", text: `Pour comparer, on met les deux valeurs en pourcentage : \\(\\dfrac{${num2}}{${den2}} \\times 100\\).` },
+      { type: "resultat", text: `${p1} : ${pct1} % ; ${p2} : environ ${pct2} %.` },
+    ],
   };
 }
 

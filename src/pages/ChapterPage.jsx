@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { getChapter } from "../chapters/registry";
 import ChapterRunner from "../components/ChapterRunner";
 import AutomatismesRunner from "../components/AutomatismesRunner";
@@ -10,6 +10,11 @@ import { colors, fonts } from "../theme";
 
 export default function ChapterPage() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  // Venu de la page /reviser : reste concentré sur cette compétence précise
+  // (voir ChapterRunner, prop focusSkill) plutôt qu'un tirage au hasard dans
+  // tout le chapitre.
+  const focusSkill = searchParams.get("competence") || undefined;
   const chapter = getChapter(id);
   const { user } = useAuth();
   const { subscription: rawSubscription, loading } = useSubscription(user?.id);
@@ -60,5 +65,5 @@ export default function ChapterPage() {
     return <AutomatismesRunner chapter={chapter} />;
   }
 
-  return <ChapterRunner chapter={chapter} />;
+  return <ChapterRunner chapter={chapter} focusSkill={focusSkill} />;
 }

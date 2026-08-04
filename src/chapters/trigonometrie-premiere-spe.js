@@ -327,6 +327,7 @@ export default {
     id: "trigonometrie-premiere-spe",
     title: "Trigonométrie",
     description: "Cercle trigonométrique, radian, valeurs remarquables, angles associés, lien avec le triangle rectangle.",
+    pourquoi: "Le cercle trigonométrique et les angles remarquables sont à la base de toute modélisation des phénomènes périodiques.",
     level: "premiere-spe",
     order: 7,
   },

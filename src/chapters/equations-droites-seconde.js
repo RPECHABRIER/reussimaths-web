@@ -455,6 +455,7 @@ export default {
     id: "equations-droites-seconde",
     title: "Équations de droites",
     description: "Équation cartésienne d'une droite, vecteur directeur, position relative de deux droites, systèmes de deux équations à deux inconnues, intersection de droites, équation réduite.",
+    pourquoi: "Écrire l'équation d'une droite, c'est traduire algébriquement une trajectoire ou une évolution linéaire — utile en physique comme en économie.",
     level: "seconde",
     free: false,
     order: 10,

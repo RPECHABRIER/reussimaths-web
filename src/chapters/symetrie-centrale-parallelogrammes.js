@@ -90,7 +90,7 @@ function genSymetriqueConservationLongueur() {
     prompt: `Le segment [${p1[0]}${p2[0]}] mesure ${fr(longueur)} cm. On construit son symétrique [${p1[0]}'${p2[0]}'] par rapport à un point O. Quelle est la longueur du segment [${p1[0]}'${p2[0]}'], en cm ?`,
     answer: longueur,
     tolerance: 0.01,
-    steps: [`La symétrie centrale conserve les longueurs : [${p1[0]}'${p2[0]}'] a la même longueur que [${p1[0]}${p2[0]}], soit ${fr(longueur)} cm.`],
+    steps: [{ type: "regle", text: `La symétrie centrale conserve les longueurs : [${p1[0]}'${p2[0]}'] a la même longueur que [${p1[0]}${p2[0]}], soit ${fr(longueur)} cm.` }],
   };
 }
 
@@ -104,7 +104,7 @@ function genSymetriqueConservationAire() {
     prompt: `Un ${figure} F a une aire de ${fr(aire)} cm². Quelle est l'aire de son symétrique F' par rapport à un point O, en cm² ?`,
     answer: aire,
     tolerance: 0.01,
-    steps: [`La symétrie centrale conserve les aires : F' a la même aire que F, soit ${fr(aire)} cm².`],
+    steps: [{ type: "regle", text: `La symétrie centrale conserve les aires : F' a la même aire que F, soit ${fr(aire)} cm².` }],
   };
 }
 
@@ -116,7 +116,7 @@ function genSymetriqueConservationAngle() {
     chapter: "Symétrie centrale — Conservation des angles",
     prompt: `Un angle mesure ${angle}°. Quelle est la mesure de son symétrique par rapport à un point O, en degrés ?`,
     answer: angle,
-    steps: [`La symétrie centrale conserve les angles : l'angle symétrique mesure aussi ${angle}°.`],
+    steps: [{ type: "regle", text: `La symétrie centrale conserve les angles : l'angle symétrique mesure aussi ${angle}°.` }],
   };
 }
 
@@ -135,8 +135,8 @@ function genSymetriqueCoordonneesAbscisseOrdonnee() {
     prompt: `On considère le point A(${xa} ; ${ya}) et le point O(${xo} ; ${yo}). O est le milieu de [AA']. Quelle est ${askX ? "l'abscisse" : "l'ordonnée"} du point A' ?`,
     answer: askX ? xPrime : yPrime,
     steps: [
-      `O est le milieu de [AA'], donc ${askX ? "x_O = (x_A + x_A') / 2" : "y_O = (y_A + y_A') / 2"}.`,
-      askX ? `x_{A'} = 2 \\times ${xo} - (${xa}) = ${xPrime}` : `y_{A'} = 2 \\times ${yo} - (${ya}) = ${yPrime}`,
+      { type: "regle", text: `O est le milieu de [AA'], donc ${askX ? "x_O = (x_A + x_A') / 2" : "y_O = (y_A + y_A') / 2"}.` },
+      { type: "calcul", text: askX ? `x_{A'} = 2 \\times ${xo} - (${xa}) = ${xPrime}` : `y_{A'} = 2 \\times ${yo} - (${ya}) = ${yPrime}` },
     ],
   };
 }
@@ -161,9 +161,13 @@ function genCentresDeSymetrieFigureUsuelleQCM() {
     answer: `${n}`,
     options: shuffle(["0", "1", "2"]),
     steps: [
-      n === 1
-        ? `${nom[0].toUpperCase()}${nom.slice(1)} possède un centre de symétrie (le centre de la figure).`
-        : `${nom[0].toUpperCase()}${nom.slice(1)} ne possède pas de centre de symétrie.`,
+      {
+        type: "regle",
+        text:
+          n === 1
+            ? `${nom[0].toUpperCase()}${nom.slice(1)} possède un centre de symétrie (le centre de la figure).`
+            : `${nom[0].toUpperCase()}${nom.slice(1)} ne possède pas de centre de symétrie.`,
+      },
     ],
   };
 }
@@ -187,7 +191,7 @@ function genFiguresAvecCentreDeSymetrieMulti() {
     prompt: `Parmi les figures suivantes, coche celles qui possèdent un centre de symétrie.`,
     options,
     answer,
-    steps: [`Un cercle, un carré, un rectangle, un losange et un parallélogramme ont un centre de symétrie. Ce n'est pas le cas des polygones réguliers à nombre impair de côtés (triangle équilatéral, pentagone régulier...).`],
+    steps: [{ type: "regle", text: `Un cercle, un carré, un rectangle, un losange et un parallélogramme ont un centre de symétrie. Ce n'est pas le cas des polygones réguliers à nombre impair de côtés (triangle équilatéral, pentagone régulier...).` }],
   };
 }
 
@@ -201,7 +205,7 @@ function genAnglesOpposesParSommetNumeric() {
     chapter: "Angles — Opposés par le sommet",
     prompt: `Deux droites se coupent en un point O, formant quatre angles. L'un de ces angles mesure ${angle}°. Quelle est la mesure de l'angle opposé par le sommet, en degrés ?`,
     answer: angle,
-    steps: [`Deux angles opposés par le sommet ont toujours la même mesure : ${angle}°.`],
+    steps: [{ type: "regle", text: `Deux angles opposés par le sommet ont toujours la même mesure : ${angle}°.` }],
   };
 }
 
@@ -214,7 +218,7 @@ function genAnglesAdjacentsSupplementairesNumeric() {
     chapter: "Angles — Adjacents et supplémentaires",
     prompt: `Les points A, O et B sont alignés. Un angle \\(\\widehat{AOC}\\) mesure ${angle}°. Quelle est la mesure de l'angle \\(\\widehat{COB}\\), en degrés ?`,
     answer,
-    steps: [`\\(\\widehat{AOC}\\) et \\(\\widehat{COB}\\) sont supplémentaires (leur somme fait 180°, car A, O, B sont alignés) : \\(180 - ${angle} = ${answer}\\)`],
+    steps: [{ type: "regle", text: `\\(\\widehat{AOC}\\) et \\(\\widehat{COB}\\) sont supplémentaires (leur somme fait 180°, car A, O, B sont alignés) : \\(180 - ${angle} = ${answer}\\)` }],
   };
 }
 
@@ -228,7 +232,7 @@ function genBissectriceMoitieNumeric() {
       chapter: "Angles — Bissectrice",
       prompt: `La demi-droite [Oz) est la bissectrice de l'angle \\(\\widehat{xOy}\\), qui mesure ${total}°. Quelle est la mesure de l'angle \\(\\widehat{xOz}\\), en degrés ?`,
       answer: total / 2,
-      steps: [`La bissectrice partage l'angle en deux angles égaux : \\(${total} \\div 2 = ${total / 2}\\)`],
+      steps: [{ type: "regle", text: `La bissectrice partage l'angle en deux angles égaux : \\(${total} \\div 2 = ${total / 2}\\)` }],
     };
   }
   const moitie = randInt(5, 85);
@@ -237,7 +241,7 @@ function genBissectriceMoitieNumeric() {
     chapter: "Angles — Bissectrice",
     prompt: `La demi-droite [Oz) est la bissectrice de l'angle \\(\\widehat{xOy}\\). Sachant que \\(\\widehat{xOz}\\) mesure ${moitie}°, quelle est la mesure de l'angle \\(\\widehat{xOy}\\), en degrés ?`,
     answer: moitie * 2,
-    steps: [`\\(\\widehat{xOy} = 2 \\times \\widehat{xOz} = 2 \\times ${moitie} = ${moitie * 2}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\widehat{xOy} = 2 \\times \\widehat{xOz} = 2 \\times ${moitie} = ${moitie * 2}\\)` }],
   };
 }
 
@@ -249,7 +253,7 @@ function genAnglesAlternesInternesNumeric() {
     chapter: "Angles — Droites parallèles",
     prompt: `Les droites (d₁) et (d₂) sont parallèles et coupées par une sécante (Δ). L'un des angles alternes-internes mesure ${angle}°. Quelle est la mesure de l'autre angle alterne-interne, en degrés ?`,
     answer: angle,
-    steps: [`Si deux droites sont parallèles, les angles alternes-internes formés avec une sécante ont la même mesure : ${angle}°.`],
+    steps: [{ type: "regle", text: `Si deux droites sont parallèles, les angles alternes-internes formés avec une sécante ont la même mesure : ${angle}°.` }],
   };
 }
 
@@ -261,7 +265,7 @@ function genAnglesCorrespondantsNumeric() {
     chapter: "Angles — Droites parallèles",
     prompt: `Les droites (d₁) et (d₂) sont parallèles et coupées par une sécante (Δ). L'un des angles correspondants mesure ${angle}°. Quelle est la mesure de l'autre angle correspondant, en degrés ?`,
     answer: angle,
-    steps: [`Si deux droites sont parallèles, les angles correspondants formés avec une sécante ont la même mesure : ${angle}°.`],
+    steps: [{ type: "regle", text: `Si deux droites sont parallèles, les angles correspondants formés avec une sécante ont la même mesure : ${angle}°.` }],
   };
 }
 
@@ -278,9 +282,13 @@ function genDroitesParallelesTestAnglesQCM() {
     answer: angle1 === angle2 ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      angle1 === angle2
-        ? `Les deux angles ${critere} sont égaux (${angle1}° = ${angle2}°) : les droites sont parallèles.`
-        : `Les deux angles ${critere} ne sont pas égaux (${angle1}° ≠ ${angle2}°) : les droites ne sont pas parallèles.`,
+      {
+        type: "regle",
+        text:
+          angle1 === angle2
+            ? `Les deux angles ${critere} sont égaux (${angle1}° = ${angle2}°) : les droites sont parallèles.`
+            : `Les deux angles ${critere} ne sont pas égaux (${angle1}° ≠ ${angle2}°) : les droites ne sont pas parallèles.`,
+      },
     ],
   };
 }
@@ -293,7 +301,7 @@ function genPerpendiculairesMemeDroiteParallelesQCM() {
     prompt: `Les droites (d₁) et (d₂) sont toutes les deux perpendiculaires à une même droite (d₃). Les droites (d₁) et (d₂) sont-elles nécessairement parallèles ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`Si deux droites sont perpendiculaires à une même troisième droite, alors elles sont parallèles entre elles.`],
+    steps: [{ type: "regle", text: `Si deux droites sont perpendiculaires à une même troisième droite, alors elles sont parallèles entre elles.` }],
   };
 }
 
@@ -326,7 +334,7 @@ function genCultureEuclideQCM() {
     prompt: it.prompt,
     answer: it.answer,
     options: shuffle(it.options),
-    steps: [it.step],
+    steps: [{ type: "donnee", text: it.step }],
   };
 }
 
@@ -342,7 +350,7 @@ function genParallelogrammeCotesOpposesEgauxNumeric() {
     chapter: "Parallélogramme — Propriétés",
     prompt: `ABCD est un parallélogramme avec AB = ${fr(AB)} cm et AD = ${fr(AD)} cm. Quelle est la longueur ${askCD ? "CD" : "BC"}, en cm ?`,
     answer: askCD ? AB : AD,
-    steps: [`Dans un parallélogramme, les côtés opposés sont égaux : CD = AB${askCD ? "" : ""} et BC = AD.`],
+    steps: [{ type: "regle", text: `Dans un parallélogramme, les côtés opposés sont égaux : CD = AB${askCD ? "" : ""} et BC = AD.` }],
   };
 }
 
@@ -358,7 +366,7 @@ function genParallelogrammeDiagonalesMilieuNumeric() {
       prompt: `ABCD est un parallélogramme dont les diagonales se coupent en ${O}. Sachant que AC = ${fr(AC)} cm, quelle est la longueur A${O}, en cm ?`,
       answer: roundTo(AC / 2, 2),
       tolerance: 0.01,
-      steps: [`${O} est le milieu de [AC], donc A${O} = AC ÷ 2 = ${fr(roundTo(AC / 2, 2))} cm.`],
+      steps: [{ type: "regle", text: `${O} est le milieu de [AC], donc A${O} = AC ÷ 2 = ${fr(roundTo(AC / 2, 2))} cm.` }],
     };
   }
   const AO = randDecimal(2, 12, 1);
@@ -368,7 +376,7 @@ function genParallelogrammeDiagonalesMilieuNumeric() {
     prompt: `ABCD est un parallélogramme dont les diagonales se coupent en ${O}. Sachant que A${O} = ${fr(AO)} cm, quelle est la longueur de la diagonale AC, en cm ?`,
     answer: roundTo(AO * 2, 2),
     tolerance: 0.01,
-    steps: [`${O} est le milieu de [AC], donc AC = 2 × A${O} = ${fr(roundTo(AO * 2, 2))} cm.`],
+    steps: [{ type: "regle", text: `${O} est le milieu de [AC], donc AC = 2 × A${O} = ${fr(roundTo(AO * 2, 2))} cm.` }],
   };
 }
 
@@ -380,7 +388,7 @@ function genParallelogrammeAnglesOpposesEgauxNumeric() {
     chapter: "Parallélogramme — Angles",
     prompt: `ABCD est un parallélogramme. L'angle \\(\\widehat{ABC}\\) mesure ${angle}°. Quelle est la mesure de l'angle \\(\\widehat{ADC}\\), en degrés ?`,
     answer: angle,
-    steps: [`Dans un parallélogramme, les angles opposés sont égaux : \\(\\widehat{ADC} = \\widehat{ABC} = ${angle}°\\)`],
+    steps: [{ type: "regle", text: `Dans un parallélogramme, les angles opposés sont égaux : \\(\\widehat{ADC} = \\widehat{ABC} = ${angle}°\\)` }],
   };
 }
 
@@ -393,7 +401,7 @@ function genParallelogrammeAnglesConsecutifsSupplementairesNumeric() {
     chapter: "Parallélogramme — Angles",
     prompt: `ABCD est un parallélogramme. L'angle \\(\\widehat{ABC}\\) mesure ${angle}°. Quelle est la mesure de l'angle \\(\\widehat{BCD}\\), en degrés ?`,
     answer,
-    steps: [`Dans un parallélogramme, deux angles consécutifs sont supplémentaires (leur somme fait 180°, car les côtés (AB) et (DC) sont parallèles) : \\(180 - ${angle} = ${answer}\\)`],
+    steps: [{ type: "regle", text: `Dans un parallélogramme, deux angles consécutifs sont supplémentaires (leur somme fait 180°, car les côtés (AB) et (DC) sont parallèles) : \\(180 - ${angle} = ${answer}\\)` }],
   };
 }
 
@@ -415,9 +423,13 @@ function genReconnaitreParallelogrammeCritereQCM() {
     answer: it.reponse,
     options: ["Oui", "Non"],
     steps: [
-      it.reponse === "Oui"
-        ? `Cette propriété est un critère suffisant pour affirmer que ABCD est un parallélogramme.`
-        : `Cette seule information ne suffit pas : on ne peut pas conclure que ABCD est un parallélogramme.`,
+      {
+        type: "regle",
+        text:
+          it.reponse === "Oui"
+            ? `Cette propriété est un critère suffisant pour affirmer que ABCD est un parallélogramme.`
+            : `Cette seule information ne suffit pas : on ne peut pas conclure que ABCD est un parallélogramme.`,
+      },
     ],
   };
 }
@@ -439,7 +451,7 @@ function genCasParticulierParallelogrammeQCM() {
     prompt: `ABCD est ${it.desc}. De quel quadrilatère particulier s'agit-il ?`,
     answer: it.reponse,
     options,
-    steps: [`On reconnaît ici la définition/propriété caractéristique : c'est ${it.reponse.toLowerCase()}.`],
+    steps: [{ type: "regle", text: `On reconnaît ici la définition/propriété caractéristique : c'est ${it.reponse.toLowerCase()}.` }],
   };
 }
 
@@ -455,7 +467,7 @@ function genAireParallelogrammeBaseHauteur() {
     prompt: `Un parallélogramme a pour base ${base} cm et pour hauteur relative à cette base ${hauteur} cm. Quelle est son aire, en cm² ?`,
     figure: buildParallelogrammeFigure(base, hauteur, shift, { withHauteur: true }),
     answer,
-    steps: [`Aire = base × hauteur = ${base} \\times ${hauteur} = ${answer}`],
+    steps: [{ type: "calcul", text: `Aire = base × hauteur = ${base} \\times ${hauteur} = ${answer}` }],
   };
 }
 
@@ -471,7 +483,7 @@ function genAireParallelogrammeTrouverHauteur() {
     prompt: `Un parallélogramme a une aire de ${aire} cm² et une base de ${base} cm. Quelle est la hauteur relative à cette base, en cm ?`,
     figure: buildParallelogrammeFigure(base, hauteur, shift, { withHauteur: true }),
     answer: hauteur,
-    steps: [`Hauteur = Aire ÷ base = ${aire} \\div ${base} = ${hauteur}`],
+    steps: [{ type: "calcul", text: `Hauteur = Aire ÷ base = ${aire} \\div ${base} = ${hauteur}` }],
   };
 }
 
@@ -488,7 +500,7 @@ function genPerimetreParallelogramme() {
     figure: buildParallelogrammeFigure(AB, AD, shift, { withDiagonales: false }),
     answer,
     tolerance: 0.01,
-    steps: [`Périmètre = 2 \\times (AB + AD) = 2 \\times (${fr(AB)} + ${fr(AD)}) = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Périmètre = 2 \\times (AB + AD) = 2 \\times (${fr(AB)} + ${fr(AD)}) = ${fr(answer)}` }],
   };
 }
 
@@ -507,11 +519,15 @@ function genReconnaitreCasParticulierViaDiagonalesQCM() {
     answer: it.reponse,
     options: ["Un rectangle", "Un losange", "Un carré"],
     steps: [
-      it.reponse === "Un rectangle"
-        ? `Un parallélogramme dont les diagonales sont égales est un rectangle.`
-        : it.reponse === "Un losange"
-        ? `Un parallélogramme dont les diagonales sont perpendiculaires est un losange.`
-        : `Un parallélogramme dont les diagonales sont égales et perpendiculaires est un carré (à la fois rectangle et losange).`,
+      {
+        type: "regle",
+        text:
+          it.reponse === "Un rectangle"
+            ? `Un parallélogramme dont les diagonales sont égales est un rectangle.`
+            : it.reponse === "Un losange"
+            ? `Un parallélogramme dont les diagonales sont perpendiculaires est un losange.`
+            : `Un parallélogramme dont les diagonales sont égales et perpendiculaires est un carré (à la fois rectangle et losange).`,
+      },
     ],
   };
 }
@@ -530,7 +546,7 @@ function genDemonstrationLosangeCotesEgauxQCM() {
       "Un parallélogramme qui a un angle droit est un losange",
       "Un parallélogramme dont les diagonales sont égales est un losange",
     ]),
-    steps: [`C'est un critère de reconnaissance du losange : un parallélogramme ayant deux côtés consécutifs égaux est un losange (car alors tous ses côtés sont égaux).`],
+    steps: [{ type: "regle", text: `C'est un critère de reconnaissance du losange : un parallélogramme ayant deux côtés consécutifs égaux est un losange (car alors tous ses côtés sont égaux).` }],
   };
 }
 
@@ -548,7 +564,7 @@ function genDemonstrationRectangleAngleDroitQCM() {
       "Un parallélogramme qui a deux côtés consécutifs égaux est un rectangle",
       "Un parallélogramme qui a un centre de symétrie est un rectangle",
     ]),
-    steps: [`C'est un critère de reconnaissance du rectangle : un parallélogramme ayant un angle droit est un rectangle (car ses quatre angles sont alors droits).`],
+    steps: [{ type: "regle", text: `C'est un critère de reconnaissance du rectangle : un parallélogramme ayant un angle droit est un rectangle (car ses quatre angles sont alors droits).` }],
   };
 }
 
@@ -560,7 +576,7 @@ function genDemonstrationTriangleIsocelesDiagonalesRectangleQCM() {
     prompt: `ABCD est un rectangle de centre O (intersection des diagonales [AC] et [BD]). Quelle est la nature des triangles AOD, BOA et COB ?`,
     answer: "Des triangles isocèles en O",
     options: shuffle(["Des triangles isocèles en O", "Des triangles rectangles en O", "Des triangles équilatéraux"]),
-    steps: [`Dans un rectangle, les diagonales ont la même longueur et se coupent en leur milieu O : OA = OB = OC = OD, donc les triangles AOD, BOA et COB sont isocèles en O.`],
+    steps: [{ type: "regle", text: `Dans un rectangle, les diagonales ont la même longueur et se coupent en leur milieu O : OA = OB = OC = OD, donc les triangles AOD, BOA et COB sont isocèles en O.` }],
   };
 }
 
@@ -583,10 +599,10 @@ function genAireParallelogrammeDemiDisquesComposeeNumeric() {
     answer,
     tolerance,
     steps: [
-      `Aire du parallélogramme = ${AB} \\times ${hauteur} = ${aireParallelogramme}`,
-      `Les deux demi-disques de diamètre AB (= ${AB} cm) forment un disque d'aire \\approx ${fr(aireDisqueAB)}`,
-      `Les deux demi-disques de diamètre AD (= ${AD} cm) forment un disque d'aire \\approx ${fr(aireDisqueAD)}`,
-      `Aire totale \\approx ${aireParallelogramme} + ${fr(aireDisqueAB)} + ${fr(aireDisqueAD)} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `Aire du parallélogramme = ${AB} \\times ${hauteur} = ${aireParallelogramme}` },
+      { type: "calcul", text: `Les deux demi-disques de diamètre AB (= ${AB} cm) forment un disque d'aire \\approx ${fr(aireDisqueAB)}` },
+      { type: "calcul", text: `Les deux demi-disques de diamètre AD (= ${AD} cm) forment un disque d'aire \\approx ${fr(aireDisqueAD)}` },
+      { type: "resultat", text: `Aire totale \\approx ${aireParallelogramme} + ${fr(aireDisqueAB)} + ${fr(aireDisqueAD)} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -603,7 +619,10 @@ function genEstimationAireRecouvrementParallelogrammeNumeric() {
     chapter: "Parallélogramme — Estimation d'aire",
     prompt: `Sur une carte à l'échelle, un parallélogramme représente une base de ${baseKm} km et une hauteur de ${hauteurKm} km. On peut recouvrir entièrement ${territoire} avec environ ${nbParallelogrammes} de ces parallélogrammes. Quelle est l'aire approximative de ${territoire}, en km² ?`,
     answer,
-    steps: [`Aire d'un parallélogramme = ${baseKm} \\times ${hauteurKm} = ${baseKm * hauteurKm} \\ km^2`, `Aire totale \\approx ${baseKm * hauteurKm} \\times ${nbParallelogrammes} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `Aire d'un parallélogramme = ${baseKm} \\times ${hauteurKm} = ${baseKm * hauteurKm} \\ km^2` },
+      { type: "calcul", text: `Aire totale \\approx ${baseKm * hauteurKm} \\times ${nbParallelogrammes} = ${answer}` },
+    ],
   };
 }
 
@@ -684,6 +703,7 @@ export default {
     id: "symetrie-centrale-parallelogrammes",
     title: "Symétrie centrale, parallélogrammes",
     description: "Symétrie centrale (conservation des longueurs, aires, angles), angles et droites parallèles, propriétés et reconnaissance du parallélogramme (dont les cas particuliers via les diagonales), petites démonstrations, aire.",
+    pourquoi: "La symétrie centrale et les parallélogrammes sont à la base de nombreux motifs et constructions géométriques du quotidien.",
     level: "cinquieme",
     free: false,
     order: 8,

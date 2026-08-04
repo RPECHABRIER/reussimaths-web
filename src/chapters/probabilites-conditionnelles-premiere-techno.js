@@ -224,6 +224,7 @@ export default {
     id: "probabilites-conditionnelles-premiere-techno",
     title: "Probabilités conditionnelles et indépendance",
     description: "Indépendance de deux évènements (P_A(B) = P(B)), partition de l'univers, formule des probabilités totales, arbres pondérés.",
+    pourquoi: "Les probabilités conditionnelles permettent d'actualiser un risque quand une information nouvelle arrive — un test médical positif, un email détecté comme spam.",
     level: "premiere-techno",
     order: 6,
   },

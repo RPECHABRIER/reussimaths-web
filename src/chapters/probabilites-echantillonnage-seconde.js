@@ -372,6 +372,7 @@ export default {
     id: "probabilites-echantillonnage-seconde",
     title: "Probabilités et échantillonnage",
     description: "Modèle équiprobable, événement contraire, réunion d'événements, univers d'une expérience, lancers de dés, tirages de cartes, types d'événements, fréquence et échantillonnage.",
+    pourquoi: "Comprendre le hasard et l'équiprobabilité, c'est la base pour interpréter un sondage, un jeu ou un tirage au sort.",
     level: "seconde",
     free: false,
     order: 13,

@@ -45,7 +45,7 @@ function genTraduireExpressionLitteraleQCM() {
     prompt: `« ${target.phrase} », noté x, se traduit par l'expression littérale :`,
     answer: target.expr,
     options,
-    steps: [`« ${target.phrase} » se traduit par \\(${target.expr}\\).`],
+    steps: [{ type: "regle", text: `« ${target.phrase} » se traduit par \\(${target.expr}\\).` }],
   };
 }
 
@@ -60,7 +60,7 @@ function genEvaluerExpressionLineaireNumeric() {
     chapter: "Calcul littéral — Exprimer, évaluer",
     prompt: `Évalue l'expression \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\) pour \\(x = ${x}\\).`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -76,7 +76,7 @@ function genEvaluerExpressionQuadratiqueNumeric() {
     chapter: "Calcul littéral — Exprimer, évaluer",
     prompt: `Évalue l'expression \\(${a}x^{2} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\) pour \\(x = ${x}\\).`,
     answer,
-    steps: [`${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${answer}` }],
   };
 }
 
@@ -95,7 +95,7 @@ function genProgrammeCalculLitteralQCM() {
     prompt: `Un programme de calcul consiste à : choisir un nombre, le multiplier par ${m}, puis ajouter ${p}. Quelle expression littérale correspond à ce programme (nombre de départ noté x) ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`On traduit chaque étape : \\(x \\times ${m} ${p >= 0 ? "+" : "-"} ${Math.abs(p)}\\).`],
+    steps: [{ type: "regle", text: `On traduit chaque étape : \\(x \\times ${m} ${p >= 0 ? "+" : "-"} ${Math.abs(p)}\\).` }],
   };
 }
 
@@ -110,7 +110,7 @@ function genProgrammeCalculEvaluerNumeric() {
     chapter: "Calcul littéral — Exprimer, évaluer",
     prompt: `Un programme de calcul consiste à : choisir un nombre, le multiplier par ${m}, puis ajouter ${p}. Quel résultat obtient-on si on choisit ${depart} comme nombre de départ ?`,
     answer,
-    steps: [`${depart} \\times ${m} ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${depart} \\times ${m} ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${answer}` }],
   };
 }
 
@@ -129,7 +129,10 @@ function genReduireExpressionLineaireCoefficientNumeric() {
     chapter: "Calcul littéral — Réduire",
     prompt: `On réduit l'expression \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\). Quel est le coefficient de x dans la forme réduite ?`,
     answer: coefX,
-    steps: [`${a} + ${c} = ${coefX}\\ \\text{(coefficient de x)}`, `${b} + ${d} = ${constant}\\ \\text{(terme constant)}`],
+    steps: [
+      { type: "resultat", text: `${a} + ${c} = ${coefX}\\ \\text{(coefficient de x)}` },
+      { type: "calcul", text: `${b} + ${d} = ${constant}\\ \\text{(terme constant)}` },
+    ],
   };
 }
 
@@ -147,7 +150,7 @@ function genReduireExpressionQuadratiqueCoefficientNumeric() {
     chapter: "Calcul littéral — Réduire",
     prompt: `On réduit l'expression \\(${a}x^{2} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} ${d >= 0 ? "+" : "-"} ${Math.abs(d)}x^{2} ${e >= 0 ? "+" : "-"} ${Math.abs(e)}x ${f >= 0 ? "+" : "-"} ${Math.abs(f)}\\). Quel est le coefficient de \\(x^2\\) dans la forme réduite ?`,
     answer: coefX2,
-    steps: [`${a} + ${d} = ${coefX2}\\ \\text{(coefficient de } x^2\\text{)}`],
+    steps: [{ type: "calcul", text: `${a} + ${d} = ${coefX2}\\ \\text{(coefficient de } x^2\\text{)}` }],
   };
 }
 
@@ -163,7 +166,7 @@ function genDevelopperSimpleDistributiviteConstanteNumeric() {
     chapter: "Calcul littéral — Développer",
     prompt: `On développe \\(${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x + ?\\). Quel est ce terme constant ?`,
     answer,
-    steps: [`${k} \\times ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${k} \\times ${b} = ${answer}` }],
   };
 }
 
@@ -181,9 +184,12 @@ function genDevelopperSigneDevantParentheseQCM() {
     answer: correct,
     options: [correct, wrong],
     steps: [
-      isNeg
-        ? `Développer un signe - devant une parenthèse change les signes : ${correct}.`
-        : `Développer un signe + devant une parenthèse laisse l'expression inchangée : ${correct}.`,
+      {
+        type: "regle",
+        text: isNeg
+          ? `Développer un signe - devant une parenthèse change les signes : ${correct}.`
+          : `Développer un signe + devant une parenthèse laisse l'expression inchangée : ${correct}.`,
+      },
     ],
   };
 }
@@ -204,7 +210,10 @@ function genDevelopperDoubleDistributiviteCoefficientNumeric() {
     chapter: "Calcul littéral — Développer",
     prompt,
     answer,
-    steps: [`${a} + ${b} = ${a + b}\\ \\text{(coefficient de x)}`, `${a} \\times ${b} = ${a * b}\\ \\text{(terme constant)}`],
+    steps: [
+      { type: "calcul", text: `${a} + ${b} = ${a + b}\\ \\text{(coefficient de x)}` },
+      { type: "calcul", text: `${a} \\times ${b} = ${a * b}\\ \\text{(terme constant)}` },
+    ],
   };
 }
 
@@ -219,7 +228,7 @@ function genFactoriserFacteurCommunNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ?\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)\\). Quel est ce facteur commun ?`,
     answer: k,
-    steps: [`${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)`],
+    steps: [{ type: "calcul", text: `${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)` }],
   };
 }
 
@@ -234,7 +243,7 @@ function genFactoriserParentheseCommuneNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(\\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right) \\times ${p} + \\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right) \\times ${q} = \\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right)\\left(?\\right)\\). Que vaut ce facteur (somme entre parenthèses) ?`,
     answer,
-    steps: [`${p} + ${q} = ${answer}`],
+    steps: [{ type: "calcul", text: `${p} + ${q} = ${answer}` }],
   };
 }
 
@@ -250,7 +259,7 @@ function genVraiFauxFactorisationQCM() {
     prompt: `L'expression \\(${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)}\\) a-t-elle pour factorisation \\(${k}\\left(x ${proposedB >= 0 ? "+" : "-"} ${Math.abs(proposedB)}\\right)\\) ?`,
     answer: isCorrect ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)}`],
+    steps: [{ type: "calcul", text: `${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)}` }],
   };
 }
 
@@ -281,7 +290,7 @@ function genEvaluerExpressionSigneQCM() {
     prompt: `Lorsque \\(x = ${x}\\), l'expression \\(${a}x^{2} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\) vaut :`,
     answer: String(correct),
     options,
-    steps: [`${a} \\times (${x})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${correct}`],
+    steps: [{ type: "calcul", text: `${a} \\times (${x})^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${correct}` }],
   };
 }
 
@@ -297,7 +306,10 @@ function genPerimetreRectangleLitteralNumeric() {
     chapter: "Calcul littéral — Problèmes",
     prompt: `Un rectangle a pour longueur x cm et pour largeur ${largeur} cm. Exprime son périmètre en fonction de x, puis calcule sa valeur pour \\(x = ${x}\\) cm.`,
     answer: perimetre,
-    steps: [`\\text{Périmètre} = 2x + 2 \\times ${largeur} = 2x + ${2 * largeur}`, `2 \\times ${x} + ${2 * largeur} = ${perimetre}`],
+    steps: [
+      { type: "regle", text: `\\text{Périmètre} = 2x + 2 \\times ${largeur} = 2x + ${2 * largeur}` },
+      { type: "resultat", text: `2 \\times ${x} + ${2 * largeur} = ${perimetre}` },
+    ],
   };
 }
 
@@ -311,7 +323,10 @@ function genAireRectangleLitteralNumeric() {
     chapter: "Calcul littéral — Problèmes",
     prompt: `Un rectangle a pour longueur \\(x + ${a}\\) cm et pour largeur x cm. Exprime son aire en fonction de x, puis calcule sa valeur pour \\(x = ${x}\\) cm.`,
     answer: aire,
-    steps: [`\\text{Aire} = x(x + ${a}) = x^2 + ${a}x`, `${x}^2 + ${a} \\times ${x} = ${aire}`],
+    steps: [
+      { type: "regle", text: `\\text{Aire} = x(x + ${a}) = x^2 + ${a}x` },
+      { type: "resultat", text: `${x}^2 + ${a} \\times ${x} = ${aire}` },
+    ],
   };
 }
 
@@ -366,6 +381,7 @@ export default {
     id: "calcul-litteral-quatrieme",
     title: "Calcul littéral",
     description: "Exprimer en fonction d'une variable, évaluer une expression, programmes de calcul, réduire, développer et factoriser des expressions littérales.",
+    pourquoi: "Manipuler des expressions littérales, c'est apprendre à raisonner sur une situation générale plutôt que sur un seul exemple — la base de toute formule, en maths comme en sciences.",
     level: "quatrieme",
     free: false,
     order: 6,

@@ -197,6 +197,7 @@ export default {
     id: "logarithme-decimal-terminale-techno",
     title: "Fonction logarithme décimal",
     description: "Définition via 10^x = b, sens de variation, propriétés algébriques, résolution d'équations, ordre de grandeur.",
+    pourquoi: "Le logarithme décimal sert à mesurer des échelles qui varient énormément : le pH, l'intensité sonore (décibels), la magnitude d'un séisme.",
     level: "terminale-techno",
     order: 4,
   },

@@ -330,6 +330,7 @@ export default {
     id: "suites-numeriques-premiere-spe",
     title: "Suites numériques, modèles discrets",
     description: "Modes de génération, suites arithmétiques et géométriques, sommes, sens de variation, limite intuitive.",
+    pourquoi: "Les suites modélisent tout ce qui évolue étape par étape : un capital qui s'accumule, une population qui croît, un médicament qui se dilue dans le sang.",
     level: "premiere-spe",
     order: 3,
   },

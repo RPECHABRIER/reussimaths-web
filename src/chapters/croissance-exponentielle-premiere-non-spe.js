@@ -335,6 +335,7 @@ export default {
     id: "croissance-exponentielle-premiere-non-spe",
     title: "Croissance exponentielle",
     description: "Suites géométriques (raison, expression explicite, sens de variation), fonctions exponentielles, modélisation d'évolutions en pourcentage constant, coefficient multiplicateur global et taux d'évolution moyen par période.",
+    pourquoi: "Modéliser une croissance exponentielle, c'est comprendre une épidémie, un taux d'intérêt composé ou la désintégration radioactive.",
     level: "premiere-non-spe",
     free: false,
     order: 5,

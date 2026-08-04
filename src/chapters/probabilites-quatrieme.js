@@ -33,7 +33,7 @@ function genProbabiliteEquiprobableNumeric() {
     prompt: `Une expérience aléatoire comporte ${total} issues équiprobables. Un événement A est réalisé par ${favorables} de ces issues. Quelle est la probabilité de l'événement A (écriture décimale, arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`P(A) = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P(A) = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -47,7 +47,7 @@ function genNombreIssuesFavorablesDepuisProbabiliteNumeric() {
     chapter: "Probabilités — Calculer",
     prompt: `Une expérience comporte ${total} issues équiprobables. La probabilité d'un événement A est de ${fr(proba)}. Combien d'issues favorables réalisent l'événement A ?`,
     answer: favorables,
-    steps: [`${fr(proba)} \\times ${total} = ${favorables}`],
+    steps: [{ type: "calcul", text: `${fr(proba)} \\times ${total} = ${favorables}` }],
   };
 }
 
@@ -66,7 +66,10 @@ function genProbabiliteDepuisEffectifsNumeric() {
     prompt: `Une urne contient ${chosenCouleurs.map((c, i) => `${effectifs[i]} boules ${c}`).join(", ")}, toutes indiscernables au toucher. On pioche une boule au hasard. Quelle est la probabilité d'obtenir une boule ${chosenCouleurs[idx]} (arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`\\text{Total de boules} = ${effectifs.join(" + ")} = ${total}`, `P = \\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\text{Total de boules} = ${effectifs.join(" + ")} = ${total}` },
+      { type: "resultat", text: `P = \\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -91,7 +94,7 @@ function genPeutEtreProbabiliteQCM() {
     prompt: `Le nombre ${item.display} peut-il correspondre à une probabilité ?`,
     answer: item.valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Une probabilité est toujours comprise entre 0 et 1 (soit entre 0 % et 100 %).`],
+    steps: [{ type: "regle", text: `Une probabilité est toujours comprise entre 0 et 1 (soit entre 0 % et 100 %).` }],
   };
 }
 
@@ -107,7 +110,7 @@ function genProbabiliteDeuxEvenementsReunisNumeric() {
     prompt: `Une expérience comporte ${total} issues équiprobables. L'événement A est réalisé par ${favA} issues et l'événement B (incompatible avec A) par ${favB} issues. Quelle est la probabilité que A ou B se réalise (arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`P(A \\text{ ou } B) = \\dfrac{${favA} + ${favB}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P(A \\text{ ou } B) = \\dfrac{${favA} + ${favB}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -123,7 +126,7 @@ function genProbabiliteEnPourcentageNumeric() {
       prompt: `On a \\(P(A) = ${fr(p)}\\). Exprime cette probabilité sous forme de pourcentage.`,
       answer,
       tolerance: 0.1,
-      steps: [`${fr(p)} \\times 100 = ${fr(answer)}\\%`],
+      steps: [{ type: "calcul", text: `${fr(p)} \\times 100 = ${fr(answer)}\\%` }],
     };
   }
   const pct = randInt(1, 99);
@@ -134,7 +137,7 @@ function genProbabiliteEnPourcentageNumeric() {
     prompt: `On a \\(P(A) = ${pct}\\%\\). Exprime cette probabilité en écriture décimale.`,
     answer,
     tolerance: 0.001,
-    steps: [`${pct} \\div 100 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${pct} \\div 100 = ${fr(answer)}` }],
   };
 }
 
@@ -162,9 +165,12 @@ function genEstEquiprobableQCM() {
     answer: ctx.equi ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      ctx.equi
-        ? "Chaque issue a la même probabilité de se réaliser : c'est une situation d'équiprobabilité."
-        : "Les issues n'ont pas toutes la même probabilité de se réaliser : ce n'est pas une situation d'équiprobabilité.",
+      {
+        type: "regle",
+        text: ctx.equi
+          ? "Chaque issue a la même probabilité de se réaliser : c'est une situation d'équiprobabilité."
+          : "Les issues n'ont pas toutes la même probabilité de se réaliser : ce n'est pas une situation d'équiprobabilité.",
+      },
     ],
   };
 }
@@ -189,7 +195,7 @@ function genTypeEvenementQCM() {
     prompt: `${item.desc} Quel est le type de cet événement ?`,
     answer: item.type,
     options: ["Certain", "Impossible", "Élémentaire", "Non élémentaire"],
-    steps: [`Cet événement est ${item.type.toLowerCase()}.`],
+    steps: [{ type: "regle", text: `Cet événement est ${item.type.toLowerCase()}.` }],
   };
 }
 
@@ -203,7 +209,7 @@ function genProbabiliteEvenementContraireNumeric() {
     prompt: `On a \\(P(A) = ${fr(pA)}\\). Quelle est la probabilité de l'événement contraire \\(\\overline{A}\\) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`P(\\overline{A}) = 1 - P(A) = 1 - ${fr(pA)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P(\\overline{A}) = 1 - P(A) = 1 - ${fr(pA)} = ${fr(answer)}` }],
   };
 }
 
@@ -225,7 +231,7 @@ function genEvenementContraireDescriptionQCM() {
     prompt: `Quel est l'événement contraire de « ${item.evt} » ?`,
     answer: item.contraire,
     options,
-    steps: [`L'événement contraire de « ${item.evt} » est « ${item.contraire} ».`],
+    steps: [{ type: "regle", text: `L'événement contraire de « ${item.evt} » est « ${item.contraire} ».` }],
   };
 }
 
@@ -256,8 +262,11 @@ function genSommeProbabilitesVerificationQCM() {
     answer: reallyValid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `${probs.map((p) => fr(p)).join(" + ")} = ${fr(sum)}`,
-      reallyValid ? "La somme vaut 1 : la répartition est possible." : "La somme ne vaut pas 1 : la répartition n'est pas possible.",
+      { type: "calcul", text: `${probs.map((p) => fr(p)).join(" + ")} = ${fr(sum)}` },
+      {
+        type: "resultat",
+        text: reallyValid ? "La somme vaut 1 : la répartition est possible." : "La somme ne vaut pas 1 : la répartition n'est pas possible.",
+      },
     ],
   };
 }
@@ -280,7 +289,7 @@ function genCompleterTableauProbabiliteNumeric() {
     prompt: `Voici un tableau de probabilités : ${issues.slice(0, n - 1).map((iss, i) => `${iss} : ${fr(probs[i])}`).join(", ")}, ${issues[n - 1]} : ?. Sachant que la somme des probabilités vaut 1, quelle est la probabilité manquante ?`,
     answer: manquant,
     tolerance: 0.01,
-    steps: [`1 - (${probs.map((p) => fr(p)).join(" + ")}) = ${fr(manquant)}`],
+    steps: [{ type: "calcul", text: `1 - (${probs.map((p) => fr(p)).join(" + ")}) = ${fr(manquant)}` }],
   };
 }
 
@@ -308,7 +317,7 @@ function genComparerDeuxGroupesProbabiliteNumeric() {
     prompt: `Dans un collège, il y a ${totalFilles4e} filles scolarisées en classe de 4e. On choisit au hasard un élève ${contexte}. Quelle est la probabilité que ce soit une fille de 4e (arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`\\dfrac{${totalFilles4e}}{${denom}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${totalFilles4e}}{${denom}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -357,6 +366,7 @@ export default {
     id: "probabilites-quatrieme",
     title: "Probabilités",
     description: "Calculer une probabilité, reconnaître une situation d'équiprobabilité, événements certains, impossibles et contraires, vérifier une répartition de probabilités.",
+    pourquoi: "Calculer une probabilité, c'est estimer le risque ou la chance qu'un évènement se produise — utile pour un jeu, une météo, une décision.",
     level: "quatrieme",
     free: false,
     order: 9,

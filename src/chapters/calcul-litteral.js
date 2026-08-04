@@ -94,7 +94,7 @@ function genTraduirePhraseEnExpressionQCM() {
     prompt: `Quelle expression littérale correspond à : « ${target.phrase} » ?`,
     answer: target.expr,
     options,
-    steps: [`« ${target.phrase} » se traduit par \\(${target.expr}\\).`],
+    steps: [{ type: "resultat", text: `« ${target.phrase} » se traduit par \\(${target.expr}\\).` }],
   };
 }
 
@@ -110,7 +110,7 @@ function genValeurExpressionLitteraleBasique() {
     chapter: "Calcul littéral — Traduire en formule",
     prompt: kind === "ax+b" ? `Calcule A = ${a}x + ${b} lorsque x = ${x}.` : `Calcule A = ${a}(x + ${b}) lorsque x = ${x}.`,
     answer: value,
-    steps: kind === "ax+b" ? [`${a} \\times ${x} + ${b} = ${value}`] : [`${a} \\times (${x} + ${b}) = ${a} \\times ${x + b} = ${value}`],
+    steps: kind === "ax+b" ? [{ type: "calcul", text: `${a} \\times ${x} + ${b} = ${value}` }] : [{ type: "calcul", text: `${a} \\times (${x} + ${b}) = ${a} \\times ${x + b} = ${value}` }],
   };
 }
 
@@ -125,7 +125,10 @@ function genPerimetreRectangleEnFonctionDeX() {
     prompt: `ABCD est un rectangle de largeur x et de longueur ${L} cm. Calcule son périmètre (en cm) lorsque x = ${x} cm.`,
     figure: buildRectangleFigureLabeled(L, "x"),
     answer: perimetre,
-    steps: [`Périmètre = 2 \\times (x + ${L})`, `2 \\times (${x} + ${L}) = ${perimetre}`],
+    steps: [
+      { type: "regle", text: `Périmètre = 2 \\times (x + ${L})` },
+      { type: "calcul", text: `2 \\times (${x} + ${L}) = ${perimetre}` },
+    ],
   };
 }
 
@@ -140,7 +143,10 @@ function genProblemeAssembleeEffectifEnFonctionDeX() {
     chapter: "Calcul littéral — Traduire en formule",
     prompt: `Dans une assemblée, il y a deux fois plus de ${groupeA} que de ${groupeB}, et ${extra} ${groupeC} de plus que de ${groupeB}. On note x le nombre de ${groupeB}. Calcule le nombre total de personnes dans l'assemblée lorsque x = ${x}.`,
     answer: total,
-    steps: [`Total = x + 2x + (x + ${extra}) = 4x + ${extra}`, `4 \\times ${x} + ${extra} = ${total}`],
+    steps: [
+      { type: "regle", text: `Total = x + 2x + (x + ${extra}) = 4x + ${extra}` },
+      { type: "calcul", text: `4 \\times ${x} + ${extra} = ${total}` },
+    ],
   };
 }
 
@@ -161,7 +167,10 @@ function genTesterEgaliteQCM() {
     prompt: `On considère \\(E_1 = ${a}x + ${b}\\) et \\(E_2 = x^2 + ${c}\\). Pour x = ${x}, a-t-on \\(E_1 = E_2\\) ?`,
     answer: egales ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\(E_1 = ${a} \\times ${x} + ${b} = ${e1}\\)`, `\\(E_2 = ${x}^2 + ${c} = ${e2}\\)`],
+    steps: [
+      { type: "calcul", text: `\\(E_1 = ${a} \\times ${x} + ${b} = ${e1}\\)` },
+      { type: "calcul", text: `\\(E_2 = ${x}^2 + ${c} = ${e2}\\)` },
+    ],
   };
 }
 
@@ -180,7 +189,7 @@ function genTrouverValeurXEgaliteVraieQCM() {
     prompt: `Parmi les valeurs suivantes, laquelle est solution de l'équation \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\) ?`,
     answer: `${xTrue}`,
     options,
-    steps: [`${a} \\times ${xTrue} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${xTrue} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}` }],
   };
 }
 
@@ -196,7 +205,7 @@ function genDevelopperTrouverCoefficient() {
     chapter: "Calcul littéral — Distributivité",
     prompt: `Développe : \\(${k}(${a}x + ${b})\\). Quel est le coefficient de x dans la forme développée ?`,
     answer: k * a,
-    steps: [`${k}(${a}x + ${b}) = ${k} \\times ${a}x + ${k} \\times ${b} = ${k * a}x + ${k * b}`],
+    steps: [{ type: "calcul", text: `${k}(${a}x + ${b}) = ${k} \\times ${a}x + ${k} \\times ${b} = ${k * a}x + ${k * b}` }],
   };
 }
 
@@ -216,7 +225,11 @@ function genFactoriserTrouverFacteurCommun() {
     chapter: "Calcul littéral — Distributivité",
     prompt: `Factorise en mettant en évidence le plus grand facteur commun entier : \\(${coeffX}x + ${constante}\\). Quel est ce facteur commun ?`,
     answer: k,
-    steps: [`${coeffX} = ${k} \\times ${a / g}` , `${constante} = ${k} \\times ${b / g}`, `\\(${coeffX}x + ${constante} = ${k}(${a / g}x + ${b / g})\\)`],
+    steps: [
+      { type: "calcul", text: `${coeffX} = ${k} \\times ${a / g}` },
+      { type: "calcul", text: `${constante} = ${k} \\times ${b / g}` },
+      { type: "resultat", text: `\\(${coeffX}x + ${constante} = ${k}(${a / g}x + ${b / g})\\)` },
+    ],
   };
 }
 
@@ -242,7 +255,7 @@ function genTesterVraiFauxDeveloppementQCM() {
     prompt: `Est-ce que \\(${k}(${a}x + ${b}) = ${developpementAffiche}\\) ?`,
     answer: correct ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [`Le développement correct est : \\(${k}(${a}x + ${b}) = ${developpementCorrect}\\)`],
+    steps: [{ type: "calcul", text: `Le développement correct est : \\(${k}(${a}x + ${b}) = ${developpementCorrect}\\)` }],
   };
 }
 
@@ -257,7 +270,10 @@ function genAireRectangleFactoriseDeveloppe() {
     chapter: "Calcul littéral — Distributivité",
     prompt: `Un rectangle a pour largeur x et pour longueur (${a} + ${b}). Calcule son aire lorsque x = ${x}.`,
     answer: aire,
-    steps: [`Aire = x \\times (${a} + ${b})`, `${x} \\times (${a} + ${b}) = ${x} \\times ${a + b} = ${aire}`],
+    steps: [
+      { type: "regle", text: `Aire = x \\times (${a} + ${b})` },
+      { type: "calcul", text: `${x} \\times (${a} + ${b}) = ${x} \\times ${a + b} = ${aire}` },
+    ],
   };
 }
 
@@ -278,7 +294,7 @@ function genVerifierIdentiteAlgebriqueQCM() {
     prompt: `L'égalité \\(${k}(${a}x + ${c}) = ${droite}\\) est-elle vraie pour toute valeur de x ?`,
     answer: vraie ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`En développant, \\(${k}(${a}x + ${c}) = ${developpe}\\), quelle que soit la valeur de x.`],
+    steps: [{ type: "regle", text: `En développant, \\(${k}(${a}x + ${c}) = ${developpe}\\), quelle que soit la valeur de x.` }],
   };
 }
 
@@ -308,7 +324,7 @@ function genResoudreEquationAdditionSoustraction() {
     chapter: "Calcul littéral — Résoudre une équation",
     prompt,
     answer: xSolution,
-    steps: [`La solution de cette équation est x = ${fr(xSolution)}.`],
+    steps: [{ type: "resultat", text: `La solution de cette équation est x = ${fr(xSolution)}.` }],
   };
 }
 
@@ -325,7 +341,7 @@ function genResoudreEquationMultiplicationDivision() {
       prompt: `Résous : \\(${a}x = ${fr(b)}\\)`,
       answer: xSolution,
       tolerance: 0.01,
-      steps: [`x = ${fr(b)} \\div ${a} = ${fr(xSolution)}`],
+      steps: [{ type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSolution)}` }],
     };
   }
   const b = nonZero(-15, 15);
@@ -335,7 +351,7 @@ function genResoudreEquationMultiplicationDivision() {
     chapter: "Calcul littéral — Résoudre une équation",
     prompt: `Résous : \\(x \\div ${a} = ${b}\\)`,
     answer: xSolution,
-    steps: [`x = ${b} \\times ${a} = ${xSolution}`],
+    steps: [{ type: "calcul", text: `x = ${b} \\times ${a} = ${xSolution}` }],
   };
 }
 
@@ -350,7 +366,10 @@ function genResoudreEquationDeuxEtapes() {
     chapter: "Calcul littéral — Résoudre une équation",
     prompt: `Résous : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSolution,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSolution}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "calcul", text: `x = ${c - b} \\div ${a} = ${xSolution}` },
+    ],
   };
 }
 
@@ -368,7 +387,7 @@ function genVerifierSiSolutionEquationQCM() {
     prompt: `${prenom} a trouvé ${propose} comme solution de l'équation \\(${a}x = ${b}\\). A-t-il/elle raison ?`,
     answer: correct ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`La solution de \\(${a}x = ${b}\\) est x = ${b} \\div ${a} = ${xTrue}.`],
+    steps: [{ type: "calcul", text: `La solution de \\(${a}x = ${b}\\) est x = ${b} \\div ${a} = ${xTrue}.` }],
   };
 }
 
@@ -386,7 +405,10 @@ function genEquationContexteSchemaBarres() {
     prompt: `Pour un cadeau, ${p1}, ${p2} et ${p3} achètent chacun une ou plusieurs ${objet}s de même valeur : ${p1} en achète ${parts[0]}, ${p2} en achète ${parts[1]} et ${p3} en achète ${parts[2]}. La valeur totale du cadeau est de ${fr(total)} €. Quelle est la valeur d'une ${objet}, en € ?`,
     answer: prixUnitaire,
     tolerance: 0.01,
-    steps: [`${totalParts} \\times \\text{valeur} = ${fr(total)}`, `\\text{valeur} = ${fr(total)} \\div ${totalParts} = ${fr(prixUnitaire)}`],
+    steps: [
+      { type: "regle", text: `${totalParts} \\times \\text{valeur} = ${fr(total)}` },
+      { type: "calcul", text: `\\text{valeur} = ${fr(total)} \\div ${totalParts} = ${fr(prixUnitaire)}` },
+    ],
   };
 }
 
@@ -405,9 +427,9 @@ function genProblemeHeritageAlKhwarizmi() {
     prompt: `À sa mort, ${nom} laisse 3 fils et une fortune qui s'élève à ${total} pièces. Il fait à son deuxième fils une donation égale à la part du premier fils à laquelle il ajoute ${a} pièces. Au troisième fils, il fait une donation égale au double de la part du premier fils à laquelle il retire ${a} pièces. Quelle est la part du premier fils, en pièces ?`,
     answer: base,
     steps: [
-      `Si x est la part du premier fils : x + (x + ${a}) + (2x - ${a}) = ${total}`,
-      `4x = ${total}`,
-      `x = ${base}`,
+      { type: "donnee", text: `Si x est la part du premier fils : x + (x + ${a}) + (2x - ${a}) = ${total}` },
+      { type: "calcul", text: `4x = ${total}` },
+      { type: "resultat", text: `x = ${base}` },
     ],
   };
 }
@@ -465,6 +487,7 @@ export default {
     id: "calcul-litteral",
     title: "Calcul littéral",
     description: "Traduire en formule, tester une égalité, distributivité, résoudre une équation.",
+    pourquoi: "Traduire une situation en formule et vérifier une égalité, c'est le tout premier pas vers l'algèbre : raisonner sans connaître tous les nombres à l'avance.",
     level: "cinquieme",
     free: false,
     order: 5,

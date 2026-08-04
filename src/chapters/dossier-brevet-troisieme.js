@@ -50,7 +50,10 @@ function genProgrammeCalculNumeric() {
     chapter: "Préparation au Brevet — Programmes de calcul",
     prompt: `Voici un programme de calcul : « Choisir un nombre. Ajouter ${a}. Multiplier le résultat par ${b}. » Applique ce programme au nombre ${n}.`,
     answer,
-    steps: [`${n} + ${a} = ${etape1}`, `${etape1} \\times ${b} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${n} + ${a} = ${etape1}` },
+      { type: "resultat", text: `${etape1} \\times ${b} = ${answer}` },
+    ],
   };
 }
 
@@ -65,7 +68,7 @@ function genProgrammeLitteralNumeric() {
     chapter: "Préparation au Brevet — Programmes de calcul",
     prompt: `Voici un programme de calcul : « Choisir un nombre x. Ajouter ${a}. Multiplier le résultat par x. » On peut montrer que ce programme donne toujours \\(x^2 ${a >= 0 ? "+" : "-"} ${Math.abs(a)}x\\). Calcule le résultat pour x = ${x}.`,
     answer,
-    steps: [`${x}^2 ${a >= 0 ? "+" : "-"} ${Math.abs(a)} \\times ${x} = ${x * x} ${a * x >= 0 ? "+" : "-"} ${Math.abs(a * x)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${x}^2 ${a >= 0 ? "+" : "-"} ${Math.abs(a)} \\times ${x} = ${x * x} ${a * x >= 0 ? "+" : "-"} ${Math.abs(a * x)} = ${answer}` }],
   };
 }
 
@@ -82,7 +85,7 @@ function genEcritureScientifiqueQCM() {
     prompt: `Un même nombre peut s'écrire \\(${bonneEcriture}\\) ou \\(${mauvaiseEcriture}\\). Laquelle de ces deux écritures est l'écriture scientifique correcte (coefficient compris entre 1 inclus et 10 exclu) ?`,
     answer: bonneEcriture,
     options: [bonneEcriture, mauvaiseEcriture],
-    steps: [`L'écriture scientifique impose un coefficient a tel que \\(1 \\leqslant a < 10\\). Ici, ${fr(coeff)} convient, pas ${fr(mauvaiseCoeff)}.`],
+    steps: [{ type: "regle", text: `L'écriture scientifique impose un coefficient a tel que \\(1 \\leqslant a < 10\\). Ici, ${fr(coeff)} convient, pas ${fr(mauvaiseCoeff)}.` }],
   };
 }
 
@@ -96,7 +99,7 @@ function genIdentiteRemarquableNumeric() {
     chapter: "Préparation au Brevet — Calcul littéral",
     prompt: `On sait que \\((a-b)(a+b) = a^2 - b^2\\). Utilise cette égalité pour calculer \\(${a - b} \\times ${a + b}\\) (avec a = ${a} et b = ${b}).`,
     answer,
-    steps: [`${a}^2 - ${b}^2 = ${a * a} - ${b * b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a}^2 - ${b}^2 = ${a * a} - ${b * b} = ${answer}` }],
   };
 }
 
@@ -114,7 +117,11 @@ function genAireComposeeEquationNumeric() {
     prompt: `Le sol d'un garage rectangulaire de largeur ${largeur} m et de longueur variable x (en m) est prolongé par un triangle rectangle de base ${baseTriangle} m et de hauteur ${fr(hauteurTriangle)} m. L'aire totale du sol est donnée par \\(${largeur}x + ${fr(aireTriangle)}\\) (en m²). Pour quelle valeur de x cette aire totale vaut-elle ${fr(aireCible)} m² ?`,
     answer: xSol,
     tolerance: 0.02,
-    steps: [`${largeur}x + ${fr(aireTriangle)} = ${fr(aireCible)}`, `${largeur}x = ${fr(roundTo(aireCible - aireTriangle, 2))}`, `x = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${largeur}x + ${fr(aireTriangle)} = ${fr(aireCible)}` },
+      { type: "calcul", text: `${largeur}x = ${fr(roundTo(aireCible - aireTriangle, 2))}` },
+      { type: "resultat", text: `x = ${xSol}` },
+    ],
   };
 }
 
@@ -129,7 +136,11 @@ function genCompararTarifsEgaliteNumeric() {
     chapter: "Préparation au Brevet — Fonctions",
     prompt: `Un club propose deux tarifs pour x séances : le tarif A coûte ${a}x €, le tarif B coûte ${b} + ${c}x €. À partir de combien de séances (valeur entière) le tarif A devient-il plus cher que le tarif B (c'est-à-dire, pour quelle valeur de x les deux tarifs sont-ils égaux) ?`,
     answer: xSol,
-    steps: [`${a}x = ${b} + ${c}x`, `${a - c}x = ${b}`, `x = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${a}x = ${b} + ${c}x` },
+      { type: "calcul", text: `${a - c}x = ${b}` },
+      { type: "resultat", text: `x = ${xSol}` },
+    ],
   };
 }
 
@@ -148,7 +159,11 @@ function genCompararTarifsBudgetNumeric() {
     chapter: "Préparation au Brevet — Fonctions",
     prompt: `Un tarif A coûte ${a} € par séance. Un tarif B coûte un forfait de ${b} € plus ${c} € par séance. Avec un budget de ${budget} €, quel est le nombre maximal de séances accessible (en choisissant le meilleur tarif) ?`,
     answer,
-    steps: [`\\text{Tarif A : } \\lfloor ${budget} \\div ${a} \\rfloor = ${maxA}\\text{ séances}`, `\\text{Tarif B : } \\lfloor (${budget} - ${b}) \\div ${c} \\rfloor = ${maxB}\\text{ séances}`, `\\text{Le tarif } ${meilleur} \\text{ permet } ${answer} \\text{ séances.}`],
+    steps: [
+      { type: "calcul", text: `\\text{Tarif A : } \\lfloor ${budget} \\div ${a} \\rfloor = ${maxA}\\text{ séances}` },
+      { type: "calcul", text: `\\text{Tarif B : } \\lfloor (${budget} - ${b}) \\div ${c} \\rfloor = ${maxB}\\text{ séances}` },
+      { type: "resultat", text: `\\text{Le tarif } ${meilleur} \\text{ permet } ${answer} \\text{ séances.}` },
+    ],
   };
 }
 
@@ -167,8 +182,12 @@ function genFonctionAffineImageAntecedentNumeric() {
       : `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Détermine l'antécédent de ${y} par f (c'est-à-dire la valeur de x telle que \\(f(x) = ${y}\\)).`,
     answer: askImage ? y : x,
     steps: askImage
-      ? [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}`]
-      : [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}`, `${a}x = ${y - b}`, `x = ${x}`],
+      ? [{ type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}` }]
+      : [
+          { type: "donnee", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}` },
+          { type: "calcul", text: `${a}x = ${y - b}` },
+          { type: "resultat", text: `x = ${x}` },
+        ],
   };
 }
 
@@ -187,7 +206,7 @@ function genMoyennePondereeBrevetNumeric() {
     prompt: `${prenom} a obtenu les notes suivantes, avec leurs coefficients : ${notes.map((n, i) => `${n} (coefficient ${shuffled[i]})`).join(", ")}. Calcule sa moyenne pondérée (arrondie au centième).`,
     answer,
     tolerance: 0.02,
-    steps: [`\\dfrac{${notes.map((n, i) => `${n} \\times ${shuffled[i]}`).join(" + ")}}{${totalCoeffs}} = \\dfrac{${sommeProduits}}{${totalCoeffs}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${notes.map((n, i) => `${n} \\times ${shuffled[i]}`).join(" + ")}}{${totalCoeffs}} = \\dfrac{${sommeProduits}}{${totalCoeffs}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -202,7 +221,7 @@ function genProbabiliteBrevetNumeric() {
     prompt: `Un sac contient ${total} jetons indiscernables au toucher, dont ${favorables} sont gagnants. On tire un jeton au hasard. Quelle est la probabilité de tirer un jeton gagnant (valeur décimale arrondie au millième) ?`,
     answer,
     tolerance: 0.002,
-    steps: [`P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -220,10 +239,10 @@ function genPythagoreTrigoBrevetNumeric() {
     answer: CD,
     tolerance: 0.15,
     steps: [
-      `AC^2 = AB^2 + BC^2 = ${AB}^2 + ${AD}^2 = ${AB * AB + AD * AD}`,
-      `AC = \\sqrt{${AB * AB + AD * AD}} \\approx ${fr(AC)}\\text{ cm}`,
-      `\\tan(${angleDeg}°) = \\dfrac{CD}{AC}`,
-      `CD = ${fr(AC)} \\times \\tan(${angleDeg}°) \\approx ${fr(CD)}\\text{ cm}`,
+      { type: "calcul", text: `AC^2 = AB^2 + BC^2 = ${AB}^2 + ${AD}^2 = ${AB * AB + AD * AD}` },
+      { type: "calcul", text: `AC = \\sqrt{${AB * AB + AD * AD}} \\approx ${fr(AC)}\\text{ cm}` },
+      { type: "regle", text: `\\tan(${angleDeg}°) = \\dfrac{CD}{AC}` },
+      { type: "resultat", text: `CD = ${fr(AC)} \\times \\tan(${angleDeg}°) \\approx ${fr(CD)}\\text{ cm}` },
     ],
   };
 }
@@ -239,7 +258,7 @@ function genVolumeConeNumeric() {
     prompt: `Calcule le volume d'un cône de révolution de rayon de base ${R} cm et de hauteur ${h} cm (valeur approchée au dixième, en cm³). Rappel : \\(V = \\dfrac{1}{3} \\times \\pi \\times R^2 \\times h\\).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.01),
-    steps: [`V = \\dfrac{1}{3} \\times \\pi \\times ${R}^2 \\times ${h} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `V = \\dfrac{1}{3} \\times \\pi \\times ${R}^2 \\times ${h} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -254,7 +273,10 @@ function genEquationParenthesesNumeric() {
     chapter: "Préparation au Brevet — Équations",
     prompt: `Résous l'équation : \\(${a}(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${c}\\)`,
     answer: xSol,
-    steps: [`x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c} \\div ${a} = ${c / a}`, `x = ${c / a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c} \\div ${a} = ${c / a}` },
+      { type: "resultat", text: `x = ${c / a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${xSol}` },
+    ],
   };
 }
 
@@ -271,7 +293,7 @@ function genPourcentageEvolutionBrevetNumeric() {
     prompt: `Un article coûte ${prixInitial} €. Son prix ${hausse ? "augmente" : "diminue"} de ${p} %. Calcule le nouveau prix (en €, arrondi au centime).`,
     answer,
     tolerance: 0.02,
-    steps: [`${prixInitial} \\times ${fr(roundTo(coefficient, 3))} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${prixInitial} \\times ${fr(roundTo(coefficient, 3))} = ${fr(answer)}` }],
   };
 }
 
@@ -292,9 +314,9 @@ function genVraiFauxCalculQCM() {
     answer: propositionVraie ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `\\text{Rappel : } (a+b)^2 = a^2 + 2ab + b^2 \\text{ (et non } a^2 + b^2\\text{, sauf cas particulier).}`,
-      `\\text{Ici : } (${a}+${b})^2 = ${carreDeLaSomme}, \\text{ alors que } ${a}^2 + ${b}^2 = ${sommeCarres}.`,
-      propositionVraie ? `L'affirmation utilise la bonne formule : elle est vraie.` : `L'affirmation omet le double produit \\(2ab\\) : elle est fausse.`,
+      { type: "regle", text: `\\text{Rappel : } (a+b)^2 = a^2 + 2ab + b^2 \\text{ (et non } a^2 + b^2\\text{, sauf cas particulier).}` },
+      { type: "calcul", text: `\\text{Ici : } (${a}+${b})^2 = ${carreDeLaSomme}, \\text{ alors que } ${a}^2 + ${b}^2 = ${sommeCarres}.` },
+      { type: "resultat", text: propositionVraie ? `L'affirmation utilise la bonne formule : elle est vraie.` : `L'affirmation omet le double produit \\(2ab\\) : elle est fausse.` },
     ],
   };
 }
@@ -348,6 +370,7 @@ export default {
     id: "dossier-brevet-troisieme",
     title: "Préparation au Brevet",
     description: "Exercices de synthèse type Brevet : programmes de calcul, calcul littéral, équations, comparaison de tarifs, fonctions, statistiques, probabilités, géométrie (Pythagore, trigonométrie, volume d'un cône) et pourcentages.",
+    pourquoi: "Ce dossier rassemble les grands types d'exercices du Brevet pour t'entraîner dans les conditions réelles de l'examen.",
     level: "troisieme",
     free: false,
     order: 16,

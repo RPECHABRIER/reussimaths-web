@@ -260,6 +260,7 @@ export default {
     id: "fonctions-second-degre-premiere-techno",
     title: "Fonctions polynômes de degré 2",
     description: "Allure de la parabole, racines et signe sous forme factorisée (sans discriminant), sommet, résolution graphique.",
+    pourquoi: "Étudier une parabole, c'est ce qui permet de trouver un maximum de profit, un minimum de coût, ou la trajectoire d'un objet lancé.",
     level: "premiere-techno",
     order: 3,
   },

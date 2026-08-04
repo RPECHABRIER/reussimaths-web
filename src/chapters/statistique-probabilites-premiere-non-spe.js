@@ -378,6 +378,7 @@ export default {
     id: "statistique-probabilites-premiere-non-spe",
     title: "De la statistique aux probabilités",
     description: "Fréquences marginales et conditionnelles, probabilité conditionnelle P_A(B), indépendance de deux événements, arbres pondérés, formule des probabilités totales, répétition d'expériences identiques et indépendantes.",
+    pourquoi: "Passer des fréquences observées à la probabilité, c'est le raisonnement utilisé dans toute étude statistique ou sondage d'opinion.",
     level: "premiere-non-spe",
     free: false,
     order: 3,

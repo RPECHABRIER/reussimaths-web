@@ -51,7 +51,7 @@ function genMoyenneSimpleNumeric() {
     prompt: `Calcule la moyenne de la série suivante : ${values.join(" ; ")}.`,
     answer,
     tolerance: 0.02,
-    steps: [`\\dfrac{${values.join(" + ")}}{${n}} = \\dfrac{${somme}}{${n}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${values.join(" + ")}}{${n}} = \\dfrac{${somme}}{${n}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -72,7 +72,7 @@ function genMoyennePondereeNumeric() {
       .join(", ")}. Calcule le nombre moyen de livres lus par élève.`,
     answer,
     tolerance: 0.02,
-    steps: [`\\dfrac{${detail}}{${total}} = \\dfrac{${sommeProduits}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${detail}}{${total}} = \\dfrac{${sommeProduits}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -88,8 +88,8 @@ function genMedianeImpairNumeric() {
     prompt: `Détermine la médiane de la série suivante : ${values.join(" ; ")}.`,
     answer,
     steps: [
-      `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.`,
-      `Il y a ${n} valeurs, donc la médiane est la ${(n + 1) / 2}\\text{e} valeur, c'est-à-dire ${answer}.`,
+      { type: "calcul", text: `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.` },
+      { type: "resultat", text: `Il y a ${n} valeurs, donc la médiane est la ${(n + 1) / 2}\\text{e} valeur, c'est-à-dire ${answer}.` },
     ],
   };
 }
@@ -109,9 +109,9 @@ function genMedianePairNumeric() {
     answer,
     tolerance: 0.02,
     steps: [
-      `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.`,
-      `Il y a ${n} valeurs, donc une médiane se situe entre la ${n / 2}\\text{e} et la ${n / 2 + 1}\\text{e} valeur, c'est-à-dire entre ${v1} et ${v2}.`,
-      `\\dfrac{${v1} + ${v2}}{2} = ${fr(answer)}`,
+      { type: "calcul", text: `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.` },
+      { type: "calcul", text: `Il y a ${n} valeurs, donc une médiane se situe entre la ${n / 2}\\text{e} et la ${n / 2 + 1}\\text{e} valeur, c'est-à-dire entre ${v1} et ${v2}.` },
+      { type: "resultat", text: `\\dfrac{${v1} + ${v2}}{2} = ${fr(answer)}` },
     ],
   };
 }
@@ -128,7 +128,10 @@ function genEtendueNumeric() {
     chapter: "Statistiques — Paramètres statistiques",
     prompt: `Calcule l'étendue de la série suivante : ${values.join(" ; ")}.`,
     answer,
-    steps: [`La valeur maximale est ${max} et la valeur minimale est ${min}.`, `Étendue : ${max} - ${min} = ${answer}`],
+    steps: [
+      { type: "donnee", text: `La valeur maximale est ${max} et la valeur minimale est ${min}.` },
+      { type: "resultat", text: `Étendue : ${max} - ${min} = ${answer}` },
+    ],
   };
 }
 
@@ -145,9 +148,9 @@ function genValeurManquanteMoyenneNumeric() {
     prompt: `Une série de ${n} valeurs est : ${autres.join(" ; ")} et x. Sachant que la moyenne de cette série est ${fr(moyenne)}, détermine la valeur de x.`,
     answer: xSol,
     steps: [
-      `\\dfrac{${autres.join(" + ")} + x}{${n}} = ${fr(moyenne)}`,
-      `${autres.reduce((a, b) => a + b, 0)} + x = ${fr(moyenne)} \\times ${n} = ${fr(somme)}`,
-      `x = ${fr(somme)} - ${autres.reduce((a, b) => a + b, 0)} = ${xSol}`,
+      { type: "donnee", text: `\\dfrac{${autres.join(" + ")} + x}{${n}} = ${fr(moyenne)}` },
+      { type: "calcul", text: `${autres.reduce((a, b) => a + b, 0)} + x = ${fr(moyenne)} \\times ${n} = ${fr(somme)}` },
+      { type: "resultat", text: `x = ${fr(somme)} - ${autres.reduce((a, b) => a + b, 0)} = ${xSol}` },
     ],
   };
 }
@@ -174,7 +177,11 @@ function genComparerSeriesQCM() {
     answer = meilleur;
     options = shuffle([prenom1, prenom2]);
     question = `Qui a la meilleure moyenne ?`;
-    steps = [`Moyenne de ${prenom1} : \\dfrac{${notes1.join(" + ")}}{${n}} = ${fr(moy1)}`, `Moyenne de ${prenom2} : \\dfrac{${notes2.join(" + ")}}{${n}} = ${fr(moy2f)}`, `${meilleur} a la meilleure moyenne.`];
+    steps = [
+      { type: "calcul", text: `Moyenne de ${prenom1} : \\dfrac{${notes1.join(" + ")}}{${n}} = ${fr(moy1)}` },
+      { type: "calcul", text: `Moyenne de ${prenom2} : \\dfrac{${notes2.join(" + ")}}{${n}} = ${fr(moy2f)}` },
+      { type: "resultat", text: `${meilleur} a la meilleure moyenne.` },
+    ];
   } else {
     if (etendue1 === etendue2) notes2[0] = Math.min(...notes2) === notes2[0] ? notes2[0] + 1 : notes2[0] - 1;
     const etendue2f = Math.max(...notes2) - Math.min(...notes2);
@@ -182,7 +189,11 @@ function genComparerSeriesQCM() {
     answer = plusRegulier;
     options = shuffle([prenom1, prenom2]);
     question = `Qui est le plus régulier (l'étendue la plus faible) ?`;
-    steps = [`Étendue de ${prenom1} : ${Math.max(...notes1)} - ${Math.min(...notes1)} = ${etendue1}`, `Étendue de ${prenom2} : ${Math.max(...notes2)} - ${Math.min(...notes2)} = ${etendue2f}`, `${plusRegulier} est le plus régulier.`];
+    steps = [
+      { type: "calcul", text: `Étendue de ${prenom1} : ${Math.max(...notes1)} - ${Math.min(...notes1)} = ${etendue1}` },
+      { type: "calcul", text: `Étendue de ${prenom2} : ${Math.max(...notes2)} - ${Math.min(...notes2)} = ${etendue2f}` },
+      { type: "resultat", text: `${plusRegulier} est le plus régulier.` },
+    ];
   }
   return {
     type: "qcm",
@@ -209,7 +220,7 @@ function genAngleDiagrammeCirculaireNumeric() {
     prompt: `Dans une classe de ${total} élèves, ${parts[i]} pratiquent un sport donné. Pour représenter cette répartition avec un diagramme circulaire, quel doit être l'angle (en degrés, arrondi au dixième) du secteur correspondant à ce sport ?`,
     answer: angle,
     tolerance: 0.2,
-    steps: [`\\dfrac{${parts[i]} \\times 360}{${total}} \\approx ${fr(angle)}\\text{°}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${parts[i]} \\times 360}{${total}} \\approx ${fr(angle)}\\text{°}` }],
   };
 }
 
@@ -229,7 +240,10 @@ function genLectureTableauEffectifsQCM() {
     prompt: `Voici un tableau d'effectifs pour un sondage sur le(la) ${objet} : ${noms.map((c, j) => `${c} (${effectifs[j]})`).join(", ")}. Quelle catégorie a le ${askMax ? "plus grand" : "plus petit"} effectif ?`,
     answer: noms[idx],
     options: shuffle([...noms]),
-    steps: [`Effectif total : ${total}.`, `${askMax ? "Le plus grand effectif" : "Le plus petit effectif"} est ${effectifs[idx]}, obtenu pour la catégorie ${noms[idx]}.`],
+    steps: [
+      { type: "donnee", text: `Effectif total : ${total}.` },
+      { type: "resultat", text: `${askMax ? "Le plus grand effectif" : "Le plus petit effectif"} est ${effectifs[idx]}, obtenu pour la catégorie ${noms[idx]}.` },
+    ],
   };
 }
 
@@ -257,8 +271,8 @@ function genRegroupementClassesQCM() {
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : l'amplitude d'une classe [a ; b[ est b - a.`,
-      valid ? `Chaque classe a bien une amplitude de ${amplitude}.` : `Au moins une classe n'a pas une amplitude de ${amplitude} : le regroupement n'est pas cohérent.`,
+      { type: "regle", text: `Rappel : l'amplitude d'une classe [a ; b[ est b - a.` },
+      { type: "resultat", text: valid ? `Chaque classe a bien une amplitude de ${amplitude}.` : `Au moins une classe n'a pas une amplitude de ${amplitude} : le regroupement n'est pas cohérent.` },
     ],
   };
 }
@@ -283,7 +297,10 @@ function genMoyenneClasseNumeric() {
     prompt: `Voici un tableau d'effectifs par classes : ${classesTexte}. En utilisant la valeur centrale de chaque classe, calcule la moyenne de cette série (arrondie au dixième).`,
     answer,
     tolerance: 0.15,
-    steps: [`On utilise la valeur centrale de chaque classe : ${centres.map(fr).join(", ")}.`, `\\dfrac{${detail}}{${total}} = \\dfrac{${fr(sommeProduits)}}{${total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `On utilise la valeur centrale de chaque classe : ${centres.map(fr).join(", ")}.` },
+      { type: "resultat", text: `\\dfrac{${detail}}{${total}} = \\dfrac{${fr(sommeProduits)}}{${total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -314,7 +331,10 @@ function genMedianeClasseQCM() {
     prompt: `Voici un tableau d'effectifs par classes : ${classesTexte}. Dans quelle classe se situe la médiane de cette série ?`,
     answer: options[classeMediane],
     options,
-    steps: [`L'effectif total est ${total}, donc la médiane se situe autour de la ${rangMedian}\\text{e} valeur.`, `En cumulant les effectifs classe par classe, on atteint ce rang dans la classe ${options[classeMediane]}.`],
+    steps: [
+      { type: "calcul", text: `L'effectif total est ${total}, donc la médiane se situe autour de la ${rangMedian}\\text{e} valeur.` },
+      { type: "resultat", text: `En cumulant les effectifs classe par classe, on atteint ce rang dans la classe ${options[classeMediane]}.` },
+    ],
   };
 }
 
@@ -330,7 +350,7 @@ function genFrequenceNumeric() {
     prompt: `Dans une série de ${total} valeurs, une valeur donnée apparaît ${effectif} fois. Calcule sa fréquence en pourcentage (arrondie au dixième).`,
     answer: freq,
     tolerance: 0.2,
-    steps: [`\\dfrac{${effectif}}{${total}} \\times 100 \\approx ${fr(freq)}\\ \\%`],
+    steps: [{ type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 100 \\approx ${fr(freq)}\\ \\%` }],
   };
 }
 
@@ -351,7 +371,10 @@ function genFormuleTableurQCM() {
     prompt: `Dans un tableur, les ${n} valeurs d'une série sont saisies dans les cellules ${colonne}2 à ${colonne}${n + 1}. Quelle formule permet de calculer leur moyenne ?`,
     answer: bonneFormule,
     options,
-    steps: [`La fonction MOYENNE calcule directement la moyenne d'une plage de cellules.`, `Il faut donc saisir ${bonneFormule}.`],
+    steps: [
+      { type: "regle", text: `La fonction MOYENNE calcule directement la moyenne d'une plage de cellules.` },
+      { type: "resultat", text: `Il faut donc saisir ${bonneFormule}.` },
+    ],
   };
 }
 
@@ -373,9 +396,9 @@ function genMoyenneMedianeExtremeQCM() {
     answer: "La moyenne",
     options: ["La moyenne", "La médiane"],
     steps: [
-      `Moyenne : \\dfrac{${values.join(" + ")}}{${n}} \\approx ${fr(moyenne)}`,
-      `Une médiane : ${fr(mediane)}`,
-      `La moyenne est beaucoup plus sensible aux valeurs extrêmes que la médiane, qui ne dépend que du rang des valeurs.`,
+      { type: "calcul", text: `Moyenne : \\dfrac{${values.join(" + ")}}{${n}} \\approx ${fr(moyenne)}` },
+      { type: "calcul", text: `Une médiane : ${fr(mediane)}` },
+      { type: "resultat", text: `La moyenne est beaucoup plus sensible aux valeurs extrêmes que la médiane, qui ne dépend que du rang des valeurs.` },
     ],
   };
 }
@@ -429,6 +452,7 @@ export default {
     id: "statistiques-troisieme",
     title: "Statistiques",
     description: "Moyenne, moyenne pondérée, médiane, étendue, fréquence, lecture de tableaux d'effectifs, angle d'un diagramme circulaire, tableaux à classes et comparaison de séries.",
+    pourquoi: "Moyenne, médiane et fréquence permettent de résumer et comparer des séries de données réelles, comme dans une étude statistique.",
     level: "troisieme",
     free: false,
     order: 9,

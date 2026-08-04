@@ -177,6 +177,7 @@ export default {
     id: "statistiques-deux-variables-premiere-techno",
     title: "Statistiques à deux variables",
     description: "Nuage de points, point moyen, ajustement affine, interpolation et extrapolation.",
+    pourquoi: "Ajuster un nuage de points par une droite, c'est ce qui permet de faire des prévisions à partir de données observées : ventes, météo, croissance.",
     level: "premiere-techno",
     order: 5,
   },

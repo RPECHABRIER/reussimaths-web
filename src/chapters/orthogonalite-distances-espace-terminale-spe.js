@@ -402,6 +402,7 @@ export default {
     id: "orthogonalite-distances-espace-terminale-spe",
     title: "Orthogonalité et distances dans l'espace",
     description: "Produit scalaire de l'espace, orthogonalité de vecteurs, vecteur normal à un plan, équation d'un plan, distance d'un point à un plan, colinéarité de vecteurs normaux, positions relatives de droites et de plans.",
+    pourquoi: "Le produit scalaire dans l'espace permet de calculer des distances et des angles en 3D : architecture, jeux vidéo, robotique.",
     level: "terminale-spe",
     free: false,
     order: 4,

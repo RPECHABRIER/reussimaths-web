@@ -342,6 +342,7 @@ export default {
     id: "variations-globales-premiere-non-spe",
     title: "Variations globales",
     description: "Fonction dérivée (fonctions affines, trinômes, fonction cube), recherche des tangentes horizontales, lien entre le signe de la dérivée et le sens de variation, extremums, linéarité de la dérivation.",
+    pourquoi: "Le nombre dérivé et la fonction dérivée permettent de savoir à quel rythme une quantité évolue à un instant donné : vitesse, croissance, rentabilité.",
     level: "premiere-non-spe",
     free: false,
     order: 7,

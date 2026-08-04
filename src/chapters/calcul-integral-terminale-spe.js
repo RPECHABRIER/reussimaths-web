@@ -307,6 +307,7 @@ export default {
     id: "calcul-integral-terminale-spe",
     title: "Calcul intégral",
     description: "Intégrale définie, linéarité, relation de Chasles, aire sous une courbe et entre deux courbes.",
+    pourquoi: "Calculer une aire sous une courbe, c'est ce qui permet d'estimer une quantité totale (distance, volume, revenu cumulé) à partir d'une vitesse ou d'un débit qui varie dans le temps.",
     level: "terminale-spe",
     free: false,
     order: 12,

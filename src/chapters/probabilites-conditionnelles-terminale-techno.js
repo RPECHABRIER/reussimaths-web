@@ -167,6 +167,7 @@ export default {
     id: "probabilites-conditionnelles-terminale-techno",
     title: "Probabilités conditionnelles et probabilités totales",
     description: "Partition de l'univers, formule des probabilités totales, arbres pondérés à plusieurs niveaux.",
+    pourquoi: "La formule des probabilités totales permet de calculer un risque global à partir de sous-populations différentes — assurance, contrôle qualité, épidémiologie.",
     level: "terminale-techno",
     order: 7,
   },

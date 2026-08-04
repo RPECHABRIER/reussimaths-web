@@ -46,11 +46,11 @@ function genProgrammeCalculPointFixeNumeric() {
     prompt: `On considère le programme de calcul suivant : 1. Choisir un nombre. 2. Lui ajouter ${a}. 3. Diviser le résultat obtenu par ${b}. 4. Retirer ${c} au résultat. Pour quel nombre choisi au départ obtient-on, en sortie du programme, le nombre choisi initialement ?`,
     answer: xSol,
     steps: [
-      `\\dfrac{x + ${a}}{${b}} - ${c} = x`,
-      `x + ${a} = ${b}(x + ${c})`,
-      `x + ${a} = ${b}x + ${b * c}`,
-      `${a} - ${b * c} = ${b}x - x = ${b - 1}x`,
-      `x = ${xSol}`,
+      { type: "donnee", text: `\\dfrac{x + ${a}}{${b}} - ${c} = x` },
+      { type: "calcul", text: `x + ${a} = ${b}(x + ${c})` },
+      { type: "calcul", text: `x + ${a} = ${b}x + ${b * c}` },
+      { type: "calcul", text: `${a} - ${b * c} = ${b}x - x = ${b - 1}x` },
+      { type: "resultat", text: `x = ${xSol}` },
     ],
   };
 }
@@ -68,9 +68,9 @@ function genFonctionTropheesNumeric() {
     prompt: `${prenom} a ${base} trophée(s) au départ dans un jeu vidéo, et gagne ${fr(inc)} trophée(s) supplémentaire(s) à chaque connexion. Après combien de connexions ${prenom} obtient-il ${fr(N)} trophées ?`,
     answer: x,
     steps: [
-      `N = ${base} + ${fr(inc)} \\times x`,
-      `${fr(N)} = ${base} + ${fr(inc)} \\times x`,
-      `x = \\dfrac{${fr(N)} - ${base}}{${fr(inc)}} = ${x}`,
+      { type: "regle", text: `N = ${base} + ${fr(inc)} \\times x` },
+      { type: "calcul", text: `${fr(N)} = ${base} + ${fr(inc)} \\times x` },
+      { type: "resultat", text: `x = \\dfrac{${fr(N)} - ${base}}{${fr(inc)}} = ${x}` },
     ],
   };
 }
@@ -86,7 +86,7 @@ function genDiagrammeCirculaireAngleNumeric() {
     prompt: `Lors d'un sondage, ${count} personnes sur ${T} interrogées ont répondu « oui » à une question. Sur un diagramme circulaire, quelle est la mesure de l'angle correspondant à cette réponse, en degrés (arrondie au dixième si nécessaire) ?`,
     answer: angle,
     tolerance: 0.5,
-    steps: [`\\dfrac{${count}}{${T}} \\times 360 \\approx ${fr(angle)}°`],
+    steps: [{ type: "calcul", text: `\\dfrac{${count}}{${T}} \\times 360 \\approx ${fr(angle)}°` }],
   };
 }
 
@@ -103,9 +103,9 @@ function genTrianglesEgauxHypotenuseNumeric() {
     prompt: `ABC et DEF sont deux triangles égaux (superposables), avec ABC rectangle en B tel que AB = ${leg1} cm et AC = ${hyp} cm (hypoténuse). Le côté [EF] du triangle DEF correspond au côté [BC] du triangle ABC. Calcule la longueur EF, en cm.`,
     answer: leg2,
     steps: [
-      `BC^2 = AC^2 - AB^2 = ${hyp}^2 - ${leg1}^2 = ${hyp * hyp} - ${leg1 * leg1} = ${leg2 * leg2}`,
-      `BC = \\sqrt{${leg2 * leg2}} = ${leg2}`,
-      `\\text{Les triangles étant égaux, EF} = BC = ${leg2}\\ cm`,
+      { type: "calcul", text: `BC^2 = AC^2 - AB^2 = ${hyp}^2 - ${leg1}^2 = ${hyp * hyp} - ${leg1 * leg1} = ${leg2 * leg2}` },
+      { type: "calcul", text: `BC = \\sqrt{${leg2 * leg2}} = ${leg2}` },
+      { type: "resultat", text: `\\text{Les triangles étant égaux, EF} = BC = ${leg2}\\ cm` },
     ],
   };
 }
@@ -124,7 +124,7 @@ function genPerimetreTriangleFractionNumeric() {
     prompt: `Un triangle est rectangle, avec des côtés de l'angle droit mesurant ${fr(leg1)} cm et ${fr(leg2)} cm, et une hypoténuse de ${fr(hyp)} cm. Calcule le périmètre de ce triangle, en cm.`,
     answer: perimetre,
     tolerance: 0.02,
-    steps: [`P = ${fr(leg1)} + ${fr(leg2)} + ${fr(hyp)} = ${fr(perimetre)}\\ cm`],
+    steps: [{ type: "calcul", text: `P = ${fr(leg1)} + ${fr(leg2)} + ${fr(hyp)} = ${fr(perimetre)}\\ cm` }],
   };
 }
 
@@ -143,7 +143,10 @@ function genComparerCalculsIdentiteQCM() {
     prompt: `Calcul 1 : \\(${a} \\times (${b} + ${c})\\). Calcul 2 : \\(${a} \\times ${b2} + ${a} \\times ${c}\\). Ces deux calculs donnent-ils le même résultat ?`,
     answer: isSame ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\text{Calcul 1} = ${a} \\times ${b + c} = ${expr1Val}`, `\\text{Calcul 2} = ${a * b2} + ${a * c} = ${expr2Val}`],
+    steps: [
+      { type: "calcul", text: `\\text{Calcul 1} = ${a} \\times ${b + c} = ${expr1Val}` },
+      { type: "calcul", text: `\\text{Calcul 2} = ${a * b2} + ${a * c} = ${expr2Val}` },
+    ],
   };
 }
 
@@ -163,7 +166,10 @@ function genProbabiliteDeuxDesSommeNumeric() {
     prompt: `Alix lance deux dés équilibrés à six faces : le premier a ses faces numérotées de 1 à 6, le second a ses faces numérotées de -1 à -6. Elle gagne si la somme des deux dés obtenus est supérieure ou égale à ${t}. Quelle est la probabilité qu'elle gagne, sous forme décimale (arrondie au millième) ?`,
     answer: prob,
     tolerance: 0.001,
-    steps: [`\\text{Il y a } ${count} \\text{ issues favorables sur } 36.`, `P = \\dfrac{${count}}{36} \\approx ${fr(prob)}`],
+    steps: [
+      { type: "donnee", text: `\\text{Il y a } ${count} \\text{ issues favorables sur } 36.` },
+      { type: "resultat", text: `P = \\dfrac{${count}}{36} \\approx ${fr(prob)}` },
+    ],
   };
 }
 
@@ -183,9 +189,14 @@ function genThalesReciproqueContexteQCM() {
     answer: isParallel ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `\\dfrac{AB}{AC} = \\dfrac{${AB}}{${AC}}`,
-      `\\dfrac{AD}{AE} = \\dfrac{${AD}}{${AE}}`,
-      isParallel ? "Les quotients sont égaux : d'après la réciproque du théorème de Thalès, les droites sont parallèles." : "Les quotients sont différents : les droites ne sont pas parallèles.",
+      { type: "calcul", text: `\\dfrac{AB}{AC} = \\dfrac{${AB}}{${AC}}` },
+      { type: "calcul", text: `\\dfrac{AD}{AE} = \\dfrac{${AD}}{${AE}}` },
+      {
+        type: "resultat",
+        text: isParallel
+          ? "Les quotients sont égaux : d'après la réciproque du théorème de Thalès, les droites sont parallèles."
+          : "Les quotients sont différents : les droites ne sont pas parallèles.",
+      },
     ],
   };
 }
@@ -211,8 +222,8 @@ function genAjouterValeurMedianeNumeric() {
     answer: M,
     tolerance: 0.05,
     steps: [
-      `\\text{En triant : } ${below.sort((a, b) => a - b).map(fr).join(" ; ")} < ${fr(M)} < ${above.sort((a, b) => a - b).map(fr).join(" ; ")}`,
-      `\\text{En ajoutant } ${fr(M)}\\text{, la série triée compte 7 valeurs, dont la 4}^e\\text{ (médiane) est } ${fr(M)}.`,
+      { type: "donnee", text: `\\text{En triant : } ${below.sort((a, b) => a - b).map(fr).join(" ; ")} < ${fr(M)} < ${above.sort((a, b) => a - b).map(fr).join(" ; ")}` },
+      { type: "resultat", text: `\\text{En ajoutant } ${fr(M)}\\text{, la série triée compte 7 valeurs, dont la 4}^e\\text{ (médiane) est } ${fr(M)}.` },
     ],
   };
 }
@@ -230,9 +241,9 @@ function genAjouterValeurMoyenneNumeric() {
     answer: x,
     tolerance: 0.05,
     steps: [
-      `\\text{Somme actuelle} = ${fr(roundTo(S, 1))}`,
-      `\\dfrac{\\text{Somme} + x}{${values.length + 1}} = ${Mtarget}`,
-      `x = ${Mtarget} \\times ${values.length + 1} - ${fr(roundTo(S, 1))} = ${fr(x)}`,
+      { type: "donnee", text: `\\text{Somme actuelle} = ${fr(roundTo(S, 1))}` },
+      { type: "regle", text: `\\dfrac{\\text{Somme} + x}{${values.length + 1}} = ${Mtarget}` },
+      { type: "resultat", text: `x = ${Mtarget} \\times ${values.length + 1} - ${fr(roundTo(S, 1))} = ${fr(x)}` },
     ],
   };
 }
@@ -249,7 +260,10 @@ function genVolumePyramideAireDonneeNumeric() {
     prompt: `Une pyramide a une base carrée de côté ${fr(cote)} cm (donc d'aire ${fr(aire)} cm²) et une hauteur de ${hauteur} cm. Calcule son volume, en cm³ (arrondi au centième).`,
     answer: volume,
     tolerance: 0.05,
-    steps: [`\\text{Aire de la base} = ${fr(cote)}^2 = ${fr(aire)}\\ cm^2`, `V = \\dfrac{${fr(aire)} \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3`],
+    steps: [
+      { type: "calcul", text: `\\text{Aire de la base} = ${fr(cote)}^2 = ${fr(aire)}\\ cm^2` },
+      { type: "resultat", text: `V = \\dfrac{${fr(aire)} \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3` },
+    ],
   };
 }
 
@@ -266,8 +280,8 @@ function genPatronConeAngleSecteurNumeric() {
     answer: angle,
     tolerance: 0.5,
     steps: [
-      `\\text{génératrice} = \\sqrt{${rayon}^2 + ${hauteur}^2} \\approx ${fr(generatrice)}\\ cm`,
-      `\\text{angle} = 360 \\times \\dfrac{${rayon}}{${fr(generatrice)}} \\approx ${fr(angle)}°`,
+      { type: "calcul", text: `\\text{génératrice} = \\sqrt{${rayon}^2 + ${hauteur}^2} \\approx ${fr(generatrice)}\\ cm` },
+      { type: "resultat", text: `\\text{angle} = 360 \\times \\dfrac{${rayon}}{${fr(generatrice)}} \\approx ${fr(angle)}°` },
     ],
   };
 }
@@ -282,8 +296,8 @@ function genTranslationQuadrilatereContexteQCM() {
     answer: "Parallélogramme",
     options: ["Parallélogramme", "Rectangle", "Losange", "Rien de particulier"],
     steps: [
-      `\\text{Une translation conserve les longueurs et le parallélisme : } (${A}${A}') // (${B}${B}') \\text{ et } ${A}${A}' = ${B}${B}'.`,
-      `\\text{Donc } ${A}${A}'${B}'${B} \\text{ est un parallélogramme.}`,
+      { type: "regle", text: `\\text{Une translation conserve les longueurs et le parallélisme : } (${A}${A}') // (${B}${B}') \\text{ et } ${A}${A}' = ${B}${B}'.` },
+      { type: "resultat", text: `\\text{Donc } ${A}${A}'${B}'${B} \\text{ est un parallélogramme.}` },
     ],
   };
 }
@@ -301,7 +315,7 @@ function genPythagoreFormuleRearrangementQCM() {
     prompt: `${X}${R}${Y} est un triangle rectangle en ${R}. Laquelle de ces formules permet de déterminer ${R}${X} ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`\\text{Dans un triangle rectangle en } ${R}\\text{, l'hypoténuse est } [${X}${Y}]\\text{, donc } ${X}${Y}^2 = ${R}${X}^2 + ${R}${Y}^2.`],
+    steps: [{ type: "regle", text: `\\text{Dans un triangle rectangle en } ${R}\\text{, l'hypoténuse est } [${X}${Y}]\\text{, donc } ${X}${Y}^2 = ${R}${X}^2 + ${R}${Y}^2.` }],
   };
 }
 
@@ -323,7 +337,7 @@ function genFactorisationExpressionQCM() {
     prompt: `L'expression \\(${a}x + ${b}\\) peut être factorisée sous la forme :`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`${a}x + ${b} = ${gcdVal}(${m}x + ${n})\\ \\text{ car } ${a} = ${gcdVal} \\times ${m}\\ \\text{ et } ${b} = ${gcdVal} \\times ${n}.`],
+    steps: [{ type: "calcul", text: `${a}x + ${b} = ${gcdVal}(${m}x + ${n})\\ \\text{ car } ${a} = ${gcdVal} \\times ${m}\\ \\text{ et } ${b} = ${gcdVal} \\times ${n}.` }],
   };
 }
 
@@ -376,6 +390,7 @@ export default {
     id: "exercices-fin-annee-quatrieme",
     title: "Exercices de fin d'année",
     description: "Révision finale mélangeant les notions de tous les chapitres de 4e (exercices transversaux).",
+    pourquoi: "Ce brassage de fin d'année permet de vérifier que toutes les notions de 4e sont bien consolidées avant d'aborder la 3e.",
     level: "quatrieme",
     free: false,
     order: 16,

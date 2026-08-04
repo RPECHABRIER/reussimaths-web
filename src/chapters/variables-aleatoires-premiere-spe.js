@@ -326,6 +326,7 @@ export default {
     id: "variables-aleatoires-premiere-spe",
     title: "Variables aléatoires réelles",
     description: "Loi de probabilité, espérance, variance, écart-type, linéarité de l'espérance, jeu équitable.",
+    pourquoi: "Une variable aléatoire et son espérance permettent de prévoir le résultat moyen d'un jeu, d'un pari ou d'une décision incertaine.",
     level: "premiere-spe",
     order: 11,
   },

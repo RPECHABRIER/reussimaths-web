@@ -270,6 +270,7 @@ export default {
     id: "reviser-les-bases-seconde",
     title: "Réviser les bases",
     description: "Un tour d'horizon des savoir-faire de 3e indispensables pour aborder les nouveaux chapitres de 2nde.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "seconde",
     free: true,
     order: 0,

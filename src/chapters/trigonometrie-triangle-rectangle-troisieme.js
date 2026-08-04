@@ -55,8 +55,8 @@ function genIdentifierRatioQCM() {
     answer: connus.ratio,
     options: ["Cosinus", "Sinus", "Tangente"],
     steps: [
-      `Rappel : cosinus = \\dfrac{\\text{adjacent}}{\\text{hypoténuse}}, \\ \\sin = \\dfrac{\\text{opposé}}{\\text{hypoténuse}}, \\ \\tan = \\dfrac{\\text{opposé}}{\\text{adjacent}}.`,
-      `Ici, on connaît ${connus.cotes} : on utilise ${connus.ratio.toLowerCase()}.`,
+      { type: "regle", text: `Rappel : cosinus = \\dfrac{\\text{adjacent}}{\\text{hypoténuse}}, \\ \\sin = \\dfrac{\\text{opposé}}{\\text{hypoténuse}}, \\ \\tan = \\dfrac{\\text{opposé}}{\\text{adjacent}}.` },
+      { type: "resultat", text: `Ici, on connaît ${connus.cotes} : on utilise ${connus.ratio.toLowerCase()}.` },
     ],
   };
 }
@@ -81,7 +81,10 @@ function genIdentifierCoteQCM() {
     prompt: `${s1}${s2}${s3} est un triangle rectangle en ${s1}. Par rapport à l'angle \\(\\widehat{${s2}}\\), quel est le ${cible} ?`,
     answer: reponseFinale,
     options,
-    steps: [`Le triangle est rectangle en ${s1}, donc l'hypoténuse est ${hyp}.`, `Par rapport à l'angle en ${s2}, le côté adjacent est ${adj} et le côté opposé est ${opp}.`],
+    steps: [
+      { type: "regle", text: `Le triangle est rectangle en ${s1}, donc l'hypoténuse est ${hyp}.` },
+      { type: "resultat", text: `Par rapport à l'angle en ${s2}, le côté adjacent est ${adj} et le côté opposé est ${opp}.` },
+    ],
   };
 }
 
@@ -100,8 +103,14 @@ function genCalculerLongueurCosinusNumeric() {
     answer: askHyp ? roundTo(hyp, 1) : adj,
     tolerance: 0.15,
     steps: askHyp
-      ? [`\\cos(${angle}°) = \\dfrac{${fr(adj)}}{\\text{hyp}}`, `\\text{hyp} = \\dfrac{${fr(adj)}}{\\cos(${angle}°)} \\approx ${fr(roundTo(hyp, 1))}`]
-      : [`\\cos(${angle}°) = \\dfrac{\\text{adj}}{${hyp}}`, `\\text{adj} = ${hyp} \\times \\cos(${angle}°) \\approx ${fr(adj)}`],
+      ? [
+          { type: "regle", text: `\\cos(${angle}°) = \\dfrac{${fr(adj)}}{\\text{hyp}}` },
+          { type: "resultat", text: `\\text{hyp} = \\dfrac{${fr(adj)}}{\\cos(${angle}°)} \\approx ${fr(roundTo(hyp, 1))}` },
+        ]
+      : [
+          { type: "regle", text: `\\cos(${angle}°) = \\dfrac{\\text{adj}}{${hyp}}` },
+          { type: "resultat", text: `\\text{adj} = ${hyp} \\times \\cos(${angle}°) \\approx ${fr(adj)}` },
+        ],
   };
 }
 
@@ -120,8 +129,14 @@ function genCalculerLongueurSinusNumeric() {
     answer: askHyp ? roundTo(hyp, 1) : opp,
     tolerance: 0.15,
     steps: askHyp
-      ? [`\\sin(${angle}°) = \\dfrac{${fr(opp)}}{\\text{hyp}}`, `\\text{hyp} = \\dfrac{${fr(opp)}}{\\sin(${angle}°)} \\approx ${fr(roundTo(hyp, 1))}`]
-      : [`\\sin(${angle}°) = \\dfrac{\\text{opp}}{${hyp}}`, `\\text{opp} = ${hyp} \\times \\sin(${angle}°) \\approx ${fr(opp)}`],
+      ? [
+          { type: "regle", text: `\\sin(${angle}°) = \\dfrac{${fr(opp)}}{\\text{hyp}}` },
+          { type: "resultat", text: `\\text{hyp} = \\dfrac{${fr(opp)}}{\\sin(${angle}°)} \\approx ${fr(roundTo(hyp, 1))}` },
+        ]
+      : [
+          { type: "regle", text: `\\sin(${angle}°) = \\dfrac{\\text{opp}}{${hyp}}` },
+          { type: "resultat", text: `\\text{opp} = ${hyp} \\times \\sin(${angle}°) \\approx ${fr(opp)}` },
+        ],
   };
 }
 
@@ -140,8 +155,14 @@ function genCalculerLongueurTangenteNumeric() {
     answer: askAdj ? roundTo(adj, 1) : opp,
     tolerance: 0.15,
     steps: askAdj
-      ? [`\\tan(${angle}°) = \\dfrac{${fr(opp)}}{\\text{adj}}`, `\\text{adj} = \\dfrac{${fr(opp)}}{\\tan(${angle}°)} \\approx ${fr(roundTo(adj, 1))}`]
-      : [`\\tan(${angle}°) = \\dfrac{\\text{opp}}{${adj}}`, `\\text{opp} = ${adj} \\times \\tan(${angle}°) \\approx ${fr(opp)}`],
+      ? [
+          { type: "regle", text: `\\tan(${angle}°) = \\dfrac{${fr(opp)}}{\\text{adj}}` },
+          { type: "resultat", text: `\\text{adj} = \\dfrac{${fr(opp)}}{\\tan(${angle}°)} \\approx ${fr(roundTo(adj, 1))}` },
+        ]
+      : [
+          { type: "regle", text: `\\tan(${angle}°) = \\dfrac{\\text{opp}}{${adj}}` },
+          { type: "resultat", text: `\\text{opp} = ${adj} \\times \\tan(${angle}°) \\approx ${fr(opp)}` },
+        ],
   };
 }
 
@@ -156,7 +177,10 @@ function genCalculerAngleArccosNumeric() {
     chapter: "Trigonométrie — Calculer une longueur ou une mesure d'angle",
     prompt: `Dans un triangle rectangle, un angle aigu a un côté adjacent de ${fr(adj)} cm et une hypoténuse de ${hyp} cm. Calcule la mesure de cet angle, arrondie au degré près.`,
     answer,
-    steps: [`\\cos(\\widehat{x}) = \\dfrac{${fr(adj)}}{${hyp}}`, `\\widehat{x} \\approx ${answer}°`],
+    steps: [
+      { type: "regle", text: `\\cos(\\widehat{x}) = \\dfrac{${fr(adj)}}{${hyp}}` },
+      { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
+    ],
   };
 }
 
@@ -171,7 +195,10 @@ function genCalculerAngleArcsinNumeric() {
     chapter: "Trigonométrie — Calculer une longueur ou une mesure d'angle",
     prompt: `Dans un triangle rectangle, un angle aigu a un côté opposé de ${fr(opp)} cm et une hypoténuse de ${hyp} cm. Calcule la mesure de cet angle, arrondie au degré près.`,
     answer,
-    steps: [`\\sin(\\widehat{x}) = \\dfrac{${fr(opp)}}{${hyp}}`, `\\widehat{x} \\approx ${answer}°`],
+    steps: [
+      { type: "regle", text: `\\sin(\\widehat{x}) = \\dfrac{${fr(opp)}}{${hyp}}` },
+      { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
+    ],
   };
 }
 
@@ -186,7 +213,10 @@ function genCalculerAngleArctanNumeric() {
     chapter: "Trigonométrie — Calculer une longueur ou une mesure d'angle",
     prompt: `Dans un triangle rectangle, un angle aigu a un côté opposé de ${fr(opp)} cm et un côté adjacent de ${adj} cm. Calcule la mesure de cet angle, arrondie au degré près.`,
     answer,
-    steps: [`\\tan(\\widehat{x}) = \\dfrac{${fr(opp)}}{${adj}}`, `\\widehat{x} \\approx ${answer}°`],
+    steps: [
+      { type: "regle", text: `\\tan(\\widehat{x}) = \\dfrac{${fr(opp)}}{${adj}}` },
+      { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
+    ],
   };
 }
 
@@ -202,8 +232,8 @@ function genValeurTrigoValideQCM() {
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : dans un triangle rectangle, le cosinus et le sinus d'un angle aigu sont toujours compris strictement entre 0 et 1.`,
-      valid ? `C'est bien le cas ici.` : `Ce n'est pas le cas ici.`,
+      { type: "regle", text: `Rappel : dans un triangle rectangle, le cosinus et le sinus d'un angle aigu sont toujours compris strictement entre 0 et 1.` },
+      { type: "resultat", text: valid ? `C'est bien le cas ici.` : `Ce n'est pas le cas ici.` },
     ],
   };
 }
@@ -222,7 +252,10 @@ function genProblemeHauteurTangenteNumeric() {
     prompt: `${prenom} observe le sommet d'un arbre. L'angle entre le sol et sa ligne de visée est de ${angle}°. ${prenom} se trouve à ${distance} m du pied de l'arbre. En supposant que le terrain est horizontal et que la ligne de visée part du sol, calcule la hauteur de l'arbre (arrondie au dixième de mètre).`,
     answer: hauteur,
     tolerance: 0.2,
-    steps: [`\\tan(${angle}°) = \\dfrac{\\text{hauteur}}{${distance}}`, `\\text{hauteur} = ${distance} \\times \\tan(${angle}°) \\approx ${fr(hauteur)}\\text{ m}`],
+    steps: [
+      { type: "regle", text: `\\tan(${angle}°) = \\dfrac{\\text{hauteur}}{${distance}}` },
+      { type: "resultat", text: `\\text{hauteur} = ${distance} \\times \\tan(${angle}°) \\approx ${fr(hauteur)}\\text{ m}` },
+    ],
   };
 }
 
@@ -236,7 +269,10 @@ function genProblemePenteAngleNumeric() {
     chapter: "Trigonométrie — Applications",
     prompt: `La hauteur d'une colline est de ${hauteurColline} m. Un randonneur parcourt ${distanceParcourue} m du bas au sommet de la colline (en suivant la pente). Calcule l'angle de la pente avec l'horizontale (arrondi au degré).`,
     answer,
-    steps: [`\\sin(\\widehat{x}) = \\dfrac{${hauteurColline}}{${distanceParcourue}}`, `\\widehat{x} \\approx ${answer}°`],
+    steps: [
+      { type: "regle", text: `\\sin(\\widehat{x}) = \\dfrac{${hauteurColline}}{${distanceParcourue}}` },
+      { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
+    ],
   };
 }
 
@@ -249,7 +285,10 @@ function genAnglesComplementairesNumeric() {
     chapter: "Trigonométrie — Relations trigonométriques",
     prompt: `Dans un triangle rectangle, un angle aigu mesure ${angle}°. Quelle est la mesure de l'autre angle aigu ?`,
     answer,
-    steps: [`\\text{Les deux angles aigus d'un triangle rectangle sont complémentaires.}`, `90 - ${angle} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Les deux angles aigus d'un triangle rectangle sont complémentaires.}` },
+      { type: "resultat", text: `90 - ${angle} = ${answer}` },
+    ],
   };
 }
 
@@ -265,10 +304,10 @@ function genPythagoreEtTrigoNumeric() {
     prompt: `Un triangle ABC est rectangle en A, avec AB = ${cote1} cm et AC = ${cote2} cm. Calcule d'abord BC (arrondie au centième) grâce au théorème de Pythagore, puis donne la mesure de l'angle \\(\\widehat{ABC}\\) (arrondie au degré près).`,
     answer: angle,
     steps: [
-      `BC^2 = AB^2 + AC^2 = ${cote1}^2 + ${cote2}^2 = ${cote1 * cote1 + cote2 * cote2}`,
-      `BC = \\sqrt{${cote1 * cote1 + cote2 * cote2}} \\approx ${fr(hyp)}\\text{ cm}`,
-      `\\tan(\\widehat{ABC}) = \\dfrac{AC}{AB} = \\dfrac{${cote2}}{${cote1}}`,
-      `\\widehat{ABC} \\approx ${angle}°`,
+      { type: "calcul", text: `BC^2 = AB^2 + AC^2 = ${cote1}^2 + ${cote2}^2 = ${cote1 * cote1 + cote2 * cote2}` },
+      { type: "calcul", text: `BC = \\sqrt{${cote1 * cote1 + cote2 * cote2}} \\approx ${fr(hyp)}\\text{ cm}` },
+      { type: "regle", text: `\\tan(\\widehat{ABC}) = \\dfrac{AC}{AB} = \\dfrac{${cote2}}{${cote1}}` },
+      { type: "resultat", text: `\\widehat{ABC} \\approx ${angle}°` },
     ],
   };
 }
@@ -284,7 +323,10 @@ function genProblemeHauteurSinusNumeric() {
     prompt: `Une échelle de ${longueurEchelle} m de long est appuyée contre un mur. Elle fait un angle de ${angle}° avec le sol. À quelle hauteur du mur (arrondie au centième de mètre) le sommet de l'échelle touche-t-il le mur ?`,
     answer: hauteur,
     tolerance: 0.03,
-    steps: [`\\sin(${angle}°) = \\dfrac{\\text{hauteur}}{${longueurEchelle}}`, `\\text{hauteur} = ${longueurEchelle} \\times \\sin(${angle}°) \\approx ${fr(hauteur)}\\text{ m}`],
+    steps: [
+      { type: "regle", text: `\\sin(${angle}°) = \\dfrac{\\text{hauteur}}{${longueurEchelle}}` },
+      { type: "resultat", text: `\\text{hauteur} = ${longueurEchelle} \\times \\sin(${angle}°) \\approx ${fr(hauteur)}\\text{ m}` },
+    ],
   };
 }
 
@@ -301,8 +343,8 @@ function genCalculerHypotenuseTrigoNumeric() {
     answer: hyp,
     tolerance: 0.15,
     steps: [
-      useCos ? `\\cos(${angle}°) = \\dfrac{${cote}}{\\text{hyp}}` : `\\sin(${angle}°) = \\dfrac{${cote}}{\\text{hyp}}`,
-      `\\text{hyp} = \\dfrac{${cote}}{${useCos ? "\\cos" : "\\sin"}(${angle}°)} \\approx ${fr(hyp)}`,
+      { type: "regle", text: useCos ? `\\cos(${angle}°) = \\dfrac{${cote}}{\\text{hyp}}` : `\\sin(${angle}°) = \\dfrac{${cote}}{\\text{hyp}}` },
+      { type: "resultat", text: `\\text{hyp} = \\dfrac{${cote}}{${useCos ? "\\cos" : "\\sin"}(${angle}°)} \\approx ${fr(hyp)}` },
     ],
   };
 }
@@ -356,6 +398,7 @@ export default {
     id: "trigonometrie-triangle-rectangle-troisieme",
     title: "Trigonométrie dans le triangle rectangle",
     description: "Cosinus, sinus et tangente dans un triangle rectangle : identifier les côtés, calculer une longueur ou un angle (arccos, arcsin, arctan), angles complémentaires et problèmes contextualisés (hauteur, pente).",
+    pourquoi: "Cosinus, sinus et tangente permettent de calculer une longueur ou une hauteur inaccessible à partir d'un angle mesuré.",
     level: "troisieme",
     free: false,
     order: 12,

@@ -203,6 +203,7 @@ export default {
     id: "variables-aleatoires-premiere-techno",
     title: "Variables aléatoires",
     description: "Loi de probabilité discrète, loi de Bernoulli et son espérance, fluctuation d'échantillonnage.",
+    pourquoi: "Une variable aléatoire et son espérance permettent de prévoir le résultat moyen d'un jeu, d'un pari ou d'une décision incertaine.",
     level: "premiere-techno",
     order: 8,
   },

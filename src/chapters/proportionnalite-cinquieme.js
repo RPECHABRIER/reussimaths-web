@@ -55,9 +55,13 @@ function genTesterProportionnaliteQuotientsQCM() {
     answer: isProp ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `On compare les quotients : \\dfrac{${fr(b1)}}{${a1}} = ${fr(roundTo(b1 / a1, 3))}` +
-        ` \\text{ et } \\dfrac{${fr(b2)}}{${a2}} = ${fr(roundTo(b2 / a2, 3))}`,
-      isProp ? `Les quotients sont égaux : la situation est proportionnelle.` : `Les quotients sont différents : la situation n'est pas proportionnelle.`,
+      {
+        type: "calcul",
+        text:
+          `On compare les quotients : \\dfrac{${fr(b1)}}{${a1}} = ${fr(roundTo(b1 / a1, 3))}` +
+          ` \\text{ et } \\dfrac{${fr(b2)}}{${a2}} = ${fr(roundTo(b2 / a2, 3))}`,
+      },
+      { type: "resultat", text: isProp ? `Les quotients sont égaux : la situation est proportionnelle.` : `Les quotients sont différents : la situation n'est pas proportionnelle.` },
     ],
   };
 }
@@ -73,7 +77,7 @@ function genCalculerCoefficientNumeric() {
     prompt: `Dans un tableau de proportionnalité, la valeur ${a} correspond à ${fr(b)}. Quel est le coefficient de proportionnalité (de la première à la deuxième ligne) ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}` }],
   };
 }
 
@@ -90,7 +94,10 @@ function genTrouverValeurManquanteNumeric() {
     prompt: `Dans un tableau de proportionnalité, ${a1} correspond à ${fr(b1)}. À combien correspond ${a2} ?`,
     answer,
     tolerance: 0.02,
-    steps: [`Coefficient = ${fr(b1)} \\div ${a1} = ${fr(roundTo(b1 / a1, 3))}`, `${a2} \\times ${fr(roundTo(b1 / a1, 3))} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Coefficient = ${fr(b1)} \\div ${a1} = ${fr(roundTo(b1 / a1, 3))}` },
+      { type: "calcul", text: `${a2} \\times ${fr(roundTo(b1 / a1, 3))} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -108,7 +115,7 @@ function genQuatriemeProportionnelleNumeric() {
     prompt: `Pour ${a} ${objet}, ${p1} paie ${fr(b)} €. Combien ${p1} paierait-${p1[0] === "e" ? "elle" : "il"} pour ${c} ${objet} (au prix proportionnel), arrondi au centième ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${fr(b)} \\div ${a} \\times ${c} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(b)} \\div ${a} \\times ${c} = ${fr(answer)}` }],
   };
 }
 
@@ -125,7 +132,7 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -141,7 +148,10 @@ function genPrixApresRemiseNumeric() {
     prompt: `Un article coûte ${fr(prixInitial)} €. Le commerçant accorde une remise de ${p} %. Quel est le nouveau prix, en € (arrondi au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`Remise = ${fr(prixInitial)} \\times \\dfrac{${p}}{100} \\approx ${fr(remise)}`, `Nouveau prix = ${fr(prixInitial)} - ${fr(remise)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Remise = ${fr(prixInitial)} \\times \\dfrac{${p}}{100} \\approx ${fr(remise)}` },
+      { type: "resultat", text: `Nouveau prix = ${fr(prixInitial)} - ${fr(remise)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -157,7 +167,10 @@ function genPrixApresMajorationNumeric() {
     prompt: `Un produit a un prix hors taxe (HT) de ${fr(prixHT)} €. Le taux de TVA applicable est de ${fr(taux)} %. Quel est le prix toutes taxes comprises (TTC), en € (arrondi au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`TVA = ${fr(prixHT)} \\times \\dfrac{${fr(taux)}}{100} \\approx ${fr(tva)}`, `Prix TTC = ${fr(prixHT)} + ${fr(tva)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `TVA = ${fr(prixHT)} \\times \\dfrac{${fr(taux)}}{100} \\approx ${fr(tva)}` },
+      { type: "resultat", text: `Prix TTC = ${fr(prixHT)} + ${fr(tva)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -172,7 +185,10 @@ function genCalculerTauxReductionNumeric() {
     prompt: `Un article coûtait initialement ${prixInitial} € et coûte maintenant ${fr(prixFinal)} €. Quel est le taux de réduction appliqué, en % ?`,
     answer: p,
     tolerance: 0.5,
-    steps: [`Réduction = ${prixInitial} - ${fr(prixFinal)} = ${fr(roundTo(prixInitial - prixFinal, 2))}`, `Taux = (${fr(roundTo(prixInitial - prixFinal, 2))} \\div ${prixInitial}) \\times 100 = ${p} \\%`],
+    steps: [
+      { type: "calcul", text: `Réduction = ${prixInitial} - ${fr(prixFinal)} = ${fr(roundTo(prixInitial - prixFinal, 2))}` },
+      { type: "resultat", text: `Taux = (${fr(roundTo(prixInitial - prixFinal, 2))} \\div ${prixInitial}) \\times 100 = ${p} \\%` },
+    ],
   };
 }
 
@@ -188,7 +204,7 @@ function genCalculerPourcentageProportionNumeric() {
     prompt: `Sur ${total} ${objet}, ${partie} possèdent un vélo. Quel est le pourcentage de ${objet} possédant un vélo (arrondi au dixième) ?`,
     answer,
     tolerance: 0.1,
-    steps: [`(${partie} \\div ${total}) \\times 100 \\approx ${fr(answer)} \\%`],
+    steps: [{ type: "calcul", text: `(${partie} \\div ${total}) \\times 100 \\approx ${fr(answer)} \\%` }],
   };
 }
 
@@ -206,7 +222,10 @@ function genEchelleDistanceReelleNumeric() {
     prompt: `Sur une carte à l'échelle 1/${echelleN.toLocaleString("fr-FR")}, une distance mesure ${fr(distanceCarte)} cm. Quelle est la distance réelle correspondante, en mètres (arrondie au centième) ?`,
     answer: answerM,
     tolerance: Math.max(0.02, answerM * 0.001),
-    steps: [`Distance réelle = ${fr(distanceCarte)} \\times ${echelleN} = ${fr(answerCm)} \\text{ cm}`, `${fr(answerCm)} \\text{ cm} = ${fr(answerM)} \\text{ m}`],
+    steps: [
+      { type: "calcul", text: `Distance réelle = ${fr(distanceCarte)} \\times ${echelleN} = ${fr(answerCm)} \\text{ cm}` },
+      { type: "resultat", text: `${fr(answerCm)} \\text{ cm} = ${fr(answerM)} \\text{ m}` },
+    ],
   };
 }
 
@@ -222,7 +241,10 @@ function genEchelleDistanceCarteNumeric() {
     prompt: `Un plan est réalisé à l'échelle 1/${echelleN}. Une pièce mesure ${distanceReelleM} m de long en réalité. Quelle est sa longueur sur le plan, en cm (arrondie au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${distanceReelleM} \\text{ m} = ${distanceReelleCm} \\text{ cm}`, `${distanceReelleCm} \\div ${echelleN} = ${fr(answer)} \\text{ cm}`],
+    steps: [
+      { type: "calcul", text: `${distanceReelleM} \\text{ m} = ${distanceReelleCm} \\text{ cm}` },
+      { type: "calcul", text: `${distanceReelleCm} \\div ${echelleN} = ${fr(answer)} \\text{ cm}` },
+    ],
   };
 }
 
@@ -237,7 +259,7 @@ function genExprimerEchelleNumeric() {
     prompt: `Sur un plan, un segment de ${fr(distancePlan)} cm représente une distance réelle de ${fr(distanceReelleCm)} cm. L'échelle de ce plan est de la forme 1/N. Quelle est la valeur de N ?`,
     answer: echelleN,
     tolerance: 1,
-    steps: [`N = ${fr(distanceReelleCm)} \\div ${fr(distancePlan)} = ${echelleN}`],
+    steps: [{ type: "calcul", text: `N = ${fr(distanceReelleCm)} \\div ${fr(distancePlan)} = ${echelleN}` }],
   };
 }
 
@@ -254,7 +276,7 @@ function genVitesseDistanceNumeric() {
     prompt: `Un mobile roule à une vitesse constante de ${vitesse} km/h pendant ${fr(temps)} h. Quelle distance parcourt-il, en km ?`,
     answer,
     tolerance: 0.05,
-    steps: [`${vitesse} \\times ${fr(temps)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${vitesse} \\times ${fr(temps)} = ${fr(answer)}` }],
   };
 }
 
@@ -269,7 +291,7 @@ function genVitesseTempsNumeric() {
     prompt: `Un mobile roule à une vitesse constante de ${vitesse} km/h et parcourt ${fr(distance)} km. Quelle est la durée du trajet, en heures (arrondie au dixième) ?`,
     answer: temps,
     tolerance: 0.1,
-    steps: [`${fr(distance)} \\div ${vitesse} \\approx ${fr(temps)}`],
+    steps: [{ type: "calcul", text: `${fr(distance)} \\div ${vitesse} \\approx ${fr(temps)}` }],
   };
 }
 
@@ -284,7 +306,7 @@ function genVitesseMoyenneNumeric() {
     prompt: `Un mobile parcourt ${fr(distance)} km en ${fr(temps)} h, à vitesse constante. Quelle est sa vitesse moyenne, en km/h ?`,
     answer: vitesse,
     tolerance: 0.2,
-    steps: [`${fr(distance)} \\div ${fr(temps)} \\approx ${vitesse}`],
+    steps: [{ type: "calcul", text: `${fr(distance)} \\div ${fr(temps)} \\approx ${vitesse}` }],
   };
 }
 
@@ -302,7 +324,10 @@ function genLongueurArcCercleNumeric() {
     prompt: `On considère un cercle de rayon ${r} cm. Quelle est la longueur de l'arc correspondant à un angle au centre de ${angle}°, en cm (arrondie au centième) ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [`Périmètre du cercle \\approx ${fr(perimetre)} \\text{ cm}`, `Longueur de l'arc = \\dfrac{${angle}}{360} \\times ${fr(perimetre)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Périmètre du cercle \\approx ${fr(perimetre)} \\text{ cm}` },
+      { type: "calcul", text: `Longueur de l'arc = \\dfrac{${angle}}{360} \\times ${fr(perimetre)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -318,7 +343,10 @@ function genAireSecteurCirculaireNumeric() {
     prompt: `On considère un disque de rayon ${r} cm. Quelle est l'aire du secteur angulaire correspondant à un angle au centre de ${angle}°, en cm² (arrondie au centième) ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [`Aire du disque \\approx ${fr(aireDisque)} \\text{ cm}^2`, `Aire du secteur = \\dfrac{${angle}}{360} \\times ${fr(aireDisque)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Aire du disque \\approx ${fr(aireDisque)} \\text{ cm}^2` },
+      { type: "calcul", text: `Aire du secteur = \\dfrac{${angle}}{360} \\times ${fr(aireDisque)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -344,7 +372,7 @@ function genGraphiqueProportionnaliteQCM() {
       prompt: items[0].q,
       answer: items[0].r,
       options: shuffle([items[0].r, "Les points forment une courbe quelconque", "Les points sont alignés sur une droite qui ne passe pas forcément par l'origine"]),
-      steps: [`Deux grandeurs proportionnelles sont représentées par des points alignés sur une droite passant par l'origine du repère.`],
+      steps: [{ type: "regle", text: `Deux grandeurs proportionnelles sont représentées par des points alignés sur une droite passant par l'origine du repère.` }],
     };
   }
   return {
@@ -353,7 +381,7 @@ function genGraphiqueProportionnaliteQCM() {
     prompt: items[1].q,
     answer: items[1].r,
     options: ["Oui", "Non"],
-    steps: [`Une droite qui ne passe pas par l'origine ne peut pas représenter une situation de proportionnalité.`],
+    steps: [{ type: "regle", text: `Une droite qui ne passe pas par l'origine ne peut pas représenter une situation de proportionnalité.` }],
   };
 }
 
@@ -370,7 +398,7 @@ function genTarifAvecAbonnementNonProportionnelQCM() {
     prompt: `Un cinéma propose un tarif avec abonnement : ${abonnement} € d'abonnement, puis ${prixParUnite} € par séance. Pour ${n} séances, le prix total est de ${prixAvecAbo} €. Ce tarif est-il proportionnel au nombre de séances ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`Sans l'abonnement fixe, le prix serait de ${prixSansAbo} € : la présence d'un montant fixe (l'abonnement) empêche la proportionnalité.`],
+    steps: [{ type: "regle", text: `Sans l'abonnement fixe, le prix serait de ${prixSansAbo} € : la présence d'un montant fixe (l'abonnement) empêche la proportionnalité.` }],
   };
 }
 
@@ -388,7 +416,7 @@ function genAgrandissementReductionFigureNumeric() {
     prompt: `Un rectangle de longueur ${longueur} cm et de largeur ${largeur} cm est agrandi avec un coefficient ${fr(k)}. Quelle est la nouvelle ${askLongueur ? "longueur" : "largeur"}, en cm ?`,
     answer: askLongueur ? answerL : answerl,
     tolerance: 0.02,
-    steps: [askLongueur ? `${longueur} \\times ${fr(k)} = ${fr(answerL)}` : `${largeur} \\times ${fr(k)} = ${fr(answerl)}`],
+    steps: [{ type: "calcul", text: askLongueur ? `${longueur} \\times ${fr(k)} = ${fr(answerL)}` : `${largeur} \\times ${fr(k)} = ${fr(answerl)}` }],
   };
 }
 
@@ -451,6 +479,7 @@ export default {
     id: "proportionnalite-cinquieme",
     title: "Proportionnalité",
     description: "Identifier une situation, coefficient de proportionnalité, pourcentages, échelles, vitesse, longueur d'arc et aire d'un secteur circulaire, reconnaissance graphique.",
+    pourquoi: "Reconnaître une situation de proportionnalité, c'est l'une des compétences les plus utilisées au quotidien : recettes de cuisine, pourcentages, échelles de carte, conversions de devises.",
     level: "cinquieme",
     free: false,
     order: 11,

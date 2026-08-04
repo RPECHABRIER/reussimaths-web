@@ -51,7 +51,10 @@ function genCalculerExpressionPriorites() {
     chapter: "Opérations sur les nombres — Priorités opératoires",
     prompt: `Calcule en respectant les priorités : \\(${a} ${op1} ${b} \\times ${c}\\)`,
     answer: result,
-    steps: [`On effectue d'abord la multiplication : ${b} \\times ${c} = ${b * c}`, `Puis : ${a} ${op1} ${b * c} = ${result}`],
+    steps: [
+      { type: "regle", text: `On effectue d'abord la multiplication : ${b} \\times ${c} = ${b * c}` },
+      { type: "calcul", text: `Puis : ${a} ${op1} ${b * c} = ${result}` },
+    ],
   };
 }
 
@@ -71,9 +74,12 @@ function genIdentifierSommeOuProduit() {
     answer: isSomme ? "Une somme" : "Un produit",
     options: ["Une somme", "Un produit"],
     steps: [
-      isSomme
-        ? "La dernière opération à effectuer (en respectant les priorités) est une addition : c'est une somme."
-        : "Grâce aux parenthèses, la dernière opération à effectuer est une multiplication : c'est un produit.",
+      {
+        type: "regle",
+        text: isSomme
+          ? "La dernière opération à effectuer (en respectant les priorités) est une addition : c'est une somme."
+          : "Grâce aux parenthèses, la dernière opération à effectuer est une multiplication : c'est un produit.",
+      },
     ],
   };
 }
@@ -96,7 +102,7 @@ function genAssocierExpressionResultat() {
     prompt: `Quel est le résultat de l'expression \\(${target.expr}\\) ?`,
     answer: `${fr(target.value)}`,
     options,
-    steps: [`On applique les priorités opératoires (parenthèses, puis multiplication, puis addition).`],
+    steps: [{ type: "regle", text: `On applique les priorités opératoires (parenthèses, puis multiplication, puis addition).` }],
   };
 }
 
@@ -118,7 +124,7 @@ function genReconnaitreExpressionsEgalesDistributivite() {
     prompt: `Les expressions \\(${expr1}\\) et \\(${expr2}\\) sont-elles égales ?`,
     answer: showCorrect ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\(${k} \\times (${a} + ${b}) = ${k} \\times ${a} + ${k} \\times ${b}\\) (distributivité de la multiplication sur l'addition).`],
+    steps: [{ type: "regle", text: `\\(${k} \\times (${a} + ${b}) = ${k} \\times ${a} + ${k} \\times ${b}\\) (distributivité de la multiplication sur l'addition).` }],
   };
 }
 
@@ -133,7 +139,7 @@ function genCalculAstucieuxFacteurCommun() {
     chapter: "Opérations sur les nombres — Distributivité",
     prompt: `En utilisant la distributivité, calcule astucieusement : \\(${k} \\times ${a} + ${k} \\times ${b}\\)`,
     answer,
-    steps: [`${k} \\times ${a} + ${k} \\times ${b} = ${k} \\times (${a} + ${b}) = ${k} \\times ${a + b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${k} \\times ${a} + ${k} \\times ${b} = ${k} \\times (${a} + ${b}) = ${k} \\times ${a + b} = ${answer}` }],
   };
 }
 
@@ -148,7 +154,7 @@ function genAireRectangleDecompose() {
     chapter: "Opérations sur les nombres — Distributivité",
     prompt: `Un rectangle de largeur ${largeur} cm est composé de deux parties accolées, de longueurs ${long1} cm et ${long2} cm. Quelle est l'aire totale du rectangle, en cm² ?`,
     answer,
-    steps: [`${largeur} \\times (${long1} + ${long2}) = ${largeur} \\times ${long1 + long2} = ${answer}`],
+    steps: [{ type: "calcul", text: `${largeur} \\times (${long1} + ${long2}) = ${largeur} \\times ${long1 + long2} = ${answer}` }],
   };
 }
 
@@ -166,7 +172,10 @@ function genProgrammeCalculTexte() {
     chapter: "Opérations sur les nombres — Programme de calcul",
     prompt: `Programme de calcul : choisir un nombre, ajouter ${add}, puis multiplier le résultat par ${mult}. Quel résultat obtient-on en partant de ${depart} ?`,
     answer,
-    steps: [`${depart} + ${add} = ${etape1}`, `${etape1} \\times ${mult} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${depart} + ${add} = ${etape1}` },
+      { type: "calcul", text: `${etape1} \\times ${mult} = ${answer}` },
+    ],
   };
 }
 
@@ -182,7 +191,10 @@ function genRetrouverNombreDepartProgramme() {
     chapter: "Opérations sur les nombres — Programme de calcul",
     prompt: `Un programme de calcul consiste à : choisir un nombre, le multiplier par ${mult}, puis soustraire ${sub}. En partant d'un nombre, on obtient ${resultat}. Quel était ce nombre de départ ?`,
     answer: depart,
-    steps: [`${resultat} + ${sub} = ${etape1}`, `${etape1} \\div ${mult} = ${depart}`],
+    steps: [
+      { type: "calcul", text: `${resultat} + ${sub} = ${etape1}` },
+      { type: "calcul", text: `${etape1} \\div ${mult} = ${depart}` },
+    ],
   };
 }
 
@@ -237,7 +249,7 @@ function genChoisirOperationProblemeQCM() {
     prompt,
     answer,
     options,
-    steps: [`On identifie la situation (regrouper, répéter, retirer, réunir) pour choisir l'opération adaptée.`],
+    steps: [{ type: "regle", text: `On identifie la situation (regrouper, répéter, retirer, réunir) pour choisir l'opération adaptée.` }],
   };
 }
 
@@ -278,6 +290,7 @@ export default {
     id: "operations-sur-les-nombres",
     title: "Opérations sur les nombres",
     description: "Priorités opératoires, nommer un calcul, distributivité, programmes de calcul, choisir une opération.",
+    pourquoi: "Connaître les priorités opératoires et choisir la bonne opération, c'est éviter les erreurs de calcul les plus fréquentes, à l'école comme dans la vie quotidienne.",
     level: "cinquieme",
     free: false,
     order: 2,

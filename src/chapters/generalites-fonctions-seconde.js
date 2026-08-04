@@ -364,6 +364,7 @@ export default {
     id: "generalites-fonctions-seconde",
     title: "Généralités sur les fonctions",
     description: "Vocabulaire (image, antécédent, courbe), calcul d'image et d'antécédent, lecture de tableaux de valeurs, ensemble de définition, fonctions paires/impaires et résolution d'équations par factorisation.",
+    pourquoi: "Lire une courbe ou un tableau de valeurs, c'est la compétence de base pour interpréter n'importe quel graphique scientifique ou économique.",
     level: "seconde",
     free: false,
     order: 3,

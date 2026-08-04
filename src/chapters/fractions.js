@@ -71,7 +71,10 @@ function genFractionDunNombreEntier() {
     chapter: "Fractions — Fraction d'un nombre",
     prompt: `\\(\\dfrac{${num}}{${den}}\\) de ${nombre} = ?`,
     answer,
-    steps: [`${nombre} \\div ${den} = ${k}`, `${k} \\times ${num} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${nombre} \\div ${den} = ${k}` },
+      { type: "calcul", text: `${k} \\times ${num} = ${answer}` },
+    ],
   };
 }
 
@@ -86,7 +89,7 @@ function genFractionQuotientDecimal() {
     prompt: `Donne l'écriture décimale de \\(\\dfrac{${num}}{${den}}\\), arrondie au centième si besoin.`,
     answer,
     tolerance: 0.01,
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${num} \\div ${den} \\approx ${fr(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${num} \\div ${den} \\approx ${fr(answer)}\\)` }],
   };
 }
 
@@ -119,7 +122,7 @@ function genLireAbscisseFraction() {
     prompt: `La demi-droite ci-dessous va de 0 à ${maxEntier} et chaque unité est partagée en ${den} parts égales. Donne l'écriture décimale de l'abscisse du point ${letter}.`,
     figure,
     answer: value,
-    steps: [`${letter} est à ${posNum} graduation${posNum > 1 ? "s" : ""} de ${den}e : \\(\\dfrac{${posNum}}{${den}} = ${frTex(value)}\\)`],
+    steps: [{ type: "calcul", text: `${letter} est à ${posNum} graduation${posNum > 1 ? "s" : ""} de ${den}e : \\(\\dfrac{${posNum}}{${den}} = ${frTex(value)}\\)` }],
   };
 }
 
@@ -137,7 +140,7 @@ function genFractionsEgalesTrouver() {
       chapter: "Fractions — Fractions égales",
       prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{?}{${b * m}}\\)`,
       answer: a * m,
-      steps: [`On multiplie numérateur et dénominateur par ${m}.`],
+      steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
     };
   }
   return {
@@ -145,7 +148,7 @@ function genFractionsEgalesTrouver() {
     chapter: "Fractions — Fractions égales",
     prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{${a * m}}{?}\\)`,
     answer: b * m,
-    steps: [`On multiplie numérateur et dénominateur par ${m}.`],
+    steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
   };
 }
 
@@ -160,7 +163,7 @@ function genDecomposerFractionEntierFraction() {
     chapter: "Fractions — Décomposition",
     prompt: `Donne l'écriture décimale de \\(${q} + \\dfrac{${r}}{${den}}\\).`,
     answer: roundTo(q + r / den, 4),
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${q} + \\dfrac{${r}}{${den}} = ${frTex(roundTo(q + r / den, 4))}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${q} + \\dfrac{${r}}{${den}} = ${frTex(roundTo(q + r / den, 4))}\\)` }],
   };
 }
 
@@ -180,7 +183,7 @@ function genComparerFractionUniteDemi() {
     prompt: `Complète par <, > ou = : \\(\\dfrac{${num}}{${den}}\\) ... ${targetTex}`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${frTex(roundTo(num / den, 4))}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${frTex(roundTo(num / den, 4))}\\)` }],
   };
 }
 
@@ -211,7 +214,7 @@ function genComparerDeuxFractions() {
     prompt: `Complète par <, > ou = : \\(\\dfrac{${a}}{${b}}\\) ... \\(\\dfrac{${c}}{${d}}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`\\(\\dfrac{${a}}{${b}} \\approx ${roundTo(left, 3)}\\) ; \\(\\dfrac{${c}}{${d}} \\approx ${roundTo(right, 3)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${a}}{${b}} \\approx ${roundTo(left, 3)}\\) ; \\(\\dfrac{${c}}{${d}} \\approx ${roundTo(right, 3)}\\)` }],
   };
 }
 
@@ -225,7 +228,7 @@ function genEncadrerFraction() {
     chapter: "Fractions — Encadrer",
     prompt: `Quel est le plus grand entier inférieur ou égal à \\(\\dfrac{${num}}{${den}}\\) ?`,
     answer,
-    steps: [`${num} \\div ${den} \\approx ${roundTo(num / den, 2)}`],
+    steps: [{ type: "calcul", text: `${num} \\div ${den} \\approx ${roundTo(num / den, 2)}` }],
   };
 }
 
@@ -246,7 +249,7 @@ function genRangerFractions() {
     prompt: `Parmi ces fractions, laquelle est la plus ${askMax ? "grande" : "petite"} ?`,
     answer: options[targetIndex],
     options,
-    steps: fractions.map((f, i) => `\\(\\dfrac{${f.num}}{${f.den}} \\approx ${roundTo(values[i], 3)}\\)`),
+    steps: fractions.map((f, i) => ({ type: "calcul", text: `\\(\\dfrac{${f.num}}{${f.den}} \\approx ${roundTo(values[i], 3)}\\)` })),
   };
 }
 
@@ -262,7 +265,7 @@ function genAdditionMemeDenominateur() {
     chapter: "Fractions — Additionner",
     prompt: `\\(\\dfrac{${n1}}{${den}} + \\dfrac{${n2}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer: n1 + n2,
-    steps: [`${n1} + ${n2} = ${n1 + n2}`],
+    steps: [{ type: "calcul", text: `${n1} + ${n2} = ${n1 + n2}` }],
   };
 }
 
@@ -276,7 +279,7 @@ function genSoustractionMemeDenominateur() {
     chapter: "Fractions — Soustraire",
     prompt: `\\(\\dfrac{${n1}}{${den}} - \\dfrac{${n2}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer: n1 - n2,
-    steps: [`${n1} - ${n2} = ${n1 - n2}`],
+    steps: [{ type: "calcul", text: `${n1} - ${n2} = ${n1 - n2}` }],
   };
 }
 
@@ -294,7 +297,10 @@ function genAdditionDenominateursMultiples() {
     chapter: "Fractions — Additionner (dénominateurs différents)",
     prompt: `\\(\\dfrac{${num1}}{${den1}} + \\dfrac{${num2}}{${den2}} = \\dfrac{?}{${den2}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`\\(\\dfrac{${num1}}{${den1}} = \\dfrac{${num1Converti}}{${den2}}\\)`, `${num1Converti} + ${num2} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `\\(\\dfrac{${num1}}{${den1}} = \\dfrac{${num1Converti}}{${den2}}\\)` },
+      { type: "calcul", text: `${num1Converti} + ${num2} = ${answer}` },
+    ],
   };
 }
 
@@ -309,7 +315,7 @@ function genMultiplierEntierParFraction() {
     chapter: "Fractions — Multiplier",
     prompt: `${k} × \\(\\dfrac{${num}}{${den}}\\) = \\(\\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${k} \\times ${num} = ${answer}`],
+    steps: [{ type: "calcul", text: `${k} \\times ${num} = ${answer}` }],
   };
 }
 
@@ -326,7 +332,7 @@ function genMultiplierDeuxFractions() {
     prompt: `Calcule \\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}}\\) (arrondis au centième si besoin).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\(\\dfrac{${a} \\times ${c}}{${b} \\times ${d}} = \\dfrac{${a * c}}{${b * d}} \\approx ${fr(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${a} \\times ${c}}{${b} \\times ${d}} = \\dfrac{${a * c}}{${b * d}} \\approx ${fr(answer)}\\)` }],
   };
 }
 
@@ -342,7 +348,7 @@ function genAppliquerPourcentageNombre() {
     chapter: "Fractions — Pourcentages",
     prompt: `${pct} % de ${base} = ?`,
     answer,
-    steps: [`${base} \\times \\dfrac{${pct}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${base} \\times \\dfrac{${pct}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -359,7 +365,10 @@ function genPourcentageReductionBidirectionnel() {
       chapter: "Fractions — Problèmes",
       prompt: `Un article coûte ${fr(prixInitial)} €. Il est soldé à ${pct} %. Quel est son nouveau prix, en € ?`,
       answer: prixFinal,
-      steps: [`Réduction : ${fr(prixInitial)} \\times \\dfrac{${pct}}{100} = ${fr(reduction)}`, `${fr(prixInitial)} - ${fr(reduction)} = ${fr(prixFinal)}`],
+      steps: [
+        { type: "calcul", text: `Réduction : ${fr(prixInitial)} \\times \\dfrac{${pct}}{100} = ${fr(reduction)}` },
+        { type: "calcul", text: `${fr(prixInitial)} - ${fr(reduction)} = ${fr(prixFinal)}` },
+      ],
     };
   }
   return {
@@ -367,7 +376,10 @@ function genPourcentageReductionBidirectionnel() {
     chapter: "Fractions — Problèmes",
     prompt: `Après une réduction de ${pct} %, un article coûte ${fr(prixFinal)} €. Quel était son prix avant réduction, en € ?`,
     answer: prixInitial,
-    steps: [`Le prix soldé représente ${100 - pct} % du prix initial.`, `${fr(prixFinal)} \\div ${(100 - pct) / 100} = ${fr(prixInitial)}`],
+    steps: [
+      { type: "regle", text: `Le prix soldé représente ${100 - pct} % du prix initial.` },
+      { type: "calcul", text: `${fr(prixFinal)} \\div ${(100 - pct) / 100} = ${fr(prixInitial)}` },
+    ],
   };
 }
 
@@ -391,7 +403,7 @@ function genChaineMoitieReserve() {
     chapter: "Fractions — Problèmes",
     prompt: `${prenomPrincipal} a une réserve de bonbons. ${pronomP === "elle" ? "Elle" : "Il"} ${recit}. Il lui reste alors ${finalAmount} bonbons. Combien ${prenomPrincipal} avait-${pronomP} de bonbons au départ ?`,
     answer: x0,
-    steps: [`En remontant les partages par moitié : ${finalAmount} × 2${peopleCount > 1 ? `^${peopleCount}` : ""} = ${x0}`],
+    steps: [{ type: "calcul", text: `En remontant les partages par moitié : ${finalAmount} × 2${peopleCount > 1 ? `^${peopleCount}` : ""} = ${x0}` }],
   };
 }
 
@@ -411,7 +423,7 @@ function genProblemeCocheQuestionsFractions() {
     prompt: `Un article coûte ${prix} € et bénéficie d'une réduction de ${pct} %. Coche les questions auxquelles tu pourrais répondre avec ces informations.`,
     options,
     answer,
-    steps: [`On peut calculer un montant de réduction ou un prix final à partir d'un prix et d'un taux, mais pas un nombre de clients.`],
+    steps: [{ type: "regle", text: `On peut calculer un montant de réduction ou un prix final à partir d'un prix et d'un taux, mais pas un nombre de clients.` }],
   };
 }
 
@@ -429,7 +441,7 @@ function genProblemeCompletePhraseFraction() {
     chapter: "Fractions — Problèmes",
     prompt: `${prenom} doit prendre \\(\\dfrac{${num}}{${den}}\\) de ${N} ${unit}. Complète : ${prenom} doit prendre ... ${unit}.`,
     answer,
-    steps: [`\\(\\dfrac{${num}}{${den}} \\times ${N} = ${answer}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} \\times ${N} = ${answer}\\)` }],
   };
 }
 
@@ -455,7 +467,7 @@ function genProblemePartageArgentFractions() {
     prompt: `${p1} et ${p2} ont reçu chacun ${M} €. ${p1} dépense \\(\\dfrac{${a1}}{${b1}}\\) de cette somme, ${p2} dépense \\(\\dfrac{${a2}}{${b2}}\\) de la sienne. Qui a le plus dépensé ?`,
     answer: correct,
     options: [optA, optB, optEq],
-    steps: [`${p1} : ${dep1} € ; ${p2} : ${dep2} €.`],
+    steps: [{ type: "calcul", text: `${p1} : ${dep1} € ; ${p2} : ${dep2} €.` }],
   };
 }
 
@@ -478,7 +490,10 @@ function genProblemeReductionVraiFaux() {
     prompt: `Un pull coûte ${prix} €. Il y a une réduction de ${pct} %. Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`Réduction : ${prix} \\times \\dfrac{${pct}}{100} = ${reduction}`, `Prix payé : ${prix} - ${reduction} = ${prixFinal}`],
+    steps: [
+      { type: "calcul", text: `Réduction : ${prix} \\times \\dfrac{${pct}}{100} = ${reduction}` },
+      { type: "calcul", text: `Prix payé : ${prix} - ${reduction} = ${prixFinal}` },
+    ],
   };
 }
 
@@ -494,7 +509,7 @@ function genProblemeGroupeElevesFraction() {
     chapter: "Fractions — Problèmes",
     prompt: `Dans une classe de ${N} élèves, \\(\\dfrac{${num}}{${den}}\\) des élèves n'ont lu aucun livre pendant les vacances. Combien d'élèves cela représente-t-il ?`,
     answer,
-    steps: [`\\(\\dfrac{${num}}{${den}} \\times ${N} = ${answer}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} \\times ${N} = ${answer}\\)` }],
   };
 }
 
@@ -515,7 +530,7 @@ function genProblemeDistanceParcourueFraction() {
       askRemaining ? `Quelle fraction du plein lui reste-t-${pronom === "elle" ? "elle" : "il"}` : `Quelle fraction du plein a-t-${pronom === "elle" ? "elle" : "il"} déjà utilisée`
     } ? (donne le numérateur, le dénominateur étant ${den})`,
     answer: answerNum,
-    steps: [`\\(\\dfrac{${num1}}{${den}} + \\dfrac{${num2}}{${den}} = \\dfrac{${usedNum}}{${den}}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num1}}{${den}} + \\dfrac{${num2}}{${den}} = \\dfrac{${usedNum}}{${den}}\\)` }],
   };
 }
 
@@ -536,7 +551,7 @@ function genProblemeVraiFauxSucreTablette() {
     prompt: `La tablette de chocolat de ${p1} contient ${pct1} % de sucre. La tablette de ${p2} contient \\(\\dfrac{${num2}}{${den2}}\\) de sucre. Quelle tablette est la plus sucrée ?`,
     answer: correct,
     options: [optA, optB, optEq],
-    steps: [`${p1} : ${pct1} % ; ${p2} : environ ${pct2} %.`],
+    steps: [{ type: "calcul", text: `${p1} : ${pct1} % ; ${p2} : environ ${pct2} %.` }],
   };
 }
 
@@ -556,7 +571,7 @@ function genRubanNoeuds() {
       ? `${nbRubans} rubans identiques permettent chacun de faire ${den} nœuds (chaque nœud utilise \\(\\dfrac{1}{${den}}\\) de ruban). On a déjà réalisé ${nbNoeuds} nœuds au total. Combien de nœuds ont été faits sur le ruban actuellement entamé ?`
       : `${nbRubans} rubans identiques permettent chacun de faire ${den} nœuds (chaque nœud utilise \\(\\dfrac{1}{${den}}\\) de ruban). On a déjà réalisé ${nbNoeuds} nœuds au total. Combien de rubans ont été entièrement utilisés ?`,
     answer: askEntame ? noeudsSurRubanEntame : rubansEntiers,
-    steps: [`${nbNoeuds} = ${den} \\times ${rubansEntiers} + ${noeudsSurRubanEntame}`],
+    steps: [{ type: "calcul", text: `${nbNoeuds} = ${den} \\times ${rubansEntiers} + ${noeudsSurRubanEntame}` }],
   };
 }
 
@@ -631,6 +646,7 @@ export default {
     id: "fractions",
     title: "Fractions",
     description: "Fraction d'un nombre, fractions égales, comparer, additionner, multiplier des fractions.",
+    pourquoi: "Les fractions permettent de partager, comparer et mesurer avec précision — indispensables en cuisine, en bricolage comme en sciences.",
     level: "sixieme",
     free: false,
     order: 4,

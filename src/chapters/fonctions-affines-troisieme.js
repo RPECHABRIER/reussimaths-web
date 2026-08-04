@@ -48,7 +48,7 @@ function genIdentifierABFormeSimpleNumeric() {
     chapter: "Fonctions affines — Identifier a et b",
     prompt: `On définit \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\), une fonction affine de la forme \\(f(x) = ax + b\\). Quelle est ${askA ? "la valeur de a" : "la valeur de b"} ?`,
     answer: askA ? a : b,
-    steps: [`f(x) = ax + b \\text{ avec } a = ${a} \\text{ et } b = ${b}`],
+    steps: [{ type: "donnee", text: `f(x) = ax + b \\text{ avec } a = ${a} \\text{ et } b = ${b}` }],
   };
 }
 
@@ -65,7 +65,7 @@ function genMettreSousFormeFractionNumeric() {
     chapter: "Fonctions affines — Identifier a et b",
     prompt: `On écrit \\(f(x) = \\dfrac{${p}x ${sgn(q)} ${abs(q)}}{${d}}\\) sous la forme \\(f(x) = ax + b\\). Quelle est ${askA ? "la valeur de a" : "la valeur de b"} ?`,
     answer: askA ? a : b,
-    steps: [`f(x) = \\dfrac{${p}}{${d}}x ${sgn(q)} \\dfrac{${abs(q)}}{${d}} = ${a}x ${sgn(b)} ${abs(b)}`],
+    steps: [{ type: "calcul", text: `f(x) = \\dfrac{${p}}{${d}}x ${sgn(q)} \\dfrac{${abs(q)}}{${d}} = ${a}x ${sgn(b)} ${abs(b)}` }],
   };
 }
 
@@ -82,7 +82,7 @@ function genMettreSousFormeDoubleDistributiviteNumeric() {
     chapter: "Fonctions affines — Identifier a et b",
     prompt: `On écrit \\(h(x) = ${k}\\left(x ${sgn(p)} ${abs(p)}\\right) ${sgn(q)} ${abs(q)}\\) sous la forme \\(h(x) = ax + b\\). Quelle est ${askA ? "la valeur de a" : "la valeur de b"} ?`,
     answer: askA ? a : b,
-    steps: [`h(x) = ${k}x ${sgn(k * p)} ${abs(k * p)} ${sgn(q)} ${abs(q)} = ${a}x ${sgn(b)} ${abs(b)}`],
+    steps: [{ type: "calcul", text: `h(x) = ${k}x ${sgn(k * p)} ${abs(k * p)} ${sgn(q)} ${abs(q)} = ${a}x ${sgn(b)} ${abs(b)}` }],
   };
 }
 
@@ -99,8 +99,8 @@ function genMettreSousFormeDifferenceCarresNumeric() {
     prompt: `On écrit \\(k(x) = \\left(x ${sgn(p)} ${abs(p)}\\right)\\left(x ${sgn(q)} ${abs(q)}\\right) - x^{2}\\) sous la forme \\(k(x) = ax + b\\). Quelle est ${askA ? "la valeur de a" : "la valeur de b"} ?`,
     answer: askA ? a : b,
     steps: [
-      `\\left(x ${sgn(p)} ${abs(p)}\\right)\\left(x ${sgn(q)} ${abs(q)}\\right) = x^{2} ${sgn(a)} ${abs(a)}x ${sgn(b)} ${abs(b)}`,
-      `k(x) = x^{2} ${sgn(a)} ${abs(a)}x ${sgn(b)} ${abs(b)} - x^{2} = ${a}x ${sgn(b)} ${abs(b)}`,
+      { type: "calcul", text: `\\left(x ${sgn(p)} ${abs(p)}\\right)\\left(x ${sgn(q)} ${abs(q)}\\right) = x^{2} ${sgn(a)} ${abs(a)}x ${sgn(b)} ${abs(b)}` },
+      { type: "resultat", text: `k(x) = x^{2} ${sgn(a)} ${abs(a)}x ${sgn(b)} ${abs(b)} - x^{2} = ${a}x ${sgn(b)} ${abs(b)}` },
     ],
   };
 }
@@ -121,7 +121,7 @@ function genPointAppartientDroiteQCM() {
     prompt: `La droite représentant \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\) passe-t-elle par le point de coordonnées \\((${x0}\\,;\\,${y0})\\) ?`,
     answer: isOn ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${trueY}`],
+    steps: [{ type: "calcul", text: `f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${trueY}` }],
   };
 }
 
@@ -138,7 +138,7 @@ function genComparerCoefficientsDirecteursQCM() {
     prompt: `On considère deux fonctions affines f et g de coefficients directeurs respectifs ${a1} et ${a2}. Laquelle a le coefficient directeur le plus grand ?`,
     answer: a1 > a2 ? "f" : "g",
     options: ["f", "g"],
-    steps: [`${a1} ${a1 > a2 ? ">" : "<"} ${a2}`],
+    steps: [{ type: "resultat", text: `${a1} ${a1 > a2 ? ">" : "<"} ${a2}` }],
   };
 }
 
@@ -152,7 +152,7 @@ function genCroissanteDecroissanteQCM() {
     prompt: `On définit \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\). La fonction f est-elle croissante ou décroissante ?`,
     answer: a > 0 ? "Croissante" : "Décroissante",
     options: ["Croissante", "Décroissante"],
-    steps: [`\\text{Le coefficient directeur } a = ${a} \\text{ est } ${a > 0 ? "positif" : "négatif"}, \\text{ donc f est } ${a > 0 ? "croissante" : "décroissante"}.`],
+    steps: [{ type: "regle", text: `\\text{Le coefficient directeur } a = ${a} \\text{ est } ${a > 0 ? "positif" : "négatif"}, \\text{ donc f est } ${a > 0 ? "croissante" : "décroissante"}.` }],
   };
 }
 
@@ -168,7 +168,12 @@ function genPasseParOrigineQCM() {
     prompt: `La droite représentant \\(f(x) = ${a}x${exprB}\\) passe-t-elle par l'origine du repère ?`,
     answer: isLinear ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [isLinear ? `b = 0, \\text{ donc la droite passe par l'origine.}` : `b = ${b} \\neq 0, \\text{ donc la droite ne passe pas par l'origine.}`],
+    steps: [
+      {
+        type: "regle",
+        text: isLinear ? `b = 0, \\text{ donc la droite passe par l'origine.}` : `b = ${b} \\neq 0, \\text{ donc la droite ne passe pas par l'origine.}`,
+      },
+    ],
   };
 }
 
@@ -198,7 +203,7 @@ function genFonctionLineaireVsAffineQCM() {
     prompt: `La fonction définie par \\(f(x) = ${expr}\\) est :`,
     answer: labels[kind],
     options: Object.values(labels),
-    steps: [`Il s'agit de ${labels[kind].toLowerCase()}.`],
+    steps: [{ type: "resultat", text: `Il s'agit de ${labels[kind].toLowerCase()}.` }],
   };
 }
 
@@ -215,7 +220,12 @@ function genDeterminerAffineDeuxConditionsNumeric() {
     chapter: "Fonctions affines — Déterminer une fonction",
     prompt: `f est une fonction affine telle que \\(f(0) = ${b}\\) et \\(f(${x1}) = ${y1}\\). Quel est le coefficient a de f (avec \\(f(x) = ax + b\\)) ?`,
     answer: a,
-    steps: [`f(0) = b, \\text{ donc } b = ${b}`, `f(${x1}) = a \\times ${x1} + ${b} = ${y1}`, `a \\times ${x1} = ${y1 - b}`, `a = \\dfrac{${y1 - b}}{${x1}} = ${a}`],
+    steps: [
+      { type: "donnee", text: `f(0) = b, \\text{ donc } b = ${b}` },
+      { type: "donnee", text: `f(${x1}) = a \\times ${x1} + ${b} = ${y1}` },
+      { type: "calcul", text: `a \\times ${x1} = ${y1 - b}` },
+      { type: "resultat", text: `a = \\dfrac{${y1 - b}}{${x1}} = ${a}` },
+    ],
   };
 }
 
@@ -230,7 +240,11 @@ function genResoudreFxEgaleCibleNumeric() {
     chapter: "Fonctions affines — Déterminer une fonction",
     prompt: `On définit \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\). Trouve l'antécédent de ${target} par f.`,
     answer: x0,
-    steps: [`${a}x ${sgn(b)} ${abs(b)} = ${target}`, `${a}x = ${target - b}`, `x = \\dfrac{${target - b}}{${a}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${a}x ${sgn(b)} ${abs(b)} = ${target}` },
+      { type: "calcul", text: `${a}x = ${target - b}` },
+      { type: "resultat", text: `x = \\dfrac{${target - b}}{${a}} = ${x0}` },
+    ],
   };
 }
 
@@ -251,7 +265,11 @@ function genCompareDeuxTarifsSeuilNumeric() {
     chapter: "Fonctions affines — Problèmes de tarifs",
     prompt: `Un tarif A coûte ${b1} € de forfait plus ${a1} € par unité : \\(f(x) = ${a1}x + ${b1}\\). Un tarif B coûte ${b2} € de forfait plus ${a2} € par unité : \\(g(x) = ${a2}x + ${b2}\\). À partir de combien d'unités les deux tarifs coûtent-ils le même prix ?`,
     answer: x0,
-    steps: [`${a1}x + ${b1} = ${a2}x + ${b2}`, `${a1 - a2}x = ${b2 - b1}`, `x = \\dfrac{${b2 - b1}}{${a1 - a2}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${a1}x + ${b1} = ${a2}x + ${b2}` },
+      { type: "calcul", text: `${a1 - a2}x = ${b2 - b1}` },
+      { type: "resultat", text: `x = \\dfrac{${b2 - b1}}{${a1 - a2}} = ${x0}` },
+    ],
   };
 }
 
@@ -266,7 +284,7 @@ function genCalculerImageContexteTarifNumeric() {
     chapter: "Fonctions affines — Problèmes de tarifs",
     prompt: `Un forfait téléphonique coûte ${b} € par mois plus ${a} € par gigaoctet utilisé au-delà du forfait inclus : \\(p(x) = ${a}x + ${b}\\), où x est le nombre de gigaoctets supplémentaires. Calcule le prix total pour ${x0} gigaoctets supplémentaires.`,
     answer,
-    steps: [`p(${x0}) = ${a} \\times ${x0} + ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `p(${x0}) = ${a} \\times ${x0} + ${b} = ${answer}` }],
   };
 }
 
@@ -281,7 +299,11 @@ function genResoudreAntecedentContexteTarifNumeric() {
     chapter: "Fonctions affines — Problèmes de tarifs",
     prompt: `Un forfait coûte ${b} € plus ${a} € par unité supplémentaire : \\(p(x) = ${a}x + ${b}\\). Combien d'unités supplémentaires obtient-on avec un budget total de ${target} € ?`,
     answer: x0,
-    steps: [`${a}x + ${b} = ${target}`, `${a}x = ${target - b}`, `x = \\dfrac{${target - b}}{${a}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${a}x + ${b} = ${target}` },
+      { type: "calcul", text: `${a}x = ${target - b}` },
+      { type: "resultat", text: `x = \\dfrac{${target - b}}{${a}} = ${x0}` },
+    ],
   };
 }
 
@@ -332,6 +354,7 @@ export default {
     id: "fonctions-affines-troisieme",
     title: "Fonctions affines",
     description: "Identifier les coefficients a et b d'une fonction affine, vérifier qu'un point appartient à une droite, comparer des coefficients directeurs, déterminer une fonction affine, résoudre f(x) = cible, et comparer des tarifs.",
+    pourquoi: "Identifier une fonction affine, c'est reconnaître immédiatement les situations qui évoluent à vitesse constante (tarifs, trajets, conversions).",
     level: "troisieme",
     free: false,
     order: 7,

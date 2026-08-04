@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, X, Timer, Square, CheckSquare } from "lucide-react";
+import { Check, X, Timer, Square, CheckSquare, ArrowRight } from "lucide-react";
 import MathText from "./MathText";
+import StepsList from "./StepsList";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
+import { useAuth } from "../hooks/useAuth";
+import { useSkillTracking } from "../hooks/useSkillTracking";
+import { useDailyStreak } from "../hooks/useDailyStreak";
 import { colors, fonts, shadow } from "../theme";
 
 const ink = colors.ink;
@@ -31,6 +35,9 @@ function formatDuration(ms) {
 // LES DEUX joueurs soient interrogés sur le même thème plutôt qu'un mélange
 // aléatoire indépendant de chaque côté (voir Amis.jsx, describeChallenge).
 export default function MiniDuel({ chapter, count, themeId, onFinish }) {
+  const { user } = useAuth();
+  const skillTracking = useSkillTracking(user?.id);
+  const dailyStreak = useDailyStreak(user?.id);
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [exercise, setExercise] = useState(() => chapter.generate(themeId));
@@ -38,12 +45,19 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
   const [selected, setSelected] = useState(null);
   const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef(Date.now());
 
   useEffect(() => {
     const id = setInterval(() => setElapsed(Date.now() - startRef.current), 100);
     return () => clearInterval(id);
+  }, []);
+
+  // Compte comme pratique du jour dès le premier duel lancé.
+  useEffect(() => {
+    dailyStreak.markPracticed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const next = (correct) => {
@@ -59,30 +73,34 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
     setSelected(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setShowHelp(false);
+  };
+
+  // Sur une bonne réponse, on enchaîne automatiquement (rythme du duel). Sur
+  // une erreur, on s'arrête pour laisser la méthode (steps) consultable
+  // avant de reprendre manuellement (voir bouton "Suivant").
+  const registerAnswer = (correct) => {
+    setFeedback({ correct });
+    skillTracking.recordAttempt({ skillId: exercise.chapter, chapterId: chapter.meta.id, correct });
+    if (correct) setTimeout(() => next(true), 550);
   };
 
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    const correct = Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance;
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 550);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
   };
 
   const submitQCM = (opt) => {
     if (feedback) return;
     setSelected(opt);
-    const correct = opt === exercise.answer;
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 550);
+    registerAnswer(opt === exercise.answer);
   };
 
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    const correct = matchesText(input, exercise.answer);
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 550);
+    registerAnswer(matchesText(input, exercise.answer));
   };
 
   const toggleMulti = (i) => {
@@ -92,9 +110,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
 
   const submitMulti = () => {
     if (feedback) return;
-    const correct = matchesMulti(selectedMulti, exercise.answer);
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 550);
+    registerAnswer(matchesMulti(selectedMulti, exercise.answer));
   };
 
   return (
@@ -245,12 +261,39 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
       )}
 
       {feedback && (
-        <div
-          className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-2"
-          style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
-        >
-          {feedback.correct ? <Check size={16} /> : <X size={16} />}
-          <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+        <div className="mt-2">
+          <div
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm"
+            style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
+          >
+            {feedback.correct ? <Check size={16} /> : <X size={16} />}
+            <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+          </div>
+
+          {!feedback.correct && (
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => setShowHelp((s) => !s)}
+                className="flex-1 py-2 rounded-full text-xs font-semibold"
+                style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ring}` }}
+              >
+                {showHelp ? "Masquer la méthode" : "Voir la méthode"}
+              </button>
+              <button
+                onClick={() => next(false)}
+                className="flex-1 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1"
+                style={{ backgroundColor: ink, color: paper }}
+              >
+                Suivant <ArrowRight size={13} />
+              </button>
+            </div>
+          )}
+
+          {!feedback.correct && showHelp && (
+            <div className="mt-2">
+              <StepsList steps={exercise.steps} dark={false} />
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -67,7 +67,7 @@ function genVocabulaireEnFonctionDeQCM() {
     prompt: it.q,
     answer: it.r,
     options: shuffle(it.opts),
-    steps: [`C'est une définition de base du vocabulaire des fonctions.`],
+    steps: [{ type: "regle", text: `C'est une définition de base du vocabulaire des fonctions.` }],
   };
 }
 
@@ -82,7 +82,7 @@ function genEvaluerFonctionAffineNumeric() {
     chapter: "Fonctions — Évaluer une fonction",
     prompt: `On considère la fonction f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -97,7 +97,7 @@ function genTrouverAntecedentNumeric() {
     chapter: "Fonctions — Image et antécédent",
     prompt: `On considère la fonction f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Quel est l'antécédent de ${y} par la fonction f (c'est-à-dire la valeur de x telle que \\(f(x) = ${y}\\)) ?`,
     answer: x,
-    steps: [`${y} = ${a}x ${b >= 0 ? "+" : ""} ${b} \\Rightarrow x = (${y} - (${b})) \\div ${a} = ${x}`],
+    steps: [{ type: "calcul", text: `${y} = ${a}x ${b >= 0 ? "+" : ""} ${b} \\Rightarrow x = (${y} - (${b})) \\div ${a} = ${x}` }],
   };
 }
 
@@ -112,7 +112,7 @@ function genNotationFlecheeNumeric() {
     chapter: "Fonctions — Notation fléchée",
     prompt: `Une fonction f est définie par la notation fléchée \\(f : x \\longmapsto ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Quelle est l'image de ${x} par cette fonction ?`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -130,7 +130,10 @@ function genProgrammeCalculFonctionNumeric() {
     chapter: "Fonctions — Programme de calcul",
     prompt: `On considère le programme de calcul suivant : choisir un nombre, ajouter ${add}, puis multiplier le résultat par ${mult}. On note f la fonction qui, à un nombre x, associe le résultat de ce programme. Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`${x} + ${add} = ${etape1}`, `${etape1} \\times ${mult} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${x} + ${add} = ${etape1}` },
+      { type: "calcul", text: `${etape1} \\times ${mult} = ${answer}` },
+    ],
   };
 }
 
@@ -146,7 +149,10 @@ function genRetrouverDepartFonctionNumeric() {
     chapter: "Fonctions — Programme de calcul",
     prompt: `Une fonction f est définie par le programme : choisir un nombre, le multiplier par ${mult}, puis soustraire ${sub}. Sachant que \\(f(x) = ${resultat}\\), quelle est la valeur de x ?`,
     answer: x,
-    steps: [`${resultat} + ${sub} = ${etape1}`, `${etape1} \\div ${mult} = ${x}`],
+    steps: [
+      { type: "calcul", text: `${resultat} + ${sub} = ${etape1}` },
+      { type: "calcul", text: `${etape1} \\div ${mult} = ${x}` },
+    ],
   };
 }
 
@@ -165,7 +171,7 @@ function genRelationDependanceProportionnelleQCM() {
       prompt: `On considère des rectangles dont l'un des côtés mesure toujours ${cote} cm. Voici l'aire de ces rectangles en fonction de la longueur du second côté : ${xs.map((x, i) => `${x} cm → ${ys[i]} cm²`).join(" ; ")}. L'aire est-elle proportionnelle à la longueur du second côté ?`,
       answer: "Oui",
       options: ["Oui", "Non"],
-      steps: [`Chaque aire s'obtient en multipliant la longueur par ${cote} (un nombre fixe) : c'est une situation de proportionnalité.`],
+      steps: [{ type: "regle", text: `Chaque aire s'obtient en multipliant la longueur par ${cote} (un nombre fixe) : c'est une situation de proportionnalité.` }],
     };
   }
   const prixNormal = randInt(3, 10);
@@ -179,7 +185,7 @@ function genRelationDependanceProportionnelleQCM() {
     prompt: `Un article coûte ${prixNormal} € à l'unité, mais il est vendu par lots de ${lot} au prix de ${prixPromo} €. Voici le prix payé en fonction du nombre d'articles achetés (par lots complets) : ${xs.map((x, i) => `${x} → ${ysPromo[i]} €`).join(" ; ")}. Le prix payé est-il proportionnel au nombre d'articles ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`Le tarif change selon que l'on achète à l'unité ou par lot : les quotients prix/quantité ne sont pas tous égaux, ce n'est pas une situation de proportionnalité.`],
+    steps: [{ type: "regle", text: `Le tarif change selon que l'on achète à l'unité ou par lot : les quotients prix/quantité ne sont pas tous égaux, ce n'est pas une situation de proportionnalité.` }],
   };
 }
 
@@ -194,7 +200,7 @@ function genCompleterTableauValeursNumeric() {
     chapter: "Fonctions — Tableau de valeurs",
     prompt: `Une fonction f vérifie \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Complète le tableau de valeurs : quelle est la valeur de \\(f(${x})\\) ?`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -210,7 +216,7 @@ function genPuissanceEolienneNumeric() {
     prompt: `La puissance électrique P (en kW) d'une éolienne soumise à un vent donné dépend du diamètre D (en m) de son rotor, selon la formule \\(P = 0,25 \\times D^2\\). Quelle est la puissance délivrée par une éolienne de diamètre ${D} m, en kW ?`,
     answer,
     tolerance: 0.02,
-    steps: [`P = 0,25 \\times ${D}^2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = 0,25 \\times ${D}^2 = ${fr(answer)}` }],
   };
 }
 
@@ -223,7 +229,10 @@ function genDiametreEolienneNumeric() {
     chapter: "Fonctions — Contexte : éolienne",
     prompt: `La puissance électrique P (en kW) d'une éolienne vérifie \\(P = 0,25 \\times D^2\\), où D est le diamètre du rotor (en m). Pour qu'une éolienne délivre une puissance de ${fr(roundTo(puissance, 2))} kW, quel doit être le diamètre D de son rotor, en m ?`,
     answer: D,
-    steps: [`D^2 = ${fr(roundTo(puissance, 2))} \\div 0,25 = ${roundTo(puissance / 0.25, 2)}`, `D = ${D}`],
+    steps: [
+      { type: "calcul", text: `D^2 = ${fr(roundTo(puissance, 2))} \\div 0,25 = ${roundTo(puissance / 0.25, 2)}` },
+      { type: "resultat", text: `D = ${D}` },
+    ],
   };
 }
 
@@ -237,7 +246,7 @@ function genTemperatureRessentieNumeric() {
     prompt: `Par un vent de 60 km/h, la température ressentie \\(T_r\\) (en °C) en fonction de la température ambiante T (en °C) vérifie \\(T_r = 1,38 \\times T - 8,77\\). Quelle est la température ressentie pour une température ambiante de ${T}°C (arrondie au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`T_r = 1,38 \\times ${T} - 8,77 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `T_r = 1,38 \\times ${T} - 8,77 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -251,7 +260,7 @@ function genDistanceFreinageNumeric() {
     prompt: `Sur route mouillée, la distance de freinage est 75 % plus grande que sur route sèche. Pour une distance de freinage de ${fr(distanceSeche)} m sur route sèche, quelle est la distance de freinage sur route mouillée, en m (arrondie au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${fr(distanceSeche)} \\times 1,75 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(distanceSeche)} \\times 1,75 = ${fr(answer)}` }],
   };
 }
 
@@ -266,7 +275,7 @@ function genVolumeCylindreFonctionHauteurNumeric() {
     prompt: `On considère des cylindres de rayon fixé à ${r} cm. Le volume V (en cm³) d'un tel cylindre s'exprime en fonction de sa hauteur h (en cm) par la formule \\(V = \\pi \\times ${r}^2 \\times h\\). Quel est le volume d'un cylindre de rayon ${r} cm et de hauteur ${h} cm, en cm³ (arrondi au centième) ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [`V = \\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `V = \\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -279,7 +288,7 @@ function genAireCarreFonctionCoteNumeric() {
     chapter: "Fonctions — Contexte : aire d'un carré",
     prompt: `L'aire A d'un carré s'exprime en fonction de la longueur c de son côté par la formule \\(A(c) = c \\times c\\). Quelle est l'aire d'un carré de côté ${c} cm, en cm² ?`,
     answer,
-    steps: [`A(${c}) = ${c} \\times ${c} = ${answer}`],
+    steps: [{ type: "calcul", text: `A(${c}) = ${c} \\times ${c} = ${answer}` }],
   };
 }
 
@@ -299,7 +308,7 @@ function genLireTableauFonctionCroissanceQCM() {
     prompt: `Le tableau suivant donne la taille (en cm) d'un enfant en fonction de son âge (en années) : ${table.map(([x, y]) => `${x} ans → ${y} cm`).join(" ; ")}. La taille est-elle proportionnelle à l'âge ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`Si la taille était proportionnelle à l'âge, tous les quotients taille ÷ âge seraient égaux, ce qui n'est pas le cas ici (par exemple ${y1} \\div ${x1} \\ne ${y2} \\div ${x2}).`],
+    steps: [{ type: "regle", text: `Si la taille était proportionnelle à l'âge, tous les quotients taille ÷ âge seraient égaux, ce qui n'est pas le cas ici (par exemple ${y1} \\div ${x1} \\ne ${y2} \\div ${x2}).` }],
   };
 }
 
@@ -352,6 +361,7 @@ export default {
     id: "fonctions",
     title: "Fonctions",
     description: "Vocabulaire (en fonction de, notations fléchée et fonctionnelle), évaluer une fonction, image et antécédent, programme de calcul, relation de dépendance proportionnelle ou non, fonctions en contexte réel.",
+    pourquoi: "Comprendre la notion de fonction, c'est apprendre à décrire comment une quantité dépend d'une autre — la base de toute modélisation scientifique.",
     level: "cinquieme",
     free: false,
     order: 12,

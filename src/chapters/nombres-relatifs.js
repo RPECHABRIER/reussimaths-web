@@ -77,7 +77,7 @@ function genOpposeDunNombre() {
     prompt: `Quel est l'opposé de ${fr(n)} ?`,
     answer,
     tolerance: 0.001,
-    steps: [`L'opposé de ${fr(n)} est ${fr(answer)} (même distance à zéro, signe contraire).`],
+    steps: [{ type: "regle", text: `L'opposé de ${fr(n)} est ${fr(answer)} (même distance à zéro, signe contraire).` }],
   };
 }
 
@@ -91,7 +91,7 @@ function genValeurAbsolueDunNombre() {
     prompt: `Quelle est la valeur absolue (distance à zéro) de ${fr(n)} ?`,
     answer,
     tolerance: 0.001,
-    steps: [`La distance à zéro de ${fr(n)} est ${fr(answer)}.`],
+    steps: [{ type: "resultat", text: `La distance à zéro de ${fr(n)} est ${fr(answer)}.` }],
   };
 }
 
@@ -105,7 +105,7 @@ function genSigneDunNombreQCM() {
     prompt: `Le nombre ${fr(n)} est-il positif ou négatif ?`,
     answer: positif ? "Positif" : "Négatif",
     options: ["Positif", "Négatif"],
-    steps: [`${fr(n)} est ${positif ? "positif" : "négatif"}.`],
+    steps: [{ type: "resultat", text: `${fr(n)} est ${positif ? "positif" : "négatif"}.` }],
   };
 }
 
@@ -119,7 +119,7 @@ function genRetrouverNombreDepuisOppose() {
     prompt: `L'opposé d'un nombre a est ${fr(b)}. Quel est ce nombre a ?`,
     answer,
     tolerance: 0.001,
-    steps: [`Si l'opposé de a vaut ${fr(b)}, alors a = ${fr(answer)}.`],
+    steps: [{ type: "calcul", text: `Si l'opposé de a vaut ${fr(b)}, alors a = ${fr(answer)}.` }],
   };
 }
 
@@ -135,7 +135,7 @@ function genContexteAscenseurNiveauQCM() {
     prompt: `Un immeuble a un parking situé ${sousSol} niveau${sousSol > 1 ? "x" : ""} sous le rez-de-chaussée. Quel nombre relatif représente cet étage ?`,
     answer: correct,
     options,
-    steps: [`Le rez-de-chaussée est au niveau 0. ${sousSol} niveau(x) en dessous correspond à ${correct}.`],
+    steps: [{ type: "regle", text: `Le rez-de-chaussée est au niveau 0. ${sousSol} niveau(x) en dessous correspond à ${correct}.` }],
   };
 }
 
@@ -152,7 +152,7 @@ function genContexteProfondeurHauteurEcriture() {
       : `Un drone vole à ${fr(valeur)} m au-dessus du niveau de la mer. Quel nombre relatif (en m) représente cette altitude ?`,
     answer,
     tolerance: 0.01,
-    steps: [`Le niveau de la mer correspond à 0. ${isProfondeur ? "En dessous" : "Au-dessus"}, on utilise un nombre ${isProfondeur ? "négatif" : "positif"}.`],
+    steps: [{ type: "regle", text: `Le niveau de la mer correspond à 0. ${isProfondeur ? "En dessous" : "Au-dessus"}, on utilise un nombre ${isProfondeur ? "négatif" : "positif"}.` }],
   };
 }
 
@@ -167,7 +167,7 @@ function genAbscisseSurDroiteGraduee() {
     prompt: `Quelle est l'abscisse du point M sur la droite graduée ci-dessous ?`,
     figure: buildGraduatedLineFigure(markedValue, -8, 8, "M"),
     answer: markedValue,
-    steps: [`Le point M est placé sur la graduation ${markedValue}.`],
+    steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${markedValue}.` }],
   };
 }
 
@@ -183,7 +183,7 @@ function genComparerDistancesAZeroQCM() {
     prompt: `Quel nombre a la plus grande distance à zéro : ${fr(a)} ou ${fr(b)} ?`,
     answer,
     options: shuffle([fr(a), fr(b)]),
-    steps: [`Distance à zéro de ${fr(a)} : ${fr(Math.abs(a))}. Distance à zéro de ${fr(b)} : ${fr(Math.abs(b))}.`],
+    steps: [{ type: "calcul", text: `Distance à zéro de ${fr(a)} : ${fr(Math.abs(a))}. Distance à zéro de ${fr(b)} : ${fr(Math.abs(b))}.` }],
   };
 }
 
@@ -204,7 +204,7 @@ function genClasserDatesFrise() {
     prompt: `Range ces événements dans l'ordre chronologique (du plus ancien au plus récent) : ${events.map((e) => `${e.label} (an ${e.year})`).join(" ; ")}.`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On classe les années par ordre croissant (les années négatives sont les plus anciennes).`],
+    steps: [{ type: "regle", text: `On classe les années par ordre croissant (les années négatives sont les plus anciennes).` }],
   };
 }
 
@@ -222,7 +222,7 @@ function genComparerDeuxRelatifsQCM() {
     prompt: `Complète par < ou > : \\(${frTex(a)}\\) ... \\(${frTex(b)}\\)`,
     answer: correct,
     options: ["<", ">"],
-    steps: [`Un nombre négatif est toujours inférieur à un nombre positif ; entre deux négatifs, le plus grand est celui qui a la plus petite distance à zéro.`],
+    steps: [{ type: "regle", text: `Un nombre négatif est toujours inférieur à un nombre positif ; entre deux négatifs, le plus grand est celui qui a la plus petite distance à zéro.` }],
   };
 }
 
@@ -235,7 +235,7 @@ function genEncadrerParEntiersRelatifsConsecutifs() {
     chapter: "Nombres relatifs — Comparer",
     prompt: `Quel est l'entier relatif immédiatement inférieur à ${fr(x)} ?`,
     answer,
-    steps: [`${answer} < ${fr(x)} < ${answer + 1}`],
+    steps: [{ type: "resultat", text: `${answer} < ${fr(x)} < ${answer + 1}` }],
   };
 }
 
@@ -257,7 +257,10 @@ function genRangerRelatifsOrdreCroissantDecroissant() {
     prompt: `Range dans l'ordre ${asc ? "croissant" : "décroissant"} les nombres suivants : ${nums.map(fr).join(" ; ")}`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On place les nombres négatifs avant les positifs, puis on compare leurs distances à zéro.`, `Ordre correct : ${correctOrder}`],
+    steps: [
+      { type: "regle", text: `On place les nombres négatifs avant les positifs, puis on compare leurs distances à zéro.` },
+      { type: "resultat", text: `Ordre correct : ${correctOrder}` },
+    ],
   };
 }
 
@@ -275,7 +278,10 @@ function genAdditionnerDeuxRelatifsMemeSigne() {
     prompt: `Calcule : \\((${signedTex(a)}) + (${signedTex(b)})\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`Les deux nombres ont le même signe : on garde ce signe et on additionne leurs distances à zéro.`, `${fr(a)} + ${fr(b)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `Les deux nombres ont le même signe : on garde ce signe et on additionne leurs distances à zéro.` },
+      { type: "calcul", text: `${fr(a)} + ${fr(b)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -291,7 +297,10 @@ function genAdditionnerDeuxRelatifsSignesContraires() {
     prompt: `Calcule : \\((${signedTex(a)}) + (${signedTex(b)})\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`Les deux nombres ont des signes contraires : on garde le signe du nombre ayant la plus grande distance à zéro, et on soustrait les distances à zéro.`, `${fr(a)} + ${fr(b)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `Les deux nombres ont des signes contraires : on garde le signe du nombre ayant la plus grande distance à zéro, et on soustrait les distances à zéro.` },
+      { type: "calcul", text: `${fr(a)} + ${fr(b)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -307,7 +316,7 @@ function genProblemeTemperatureAddition() {
     prompt: `Il fait ${fr(t0)}°C. La température ${augmente ? "augmente" : "baisse"} de ${fr(delta)}°C. Quelle température fait-il ensuite, en °C ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(t0)} ${augmente ? "+" : "-"} ${fr(delta)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(t0)} ${augmente ? "+" : "-"} ${fr(delta)} = ${fr(answer)}` }],
   };
 }
 
@@ -324,7 +333,10 @@ function genSoustraireDeuxRelatifs() {
     prompt: `Calcule : \\((${signedTex(a)}) - (${signedTex(b)})\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`Soustraire un nombre revient à ajouter son opposé : (${signedTex(a)}) + (${signedTex(-b)})`, `= ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `Soustraire un nombre revient à ajouter son opposé : (${signedTex(a)}) + (${signedTex(-b)})` },
+      { type: "resultat", text: `= ${fr(answer)}` },
+    ],
   };
 }
 
@@ -339,7 +351,7 @@ function genTransformerSoustractionEnAddition() {
     prompt: `On veut écrire \\((${signedTex(a)}) - (${signedTex(b)})\\) sous la forme d'une addition : \\((${signedTex(a)}) + ?\\). Quel est le nombre manquant ?`,
     answer,
     tolerance: 0.001,
-    steps: [`Soustraire (${signedTex(b)}) revient à ajouter son opposé, soit ${fr(answer)}.`],
+    steps: [{ type: "regle", text: `Soustraire (${signedTex(b)}) revient à ajouter son opposé, soit ${fr(answer)}.` }],
   };
 }
 
@@ -356,7 +368,7 @@ function genDureeVieHistorique() {
       chapter: "Nombres relatifs — Soustraire",
       prompt: `${nom} est né(e) en l'an ${naissance} et est mort(e) en l'an ${mortAn}. À quel âge est-il/elle mort(e) ?`,
       answer: dureeVie,
-      steps: [`${mortAn} - (${naissance}) = ${dureeVie}`],
+      steps: [{ type: "calcul", text: `${mortAn} - (${naissance}) = ${dureeVie}` }],
     };
   }
   return {
@@ -364,7 +376,7 @@ function genDureeVieHistorique() {
     chapter: "Nombres relatifs — Soustraire",
     prompt: `${nom} est mort(e) à ${dureeVie} ans, en l'an ${mortAn}. En quelle année est-il/elle né(e) ?`,
     answer: naissance,
-    steps: [`${mortAn} - ${dureeVie} = ${naissance}`],
+    steps: [{ type: "calcul", text: `${mortAn} - ${dureeVie} = ${naissance}` }],
   };
 }
 
@@ -380,7 +392,7 @@ function genVariationMasseSemaine() {
     prompt: `Voici ${grandeur} sur deux semaines : semaine 1 : ${fr(semaine1)} ; semaine 2 : ${fr(semaine2)}. Calcule la variation entre la semaine 1 et la semaine 2.`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(semaine2)} - (${fr(semaine1)}) = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(semaine2)} - (${fr(semaine1)}) = ${fr(answer)}` }],
   };
 }
 
@@ -404,7 +416,10 @@ function genCalculerExpressionRelatifsEnchainee() {
     prompt: `Calcule : \\(${exprParts.join(" ")}\\)`,
     answer: total,
     tolerance: 0.01,
-    steps: [`On calcule de gauche à droite en transformant chaque soustraction en addition de l'opposé.`, `Résultat : ${fr(total)}`],
+    steps: [
+      { type: "regle", text: `On calcule de gauche à droite en transformant chaque soustraction en addition de l'opposé.` },
+      { type: "resultat", text: `Résultat : ${fr(total)}` },
+    ],
   };
 }
 
@@ -421,7 +436,7 @@ function genBilanCarboneAdditionSoustraction() {
     prompt: `Une commune étudie son bilan carbone journalier (en kg de CO2, positif si émission, négatif si économie) : ${detail}. Calcule le bilan total de la journée, en kg.`,
     answer: total,
     tolerance: 0.01,
-    steps: [`${valeurs.map(fr).join(" + ")} = ${fr(total)}`],
+    steps: [{ type: "calcul", text: `${valeurs.map(fr).join(" + ")} = ${fr(total)}` }],
   };
 }
 
@@ -437,7 +452,7 @@ function genEcartEffectifsEvolution() {
     chapter: "Nombres relatifs — Enchaîner",
     prompt: `En ${mois[0]}, l'écart entre deux effectifs est de ${depart}. ${detail[0].toUpperCase()}${detail.slice(1)}. Quel est l'écart final ?`,
     answer: final,
-    steps: [`${depart} ${variations.map((v) => `${v >= 0 ? "+" : ""}${v}`).join(" ")} = ${final}`],
+    steps: [{ type: "calcul", text: `${depart} ${variations.map((v) => `${v >= 0 ? "+" : ""}${v}`).join(" ")} = ${final}` }],
   };
 }
 
@@ -476,7 +491,10 @@ function genCompleterGraduationDemiDroite() {
     chapter: "Nombres relatifs — Repérages",
     prompt: `Sur une demi-droite graduée régulièrement, la première graduation est ${min} et la dernière (après ${nbIntervalles} intervalles égaux) est ${max}. Quelle est la valeur de la ${targetIndex}${targetIndex === 1 ? "re" : "e"} graduation après ${min} ?`,
     answer,
-    steps: [`Chaque intervalle vaut (${max} - ${min}) \\div ${nbIntervalles} = ${pas}.`, `${min} + ${targetIndex} \\times ${pas} = ${answer}`],
+    steps: [
+      { type: "regle", text: `Chaque intervalle vaut (${max} - ${min}) \\div ${nbIntervalles} = ${pas}.` },
+      { type: "calcul", text: `${min} + ${targetIndex} \\times ${pas} = ${answer}` },
+    ],
   };
 }
 
@@ -491,7 +509,7 @@ function genLireCoordonneePointRepere() {
     prompt: `Dans le repère ci-dessous, quelle est ${askAbscisse ? "l'abscisse" : "l'ordonnée"} du point A ?`,
     figure: buildRepereFigure(px, py),
     answer: askAbscisse ? px : py,
-    steps: [`Le point A a pour coordonnées (${px} ; ${py}).`],
+    steps: [{ type: "donnee", text: `Le point A a pour coordonnées (${px} ; ${py}).` }],
   };
 }
 
@@ -505,7 +523,7 @@ function genSymetriqueParRapportOrigineCoordonnees() {
     chapter: "Nombres relatifs — Repérages",
     prompt: `Le point A a pour coordonnées (${px} ; ${py}). Son symétrique A' par rapport à l'origine O du repère a pour coordonnées (?, ?). Quelle est ${askAbscisse ? "l'abscisse" : "l'ordonnée"} de A' ?`,
     answer: askAbscisse ? -px : -py,
-    steps: [`Le symétrique par rapport à l'origine a des coordonnées opposées : A'(${-px} ; ${-py}).`],
+    steps: [{ type: "regle", text: `Le symétrique par rapport à l'origine a des coordonnées opposées : A'(${-px} ; ${-py}).` }],
   };
 }
 
@@ -521,8 +539,8 @@ function genSymetriqueParRapportAxeCoordonnees() {
     prompt: `Le point A a pour coordonnées (${px} ; ${py}). Quelle est ${axeAbscisses ? "l'ordonnée" : "l'abscisse"} du symétrique de A par rapport à l'axe des ${axeAbscisses ? "abscisses" : "ordonnées"} ?`,
     answer,
     steps: axeAbscisses
-      ? [`Le symétrique par rapport à l'axe des abscisses garde la même abscisse et change le signe de l'ordonnée : (${px} ; ${-py}).`]
-      : [`Le symétrique par rapport à l'axe des ordonnées garde la même ordonnée et change le signe de l'abscisse : (${-px} ; ${py}).`],
+      ? [{ type: "regle", text: `Le symétrique par rapport à l'axe des abscisses garde la même abscisse et change le signe de l'ordonnée : (${px} ; ${-py}).` }]
+      : [{ type: "regle", text: `Le symétrique par rapport à l'axe des ordonnées garde la même ordonnée et change le signe de l'abscisse : (${-px} ; ${py}).` }],
   };
 }
 
@@ -538,7 +556,7 @@ function genQuadrantSigneCoordonneesQCM() {
     prompt: `Le point A a pour coordonnées (${px} ; ${py}). Dans quelle zone du plan (par rapport aux axes) se trouve-t-il ?`,
     answer: zone,
     options: shuffle(["en haut à droite", "en haut à gauche", "en bas à gauche", "en bas à droite"]),
-    steps: [`On regarde le signe de l'abscisse (${px >= 0 ? "positive : droite" : "négative : gauche"}) et de l'ordonnée (${py >= 0 ? "positive : haut" : "négative : bas"}).`],
+    steps: [{ type: "regle", text: `On regarde le signe de l'abscisse (${px >= 0 ? "positive : droite" : "négative : gauche"}) et de l'ordonnée (${py >= 0 ? "positive : haut" : "négative : bas"}).` }],
   };
 }
 
@@ -553,7 +571,7 @@ function genMilieuSegmentAbscisse() {
     prompt: `Sur une droite graduée, A a pour abscisse ${a} et C a pour abscisse ${c}. L est le milieu du segment [AC]. Quelle est l'abscisse de L ?`,
     answer: milieu,
     tolerance: 0.01,
-    steps: [`(${a} + ${c}) \\div 2 = ${fr(milieu)}`],
+    steps: [{ type: "calcul", text: `(${a} + ${c}) \\div 2 = ${fr(milieu)}` }],
   };
 }
 
@@ -569,7 +587,7 @@ function genTraduireOperationAvecZero() {
       chapter: "Nombres relatifs — Culture",
       prompt: `La somme de zéro et d'une dette de ${montant} pièces est une dette de combien de pièces ? (réponds par un nombre relatif)`,
       answer: -montant,
-      steps: [`0 + (${-montant}) = ${-montant}`],
+      steps: [{ type: "calcul", text: `0 + (${-montant}) = ${-montant}` }],
     };
   }
   if (kind === "dette_soustraite") {
@@ -578,7 +596,7 @@ function genTraduireOperationAvecZero() {
       chapter: "Nombres relatifs — Culture",
       prompt: `Une dette de ${montant} pièces soustraite de zéro donne un bien de combien de pièces ? (réponds par un nombre relatif)`,
       answer: montant,
-      steps: [`0 - (${-montant}) = ${montant}`],
+      steps: [{ type: "calcul", text: `0 - (${-montant}) = ${montant}` }],
     };
   }
   return {
@@ -586,7 +604,7 @@ function genTraduireOperationAvecZero() {
     chapter: "Nombres relatifs — Culture",
     prompt: `Un bien de ${montant} pièces soustrait de zéro donne une dette de combien de pièces ? (réponds par un nombre relatif)`,
     answer: -montant,
-    steps: [`0 - ${montant} = ${-montant}`],
+    steps: [{ type: "calcul", text: `0 - ${montant} = ${-montant}` }],
   };
 }
 
@@ -667,6 +685,7 @@ export default {
     id: "nombres-relatifs",
     title: "Nombres relatifs",
     description: "Opposé, valeur absolue, droite graduée, comparer, additionner, soustraire, repérage dans le plan.",
+    pourquoi: "L'opposé, la valeur absolue et le repérage sur une droite graduée préparent tout le calcul algébrique des classes suivantes.",
     level: "cinquieme",
     free: false,
     order: 6,

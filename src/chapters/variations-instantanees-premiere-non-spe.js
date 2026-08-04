@@ -370,6 +370,7 @@ export default {
     id: "variations-instantanees-premiere-non-spe",
     title: "Variations instantanées",
     description: "Nombre dérivé comme coefficient directeur de la tangente, tangente horizontale, dérivée d'une fonction affine, équation de la tangente, signe du nombre dérivé et sens de variation local, interprétation physique (vitesse, accélération).",
+    pourquoi: "Le nombre dérivé permet de savoir à quel rythme une quantité évolue à un instant précis — la base de toute optimisation.",
     level: "premiere-non-spe",
     free: false,
     order: 6,

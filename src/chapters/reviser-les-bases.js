@@ -58,7 +58,10 @@ function genChiffrePosition() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `Dans le nombre ${n}, quel est le chiffre des ${pos.name} ?`,
     answer: digit,
-    steps: [`On repère la position "${pos.name}" en partant de la droite.`, `Le chiffre à cette position est ${digit}.`],
+    steps: [
+      { type: "regle", text: `On repère la position "${pos.name}" en partant de la droite.` },
+      { type: "resultat", text: `Le chiffre à cette position est ${digit}.` },
+    ],
   };
 }
 
@@ -86,7 +89,10 @@ function genDecompositionAdditive() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `Quel nombre correspond à \\(${terms.join(" + ")}\\) ?`,
     answer: total,
-    steps: [`On calcule chaque produit puis on additionne les résultats.`, `Résultat : ${total}`],
+    steps: [
+      { type: "regle", text: `On calcule chaque produit puis on additionne les résultats.` },
+      { type: "resultat", text: `Résultat : ${total}` },
+    ],
   };
 }
 
@@ -105,7 +111,7 @@ function genConversionUnites() {
       chapter: "Réviser les bases — Nombres entiers",
       prompt: `Quel nombre correspond à ${count} ${unite.name} ?`,
       answer: n,
-      steps: [`${count} \\times ${unite.val} = ${n}`],
+      steps: [{ type: "calcul", text: `${count} \\times ${unite.val} = ${n}` }],
     };
   }
   return {
@@ -113,7 +119,7 @@ function genConversionUnites() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `${n} = combien de ${unite.name} ?`,
     answer: count,
-    steps: [`${n} \\div ${unite.val} = ${count}`],
+    steps: [{ type: "calcul", text: `${n} \\div ${unite.val} = ${count}` }],
   };
 }
 
@@ -124,7 +130,7 @@ function genNombrePrecedent() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `Quel est l'entier qui précède immédiatement ${n} ?`,
     answer: n - 1,
-    steps: [`Le nombre juste avant ${n} est ${n - 1}.`],
+    steps: [{ type: "calcul", text: `Le nombre juste avant ${n} est ${n - 1}.` }],
   };
 }
 
@@ -136,7 +142,7 @@ function genCompleterRond() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `Complète : \\(${n} + \\underline{\\hspace{1cm}} = ${rond}\\)`,
     answer: rond - n,
-    steps: [`${rond} - ${n} = ${rond - n}`],
+    steps: [{ type: "calcul", text: `${rond} - ${n} = ${rond - n}` }],
   };
 }
 
@@ -150,7 +156,10 @@ function genSuiteLogique() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `Complète la suite logique : ${terms.join(" — ")} — ... ?`,
     answer,
-    steps: [`On repère le pas entre deux termes consécutifs : ${step >= 0 ? "+" : ""}${step}.`, `${terms[2]} ${step >= 0 ? "+" : "-"} ${Math.abs(step)} = ${answer}`],
+    steps: [
+      { type: "regle", text: `On repère le pas entre deux termes consécutifs : ${step >= 0 ? "+" : ""}${step}.` },
+      { type: "calcul", text: `${terms[2]} ${step >= 0 ? "+" : "-"} ${Math.abs(step)} = ${answer}` },
+    ],
   };
 }
 
@@ -169,9 +178,9 @@ function genProblemeCode() {
     prompt: `${prenom} a oublié le code à 4 chiffres de son ${objet}. Le chiffre des dizaines est le double de celui des milliers. Le chiffre des centaines est le triple de celui des unités. La somme des quatre chiffres est ${sum}. Quel est ce code ?`,
     answer: code,
     steps: [
-      `On cherche des chiffres m (milliers), d (dizaines), c (centaines), u (unités) avec d = 2m et c = 3u.`,
-      `En testant les petites valeurs qui vérifient la somme, on trouve m = ${m}, c = ${c}, d = ${d}, u = ${u}.`,
-      `Le code est ${code}.`,
+      { type: "regle", text: `On cherche des chiffres m (milliers), d (dizaines), c (centaines), u (unités) avec d = 2m et c = 3u.` },
+      { type: "calcul", text: `En testant les petites valeurs qui vérifient la somme, on trouve m = ${m}, c = ${c}, d = ${d}, u = ${u}.` },
+      { type: "resultat", text: `Le code est ${code}.` },
     ],
   };
 }
@@ -187,7 +196,7 @@ function genProblemeSommeObjets() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `${lieu} on recense ${lines}. Combien d'objets au total ont été recensés ?`,
     answer: total,
-    steps: [`On additionne les quatre quantités : ${counts.join(" + ")} = ${total}.`],
+    steps: [{ type: "calcul", text: `On additionne les quatre quantités : ${counts.join(" + ")} = ${total}.` }],
   };
 }
 
@@ -202,7 +211,10 @@ function genProblemeSoustractionPartie() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `${fleuve} est un fleuve de longueur totale ${total} km, dont ${partEtranger} km ${pays}. Combien de kilomètres mesure sa partie française ?`,
     answer: partFrance,
-    steps: [`Partie française = longueur totale − partie à l'étranger.`, `${total} - ${partEtranger} = ${partFrance}`],
+    steps: [
+      { type: "regle", text: `Partie française = longueur totale − partie à l'étranger.` },
+      { type: "calcul", text: `${total} - ${partEtranger} = ${partFrance}` },
+    ],
   };
 }
 
@@ -214,7 +226,10 @@ function genProblemeConversionTemps() {
       chapter: "Réviser les bases — Problèmes",
       prompt: `Combien y a-t-il de minutes dans ${h} heures ?`,
       answer: h * 60,
-      steps: [`1 heure = 60 minutes.`, `${h} \\times 60 = ${h * 60}`],
+      steps: [
+        { type: "regle", text: `1 heure = 60 minutes.` },
+        { type: "calcul", text: `${h} \\times 60 = ${h * 60}` },
+      ],
     };
   }
   const m = randInt(20, 95);
@@ -223,7 +238,10 @@ function genProblemeConversionTemps() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `Combien y a-t-il de secondes dans ${m} minutes ?`,
     answer: m * 60,
-    steps: [`1 minute = 60 secondes.`, `${m} \\times 60 = ${m * 60}`],
+    steps: [
+      { type: "regle", text: `1 minute = 60 secondes.` },
+      { type: "calcul", text: `${m} \\times 60 = ${m * 60}` },
+    ],
   };
 }
 
@@ -238,7 +256,10 @@ function genProblemeEcartTaille() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `${p1} mesure ${largerCm} cm, c'est ${ecart} cm de plus que son ${lien} ${p2}. Quelle est la taille de ${p2}, en cm ?`,
     answer: smallerCm,
-    steps: [`Taille de ${p2} = taille de ${p1} − écart.`, `${largerCm} - ${ecart} = ${smallerCm}`],
+    steps: [
+      { type: "regle", text: `Taille de ${p2} = taille de ${p1} − écart.` },
+      { type: "calcul", text: `${largerCm} - ${ecart} = ${smallerCm}` },
+    ],
   };
 }
 
@@ -254,7 +275,7 @@ function genProblemeMultiplicateur() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `${p1} possède ${mot} plus de ${objet} que ${p2}, qui en a ${base}. Combien de ${objet} ${p1} possède-t-il ?`,
     answer: total,
-    steps: [`${base} \\times ${facteur} = ${total}`],
+    steps: [{ type: "calcul", text: `${base} \\times ${facteur} = ${total}` }],
   };
 }
 
@@ -269,7 +290,7 @@ function genProblemeComparaisonFois() {
     chapter: "Réviser les bases — Problèmes",
     prompt: `${p1} et ${p2} comparent leurs ${contexte}. ${p1} en a ${total} ; ${p2} en a ${base}. Combien de fois plus ${p1} en a-t-il que ${p2} ?`,
     answer: facteur,
-    steps: [`${total} \\div ${base} = ${facteur}`],
+    steps: [{ type: "calcul", text: `${total} \\div ${base} = ${facteur}` }],
   };
 }
 
@@ -281,7 +302,7 @@ function genPoserOperation() {
     chapter: "Réviser les bases — Automatismes",
     prompt: `Pose et calcule : \\(${a} \\times ${b}\\)`,
     answer: a * b,
-    steps: [`${a} \\times ${b} = ${a * b}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${a * b}` }],
   };
 }
 
@@ -294,7 +315,7 @@ function genAdditionSoustractionPosee() {
       chapter: "Réviser les bases — Automatismes",
       prompt: `Pose et calcule : \\(${a} + ${b}\\)`,
       answer: a + b,
-      steps: [`${a} + ${b} = ${a + b}`],
+      steps: [{ type: "calcul", text: `${a} + ${b} = ${a + b}` }],
     };
   }
   const a = randInt(5000, 9999);
@@ -304,7 +325,7 @@ function genAdditionSoustractionPosee() {
     chapter: "Réviser les bases — Automatismes",
     prompt: `Pose et calcule : \\(${a} - ${b}\\)`,
     answer: a - b,
-    steps: [`${a} - ${b} = ${a - b}`],
+    steps: [{ type: "calcul", text: `${a} - ${b} = ${a - b}` }],
   };
 }
 
@@ -316,7 +337,10 @@ function genCalculAstucieux() {
     chapter: "Réviser les bases — Automatismes",
     prompt: `Calcule astucieusement : \\(${nums.join(" + ")}\\)`,
     answer: total,
-    steps: [`On peut regrouper les nombres pour former des dizaines ou centaines rondes avant d'additionner.`, `Total : ${total}`],
+    steps: [
+      { type: "regle", text: `On peut regrouper les nombres pour former des dizaines ou centaines rondes avant d'additionner.` },
+      { type: "resultat", text: `Total : ${total}` },
+    ],
   };
 }
 
@@ -340,7 +364,10 @@ function genRangerTableau() {
     prompt: `Voici les masses (en kg) de quelques animaux : ${table}. Range-les par masse ${asc ? "croissante" : "décroissante"}.`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On compare les valeurs une à une puis on les ordonne.`, `Ordre correct : ${correctOrder}`],
+    steps: [
+      { type: "regle", text: `On compare les valeurs une à une puis on les ordonne.` },
+      { type: "resultat", text: `Ordre correct : ${correctOrder}` },
+    ],
   };
 }
 
@@ -386,10 +413,13 @@ function genPointsAlignes() {
     answer,
     options: shuffle(["Oui", "Non"]),
     steps: [
-      `Des points sont alignés s'ils appartiennent à une même droite.`,
-      askAligned
-        ? `${l1}, ${l2} et ${l3} sont bien placés sur la droite tracée : ils sont alignés.`
-        : `${l4} n'appartient pas à la droite (${l1}${l3}) : les points ne sont pas tous alignés.`,
+      { type: "regle", text: `Des points sont alignés s'ils appartiennent à une même droite.` },
+      {
+        type: "resultat",
+        text: askAligned
+          ? `${l1}, ${l2} et ${l3} sont bien placés sur la droite tracée : ils sont alignés.`
+          : `${l4} n'appartient pas à la droite (${l1}${l3}) : les points ne sont pas tous alignés.`,
+      },
     ],
   };
 }
@@ -426,9 +456,9 @@ function genAppartenanceMulti() {
     options,
     answer,
     steps: [
-      `${M.id} est le milieu de [${A.id}${B.id}] : il appartient donc au segment ET à la droite (${A.id}${B.id}).`,
-      `${C.id} n'est pas sur la droite (${A.id}${B.id}) : ${A.id}, ${B.id}, ${C.id} ne sont pas alignés.`,
-      `${E.id} n'appartient pas au segment [${B.id}${C.id}].`,
+      { type: "resultat", text: `${M.id} est le milieu de [${A.id}${B.id}] : il appartient donc au segment ET à la droite (${A.id}${B.id}).` },
+      { type: "resultat", text: `${C.id} n'est pas sur la droite (${A.id}${B.id}) : ${A.id}, ${B.id}, ${C.id} ne sont pas alignés.` },
+      { type: "resultat", text: `${E.id} n'appartient pas au segment [${B.id}${C.id}].` },
     ],
   };
 }
@@ -476,7 +506,10 @@ function genNatureDroites() {
     figure,
     answer,
     options: shuffle(Object.values(sentences)),
-    steps: [`On observe si les droites se croisent, et si oui, en formant un angle droit ou non.`, answer],
+    steps: [
+      { type: "regle", text: `On observe si les droites se croisent, et si oui, en formant un angle droit ou non.` },
+      { type: "resultat", text: answer },
+    ],
   };
 }
 
@@ -514,7 +547,7 @@ function genNatureQuadrilatereTriangle() {
       prompt: `Quelle est la nature du quadrilatère ${a}${b}${c}${d} ? (Réponds par un seul mot.)`,
       figure,
       answer: ["carré", "carre"],
-      steps: [`4 côtés de même longueur (codés) et 4 angles droits : c'est un carré.`],
+      steps: [{ type: "resultat", text: `4 côtés de même longueur (codés) et 4 angles droits : c'est un carré.` }],
     };
   }
 
@@ -550,7 +583,7 @@ function genNatureQuadrilatereTriangle() {
       prompt: `Quelle est la nature du quadrilatère ${a}${b}${c}${d} ? (Réponds par un seul mot.)`,
       figure,
       answer: ["rectangle"],
-      steps: [`Côtés opposés de même longueur (codés) et 4 angles droits, mais tous les côtés ne sont pas égaux : c'est un rectangle.`],
+      steps: [{ type: "resultat", text: `Côtés opposés de même longueur (codés) et 4 angles droits, mais tous les côtés ne sont pas égaux : c'est un rectangle.` }],
     };
   }
 
@@ -582,7 +615,7 @@ function genNatureQuadrilatereTriangle() {
       prompt: `Quelle est la nature du quadrilatère ${a}${b}${c}${d} ? (Réponds par un seul mot.)`,
       figure,
       answer: ["losange"],
-      steps: [`Les 4 côtés ont la même longueur (codés), mais les angles ne sont pas droits : c'est un losange.`],
+      steps: [{ type: "resultat", text: `Les 4 côtés ont la même longueur (codés), mais les angles ne sont pas droits : c'est un losange.` }],
     };
   }
 
@@ -611,7 +644,7 @@ function genNatureQuadrilatereTriangle() {
       prompt: `Quelle est la nature du triangle ${a}${b}${c} ? (Réponds par "triangle rectangle".)`,
       figure,
       answer: ["triangle rectangle"],
-      steps: [`Un angle droit est codé en ${a} : c'est un triangle rectangle.`],
+      steps: [{ type: "resultat", text: `Un angle droit est codé en ${a} : c'est un triangle rectangle.` }],
     };
   }
 
@@ -639,7 +672,7 @@ function genNatureQuadrilatereTriangle() {
     prompt: `Quelle est la nature du triangle ${a}${b}${c} ? (Réponds par "triangle isocèle".)`,
     figure,
     answer: ["triangle isocèle", "triangle isocele"],
-    steps: [`Deux côtés de même longueur sont codés (${a}${c} et ${b}${c}) : c'est un triangle isocèle en ${c}.`],
+    steps: [{ type: "resultat", text: `Deux côtés de même longueur sont codés (${a}${c} et ${b}${c}) : c'est un triangle isocèle en ${c}.` }],
   };
 }
 
@@ -664,7 +697,10 @@ function genMilieuSegment() {
       prompt: `M est le milieu du segment [AB]. Sachant que AB = ${total} cm, quelle est la longueur AM, en cm ?`,
       figure,
       answer: half,
-      steps: [`Le milieu partage le segment en deux parties égales.`, `AM = AB \\div 2 = ${total} \\div 2 = ${half}`],
+      steps: [
+        { type: "regle", text: `Le milieu partage le segment en deux parties égales.` },
+        { type: "calcul", text: `AM = AB \\div 2 = ${total} \\div 2 = ${half}` },
+      ],
     };
   }
   return {
@@ -673,7 +709,7 @@ function genMilieuSegment() {
     prompt: `M est le milieu du segment [AB]. Sachant que AM = ${half} cm, quelle est la longueur AB, en cm ?`,
     figure,
     answer: total,
-    steps: [`AB = 2 \\times AM = 2 \\times ${half} = ${total}`],
+    steps: [{ type: "calcul", text: `AB = 2 \\times AM = 2 \\times ${half} = ${total}` }],
   };
 }
 
@@ -710,7 +746,10 @@ function genPerimetreFigureCodee() {
     prompt: `ABCD est un rectangle. Calcule son périmètre, en cm.`,
     figure,
     answer: perim,
-    steps: [`Périmètre = 2 \\times (longueur + largeur)`, `2 \\times (${L} + ${l}) = ${perim}`],
+    steps: [
+      { type: "regle", text: `Périmètre = 2 \\times (longueur + largeur)` },
+      { type: "calcul", text: `2 \\times (${L} + ${l}) = ${perim}` },
+    ],
   };
 }
 
@@ -749,6 +788,7 @@ export default {
     id: "reviser-les-bases",
     title: "Réviser les bases",
     description: "Nombres entiers, calculs et géométrie de base — pour prendre un bon départ en 6e. Gratuit et illimité.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "sixieme",
     free: true,
     order: 0,

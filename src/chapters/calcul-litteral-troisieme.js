@@ -60,9 +60,9 @@ function genDevelopperSimpleDistributiviteGeneraleNumeric() {
     prompt: `On développe \\(${k}\\left(${a}x ${sgn(b)} ${abs(b)}\\right) = ?x ${askCoefX ? "+ \\ldots" : `${sgn(coefX)} ${abs(coefX)}`}\\). Quel est ${askCoefX ? "le coefficient de x" : "le terme constant"} de cette expression développée ?`,
     answer: askCoefX ? coefX : constant,
     steps: [
-      `${k} \\times ${a}x = ${coefX}x`,
-      `${k} \\times \\left(${b}\\right) = ${constant}`,
-      `${k}\\left(${a}x ${sgn(b)} ${abs(b)}\\right) = ${coefX}x ${sgn(constant)} ${abs(constant)}`,
+      { type: "calcul", text: `${k} \\times ${a}x = ${coefX}x` },
+      { type: "calcul", text: `${k} \\times \\left(${b}\\right) = ${constant}` },
+      { type: "resultat", text: `${k}\\left(${a}x ${sgn(b)} ${abs(b)}\\right) = ${coefX}x ${sgn(constant)} ${abs(constant)}` },
     ],
   };
 }
@@ -81,9 +81,12 @@ function genDevelopperSigneDevantParentheseNumeric() {
     prompt: `On développe \\(${isNeg ? "-" : "+"}\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\). Quel est ${askCoefX ? "le coefficient de x" : "le terme constant"} de cette expression développée ?`,
     answer: askCoefX ? coefX : constant,
     steps: [
-      isNeg
-        ? `Un signe - devant une parenthèse change le signe de chaque terme : ${coefX}x ${sgn(constant)} ${abs(constant)}`
-        : `Un signe + devant une parenthèse laisse chaque terme inchangé : ${coefX}x ${sgn(constant)} ${abs(constant)}`,
+      {
+        type: "regle",
+        text: isNeg
+          ? `Un signe - devant une parenthèse change le signe de chaque terme : ${coefX}x ${sgn(constant)} ${abs(constant)}`
+          : `Un signe + devant une parenthèse laisse chaque terme inchangé : ${coefX}x ${sgn(constant)} ${abs(constant)}`,
+      },
     ],
   };
 }
@@ -111,9 +114,9 @@ function genDevelopperDoubleDistributiviteGeneraleNumeric() {
     prompt,
     answer,
     steps: [
-      `${a}x \\times ${c}x = ${coefX2}x^2`,
-      `${a}x \\times \\left(${d}\\right) + \\left(${b}\\right) \\times ${c}x = ${a * d}x ${sgn(b * c)} ${abs(b * c)}x = ${sgn(coefX)} ${abs(coefX)}x`,
-      `\\left(${b}\\right) \\times \\left(${d}\\right) = ${constant}`,
+      { type: "calcul", text: `${a}x \\times ${c}x = ${coefX2}x^2` },
+      { type: "calcul", text: `${a}x \\times \\left(${d}\\right) + \\left(${b}\\right) \\times ${c}x = ${a * d}x ${sgn(b * c)} ${abs(b * c)}x = ${sgn(coefX)} ${abs(coefX)}x` },
+      { type: "calcul", text: `\\left(${b}\\right) \\times \\left(${d}\\right) = ${constant}` },
     ],
   };
 }
@@ -147,10 +150,10 @@ function genCorrigerErreurEleveQCM() {
     answer: correct,
     options,
     steps: [
-      `Soustraire une parenthèse revient à changer le signe de chacun de ses termes : ${a}x ${sgn(b)} ${abs(b)} ${c >= 0 ? "-" : "+"} ${abs(c)}x ${d >= 0 ? "-" : "+"} ${abs(d)}`,
-      `On regroupe les termes en x : ${a} ${c >= 0 ? "-" : "+"} ${abs(c)} = ${coefXOk}`,
-      `On regroupe les termes constants : ${b} ${d >= 0 ? "-" : "+"} ${abs(d)} = ${constOk}`,
-      `A = ${correct}`,
+      { type: "regle", text: `Soustraire une parenthèse revient à changer le signe de chacun de ses termes : ${a}x ${sgn(b)} ${abs(b)} ${c >= 0 ? "-" : "+"} ${abs(c)}x ${d >= 0 ? "-" : "+"} ${abs(d)}` },
+      { type: "calcul", text: `On regroupe les termes en x : ${a} ${c >= 0 ? "-" : "+"} ${abs(c)} = ${coefXOk}` },
+      { type: "calcul", text: `On regroupe les termes constants : ${b} ${d >= 0 ? "-" : "+"} ${abs(d)} = ${constOk}` },
+      { type: "resultat", text: `A = ${correct}` },
     ],
   };
 }
@@ -167,7 +170,7 @@ function genFactoriserFacteurCommunXNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(${a}x^{2} ${sgn(b)} ${abs(b)}x = x\\left(?x ${askA ? "+ \\ldots" : `${sgn(a)} ${abs(a)}`}\\right)\\). Quel est ${askA ? "le coefficient de x" : "le terme constant"} du facteur entre parenthèses ?`,
     answer: askA ? a : b,
-    steps: [`${a}x^{2} ${sgn(b)} ${abs(b)}x = x \\times ${a}x + x \\times ${b} = x\\left(${a}x ${sgn(b)} ${abs(b)}\\right)`],
+    steps: [{ type: "calcul", text: `${a}x^{2} ${sgn(b)} ${abs(b)}x = x \\times ${a}x + x \\times ${b} = x\\left(${a}x ${sgn(b)} ${abs(b)}\\right)` }],
   };
 }
 
@@ -192,8 +195,8 @@ function genFactoriserPlusGrandFacteurCommunQCM() {
     answer: full,
     options,
     steps: [
-      `Le plus grand facteur commun de ${g * p} et ${g * q} est ${g}, donc la factorisation complète est ${full}.`,
-      `${partial} n'utilise qu'un facteur commun de ${g2}, ce n'est pas le plus grand possible.`,
+      { type: "resultat", text: `Le plus grand facteur commun de ${g * p} et ${g * q} est ${g}, donc la factorisation complète est ${full}.` },
+      { type: "regle", text: `${partial} n'utilise qu'un facteur commun de ${g2}, ce n'est pas le plus grand possible.` },
     ],
   };
 }
@@ -211,9 +214,9 @@ function genDevelopperDifferenceCarresNumeric() {
     prompt: `On développe \\(\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\left(${a}x ${sgn(-b)} ${abs(-b)}\\right)\\). Quel est ${askX2 ? "le coefficient de \\(x^2\\)" : "le terme constant"} de cette expression développée ?`,
     answer: askX2 ? coefX2 : constant,
     steps: [
-      `\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\left(${a}x ${sgn(-b)} ${abs(-b)}\\right) = \\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2}`,
-      `\\left(${a}x\\right)^2 = ${coefX2}x^2`,
-      `\\left(${b}\\right)^2 = ${b * b}, \\text{ donc le terme constant vaut } ${constant}`,
+      { type: "regle", text: `\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\left(${a}x ${sgn(-b)} ${abs(-b)}\\right) = \\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2}` },
+      { type: "calcul", text: `\\left(${a}x\\right)^2 = ${coefX2}x^2` },
+      { type: "resultat", text: `\\left(${b}\\right)^2 = ${b * b}, \\text{ donc le terme constant vaut } ${constant}` },
     ],
   };
 }
@@ -231,8 +234,8 @@ function genFactoriserDifferenceCarresNumeric() {
     prompt: `On factorise \\(${a2}x^{2} - ${b2} = \\left(${askA ? "?" : a}x ${askA ? `+ ${b}` : "+ ?"}\\right)\\left(${a}x - ${b}\\right)\\). Quel est ${askA ? "le coefficient de x" : "le terme constant"} du premier facteur ?`,
     answer: askA ? a : b,
     steps: [
-      `${a2}x^{2} - ${b2} = \\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2}`,
-      `\\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2} = \\left(${a}x - ${b}\\right)\\left(${a}x + ${b}\\right)`,
+      { type: "calcul", text: `${a2}x^{2} - ${b2} = \\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2}` },
+      { type: "resultat", text: `\\left(${a}x\\right)^{2} - \\left(${b}\\right)^{2} = \\left(${a}x - ${b}\\right)\\left(${a}x + ${b}\\right)` },
     ],
   };
 }
@@ -251,10 +254,10 @@ function genIdentiteRemarquableCarreNumeric() {
     prompt: `On développe \\(\\left(${a}x ${sgn(b)} ${abs(b)}\\right)^{2} = ${coefX2}x^{2} ${askCoefX ? "+ \\ldots x" : `${sgn(coefX)} ${abs(coefX)}x`} ${askCoefX ? `${sgn(constant)} ${abs(constant)}` : "+ \\ldots"}\\). Quel est ${askCoefX ? "le coefficient de x" : "le terme constant"} ?`,
     answer: askCoefX ? coefX : constant,
     steps: [
-      `\\left(${a}x ${sgn(b)} ${abs(b)}\\right)^{2} = \\left(${a}x\\right)^{2} + 2 \\times ${a}x \\times \\left(${b}\\right) + \\left(${b}\\right)^{2}`,
-      `\\left(${a}x\\right)^{2} = ${coefX2}x^2`,
-      `2 \\times ${a} \\times ${b} = ${coefX}`,
-      `\\left(${b}\\right)^{2} = ${constant}`,
+      { type: "regle", text: `\\left(${a}x ${sgn(b)} ${abs(b)}\\right)^{2} = \\left(${a}x\\right)^{2} + 2 \\times ${a}x \\times \\left(${b}\\right) + \\left(${b}\\right)^{2}` },
+      { type: "calcul", text: `\\left(${a}x\\right)^{2} = ${coefX2}x^2` },
+      { type: "calcul", text: `2 \\times ${a} \\times ${b} = ${coefX}` },
+      { type: "resultat", text: `\\left(${b}\\right)^{2} = ${constant}` },
     ],
   };
 }
@@ -275,8 +278,8 @@ function genFactoriserFacteurCommunBinomeGeneraleNumeric() {
     prompt: `On factorise \\(\\left(${p}x ${sgn(a)} ${abs(a)}\\right)\\left(x ${sgn(-b)} ${abs(-b)}\\right) + \\left(${q}x ${sgn(c)} ${abs(c)}\\right)\\left(x ${sgn(-b)} ${abs(-b)}\\right) = \\left(x ${sgn(-b)} ${abs(-b)}\\right)\\left(?\\right)\\). Quel est ${askCoefX ? "le coefficient de x" : "le terme constant"} du facteur entre la dernière parenthèse ?`,
     answer: askCoefX ? coefX : constant,
     steps: [
-      `\\left(x ${sgn(-b)} ${abs(-b)}\\right) \\text{ est un facteur commun aux deux termes.}`,
-      `On additionne les autres facteurs : \\left(${p}x ${sgn(a)} ${abs(a)}\\right) + \\left(${q}x ${sgn(c)} ${abs(c)}\\right) = ${coefX}x ${sgn(constant)} ${abs(constant)}`,
+      { type: "regle", text: `\\left(x ${sgn(-b)} ${abs(-b)}\\right) \\text{ est un facteur commun aux deux termes.}` },
+      { type: "resultat", text: `On additionne les autres facteurs : \\left(${p}x ${sgn(a)} ${abs(a)}\\right) + \\left(${q}x ${sgn(c)} ${abs(c)}\\right) = ${coefX}x ${sgn(constant)} ${abs(constant)}` },
     ],
   };
 }
@@ -297,10 +300,10 @@ function genProgrammeResoudreEquationNumeric() {
     prompt: `Un programme de calcul : choisir un nombre x, le multiplier par ${m}, lui soustraire ${p}, puis multiplier le résultat obtenu par ${k}. Quel nombre de départ x permet d'obtenir ${target} ?`,
     answer: x0,
     steps: [
-      `${k}\\left(${m}x - ${p}\\right) = ${target}`,
-      `${m}x - ${p} = \\dfrac{${target}}{${k}} = ${inner}`,
-      `${m}x = ${inner} + ${p} = ${inner + p}`,
-      `x = \\dfrac{${inner + p}}{${m}} = ${x0}`,
+      { type: "donnee", text: `${k}\\left(${m}x - ${p}\\right) = ${target}` },
+      { type: "calcul", text: `${m}x - ${p} = \\dfrac{${target}}{${k}} = ${inner}` },
+      { type: "calcul", text: `${m}x = ${inner} + ${p} = ${inner + p}` },
+      { type: "resultat", text: `x = \\dfrac{${inner + p}}{${m}} = ${x0}` },
     ],
   };
 }
@@ -321,8 +324,8 @@ function genProgrammeMultipleDeKNumeric() {
     prompt: `Un programme de calcul : choisir un nombre n, le multiplier par ${A}, puis lui soustraire ${B}. Quel que soit l'entier n choisi, le résultat est toujours un multiple d'un même entier. Quel est le plus grand entier possible dont ${A}n - ${B} est toujours un multiple ?`,
     answer: K,
     steps: [
-      `${A}n - ${B} = ${K}\\left(${r}n - ${s}\\right)`,
-      `Comme ${r} et ${s} n'ont pas d'autre diviseur commun que 1, ${K} est le plus grand facteur commun possible : le résultat est toujours un multiple de ${K}.`,
+      { type: "calcul", text: `${A}n - ${B} = ${K}\\left(${r}n - ${s}\\right)` },
+      { type: "resultat", text: `Comme ${r} et ${s} n'ont pas d'autre diviseur commun que 1, ${K} est le plus grand facteur commun possible : le résultat est toujours un multiple de ${K}.` },
     ],
   };
 }
@@ -337,7 +340,10 @@ function genAireRectangleDifferenceCarresNumeric() {
     chapter: "Calcul littéral — Problèmes",
     prompt: `Un rectangle a pour dimensions \\(\\left(x - ${a}\\right)\\) cm et \\(\\left(x + ${a}\\right)\\) cm. Exprime son aire en fonction de x, puis calcule sa valeur pour \\(x = ${x}\\) cm.`,
     answer: aire,
-    steps: [`\\text{Aire} = \\left(x - ${a}\\right)\\left(x + ${a}\\right) = x^{2} - ${a * a}`, `${x}^{2} - ${a * a} = ${aire}`],
+    steps: [
+      { type: "calcul", text: `\\text{Aire} = \\left(x - ${a}\\right)\\left(x + ${a}\\right) = x^{2} - ${a * a}` },
+      { type: "resultat", text: `${x}^{2} - ${a * a} = ${aire}` },
+    ],
   };
 }
 
@@ -352,8 +358,8 @@ function genProgrammeCarreToujoursNumeric() {
     prompt: `Un programme de calcul : choisir un nombre n, calculer \\(\\left(n + ${a}\\right)\\left(n - ${a}\\right)\\), puis ajouter ${a * a}. Ce programme donne toujours le carré du nombre de départ, quelle que soit la valeur de ${a}. Quel résultat obtient-on pour \\(n = ${n}\\) ?`,
     answer,
     steps: [
-      `\\left(n + ${a}\\right)\\left(n - ${a}\\right) + ${a * a} = n^{2} - ${a * a} + ${a * a} = n^{2}`,
-      `Pour n = ${n} : n^{2} = ${answer}`,
+      { type: "regle", text: `\\left(n + ${a}\\right)\\left(n - ${a}\\right) + ${a * a} = n^{2} - ${a * a} + ${a * a} = n^{2}` },
+      { type: "resultat", text: `Pour n = ${n} : n^{2} = ${answer}` },
     ],
   };
 }
@@ -386,9 +392,9 @@ function genQCMReconnaitreDeveloppementQCM() {
     answer: correct,
     options,
     steps: [
-      `${a}x \\times ${c}x = ${coefX2}x^2`,
-      `${a}x \\times \\left(${d}\\right) + \\left(${b}\\right) \\times ${c}x = ${sgn(coefXOk)} ${abs(coefXOk)}x`,
-      `\\left(${b}\\right) \\times \\left(${d}\\right) = ${constOk}`,
+      { type: "calcul", text: `${a}x \\times ${c}x = ${coefX2}x^2` },
+      { type: "calcul", text: `${a}x \\times \\left(${d}\\right) + \\left(${b}\\right) \\times ${c}x = ${sgn(coefXOk)} ${abs(coefXOk)}x` },
+      { type: "resultat", text: `\\left(${b}\\right) \\times \\left(${d}\\right) = ${constOk}` },
     ],
   };
 }
@@ -409,9 +415,9 @@ function genPerimetreCarreEgalRectangleNumeric() {
     prompt: `Un carré a pour côté \\(\\left(x + ${a}\\right)\\) cm. Un rectangle a pour longueur \\(\\left(x + ${a + t}\\right)\\) cm et pour largeur \\(\\left(x ${sgn(largeurConst)} ${abs(largeurConst)}\\right)\\) cm. On admet que ces deux figures ont toujours le même périmètre, quelle que soit la valeur de x. Calcule ce périmètre commun pour \\(x = ${x}\\) cm.`,
     answer: perimetre,
     steps: [
-      `\\text{Périmètre du carré} = 4\\left(x + ${a}\\right) = 4x + ${4 * a}`,
-      `\\text{Périmètre du rectangle} = 2\\left(x + ${a + t}\\right) + 2\\left(x ${sgn(largeurConst)} ${abs(largeurConst)}\\right) = 4x + ${4 * a}`,
-      `\\text{Pour } x = ${x} : 4 \\times ${x} + ${4 * a} = ${perimetre}`,
+      { type: "calcul", text: `\\text{Périmètre du carré} = 4\\left(x + ${a}\\right) = 4x + ${4 * a}` },
+      { type: "regle", text: `\\text{Périmètre du rectangle} = 2\\left(x + ${a + t}\\right) + 2\\left(x ${sgn(largeurConst)} ${abs(largeurConst)}\\right) = 4x + ${4 * a}` },
+      { type: "resultat", text: `\\text{Pour } x = ${x} : 4 \\times ${x} + ${4 * a} = ${perimetre}` },
     ],
   };
 }
@@ -467,6 +473,7 @@ export default {
     id: "calcul-litteral-troisieme",
     title: "Calcul littéral",
     description: "Développer (simple/double distributivité, identités remarquables), factoriser (facteur commun, différence de deux carrés), programmes de calcul et problèmes de périmètre/aire.",
+    pourquoi: "Développer et factoriser, c'est disposer de deux façons de voir la même expression — un réflexe indispensable pour résoudre des équations et des problèmes concrets.",
     level: "troisieme",
     free: false,
     order: 4,

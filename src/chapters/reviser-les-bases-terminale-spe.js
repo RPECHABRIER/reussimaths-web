@@ -203,6 +203,7 @@ export default {
     id: "reviser-les-bases-terminale-spe",
     title: "Réviser les bases",
     description: "Un tour d'horizon des savoir-faire de Première indispensables pour aborder les nouveaux chapitres de Terminale.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "terminale-spe",
     free: true,
     order: 0,

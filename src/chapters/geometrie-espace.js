@@ -55,7 +55,7 @@ function genNombreFacesLateralesPrismeNumeric() {
     chapter: "Géométrie dans l'espace — Patrons",
     prompt: `Un prisme droit a une base ${nom}. Combien de faces latérales rectangulaires comporte son patron ?`,
     answer: n,
-    steps: [`Un prisme droit a autant de faces latérales que de côtés a sa base : ${n}.`],
+    steps: [{ type: "regle", text: `Un prisme droit a autant de faces latérales que de côtés a sa base : ${n}.` }],
   };
 }
 
@@ -89,7 +89,7 @@ function genPerspectiveCavaliereProprieteQCM() {
     prompt: it.q,
     answer: it.r,
     options: shuffle(it.opts),
-    steps: [`C'est une règle de construction de la perspective cavalière.`],
+    steps: [{ type: "regle", text: `C'est une règle de construction de la perspective cavalière.` }],
   };
 }
 
@@ -109,11 +109,15 @@ function genFacesSommetsAretesPrismeNumeric() {
     prompt: `Un prisme droit a une base ${noms[n]} (${n} côtés). Combien de ${label} possède-t-il ?`,
     answer,
     steps: [
-      mode === "faces"
-        ? `Un prisme droit a 2 bases + autant de faces latérales que de côtés à la base : \\(2 + ${n} = ${faces}\\)`
-        : mode === "sommets"
-        ? `Chaque base a ${n} sommets : \\(2 \\times ${n} = ${sommets}\\)`
-        : `${n} arêtes sur chaque base, plus ${n} arêtes latérales : \\(2 \\times ${n} + ${n} = ${aretes}\\)`,
+      {
+        type: "calcul",
+        text:
+          mode === "faces"
+            ? `Un prisme droit a 2 bases + autant de faces latérales que de côtés à la base : \\(2 + ${n} = ${faces}\\)`
+            : mode === "sommets"
+            ? `Chaque base a ${n} sommets : \\(2 \\times ${n} = ${sommets}\\)`
+            : `${n} arêtes sur chaque base, plus ${n} arêtes latérales : \\(2 \\times ${n} + ${n} = ${aretes}\\)`,
+      },
     ],
   };
 }
@@ -131,7 +135,7 @@ function genVolumePaveDroitNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un pavé droit a pour dimensions ${L} cm, ${l} cm et ${h} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [`${L} \\times ${l} \\times ${h} = ${answer}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
   };
 }
 
@@ -144,7 +148,7 @@ function genVolumeCubeNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un cube a une arête de ${c} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [`${c} \\times ${c} \\times ${c} = ${answer}`],
+    steps: [{ type: "calcul", text: `${c} \\times ${c} \\times ${c} = ${answer}` }],
   };
 }
 
@@ -160,7 +164,10 @@ function genVolumePrismeDroitBaseTriangleNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un prisme droit a une base triangulaire de base ${base} cm et de hauteur ${hauteurTriangle} cm, et une hauteur (longueur du prisme) de ${hauteurPrisme} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [`Aire de la base = (${base} \\times ${hauteurTriangle}) \\div 2 = ${fr(aireBase)}`, `Volume = ${fr(aireBase)} \\times ${hauteurPrisme} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Aire de la base = (${base} \\times ${hauteurTriangle}) \\div 2 = ${fr(aireBase)}` },
+      { type: "calcul", text: `Volume = ${fr(aireBase)} \\times ${hauteurPrisme} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -175,7 +182,7 @@ function genVolumeCylindreRevolutionNumeric() {
     prompt: `Un cylindre de révolution a un rayon de base de ${r} cm et une hauteur de ${h} cm. Quel est son volume, en cm³, arrondi au centième ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [`\\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -190,7 +197,7 @@ function genTrouverHauteurPaveNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un pavé droit a un volume de ${volume} cm³. Sa longueur est ${L} cm et sa largeur est ${l} cm. Quelle est sa hauteur, en cm ?`,
     answer: h,
-    steps: [`Hauteur = Volume \\div (Longueur \\times largeur) = ${volume} \\div (${L} \\times ${l}) = ${h}`],
+    steps: [{ type: "calcul", text: `Hauteur = Volume \\div (Longueur \\times largeur) = ${volume} \\div (${L} \\times ${l}) = ${h}` }],
   };
 }
 
@@ -209,7 +216,7 @@ function genConversionUnitesVolumeNumeric() {
     prompt: `Convertis ${fr(valeur)} ${unites[iFrom]} en ${unites[iTo]}.`,
     answer,
     tolerance: Math.max(0.000001, roundTo(Math.abs(answer) * 0.001, 6)),
-    steps: [`Pour passer de ${unites[iFrom]} à ${unites[iTo]}, on divise par 1000 : ${fr(valeur)} \\div 1000 = ${fr(answer)}`],
+    steps: [{ type: "regle", text: `Pour passer de ${unites[iFrom]} à ${unites[iTo]}, on divise par 1000 : ${fr(valeur)} \\div 1000 = ${fr(answer)}` }],
   };
 }
 
@@ -224,7 +231,7 @@ function genConversionVolumeCapaciteNumeric() {
       prompt: `Convertis ${fr(v)} dm³ en litres (L).`,
       answer: v,
       tolerance: 0.01,
-      steps: [`1 dm³ = 1 L, donc ${fr(v)} dm³ = ${fr(v)} L`],
+      steps: [{ type: "regle", text: `1 dm³ = 1 L, donc ${fr(v)} dm³ = ${fr(v)} L` }],
     };
   }
   if (mode === "L-vers-dm3") {
@@ -234,7 +241,7 @@ function genConversionVolumeCapaciteNumeric() {
       prompt: `Convertis ${fr(v)} L en dm³.`,
       answer: v,
       tolerance: 0.01,
-      steps: [`1 L = 1 dm³, donc ${fr(v)} L = ${fr(v)} dm³`],
+      steps: [{ type: "regle", text: `1 L = 1 dm³, donc ${fr(v)} L = ${fr(v)} dm³` }],
     };
   }
   if (mode === "cm3-vers-mL") {
@@ -244,7 +251,7 @@ function genConversionVolumeCapaciteNumeric() {
       prompt: `Convertis ${fr(v)} cm³ en millilitres (mL).`,
       answer: v,
       tolerance: 0.01,
-      steps: [`1 cm³ = 1 mL, donc ${fr(v)} cm³ = ${fr(v)} mL`],
+      steps: [{ type: "regle", text: `1 cm³ = 1 mL, donc ${fr(v)} cm³ = ${fr(v)} mL` }],
     };
   }
   return {
@@ -253,7 +260,7 @@ function genConversionVolumeCapaciteNumeric() {
     prompt: `Convertis ${fr(v)} mL en cm³.`,
     answer: v,
     tolerance: 0.01,
-    steps: [`1 mL = 1 cm³, donc ${fr(v)} mL = ${fr(v)} cm³`],
+    steps: [{ type: "regle", text: `1 mL = 1 cm³, donc ${fr(v)} mL = ${fr(v)} cm³` }],
   };
 }
 
@@ -272,7 +279,7 @@ function genAireDisqueNumeric() {
       : `Un disque a un diamètre de ${2 * r} cm. Quelle est son aire, en cm², arrondie au centième ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [`\\pi \\times ${r}^2 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\pi \\times ${r}^2 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -292,9 +299,9 @@ function genVolumePaveTroueParCylindreNumeric() {
     answer,
     tolerance: piTolerance(answer),
     steps: [
-      `Volume du pavé = ${L} \\times ${l} \\times ${h} = ${volumePave}`,
-      `Volume du cylindre retiré \\approx \\pi \\times ${r}^2 \\times ${h} \\approx ${fr(volumeCylindre)}`,
-      `Volume restant \\approx ${volumePave} - ${fr(volumeCylindre)} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `Volume du pavé = ${L} \\times ${l} \\times ${h} = ${volumePave}` },
+      { type: "calcul", text: `Volume du cylindre retiré \\approx \\pi \\times ${r}^2 \\times ${h} \\approx ${fr(volumeCylindre)}` },
+      { type: "resultat", text: `Volume restant \\approx ${volumePave} - ${fr(volumeCylindre)} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -316,9 +323,9 @@ function genVolumeComposePaveDemiCylindreNumeric() {
     answer,
     tolerance: piTolerance(answer),
     steps: [
-      `Volume du pavé = ${L} \\times ${l} \\times ${h} = ${volumePave}`,
-      `Volume du demi-cylindre \\approx (\\pi \\times ${fr(r)}^2 \\times ${L}) \\div 2 \\approx ${fr(volumeDemiCylindre)}`,
-      `Volume total \\approx ${volumePave} + ${fr(volumeDemiCylindre)} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `Volume du pavé = ${L} \\times ${l} \\times ${h} = ${volumePave}` },
+      { type: "calcul", text: `Volume du demi-cylindre \\approx (\\pi \\times ${fr(r)}^2 \\times ${L}) \\div 2 \\approx ${fr(volumeDemiCylindre)}` },
+      { type: "resultat", text: `Volume total \\approx ${volumePave} + ${fr(volumeDemiCylindre)} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -333,7 +340,10 @@ function genCapaciteBouteillesMinimumNumeric() {
     chapter: "Géométrie dans l'espace — Volumes et capacités",
     prompt: `On veut mettre en bouteilles ${volumeTotalL} L d'eau, en utilisant des bouteilles de ${fr(capaciteBouteille)} L. Quel est le nombre minimum de bouteilles nécessaires ?`,
     answer,
-    steps: [`${volumeTotalL} \\div ${fr(capaciteBouteille)} = ${roundTo(volumeTotalL / capaciteBouteille, 3)}`, `On arrondit à l'entier supérieur : ${answer} bouteilles.`],
+    steps: [
+      { type: "calcul", text: `${volumeTotalL} \\div ${fr(capaciteBouteille)} = ${roundTo(volumeTotalL / capaciteBouteille, 3)}` },
+      { type: "resultat", text: `On arrondit à l'entier supérieur : ${answer} bouteilles.` },
+    ],
   };
 }
 
@@ -355,7 +365,7 @@ function genCultureSolidesPlatonFacesQCM() {
     prompt: `Combien de faces possède ${nom}, l'un des cinq solides de Platon ?`,
     answer: `${faces}`,
     options: shuffle([`${faces}`, `${faces === 4 ? 6 : 4}`, `${faces === 20 ? 12 : 20}`]),
-    steps: [`${nom[0].toUpperCase()}${nom.slice(1)} possède ${faces} faces.`],
+    steps: [{ type: "donnee", text: `${nom[0].toUpperCase()}${nom.slice(1)} possède ${faces} faces.` }],
   };
 }
 
@@ -375,7 +385,7 @@ function genCultureFormuleEulerNumeric() {
     chapter: "Géométrie dans l'espace — Culture mathématique",
     prompt: `Pour ${nom}, on compte ${F} faces et ${S} sommets. En utilisant la formule d'Euler S - A + F = 2 (S = nombre de sommets, A = nombre d'arêtes, F = nombre de faces), quel est le nombre d'arêtes A ?`,
     answer: A,
-    steps: [`S - A + F = 2 \\Rightarrow A = S + F - 2 = ${S} + ${F} - 2 = ${A}`],
+    steps: [{ type: "calcul", text: `S - A + F = 2 \\Rightarrow A = S + F - 2 = ${S} + ${F} - 2 = ${A}` }],
   };
 }
 
@@ -404,7 +414,7 @@ function genCultureEscherQCM() {
     prompt: it.q,
     answer: it.r,
     options: shuffle(it.opts),
-    steps: [`M. C. Escher (1898-1972) est un artiste néerlandais dont les œuvres explorent des figures impossibles comme le triangle de Penrose ou le cube impossible.`],
+    steps: [{ type: "donnee", text: `M. C. Escher (1898-1972) est un artiste néerlandais dont les œuvres explorent des figures impossibles comme le triangle de Penrose ou le cube impossible.` }],
   };
 }
 
@@ -461,6 +471,7 @@ export default {
     id: "geometrie-espace",
     title: "Géométrie dans l'espace",
     description: "Patrons et perspective cavalière, volumes (pavé, cube, prisme, cylindre), conversions volume/capacité, aire du disque, figures composées, culture mathématique.",
+    pourquoi: "Représenter un solide en perspective et calculer son volume, c'est utile dès qu'on emballe, transporte ou construit quelque chose.",
     level: "cinquieme",
     free: false,
     order: 7,

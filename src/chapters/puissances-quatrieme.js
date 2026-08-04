@@ -37,7 +37,7 @@ function genEcrireProduitCommePuissanceNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `On écrit \\(${factors} = ${a}^{?}\\). Quel est cet exposant ?`,
     answer: n,
-    steps: [`Il y a ${n} facteurs égaux à ${a}, donc l'exposant est ${n}.`],
+    steps: [{ type: "regle", text: `Il y a ${n} facteurs égaux à ${a}, donc l'exposant est ${n}.` }],
   };
 }
 
@@ -51,7 +51,7 @@ function genValeurPuissanceNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `Calcule : \\(\\left(${a}\\right)^{${n}}\\)`,
     answer,
-    steps: [`${Array(n).fill(`(${a})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Array(n).fill(`(${a})`).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -65,7 +65,7 @@ function genPuissanceDixValeurNumeric() {
     prompt: `Calcule : \\(10^{${n}}\\) (donne l'écriture décimale)`,
     answer,
     tolerance: Math.abs(answer) < 1 ? 0.00001 : 0.5,
-    steps: [`10^{${n}} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `10^{${n}} = ${fr(answer)}` }],
   };
 }
 
@@ -79,7 +79,7 @@ function genRegleProduitPuissancesMemeBaseNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(${a}^{${m}} \\times ${a}^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m + n,
-    steps: [`${m} + ${n} = ${m + n}`],
+    steps: [{ type: "calcul", text: `${m} + ${n} = ${m + n}` }],
   };
 }
 
@@ -93,7 +93,7 @@ function genRegleQuotientPuissancesMemeBaseNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(${a}^{${m}} \\div ${a}^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m - n,
-    steps: [`${m} - ${n} = ${m - n}`],
+    steps: [{ type: "calcul", text: `${m} - ${n} = ${m - n}` }],
   };
 }
 
@@ -107,7 +107,7 @@ function genReglePuissanceDePuissanceNumeric() {
     chapter: "Puissances — Rappels",
     prompt: `\\(\\left(${a}^{${m}}\\right)^{${n}} = ${a}^{?}\\) — quel est cet exposant ?`,
     answer: m * n,
-    steps: [`${m} \\times ${n} = ${m * n}`],
+    steps: [{ type: "calcul", text: `${m} \\times ${n} = ${m * n}` }],
   };
 }
 
@@ -123,7 +123,7 @@ function genExposantZeroQCM() {
     prompt: `Que vaut \\(${a}^{0}\\) ?`,
     answer: "1",
     options: ["0", "1", `${a}`],
-    steps: [`Pour tout nombre non nul, l'exposant 0 donne toujours 1.`],
+    steps: [{ type: "regle", text: `Pour tout nombre non nul, l'exposant 0 donne toujours 1.` }],
   };
 }
 
@@ -139,7 +139,12 @@ function genSignePuissanceQCM() {
     prompt: `Le nombre \\((-${a})^{${n}}\\) est-il positif ou négatif ?`,
     answer: sign,
     options: ["Positif", "Négatif"],
-    steps: [n % 2 === 0 ? `L'exposant ${n} est pair : le résultat est positif.` : `L'exposant ${n} est impair : le résultat est négatif.`],
+    steps: [
+      {
+        type: "regle",
+        text: n % 2 === 0 ? `L'exposant ${n} est pair : le résultat est positif.` : `L'exposant ${n} est impair : le résultat est négatif.`,
+      },
+    ],
   };
 }
 
@@ -161,7 +166,7 @@ function genEcritureScientifiqueQCM() {
     prompt: `Quelle est la notation scientifique du nombre ${fr(nombre)} ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`${fr(nombre)} = ${correct}`],
+    steps: [{ type: "calcul", text: `${fr(nombre)} = ${correct}` }],
   };
 }
 
@@ -176,7 +181,7 @@ function genConvertirScientifiqueVersDecimalNumeric() {
     prompt: `Donne l'écriture décimale du nombre \\(${fr(aMantisse)} \\times 10^{${n}}\\).`,
     answer,
     tolerance: Math.max(0.00001, Math.abs(answer) * 0.001),
-    steps: [`${fr(aMantisse)} \\times 10^{${n}} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(aMantisse)} \\times 10^{${n}} = ${fr(answer)}` }],
   };
 }
 
@@ -194,9 +199,12 @@ function genEstNotationScientifiqueQCM() {
     answer: isValide ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      isValide
-        ? `${fr(a)} vérifie bien \\(1 \\leqslant ${fr(a)} < 10\\) : c'est une notation scientifique.`
-        : `${fr(a)} ne vérifie pas \\(1 \\leqslant a < 10\\) : ce n'est pas une notation scientifique.`,
+      {
+        type: "regle",
+        text: isValide
+          ? `${fr(a)} vérifie bien \\(1 \\leqslant ${fr(a)} < 10\\) : c'est une notation scientifique.`
+          : `${fr(a)} ne vérifie pas \\(1 \\leqslant a < 10\\) : ce n'est pas une notation scientifique.`,
+      },
     ],
   };
 }
@@ -224,7 +232,7 @@ function genPrefixeMetriqueQCM() {
     prompt: `À quelle puissance de 10 correspond le préfixe « ${target.nom} » ?`,
     answer: `10^{${target.puissance}}`,
     options,
-    steps: [`Le préfixe « ${target.nom} » correspond à \\(10^{${target.puissance}}\\).`],
+    steps: [{ type: "regle", text: `Le préfixe « ${target.nom} » correspond à \\(10^{${target.puissance}}\\).` }],
   };
 }
 
@@ -241,7 +249,11 @@ function genProduitNotationScientifiqueNumeric() {
     prompt: `Calcule \\(\\left(${fr(a1)} \\times 10^{${n1}}\\right) \\times \\left(${fr(a2)} \\times 10^{${n2}}\\right)\\) et donne le résultat en écriture décimale.`,
     answer,
     tolerance: Math.max(0.00001, Math.abs(answer) * 0.005),
-    steps: [`${fr(a1)} \\times ${fr(a2)} = ${fr(roundTo(a1 * a2, 4))}`, `10^{${n1}} \\times 10^{${n2}} = 10^{${n1 + n2}}`, `\\text{Résultat} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${fr(a1)} \\times ${fr(a2)} = ${fr(roundTo(a1 * a2, 4))}` },
+      { type: "calcul", text: `10^{${n1}} \\times 10^{${n2}} = 10^{${n1 + n2}}` },
+      { type: "resultat", text: `\\text{Résultat} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -259,7 +271,12 @@ function genCarreParfaitQCM() {
     prompt: `${n} est-il un carré parfait ?`,
     answer: isCarre ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [isCarre ? `${n} = ${Math.round(Math.sqrt(n))}^2, c'est un carré parfait.` : `Aucun entier élevé au carré ne donne ${n} : ce n'est pas un carré parfait.`],
+    steps: [
+      {
+        type: "regle",
+        text: isCarre ? `${n} = ${Math.round(Math.sqrt(n))}^2, c'est un carré parfait.` : `Aucun entier élevé au carré ne donne ${n} : ce n'est pas un carré parfait.`,
+      },
+    ],
   };
 }
 
@@ -272,7 +289,7 @@ function genRacineCarreeExacteNumeric() {
     chapter: "Puissances — Racine carrée",
     prompt: `Calcule \\(\\sqrt{${carre}}\\).`,
     answer: racine,
-    steps: [`Comme ${racine}^2 = ${carre} et ${racine} > 0, alors \\sqrt{${carre}} = ${racine}.`],
+    steps: [{ type: "regle", text: `Comme ${racine}^2 = ${carre} et ${racine} > 0, alors \\sqrt{${carre}} = ${racine}.` }],
   };
 }
 
@@ -286,7 +303,10 @@ function genEncadrementRacineCarreeNumeric() {
     chapter: "Puissances — Racine carrée",
     prompt: `Entre quels deux entiers consécutifs \\(\\sqrt{${n}}\\) est-il encadré ? Donne l'entier le plus petit (la borne inférieure).`,
     answer: borneInf,
-    steps: [`${borneInf}^2 = ${borneInf * borneInf} < ${n} < ${borneSup * borneSup} = ${borneSup}^2`, `Donc ${borneInf} < \\sqrt{${n}} < ${borneSup}.`],
+    steps: [
+      { type: "calcul", text: `${borneInf}^2 = ${borneInf * borneInf} < ${n} < ${borneSup * borneSup} = ${borneSup}^2` },
+      { type: "resultat", text: `Donc ${borneInf} < \\sqrt{${n}} < ${borneSup}.` },
+    ],
   };
 }
 
@@ -300,7 +320,7 @@ function genRacineCarreeApprocheeNumeric() {
     prompt: `À l'aide de la calculatrice, donne une valeur approchée de \\(\\sqrt{${n}}\\) au centième près.`,
     answer,
     tolerance: 0.01,
-    steps: [`\\sqrt{${n}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\sqrt{${n}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -313,7 +333,7 @@ function genCoteCarreDepuisAireNumeric() {
     chapter: "Puissances — Racine carrée",
     prompt: `Un carré a une aire de ${aire} cm². Quel est son côté, en cm ?`,
     answer: cote,
-    steps: [`\\sqrt{${aire}} = ${cote}`],
+    steps: [{ type: "calcul", text: `\\sqrt{${aire}} = ${cote}` }],
   };
 }
 
@@ -372,6 +392,7 @@ export default {
     id: "puissances-quatrieme",
     title: "Puissances",
     description: "Puissances de base quelconque et de base 10, règles de calcul, notation scientifique et préfixes, racine carrée.",
+    pourquoi: "Les puissances de 10 et la notation scientifique permettent de manipuler aussi bien l'infiniment petit (un atome) que l'infiniment grand (une distance dans l'espace).",
     level: "quatrieme",
     free: false,
     order: 5,

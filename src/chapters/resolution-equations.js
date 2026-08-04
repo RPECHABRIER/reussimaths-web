@@ -44,8 +44,11 @@ function genTesterSolutionEquationQCM() {
     answer: isSolution ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${leftValue}`,
-      isSolution ? `${leftValue} = ${c}, donc c'est bien solution.` : `${leftValue} \\neq ${c}, donc ce n'est pas solution.`,
+      { type: "calcul", text: `${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${leftValue}` },
+      {
+        type: "resultat",
+        text: isSolution ? `${leftValue} = ${c}, donc c'est bien solution.` : `${leftValue} \\neq ${c}, donc ce n'est pas solution.`,
+      },
     ],
   };
 }
@@ -62,7 +65,7 @@ function genResoudreEquationAdditionSoustractionNumeric() {
     chapter: "Résolution d'équations — Résoudre",
     prompt: `Résous l'équation : \\(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)} = ${b}\\)`,
     answer: xSol,
-    steps: [`x = ${b} ${a >= 0 ? "-" : "+"} ${Math.abs(a)} = ${xSol}`],
+    steps: [{ type: "calcul", text: `x = ${b} ${a >= 0 ? "-" : "+"} ${Math.abs(a)} = ${xSol}` }],
   };
 }
 
@@ -79,7 +82,7 @@ function genResoudreEquationMultiplicationNumeric() {
     prompt: `Résous l'équation : \\(${a}x = ${fr(b)}\\)`,
     answer: xSol,
     tolerance: 0.01,
-    steps: [`x = ${fr(b)} \\div ${a} = ${fr(xSol)}`],
+    steps: [{ type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSol)}` }],
   };
 }
 
@@ -94,7 +97,10 @@ function genResoudreEquationDeuxEtapesNumeric() {
     chapter: "Résolution d'équations — Résoudre",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -113,7 +119,11 @@ function genResoudreEquationDesDeuxCotesNumeric() {
     chapter: "Résolution d'équations — Résoudre",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\)`,
     answer: xSol,
-    steps: [`${a}x - (${c}x) = ${d} - (${b})`, `${a - c}x = ${d - b}`, `x = ${d - b} \\div ${a - c} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x - (${c}x) = ${d} - (${b})` },
+      { type: "calcul", text: `${a - c}x = ${d - b}` },
+      { type: "resultat", text: `x = ${d - b} \\div ${a - c} = ${xSol}` },
+    ],
   };
 }
 
@@ -131,9 +141,9 @@ function genResoudreEquationAvecParenthesesNumeric() {
     prompt: `Résous l'équation : \\(${k}\\left(x ${m >= 0 ? "+" : "-"} ${Math.abs(m)}\\right) ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
     steps: [
-      `${k}x ${km >= 0 ? "+" : "-"} ${Math.abs(km)} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}`,
-      `${k}x = ${c} ${km + b >= 0 ? "-" : "+"} ${Math.abs(km + b)} = ${c - (km + b)}`,
-      `x = ${c - (km + b)} \\div ${k} = ${xSol}`,
+      { type: "calcul", text: `${k}x ${km >= 0 ? "+" : "-"} ${Math.abs(km)} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}` },
+      { type: "calcul", text: `${k}x = ${c} ${km + b >= 0 ? "-" : "+"} ${Math.abs(km + b)} = ${c - (km + b)}` },
+      { type: "resultat", text: `x = ${c - (km + b)} \\div ${k} = ${xSol}` },
     ],
   };
 }
@@ -153,7 +163,7 @@ function genOperationInverseQCM() {
     prompt: `Pour résoudre l'équation \\(x ${isAdd ? "+" : "-"} ${Math.abs(a)} = ${b}\\), quelle opération faut-il effectuer sur les deux membres pour isoler x ?`,
     answer: correct,
     options: shuffle([correct, wrong1, wrong2, wrong3]),
-    steps: [`Pour isoler x, on effectue l'opération inverse : ${correct}.`],
+    steps: [{ type: "regle", text: `Pour isoler x, on effectue l'opération inverse : ${correct}.` }],
   };
 }
 
@@ -178,7 +188,12 @@ function genTraduireProblemeAgeQCM() {
     prompt: `« Si je prends le ${mult1Str} de mon âge, j'obtiens le ${mult2Str} de l'âge que j'avais il y a ${anneesEcoulees} ans. » En notant x mon âge actuel, quelle équation traduit ce problème ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`Le ${mult1Str} de mon âge : ${multiple1}x. L'âge il y a ${anneesEcoulees} ans : x - ${anneesEcoulees}. Le ${mult2Str} de cet âge : ${multiple2}(x - ${anneesEcoulees}).`],
+    steps: [
+      {
+        type: "regle",
+        text: `Le ${mult1Str} de mon âge : ${multiple1}x. L'âge il y a ${anneesEcoulees} ans : x - ${anneesEcoulees}. Le ${mult2Str} de cet âge : ${multiple2}(x - ${anneesEcoulees}).`,
+      },
+    ],
   };
 }
 
@@ -191,7 +206,10 @@ function genProblemeSommeMultiplesNumeric() {
     chapter: "Résolution d'équations — Problèmes",
     prompt: `On cherche un nombre pour lequel la somme de lui-même, de son double et de son triple est égale à ${total}. Quel est ce nombre ?`,
     answer: xSol,
-    steps: [`x + 2x + 3x = 6x = ${total}`, `x = ${total} \\div 6 = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `x + 2x + 3x = 6x = ${total}` },
+      { type: "resultat", text: `x = ${total} \\div 6 = ${xSol}` },
+    ],
   };
 }
 
@@ -204,7 +222,12 @@ function genProblemeDoubleTripleAgeNumeric() {
     chapter: "Résolution d'équations — Problèmes",
     prompt: `« Le double de mon âge est égal au triple de l'âge que j'avais il y a ${anneesEcoulees} ans. » Quel est mon âge actuel (noté x) ?`,
     answer: xSol,
-    steps: [`2x = 3(x - ${anneesEcoulees})`, `2x = 3x - ${3 * anneesEcoulees}`, `-x = -${3 * anneesEcoulees}`, `x = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `2x = 3(x - ${anneesEcoulees})` },
+      { type: "calcul", text: `2x = 3x - ${3 * anneesEcoulees}` },
+      { type: "calcul", text: `-x = -${3 * anneesEcoulees}` },
+      { type: "resultat", text: `x = ${xSol}` },
+    ],
   };
 }
 
@@ -219,7 +242,11 @@ function genPerimetreEquationNumeric() {
     chapter: "Résolution d'équations — Problèmes",
     prompt: `Une figure a un périmètre égal à \\(${nbCotesX}x + ${2 * largeurFixe}\\) mm. Détermine x pour que ce périmètre soit égal à ${perimetre} mm.`,
     answer: xSol,
-    steps: [`${nbCotesX}x + ${2 * largeurFixe} = ${perimetre}`, `${nbCotesX}x = ${perimetre - 2 * largeurFixe}`, `x = ${perimetre - 2 * largeurFixe} \\div ${nbCotesX} = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${nbCotesX}x + ${2 * largeurFixe} = ${perimetre}` },
+      { type: "calcul", text: `${nbCotesX}x = ${perimetre - 2 * largeurFixe}` },
+      { type: "resultat", text: `x = ${perimetre - 2 * largeurFixe} \\div ${nbCotesX} = ${xSol}` },
+    ],
   };
 }
 
@@ -234,7 +261,11 @@ function genProgrammeCalculTrouverEntreeNumeric() {
     chapter: "Résolution d'équations — Problèmes",
     prompt: `Un programme de calcul consiste à : choisir un nombre, le multiplier par ${m}, puis ajouter ${p}. Quel nombre de départ permet d'obtenir ${sortie} en sortie du programme ?`,
     answer: xSol,
-    steps: [`${m}x ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${sortie}`, `${m}x = ${sortie - p}`, `x = ${sortie - p} \\div ${m} = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${m}x ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${sortie}` },
+      { type: "calcul", text: `${m}x = ${sortie - p}` },
+      { type: "resultat", text: `x = ${sortie - p} \\div ${m} = ${xSol}` },
+    ],
   };
 }
 
@@ -254,9 +285,9 @@ function genDeuxProgrammesMemeResultatNumeric() {
     prompt: `Le programme A consiste à multiplier un nombre par ${m1} puis ajouter ${p1}. Le programme B consiste à multiplier ce même nombre par ${m2} puis ajouter ${p2}. Pour quelle valeur du nombre de départ les deux programmes donnent-ils le même résultat ?`,
     answer: xSol,
     steps: [
-      `${m1}x ${p1 >= 0 ? "+" : "-"} ${Math.abs(p1)} = ${m2}x ${p2 >= 0 ? "+" : "-"} ${Math.abs(p2)}`,
-      `${m1 - m2}x = ${p2 - p1}`,
-      `x = ${p2 - p1} \\div ${m1 - m2} = ${xSol}`,
+      { type: "donnee", text: `${m1}x ${p1 >= 0 ? "+" : "-"} ${Math.abs(p1)} = ${m2}x ${p2 >= 0 ? "+" : "-"} ${Math.abs(p2)}` },
+      { type: "calcul", text: `${m1 - m2}x = ${p2 - p1}` },
+      { type: "resultat", text: `x = ${p2 - p1} \\div ${m1 - m2} = ${xSol}` },
     ],
   };
 }
@@ -274,9 +305,9 @@ function genPrixEquationContexteNumeric() {
     prompt: `Une sortie scolaire réunit ${nEnfants} enfants et ${nAdultes} adultes. Une place adulte coûte ${diff} € de plus qu'une place enfant, et le coût total de la sortie est de ${total} €. Quel est le prix d'une place enfant, en euros ?`,
     answer: xSol,
     steps: [
-      `${nEnfants}x + ${nAdultes}(x + ${diff}) = ${total}`,
-      `${nEnfants + nAdultes}x + ${nAdultes * diff} = ${total}`,
-      `x = (${total} - ${nAdultes * diff}) \\div ${nEnfants + nAdultes} = ${xSol}`,
+      { type: "donnee", text: `${nEnfants}x + ${nAdultes}(x + ${diff}) = ${total}` },
+      { type: "calcul", text: `${nEnfants + nAdultes}x + ${nAdultes * diff} = ${total}` },
+      { type: "resultat", text: `x = (${total} - ${nAdultes * diff}) \\div ${nEnfants + nAdultes} = ${xSol}` },
     ],
   };
 }
@@ -328,6 +359,7 @@ export default {
     id: "resolution-equations",
     title: "Résolution d'équations",
     description: "Tester si un nombre est solution d'une équation, résoudre des équations du premier degré, traduire et résoudre des problèmes concrets.",
+    pourquoi: "Résoudre une équation, c'est traduire un problème concret en calcul, puis remonter du calcul à la solution du problème.",
     level: "quatrieme",
     free: false,
     order: 7,

@@ -57,7 +57,7 @@ function genCalculerFrequencePourcentageNumeric() {
     prompt: `Dans une enquête menée auprès de ${total} ${objet}, ${effectif} ont répondu "oui". Quelle est la fréquence de cette réponse, en pourcentage (arrondi au centième) ?`,
     answer,
     tolerance: 0.05,
-    steps: [`Fréquence = ${effectif} \\div ${total} \\times 100 \\approx ${fr(answer)} \\%`],
+    steps: [{ type: "calcul", text: `Fréquence = ${effectif} \\div ${total} \\times 100 \\approx ${fr(answer)} \\%` }],
   };
 }
 
@@ -71,7 +71,7 @@ function genCalculerEffectifTotalNumeric() {
     chapter: "Statistiques — Effectif et fréquence",
     prompt: `Un tableau donne les effectifs suivants pour chaque catégorie : ${effectifs.join(" ; ")}. Quel est l'effectif total ?`,
     answer: total,
-    steps: [`${effectifs.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${effectifs.join(" + ")} = ${total}` }],
   };
 }
 
@@ -86,7 +86,7 @@ function genAngleDiagrammeCirculaireNumeric() {
     prompt: `Dans un diagramme circulaire représentant ${total} données au total, une catégorie a un effectif de ${effectif}. Quelle est la mesure de l'angle du secteur correspondant, en degrés (arrondi au dixième) ?`,
     answer,
     tolerance: 0.1,
-    steps: [`Angle = (${effectif} \\div ${total}) \\times 360 \\approx ${fr(answer)}°`],
+    steps: [{ type: "calcul", text: `Angle = (${effectif} \\div ${total}) \\times 360 \\approx ${fr(answer)}°` }],
   };
 }
 
@@ -103,7 +103,7 @@ function genLireTableauEffectifsQCM() {
     prompt: `Un club sportif a recensé le nombre de licenciés par activité : ${table}. Quelle activité a ${askMax ? "le plus" : "le moins"} de licenciés ?`,
     answer: categories[idx],
     options: shuffle([...categories]),
-    steps: [`On compare les effectifs : ${table}.`],
+    steps: [{ type: "donnee", text: `On compare les effectifs : ${table}.` }],
   };
 }
 
@@ -121,7 +121,7 @@ function genCalculerMoyenneSimpleNumeric() {
     prompt: `Calcule la moyenne de la série statistique suivante (arrondie au centième si besoin) : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [`(${valeurs.join(" + ")}) \\div ${n} = ${total} \\div ${n} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} = ${total} \\div ${n} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -139,7 +139,7 @@ function genEcartALaMoyenneNumeric() {
     prompt: `Une série statistique a pour valeurs : ${valeurs.join(" ; ")} (moyenne = ${fr(moyenne)}). Quel est l'écart à la moyenne (en valeur absolue) de la valeur ${valeurs[idx]} ?`,
     answer,
     tolerance: 0.02,
-    steps: [`|${valeurs[idx]} - ${fr(moyenne)}| \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `|${valeurs[idx]} - ${fr(moyenne)}| \\approx ${fr(answer)}` }],
   };
 }
 
@@ -158,8 +158,8 @@ function genMoyennePondereeNumeric() {
     answer,
     tolerance: 0.02,
     steps: [
-      `Somme pondérée = ${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")} = ${sommeProduits}`,
-      `Moyenne = ${sommeProduits} \\div ${totalEffectif} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `Somme pondérée = ${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")} = ${sommeProduits}` },
+      { type: "calcul", text: `Moyenne = ${sommeProduits} \\div ${totalEffectif} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -180,7 +180,10 @@ function genExclureValeursExtremesMoyenneNumeric() {
     prompt: `Voici une série de résultats : ${valeurs.join(" ; ")}. On considère que la valeur la plus haute et la valeur la plus basse sont des contre-performances. Quelle est la moyenne de la série une fois ces deux valeurs extrêmes retirées (arrondie au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`On retire ${max} et ${min}, il reste : ${restants.join(" ; ")}.`, `Moyenne = (${restants.join(" + ")}) \\div ${restants.length} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "donnee", text: `On retire ${max} et ${min}, il reste : ${restants.join(" ; ")}.` },
+      { type: "calcul", text: `Moyenne = (${restants.join(" + ")}) \\div ${restants.length} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -198,7 +201,10 @@ function genComparerMoyennesQCM() {
     prompt: `${p1} a obtenu les notes suivantes : ${a.join(" ; ")}. ${p2} a obtenu : ${b.join(" ; ")}. ${p1} affirme : "J'ai une meilleure moyenne que ${p2} !" Est-ce exact ?`,
     answer: moyA > moyB ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Moyenne de ${p1} \\approx ${fr(moyA)}`, `Moyenne de ${p2} \\approx ${fr(moyB)}`],
+    steps: [
+      { type: "calcul", text: `Moyenne de ${p1} \\approx ${fr(moyA)}` },
+      { type: "calcul", text: `Moyenne de ${p2} \\approx ${fr(moyB)}` },
+    ],
   };
 }
 
@@ -221,7 +227,7 @@ function genQualifierEvenementQCM() {
     prompt: `Comment qualifier l'événement suivant : "${it.texte}" ?`,
     answer: it.r,
     options: shuffle(["Impossible", "Certain", "Probable (ni impossible ni certain)"]),
-    steps: [`On compare les issues possibles de l'expérience à l'événement décrit.`],
+    steps: [{ type: "regle", text: `On compare les issues possibles de l'expérience à l'événement décrit.` }],
   };
 }
 
@@ -242,7 +248,7 @@ function genProbabiliteDeNumeric() {
     prompt: `On lance un dé équilibré à 6 faces numérotées de 1 à 6. Quelle est la probabilité de l'événement "${it.desc}" (sous forme décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`P = (\\text{nombre d'issues favorables}) \\div (\\text{nombre d'issues possibles}) = ${it.favorables} \\div 6 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = (\\text{nombre d'issues favorables}) \\div (\\text{nombre d'issues possibles}) = ${it.favorables} \\div 6 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -264,7 +270,7 @@ function genProbabiliteUrneTirageNumeric() {
     prompt: `Une urne contient ${rouges} billes rouges, ${bleues} billes bleues et ${vertes} billes vertes, indiscernables au toucher. On tire une bille au hasard. Quelle est la probabilité de tirer une bille ${couleur.nom} (sous forme décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`P = ${couleur.n} \\div ${total} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = ${couleur.n} \\div ${total} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -278,7 +284,7 @@ function genProbabiliteEvenementContraireNumeric() {
     prompt: `Un événement A a une probabilité P(A) = ${fr(p)}. Quelle est la probabilité de l'événement contraire (ne pas réaliser A) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`P(\\text{contraire de A}) = 1 - P(A) = 1 - ${fr(p)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P(\\text{contraire de A}) = 1 - P(A) = 1 - ${fr(p)} = ${fr(answer)}` }],
   };
 }
 
@@ -301,7 +307,7 @@ function genComparerProbabilitesSacsQCM() {
     prompt: `${description}. Chacun tire une bille au hasard dans son propre sac. Qui a la plus grande probabilité de tirer une bille rouge ?`,
     answer: noms[meilleur],
     options: [...noms],
-    steps: [`On compare les proportions de billes rouges dans chaque sac : ${noms.map((n, i) => `${n} \\approx ${roundTo(sacs[i].p, 3)}`).join(", ")}.`],
+    steps: [{ type: "calcul", text: `On compare les proportions de billes rouges dans chaque sac : ${noms.map((n, i) => `${n} \\approx ${roundTo(sacs[i].p, 3)}`).join(", ")}.` }],
   };
 }
 
@@ -317,7 +323,7 @@ function genSommeDeuxDesProbabiliteNumeric() {
     prompt: `On lance deux dés équilibrés à 6 faces et on additionne les résultats obtenus. Quelle est la probabilité d'obtenir une somme égale à ${somme} (sous forme décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`Il y a ${favorables} façon(s) d'obtenir la somme ${somme} parmi les 36 issues possibles : P = ${favorables} \\div 36 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Il y a ${favorables} façon(s) d'obtenir la somme ${somme} parmi les 36 issues possibles : P = ${favorables} \\div 36 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -333,7 +339,7 @@ function genFrequenceVersProbabiliteQCM() {
       "Elle devient toujours égale à 0,5",
       "Elle s'éloigne de plus en plus de la probabilité théorique",
     ]),
-    steps: [`C'est la loi des grands nombres : plus on répète l'expérience, plus la fréquence observée se rapproche de la probabilité théorique.`],
+    steps: [{ type: "regle", text: `C'est la loi des grands nombres : plus on répète l'expérience, plus la fréquence observée se rapproche de la probabilité théorique.` }],
   };
 }
 
@@ -354,7 +360,7 @@ function genExperienceAleatoireQCM() {
     prompt: `"${it.texte}." Est-ce une expérience aléatoire (dont le résultat dépend du hasard) ?`,
     answer: it.r,
     options: ["Oui", "Non"],
-    steps: [it.r === "Oui" ? `Le résultat n'est pas connu à l'avance : c'est une expérience aléatoire.` : `Le résultat est prévisible ou fixe : ce n'est pas une expérience aléatoire.`],
+    steps: [{ type: "regle", text: it.r === "Oui" ? `Le résultat n'est pas connu à l'avance : c'est une expérience aléatoire.` : `Le résultat est prévisible ou fixe : ce n'est pas une expérience aléatoire.` }],
   };
 }
 
@@ -368,7 +374,7 @@ function genProbabiliteRoueSecteursInegauxNumeric() {
     prompt: `Une roue de loterie est partagée en secteurs angulaires de tailles différentes. Un secteur donné a un angle de ${angle}°. Quelle est la probabilité que la flèche s'arrête sur ce secteur (sous forme décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`P = \\dfrac{${angle}}{360} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = \\dfrac{${angle}}{360} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -383,7 +389,10 @@ function genProbabiliteFractionSimplifieeNumeric() {
     chapter: "Probabilités — Simplifier une probabilité",
     prompt: `Dans une expérience à ${total} issues équiprobables, un événement a ${favorables} issues favorables. Une fois la fraction \\(\\dfrac{${favorables}}{${total}}\\) simplifiée au maximum, quel est son numérateur ?`,
     answer: numSimplifie,
-    steps: [`\\text{PGCD}(${favorables}, ${total}) = ${d}`, `\\dfrac{${favorables}}{${total}} = \\dfrac{${numSimplifie}}{${total / d}}`],
+    steps: [
+      { type: "calcul", text: `\\text{PGCD}(${favorables}, ${total}) = ${d}` },
+      { type: "resultat", text: `\\dfrac{${favorables}}{${total}} = \\dfrac{${numSimplifie}}{${total / d}}` },
+    ],
   };
 }
 
@@ -405,7 +414,7 @@ function genClassementProbabilitesQCM() {
     prompt: `On donne les probabilités de cinq événements : ${description}. Quel est l'événement le plus probable ?`,
     answer: plusProbable.nom,
     options: shuffled.map((e) => e.nom),
-    steps: [`L'événement le plus probable est celui dont la probabilité est la plus proche de 1.`],
+    steps: [{ type: "regle", text: `L'événement le plus probable est celui dont la probabilité est la plus proche de 1.` }],
   };
 }
 
@@ -468,6 +477,7 @@ export default {
     id: "statistiques-probabilites",
     title: "Statistiques, probabilités",
     description: "Effectif et fréquence, tableaux et diagrammes, moyenne (simple, pondérée, écarts), probabilités (équiprobabilité, événement contraire, somme de deux dés, fréquence et probabilité).",
+    pourquoi: "Calculer une moyenne ou une probabilité simple, c'est déjà résumer et interpréter des données réelles.",
     level: "cinquieme",
     free: false,
     order: 10,

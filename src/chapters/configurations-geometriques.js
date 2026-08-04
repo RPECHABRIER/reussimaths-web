@@ -439,6 +439,7 @@ export default {
     id: "configurations-geometriques",
     title: "Configurations géométriques",
     description: "Existence d'un triangle, triangles particuliers, angles, représenter l'espace.",
+    pourquoi: "Savoir si un triangle existe et reconnaître des figures particulières, c'est la base de toute construction géométrique fiable.",
     level: "sixieme",
     free: false,
     order: 8,

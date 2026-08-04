@@ -454,6 +454,7 @@ export default {
     id: "reperage-configurations-seconde",
     title: "Repérage et configurations dans le plan",
     description: "Coordonnées du milieu, distance entre deux points, alignement, parallélogrammes via milieu commun des diagonales, réciproque de Pythagore, centre de gravité, types de repères.",
+    pourquoi: "Repérer un point par ses coordonnées, c'est le même principe qu'un GPS ou qu'une carte quadrillée.",
     level: "seconde",
     free: false,
     order: 7,

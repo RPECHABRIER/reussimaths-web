@@ -172,6 +172,7 @@ export default {
     id: "statistiques-deux-variables-terminale-techno",
     title: "Statistiques à deux variables (ajustement non affine)",
     description: "Changement de variable (Y = u², 1/t, log(y)...) pour se ramener à un ajustement affine, retour au modèle d'origine.",
+    pourquoi: "Changer de variable pour ajuster un nuage de points, c'est aller au-delà de la simple droite pour modéliser des phénomènes qui accélèrent, ralentissent ou explosent.",
     level: "terminale-techno",
     order: 6,
   },

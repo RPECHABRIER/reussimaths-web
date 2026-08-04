@@ -385,6 +385,7 @@ export default {
     id: "colinearite-vecteurs-seconde",
     title: "Colinéarité de vecteurs",
     description: "Déterminant de deux vecteurs, critère de colinéarité, alignement de points, parallélisme de droites, coefficient de colinéarité, vecteurs directeurs.",
+    pourquoi: "La colinéarité de vecteurs permet de démontrer un alignement ou un parallélisme sans mesurer sur une figure — un outil clé en géométrie comme en physique (forces, vitesses).",
     level: "seconde",
     free: false,
     order: 9,

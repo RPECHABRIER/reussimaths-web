@@ -89,7 +89,10 @@ function genRectangleGrandeurs() {
       prompt: `Calcule l'aire de ce ${shapeName}, en cm².`,
       figure,
       answer: aire,
-      steps: [`Aire = longueur × largeur`, `${L} \\times ${l} = ${aire}`],
+      steps: [
+        { type: "regle", text: `Aire = longueur × largeur` },
+        { type: "calcul", text: `${L} \\times ${l} = ${aire}` },
+      ],
     };
   }
   return {
@@ -98,7 +101,10 @@ function genRectangleGrandeurs() {
     prompt: `Calcule le périmètre de ce ${shapeName}, en cm.`,
     figure,
     answer: perim,
-    steps: [`Périmètre = 2 × (longueur + largeur)`, `2 \\times (${L} + ${l}) = ${perim}`],
+    steps: [
+      { type: "regle", text: `Périmètre = 2 × (longueur + largeur)` },
+      { type: "calcul", text: `2 \\times (${L} + ${l}) = ${perim}` },
+    ],
   };
 }
 
@@ -116,7 +122,7 @@ function genPerimetreCercle() {
       : `Un cercle a un rayon de ${r} cm. Quel est son périmètre, arrondi au centième ?`,
     answer,
     tolerance: 0.05,
-    steps: [`\\pi \\times ${D} \\approx ${answer}`],
+    steps: [{ type: "calcul", text: `\\pi \\times ${D} \\approx ${answer}` }],
   };
 }
 
@@ -131,7 +137,7 @@ function genPerimetreDemiCercle() {
     prompt: `Un demi-disque a un rayon de ${r} cm. Quel est le périmètre de ce demi-disque (demi-cercle + diamètre), arrondi au centième ?`,
     answer,
     tolerance: 0.05,
-    steps: [`\\pi \\times ${r} + ${D} \\approx ${answer}`],
+    steps: [{ type: "calcul", text: `\\pi \\times ${r} + ${D} \\approx ${answer}` }],
   };
 }
 
@@ -184,7 +190,7 @@ function genFigureComposeeRectangles() {
       prompt: `Calcule l'aire de cette figure (toutes les longueurs sont en cm), en cm².`,
       figure,
       answer: aire,
-      steps: [`Aire = ${W} \\times ${h} + ${w2} \\times ${H - h} = ${aire}`],
+      steps: [{ type: "calcul", text: `Aire = ${W} \\times ${h} + ${w2} \\times ${H - h} = ${aire}` }],
     };
   }
   return {
@@ -193,7 +199,7 @@ function genFigureComposeeRectangles() {
     prompt: `Calcule le périmètre de cette figure (toutes les longueurs sont en cm).`,
     figure,
     answer: perimetre,
-    steps: [`${sideAB} + ${sideBC} + ${sideCD} + ${sideDE} + ${sideEF} + ${sideFA} = ${perimetre}`],
+    steps: [{ type: "calcul", text: `${sideAB} + ${sideBC} + ${sideCD} + ${sideDE} + ${sideEF} + ${sideFA} = ${perimetre}` }],
   };
 }
 
@@ -208,7 +214,7 @@ function genVolumePave() {
     chapter: "Grandeurs et mesures — Volume",
     prompt: `Un pavé droit a pour dimensions ${L} cm × ${l} cm × ${h} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [`${L} \\times ${l} \\times ${h} = ${answer}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
   };
 }
 
@@ -227,7 +233,7 @@ function genConvertirUnitesLongueur() {
     chapter: "Grandeurs et mesures — Unités de longueur",
     prompt: `Convertis ${fr(value)} ${UNITES_LONGUEUR[i]} en ${UNITES_LONGUEUR[j]}.`,
     answer: result,
-    steps: [`1 ${UNITES_LONGUEUR[i]} = ${facteur} ${UNITES_LONGUEUR[j]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_LONGUEUR[i]} = ${facteur} ${UNITES_LONGUEUR[j]}` }],
   };
 }
 
@@ -245,7 +251,7 @@ function genConvertirUnitesAire() {
     chapter: "Grandeurs et mesures — Unités d'aire",
     prompt: `Convertis ${fr(value)} ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} en ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}.`,
     answer: result,
-    steps: [`1 ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} = ${facteur} ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} = ${facteur} ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}` }],
   };
 }
 
@@ -270,7 +276,7 @@ function genComparerAiresQCM() {
     prompt: `Quelle est l'aire la plus grande ?`,
     answer: correct,
     options: [e1.text, e2.text],
-    steps: [`${e1.text} = ${e1.base} mm² ; ${e2.text} = ${e2.base} mm²`],
+    steps: [{ type: "calcul", text: `${e1.text} = ${e1.base} mm² ; ${e2.text} = ${e2.base} mm²` }],
   };
 }
 
@@ -307,7 +313,7 @@ function genLireHeureHorloge() {
     prompt: `Quelle heure indique cette horloge ? (réponds au format 4h15)`,
     figure: buildClockFigure(heureAffichee, minute),
     answer: accepted,
-    steps: [`La petite aiguille est entre ${heureAffichee} et ${heureAffichee === 12 ? 1 : heureAffichee + 1}, la grande aiguille indique ${minute} minutes.`],
+    steps: [{ type: "donnee", text: `La petite aiguille est entre ${heureAffichee} et ${heureAffichee === 12 ? 1 : heureAffichee + 1}, la grande aiguille indique ${minute} minutes.` }],
   };
 }
 
@@ -320,7 +326,7 @@ function genConvertirDureeMinutesHeures() {
     chapter: "Grandeurs et mesures — Durées",
     prompt: askHeures ? `${mins} min = ? h (partie entière)` : `${mins} min : combien de minutes restantes après les heures entières (le reste) ?`,
     answer: askHeures ? Math.floor(mins / 60) : mins % 60,
-    steps: [`${mins} = 60 \\times ${Math.floor(mins / 60)} + ${mins % 60}`],
+    steps: [{ type: "calcul", text: `${mins} = 60 \\times ${Math.floor(mins / 60)} + ${mins % 60}` }],
   };
 }
 
@@ -335,7 +341,7 @@ function genConvertirDureeJoursHeures() {
       chapter: "Grandeurs et mesures — Durées",
       prompt: askJours ? `${heures} h = ? jours (partie entière)` : `${heures} h : combien d'heures restantes après les jours entiers ?`,
       answer: askJours ? Math.floor(heures / 24) : heures % 24,
-      steps: [`${heures} = 24 \\times ${Math.floor(heures / 24)} + ${heures % 24}`],
+      steps: [{ type: "calcul", text: `${heures} = 24 \\times ${Math.floor(heures / 24)} + ${heures % 24}` }],
     };
   }
   const jours = randInt(1, 10);
@@ -345,7 +351,7 @@ function genConvertirDureeJoursHeures() {
     chapter: "Grandeurs et mesures — Durées",
     prompt: `${jours} jours ${heuresReste} h = ? heures au total`,
     answer: jours * 24 + heuresReste,
-    steps: [`${jours} \\times 24 + ${heuresReste} = ${jours * 24 + heuresReste}`],
+    steps: [{ type: "calcul", text: `${jours} \\times 24 + ${heuresReste} = ${jours * 24 + heuresReste}` }],
   };
 }
 
@@ -360,7 +366,7 @@ function genConvertirDureeSexagesimaleDecimale() {
       chapter: "Grandeurs et mesures — Durées",
       prompt: `${m} min = ? h (écriture décimale)`,
       answer,
-      steps: [`${m} \\div 60 = ${fr(answer)}`],
+      steps: [{ type: "calcul", text: `${m} \\div 60 = ${fr(answer)}` }],
     };
   }
   const dixieme = randInt(1, 9);
@@ -371,7 +377,7 @@ function genConvertirDureeSexagesimaleDecimale() {
     chapter: "Grandeurs et mesures — Durées",
     prompt: `${fr(heureDecimale)} h = ? min`,
     answer,
-    steps: [`${fr(heureDecimale)} \\times 60 = ${answer}`],
+    steps: [{ type: "calcul", text: `${fr(heureDecimale)} \\times 60 = ${answer}` }],
   };
 }
 
@@ -395,7 +401,7 @@ function genComparerDureesQCM() {
     prompt: `Quelle est la durée la plus grande ?`,
     answer: correct,
     options: [d1.text, d2.text],
-    steps: [`${d1.text} = ${d1.seconds} s ; ${d2.text} = ${d2.seconds} s`],
+    steps: [{ type: "calcul", text: `${d1.text} = ${d1.seconds} s ; ${d2.text} = ${d2.seconds} s` }],
   };
 }
 
@@ -421,7 +427,10 @@ function genProblemeDureeHebdomadaireTravail() {
     prompt: `${prenom} travaille ${joursTravailles} jours par semaine, de ${matinH} h ${String(matinM).padStart(2, "0")} à ${finMatinH} h ${String(matinM).padStart(2, "0")} et de ${apresMidiH} h ${String(matinM).padStart(2, "0")} à ${finJourneeH} h ${String(matinM).padStart(2, "0")}. Quelle est sa durée de travail hebdomadaire totale, en heures ?`,
     answer: totalHeures,
     tolerance: 0.02,
-    steps: [`Durée par jour : ${dureeJournaliere} min`, `${dureeJournaliere} \\times ${joursTravailles} = ${totalMinutes} min = ${fr(totalHeures)} h`],
+    steps: [
+      { type: "calcul", text: `Durée par jour : ${dureeJournaliere} min` },
+      { type: "calcul", text: `${dureeJournaliere} \\times ${joursTravailles} = ${totalMinutes} min = ${fr(totalHeures)} h` },
+    ],
   };
 }
 
@@ -444,7 +453,7 @@ function genProblemeHeureArriveeTexte() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `${prenom} part à ${depH} h ${String(depM).padStart(2, "0")}. Son trajet dure ${dureeMin} minutes. À quelle heure arrive-t-${pronom} ? (réponds au format 14h30)`,
     answer: accepted,
-    steps: [`${depH * 60 + depM} + ${dureeMin} = ${totalMin} min → ${arrH} h ${String(arrM).padStart(2, "0")}`],
+    steps: [{ type: "calcul", text: `${depH * 60 + depM} + ${dureeMin} = ${totalMin} min → ${arrH} h ${String(arrM).padStart(2, "0")}` }],
   };
 }
 
@@ -461,7 +470,7 @@ function genProblemeDureeEntreDeuxHeures() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `Un trajet commence à ${h1} h ${String(m1).padStart(2, "0")} et se termine à ${h2} h ${String(m2).padStart(2, "0")}. Quelle est la durée du trajet, en minutes ?`,
     answer: dureeMin,
-    steps: [`${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}`],
+    steps: [{ type: "calcul", text: `${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}` }],
   };
 }
 
@@ -477,7 +486,10 @@ function genProblemeGrillagePerimetre() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `Un terrain rectangulaire mesure ${L} m sur ${l} m. Le grillage coûte ${fr(prixMetre)} € le mètre. Quel est le prix du grillage nécessaire pour clôturer ce terrain, en € ?`,
     answer: total,
-    steps: [`Périmètre : 2 \\times (${L} + ${l}) = ${perim}`, `${perim} \\times ${fr(prixMetre)} = ${fr(total)}`],
+    steps: [
+      { type: "calcul", text: `Périmètre : 2 \\times (${L} + ${l}) = ${perim}` },
+      { type: "calcul", text: `${perim} \\times ${fr(prixMetre)} = ${fr(total)}` },
+    ],
   };
 }
 
@@ -493,7 +505,10 @@ function genProblemeMoquetteAire() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `Une salle rectangulaire mesure ${L} m sur ${l} m. La moquette coûte ${fr(prixM2)} € le m². Quel est le prix total de la moquette nécessaire, en € ?`,
     answer: total,
-    steps: [`Aire : ${L} \\times ${l} = ${aire}`, `${aire} \\times ${fr(prixM2)} = ${fr(total)}`],
+    steps: [
+      { type: "calcul", text: `Aire : ${L} \\times ${l} = ${aire}` },
+      { type: "calcul", text: `${aire} \\times ${fr(prixM2)} = ${fr(total)}` },
+    ],
   };
 }
 
@@ -515,7 +530,7 @@ function genProblemeComparaisonSurfaces() {
     prompt: `Quel terrain a la plus grande aire ?`,
     answer: correct,
     options: [optA, optB, optEq],
-    steps: [`Terrain 1 : ${aire1} m² ; Terrain 2 : ${aire2} m²`],
+    steps: [{ type: "calcul", text: `Terrain 1 : ${aire1} m² ; Terrain 2 : ${aire2} m²` }],
   };
 }
 
@@ -529,7 +544,7 @@ function genProblemeFrequenceTotal() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `Un cœur bat environ ${freq} fois par minute. Combien de fois bat-il (environ) en ${jours} jours ?`,
     answer: total,
-    steps: [`${freq} \\times 60 \\times 24 \\times ${jours} = ${total}`],
+    steps: [{ type: "calcul", text: `${freq} \\times 60 \\times 24 \\times ${jours} = ${total}` }],
   };
 }
 
@@ -545,7 +560,7 @@ function genProblemeSommeDistances() {
     chapter: "Grandeurs et mesures — Problèmes",
     prompt: `Lors d'un triathlon, un athlète parcourt ${detail}. Quelle est la distance totale parcourue, en km ?`,
     answer: total,
-    steps: [`${distances.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${distances.join(" + ")} = ${total}` }],
   };
 }
 
@@ -564,7 +579,7 @@ function genProblemeCocheQuestionsGrandeurs() {
     prompt: `Un rectangle a pour longueur ${L} cm (la largeur n'est pas précisée ici). Coche les questions auxquelles on pourrait répondre si l'on connaissait aussi sa largeur.`,
     options,
     answer,
-    steps: [`Un rectangle a un périmètre et une aire, mais pas de "volume" (notion réservée aux solides).`],
+    steps: [{ type: "regle", text: `Un rectangle a un périmètre et une aire, mais pas de "volume" (notion réservée aux solides).` }],
   };
 }
 
@@ -631,6 +646,7 @@ export default {
     id: "grandeurs-mesures",
     title: "Grandeurs et mesures",
     description: "Périmètre, aire, volume, unités de longueur et d'aire, horaires et durées.",
+    pourquoi: "Calculer un périmètre, une aire ou une durée, ce sont des gestes du quotidien : peindre une pièce, planifier un trajet, cuisiner une recette.",
     level: "sixieme",
     free: false,
     order: 5,

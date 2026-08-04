@@ -44,7 +44,7 @@ function genResoudreEquationAxNumeric() {
     chapter: "Équations — Premier degré",
     prompt: `Résous l'équation \\(${a}x = ${b}\\).`,
     answer: x0,
-    steps: [`x = \\dfrac{${b}}{${a}} = ${x0}`],
+    steps: [{ type: "resultat", text: `x = \\dfrac{${b}}{${a}} = ${x0}` }],
   };
 }
 
@@ -59,7 +59,10 @@ function genResoudreEquationAxPlusBNumeric() {
     chapter: "Équations — Premier degré",
     prompt: `Résous l'équation \\(${a}x ${sgn(b)} ${abs(b)} = ${c}\\).`,
     answer: x0,
-    steps: [`${a}x = ${c} ${sgn(-b)} ${abs(b)} = ${c - b}`, `x = \\dfrac{${c - b}}{${a}} = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${sgn(-b)} ${abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = \\dfrac{${c - b}}{${a}} = ${x0}` },
+    ],
   };
 }
 
@@ -78,7 +81,11 @@ function genResoudreEquationDeuxCotesNumeric() {
     chapter: "Équations — Premier degré",
     prompt: `Résous l'équation \\(${a}x ${sgn(b)} ${abs(b)} = ${c}x ${sgn(d)} ${abs(d)}\\).`,
     answer: x0,
-    steps: [`${a - c}x ${sgn(b)} ${abs(b)} = ${d}`, `${a - c}x = ${d - b}`, `x = \\dfrac{${d - b}}{${a - c}} = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a - c}x ${sgn(b)} ${abs(b)} = ${d}` },
+      { type: "calcul", text: `${a - c}x = ${d - b}` },
+      { type: "resultat", text: `x = \\dfrac{${d - b}}{${a - c}} = ${x0}` },
+    ],
   };
 }
 
@@ -99,10 +106,10 @@ function genResoudreEquationReductionPrealableNumeric() {
     prompt: `On réduit puis on résout : \\(${p1}x ${sgn(p2)} ${abs(p2)}x ${sgn(q1)} ${abs(q1)} = ${p3}x ${sgn(q2)} ${abs(q2)}\\).`,
     answer: x0,
     steps: [
-      `${p1}x ${sgn(p2)} ${abs(p2)}x = ${p1 + p2}x`,
-      `${p1 + p2}x ${sgn(q1)} ${abs(q1)} = ${p3}x ${sgn(q2)} ${abs(q2)}`,
-      `${p1 + p2 - p3}x = ${q2 - q1}`,
-      `x = \\dfrac{${q2 - q1}}{${p1 + p2 - p3}} = ${x0}`,
+      { type: "calcul", text: `${p1}x ${sgn(p2)} ${abs(p2)}x = ${p1 + p2}x` },
+      { type: "calcul", text: `${p1 + p2}x ${sgn(q1)} ${abs(q1)} = ${p3}x ${sgn(q2)} ${abs(q2)}` },
+      { type: "calcul", text: `${p1 + p2 - p3}x = ${q2 - q1}` },
+      { type: "resultat", text: `x = \\dfrac{${q2 - q1}}{${p1 + p2 - p3}} = ${x0}` },
     ],
   };
 }
@@ -126,9 +133,9 @@ function genResoudreEquationFractionsNumeric() {
     prompt: `Résous l'équation \\(\\dfrac{x}{${d}} ${sgn(c)} ${abs(c)} = \\dfrac{${m}x}{${d}} ${sgn(-f)} ${abs(f)}\\).`,
     answer: x0,
     steps: [
-      `\\text{On multiplie chaque membre par } ${d} : x ${sgn(cd)} ${abs(cd)} = ${m}x ${sgn(-fd)} ${abs(fd)}`,
-      `${1 - m}x = ${-fd - cd}`,
-      `x = \\dfrac{${-fd - cd}}{${1 - m}} = ${x0}`,
+      { type: "regle", text: `\\text{On multiplie chaque membre par } ${d} : x ${sgn(cd)} ${abs(cd)} = ${m}x ${sgn(-fd)} ${abs(fd)}` },
+      { type: "calcul", text: `${1 - m}x = ${-fd - cd}` },
+      { type: "resultat", text: `x = \\dfrac{${-fd - cd}}{${1 - m}} = ${x0}` },
     ],
   };
 }
@@ -151,10 +158,10 @@ function genResoudreEquationDeveloppementPrealableNumeric() {
     prompt: `Résous l'équation \\(${k1}\\left(x ${sgn(p1)} ${abs(p1)}\\right) + ${k2}\\left(x ${sgn(p2)} ${abs(p2)}\\right) = ${target}\\).`,
     answer: x0,
     steps: [
-      `${k1}x ${sgn(k1 * p1)} ${abs(k1 * p1)} + ${k2}x ${sgn(k2 * p2)} ${abs(k2 * p2)} = ${target}`,
-      `${k1 + k2}x ${sgn(constSum)} ${abs(constSum)} = ${target}`,
-      `${k1 + k2}x = ${target - constSum}`,
-      `x = \\dfrac{${target - constSum}}{${k1 + k2}} = ${x0}`,
+      { type: "calcul", text: `${k1}x ${sgn(k1 * p1)} ${abs(k1 * p1)} + ${k2}x ${sgn(k2 * p2)} ${abs(k2 * p2)} = ${target}` },
+      { type: "calcul", text: `${k1 + k2}x ${sgn(constSum)} ${abs(constSum)} = ${target}` },
+      { type: "calcul", text: `${k1 + k2}x = ${target - constSum}` },
+      { type: "resultat", text: `x = \\dfrac{${target - constSum}}{${k1 + k2}} = ${x0}` },
     ],
   };
 }
@@ -178,10 +185,10 @@ function genProgrammeMemeResultatNumeric() {
     prompt: `Un programme A : choisir un nombre x, le multiplier par ${a}, puis ajouter ${b}. Un programme B : choisir un nombre x, le multiplier par ${c}, ajouter ${d}, puis multiplier le résultat par ${k}. Pour quel nombre de départ x les deux programmes donnent-ils le même résultat ?`,
     answer: x0,
     steps: [
-      `${a}x ${sgn(b)} ${abs(b)} = ${k}\\left(${c}x ${sgn(d)} ${abs(d)}\\right)`,
-      `${a}x ${sgn(b)} ${abs(b)} = ${k * c}x ${sgn(k * d)} ${abs(k * d)}`,
-      `${a - k * c}x = ${k * d - b}`,
-      `x = \\dfrac{${k * d - b}}{${a - k * c}} = ${x0}`,
+      { type: "donnee", text: `${a}x ${sgn(b)} ${abs(b)} = ${k}\\left(${c}x ${sgn(d)} ${abs(d)}\\right)` },
+      { type: "calcul", text: `${a}x ${sgn(b)} ${abs(b)} = ${k * c}x ${sgn(k * d)} ${abs(k * d)}` },
+      { type: "calcul", text: `${a - k * c}x = ${k * d - b}` },
+      { type: "resultat", text: `x = \\dfrac{${k * d - b}}{${a - k * c}} = ${x0}` },
     ],
   };
 }
@@ -206,9 +213,9 @@ function genResoudreEquationProduitNulNumeric() {
     prompt: `Résous l'équation produit \\(\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\left(${c}x ${sgn(d)} ${abs(d)}\\right) = 0\\). Donne la solution associée au facteur \\(${askFirst ? `${a}x ${sgn(b)} ${abs(b)}` : `${c}x ${sgn(d)} ${abs(d)}`}\\).`,
     answer: askFirst ? r1 : r2,
     steps: [
-      `\\text{Un produit de facteurs est nul si au moins l'un de ses facteurs est nul.}`,
-      `${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}`,
-      `${c}x ${sgn(d)} ${abs(d)} = 0 \\Rightarrow x = ${r2}`,
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si au moins l'un de ses facteurs est nul.}` },
+      { type: "resultat", text: `${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}` },
+      { type: "resultat", text: `${c}x ${sgn(d)} ${abs(d)} = 0 \\Rightarrow x = ${r2}` },
     ],
   };
 }
@@ -236,9 +243,14 @@ function genCombienSolutionsProduitQCM() {
     answer: sameRoot ? "1" : "2",
     options: ["1", "2"],
     steps: [
-      `${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}`,
-      `${c}x ${sgn(d)} ${abs(d)} = 0 \\Rightarrow x = ${r2}`,
-      sameRoot ? `\\text{Les deux facteurs donnent la même solution : une seule solution distincte.}` : `\\text{Les deux facteurs donnent des solutions différentes : deux solutions distinctes.}`,
+      { type: "calcul", text: `${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}` },
+      { type: "calcul", text: `${c}x ${sgn(d)} ${abs(d)} = 0 \\Rightarrow x = ${r2}` },
+      {
+        type: "resultat",
+        text: sameRoot
+          ? `\\text{Les deux facteurs donnent la même solution : une seule solution distincte.}`
+          : `\\text{Les deux facteurs donnent des solutions différentes : deux solutions distinctes.}`,
+      },
     ],
   };
 }
@@ -252,7 +264,7 @@ function genResoudreEquationCarreNumeric() {
     chapter: "Équations — Produit nul, x² = a",
     prompt: `Résous l'équation \\(x^{2} = ${a}\\). Donne la solution positive.`,
     answer: r,
-    steps: [`${a} > 0, \\text{ donc il y a deux solutions : } x = -\\sqrt{${a}} = -${r} \\text{ et } x = \\sqrt{${a}} = ${r}`],
+    steps: [{ type: "resultat", text: `${a} > 0, \\text{ donc il y a deux solutions : } x = -\\sqrt{${a}} = -${r} \\text{ et } x = \\sqrt{${a}} = ${r}` }],
   };
 }
 
@@ -273,7 +285,7 @@ function genCombienSolutionsCarreQCM() {
     prompt: `Combien de solutions a l'équation \\(x^{2} = ${a}\\) ?`,
     answer,
     options: ["0", "1", "2"],
-    steps: [step],
+    steps: [{ type: "resultat", text: step }],
   };
 }
 
@@ -295,7 +307,10 @@ function genCorrigerErreurSigneEquationProduitQCM() {
     prompt: `Un élève résout \\(\\left(${a}x ${sgn(b)} ${abs(b)}\\right)\\left(x ${sgn(e)} ${abs(e)}\\right) = 0\\) et commet des erreurs de signe. Quelles sont les solutions correctes ?`,
     answer: correct,
     options: [correct, wrong],
-    steps: [`${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}`, `x ${sgn(e)} ${abs(e)} = 0 \\Rightarrow x = ${r2}`],
+    steps: [
+      { type: "calcul", text: `${a}x ${sgn(b)} ${abs(b)} = 0 \\Rightarrow x = ${r1}` },
+      { type: "resultat", text: `x ${sgn(e)} ${abs(e)} = 0 \\Rightarrow x = ${r2}` },
+    ],
   };
 }
 
@@ -329,7 +344,7 @@ function genReconnaitreTypeEquationQCM() {
     prompt: `Quel type d'équation est \\(${expr}\\) ?`,
     answer: labels[kind],
     options: Object.values(labels),
-    steps: [`Il s'agit de ${labels[kind].toLowerCase()}.`],
+    steps: [{ type: "resultat", text: `Il s'agit de ${labels[kind].toLowerCase()}.` }],
   };
 }
 
@@ -353,7 +368,11 @@ function genModeliserProblemeAchatNumeric() {
     chapter: "Équations — Modéliser un problème",
     prompt: `Pour acheter ${n1} objets identiques, il manque ${M} € à Camille. Pour acheter seulement ${n2} de ces mêmes objets, il lui reste ${R} €. Quel est le prix x (en €) d'un objet ?`,
     answer: x0,
-    steps: [`${n1}x - ${M} = ${n2}x + ${R}`, `${n1 - n2}x = ${R + M}`, `x = \\dfrac{${R + M}}{${n1 - n2}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${n1}x - ${M} = ${n2}x + ${R}` },
+      { type: "calcul", text: `${n1 - n2}x = ${R + M}` },
+      { type: "resultat", text: `x = \\dfrac{${R + M}}{${n1 - n2}} = ${x0}` },
+    ],
   };
 }
 
@@ -372,7 +391,11 @@ function genModeliserProblemeSommeNumeric() {
     chapter: "Équations — Modéliser un problème",
     prompt: `Trois nombres valent respectivement \\(${k1}x\\), \\(${k2}x\\) et \\(${k3}x\\). Leur somme vaut ${total}. Quelle est la valeur de x ?`,
     answer: x0,
-    steps: [`${k1}x + ${k2}x + ${k3}x = ${total}`, `${k1 + k2 + k3}x = ${total}`, `x = \\dfrac{${total}}{${k1 + k2 + k3}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${k1}x + ${k2}x + ${k3}x = ${total}` },
+      { type: "calcul", text: `${k1 + k2 + k3}x = ${total}` },
+      { type: "resultat", text: `x = \\dfrac{${total}}{${k1 + k2 + k3}} = ${x0}` },
+    ],
   };
 }
 
@@ -387,7 +410,12 @@ function genModeliserProblemeAireNumeric() {
     chapter: "Équations — Modéliser un problème",
     prompt: `Un rectangle a pour largeur ${L} cm et pour longueur \\(${a} + x\\) cm (x en cm). Son aire vaut ${aire} cm². Quelle est la valeur de x ?`,
     answer: x0,
-    steps: [`${L}\\left(${a} + x\\right) = ${aire}`, `${L * a} + ${L}x = ${aire}`, `${L}x = ${aire - L * a}`, `x = \\dfrac{${aire - L * a}}{${L}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${L}\\left(${a} + x\\right) = ${aire}` },
+      { type: "calcul", text: `${L * a} + ${L}x = ${aire}` },
+      { type: "calcul", text: `${L}x = ${aire - L * a}` },
+      { type: "resultat", text: `x = \\dfrac{${aire - L * a}}{${L}} = ${x0}` },
+    ],
   };
 }
 
@@ -442,6 +470,7 @@ export default {
     id: "equations-troisieme",
     title: "Équations",
     description: "Résoudre une équation du premier degré, une équation produit ou de la forme x² = a, reconnaître le type d'une équation, et modéliser un problème concret par une équation.",
+    pourquoi: "Résoudre une équation, c'est trouver la valeur inconnue d'un problème concret — un raisonnement qui sert bien au-delà des mathématiques.",
     level: "troisieme",
     free: false,
     order: 5,

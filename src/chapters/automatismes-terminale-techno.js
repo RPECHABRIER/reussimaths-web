@@ -300,6 +300,7 @@ export default {
     id: "automatismes-terminale-techno",
     title: "Automatismes",
     description: "Calcul rapide et automatismes du programme de Terminale STMG, thème par thème.",
+    pourquoi: "Les automatismes, c'est le calcul mental qui libère de la place dans ta tête pour réfléchir au problème plutôt qu'à l'arithmétique : quelques minutes régulières valent mieux qu'une révision unique la veille du contrôle.",
     level: "terminale-techno",
     freemiumDaily: 5,
     order: 1,

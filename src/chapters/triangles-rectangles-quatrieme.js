@@ -58,9 +58,9 @@ function genCalculerHypotenuseNumeric() {
     answer: c,
     tolerance: 0.01,
     steps: [
-      `${autres[0]}${autres[1]}^2 = ${droit}${autres[0]}^2 + ${droit}${autres[1]}^2`,
-      `${autres[0]}${autres[1]}^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${a * a + b * b}`,
-      `${autres[0]}${autres[1]} = \\sqrt{${a * a + b * b}} \\approx ${fr(c)}`,
+      { type: "regle", text: `${autres[0]}${autres[1]}^2 = ${droit}${autres[0]}^2 + ${droit}${autres[1]}^2` },
+      { type: "calcul", text: `${autres[0]}${autres[1]}^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${a * a + b * b}` },
+      { type: "resultat", text: `${autres[0]}${autres[1]} = \\sqrt{${a * a + b * b}} \\approx ${fr(c)}` },
     ],
   };
 }
@@ -88,7 +88,10 @@ function genCalculerHypotenuseExacteNumeric() {
     prompt: `RST est un triangle rectangle en R, avec RS = ${a} cm et RT = ${b} cm. Calcule la longueur ST, en cm.`,
     figure: buildRightTriangleFigure({ right: "R", horiz: "S", vert: "T" }),
     answer: c,
-    steps: [`ST^2 = RS^2 + RT^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}`, `ST = \\sqrt{${c * c}} = ${c}`],
+    steps: [
+      { type: "calcul", text: `ST^2 = RS^2 + RT^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}` },
+      { type: "resultat", text: `ST = \\sqrt{${c * c}} = ${c}` },
+    ],
   };
 }
 
@@ -108,7 +111,11 @@ function genCalculerCoteAngleDroitNumeric() {
     prompt: `DEF est un triangle rectangle en D, avec EF = ${c} cm (hypoténuse) et DE = ${a} cm. Calcule la longueur DF, en cm.`,
     figure: buildRightTriangleFigure({ right: "D", horiz: "E", vert: "F" }),
     answer: b,
-    steps: [`EF^2 = DE^2 + DF^2`, `DF^2 = EF^2 - DE^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${b * b}`, `DF = \\sqrt{${b * b}} = ${b}`],
+    steps: [
+      { type: "regle", text: `EF^2 = DE^2 + DF^2` },
+      { type: "calcul", text: `DF^2 = EF^2 - DE^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${b * b}` },
+      { type: "resultat", text: `DF = \\sqrt{${b * b}} = ${b}` },
+    ],
   };
 }
 
@@ -125,7 +132,10 @@ function genCalculerCoteAngleDroitApprocheNumeric() {
     figure: buildRightTriangleFigure({ right: "G", horiz: "H", vert: "I" }),
     answer: b,
     tolerance: 0.01,
-    steps: [`GI^2 = HI^2 - GH^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${bSq}`, `GI = \\sqrt{${bSq}} \\approx ${fr(b)}`],
+    steps: [
+      { type: "calcul", text: `GI^2 = HI^2 - GH^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${bSq}` },
+      { type: "resultat", text: `GI = \\sqrt{${bSq}} \\approx ${fr(b)}` },
+    ],
   };
 }
 
@@ -142,9 +152,9 @@ function genProblemeContextualisePythagoreNumeric() {
     answer: distance,
     tolerance: 0.02,
     steps: [
-      `\\text{Le mât, le sol et le câble forment un triangle rectangle.}`,
-      `\\text{câble}^2 = ${hauteur}^2 + ${base}^2 = ${hauteur * hauteur} + ${base * base} = ${hauteur * hauteur + base * base}`,
-      `\\text{câble} = \\sqrt{${hauteur * hauteur + base * base}} \\approx ${fr(distance)}\\ \\text{m}`,
+      { type: "donnee", text: `\\text{Le mât, le sol et le câble forment un triangle rectangle.}` },
+      { type: "calcul", text: `\\text{câble}^2 = ${hauteur}^2 + ${base}^2 = ${hauteur * hauteur} + ${base * base} = ${hauteur * hauteur + base * base}` },
+      { type: "resultat", text: `\\text{câble} = \\sqrt{${hauteur * hauteur + base * base}} \\approx ${fr(distance)}\\ \\text{m}` },
     ],
   };
 }
@@ -171,11 +181,14 @@ function genReciproquePythagoreQCM() {
     answer: isRight ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `\\text{Plus grand côté : } ${noms[0]}${noms[2]}^2 = ${c}^2 = ${sq(c)}`,
-      `${noms[0]}${noms[1]}^2 + ${noms[1]}${noms[2]}^2 = ${a}^2 + ${b}^2 = ${sq(a)} + ${sq(b)} = ${sq(a) + sq(b)}`,
-      isRight
-        ? "Les deux résultats sont égaux : d'après la réciproque du théorème de Pythagore, le triangle est rectangle."
-        : "Les deux résultats sont différents : le triangle n'est pas rectangle.",
+      { type: "calcul", text: `\\text{Plus grand côté : } ${noms[0]}${noms[2]}^2 = ${c}^2 = ${sq(c)}` },
+      { type: "calcul", text: `${noms[0]}${noms[1]}^2 + ${noms[1]}${noms[2]}^2 = ${a}^2 + ${b}^2 = ${sq(a)} + ${sq(b)} = ${sq(a) + sq(b)}` },
+      {
+        type: "resultat",
+        text: isRight
+          ? "Les deux résultats sont égaux : d'après la réciproque du théorème de Pythagore, le triangle est rectangle."
+          : "Les deux résultats sont différents : le triangle n'est pas rectangle.",
+      },
     ],
   };
 }
@@ -195,9 +208,9 @@ function genReciproqueSommetQCM() {
     answer: "L",
     options: ["K", "L", "M"],
     steps: [
-      `\\text{Le plus grand côté est [KM], donc le sommet opposé à [KM] est le sommet de l'angle droit.}`,
-      `KM^2 = KL^2 + LM^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}`,
-      `\\text{Le triangle KLM est donc rectangle en L.}`,
+      { type: "regle", text: `\\text{Le plus grand côté est [KM], donc le sommet opposé à [KM] est le sommet de l'angle droit.}` },
+      { type: "calcul", text: `KM^2 = KL^2 + LM^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}` },
+      { type: "resultat", text: `\\text{Le triangle KLM est donc rectangle en L.}` },
     ],
   };
 }
@@ -217,8 +230,8 @@ function genCalculerAngleCosinusNumeric() {
     answer: angle,
     tolerance: 0.2,
     steps: [
-      `\\cos(\\widehat{PNQ}) = \\dfrac{NP}{NQ} = \\dfrac{${adjacent}}{${hypotenuse}} \\approx ${fr(roundTo(adjacent / hypotenuse, 4))}`,
-      `\\widehat{PNQ} \\approx ${fr(angle)}°`,
+      { type: "calcul", text: `\\cos(\\widehat{PNQ}) = \\dfrac{NP}{NQ} = \\dfrac{${adjacent}}{${hypotenuse}} \\approx ${fr(roundTo(adjacent / hypotenuse, 4))}` },
+      { type: "resultat", text: `\\widehat{PNQ} \\approx ${fr(angle)}°` },
     ],
   };
 }
@@ -236,8 +249,8 @@ function genCalculerLongueurCosinusAdjacentNumeric() {
     answer: adjacent,
     tolerance: 0.05,
     steps: [
-      `\\cos(\\widehat{WUV}) = \\dfrac{UV}{UW}`,
-      `UV = \\cos(${angle}°) \\times ${hypotenuse} \\approx ${fr(adjacent)}`,
+      { type: "regle", text: `\\cos(\\widehat{WUV}) = \\dfrac{UV}{UW}` },
+      { type: "resultat", text: `UV = \\cos(${angle}°) \\times ${hypotenuse} \\approx ${fr(adjacent)}` },
     ],
   };
 }
@@ -255,8 +268,8 @@ function genCalculerHypotenuseCosinusNumeric() {
     answer: hypotenuse,
     tolerance: 0.05,
     steps: [
-      `\\cos(\\widehat{ZXY}) = \\dfrac{XY}{XZ}`,
-      `XZ = \\dfrac{${adjacent}}{\\cos(${angle}°)} \\approx ${fr(hypotenuse)}`,
+      { type: "regle", text: `\\cos(\\widehat{ZXY}) = \\dfrac{XY}{XZ}` },
+      { type: "resultat", text: `XZ = \\dfrac{${adjacent}}{\\cos(${angle}°)} \\approx ${fr(hypotenuse)}` },
     ],
   };
 }
@@ -271,7 +284,7 @@ function genCosinusValideQCM() {
     prompt: `Peut-on avoir \\(\\cos(\\widehat{x}) = ${fr(value)}\\) pour un angle aigu \\(\\widehat{x}\\) ?`,
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Le cosinus d'un angle est toujours compris entre -1 et 1 (et entre 0 et 1 pour un angle aigu).`],
+    steps: [{ type: "regle", text: `Le cosinus d'un angle est toujours compris entre -1 et 1 (et entre 0 et 1 pour un angle aigu).` }],
   };
 }
 
@@ -285,8 +298,8 @@ function genSommeAnglesTriangleRectangleNumeric() {
     prompt: `Dans un triangle ABC rectangle en A, on a \\(\\widehat{ABC} = ${angleConnu}°\\). Calcule la mesure de l'angle \\(\\widehat{ACB}\\), en degrés.`,
     answer: angleInconnu,
     steps: [
-      `\\text{La somme des angles d'un triangle vaut } 180°.`,
-      `\\widehat{ACB} = 180 - 90 - ${angleConnu} = ${angleInconnu}°`,
+      { type: "regle", text: `\\text{La somme des angles d'un triangle vaut } 180°.` },
+      { type: "resultat", text: `\\widehat{ACB} = 180 - 90 - ${angleConnu} = ${angleInconnu}°` },
     ],
   };
 }
@@ -304,9 +317,9 @@ function genProblemeContextualiseCosinusNumeric() {
     answer: denivele,
     tolerance: 1,
     steps: [
-      `\\text{L'angle entre la pente et l'horizontale au sommet vaut } 90 - ${pente} = ${90 - pente}°.`,
-      `\\cos(${90 - pente}°) = \\dfrac{\\text{dénivelé}}{${distanceParcourue}}`,
-      `\\text{dénivelé} \\approx ${fr(denivele)}\\ \\text{m}`,
+      { type: "calcul", text: `\\text{L'angle entre la pente et l'horizontale au sommet vaut } 90 - ${pente} = ${90 - pente}°.` },
+      { type: "regle", text: `\\cos(${90 - pente}°) = \\dfrac{\\text{dénivelé}}{${distanceParcourue}}` },
+      { type: "resultat", text: `\\text{dénivelé} \\approx ${fr(denivele)}\\ \\text{m}` },
     ],
   };
 }
@@ -356,6 +369,7 @@ export default {
     id: "triangles-rectangles-quatrieme",
     title: "Propriétés des triangles rectangles",
     description: "Théorème de Pythagore, réciproque, et trigonométrie du triangle rectangle avec le cosinus.",
+    pourquoi: "Pythagore et la trigonométrie permettent de calculer une longueur ou une hauteur inaccessible à partir d'un simple angle.",
     level: "quatrieme",
     free: false,
     order: 13,

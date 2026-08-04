@@ -322,6 +322,7 @@ export default {
     id: "suites-terminale-spe",
     title: "Suites",
     description: "Limites de suites (géométriques, polynomiales, quotients), formes indéterminées, théorèmes de comparaison et des gendarmes, suites arithmético-géométriques, raisonnement par récurrence.",
+    pourquoi: "Étudier la limite d'une suite, c'est prévoir ce qui se passe à très long terme — un capital, une population, un algorithme qui converge.",
     level: "terminale-spe",
     free: false,
     order: 5,

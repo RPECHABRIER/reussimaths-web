@@ -332,6 +332,7 @@ export default {
     id: "continuite-terminale-spe",
     title: "Continuité",
     description: "Théorème des valeurs intermédiaires et son corollaire, continuité des fonctions usuelles, opérations sur les fonctions continues, nombre de solutions d'une équation, dichotomie, suites récurrentes et point fixe.",
+    pourquoi: "Le théorème des valeurs intermédiaires garantit qu'une équation a une solution — un outil essentiel pour prouver l'existence d'un résultat sans le calculer explicitement.",
     level: "terminale-spe",
     free: false,
     order: 7,

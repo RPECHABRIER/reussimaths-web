@@ -325,6 +325,7 @@ export default {
     id: "variations-courbes-premiere-spe",
     title: "Variations et courbes représentatives des fonctions",
     description: "Parité, sens de variation et signe de f', extremums, optimisation, position relative de courbes.",
+    pourquoi: "Étudier les variations d'une fonction, c'est trouver où un phénomène atteint son maximum ou son minimum — la base de tout problème d'optimisation.",
     level: "premiere-spe",
     order: 5,
   },

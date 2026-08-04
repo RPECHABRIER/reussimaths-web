@@ -328,6 +328,7 @@ export default {
     id: "logarithme-neperien-terminale-spe",
     title: "Logarithme népérien",
     description: "Propriétés algébriques, domaine de définition, dérivée, équations, signe et limites du logarithme népérien.",
+    pourquoi: "Le logarithme népérien intervient partout où une croissance ou décroissance exponentielle doit être « inversée » : datation au carbone 14, calcul d'intérêts, désintégration radioactive.",
     level: "terminale-spe",
     free: false,
     order: 9,

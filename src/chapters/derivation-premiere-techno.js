@@ -254,6 +254,7 @@ export default {
     id: "derivation-premiere-techno",
     title: "Dérivation",
     description: "Sécantes, taux de variation, tangente et nombre dérivé, dérivée d'un polynôme de degré ≤ 3, sens de variation, extremums.",
+    pourquoi: "La dérivée permet de savoir si une grandeur augmente ou diminue à un instant précis — indispensable pour optimiser un coût, une recette ou une production.",
     level: "premiere-techno",
     order: 4,
   },

@@ -82,8 +82,8 @@ function genCarsEtPlaces() {
     prompt: `${nbPersonnes} élèves de ${ecole} partent ${sortie}. Chaque car peut transporter ${capacite} personnes. Combien de cars faut-il prévoir au minimum ?`,
     answer: nbCars,
     steps: [
-      `${nbPersonnes} \\div ${capacite} = ${Math.floor(nbPersonnes / capacite)}${nbPersonnes % capacite ? ` reste ${nbPersonnes % capacite}` : ""}`,
-      nbPersonnes % capacite ? `Il faut un car supplémentaire pour les personnes restantes : ${nbCars} cars.` : `${nbCars} cars suffisent exactement.`,
+      { type: "calcul", text: `${nbPersonnes} \\div ${capacite} = ${Math.floor(nbPersonnes / capacite)}${nbPersonnes % capacite ? ` reste ${nbPersonnes % capacite}` : ""}` },
+      { type: "resultat", text: nbPersonnes % capacite ? `Il faut un car supplémentaire pour les personnes restantes : ${nbCars} cars.` : `${nbCars} cars suffisent exactement.` },
     ],
   };
 }
@@ -99,7 +99,7 @@ function genRemplirBoites() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `On range ${total} ${objet} dans des boîtes de ${parBoite} ${objet} chacune, sans qu'il n'en reste. Combien de boîtes sont nécessaires ?`,
     answer: nbBoites,
-    steps: [`${total} \\div ${parBoite} = ${nbBoites}`],
+    steps: [{ type: "calcul", text: `${total} \\div ${parBoite} = ${nbBoites}` }],
   };
 }
 
@@ -116,7 +116,10 @@ function genPartageEquitableAvecReste() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `${prenom} partage équitablement ${total} ${objet} entre ${nbGroupes} amis. Combien de ${objet} chaque ami reçoit-il ?`,
     answer: parGroupe,
-    steps: [`${total} = ${nbGroupes} \\times ${parGroupe} + ${reste}`, `Chaque ami reçoit ${parGroupe} ${objet} (il en reste ${reste}).`],
+    steps: [
+      { type: "calcul", text: `${total} = ${nbGroupes} \\times ${parGroupe} + ${reste}` },
+      { type: "resultat", text: `Chaque ami reçoit ${parGroupe} ${objet} (il en reste ${reste}).` },
+    ],
   };
 }
 
@@ -131,7 +134,7 @@ function genMosaiqueCarreauxPgcd() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `Un rectangle de ${longueur} cm sur ${largeur} cm doit être entièrement pavé avec des carreaux carrés identiques, sans découpe. Quelle est la plus grande taille possible pour le côté d'un carreau, en cm ?`,
     answer: côté,
-    steps: [`Le côté du carreau doit être un diviseur commun à ${longueur} et ${largeur}. Le plus grand est le PGCD(${longueur}, ${largeur}) = ${côté}.`],
+    steps: [{ type: "regle", text: `Le côté du carreau doit être un diviseur commun à ${longueur} et ${largeur}. Le plus grand est le PGCD(${longueur}, ${largeur}) = ${côté}.` }],
   };
 }
 
@@ -153,7 +156,7 @@ function genNombreEntreBornesDivisible() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `Quel est le plus petit multiple de ${d} compris entre ${borneA} et ${borneB} (bornes incluses) ?`,
     answer,
-    steps: [`On cherche le premier multiple de ${d} à partir de ${borneA} : ${answer}.`],
+    steps: [{ type: "calcul", text: `On cherche le premier multiple de ${d} à partir de ${borneA} : ${answer}.` }],
   };
 }
 
@@ -167,7 +170,10 @@ function genPlusGrandMultipleSousContrainte() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `Quel est le plus grand multiple de ${d} inférieur ou égal à ${limite} ?`,
     answer,
-    steps: [`${limite} \\div ${d} = ${Math.floor(limite / d)}${limite % d ? ` reste ${limite % d}` : ""}`, `${Math.floor(limite / d)} \\times ${d} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${limite} \\div ${d} = ${Math.floor(limite / d)}${limite % d ? ` reste ${limite % d}` : ""}` },
+      { type: "calcul", text: `${Math.floor(limite / d)} \\times ${d} = ${answer}` },
+    ],
   };
 }
 
@@ -182,9 +188,12 @@ function genNombreEstPremierQCM() {
     answer: prime ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      prime
-        ? `${n} n'a que deux diviseurs : 1 et lui-même. C'est un nombre premier.`
-        : `${n} possède d'autres diviseurs que 1 et lui-même. Ce n'est pas un nombre premier.`,
+      {
+        type: "regle",
+        text: prime
+          ? `${n} n'a que deux diviseurs : 1 et lui-même. C'est un nombre premier.`
+          : `${n} possède d'autres diviseurs que 1 et lui-même. Ce n'est pas un nombre premier.`,
+      },
     ],
   };
 }
@@ -197,7 +206,7 @@ function genNombreDiviseursDunPremier() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `Combien ${p} possède-t-il de diviseurs ?`,
     answer: 2,
-    steps: [`Un nombre premier a exactement deux diviseurs : 1 et lui-même.`],
+    steps: [{ type: "regle", text: `Un nombre premier a exactement deux diviseurs : 1 et lui-même.` }],
   };
 }
 
@@ -213,8 +222,8 @@ function genFormuleCalculPrimalite() {
     answer: prime ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `${n} \\times ${n} + ${n} + 41 = ${valeur}`,
-      prime ? `${valeur} n'a que deux diviseurs : 1 et lui-même. C'est un nombre premier.` : `${valeur} possède d'autres diviseurs que 1 et lui-même : ce n'est pas un nombre premier.`,
+      { type: "calcul", text: `${n} \\times ${n} + ${n} + 41 = ${valeur}` },
+      { type: "resultat", text: prime ? `${valeur} n'a que deux diviseurs : 1 et lui-même. C'est un nombre premier.` : `${valeur} possède d'autres diviseurs que 1 et lui-même : ce n'est pas un nombre premier.` },
     ],
   };
 }
@@ -230,7 +239,7 @@ function genDiviseurDunNombrePremierQCM() {
     prompt: `${p} est un nombre premier. ${d} est-il un diviseur de ${p} ?`,
     answer: isDivisor ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Les seuls diviseurs de ${p} (nombre premier) sont 1 et ${p}.`],
+    steps: [{ type: "regle", text: `Les seuls diviseurs de ${p} (nombre premier) sont 1 et ${p}.` }],
   };
 }
 
@@ -249,7 +258,7 @@ function genTransformerDivisionDecimaleEnEntiere() {
     chapter: "Divisibilité, fractions — Diviser par un décimal",
     prompt: `On veut calculer \\(${frTex(dividendeDecimal)} \\div ${frTex(diviseurDecimal)}\\) en se ramenant à une division par un nombre entier. Par quel nombre entier doit-on diviser (nouveau diviseur) ?`,
     answer: `${nouveauDiviseur}`,
-    steps: [`On multiplie le dividende et le diviseur par ${p} : \\(${frTex(nouveauDividende)} \\div ${nouveauDiviseur}\\)`],
+    steps: [{ type: "calcul", text: `On multiplie le dividende et le diviseur par ${p} : \\(${frTex(nouveauDividende)} \\div ${nouveauDiviseur}\\)` }],
   };
 }
 
@@ -264,7 +273,7 @@ function genRubanDiviseurDecimal() {
     chapter: "Divisibilité, fractions — Diviser par un décimal",
     prompt: `Un ${objet} de ${fr(total)} m est découpé en morceaux de ${fr(morceau)} m chacun. Combien de morceaux obtient-on ?`,
     answer: nbMorceaux,
-    steps: [`${fr(total)} \\div ${fr(morceau)} = ${nbMorceaux}`],
+    steps: [{ type: "calcul", text: `${fr(total)} \\div ${fr(morceau)} = ${nbMorceaux}` }],
   };
 }
 
@@ -278,7 +287,7 @@ function genNombreStylosAchetes() {
     chapter: "Divisibilité, fractions — Diviser par un décimal",
     prompt: `Un stylo coûte ${fr(prixUnitaire)} €. Combien de stylos peut-on acheter avec exactement ${fr(budget)} € ?`,
     answer: nbStylos,
-    steps: [`${fr(budget)} \\div ${fr(prixUnitaire)} = ${nbStylos}`],
+    steps: [{ type: "calcul", text: `${fr(budget)} \\div ${fr(prixUnitaire)} = ${nbStylos}` }],
   };
 }
 
@@ -294,7 +303,7 @@ function genFacteurAgrandissementRectangle() {
     prompt: `Un rectangle de longueur ${longueurInitiale} cm est agrandi. Sa nouvelle longueur est de ${fr(longueurFinale)} cm. Par quel nombre la longueur initiale a-t-elle été multipliée ?`,
     answer: facteur,
     tolerance: 0.05,
-    steps: [`${fr(longueurFinale)} \\div ${longueurInitiale} = ${fr(facteur)}`],
+    steps: [{ type: "calcul", text: `${fr(longueurFinale)} \\div ${longueurInitiale} = ${fr(facteur)}` }],
   };
 }
 
@@ -315,7 +324,10 @@ function genSimplifierFractionAuMaximum() {
     chapter: "Divisibilité, fractions — Fractions",
     prompt: `Simplifie au maximum : \\(\\dfrac{${num}}{${den}} = \\dfrac{?}{${b0}}\\)`,
     answer: a0,
-    steps: [`${num} \\div ${k} = ${a0}`, `${den} \\div ${k} = ${b0}`],
+    steps: [
+      { type: "calcul", text: `${num} \\div ${k} = ${a0}` },
+      { type: "calcul", text: `${den} \\div ${k} = ${b0}` },
+    ],
   };
 }
 
@@ -335,7 +347,7 @@ function genComparerFractionsDenominateursDifferentsQCM() {
     prompt: `Compare : \\(\\dfrac{${a}}{${b}}\\) ... \\(\\dfrac{${c}}{${d}}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`On compare ${a} \\times ${d} = ${a * d} et ${c} \\times ${b} = ${c * b} (produits en croix).`],
+    steps: [{ type: "calcul", text: `On compare ${a} \\times ${d} = ${a * d} et ${c} \\times ${b} = ${c * b} (produits en croix).` }],
   };
 }
 
@@ -361,7 +373,7 @@ function genRangerFractionsCroissantQCM() {
     prompt: `Range dans l'ordre ${asc ? "croissant" : "décroissant"} les fractions suivantes : \\(${entries.map((e) => e[0]).join(", ")}\\)`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On convertit chaque fraction en écriture décimale pour les comparer.`],
+    steps: [{ type: "regle", text: `On convertit chaque fraction en écriture décimale pour les comparer.` }],
   };
 }
 
@@ -384,9 +396,9 @@ function genAdditionnerFractionsDenominateursDifferentsLCM() {
     prompt: `\\(\\dfrac{${numA}}{${b}} + \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.`,
-      `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}`,
-      `${newNumA} + ${newNumD} = ${answer}`,
+      { type: "calcul", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
+      { type: "calcul", text: `${newNumA} + ${newNumD} = ${answer}` },
     ],
   };
 }
@@ -416,9 +428,9 @@ function genSoustraireFractionsDenominateursDifferentsLCM() {
     prompt: `\\(\\dfrac{${numA}}{${b}} - \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.`,
-      `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}`,
-      `${newNumA} - ${newNumD} = ${answer}`,
+      { type: "calcul", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
+      { type: "calcul", text: `${newNumA} - ${newNumD} = ${answer}` },
     ],
   };
 }
@@ -437,8 +449,8 @@ function genComparerFractionUniteEtDemiQCM() {
     answer,
     options: ["Inférieure", "Égale", "Supérieure"],
     steps: target1
-      ? [`On compare le numérateur ${a} et le dénominateur ${b}.`]
-      : [`On compare ${a} et la moitié de ${b}, soit ${fr(b / 2)}.`],
+      ? [{ type: "regle", text: `On compare le numérateur ${a} et le dénominateur ${b}.` }]
+      : [{ type: "regle", text: `On compare ${a} et la moitié de ${b}, soit ${fr(b / 2)}.` }],
   };
 }
 
@@ -459,7 +471,7 @@ function genProblemeSachetsFractionSomme() {
     prompt: `Dans chaque ${contenant}, on met \\(\\dfrac{1}{${d1}}\\) de ${premier}, et \\(\\dfrac{2}{${d2}}\\) de ${second}. Quelle fraction du ${contenant} (en écriture décimale, arrondie au centième) représentent ces deux catégories réunies ?`,
     answer: total,
     tolerance: 0.01,
-    steps: [`\\dfrac{1}{${d1}} + \\dfrac{2}{${d2}} \\approx ${fr(total)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{1}{${d1}} + \\dfrac{2}{${d2}} \\approx ${fr(total)}` }],
   };
 }
 
@@ -477,7 +489,7 @@ function genProblemeSegmentPointFractionAB() {
     prompt: `On trace un segment [AB] de ${ab} mm. On place le point C sur [AB] tel que AC mesure les \\(\\dfrac{${p}}{${q}}\\) de AB. Quelle est la longueur AC, en mm ?`,
     figure: buildSegmentAlignedFigure(ac, cb),
     answer: ac,
-    steps: [`\\dfrac{${p}}{${q}} \\times ${ab} = ${ac}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${p}}{${q}} \\times ${ab} = ${ac}` }],
   };
 }
 
@@ -544,6 +556,7 @@ export default {
     id: "divisibilite-fractions",
     title: "Divisibilité, fractions",
     description: "Multiples et diviseurs, nombres premiers, division par un décimal, comparer et additionner/soustraire des fractions.",
+    pourquoi: "Reconnaître multiples, diviseurs et nombres premiers, c'est ce qui permet de simplifier une fraction sans erreur et de comprendre la structure des nombres.",
     level: "cinquieme",
     free: false,
     order: 3,

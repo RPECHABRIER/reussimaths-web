@@ -459,4 +459,58 @@ begin
 end;
 $$;
 
+-- ---------------------------------------------------------------------------
+-- Refonte apprentissage (neurosciences) : suivi de maîtrise PAR COMPÉTENCE
+-- (pas par chapitre) + répétition espacée + streak quotidien de pratique.
+-- skill_id = exercise.chapter (le libellé déjà présent sur chaque exercice
+-- dans tous les générateurs, ex: "Second degré — Discriminant") : on évite
+-- ainsi de retoucher ~150 fichiers de chapitres pour leur donner un id
+-- explicite. chapter_id = chapter.meta.id, gardé pour regrouper/filtrer par
+-- chapitre sans reparser skill_id.
+--
+-- interval_stage suit une répétition espacée à intervalles croissants :
+-- 0 -> à revoir de suite (question ratée), 1 -> +2 jours, 2 -> +1 semaine,
+-- 3 -> +2 semaines, 4 -> +4 semaines (palier max). Une bonne réponse fait
+-- avancer interval_stage d'un cran (jusqu'à 4) et recule next_review_at
+-- d'autant ; une erreur remet interval_stage à 0 et next_review_at à
+-- maintenant (la compétence redevient "à réviser" dès aujourd'hui). Voir
+-- src/hooks/useSkillTracking.js pour le calcul exact et src/pages/Reviser.jsx
+-- pour l'écran qui liste les compétences dues.
+create table if not exists public.skill_mastery (
+  user_id uuid references auth.users (id) on delete cascade,
+  skill_id text not null,
+  chapter_id text not null,
+  attempts integer not null default 0,
+  correct integer not null default 0,
+  interval_stage integer not null default 0,
+  last_correct boolean,
+  last_practiced_at timestamptz,
+  next_review_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, skill_id)
+);
+alter table public.skill_mastery enable row level security;
+
+create policy "skill_mastery: self read/write" on public.skill_mastery
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create index if not exists skill_mastery_due_idx on public.skill_mastery (user_id, next_review_at);
+
+-- Streak quotidien de PRATIQUE (jours consécutifs où l'élève a fait au moins
+-- un exercice), distinct du streak de bonnes réponses en session (mode
+-- Jeu/Défi de ChapterRunner, purement local à la session en cours). Un seul
+-- enregistrement par jour compte, quel que soit le nombre d'exercices faits
+-- ce jour-là. Voir src/hooks/useDailyStreak.js.
+create table if not exists public.daily_streak (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  current_streak integer not null default 0,
+  best_streak integer not null default 0,
+  last_practice_date date,
+  updated_at timestamptz not null default now()
+);
+alter table public.daily_streak enable row level security;
+
+create policy "daily_streak: self read/write" on public.daily_streak
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 grant execute on function public.record_login() to authenticated;

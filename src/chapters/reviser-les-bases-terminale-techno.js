@@ -169,6 +169,7 @@ export default {
     id: "reviser-les-bases-terminale-techno",
     title: "Réviser les bases",
     description: "Un tour d'horizon des savoir-faire de Première technologique indispensables pour aborder le programme de Terminale STMG.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "terminale-techno",
     free: true,
     order: 0,

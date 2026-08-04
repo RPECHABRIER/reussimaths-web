@@ -298,6 +298,7 @@ export default {
     id: "automatismes-premiere-techno",
     title: "Automatismes",
     description: "Calcul rapide et automatismes du programme de Première technologique : évolutions, équations, signe, lecture graphique, probabilités conditionnelles.",
+    pourquoi: "Les automatismes, c'est le calcul mental qui libère de la place dans ta tête pour réfléchir au problème plutôt qu'à l'arithmétique : quelques minutes régulières valent mieux qu'une révision unique la veille du contrôle.",
     level: "premiere-techno",
     freemiumDaily: 5,
     order: 1,

@@ -312,6 +312,7 @@ export default {
     id: "combinatoire-denombrement-terminale-spe",
     title: "Combinatoire et dénombrement",
     description: "Principe multiplicatif, dénombrement de tirages (avec/sans remise, avec/sans ordre), factorielles, coefficients binomiaux et leurs propriétés (symétrie, relation de Pascal), nombre de parties d'un ensemble.",
+    pourquoi: "Dénombrer des tirages et des arrangements, c'est la base du calcul de probabilités utilisé en informatique, en génétique et en cryptographie.",
     level: "terminale-spe",
     free: false,
     order: 2,

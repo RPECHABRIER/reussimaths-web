@@ -48,7 +48,7 @@ function genMultiplierRelatifs() {
     chapter: "Réviser les bases (3e) — Nombres relatifs",
     prompt: `Calcule : \\(${a} \\times (${signedTex(b)})\\)`,
     answer: a * b,
-    steps: [`${a} \\times ${b} = ${a * b}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${a * b}` }],
   };
 }
 
@@ -62,7 +62,7 @@ function genDiviserRelatifs() {
     chapter: "Réviser les bases (3e) — Nombres relatifs",
     prompt: `Calcule : \\(${dividende} \\div (${signedTex(diviseur)})\\)`,
     answer: quotient,
-    steps: [`${dividende} \\div ${diviseur} = ${quotient}`],
+    steps: [{ type: "calcul", text: `${dividende} \\div ${diviseur} = ${quotient}` }],
   };
 }
 
@@ -79,7 +79,10 @@ function genPrioriteCalculRelatifs() {
     chapter: "Réviser les bases (3e) — Priorités",
     prompt: `Calcule en respectant les priorités : \\(${a} ${op1} ${b} \\times (${signedTex(c)})\\)`,
     answer,
-    steps: [`${b} \\times ${c} = ${produit}`, `${a} ${op1} ${produit} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${b} \\times ${c} = ${produit}` },
+      { type: "resultat", text: `${a} ${op1} ${produit} = ${answer}` },
+    ],
   };
 }
 
@@ -97,7 +100,10 @@ function genDevelopperProduitSimple() {
     chapter: "Réviser les bases (3e) — Calcul littéral",
     prompt: `On développe l'expression \\(${k}(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)})\\). On obtient une expression de la forme \\(bx + c\\). Calcule sa valeur pour \\(x = ${x}\\).`,
     answer: coeffX * x + constante,
-    steps: [`${k}(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}) = ${k}x ${constante >= 0 ? "+" : "-"} ${Math.abs(constante)}`, `${coeffX} \\times ${x} ${constante >= 0 ? "+" : "-"} ${Math.abs(constante)} = ${coeffX * x + constante}`],
+    steps: [
+      { type: "calcul", text: `${k}(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}) = ${k}x ${constante >= 0 ? "+" : "-"} ${Math.abs(constante)}` },
+      { type: "resultat", text: `${coeffX} \\times ${x} ${constante >= 0 ? "+" : "-"} ${Math.abs(constante)} = ${coeffX * x + constante}` },
+    ],
   };
 }
 
@@ -112,7 +118,10 @@ function genResoudreEquationSimple() {
     chapter: "Réviser les bases (3e) — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -132,7 +141,10 @@ function genTesterSolutionEquationQCM() {
     prompt: `Le nombre ${xTest} est-il solution de l'équation \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\) ?`,
     answer: isSolution ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${leftValue}`, isSolution ? `${leftValue} = ${c}, donc c'est bien solution.` : `${leftValue} \\neq ${c}, donc ce n'est pas solution.`],
+    steps: [
+      { type: "calcul", text: `${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${leftValue}` },
+      { type: "resultat", text: isSolution ? `${leftValue} = ${c}, donc c'est bien solution.` : `${leftValue} \\neq ${c}, donc ce n'est pas solution.` },
+    ],
   };
 }
 
@@ -148,7 +160,7 @@ function genPuissanceRelatif() {
     chapter: "Réviser les bases (3e) — Puissances",
     prompt: `Calcule : \\((${n})^{${exp}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -165,7 +177,7 @@ function genPourcentageDuneQuantite() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -180,7 +192,7 @@ function genCoefficientProportionnalite() {
     prompt: `Dans un tableau de proportionnalité, la valeur ${a} correspond à ${fr(b)}. Quel est le coefficient de proportionnalité ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}` }],
   };
 }
 
@@ -208,7 +220,10 @@ function genPythagoreHypotenuseNumeric() {
     chapter: "Réviser les bases (3e) — Théorème de Pythagore",
     prompt: `ABC est un triangle rectangle en A, avec AB = ${a} cm et AC = ${b} cm. Calcule la longueur BC, en cm.`,
     answer: c,
-    steps: [`BC^2 = AB^2 + AC^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${a * a + b * b}`, `BC = \\sqrt{${a * a + b * b}} = ${c}`],
+    steps: [
+      { type: "calcul", text: `BC^2 = AB^2 + AC^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${a * a + b * b}` },
+      { type: "resultat", text: `BC = \\sqrt{${a * a + b * b}} = ${c}` },
+    ],
   };
 }
 
@@ -224,7 +239,11 @@ function genPythagoreCoteNumeric() {
     chapter: "Réviser les bases (3e) — Théorème de Pythagore",
     prompt: `DEF est un triangle rectangle en D, avec EF = ${c} cm (hypoténuse) et DE = ${a} cm. Calcule la longueur DF, en cm.`,
     answer: b,
-    steps: [`EF^2 = DE^2 + DF^2`, `DF^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${c * c - a * a}`, `DF = \\sqrt{${c * c - a * a}} = ${b}`],
+    steps: [
+      { type: "regle", text: `EF^2 = DE^2 + DF^2` },
+      { type: "calcul", text: `DF^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${c * c - a * a}` },
+      { type: "resultat", text: `DF = \\sqrt{${c * c - a * a}} = ${b}` },
+    ],
   };
 }
 
@@ -241,7 +260,7 @@ function genEvaluerFonctionAffine() {
     chapter: "Réviser les bases (3e) — Fonctions",
     prompt: `On considère \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -263,7 +282,7 @@ function genSimplifierFraction() {
     chapter: "Réviser les bases (3e) — Fractions",
     prompt: `Simplifie la fraction \\(\\dfrac{${num}}{${den}}\\) le plus possible. Donne le ${askNum ? "numérateur" : "dénominateur"} de la fraction simplifiée.`,
     answer: askNum ? a0 : b0,
-    steps: [`\\(\\dfrac{${num}}{${den}} = \\dfrac{${a0}}{${b0}}\\) (on divise haut et bas par ${g}).`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = \\dfrac{${a0}}{${b0}}\\) (on divise haut et bas par ${g}).` }],
   };
 }
 
@@ -279,7 +298,7 @@ function genCalculerMoyenneSimple() {
     prompt: `Calcule la moyenne de la série statistique suivante (arrondie au centième si besoin) : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [`(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -309,6 +328,7 @@ export default {
     id: "reviser-les-bases-troisieme",
     title: "Réviser les bases",
     description: "Nombres relatifs, calcul littéral, équations simples, puissances, proportionnalité, théorème de Pythagore, fonctions et fractions de 4e — pour prendre un bon départ en 3e. Gratuit et illimité.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "troisieme",
     free: true,
     order: 0,

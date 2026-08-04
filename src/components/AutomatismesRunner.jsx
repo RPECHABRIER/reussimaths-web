@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, X, Timer, ArrowLeft, ArrowRight, Trophy, Lock, Square, CheckSquare, Shuffle } from "lucide-react";
 import MathText from "./MathText";
+import StepsList from "./StepsList";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
+import { useSkillTracking } from "../hooks/useSkillTracking";
+import { useDailyStreak } from "../hooks/useDailyStreak";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import { useAutomatismesBestTime } from "../hooks/useAutomatismesBestTime";
 import { colors, fonts, shadow } from "../theme";
@@ -43,6 +46,8 @@ export default function AutomatismesRunner({ chapter }) {
   const quota = useDailyQuota(chapter.meta.id, dailyLimit);
   const quotaApplies = !unlimited;
   const quotaExhausted = quotaApplies && quota.exhausted;
+  const skillTracking = useSkillTracking(user?.id);
+  const dailyStreak = useDailyStreak(user?.id);
 
   const [phase, setPhase] = useState("themes"); // themes | running | results
   const [themeId, setThemeId] = useState(null);
@@ -55,6 +60,7 @@ export default function AutomatismesRunner({ chapter }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [result, setResult] = useState(null); // { score, timeMs }
   const [justImproved, setJustImproved] = useState(false);
@@ -92,9 +98,11 @@ export default function AutomatismesRunner({ chapter }) {
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setShowHelp(false);
     setElapsed(0);
     startRef.current = Date.now();
     setPhase("running");
+    dailyStreak.markPracticed();
   };
 
   const next = (correct) => {
@@ -112,30 +120,36 @@ export default function AutomatismesRunner({ chapter }) {
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setShowHelp(false);
+  };
+
+  // Sur une bonne réponse, on enchaîne automatiquement (rythme d'une série
+  // chronométrée). Sur une erreur, on s'arrête : la méthode (steps) doit
+  // rester consultable avant de passer à la suite (voir bouton "Suivant"
+  // manuel plus bas), ce qui n'était pas possible avec l'ancien
+  // enchaînement automatique après 500 ms quelle que soit la réponse.
+  const registerAnswer = (correct) => {
+    setFeedback({ correct });
+    skillTracking.recordAttempt({ skillId: exercise.chapter, chapterId: chapter.meta.id, correct });
+    if (correct) setTimeout(() => next(true), 500);
   };
 
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    const correct = Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance;
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 500);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
   };
 
   const submitQCM = (opt) => {
     if (feedback) return;
     setSelectedOption(opt);
-    const correct = opt === exercise.answer;
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 500);
+    registerAnswer(opt === exercise.answer);
   };
 
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    const correct = matchesText(input, exercise.answer);
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 500);
+    registerAnswer(matchesText(input, exercise.answer));
   };
 
   const toggleMulti = (i) => {
@@ -145,9 +159,7 @@ export default function AutomatismesRunner({ chapter }) {
 
   const submitMulti = () => {
     if (feedback) return;
-    const correct = matchesMulti(selectedMulti, exercise.answer);
-    setFeedback({ correct });
-    setTimeout(() => next(correct), 500);
+    registerAnswer(matchesMulti(selectedMulti, exercise.answer));
   };
 
   const ink = colors.ink;
@@ -451,12 +463,39 @@ export default function AutomatismesRunner({ chapter }) {
           )}
 
           {feedback && (
-            <div
-              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-2"
-              style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
-            >
-              {feedback.correct ? <Check size={16} /> : <X size={16} />}
-              <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+            <div className="mt-2">
+              <div
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm"
+                style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
+              >
+                {feedback.correct ? <Check size={16} /> : <X size={16} />}
+                <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+              </div>
+
+              {!feedback.correct && (
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => setShowHelp((s) => !s)}
+                    className="flex-1 py-2 rounded-full text-xs font-semibold"
+                    style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ring}` }}
+                  >
+                    {showHelp ? "Masquer la méthode" : "Voir la méthode"}
+                  </button>
+                  <button
+                    onClick={() => next(false)}
+                    className="flex-1 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1"
+                    style={{ backgroundColor: ink, color: paper }}
+                  >
+                    Suivant <ArrowRight size={13} />
+                  </button>
+                </div>
+              )}
+
+              {!feedback.correct && showHelp && (
+                <div className="mt-2">
+                  <StepsList steps={exercise.steps} dark={false} />
+                </div>
+              )}
             </div>
           )}
         </div>

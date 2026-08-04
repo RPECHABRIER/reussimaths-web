@@ -12,6 +12,7 @@ import ChapterPage from "./pages/ChapterPage";
 import Account from "./pages/Account";
 import Onboarding from "./pages/Onboarding";
 import Amis from "./pages/Amis";
+import Reviser from "./pages/Reviser";
 import Idees from "./pages/Idees";
 import AdminPreview from "./pages/AdminPreview";
 import MentionsLegales from "./pages/legal/MentionsLegales";
@@ -148,6 +149,7 @@ export default function App() {
         <Route path="/compte" element={<Account />} />
         <Route path="/pseudo" element={<Onboarding />} />
         <Route path="/amis" element={<Amis />} />
+        <Route path="/reviser" element={<Reviser />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />

@@ -89,6 +89,9 @@ export default function CycleSelect() {
           <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
             Amis & défis
           </Link>
+          <Link to="/reviser" className="text-sm font-medium" style={{ color: colors.ink }}>
+            Réviser
+          </Link>
         </div>
 
         <div className="flex flex-wrap justify-center gap-4 mt-8 pt-5 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>

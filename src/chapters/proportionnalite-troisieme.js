@@ -64,7 +64,7 @@ function genSimplifierRatioNumeric() {
     chapter: "Proportionnalité — Ratios",
     prompt: `On simplifie le ratio ${a} : ${b} sous sa forme irréductible p : q. Quelle est la valeur de ${askP ? "p" : "q"} ?`,
     answer: askP ? p : q,
-    steps: [`${a} : ${b} = ${p} : ${q} \\text{ (on divise chaque terme par } ${k}\\text{)}`],
+    steps: [{ type: "calcul", text: `${a} : ${b} = ${p} : ${q} \\text{ (on divise chaque terme par } ${k}\\text{)}` }],
   };
 }
 
@@ -82,7 +82,7 @@ function genRatioEquivalentQCM() {
     prompt: `Quel ratio est équivalent à ${p} : ${q} ?`,
     answer: correct,
     options,
-    steps: [`${p} : ${q} = ${p * k1} : ${q * k1} \\text{ (on multiplie chaque terme par } ${k1}\\text{)}`],
+    steps: [{ type: "calcul", text: `${p} : ${q} = ${p * k1} : ${q * k1} \\text{ (on multiplie chaque terme par } ${k1}\\text{)}` }],
   };
 }
 
@@ -96,7 +96,10 @@ function genPourcentageDepuisRatioNumeric() {
     chapter: "Proportionnalité — Ratios",
     prompt: `Dans un ratio ${m} : ${n - m}, quelle est la proportion (en %) de la première grandeur par rapport au total ?`,
     answer,
-    steps: [`\\text{Total} = ${m} + ${n - m} = ${n}`, `\\dfrac{${m}}{${n}} \\times 100 = ${answer}\\%`],
+    steps: [
+      { type: "calcul", text: `\\text{Total} = ${m} + ${n - m} = ${n}` },
+      { type: "resultat", text: `\\dfrac{${m}}{${n}} \\times 100 = ${answer}\\%` },
+    ],
   };
 }
 
@@ -113,7 +116,12 @@ function genPartagerSelonRatioNumeric() {
     chapter: "Proportionnalité — Ratios",
     prompt: `On partage ${total} € selon le ratio ${p} : ${q}. Quelle est la part correspondant ${askP ? "à la première grandeur" : "à la seconde grandeur"} ?`,
     answer: askP ? partP : partQ,
-    steps: [`${p} + ${q} = ${p + q} \\text{ parts}`, `\\text{Une part} = \\dfrac{${total}}{${p + q}} = ${k}`, `\\text{Première grandeur} = ${p} \\times ${k} = ${partP}`, `\\text{Seconde grandeur} = ${q} \\times ${k} = ${partQ}`],
+    steps: [
+      { type: "calcul", text: `${p} + ${q} = ${p + q} \\text{ parts}` },
+      { type: "calcul", text: `\\text{Une part} = \\dfrac{${total}}{${p + q}} = ${k}` },
+      { type: "calcul", text: `\\text{Première grandeur} = ${p} \\times ${k} = ${partP}` },
+      { type: "resultat", text: `\\text{Seconde grandeur} = ${q} \\times ${k} = ${partQ}` },
+    ],
   };
 }
 
@@ -132,7 +140,10 @@ function genRecetteEchelleNumeric() {
     chapter: "Proportionnalité — Ratios",
     prompt: `Une recette utilise ${qty1} unités d'un ingrédient pour une masse totale de ${mass1} g. Quelle masse totale correspond à ${qty2} unités (même recette) ?`,
     answer: mass2,
-    steps: [`\\text{Masse par unité} = \\dfrac{${mass1}}{${qty1}} = ${u}\\text{ g}`, `${u} \\times ${qty2} = ${mass2}\\text{ g}`],
+    steps: [
+      { type: "calcul", text: `\\text{Masse par unité} = \\dfrac{${mass1}}{${qty1}} = ${u}\\text{ g}` },
+      { type: "resultat", text: `${u} \\times ${qty2} = ${mass2}\\text{ g}` },
+    ],
   };
 }
 
@@ -153,7 +164,12 @@ function genDeuxNombresRatioDifferenceNumeric() {
     chapter: "Proportionnalité — Ratios",
     prompt: `Deux nombres positifs x et y (avec x > y) sont dans le ratio ${p} : ${q} et leur différence vaut ${diff}. Quelle est la valeur de ${askX ? "x" : "y"} ?`,
     answer: askX ? x : y,
-    steps: [`x = ${p}k \\text{ et } y = ${q}k \\text{ pour un même } k`, `${p}k - ${q}k = ${diff}`, `${p - q}k = ${diff}, \\text{ donc } k = ${g}`, `x = ${x}, \\quad y = ${y}`],
+    steps: [
+      { type: "donnee", text: `x = ${p}k \\text{ et } y = ${q}k \\text{ pour un même } k` },
+      { type: "calcul", text: `${p}k - ${q}k = ${diff}` },
+      { type: "calcul", text: `${p - q}k = ${diff}, \\text{ donc } k = ${g}` },
+      { type: "resultat", text: `x = ${x}, \\quad y = ${y}` },
+    ],
   };
 }
 
@@ -170,7 +186,7 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction === "augmente" ? "augmente" : "diminue"} de ${p} %. Quel est le coefficient multiplicateur correspondant ?`,
     answer,
     tolerance: 0.001,
-    steps: [direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -184,7 +200,7 @@ function genPourcentageDepuisCoefficientNumeric() {
     chapter: "Proportionnalité — Évolutions en pourcentage",
     prompt: `Un coefficient multiplicateur de ${fr(cm)} correspond à une ${direction === "augmente" ? "augmentation" : "diminution"} de quel pourcentage ?`,
     answer: p,
-    steps: [direction === "augmente" ? `${fr(cm)} - 1 = ${fr(roundTo(p / 100, 2))} = ${p}\\%` : `1 - ${fr(cm)} = ${fr(roundTo(p / 100, 2))} = ${p}\\%`],
+    steps: [{ type: "calcul", text: direction === "augmente" ? `${fr(cm)} - 1 = ${fr(roundTo(p / 100, 2))} = ${p}\\%` : `1 - ${fr(cm)} = ${fr(roundTo(p / 100, 2))} = ${p}\\%` }],
   };
 }
 
@@ -200,7 +216,10 @@ function genTauxEvolutionDepuisPrixNumeric() {
     chapter: "Proportionnalité — Évolutions en pourcentage",
     prompt: `Le prix d'un article passe de ${P0} € à ${fr(P1)} €. Calcule le pourcentage d'évolution, en valeur absolue (sans préciser s'il s'agit d'une hausse ou d'une baisse).`,
     answer: p,
-    steps: [`\\text{Coefficient multiplicateur} = \\dfrac{${fr(P1)}}{${P0}} = ${fr(cm)}`, direction === "augmente" ? `${fr(cm)} - 1 = ${p}\\%` : `1 - ${fr(cm)} = ${p}\\%`],
+    steps: [
+      { type: "calcul", text: `\\text{Coefficient multiplicateur} = \\dfrac{${fr(P1)}}{${P0}} = ${fr(cm)}` },
+      { type: "resultat", text: direction === "augmente" ? `${fr(cm)} - 1 = ${p}\\%` : `1 - ${fr(cm)} = ${p}\\%` },
+    ],
   };
 }
 
@@ -217,7 +236,7 @@ function genCalculerPrixFinalNumeric() {
     prompt: `Un article coûte ${P0} €. Son prix ${direction === "augmente" ? "augmente" : "diminue"} de ${p} %. Quel est son nouveau prix (en €) ?`,
     answer: P1,
     tolerance: 0.01,
-    steps: [`${P0} \\times ${fr(cm)} = ${fr(P1)}`],
+    steps: [{ type: "calcul", text: `${P0} \\times ${fr(cm)} = ${fr(P1)}` }],
   };
 }
 
@@ -234,7 +253,10 @@ function genCalculerPrixInitialNumeric() {
     prompt: `Après une ${direction === "augmente" ? "augmentation" : "diminution"} de ${p} %, un article coûte ${fr(P1)} €. Quel était son prix initial (en €) ?`,
     answer: P0,
     tolerance: 0.01,
-    steps: [`\\text{Coefficient multiplicateur} = ${fr(cm)}`, `\\text{Prix initial} = \\dfrac{${fr(P1)}}{${fr(cm)}} = ${P0}`],
+    steps: [
+      { type: "donnee", text: `\\text{Coefficient multiplicateur} = ${fr(cm)}` },
+      { type: "resultat", text: `\\text{Prix initial} = \\dfrac{${fr(P1)}}{${fr(cm)}} = ${P0}` },
+    ],
   };
 }
 
@@ -255,7 +277,10 @@ function genEnchainementDeuxEvolutionsNumeric() {
     prompt: `Un article coûte ${P0} €. Son prix ${dir1 === "augmente" ? "augmente" : "diminue"} d'abord de ${p1} %, puis ${dir2 === "augmente" ? "augmente" : "diminue"} de ${p2} %. Quel est le prix final (en €) ?`,
     answer: P2,
     tolerance: 0.02,
-    steps: [`${P0} \\times ${fr(cm1)} = ${fr(P1)}`, `${fr(P1)} \\times ${fr(cm2)} = ${fr(P2)}`],
+    steps: [
+      { type: "calcul", text: `${P0} \\times ${fr(cm1)} = ${fr(P1)}` },
+      { type: "resultat", text: `${fr(P1)} \\times ${fr(cm2)} = ${fr(P2)}` },
+    ],
   };
 }
 
@@ -276,7 +301,11 @@ function genCoefficientReciproqueNumeric() {
     chapter: "Proportionnalité — Évolutions en pourcentage",
     prompt: `Une action subit une baisse de ${pDown} %. Quel pourcentage d'augmentation permettrait de revenir exactement au prix de départ ?`,
     answer: pUp,
-    steps: [`\\text{Coefficient de la baisse} = 1 - \\dfrac{${pDown}}{100} = ${fr(cmDown)}`, `\\text{Coefficient pour revenir au prix de départ} = \\dfrac{1}{${fr(cmDown)}} = ${fr(cmUp)}`, `\\text{Ce qui correspond à une augmentation de } ${pUp}\\%`],
+    steps: [
+      { type: "calcul", text: `\\text{Coefficient de la baisse} = 1 - \\dfrac{${pDown}}{100} = ${fr(cmDown)}` },
+      { type: "calcul", text: `\\text{Coefficient pour revenir au prix de départ} = \\dfrac{1}{${fr(cmDown)}} = ${fr(cmUp)}` },
+      { type: "resultat", text: `\\text{Ce qui correspond à une augmentation de } ${pUp}\\%` },
+    ],
   };
 }
 
@@ -301,7 +330,10 @@ function genComparerDeuxReductionsQCM() {
     prompt: `Un article coûte ${P0} €. L'offre A applique une réduction unique de ${pSimple} %. L'offre B applique deux réductions successives de ${p1} % puis ${p2} %. Quelle offre est la plus avantageuse (prix final le plus bas) ?`,
     answer,
     options: ["Offre A", "Offre B"],
-    steps: [`\\text{Offre A} : ${P0} \\times ${fr(cmSimple)} = ${fr(finalSimple)}\\text{ €}`, `\\text{Offre B} : ${P0} \\times ${fr(cm1)} \\times ${fr(cm2)} = ${fr(finalDouble)}\\text{ €}`],
+    steps: [
+      { type: "calcul", text: `\\text{Offre A} : ${P0} \\times ${fr(cmSimple)} = ${fr(finalSimple)}\\text{ €}` },
+      { type: "resultat", text: `\\text{Offre B} : ${P0} \\times ${fr(cm1)} \\times ${fr(cm2)} = ${fr(finalDouble)}\\text{ €}` },
+    ],
   };
 }
 
@@ -352,6 +384,7 @@ export default {
     id: "proportionnalite-troisieme",
     title: "Situations de proportionnalité",
     description: "Ratios (simplifier, partager, échelle), coefficient multiplicateur d'une évolution en pourcentage, prix final/initial, enchaînement d'évolutions et comparaison d'offres de réduction.",
+    pourquoi: "Reconnaître une situation de proportionnalité, c'est l'une des compétences les plus utilisées au quotidien : recettes de cuisine, pourcentages, échelles de carte, conversions de devises.",
     level: "troisieme",
     free: false,
     order: 8,

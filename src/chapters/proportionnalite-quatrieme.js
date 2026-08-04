@@ -37,7 +37,7 @@ function genQuatriemeProportionnelleNumeric() {
     prompt: `Dans un tableau de proportionnalité, on a \\(\\dfrac{${fr(b)}}{${a}} = \\dfrac{?}{${c}}\\). Quelle est cette quatrième proportionnelle (arrondie au centième si nécessaire) ?`,
     answer: d,
     tolerance: 0.01,
-    steps: [`${fr(b)} \\times ${c} \\div ${a} = ${fr(d)}`],
+    steps: [{ type: "calcul", text: `${fr(b)} \\times ${c} \\div ${a} = ${fr(d)}` }],
   };
 }
 
@@ -55,7 +55,10 @@ function genVerifierTableauProportionnaliteQCM() {
     prompt: `Le tableau suivant représente-t-il une situation de proportionnalité ? \\(${a}\\) → \\(${fr(b)}\\), \\(${c}\\) → \\(${fr(d)}\\)`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${fr(b)} \\div ${a} = ${fr(roundTo(b / a, 3))}`, `${fr(d)} \\div ${c} = ${fr(roundTo(d / c, 3))}`],
+    steps: [
+      { type: "calcul", text: `${fr(b)} \\div ${a} = ${fr(roundTo(b / a, 3))}` },
+      { type: "calcul", text: `${fr(d)} \\div ${c} = ${fr(roundTo(d / c, 3))}` },
+    ],
   };
 }
 
@@ -71,7 +74,7 @@ function genVitesseMoyenneNumeric() {
     chapter: "Proportionnalité — Grandeurs produits et quotients",
     prompt: `Un mobile parcourt ${distance} km en ${temps} h. Quelle est sa vitesse moyenne, en km/h ?`,
     answer: vitesse,
-    steps: [`${distance} \\div ${temps} = ${vitesse}`],
+    steps: [{ type: "calcul", text: `${distance} \\div ${temps} = ${vitesse}` }],
   };
 }
 
@@ -87,7 +90,10 @@ function genDistanceDepuisVitesseTempsNumeric() {
     prompt: `Un véhicule roule à ${vitesse} km/h pendant ${tempsMin} minutes. Quelle distance parcourt-il, en km (arrondie au centième) ?`,
     answer: distance,
     tolerance: 0.01,
-    steps: [`${tempsMin} \\text{ min} = ${fr(tempsH)} \\text{ h}`, `${vitesse} \\times ${fr(tempsH)} \\approx ${fr(distance)}`],
+    steps: [
+      { type: "calcul", text: `${tempsMin} \\text{ min} = ${fr(tempsH)} \\text{ h}` },
+      { type: "resultat", text: `${vitesse} \\times ${fr(tempsH)} \\approx ${fr(distance)}` },
+    ],
   };
 }
 
@@ -103,7 +109,7 @@ function genConversionVitesseKmhMsNumeric() {
       prompt: `Convertis ${kmh} km/h en m/s (arrondi au centième).`,
       answer,
       tolerance: 0.01,
-      steps: [`${kmh} \\div 3,6 \\approx ${fr(answer)}`],
+      steps: [{ type: "calcul", text: `${kmh} \\div 3,6 \\approx ${fr(answer)}` }],
     };
   }
   const ms = randInt(1, 60);
@@ -114,7 +120,7 @@ function genConversionVitesseKmhMsNumeric() {
     prompt: `Convertis ${ms} m/s en km/h.`,
     answer,
     tolerance: 0.01,
-    steps: [`${ms} \\times 3,6 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${ms} \\times 3,6 = ${fr(answer)}` }],
   };
 }
 
@@ -128,7 +134,7 @@ function genDebitNumeric() {
     chapter: "Proportionnalité — Grandeurs produits et quotients",
     prompt: `Un robinet laisse s'écouler ${volume} L en ${temps} minutes. Quel est son débit, en L/min ?`,
     answer: debit,
-    steps: [`${volume} \\div ${temps} = ${debit}`],
+    steps: [{ type: "calcul", text: `${volume} \\div ${temps} = ${debit}` }],
   };
 }
 
@@ -143,7 +149,7 @@ function genDensitePopulationNumeric() {
     prompt: `Une ville de ${fr(superficie)} km² compte ${habitants} habitants. Quelle est sa densité de population, en habitants/km² (arrondie à l'unité) ?`,
     answer,
     tolerance: 1,
-    steps: [`${habitants} \\div ${fr(superficie)} \\approx ${answer}`],
+    steps: [{ type: "calcul", text: `${habitants} \\div ${fr(superficie)} \\approx ${answer}` }],
   };
 }
 
@@ -164,7 +170,7 @@ function genGrandeurProduitOuQuotientQCM() {
     prompt: `La grandeur « ${item.nom} » est-elle une grandeur produit ou une grandeur quotient ?`,
     answer: item.type,
     options: ["Grandeur produit", "Grandeur quotient"],
-    steps: [`« ${item.nom} » est une ${item.type.toLowerCase()}.`],
+    steps: [{ type: "regle", text: `« ${item.nom} » est une ${item.type.toLowerCase()}.` }],
   };
 }
 
@@ -182,7 +188,7 @@ function genPointsAlignesOrigineQCM() {
     prompt: `On a placé ci-dessous les points \\(A\\), \\(B\\) et \\(C\\) dans un repère. Ces points peuvent-ils être alignés avec l'origine du repère (situation de proportionnalité) ?`,
     answer: isAligned ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`On vérifie si y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.`],
+    steps: [{ type: "calcul", text: `On vérifie si y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.` }],
     graph: {
       xMin: 0,
       xMax: Math.max(...xs) + 2,
@@ -210,7 +216,7 @@ function genAgrandissementReductionRapportNumeric() {
     prompt: `Une figure a une longueur initiale de ${fr(longueurInitiale)} cm. Après agrandissement ou réduction, cette longueur devient ${fr(longueurFinale)} cm. Quel est le rapport k appliqué ?`,
     answer: k,
     tolerance: 0.05,
-    steps: [`${fr(longueurFinale)} \\div ${fr(longueurInitiale)} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `${fr(longueurFinale)} \\div ${fr(longueurInitiale)} = ${fr(k)}` }],
   };
 }
 
@@ -225,7 +231,7 @@ function genLongueurApresAgrandissementNumeric() {
     prompt: `Une figure de longueur ${longueurInitiale} cm subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quelle est la nouvelle longueur, en cm ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${longueurInitiale} \\times ${fr(k)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${longueurInitiale} \\times ${fr(k)} = ${fr(answer)}` }],
   };
 }
 
@@ -240,7 +246,7 @@ function genAireApresAgrandissementNumeric() {
     prompt: `Une figure d'aire ${aireInitiale} cm² subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quelle est la nouvelle aire, en cm² ?`,
     answer,
     tolerance: 0.05,
-    steps: [`${aireInitiale} \\times ${fr(k)}^2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${aireInitiale} \\times ${fr(k)}^2 = ${fr(answer)}` }],
   };
 }
 
@@ -255,7 +261,7 @@ function genVolumeApresAgrandissementNumeric() {
     prompt: `Un solide de volume ${volumeInitial} cm³ subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quel est le nouveau volume, en cm³ ?`,
     answer,
     tolerance: 0.1,
-    steps: [`${volumeInitial} \\times ${fr(k)}^3 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${volumeInitial} \\times ${fr(k)}^3 = ${fr(answer)}` }],
   };
 }
 
@@ -270,7 +276,10 @@ function genEstAgrandissementOuReductionQCM() {
     answer,
     options: ["Agrandissement", "Réduction", "Reproduction"],
     steps: [
-      k > 1 ? "k > 1 : c'est un agrandissement." : k < 1 ? "0 < k < 1 : c'est une réduction." : "k = 1 : c'est une reproduction (les longueurs ne changent pas).",
+      {
+        type: "regle",
+        text: k > 1 ? "k > 1 : c'est un agrandissement." : k < 1 ? "0 < k < 1 : c'est une réduction." : "k = 1 : c'est une reproduction (les longueurs ne changent pas).",
+      },
     ],
   };
 }
@@ -290,7 +299,7 @@ function genProblemeRecetteNumeric() {
     prompt: `Pour une recette destinée à ${personnesInit} personnes, il faut ${quantiteInit} g de ${ingredient}. Quelle quantité de ${ingredient} (en g) faut-il pour ${personnesFinal} personnes ?`,
     answer,
     tolerance: 0.5,
-    steps: [`${quantiteInit} \\times ${personnesFinal} \\div ${personnesInit} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${quantiteInit} \\times ${personnesFinal} \\div ${personnesInit} = ${fr(answer)}` }],
   };
 }
 
@@ -306,7 +315,7 @@ function genProblemeEchelleNumeric() {
     prompt: `Sur une maquette, une distance réelle de ${reel} km est représentée par ${miniature} cm. Quelle distance en cm représente une distance réelle de ${autreReel} km sur cette même maquette (arrondie au dixième) ?`,
     answer,
     tolerance: 0.1,
-    steps: [`${miniature} \\times ${autreReel} \\div ${reel} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${miniature} \\times ${autreReel} \\div ${reel} = ${fr(answer)}` }],
   };
 }
 
@@ -361,6 +370,7 @@ export default {
     id: "proportionnalite-quatrieme",
     title: "Proportionnalité",
     description: "Quatrième proportionnelle, grandeurs produits et quotients, représentation graphique, agrandissement et réduction de figures.",
+    pourquoi: "Reconnaître une situation de proportionnalité, c'est l'une des compétences les plus utilisées au quotidien : recettes de cuisine, pourcentages, échelles de carte, conversions de devises.",
     level: "quatrieme",
     free: false,
     order: 11,

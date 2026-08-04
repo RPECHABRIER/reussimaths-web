@@ -560,6 +560,7 @@ export default {
     id: "operations-decimaux",
     title: "Opérations sur les décimaux",
     description: "Multiplier et diviser des nombres décimaux, division euclidienne, programmes de calcul.",
+    pourquoi: "Multiplier et diviser des décimaux sans erreur, c'est indispensable pour calculer un prix au kilo, une moyenne ou un budget.",
     level: "sixieme",
     free: false,
     order: 3,

@@ -47,7 +47,7 @@ function genImageTranslationCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la translation qui envoie l'origine O sur le point de coordonnées (${a} ; ${b}). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? x + a : y + b,
-    steps: [`M'(x + ${a}\\, ;\\ y + ${b}) = (${x + a}\\, ;\\ ${y + b})`],
+    steps: [{ type: "calcul", text: `M'(x + ${a}\\, ;\\ y + ${b}) = (${x + a}\\, ;\\ ${y + b})` }],
   };
 }
 
@@ -63,7 +63,7 @@ function genImageSymetrieCentraleCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la symétrie centrale de centre O(${x0} ; ${y0}). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? 2 * x0 - x : 2 * y0 - y,
-    steps: [`M'(2 \\times ${x0} - (${x})\\, ;\\ 2 \\times ${y0} - (${y})) = (${2 * x0 - x}\\, ;\\ ${2 * y0 - y})`],
+    steps: [{ type: "calcul", text: `M'(2 \\times ${x0} - (${x})\\, ;\\ 2 \\times ${y0} - (${y})) = (${2 * x0 - x}\\, ;\\ ${2 * y0 - y})` }],
   };
 }
 
@@ -79,7 +79,7 @@ function genImageSymetrieAxialeCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la symétrie d'axe ${axeVertical ? `la droite verticale d'équation x = ${a}` : `la droite horizontale d'équation y = ${a}`}. Donne ${axeVertical ? "l'abscisse" : "l'ordonnée"} du point M', image de M (l'autre coordonnée ne change pas).`,
     answer,
-    steps: axeVertical ? [`x' = 2 \\times ${a} - (${x}) = ${answer}`] : [`y' = 2 \\times ${a} - (${y}) = ${answer}`],
+    steps: axeVertical ? [{ type: "calcul", text: `x' = 2 \\times ${a} - (${x}) = ${answer}` }] : [{ type: "calcul", text: `y' = 2 \\times ${a} - (${y}) = ${answer}` }],
   };
 }
 
@@ -105,7 +105,7 @@ function genImageRotationCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la rotation de centre O (l'origine du repère) et d'angle ${angle}° dans le sens direct (sens contraire des aiguilles d'une montre). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? xp : yp,
-    steps: [`M'(${xp}\\, ;\\ ${yp})`],
+    steps: [{ type: "calcul", text: `M'(${xp}\\, ;\\ ${yp})` }],
   };
 }
 
@@ -122,7 +122,7 @@ function genCoefficientHomothetieNumeric() {
     prompt: `M' est l'image de M par une homothétie de centre O. On donne OM = ${OM} cm et OM' = ${fr(OMprime)} cm, avec O, M et M' alignés ${k > 0 ? "dans cet ordre (O, M, M')" : "mais M' du côté opposé de O par rapport à M"}. Donne la valeur absolue du coefficient de cette homothétie (un nombre positif).`,
     answer: Math.abs(k),
     tolerance: 0.02,
-    steps: [`|k| = \\dfrac{OM'}{OM} = \\dfrac{${fr(OMprime)}}{${OM}} = ${fr(Math.abs(k))}`],
+    steps: [{ type: "calcul", text: `|k| = \\dfrac{OM'}{OM} = \\dfrac{${fr(OMprime)}}{${OM}} = ${fr(Math.abs(k))}` }],
   };
 }
 
@@ -137,7 +137,7 @@ function genOMPrimeHomothetieNumeric() {
     prompt: `M' est l'image de M par une homothétie de centre O et de coefficient ${fr(k)}. On donne OM = ${OM} cm. Calcule OM'.`,
     answer,
     tolerance: 0.02,
-    steps: [`OM' = ${fr(k)} \\times ${OM} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `OM' = ${fr(k)} \\times ${OM} = ${fr(answer)}` }],
   };
 }
 
@@ -152,7 +152,7 @@ function genLongueurHomothetieNumeric() {
     prompt: `Un segment de ${longueur} cm a pour image, par une homothétie de coefficient ${fr(k)}, un segment de quelle longueur (en cm) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${longueur} \\times ${fr(k)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${longueur} \\times ${fr(k)} = ${fr(answer)}` }],
   };
 }
 
@@ -167,7 +167,7 @@ function genPerimetreHomothetieNumeric() {
     prompt: `Un polygone a un périmètre de ${perimetre} cm. Son image par une homothétie de coefficient ${fr(k)} a quel périmètre (en cm) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${perimetre} \\times ${fr(k)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${perimetre} \\times ${fr(k)} = ${fr(answer)}` }],
   };
 }
 
@@ -182,7 +182,7 @@ function genAireHomothetieNumeric() {
     prompt: `Une figure a une aire de ${aire} cm². Son image par une homothétie de coefficient ${fr(k)} a quelle aire (en cm²) ?`,
     answer,
     tolerance: 0.05,
-    steps: [`${aire} \\times ${fr(k)}^2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${aire} \\times ${fr(k)}^2 = ${fr(answer)}` }],
   };
 }
 
@@ -197,9 +197,12 @@ function genOrdreAlignementHomothetieQCM() {
     answer: kPositif ? options[0] : options[1],
     options,
     steps: [
-      kPositif
-        ? `Un coefficient positif place M' du même côté de O que M : O, M et M' sont alignés dans cet ordre (ou O entre les deux si |k|<1, mais toujours du même côté).`
-        : `Un coefficient négatif place M' du côté opposé de O par rapport à M : O est entre M et M'.`,
+      {
+        type: "regle",
+        text: kPositif
+          ? `Un coefficient positif place M' du même côté de O que M : O, M et M' sont alignés dans cet ordre (ou O entre les deux si |k|<1, mais toujours du même côté).`
+          : `Un coefficient négatif place M' du côté opposé de O par rapport à M : O est entre M et M'.`,
+      },
     ],
   };
 }
@@ -218,9 +221,12 @@ function genProprietesConserveesQCM() {
     answer,
     options: ["Oui", "Non"],
     steps: [
-      conserveLongueurs
-        ? `Les translations, symétries (axiales ou centrales) et rotations sont des transformations qui conservent les longueurs et les angles.`
-        : `Une homothétie de coefficient k (avec |k| différent de 1) multiplie toutes les longueurs par |k| : elle ne conserve donc pas les longueurs (sauf si |k| = 1).`,
+      {
+        type: "regle",
+        text: conserveLongueurs
+          ? `Les translations, symétries (axiales ou centrales) et rotations sont des transformations qui conservent les longueurs et les angles.`
+          : `Une homothétie de coefficient k (avec |k| différent de 1) multiplie toutes les longueurs par |k| : elle ne conserve donc pas les longueurs (sauf si |k| = 1).`,
+      },
     ],
   };
 }
@@ -234,7 +240,7 @@ function genAngleConserveTransformationQCM() {
     chapter: "Transformations — Propriétés",
     prompt: `Un angle mesure ${angle}°. Quelle est la mesure de son image par ${transfo} ?`,
     answer: angle,
-    steps: [`Toutes les transformations usuelles (translation, symétrie, rotation, homothétie) conservent les angles : l'image mesure aussi ${angle}°.`],
+    steps: [{ type: "regle", text: `Toutes les transformations usuelles (translation, symétrie, rotation, homothétie) conservent les angles : l'image mesure aussi ${angle}°.` }],
   };
 }
 
@@ -254,7 +260,7 @@ function genIdentifierTransformationQCM() {
     prompt: `Quelle transformation correspond à la description suivante : « ${cas.description} » ?`,
     answer: cas.reponse,
     options,
-    steps: [`Il s'agit d'une ${cas.reponse.toLowerCase()}.`],
+    steps: [{ type: "resultat", text: `Il s'agit d'une ${cas.reponse.toLowerCase()}.` }],
   };
 }
 
@@ -266,7 +272,7 @@ function genImageMilieuSegmentQCM() {
     chapter: "Transformations — Propriétés",
     prompt: `I est le milieu du segment [${p1}${p2}]. Une transformation envoie ${p1} sur ${p1}' et ${p2} sur ${p2}'. Quelle est l'image de I par cette transformation ? Réponds par « milieu de [${p1}'${p2}'] ».`,
     answer: `milieu de [${p1}'${p2}']`,
-    steps: [`Toutes les transformations usuelles conservent le milieu d'un segment : l'image de I est le milieu de [${p1}'${p2}'].`],
+    steps: [{ type: "regle", text: `Toutes les transformations usuelles conservent le milieu d'un segment : l'image de I est le milieu de [${p1}'${p2}'].` }],
   };
 }
 
@@ -280,7 +286,7 @@ function genRapportAireHomothetieNumeric() {
     prompt: `Une homothétie a pour coefficient ${fr(k)}. Par combien l'aire d'une figure est-elle multipliée après cette homothétie ?`,
     answer,
     tolerance: 0.02,
-    steps: [`\\text{Rapport des aires} = k^2 = ${fr(k)}^2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\text{Rapport des aires} = k^2 = ${fr(k)}^2 = ${fr(answer)}` }],
   };
 }
 
@@ -333,6 +339,7 @@ export default {
     id: "transformations-plan-troisieme",
     title: "Transformations dans le plan et leurs effets",
     description: "Coordonnées d'images par translation, symétrie et rotation, homothétie (coefficient, effet sur longueurs/périmètre/aire), et propriétés conservées par les transformations usuelles.",
+    pourquoi: "Translations, symétries, rotations et homothéties décrivent tous les mouvements et agrandissements qu'on retrouve en dessin, en architecture et dans les jeux vidéo.",
     level: "troisieme",
     free: false,
     order: 13,

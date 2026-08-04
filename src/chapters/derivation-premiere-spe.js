@@ -324,6 +324,7 @@ export default {
     id: "derivation-premiere-spe",
     title: "Dérivation",
     description: "Taux de variation, nombre dérivé, tangente, approximation linéaire, fonctions dérivées de référence et opérations.",
+    pourquoi: "Le nombre dérivé mesure la vitesse instantanée d'un phénomène — la notion centrale pour étudier comment une quantité varie, en sciences comme en économie.",
     level: "premiere-spe",
     order: 4,
   },

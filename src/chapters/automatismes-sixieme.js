@@ -58,7 +58,7 @@ function genNumerationDecimale() {
     chapter: "Automatismes — Numération décimale",
     prompt: `${unite} unité${unite > 1 ? "s" : ""} + ${count} ${mot}${count > 1 ? "s" : ""} = ?`,
     answer: value,
-    steps: [`${unite} + ${count}/${base} = ${fr(value)}`],
+    steps: [{ type: "calcul", text: `${unite} + ${count}/${base} = ${fr(value)}` }],
   };
 }
 
@@ -74,7 +74,7 @@ function genEcritureFractionDecimale() {
       chapter: "Automatismes — Écriture décimale",
       prompt: `\\(\\dfrac{${n}}{${k}} = ?\\) (écriture décimale)`,
       answer: value,
-      steps: [`\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)`],
+      steps: [{ type: "calcul", text: `\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)` }],
     };
   }
   return {
@@ -82,7 +82,7 @@ function genEcritureFractionDecimale() {
     chapter: "Automatismes — Écriture décimale",
     prompt: `Quel numérateur complète \\(\\dfrac{?}{${k}} = ${frTex(value)}\\) ?`,
     answer: n,
-    steps: [`${fr(value)} \\times ${k} = ${n}`],
+    steps: [{ type: "calcul", text: `${fr(value)} \\times ${k} = ${n}` }],
   };
 }
 
@@ -95,7 +95,7 @@ function genCompleterA1() {
     chapter: "Automatismes — Compléter à 1",
     prompt: `${fr(x)} + ? = 1`,
     answer,
-    steps: [`1 - ${fr(x)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `1 - ${fr(x)} = ${fr(answer)}` }],
   };
 }
 
@@ -108,7 +108,7 @@ function genCompleterA10() {
     chapter: "Automatismes — Compléter à 10",
     prompt: `${fr(x)} + ? = 10`,
     answer,
-    steps: [`10 - ${fr(x)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `10 - ${fr(x)} = ${fr(answer)}` }],
   };
 }
 
@@ -123,7 +123,7 @@ function genMultiplierPar10() {
     chapter: "Automatismes — Multiplier par 10, 100, 1000",
     prompt: `\\(${frTex(x)} \\times ${base} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(x)} \\times ${base} = ${frTex(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(${frTex(x)} \\times ${base} = ${frTex(answer)}\\)` }],
   };
 }
 
@@ -137,7 +137,7 @@ function genDiviserPar10() {
     chapter: "Automatismes — Diviser par 10, 100, 1000",
     prompt: `\\(${frTex(x)} \\div ${base} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(x)} \\div ${base} = ${frTex(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(${frTex(x)} \\div ${base} = ${frTex(answer)}\\)` }],
   };
 }
 
@@ -154,7 +154,7 @@ function genAdditionnerSoustraire() {
     chapter: "Automatismes — Additionner et soustraire",
     prompt: `\\(${frTex(a)} ${isAdd ? "+" : "-"} ${frTex(b)} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(a)} ${isAdd ? "+" : "-"} ${frTex(b)} = ${frTex(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(${frTex(a)} ${isAdd ? "+" : "-"} ${frTex(b)} = ${frTex(answer)}\\)` }],
   };
 }
 
@@ -191,9 +191,9 @@ function genOrdreDeGrandeur() {
     answer: estimate,
     tolerance,
     steps: [
-      `On arrondit chaque nombre à l'unité : ${roundUnit(a)} et ${roundUnit(b)}.`,
-      `${roundUnit(a)} ${opTex} ${roundUnit(b)} = ${fr(estimate)}`,
-      `(Valeur exacte : environ ${fr(roundTo(exact, 2))})`,
+      { type: "regle", text: `On arrondit chaque nombre à l'unité : ${roundUnit(a)} et ${roundUnit(b)}.` },
+      { type: "calcul", text: `${roundUnit(a)} ${opTex} ${roundUnit(b)} = ${fr(estimate)}` },
+      { type: "resultat", text: `(Valeur exacte : environ ${fr(roundTo(exact, 2))})` },
     ],
   };
 }
@@ -209,7 +209,7 @@ function genDoublesMoities() {
     chapter: "Automatismes — Doubles et moitiés",
     prompt: `\\(${frTex(x)} ${isDouble ? "\\times 2" : "\\div 2"} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(x)} ${isDouble ? "\\times 2" : "\\div 2"} = ${frTex(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(${frTex(x)} ${isDouble ? "\\times 2" : "\\div 2"} = ${frTex(answer)}\\)` }],
   };
 }
 
@@ -225,7 +225,10 @@ function genSuitesDecimales() {
     chapter: "Automatismes — Compléter les suites",
     prompt: `Complète la suite logique : ${terms.map(fr).join(" • ")} • ... ?`,
     answer,
-    steps: [`Le pas entre deux termes est ${step >= 0 ? "+" : ""}${fr(step)}.`, `${fr(terms[2])} ${step >= 0 ? "+" : "-"} ${fr(Math.abs(step))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `Le pas entre deux termes est ${step >= 0 ? "+" : ""}${fr(step)}.` },
+      { type: "calcul", text: `${fr(terms[2])} ${step >= 0 ? "+" : "-"} ${fr(Math.abs(step))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -239,7 +242,7 @@ function genArrondir() {
     prompt: `${fr(x)} ≈ ? (au dixième près)`,
     answer,
     tolerance: 0.05,
-    steps: [`On regarde le chiffre des centièmes pour arrondir au dixième : ${fr(x)} ≈ ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `On regarde le chiffre des centièmes pour arrondir au dixième : ${fr(x)} ≈ ${fr(answer)}` }],
   };
 }
 
@@ -257,7 +260,10 @@ function genEgaliteATrou() {
       chapter: "Automatismes — Égalité à trou",
       prompt: `${a} × ? + ${b} = ${c}`,
       answer: x,
-      steps: [`${c} - ${b} = ${c - b}`, `${c - b} \\div ${a} = ${x}`],
+      steps: [
+        { type: "calcul", text: `${c} - ${b} = ${c - b}` },
+        { type: "calcul", text: `${c - b} \\div ${a} = ${x}` },
+      ],
     };
   }
   if (form === "sommeb") {
@@ -271,7 +277,10 @@ function genEgaliteATrou() {
       chapter: "Automatismes — Égalité à trou",
       prompt: `(${a} + ?) × ${b} = ${c}`,
       answer: x,
-      steps: [`${c} \\div ${b} = ${a + x}`, `${a + x} - ${a} = ${x}`],
+      steps: [
+        { type: "calcul", text: `${c} \\div ${b} = ${a + x}` },
+        { type: "calcul", text: `${a + x} - ${a} = ${x}` },
+      ],
     };
   }
   if (form === "diva") {
@@ -286,7 +295,10 @@ function genEgaliteATrou() {
       chapter: "Automatismes — Égalité à trou",
       prompt: `${a} ÷ ? + ${b} = ${c}`,
       answer: x,
-      steps: [`${c} - ${b} = ${quotient}`, `${a} \\div ${quotient} = ${x}`],
+      steps: [
+        { type: "calcul", text: `${c} - ${b} = ${quotient}` },
+        { type: "calcul", text: `${a} \\div ${quotient} = ${x}` },
+      ],
     };
   }
   // a × ? - b = c
@@ -299,7 +311,10 @@ function genEgaliteATrou() {
     chapter: "Automatismes — Égalité à trou",
     prompt: `${a} × ? - ${b} = ${c}`,
     answer: x,
-    steps: [`${c} + ${b} = ${c + b}`, `${c + b} \\div ${a} = ${x}`],
+    steps: [
+      { type: "calcul", text: `${c} + ${b} = ${c + b}` },
+      { type: "calcul", text: `${c + b} \\div ${a} = ${x}` },
+    ],
   };
 }
 
@@ -320,7 +335,7 @@ function genMultDiviserPar10_100_1000() {
     chapter: "Automatismes — Multiplier et diviser par 10, 100, 1000",
     prompt: `${fr(x)} ${isMult ? "×" : "÷"} ${base} = ?`,
     answer,
-    steps: [`${fr(x)} ${isMult ? "\\times" : "\\div"} ${base} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(x)} ${isMult ? "\\times" : "\\div"} ${base} = ${fr(answer)}` }],
   };
 }
 
@@ -335,7 +350,7 @@ function genMultiplierPar0_1_001_0001() {
     chapter: "Automatismes — Multiplier par 0,1 ; 0,01 ; 0,001",
     prompt: `${fr(x)} × ${fr(mult)} = ?`,
     answer,
-    steps: [`${fr(x)} \\times ${fr(mult)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(x)} \\times ${fr(mult)} = ${fr(answer)}` }],
   };
 }
 
@@ -349,7 +364,7 @@ function genMultiplierDeuxDecimauxAuto() {
     chapter: "Automatismes — Multiplier deux nombres décimaux",
     prompt: `${fr(a)} × ${fr(b)} = ?`,
     answer,
-    steps: [`${fr(a)} \\times ${fr(b)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} \\times ${fr(b)} = ${fr(answer)}` }],
   };
 }
 
@@ -364,7 +379,7 @@ function genAjouterDeuxDecimaux() {
     chapter: "Automatismes — Ajouter deux nombres décimaux",
     prompt: `${fr(a)} + ${fr(b)} = ?`,
     answer,
-    steps: [`${fr(a)} + ${fr(b)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} + ${fr(b)} = ${fr(answer)}` }],
   };
 }
 
@@ -379,7 +394,7 @@ function genSoustraireDeuxDecimaux() {
     chapter: "Automatismes — Soustraire deux nombres décimaux",
     prompt: `${fr(a)} - ${fr(b)} = ?`,
     answer,
-    steps: [`${fr(a)} - ${fr(b)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} - ${fr(b)} = ${fr(answer)}` }],
   };
 }
 
@@ -393,7 +408,7 @@ function genDiviserDecimalParEntierAuto() {
     chapter: "Automatismes — Diviser un décimal par un entier",
     prompt: `${fr(dividende)} ÷ ${diviseur} = ?`,
     answer: quotient,
-    steps: [`${fr(dividende)} \\div ${diviseur} = ${fr(quotient)}`],
+    steps: [{ type: "calcul", text: `${fr(dividende)} \\div ${diviseur} = ${fr(quotient)}` }],
   };
 }
 
@@ -409,7 +424,7 @@ function genOrdreDeGrandeurProduitAuto() {
     prompt: `Donne un ordre de grandeur de ${fr(a)} × ${fr(b)}.`,
     answer: estimate,
     tolerance,
-    steps: [`${Math.round(a)} \\times ${Math.round(b)} = ${estimate}`],
+    steps: [{ type: "calcul", text: `${Math.round(a)} \\times ${Math.round(b)} = ${estimate}` }],
   };
 }
 
@@ -423,7 +438,7 @@ function genMultiplierPar5ou50() {
     chapter: "Automatismes — Multiplier par 5, par 50",
     prompt: `${fr(x)} × ${mult} = ?`,
     answer,
-    steps: [`${fr(x)} \\times ${mult} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(x)} \\times ${mult} = ${fr(answer)}` }],
   };
 }
 
@@ -438,7 +453,7 @@ function genDoublesMoitiesAuto() {
     chapter: "Automatismes — Doubles et moitiés",
     prompt: isDouble ? `Quel est le double de ${fr(x)} ?` : `Quelle est la moitié de ${fr(x)} ?`,
     answer,
-    steps: [isDouble ? `${fr(x)} \\times 2 = ${fr(answer)}` : `${fr(x)} \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: isDouble ? `${fr(x)} \\times 2 = ${fr(answer)}` : `${fr(x)} \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -453,7 +468,7 @@ function genMultiplierEntierParPuissance() {
     chapter: "Automatismes — Multiplier par 10, 100, 0,1 ou 0,01",
     prompt: asOpDroite ? `${x} × ${fr(mult)} = ?` : `${fr(mult)} × ${x} = ?`,
     answer,
-    steps: [`${x} \\times ${fr(mult)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${x} \\times ${fr(mult)} = ${fr(answer)}` }],
   };
 }
 
@@ -466,7 +481,7 @@ function genMultiplierPar0_5() {
     chapter: "Automatismes — Multiplier par 0,5",
     prompt: `${x} × 0,5 = ?`,
     answer,
-    steps: [`${x} \\times 0{,}5 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${x} \\times 0{,}5 = ${fr(answer)}` }],
   };
 }
 
@@ -480,7 +495,7 @@ function genDiviserPar4Et8() {
     chapter: "Automatismes — Diviser par 4 et par 8",
     prompt: `${dividende} ÷ ${diviseur} = ?`,
     answer: quotient,
-    steps: [`${dividende} \\div ${diviseur} = ${quotient}`],
+    steps: [{ type: "calcul", text: `${dividende} \\div ${diviseur} = ${quotient}` }],
   };
 }
 
@@ -502,7 +517,7 @@ function genEcritureDecimaleFractionSimple() {
     chapter: "Automatismes — Écriture décimale de fractions",
     prompt: `\\(\\dfrac{${num}}{${den}} = ?\\) (écriture décimale)`,
     answer,
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${frTex(answer)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${frTex(answer)}\\)` }],
   };
 }
 
@@ -517,7 +532,7 @@ function genMultiplicationATrouDecimale() {
     chapter: "Automatismes — Multiplication à trou",
     prompt: missingLeft ? `${a} × ? = ${fr(c)}` : `? × ${a} = ${fr(c)}`,
     answer: x,
-    steps: [`${fr(c)} \\div ${a} = ${fr(x)}`],
+    steps: [{ type: "calcul", text: `${fr(c)} \\div ${a} = ${fr(x)}` }],
   };
 }
 
@@ -533,7 +548,10 @@ function genPrendreFractionDunNombre() {
     chapter: "Automatismes — Fraction d'un nombre",
     prompt: `\\(\\dfrac{${num}}{${den}}\\) de ${nombre} = ?`,
     answer,
-    steps: [`${nombre} \\div ${den} = ${k}`, `${k} \\times ${num} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${nombre} \\div ${den} = ${k}` },
+      { type: "calcul", text: `${k} \\times ${num} = ${answer}` },
+    ],
   };
 }
 
@@ -549,7 +567,7 @@ function genFractionsEgalesAuto() {
       chapter: "Automatismes — Fractions égales",
       prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{?}{${b * m}}\\)`,
       answer: a * m,
-      steps: [`On multiplie numérateur et dénominateur par ${m}.`],
+      steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
     };
   }
   return {
@@ -557,7 +575,7 @@ function genFractionsEgalesAuto() {
     chapter: "Automatismes — Fractions égales",
     prompt: `\\(\\dfrac{${a}}{${b}} = \\dfrac{${a * m}}{?}\\)`,
     answer: b * m,
-    steps: [`On multiplie numérateur et dénominateur par ${m}.`],
+    steps: [{ type: "regle", text: `On multiplie numérateur et dénominateur par ${m}.` }],
   };
 }
 
@@ -574,7 +592,7 @@ function genDecomposerFractionAuto() {
       chapter: "Automatismes — Décomposer une fraction",
       prompt: `\\(\\dfrac{${num}}{${den}} = ? + \\dfrac{${r}}{${den}}\\) — quelle est la partie entière ?`,
       answer: q,
-      steps: [`${num} = ${den} \\times ${q} + ${r}`],
+      steps: [{ type: "calcul", text: `${num} = ${den} \\times ${q} + ${r}` }],
     };
   }
   return {
@@ -582,7 +600,7 @@ function genDecomposerFractionAuto() {
     chapter: "Automatismes — Décomposer une fraction",
     prompt: `\\(\\dfrac{${num}}{${den}} = ${q} + \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer: r,
-    steps: [`${num} = ${den} \\times ${q} + ${r}`],
+    steps: [{ type: "calcul", text: `${num} = ${den} \\times ${q} + ${r}` }],
   };
 }
 
@@ -596,7 +614,7 @@ function genAppliquerPourcentageAuto() {
     chapter: "Automatismes — Pourcentage d'un nombre",
     prompt: `${pct} % de ${base} = ?`,
     answer,
-    steps: [`${base} \\times \\dfrac{${pct}}{100} = ${answer}`],
+    steps: [{ type: "calcul", text: `${base} \\times \\dfrac{${pct}}{100} = ${answer}` }],
   };
 }
 
@@ -612,7 +630,7 @@ function genMultipleDe2_3_5_10() {
     prompt: `Coche les affirmations vraies à propos de ${n}.`,
     options,
     answer,
-    steps: [`${n} est multiple de 2 : ${n % 2 === 0 ? "vrai" : "faux"} ; de 3 : ${n % 3 === 0 ? "vrai" : "faux"} ; de 5 : ${n % 5 === 0 ? "vrai" : "faux"} ; de 10 : ${n % 10 === 0 ? "vrai" : "faux"}.`],
+    steps: [{ type: "calcul", text: `${n} est multiple de 2 : ${n % 2 === 0 ? "vrai" : "faux"} ; de 3 : ${n % 3 === 0 ? "vrai" : "faux"} ; de 5 : ${n % 5 === 0 ? "vrai" : "faux"} ; de 10 : ${n % 10 === 0 ? "vrai" : "faux"}.` }],
   };
 }
 
@@ -627,7 +645,7 @@ function genTablesMultiplicationAuto() {
     chapter: "Automatismes — Tables de multiplication",
     prompt: hideFirst ? `? × ${b} = ${c}` : `${a} × ? = ${c}`,
     answer: hideFirst ? a : b,
-    steps: [`${a} \\times ${b} = ${c}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${c}` }],
   };
 }
 
@@ -641,7 +659,7 @@ function genNombresEntiersFractionsAuto() {
     chapter: "Automatismes — Nombres entiers et fractions",
     prompt: `${n} = \\(\\dfrac{?}{${den}}\\)`,
     answer,
-    steps: [`${n} \\times ${den} = ${answer}`],
+    steps: [{ type: "calcul", text: `${n} \\times ${den} = ${answer}` }],
   };
 }
 
@@ -655,7 +673,7 @@ function genEncadrerFractionAuto() {
     chapter: "Automatismes — Encadrer une fraction",
     prompt: `Quel est le plus grand entier inférieur ou égal à \\(\\dfrac{${num}}{${den}}\\) ?`,
     answer,
-    steps: [`${num} \\div ${den} \\approx ${roundTo(num / den, 2)}`],
+    steps: [{ type: "calcul", text: `${num} \\div ${den} \\approx ${roundTo(num / den, 2)}` }],
   };
 }
 
@@ -670,7 +688,7 @@ function genEcritureDecimaleFractionAuto() {
     chapter: "Automatismes — Écriture décimale d'une fraction",
     prompt: `\\(\\dfrac{${num}}{${den}} = ?\\)`,
     answer,
-    steps: [`${num} \\div ${den} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` }],
   };
 }
 
@@ -685,7 +703,7 @@ function genLexiqueOperationsAuto() {
       chapter: "Automatismes — Lexique des opérations",
       prompt: `La somme de ${a} et ${b} est :`,
       answer: a + b,
-      steps: [`${a} + ${b} = ${a + b}`],
+      steps: [{ type: "calcul", text: `${a} + ${b} = ${a + b}` }],
     };
   }
   if (op === "difference") {
@@ -696,7 +714,7 @@ function genLexiqueOperationsAuto() {
       chapter: "Automatismes — Lexique des opérations",
       prompt: `La différence de ${a} et ${b} est :`,
       answer: a - b,
-      steps: [`${a} - ${b} = ${a - b}`],
+      steps: [{ type: "calcul", text: `${a} - ${b} = ${a - b}` }],
     };
   }
   if (op === "produit") {
@@ -707,7 +725,7 @@ function genLexiqueOperationsAuto() {
       chapter: "Automatismes — Lexique des opérations",
       prompt: `Le produit de ${a} par ${b} est :`,
       answer: a * b,
-      steps: [`${a} \\times ${b} = ${a * b}`],
+      steps: [{ type: "calcul", text: `${a} \\times ${b} = ${a * b}` }],
     };
   }
   const b = nonZero(2, 9);
@@ -718,7 +736,7 @@ function genLexiqueOperationsAuto() {
     chapter: "Automatismes — Lexique des opérations",
     prompt: `Le quotient de ${a} par ${b} est :`,
     answer: quotient,
-    steps: [`${a} \\div ${b} = ${quotient}`],
+    steps: [{ type: "calcul", text: `${a} \\div ${b} = ${quotient}` }],
   };
 }
 
@@ -742,7 +760,7 @@ function genPerimetreDisqueOuPartieAuto() {
       : `Un disque a un rayon de ${r} cm. Quel est son périmètre, arrondi au centième ?`,
     answer: isDemi ? perimDemi : perimCercle,
     tolerance: 0.05,
-    steps: [isDemi ? `\\pi \\times ${r} + ${D} \\approx ${perimDemi}` : `\\pi \\times ${D} \\approx ${perimCercle}`],
+    steps: [{ type: "calcul", text: isDemi ? `\\pi \\times ${r} + ${D} \\approx ${perimDemi}` : `\\pi \\times ${D} \\approx ${perimCercle}` }],
   };
 }
 
@@ -756,7 +774,7 @@ function genPerimetreFigureComplexeAuto() {
     chapter: "Automatismes — Périmètre d'une figure complexe",
     prompt: `Une figure a pour côtés (en cm) : ${segs.join(", ")}. Quel est son périmètre ?`,
     answer: total,
-    steps: [`${segs.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${segs.join(" + ")} = ${total}` }],
   };
 }
 
@@ -773,7 +791,7 @@ function genConvertirLongueurAuto() {
     chapter: "Automatismes — Convertir des longueurs",
     prompt: `Convertis ${fr(value)} ${UNITES_LONGUEUR_AUTO[i]} en ${UNITES_LONGUEUR_AUTO[j]}.`,
     answer: result,
-    steps: [`1 ${UNITES_LONGUEUR_AUTO[i]} = ${facteur} ${UNITES_LONGUEUR_AUTO[j]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_LONGUEUR_AUTO[i]} = ${facteur} ${UNITES_LONGUEUR_AUTO[j]}` }],
   };
 }
 
@@ -792,7 +810,7 @@ function genConvertirAireAuto(niveau) {
     chapter: `Automatismes — Convertir des aires (niveau ${niveau})`,
     prompt: `Convertis ${fr(value)} ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]]} en ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]]}.`,
     answer: result,
-    steps: [`1 ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]]} = ${facteur} ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]]} = ${facteur} ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]]}` }],
   };
 }
 function genConvertirAireNiveau1Auto() {
@@ -833,7 +851,7 @@ function genLireHeureHorlogeAuto() {
     prompt: `Quelle heure indique cette horloge ? (réponds au format 4h15)`,
     figure: buildClockFigureAuto(heureAffichee, minute),
     answer: accepted,
-    steps: [`La petite aiguille est entre ${heureAffichee} et ${heureAffichee === 12 ? 1 : heureAffichee + 1}, la grande aiguille indique ${minute} minutes.`],
+    steps: [{ type: "donnee", text: `La petite aiguille est entre ${heureAffichee} et ${heureAffichee === 12 ? 1 : heureAffichee + 1}, la grande aiguille indique ${minute} minutes.` }],
   };
 }
 
@@ -851,7 +869,7 @@ function genAdditionnerDeuxDureesAuto() {
       chapter: "Automatismes — Additionner des durées",
       prompt: `${h1} h ${m1} min + ${h2} h ${m2} min = ? minutes (au total)`,
       answer: totalMin,
-      steps: [`${h1 * 60 + m1} + ${h2 * 60 + m2} = ${totalMin}`],
+      steps: [{ type: "calcul", text: `${h1 * 60 + m1} + ${h2 * 60 + m2} = ${totalMin}` }],
     };
   }
   return {
@@ -859,7 +877,7 @@ function genAdditionnerDeuxDureesAuto() {
     chapter: "Automatismes — Additionner des durées",
     prompt: `${h1} h ${m1} min + ${h2} h ${m2} min = ? heures entières (partie entière du total)`,
     answer: Math.floor(totalMin / 60),
-    steps: [`${totalMin} \\div 60 \\approx ${roundTo(totalMin / 60, 2)}`],
+    steps: [{ type: "calcul", text: `${totalMin} \\div 60 \\approx ${roundTo(totalMin / 60, 2)}` }],
   };
 }
 
@@ -874,7 +892,7 @@ function genConvertirDureeNiveau1Auto() {
       chapter: "Automatismes — Convertir des durées (niveau 1)",
       prompt: askHeures ? `${mins} min = ? h (partie entière)` : `${mins} min : combien de minutes restantes après les heures entières (le reste) ?`,
       answer: askHeures ? Math.floor(mins / 60) : mins % 60,
-      steps: [`${mins} = 60 \\times ${Math.floor(mins / 60)} + ${mins % 60}`],
+      steps: [{ type: "calcul", text: `${mins} = 60 \\times ${Math.floor(mins / 60)} + ${mins % 60}` }],
     };
   }
   if (type === "sVersMinReste") {
@@ -885,7 +903,7 @@ function genConvertirDureeNiveau1Auto() {
       chapter: "Automatismes — Convertir des durées (niveau 1)",
       prompt: askMin ? `${secs} s = ? min (partie entière)` : `${secs} s : combien de secondes restantes après les minutes entières (le reste) ?`,
       answer: askMin ? Math.floor(secs / 60) : secs % 60,
-      steps: [`${secs} = 60 \\times ${Math.floor(secs / 60)} + ${secs % 60}`],
+      steps: [{ type: "calcul", text: `${secs} = 60 \\times ${Math.floor(secs / 60)} + ${secs % 60}` }],
     };
   }
   const h = randInt(1, 5);
@@ -895,7 +913,7 @@ function genConvertirDureeNiveau1Auto() {
     chapter: "Automatismes — Convertir des durées (niveau 1)",
     prompt: `${h} h ${m} min = ? minutes`,
     answer: h * 60 + m,
-    steps: [`${h} \\times 60 + ${m} = ${h * 60 + m}`],
+    steps: [{ type: "calcul", text: `${h} \\times 60 + ${m} = ${h * 60 + m}` }],
   };
 }
 
@@ -910,7 +928,7 @@ function genConvertirDureeNiveau2Auto() {
       chapter: "Automatismes — Convertir des durées (niveau 2)",
       prompt: askJours ? `${heures} h = ? jours (partie entière)` : `${heures} h : combien d'heures restantes après les jours entiers ?`,
       answer: askJours ? Math.floor(heures / 24) : heures % 24,
-      steps: [`${heures} = 24 \\times ${Math.floor(heures / 24)} + ${heures % 24}`],
+      steps: [{ type: "calcul", text: `${heures} = 24 \\times ${Math.floor(heures / 24)} + ${heures % 24}` }],
     };
   }
   const jours = randInt(1, 10);
@@ -920,7 +938,7 @@ function genConvertirDureeNiveau2Auto() {
     chapter: "Automatismes — Convertir des durées (niveau 2)",
     prompt: `${jours} jours ${heuresReste} h = ? heures au total`,
     answer: jours * 24 + heuresReste,
-    steps: [`${jours} \\times 24 + ${heuresReste} = ${jours * 24 + heuresReste}`],
+    steps: [{ type: "calcul", text: `${jours} \\times 24 + ${heuresReste} = ${jours * 24 + heuresReste}` }],
   };
 }
 
@@ -944,7 +962,7 @@ function genComparerDureesAuto() {
     prompt: `Quelle est la durée la plus grande ?`,
     answer: correct,
     options: [d1.text, d2.text],
-    steps: [`${d1.text} = ${d1.seconds} s ; ${d2.text} = ${d2.seconds} s`],
+    steps: [{ type: "calcul", text: `${d1.text} = ${d1.seconds} s ; ${d2.text} = ${d2.seconds} s` }],
   };
 }
 
@@ -957,7 +975,7 @@ function genConvertirDureeSexagesimaleVersDecimaleAuto() {
     chapter: "Automatismes — Durées sexagésimal → décimal",
     prompt: `${m} min = ? h (écriture décimale)`,
     answer,
-    steps: [`${m} \\div 60 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${m} \\div 60 = ${fr(answer)}` }],
   };
 }
 
@@ -971,7 +989,7 @@ function genConvertirDureeDecimaleVersSexagesimaleAuto() {
     chapter: "Automatismes — Durées décimal → sexagésimal",
     prompt: `${fr(heureDecimale)} h = ? min`,
     answer,
-    steps: [`${fr(heureDecimale)} \\times 60 = ${answer}`],
+    steps: [{ type: "calcul", text: `${fr(heureDecimale)} \\times 60 = ${answer}` }],
   };
 }
 
@@ -995,7 +1013,7 @@ function genSymetriqueReciproqueAuto() {
     chapter: "Automatismes — Symétrie axiale",
     prompt: `Le point ${p1} est le symétrique du point ${p2} par rapport à la droite (d). Quel est le symétrique du point ${p2} par rapport à (d) ?`,
     answer: [p1],
-    steps: [`La symétrie axiale est réciproque : si ${p1} est le symétrique de ${p2}, alors ${p2} est le symétrique de ${p1}.`],
+    steps: [{ type: "regle", text: `La symétrie axiale est réciproque : si ${p1} est le symétrique de ${p2}, alors ${p2} est le symétrique de ${p1}.` }],
   };
 }
 
@@ -1012,7 +1030,7 @@ function genPositionCercleDisqueAuto() {
     prompt: `Le cercle de centre O a pour rayon ${r} cm. Le point P est situé à ${OP} cm de O. Que peut-on dire de P ?`,
     answer: correct,
     options,
-    steps: [`On compare OP = ${OP} cm au rayon ${r} cm.`],
+    steps: [{ type: "regle", text: `On compare OP = ${OP} cm au rayon ${r} cm.` }],
   };
 }
 
@@ -1026,7 +1044,7 @@ function genRayonDiametreAuto() {
       chapter: "Automatismes — Cercles et disques",
       prompt: `Un cercle a un rayon de ${fr(r)} cm. Quel est son diamètre, en cm ?`,
       answer: roundTo(r * 2, 2),
-      steps: [`${fr(r)} \\times 2 = ${fr(roundTo(r * 2, 2))}`],
+      steps: [{ type: "calcul", text: `${fr(r)} \\times 2 = ${fr(roundTo(r * 2, 2))}` }],
     };
   }
   const D = randDecimal(1, 80, pick([0, 1]));
@@ -1035,7 +1053,7 @@ function genRayonDiametreAuto() {
     chapter: "Automatismes — Cercles et disques",
     prompt: `Un cercle a un diamètre de ${fr(D)} cm. Quel est son rayon, en cm ?`,
     answer: roundTo(D / 2, 2),
-    steps: [`${fr(D)} \\div 2 = ${fr(roundTo(D / 2, 2))}`],
+    steps: [{ type: "calcul", text: `${fr(D)} \\div 2 = ${fr(roundTo(D / 2, 2))}` }],
   };
 }
 
@@ -1049,7 +1067,7 @@ function genMilieuSegmentAdditiviteAuto() {
       chapter: "Automatismes — Distances",
       prompt: `M est le milieu du segment [AB]. AM = ${fr(AM)} cm. Quelle est la longueur AB ?`,
       answer: roundTo(AM * 2, 2),
-      steps: [`AB = 2 \\times AM = ${fr(roundTo(AM * 2, 2))}`],
+      steps: [{ type: "calcul", text: `AB = 2 \\times AM = ${fr(roundTo(AM * 2, 2))}` }],
     };
   }
   const AB = roundTo(AM * 2, 2);
@@ -1058,7 +1076,7 @@ function genMilieuSegmentAdditiviteAuto() {
     chapter: "Automatismes — Distances",
     prompt: `M est le milieu du segment [AB]. AB = ${fr(AB)} cm. Quelle est la longueur AM ?`,
     answer: AM,
-    steps: [`AM = AB \\div 2 = ${fr(AM)}`],
+    steps: [{ type: "calcul", text: `AM = AB \\div 2 = ${fr(AM)}` }],
   };
 }
 
@@ -1072,7 +1090,7 @@ function genMultiplierPar11_12_13() {
     chapter: "Automatismes — Multiplier par 11, 12, 13",
     prompt: `${x} × ${mult} = ?`,
     answer,
-    steps: [`${x} \\times ${mult} = ${answer}`],
+    steps: [{ type: "calcul", text: `${x} \\times ${mult} = ${answer}` }],
   };
 }
 
@@ -1088,7 +1106,7 @@ function genDiviseursEntier() {
     prompt: `Parmi les nombres proposés, coche ceux qui divisent ${n}.`,
     options,
     answer,
-    steps: [`Diviseurs de ${n} parmi ceux proposés : ${candidats.filter((d) => n % d === 0).join(", ") || "aucun"}.`],
+    steps: [{ type: "calcul", text: `Diviseurs de ${n} parmi ceux proposés : ${candidats.filter((d) => n % d === 0).join(", ") || "aucun"}.` }],
   };
 }
 
@@ -1105,7 +1123,7 @@ function genProblemeDureeAuto() {
     chapter: "Automatismes — Problèmes de durée",
     prompt: `Paul part à ${h1} h ${String(m1).padStart(2, "0")} et rentre à ${h2} h ${String(m2).padStart(2, "0")}. Combien de temps est-il parti, en minutes ?`,
     answer: dureeMin,
-    steps: [`${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}`],
+    steps: [{ type: "calcul", text: `${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}` }],
   };
 }
 
@@ -1129,7 +1147,7 @@ function genComparerLongueursAuto() {
     prompt: `Quelle est la longueur la plus grande ?`,
     answer: correct,
     options: [e1.text, e2.text],
-    steps: [`${e1.text} = ${e1.base} mm ; ${e2.text} = ${e2.base} mm`],
+    steps: [{ type: "calcul", text: `${e1.text} = ${e1.base} mm ; ${e2.text} = ${e2.base} mm` }],
   };
 }
 
@@ -1146,7 +1164,7 @@ function genConvertirContenancesAuto() {
     chapter: "Automatismes — Convertir des contenances",
     prompt: `Convertis ${fr(value)} ${UNITES_CONTENANCE_AUTO[i]} en ${UNITES_CONTENANCE_AUTO[j]}.`,
     answer: result,
-    steps: [`1 ${UNITES_CONTENANCE_AUTO[i]} = ${facteur} ${UNITES_CONTENANCE_AUTO[j]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_CONTENANCE_AUTO[i]} = ${facteur} ${UNITES_CONTENANCE_AUTO[j]}` }],
   };
 }
 
@@ -1174,7 +1192,7 @@ function genEstimerAngleAuto() {
     figure,
     answer: `${angle}°`,
     options,
-    steps: [`L'angle mesure exactement ${angle}°.`],
+    steps: [{ type: "donnee", text: `L'angle mesure exactement ${angle}°.` }],
   };
 }
 
@@ -1188,7 +1206,7 @@ function genTroisiemeAngleTriangleAuto() {
     chapter: "Automatismes — Troisième angle d'un triangle",
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième angle ?`,
     answer: c,
-    steps: [`180 - (${a} + ${b}) = ${c}`],
+    steps: [{ type: "calcul", text: `180 - (${a} + ${b}) = ${c}` }],
   };
 }
 
@@ -1201,7 +1219,7 @@ function genTroisiemeAngleTriangleRectangleAuto() {
     chapter: "Automatismes — Triangle rectangle",
     prompt: `Dans un triangle rectangle, un angle aigu mesure ${a}°. Quelle est la mesure de l'autre angle aigu ?`,
     answer: b,
-    steps: [`90 - ${a} = ${b}`],
+    steps: [{ type: "calcul", text: `90 - ${a} = ${b}` }],
   };
 }
 
@@ -1222,7 +1240,7 @@ function genMesurerAngleAuto() {
     figure,
     answer: angle,
     tolerance: 3,
-    steps: [`L'angle ASB mesure ${angle}°.`],
+    steps: [{ type: "donnee", text: `L'angle ASB mesure ${angle}°.` }],
   };
 }
 
@@ -1238,7 +1256,10 @@ function genCalculerExpressionAuto() {
       chapter: "Automatismes — Calculer des expressions",
       prompt: `180 - (${a} + ${b}) = ?`,
       answer,
-      steps: [`${a} + ${b} = ${a + b}`, `180 - ${a + b} = ${answer}`],
+      steps: [
+        { type: "calcul", text: `${a} + ${b} = ${a + b}` },
+        { type: "calcul", text: `180 - ${a + b} = ${answer}` },
+      ],
     };
   }
   if (form === "doubleSoustraction") {
@@ -1250,7 +1271,10 @@ function genCalculerExpressionAuto() {
       chapter: "Automatismes — Calculer des expressions",
       prompt: `180 - ${a} - ${b} = ?`,
       answer,
-      steps: [`180 - ${a} = ${180 - a}`, `${180 - a} - ${b} = ${answer}`],
+      steps: [
+        { type: "calcul", text: `180 - ${a} = ${180 - a}` },
+        { type: "calcul", text: `${180 - a} - ${b} = ${answer}` },
+      ],
     };
   }
   const a = randInt(20, 90);
@@ -1260,7 +1284,7 @@ function genCalculerExpressionAuto() {
     chapter: "Automatismes — Calculer des expressions",
     prompt: `${a} - ${b} = ?`,
     answer: a - b,
-    steps: [`${a} - ${b} = ${a - b}`],
+    steps: [{ type: "calcul", text: `${a} - ${b} = ${a - b}` }],
   };
 }
 
@@ -1276,7 +1300,7 @@ function genAngleSupplementaireAuto() {
       ? `Les points A, B et C sont alignés. L'angle ABD mesure ${a}°. Quelle est la mesure de l'angle DBC ?`
       : `Les points A, B et C sont alignés. L'angle DBC mesure ${b}°. Quelle est la mesure de l'angle ABD ?`,
     answer: askB ? b : a,
-    steps: [`${a} + ${b} = 180`],
+    steps: [{ type: "calcul", text: `${a} + ${b} = 180` }],
   };
 }
 
@@ -1291,7 +1315,7 @@ function genMoitiesAuto() {
     chapter: "Automatismes — Calculer des moitiés",
     prompt: `${n} ÷ 2 = ?`,
     answer,
-    steps: [`${n} \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${n} \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -1305,7 +1329,7 @@ function genMultiplierGrandsNombresAuto() {
     chapter: "Automatismes — Multiplier des grands nombres",
     prompt: `${a} × ${b} = ?`,
     answer,
-    steps: [`${a} \\times ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${answer}` }],
   };
 }
 
@@ -1318,7 +1342,7 @@ function genTable60Auto() {
     chapter: "Automatismes — Table de 60",
     prompt: `${x} × 60 = ?`,
     answer,
-    steps: [`${x} \\times 60 = ${answer}`],
+    steps: [{ type: "calcul", text: `${x} \\times 60 = ${answer}` }],
   };
 }
 
@@ -1332,7 +1356,7 @@ function genDistributiviteAuto() {
     chapter: "Automatismes — Distributivité",
     prompt: `${a} × ${b} = ?`,
     answer,
-    steps: [`${a} \\times ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${answer}` }],
   };
 }
 
@@ -1349,7 +1373,10 @@ function genCalculsParenthesesAuto() {
       chapter: "Automatismes — Calculs avec parenthèses",
       prompt: `${a} × (${b} + ${c}) = ?`,
       answer,
-      steps: [`${b} + ${c} = ${b + c}`, `${a} \\times ${b + c} = ${answer}`],
+      steps: [
+        { type: "calcul", text: `${b} + ${c} = ${b + c}` },
+        { type: "calcul", text: `${a} \\times ${b + c} = ${answer}` },
+      ],
     };
   }
   if (form === "abxc") {
@@ -1362,7 +1389,10 @@ function genCalculsParenthesesAuto() {
       chapter: "Automatismes — Calculs avec parenthèses",
       prompt: `(${a} + ${b}) × ${c} = ?`,
       answer,
-      steps: [`${a} + ${b} = ${a + b}`, `${a + b} \\times ${c} = ${answer}`],
+      steps: [
+        { type: "calcul", text: `${a} + ${b} = ${a + b}` },
+        { type: "calcul", text: `${a + b} \\times ${c} = ${answer}` },
+      ],
     };
   }
   const c = randInt(2, 9);
@@ -1373,7 +1403,7 @@ function genCalculsParenthesesAuto() {
     chapter: "Automatismes — Calculs avec parenthèses",
     prompt: `${a} ÷ ${c} = ?`,
     answer: q,
-    steps: [`${a} \\div ${c} = ${q}`],
+    steps: [{ type: "calcul", text: `${a} \\div ${c} = ${q}` }],
   };
 }
 
@@ -1387,7 +1417,7 @@ function genProportionHeureAuto() {
     chapter: "Automatismes — Proportion d'une heure",
     prompt: `\\(\\dfrac{${num}}{${den}}\\) h = ? min`,
     answer,
-    steps: [`${num} \\times 60 \\div ${den} = ${answer}`],
+    steps: [{ type: "calcul", text: `${num} \\times 60 \\div ${den} = ${answer}` }],
   };
 }
 
@@ -1412,7 +1442,7 @@ function genAngleTriangleParticulierAuto() {
       chapter: "Automatismes — Triangles particuliers",
       prompt: `ABC est un triangle équilatéral. Quelle est la mesure de chacun de ses angles ?`,
       answer: 60,
-      steps: [`180 \\div 3 = 60`],
+      steps: [{ type: "calcul", text: `180 \\div 3 = 60` }],
     };
   }
   if (type === "rectangleIsocele") {
@@ -1421,7 +1451,7 @@ function genAngleTriangleParticulierAuto() {
       chapter: "Automatismes — Triangles particuliers",
       prompt: `Un triangle rectangle isocèle a un angle droit. Quelle est la mesure de chacun des deux autres angles (égaux) ?`,
       answer: 45,
-      steps: [`(180 - 90) \\div 2 = 45`],
+      steps: [{ type: "calcul", text: `(180 - 90) \\div 2 = 45` }],
     };
   }
   const baseAngle = randInt(20, 79);
@@ -1434,7 +1464,7 @@ function genAngleTriangleParticulierAuto() {
       ? `Un triangle isocèle a deux angles à la base de ${baseAngle}° chacun. Quelle est la mesure de l'angle au sommet ?`
       : `Un triangle isocèle a un angle au sommet de ${sommetAngle}°. Quelle est la mesure de chacun des deux angles à la base ?`,
     answer: askSommet ? sommetAngle : baseAngle,
-    steps: [`180 - 2 \\times ${baseAngle} = ${sommetAngle}`],
+    steps: [{ type: "calcul", text: `180 - 2 \\times ${baseAngle} = ${sommetAngle}` }],
   };
 }
 
@@ -1459,7 +1489,7 @@ function genTriangleExisteAuto() {
     prompt: `Peut-on construire un triangle ABC tel que AB = ${a} cm, AC = ${b} cm et BC = ${c} cm ?`,
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${sorted[0]} + ${sorted[1]} ${valid ? ">" : "≤"} ${sorted[2]}`],
+    steps: [{ type: "calcul", text: `${sorted[0]} + ${sorted[1]} ${valid ? ">" : "≤"} ${sorted[2]}` }],
   };
 }
 
@@ -1489,7 +1519,7 @@ function genDecrireTriangleAuto() {
     prompt: `${desc} Quelle est la nature de ce triangle ?`,
     answer: nature,
     options: ["isocèle", "équilatéral", "rectangle", "rectangle isocèle", "quelconque"],
-    steps: [desc],
+    steps: [{ type: "donnee", text: desc }],
   };
 }
 
@@ -1506,7 +1536,7 @@ function genTroisiemeCoteAuto() {
     prompt: `AB = ${a} cm et AC = ${b} cm. Laquelle de ces longueurs peut être BC pour que le triangle ABC existe ?`,
     answer: `${validC} cm`,
     options,
-    steps: [`Il faut que BC soit strictement compris entre ${Math.abs(a - b)} et ${a + b} cm.`],
+    steps: [{ type: "regle", text: `Il faut que BC soit strictement compris entre ${Math.abs(a - b)} et ${a + b} cm.` }],
   };
 }
 
@@ -1520,7 +1550,7 @@ function genTroisiemeAngleTriangleAutoCh7() {
     chapter: "Automatismes — Angles d'un triangle",
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième ?`,
     answer: c,
-    steps: [`180 - (${a} + ${b}) = ${c}`],
+    steps: [{ type: "calcul", text: `180 - (${a} + ${b}) = ${c}` }],
   };
 }
 
@@ -1535,7 +1565,7 @@ function genVolumeCubesAuto() {
     chapter: "Automatismes — Représenter l'espace",
     prompt: `Un empilement rectangulaire de petits cubes identiques mesure ${L} cubes de long, ${l} cubes de large et ${h} cubes de haut. Combien de petits cubes contient cet empilement ?`,
     answer,
-    steps: [`${L} \\times ${l} \\times ${h} = ${answer}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
   };
 }
 
@@ -1551,7 +1581,7 @@ function genPourcentageManquantDiagrammeAuto() {
     chapter: "Automatismes — Pourcentages dans un diagramme",
     prompt: `Un diagramme circulaire est partagé en 3 parts. La première fait ${a} % et la deuxième fait ${b} %. Quel pourcentage représente la troisième part ?`,
     answer: c,
-    steps: [`100 - (${a} + ${b}) = ${c}`],
+    steps: [{ type: "calcul", text: `100 - (${a} + ${b}) = ${c}` }],
   };
 }
 
@@ -1572,7 +1602,7 @@ function genEstimerPourcentageDiagrammeAuto() {
     prompt: `Sur un diagramme circulaire, une part occupe ${c.texte} du disque. Quel pourcentage lui correspond le mieux ?`,
     answer: `${c.correct} %`,
     options,
-    steps: [`"${c.texte}" correspond à environ ${c.correct} %.`],
+    steps: [{ type: "regle", text: `"${c.texte}" correspond à environ ${c.correct} %.` }],
   };
 }
 
@@ -1587,7 +1617,7 @@ function genFractionVersPourcentageAuto() {
     chapter: "Automatismes — Fraction vers pourcentage",
     prompt: `Écris \\(\\dfrac{${num}}{${den}}\\) sous forme de pourcentage (donne juste le nombre, sans le %).`,
     answer: pct,
-    steps: [`\\(\\dfrac{${num}}{${den}} = \\dfrac{${num * (100 / den)}}{100} = ${pct}\\%\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = \\dfrac{${num * (100 / den)}}{100} = ${pct}\\%\\)` }],
   };
 }
 
@@ -1600,7 +1630,7 @@ function genDecimalVersPourcentageAuto() {
     chapter: "Automatismes — Décimal vers pourcentage",
     prompt: `Écris ${fr(dec)} sous forme de pourcentage (donne juste le nombre, sans le %).`,
     answer: pct,
-    steps: [`${fr(dec)} = ${fr(dec)} \\times 100\\% = ${pct}\\%`],
+    steps: [{ type: "calcul", text: `${fr(dec)} = ${fr(dec)} \\times 100\\% = ${pct}\\%` }],
   };
 }
 
@@ -1616,7 +1646,7 @@ function genFractionVersDecimaleSimpleAuto() {
     chapter: "Automatismes — Fraction vers décimal",
     prompt: `Écris \\(\\dfrac{${num}}{${den}}\\) sous forme d'un nombre décimal.`,
     answer: dec,
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${fr(dec)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${fr(dec)}\\)` }],
   };
 }
 
@@ -1656,7 +1686,7 @@ function genLireAbscissePointAxeGradueAuto() {
     prompt: `Les graduations sont régulières, espacées de ${step}. Quelle est l'abscisse du point D ?`,
     answer,
     figure,
-    steps: [`De ${startValue} à D, il y a ${targetIndex} graduation(s) de ${step} : ${startValue} + ${targetIndex} \\times ${step} = ${answer}`],
+    steps: [{ type: "calcul", text: `De ${startValue} à D, il y a ${targetIndex} graduation(s) de ${step} : ${startValue} + ${targetIndex} \\times ${step} = ${answer}` }],
   };
 }
 
@@ -1675,7 +1705,7 @@ function genComparerFractionDecimalAuto() {
     prompt: `Complète par <, > ou = : \\(${fr(dec)}\\) ... \\(\\dfrac{${num}}{${den}}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`\\(\\dfrac{${num}}{${den}} = ${fr(roundTo(fracVal, 2))}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = ${fr(roundTo(fracVal, 2))}\\)` }],
   };
 }
 
@@ -1689,7 +1719,7 @@ function genNombreDeDiviseursEntierAuto() {
     chapter: "Automatismes — Diviseurs d'un entier",
     prompt: `Combien le nombre ${n} a-t-il de diviseurs (en comptant 1 et ${n}) ?`,
     answer: count,
-    steps: [`Diviseurs de ${n} : ${Array.from({ length: n }, (_, i) => i + 1).filter((i) => n % i === 0).join(", ")}.`],
+    steps: [{ type: "calcul", text: `Diviseurs de ${n} : ${Array.from({ length: n }, (_, i) => i + 1).filter((i) => n % i === 0).join(", ")}.` }],
   };
 }
 
@@ -1710,7 +1740,7 @@ function genPGCDDeuxEntiersAuto() {
     chapter: "Automatismes — Diviseurs communs",
     prompt: `Quel est le plus grand diviseur commun de ${a} et ${b} ?`,
     answer,
-    steps: [`On cherche le plus grand nombre qui divise à la fois ${a} et ${b} : ${answer}.`],
+    steps: [{ type: "calcul", text: `On cherche le plus grand nombre qui divise à la fois ${a} et ${b} : ${answer}.` }],
   };
 }
 
@@ -1724,7 +1754,7 @@ function genPPCMDeuxEntiersAuto() {
     chapter: "Automatismes — Multiples communs",
     prompt: `Quel est le plus petit multiple commun (non nul) de ${a} et ${b} ?`,
     answer,
-    steps: [`On cherche le plus petit nombre qui est à la fois multiple de ${a} et de ${b} : ${answer}.`],
+    steps: [{ type: "calcul", text: `On cherche le plus petit nombre qui est à la fois multiple de ${a} et de ${b} : ${answer}.` }],
   };
 }
 
@@ -1741,7 +1771,7 @@ function genDoublesMoitiesAuto9() {
     chapter: "Automatismes — Doubles et moitiés",
     prompt: `${askDouble ? "Le double" : "La moitié"} de ${fr(n)} est`,
     answer,
-    steps: [`${fr(n)} ${askDouble ? "\\times 2" : "\\div 2"} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(n)} ${askDouble ? "\\times 2" : "\\div 2"} = ${fr(answer)}` }],
   };
 }
 
@@ -1755,7 +1785,7 @@ function genTriplesTiersAuto() {
     chapter: "Automatismes — Triples et tiers",
     prompt: `${askTriple ? "Le triple" : "Le tiers"} de ${n} est`,
     answer,
-    steps: [`${n} ${askTriple ? "\\times 3" : "\\div 3"} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${n} ${askTriple ? "\\times 3" : "\\div 3"} = ${fr(answer)}` }],
   };
 }
 
@@ -1768,7 +1798,7 @@ function genQuartAuto() {
     chapter: "Automatismes — Quarts",
     prompt: `Le quart de ${n} est`,
     answer,
-    steps: [`${n} \\div 4 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${n} \\div 4 = ${fr(answer)}` }],
   };
 }
 
@@ -1782,7 +1812,7 @@ function genDixiemeAuto() {
     chapter: "Automatismes — Dixièmes",
     prompt: `Le dixième de ${fr(n)} est`,
     answer,
-    steps: [`${fr(n)} \\div 10 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(n)} \\div 10 = ${fr(answer)}` }],
   };
 }
 
@@ -1797,7 +1827,7 @@ function genRapportMultiplicatifAuto() {
     chapter: "Automatismes — Rapports multiplicatifs",
     prompt: `${fr(a)} est combien de fois plus grand que ${fr(b)} ?`,
     answer: k,
-    steps: [`${fr(a)} \\div ${fr(b)} = ${k}`],
+    steps: [{ type: "calcul", text: `${fr(a)} \\div ${fr(b)} = ${k}` }],
   };
 }
 
@@ -1812,7 +1842,7 @@ function genTableMultiplicationFacteurAuto() {
     chapter: "Automatismes — Tables de multiplication",
     prompt: askFirst ? `${produit} = ? \\times ${autre}` : `${produit} = ${facteur} \\times ?`,
     answer: askFirst ? facteur : autre,
-    steps: [`${produit} \\div ${askFirst ? autre : facteur} = ${askFirst ? facteur : autre}`],
+    steps: [{ type: "calcul", text: `${produit} \\div ${askFirst ? autre : facteur} = ${askFirst ? facteur : autre}` }],
   };
 }
 
@@ -1827,7 +1857,7 @@ function genTableCombienDeFoisAuto() {
     chapter: "Automatismes — Tables de multiplication",
     prompt: askFois ? `Dans ${produit} il y a combien de fois ${facteur} ?` : `Dans ${produit} il y a ${fois} fois combien ?`,
     answer: askFois ? fois : facteur,
-    steps: [`${produit} \\div ${askFois ? facteur : fois} = ${askFois ? fois : facteur}`],
+    steps: [{ type: "calcul", text: `${produit} \\div ${askFois ? facteur : fois} = ${askFois ? fois : facteur}` }],
   };
 }
 
@@ -1841,7 +1871,7 @@ function genDiviserSimpleAuto() {
     chapter: "Automatismes — Diviser",
     prompt: `${dividende} \\div ${diviseur} =`,
     answer: quotient,
-    steps: [`${dividende} \\div ${diviseur} = ${quotient}`],
+    steps: [{ type: "calcul", text: `${dividende} \\div ${diviseur} = ${quotient}` }],
   };
 }
 
@@ -1854,7 +1884,7 @@ function genCinquantePourcentAuto() {
     chapter: "Automatismes — Calculer 50 %",
     prompt: `50 % de ${n} =`,
     answer,
-    steps: [`50\\% \\text{ de } ${n} = ${n} \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `50\\% \\text{ de } ${n} = ${n} \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -1867,7 +1897,7 @@ function genVingtCinqPourcentAuto() {
     chapter: "Automatismes — Calculer 25 %",
     prompt: `25 % de ${n} =`,
     answer,
-    steps: [`25\\% \\text{ de } ${n} = ${n} \\div 4 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `25\\% \\text{ de } ${n} = ${n} \\div 4 = ${fr(answer)}` }],
   };
 }
 
@@ -1881,7 +1911,7 @@ function genDixPourcentAuto() {
     chapter: "Automatismes — Calculer 10 %",
     prompt: `10 % de ${fr(n)} =`,
     answer,
-    steps: [`10\\% \\text{ de } ${fr(n)} = ${fr(n)} \\div 10 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `10\\% \\text{ de } ${fr(n)} = ${fr(n)} \\div 10 = ${fr(answer)}` }],
   };
 }
 
@@ -1894,7 +1924,7 @@ function genMultiplierPar25Auto() {
     chapter: "Automatismes — Multiplier par 25",
     prompt: `${n} \\times 25 =`,
     answer,
-    steps: [`${n} \\times 25 = ${n} \\times 100 \\div 4 = ${answer}`],
+    steps: [{ type: "calcul", text: `${n} \\times 25 = ${n} \\times 100 \\div 4 = ${answer}` }],
   };
 }
 
@@ -2062,6 +2092,7 @@ export default {
     id: "automatismes-sixieme",
     title: "Automatismes",
     description: "Calcul rapide et automatismes du programme de 6e, chapitre après chapitre.",
+    pourquoi: "Les automatismes, c'est le calcul mental qui libère de la place dans ta tête pour réfléchir au problème plutôt qu'à l'arithmétique : quelques minutes régulières valent mieux qu'une révision unique la veille du contrôle.",
     level: "sixieme",
     freemiumDaily: 5,
     order: 1,

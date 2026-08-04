@@ -263,6 +263,7 @@ export default {
     id: "suites-numeriques-premiere-techno",
     title: "Suites numériques",
     description: "Modes de génération, suites arithmétiques (croissance linéaire) et géométriques (croissance exponentielle), sens de variation, nuage de points.",
+    pourquoi: "Les suites arithmétiques et géométriques modélisent l'évolution d'un chiffre d'affaires, d'un stock ou d'un capital, année après année.",
     level: "premiere-techno",
     order: 2,
   },

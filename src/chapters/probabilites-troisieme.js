@@ -74,11 +74,15 @@ function genIdentifierEvenementQCM() {
     answer,
     options,
     steps: [
-      answer === "Événement certain"
-        ? `Cet événement se réalise à chaque lancer : il est certain.`
-        : answer === "Événement impossible"
-        ? `Cet événement ne peut jamais se réaliser : il est impossible.`
-        : `Cet événement correspond à une seule issue possible : il est élémentaire.`,
+      {
+        type: "regle",
+        text:
+          answer === "Événement certain"
+            ? `Cet événement se réalise à chaque lancer : il est certain.`
+            : answer === "Événement impossible"
+            ? `Cet événement ne peut jamais se réaliser : il est impossible.`
+            : `Cet événement correspond à une seule issue possible : il est élémentaire.`,
+      },
     ],
   };
 }
@@ -101,7 +105,7 @@ function genNombreIssuesQCM() {
     prompt: `On tire au hasard un jeton numéroté parmi ${total} jetons numérotés de 1 à ${total}. Combien de jetons portent ${critere} ?`,
     answer: String(favorables),
     options,
-    steps: [`Parmi les nombres de 1 à ${total}, il y en a exactement ${favorables} qui portent ${critere}.`],
+    steps: [{ type: "resultat", text: `Parmi les nombres de 1 à ${total}, il y en a exactement ${favorables} qui portent ${critere}.` }],
   };
 }
 
@@ -123,7 +127,10 @@ function genProbabiliteUrneNumeric() {
     prompt: `Une urne contient ${c1} ${objet} ${couleurA}, ${c2} ${objet} ${couleurB} et ${c3} ${objet} ${couleurC}, indiscernables au toucher. On tire un ${objet.slice(0, -1)} au hasard. Donne la probabilité d'obtenir un ${objet.slice(0, -1)} ${couleurA} (sous forme décimale, arrondie au millième).`,
     answer,
     tolerance: 0.002,
-    steps: [`Il y a ${total} ${objet} en tout, dont ${c1} ${couleurA}.`, `P = \\dfrac{${c1}}{${total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "donnee", text: `Il y a ${total} ${objet} en tout, dont ${c1} ${couleurA}.` },
+      { type: "resultat", text: `P = \\dfrac{${c1}}{${total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -137,7 +144,7 @@ function genEvenementContraireNumeric() {
     prompt: `On considère un événement A tel que P(A) = ${fr(pA)}. Quelle est la probabilité de l'événement contraire de A ?`,
     answer,
     tolerance: 0.01,
-    steps: [`P(\\overline{A}) = 1 - P(A) = 1 - ${fr(pA)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P(\\overline{A}) = 1 - P(A) = 1 - ${fr(pA)} = ${fr(answer)}` }],
   };
 }
 
@@ -153,7 +160,10 @@ function genSommeProbabilitesNumeric() {
     prompt: `Une expérience aléatoire a ${k} issues possibles. On connaît les probabilités de ${k - 1} d'entre elles : ${probasConnues.map(fr).join(" ; ")}. Quelle est la probabilité de la dernière issue, sachant que la somme des probabilités de toutes les issues vaut 1 ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${probasConnues.map(fr).join(" + ")} = ${fr(sommeConnues)}`, `1 - ${fr(sommeConnues)} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${probasConnues.map(fr).join(" + ")} = ${fr(sommeConnues)}` },
+      { type: "resultat", text: `1 - ${fr(sommeConnues)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -168,7 +178,7 @@ function genEffectifAttenduNumeric() {
     chapter: "Probabilités — Calculs de probabilités",
     prompt: `Un événement a une probabilité de ${num}/${den} de se réaliser à chaque expérience. On répète l'expérience ${nbExperiences} fois. Combien de fois peut-on s'attendre à ce que cet événement se réalise, en théorie ?`,
     answer,
-    steps: [`\\dfrac{${num}}{${den}} \\times ${nbExperiences} = ${answer}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nbExperiences} = ${answer}` }],
   };
 }
 
@@ -187,7 +197,11 @@ function genComparerProbabilitesQCM() {
     prompt: `Dans une expérience à ${total} issues équiprobables, l'événement A regroupe ${a} issues et l'événement B regroupe ${b} issues. Quel événement est le plus probable ?`,
     answer: plusProbable,
     options: ["A", "B"],
-    steps: [`P(A) = \\dfrac{${a}}{${total}}`, `P(B) = \\dfrac{${b}}{${total}}`, `${a} ${a > b ? ">" : "<"} ${b}, donc ${plusProbable} est le plus probable.`],
+    steps: [
+      { type: "calcul", text: `P(A) = \\dfrac{${a}}{${total}}` },
+      { type: "calcul", text: `P(B) = \\dfrac{${b}}{${total}}` },
+      { type: "resultat", text: `${a} ${a > b ? ">" : "<"} ${b}, donc ${plusProbable} est le plus probable.` },
+    ],
   };
 }
 
@@ -206,7 +220,10 @@ function genProbabiliteDeNumeric() {
     chapter: "Probabilités — Calculs de probabilités",
     prompt: `On lance un dé équilibré à 6 faces numérotées de 1 à 6. Donne la probabilité, sous forme de fraction irréductible p/q, d'obtenir un nombre ${critere}. Donne le numérateur p.`,
     answer: num,
-    steps: [`Il y a ${favorables} faces favorables sur 6.`, `\\dfrac{${favorables}}{6} = \\dfrac{${num}}{${den}}`],
+    steps: [
+      { type: "donnee", text: `Il y a ${favorables} faces favorables sur 6.` },
+      { type: "resultat", text: `\\dfrac{${favorables}}{6} = \\dfrac{${num}}{${den}}` },
+    ],
   };
 }
 
@@ -231,7 +248,10 @@ function genProbabiliteCarteQCM() {
     prompt: `On tire une carte au hasard dans un jeu de ${total} cartes. Quelle est la probabilité, sous forme de fraction irréductible, d'obtenir ${critere} ?`,
     answer: bonneReponse,
     options: [...new Set(options)],
-    steps: [`Il y a ${favorables} cartes favorables sur ${total}.`, `\\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}}`],
+    steps: [
+      { type: "donnee", text: `Il y a ${favorables} cartes favorables sur ${total}.` },
+      { type: "resultat", text: `\\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}}` },
+    ],
   };
 }
 
@@ -253,8 +273,8 @@ function genProbabiliteApresRetraitNumeric() {
     answer,
     tolerance: 0.002,
     steps: [
-      `Après le premier tirage, il reste ${nouveauTotal} ${objet} dans l'urne, dont ${nouveauC1} ${couleurA}.`,
-      `P = \\dfrac{${nouveauC1}}{${nouveauTotal}} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `Après le premier tirage, il reste ${nouveauTotal} ${objet} dans l'urne, dont ${nouveauC1} ${couleurA}.` },
+      { type: "resultat", text: `P = \\dfrac{${nouveauC1}}{${nouveauTotal}} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -278,8 +298,13 @@ function genEquiprobabiliteQCM() {
     answer: equiprobable ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : il y a équiprobabilité entre plusieurs issues si elles ont toutes les mêmes chances de se réaliser (même effectif ici).`,
-      equiprobable ? `Les trois couleurs ont le même effectif (${effectifs[0]}) : il y a équiprobabilité.` : `Les effectifs (${effectifs.join(", ")}) sont différents : il n'y a pas équiprobabilité entre les couleurs.`,
+      { type: "regle", text: `Rappel : il y a équiprobabilité entre plusieurs issues si elles ont toutes les mêmes chances de se réaliser (même effectif ici).` },
+      {
+        type: "resultat",
+        text: equiprobable
+          ? `Les trois couleurs ont le même effectif (${effectifs[0]}) : il y a équiprobabilité.`
+          : `Les effectifs (${effectifs.join(", ")}) sont différents : il n'y a pas équiprobabilité entre les couleurs.`,
+      },
     ],
   };
 }
@@ -300,8 +325,8 @@ function genValeurProbabiliteQCM() {
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : une probabilité est toujours un nombre compris entre 0 et 1 (inclus).`,
-      valid ? `C'est bien le cas ici.` : `Ce n'est pas le cas ici : ce nombre n'est pas compris entre 0 et 1.`,
+      { type: "regle", text: `Rappel : une probabilité est toujours un nombre compris entre 0 et 1 (inclus).` },
+      { type: "resultat", text: valid ? `C'est bien le cas ici.` : `Ce n'est pas le cas ici : ce nombre n'est pas compris entre 0 et 1.` },
     ],
   };
 }
@@ -316,7 +341,7 @@ function genProbabiliteDepuisPourcentageNumeric() {
     prompt: `Un événement a ${p} % de chances de se réaliser. Donne sa probabilité sous forme décimale.`,
     answer,
     tolerance: 0.005,
-    steps: [`${p}\\% = \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${p}\\% = \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -333,9 +358,9 @@ function genVerifierLoiProbabiliteQCM() {
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : la somme des probabilités de toutes les issues d'une expérience aléatoire doit être égale à 1.`,
-      `${probas.map(fr).join(" + ")} = ${fr(somme)}`,
-      valid ? `La somme vaut bien 1 : c'est cohérent.` : `La somme ne vaut pas 1 : ce n'est pas cohérent.`,
+      { type: "regle", text: `Rappel : la somme des probabilités de toutes les issues d'une expérience aléatoire doit être égale à 1.` },
+      { type: "calcul", text: `${probas.map(fr).join(" + ")} = ${fr(somme)}` },
+      { type: "resultat", text: valid ? `La somme vaut bien 1 : c'est cohérent.` : `La somme ne vaut pas 1 : ce n'est pas cohérent.` },
     ],
   };
 }
@@ -351,7 +376,10 @@ function genProbabiliteMultipleNumeric() {
     chapter: "Probabilités — Calculs de probabilités",
     prompt: `On tire au hasard un jeton numéroté parmi ${total} jetons numérotés de 1 à ${total}. Donne la probabilité, sous forme de fraction irréductible p/q, d'obtenir un multiple de ${d}. Donne le dénominateur q.`,
     answer: den,
-    steps: [`Il y a ${favorables} multiples de ${d} entre 1 et ${total}.`, `\\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}}`],
+    steps: [
+      { type: "donnee", text: `Il y a ${favorables} multiples de ${d} entre 1 et ${total}.` },
+      { type: "resultat", text: `\\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}}` },
+    ],
   };
 }
 
@@ -404,6 +432,7 @@ export default {
     id: "probabilites-troisieme",
     title: "Probabilités",
     description: "Vocabulaire des probabilités, calcul dans une situation d'équiprobabilité, événement contraire, somme des probabilités, effectif attendu, comparaison de probabilités et tirage sans remise.",
+    pourquoi: "Calculer une probabilité, c'est estimer le risque ou la chance qu'un évènement se produise — utile pour un jeu, une météo, une décision.",
     level: "troisieme",
     free: false,
     order: 10,

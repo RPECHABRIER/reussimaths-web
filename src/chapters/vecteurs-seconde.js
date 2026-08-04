@@ -374,6 +374,7 @@ export default {
     id: "vecteurs-seconde",
     title: "Notion de vecteur",
     description: "Coordonnées et norme d'un vecteur, égalité de vecteurs, translations, relation de Chasles, propriété du parallélogramme, vecteur opposé, somme et produit par un nombre.",
+    pourquoi: "Les vecteurs décrivent un déplacement (direction, sens, longueur) — le langage de base de la physique (forces, vitesses) et de l'informatique graphique.",
     level: "seconde",
     free: false,
     order: 8,

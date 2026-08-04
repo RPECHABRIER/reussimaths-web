@@ -47,7 +47,7 @@ function genVolumeSphereNumeric() {
     prompt: `Calcule le volume d'une boule de rayon ${R} cm (valeur approchée au dixième, en cm³).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.005),
-    steps: [`V = \\dfrac{4}{3} \\times \\pi \\times R^3 = \\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `V = \\dfrac{4}{3} \\times \\pi \\times R^3 = \\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -61,7 +61,7 @@ function genAireSphereNumeric() {
     prompt: `Calcule l'aire d'une sphère de rayon ${R} cm (valeur approchée au dixième, en cm²).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.005),
-    steps: [`A = 4 \\times \\pi \\times R^2 = 4 \\times \\pi \\times ${R}^2 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `A = 4 \\times \\pi \\times R^2 = 4 \\times \\pi \\times ${R}^2 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -76,7 +76,10 @@ function genVolumeSphereDepuisDiametreNumeric() {
     prompt: `Calcule le volume d'une boule de diamètre ${D} cm (valeur approchée au dixième, en cm³).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.005),
-    steps: [`R = ${D} \\div 2 = ${fr(R)}`, `V = \\dfrac{4}{3} \\times \\pi \\times ${fr(R)}^3 \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `R = ${D} \\div 2 = ${fr(R)}` },
+      { type: "resultat", text: `V = \\dfrac{4}{3} \\times \\pi \\times ${fr(R)}^3 \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -91,7 +94,10 @@ function genAireSphereDepuisDiametreNumeric() {
     prompt: `Calcule l'aire d'une sphère de diamètre ${D} cm (valeur approchée au dixième, en cm²).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.005),
-    steps: [`R = ${D} \\div 2 = ${fr(R)}`, `A = 4 \\times \\pi \\times ${fr(R)}^2 \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `R = ${D} \\div 2 = ${fr(R)}` },
+      { type: "resultat", text: `A = 4 \\times \\pi \\times ${fr(R)}^2 \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -105,7 +111,7 @@ function genVolumeDemiSphereNumeric() {
     prompt: `Un bol a la forme d'une demi-sphère de rayon ${R} cm. Calcule son volume (valeur approchée au dixième, en cm³).`,
     answer,
     tolerance: Math.max(0.5, answer * 0.005),
-    steps: [`V = \\dfrac{1}{2} \\times \\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `V = \\dfrac{1}{2} \\times \\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -127,7 +133,7 @@ function genLireCoordonneesGeographiquesQCM() {
     prompt: `La ville de ${ville} a pour latitude ${latDeg}° ${latDir} et pour longitude ${lonDeg}° ${lonDir}. Quelles sont ses coordonnées géographiques, sous la forme (latitude ; longitude) ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`Les coordonnées géographiques s'écrivent (latitude ; longitude) : (${bonneReponse}).`],
+    steps: [{ type: "regle", text: `Les coordonnées géographiques s'écrivent (latitude ; longitude) : (${bonneReponse}).` }],
   };
 }
 
@@ -142,7 +148,12 @@ function genDistinguerLatitudeLongitudeQCM() {
       : `Quelle coordonnée géographique mesure la position d'un point à l'est ou à l'ouest du méridien de référence ?`,
     answer: askLatitude ? "Latitude" : "Longitude",
     options: ["Latitude", "Longitude"],
-    steps: [askLatitude ? `La latitude se mesure par rapport à l'équateur (Nord/Sud).` : `La longitude se mesure par rapport au méridien de référence (Est/Ouest).`],
+    steps: [
+      {
+        type: "regle",
+        text: askLatitude ? `La latitude se mesure par rapport à l'équateur (Nord/Sud).` : `La longitude se mesure par rapport au méridien de référence (Est/Ouest).`,
+      },
+    ],
   };
 }
 
@@ -156,7 +167,7 @@ function genLongueurMeridienNumeric() {
     prompt: `Une planète (ou un astre) sphérique a un rayon de ${R} km. Un méridien est un demi grand cercle. Calcule la longueur d'un méridien (valeur approchée au km près).`,
     answer,
     tolerance: 5,
-    steps: [`L = \\pi \\times R = \\pi \\times ${R} \\approx ${answer}\\text{ km}`],
+    steps: [{ type: "calcul", text: `L = \\pi \\times R = \\pi \\times ${R} \\approx ${answer}\\text{ km}` }],
   };
 }
 
@@ -171,7 +182,7 @@ function genRayonParalleleNumeric() {
     prompt: `La Terre a un rayon de ${R} km. Calcule le rayon du parallèle situé à la latitude ${latitude}° (valeur approchée au km près).`,
     answer,
     tolerance: 5,
-    steps: [`r = R \\times \\cos(${latitude}°) = ${R} \\times \\cos(${latitude}°) \\approx ${answer}\\text{ km}`],
+    steps: [{ type: "calcul", text: `r = R \\times \\cos(${latitude}°) = ${R} \\times \\cos(${latitude}°) \\approx ${answer}\\text{ km}` }],
   };
 }
 
@@ -187,7 +198,10 @@ function genLongueurParalleleNumeric() {
     prompt: `La Terre a un rayon de ${R} km. Calcule la longueur du parallèle situé à la latitude ${latitude}° (valeur approchée au km près).`,
     answer,
     tolerance: 10,
-    steps: [`r = ${R} \\times \\cos(${latitude}°) \\approx ${fr(roundTo(rayonParallele, 0))}\\text{ km}`, `L = 2 \\times \\pi \\times r \\approx ${answer}\\text{ km}`],
+    steps: [
+      { type: "calcul", text: `r = ${R} \\times \\cos(${latitude}°) \\approx ${fr(roundTo(rayonParallele, 0))}\\text{ km}` },
+      { type: "resultat", text: `L = 2 \\times \\pi \\times r \\approx ${answer}\\text{ km}` },
+    ],
   };
 }
 
@@ -204,9 +218,13 @@ function genSectionCubeQCM() {
     answer,
     options: ["Un carré identique à la face", "Un rectangle", "Un disque"],
     steps: [
-      parallele === "à une face"
-        ? `Un plan parallèle à une face d'un cube donne une section carrée, de même dimensions que la face.`
-        : `Un plan parallèle à une arête (mais pas à une face) donne une section rectangulaire.`,
+      {
+        type: "regle",
+        text:
+          parallele === "à une face"
+            ? `Un plan parallèle à une face d'un cube donne une section carrée, de même dimensions que la face.`
+            : `Un plan parallèle à une arête (mais pas à une face) donne une section rectangulaire.`,
+      },
     ],
   };
 }
@@ -219,7 +237,7 @@ function genSectionPyramideFormeQCM() {
     prompt: `On coupe une pyramide par un plan parallèle à sa base. Quelle est la nature de la section obtenue, par rapport à la base ?`,
     answer: "Une réduction de la base",
     options: ["Une réduction de la base", "Un agrandissement de la base", "Une figure identique à la base"],
-    steps: [`La section est une réduction de la base (une figure semblable, plus petite, obtenue par une sorte d'homothétie de centre le sommet de la pyramide).`],
+    steps: [{ type: "regle", text: `La section est une réduction de la base (une figure semblable, plus petite, obtenue par une sorte d'homothétie de centre le sommet de la pyramide).` }],
   };
 }
 
@@ -231,7 +249,7 @@ function genSectionCylindreQCM() {
     prompt: `On coupe un cylindre de révolution par un plan parallèle à sa base. Quelle est la forme de la section obtenue ?`,
     answer: "Un disque de même rayon que la base",
     options: ["Un disque de même rayon que la base", "Un rectangle", "Une ellipse"],
-    steps: [`Un plan parallèle à la base d'un cylindre donne un disque de même rayon que la base.`],
+    steps: [{ type: "regle", text: `Un plan parallèle à la base d'un cylindre donne un disque de même rayon que la base.` }],
   };
 }
 
@@ -247,9 +265,12 @@ function genSectionSphereQCM() {
     answer: parPasseCentre ? "Il est égal à R" : "Il est strictement inférieur à R",
     options: ["Il est égal à R", "Il est strictement inférieur à R", "Il est strictement supérieur à R"],
     steps: [
-      parPasseCentre
-        ? `Un plan passant par le centre d'une sphère donne un disque de rayon égal à R (c'est un « grand cercle »).`
-        : `Un plan ne passant pas par le centre d'une sphère donne toujours un disque de rayon strictement inférieur à R.`,
+      {
+        type: "regle",
+        text: parPasseCentre
+          ? `Un plan passant par le centre d'une sphère donne un disque de rayon égal à R (c'est un « grand cercle »).`
+          : `Un plan ne passant pas par le centre d'une sphère donne toujours un disque de rayon strictement inférieur à R.`,
+      },
     ],
   };
 }
@@ -267,7 +288,10 @@ function genSectionPyramideLongueurNumeric() {
     prompt: `Une pyramide à base carrée a une hauteur de ${hauteurTotale} cm et un côté de base de ${coteBase} cm. On la coupe par un plan parallèle à la base, à une hauteur de ${hauteurCoupe} cm à partir du sommet. Calcule la longueur du côté du carré obtenu par cette section (arrondie au centième).`,
     answer,
     tolerance: 0.05,
-    steps: [`\\text{Coefficient de réduction} = \\dfrac{${hauteurCoupe}}{${hauteurTotale}} \\approx ${fr(k)}`, `\\text{Côté de la section} = ${coteBase} \\times ${fr(k)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\text{Coefficient de réduction} = \\dfrac{${hauteurCoupe}}{${hauteurTotale}} \\approx ${fr(k)}` },
+      { type: "resultat", text: `\\text{Côté de la section} = ${coteBase} \\times ${fr(k)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -320,6 +344,7 @@ export default {
     id: "geometrie-espace-troisieme",
     title: "Géométrie dans l'espace",
     description: "Sphère et boule (aire, volume), sphère terrestre (latitude, longitude, méridiens, parallèles), et sections de solides (cube, pyramide, cylindre, sphère) par un plan.",
+    pourquoi: "Les calculs sur la sphère servent à estimer des distances à la surface de la Terre (latitude, longitude) et des volumes d'objets ronds du quotidien.",
     level: "troisieme",
     free: false,
     order: 14,

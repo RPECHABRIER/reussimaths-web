@@ -344,6 +344,7 @@ export default {
     id: "exercices-fin-annee-seconde",
     title: "Exercices de fin d'année",
     description: "Synthèse transversale des grands thèmes de 2nde : fonctions affines et de référence, repérage, vecteurs, colinéarité, équations de droites, informations chiffrées, statistiques, probabilités.",
+    pourquoi: "Cette synthèse transversale permet de vérifier que les grands thèmes de 2nde sont bien acquis avant d'aborder le lycée post-seconde.",
     level: "seconde",
     free: false,
     order: 14,

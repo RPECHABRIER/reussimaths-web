@@ -85,14 +85,26 @@ function genArrondirDecimal() {
     prompt: `Arrondis ${fr(n)} ${cible}.`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(n)} arrondi ${cible} donne ${fr(answer)}.`],
+    steps: [{ type: "resultat", text: `${fr(n)} arrondi ${cible} donne ${fr(answer)}.` }],
   };
 }
 
 // ---------- 2. Comparer deux décimaux ----------
 function genComparerDecimaux() {
-  const a = randDecimal(0, 200, 2);
-  const b = randDecimal(0, 200, 2);
+  // Un cas sur deux est un piège délibéré : un décimal à 1 chiffre après la
+  // virgule mais plus grand qu'un décimal à 2 chiffres (ex. 0,7 > 0,65),
+  // pour casser le réflexe "plus de chiffres après la virgule = plus grand"
+  // plutôt que de ne jamais le rencontrer (cf. dossier Neurosciences).
+  const trap = Math.random() < 0.5;
+  let a, b;
+  if (trap) {
+    const shortVal = randDecimal(0.1, 0.9, 1);
+    const longVal = randDecimal(0.01, shortVal - 0.01, 2);
+    [a, b] = Math.random() < 0.5 ? [shortVal, longVal] : [longVal, shortVal];
+  } else {
+    a = randDecimal(0, 200, 2);
+    b = randDecimal(0, 200, 2);
+  }
   const correct = a > b ? ">" : a < b ? "<" : "=";
   return {
     type: "qcm",
@@ -100,7 +112,7 @@ function genComparerDecimaux() {
     prompt: `Complète par <, > ou = : \\(${frTex(a)}\\) ... \\(${frTex(b)}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`On compare d'abord la partie entière, puis les décimales une à une.`],
+    steps: [{ type: "regle", text: `On compare d'abord la partie entière, puis les décimales une à une — pas le nombre total de chiffres.` }],
   };
 }
 
@@ -117,7 +129,7 @@ function genAdditionSoustractionDecimaux() {
     prompt: `Calcule : \\(${frTex(x)} ${isAdd ? "+" : "-"} ${frTex(y)}\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(x)} ${isAdd ? "+" : "-"} ${fr(y)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(x)} ${isAdd ? "+" : "-"} ${fr(y)} = ${fr(answer)}` }],
   };
 }
 
@@ -132,7 +144,7 @@ function genMultiplierDecimalParEntier() {
     prompt: `Calcule : \\(${frTex(dec)} \\times ${k}\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(dec)} \\times ${k} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(dec)} \\times ${k} = ${fr(answer)}` }],
   };
 }
 
@@ -147,7 +159,7 @@ function genDiviserDecimalParEntier() {
     prompt: `Calcule : \\(${frTex(dividende)} \\div ${k}\\)`,
     answer,
     tolerance: 0.02,
-    steps: [`${fr(dividende)} \\div ${k} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(dividende)} \\div ${k} = ${fr(answer)}` }],
   };
 }
 
@@ -163,7 +175,7 @@ function genMultDiviserPuissanceDix() {
     prompt: `Calcule : \\(${frTex(n)} ${isMult ? "\\times" : "\\div"} ${p}\\)`,
     answer,
     tolerance: 0.001,
-    steps: [`${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.`],
+    steps: [{ type: "regle", text: `${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.` }],
   };
 }
 
@@ -181,7 +193,10 @@ function genFractionDunNombre() {
     chapter: "Réviser les bases (5e) — Fractions",
     prompt: `Calcule \\(\\dfrac{${num}}{${den}}\\) de ${n}.`,
     answer,
-    steps: [`${n} \\div ${den} = ${k}`, `${k} \\times ${num} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${n} \\div ${den} = ${k}` },
+      { type: "calcul", text: `${k} \\times ${num} = ${answer}` },
+    ],
   };
 }
 
@@ -198,7 +213,7 @@ function genSimplifierFraction() {
     chapter: "Réviser les bases (5e) — Fractions",
     prompt: `Simplifie la fraction \\(\\dfrac{${num}}{${den}}\\) le plus possible. Donne le ${askNum ? "numérateur" : "dénominateur"} de la fraction simplifiée.`,
     answer: askNum ? a : b,
-    steps: [`\\(\\dfrac{${num}}{${den}} = \\dfrac{${a}}{${b}}\\) (on divise haut et bas par ${g}).`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = \\dfrac{${a}}{${b}}\\) (on divise haut et bas par ${g}).` }],
   };
 }
 
@@ -213,7 +228,7 @@ function genEcritureDecimaleFraction() {
     prompt: `Donne l'écriture décimale de \\(\\dfrac{${num}}{${den}}\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`${num} \\div ${den} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` }],
   };
 }
 
@@ -230,7 +245,7 @@ function genComparerFractions() {
     prompt: `Complète par < ou > : \\(\\dfrac{${num1}}{${den}}\\) ... \\(\\dfrac{${num2}}{${den}}\\)`,
     answer: correct,
     options: ["<", ">"],
-    steps: [`Deux fractions de même dénominateur : on compare les numérateurs.`],
+    steps: [{ type: "regle", text: `Deux fractions de même dénominateur : on compare les numérateurs.` }],
   };
 }
 
@@ -246,7 +261,7 @@ function genCalculerPourcentage() {
     chapter: "Réviser les bases (5e) — Pourcentages",
     prompt: `Calcule ${pct} % de ${n}.`,
     answer,
-    steps: [`${n} \\times \\dfrac{${pct}}{100} = ${answer}`],
+    steps: [{ type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${answer}` }],
   };
 }
 
@@ -267,7 +282,7 @@ function genNatureAngle() {
     figure: buildAngleFigure(Math.max(angle, 2), randInt(0, 360)),
     answer: nature,
     options: ["aigu", "droit", "obtus", "plat"],
-    steps: [`Angle ${nature}.`],
+    steps: [{ type: "resultat", text: `Angle ${nature}.` }],
   };
 }
 
@@ -281,7 +296,7 @@ function genMesurerAngle() {
     figure: buildAngleFigure(angle, randInt(0, 360)),
     answer: angle,
     tolerance: 3,
-    steps: [`L'angle ASB mesure ${angle}°.`],
+    steps: [{ type: "donnee", text: `L'angle ASB mesure ${angle}°.` }],
   };
 }
 
@@ -296,7 +311,7 @@ function genPerimetreRectangle() {
     prompt: `ABCD est un rectangle. Calcule son périmètre, en cm.`,
     figure: buildRectangleFigure(L, l),
     answer: perim,
-    steps: [`2 \\times (${L} + ${l}) = ${perim}`],
+    steps: [{ type: "calcul", text: `2 \\times (${L} + ${l}) = ${perim}` }],
   };
 }
 
@@ -311,7 +326,7 @@ function genAireRectangle() {
     prompt: `ABCD est un rectangle. Calcule son aire, en cm².`,
     figure: buildRectangleFigure(L, l),
     answer: aire,
-    steps: [`${L} \\times ${l} = ${aire}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} = ${aire}` }],
   };
 }
 
@@ -327,7 +342,7 @@ function genSymetrieCentraleDistance() {
       : `M est le symétrique de A par rapport au point O, avec OM = ${fr(oa)} cm. Quelle est la longueur OA, en cm ?`,
     answer: oa,
     tolerance: 0.01,
-    steps: [`Le symétrique d'un point par rapport à un point O est à la même distance de O.`],
+    steps: [{ type: "regle", text: `Le symétrique d'un point par rapport à un point O est à la même distance de O.` }],
   };
 }
 
@@ -346,7 +361,7 @@ function genMultipleOuDiviseur() {
       prompt: `Lequel de ces deux nombres est un multiple de ${b} ?`,
       answer: `${a}`,
       options,
-      steps: [`${a} \\div ${b} = ${k} (nombre entier), donc ${a} est un multiple de ${b}.`],
+      steps: [{ type: "calcul", text: `${a} \\div ${b} = ${k} (nombre entier), donc ${a} est un multiple de ${b}.` }],
     };
   }
   const n = pick([12, 18, 20, 24, 30, 36, 40, 45]);
@@ -357,7 +372,7 @@ function genMultipleOuDiviseur() {
     chapter: "Réviser les bases (5e) — Multiples et diviseurs",
     prompt: `Combien le nombre ${n} a-t-il de diviseurs (en comptant 1 et ${n}) ?`,
     answer: count,
-    steps: [`Diviseurs de ${n} : ${divisors.join(", ")}.`],
+    steps: [{ type: "resultat", text: `Diviseurs de ${n} : ${divisors.join(", ")}.` }],
   };
 }
 
@@ -378,7 +393,7 @@ function genVocabulairePerimetreAire() {
     prompt: `Pour calculer ${c.texte}, a-t-on besoin du périmètre ou de l'aire ?`,
     answer: c.correct,
     options: ["périmètre", "aire"],
-    steps: [`On parle ici de la notion de "${c.correct}".`],
+    steps: [{ type: "resultat", text: `On parle ici de la notion de "${c.correct}".` }],
   };
 }
 
@@ -412,6 +427,7 @@ export default {
     id: "reviser-les-bases-cinquieme",
     title: "Réviser les bases",
     description: "Décimaux, fractions, pourcentages, angles et aires de 6e — pour prendre un bon départ en 5e. Gratuit et illimité.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "cinquieme",
     free: true,
     order: 0,

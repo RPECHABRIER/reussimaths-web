@@ -296,6 +296,7 @@ export default {
     id: "fonction-exponentielle-premiere-spe",
     title: "Fonction exponentielle",
     description: "Propriétés algébriques, signe et variations, dérivation, équations et inéquations, modélisation.",
+    pourquoi: "La fonction exponentielle modélise toute croissance ou décroissance proportionnelle à la quantité déjà présente : population, radioactivité, propagation d'une épidémie.",
     level: "premiere-spe",
     order: 6,
   },

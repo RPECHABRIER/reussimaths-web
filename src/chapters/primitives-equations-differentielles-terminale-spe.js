@@ -322,6 +322,7 @@ export default {
     id: "primitives-equations-differentielles-terminale-spe",
     title: "Primitives, équations différentielles",
     description: "Primitives usuelles, détermination de la constante, équations différentielles y'=ay et y'=ay+b.",
+    pourquoi: "Les équations différentielles décrivent comment une quantité évolue selon sa propre valeur : refroidissement d'un objet, désintégration radioactive, croissance d'une population.",
     level: "terminale-spe",
     free: false,
     order: 11,

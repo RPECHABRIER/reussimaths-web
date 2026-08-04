@@ -81,7 +81,10 @@ function genDivisionEuclidienneNumeric() {
     chapter: "Nombres entiers — Division euclidienne",
     prompt: `Effectue la division euclidienne de ${dividende} par ${diviseur}. Donne le ${askQuotient ? "quotient" : "reste"}.`,
     answer: askQuotient ? quotient : reste,
-    steps: [`${dividende} = ${diviseur} \\times ${quotient} + ${reste}`, `Le quotient vaut ${quotient} et le reste vaut ${reste} (avec ${reste} < ${diviseur}).`],
+    steps: [
+      { type: "calcul", text: `${dividende} = ${diviseur} \\times ${quotient} + ${reste}` },
+      { type: "resultat", text: `Le quotient vaut ${quotient} et le reste vaut ${reste} (avec ${reste} < ${diviseur}).` },
+    ],
   };
 }
 
@@ -103,7 +106,10 @@ function genDivisionEuclidienneProblemeNumeric() {
       ? `${prenom} a ${dividende} ${objet} à répartir équitablement dans ${diviseur} sachets identiques. Combien de ${objet} au maximum ${pronom} peut-${pronom === "il" ? "il" : "elle"} mettre dans chaque sachet ?`
       : `${prenom} a ${dividende} ${objet} à répartir équitablement dans ${diviseur} sachets identiques, en mettant le maximum possible dans chaque sachet. Combien de ${objet} lui restera-t-il ?`,
     answer: askQuotient ? quotient : reste,
-    steps: [`${dividende} = ${diviseur} \\times ${quotient} + ${reste}`, `Dans chaque sachet : ${quotient} ${objet}. Il en reste ${reste}.`],
+    steps: [
+      { type: "calcul", text: `${dividende} = ${diviseur} \\times ${quotient} + ${reste}` },
+      { type: "resultat", text: `Dans chaque sachet : ${quotient} ${objet}. Il en reste ${reste}.` },
+    ],
   };
 }
 
@@ -130,8 +136,8 @@ function genVerifierDivisionEuclidienneQCM() {
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Dans une division euclidienne, le reste doit toujours être strictement inférieur au diviseur : il faut ${rProp} < ${diviseur}.`,
-      valid ? `C'est bien le cas ici : l'écriture est correcte.` : `Ce n'est pas le cas ici (${rProp} ≥ ${diviseur}) : ce n'est pas la division euclidienne.`,
+      { type: "regle", text: `Dans une division euclidienne, le reste doit toujours être strictement inférieur au diviseur : il faut ${rProp} < ${diviseur}.` },
+      { type: "resultat", text: valid ? `C'est bien le cas ici : l'écriture est correcte.` : `Ce n'est pas le cas ici (${rProp} ≥ ${diviseur}) : ce n'est pas la division euclidienne.` },
     ],
   };
 }
@@ -162,8 +168,14 @@ function genCritereDivisibiliteQCM() {
     answer: divisible ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: divisible
-      ? [`Rappel : ${criteresTexte[d]}.`, `${n} = ${d} \\times ${k}, donc ${n} est bien divisible par ${d}.`]
-      : [`Rappel : ${criteresTexte[d]}.`, `${n} = ${d} \\times ${k} + ${r}, le reste n'est pas nul : ${n} n'est pas divisible par ${d}.`],
+      ? [
+          { type: "regle", text: `Rappel : ${criteresTexte[d]}.` },
+          { type: "resultat", text: `${n} = ${d} \\times ${k}, donc ${n} est bien divisible par ${d}.` },
+        ]
+      : [
+          { type: "regle", text: `Rappel : ${criteresTexte[d]}.` },
+          { type: "resultat", text: `${n} = ${d} \\times ${k} + ${r}, le reste n'est pas nul : ${n} n'est pas divisible par ${d}.` },
+        ],
   };
 }
 
@@ -179,7 +191,10 @@ function genPlusPetitNombreAAjouterNumeric() {
     chapter: "Nombres entiers — Divisibilité",
     prompt: `Quel est le plus petit nombre entier positif à ajouter à ${n} pour obtenir un multiple de ${d} ?`,
     answer,
-    steps: [`${n} = ${d} \\times ${k} + ${r}`, `Il manque ${d} - ${r} = ${answer} pour atteindre le multiple suivant de ${d}.`],
+    steps: [
+      { type: "calcul", text: `${n} = ${d} \\times ${k} + ${r}` },
+      { type: "resultat", text: `Il manque ${d} - ${r} = ${answer} pour atteindre le multiple suivant de ${d}.` },
+    ],
   };
 }
 
@@ -197,7 +212,7 @@ function genCompterNombresPremiersListeNumeric() {
     chapter: "Nombres entiers — Nombres premiers",
     prompt: `Voici une liste de nombres : ${liste.join(" ; ")}. Combien de nombres premiers contient cette liste ?`,
     answer: premiers.length,
-    steps: [`On teste chaque nombre : les nombres premiers de la liste sont ${premiers.length ? premiers.join(", ") : "aucun"}.`],
+    steps: [{ type: "resultat", text: `On teste chaque nombre : les nombres premiers de la liste sont ${premiers.length ? premiers.join(", ") : "aucun"}.` }],
   };
 }
 
@@ -225,8 +240,8 @@ function genEstPremierQCM() {
     answer: premier ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: premier
-      ? [`${n} n'a aucun diviseur autre que 1 et lui-même parmi les nombres inférieurs à sa racine carrée : c'est un nombre premier.`]
-      : [`${n} est divisible par ${facteur} (${n} = ${facteur} \\times ${n / facteur}) : ce n'est pas un nombre premier.`],
+      ? [{ type: "regle", text: `${n} n'a aucun diviseur autre que 1 et lui-même parmi les nombres inférieurs à sa racine carrée : c'est un nombre premier.` }]
+      : [{ type: "regle", text: `${n} est divisible par ${facteur} (${n} = ${facteur} \\times ${n / facteur}) : ce n'est pas un nombre premier.` }],
   };
 }
 
@@ -242,7 +257,7 @@ function genPlusPetitDiviseurPremierNumeric() {
     chapter: "Nombres entiers — Nombres premiers",
     prompt: `Quel est le plus petit diviseur premier de ${n} ?`,
     answer: p,
-    steps: [`On teste les nombres premiers dans l'ordre (2, 3, 5, 7, ...) : le premier qui divise ${n} est ${p} (${n} = ${p} \\times ${q}).`],
+    steps: [{ type: "regle", text: `On teste les nombres premiers dans l'ordre (2, 3, 5, 7, ...) : le premier qui divise ${n} est ${p} (${n} = ${p} \\times ${q}).` }],
   };
 }
 
@@ -260,7 +275,7 @@ function genCalculerProduitFacteursPremiersNumeric() {
     chapter: "Nombres entiers — Décomposition en facteurs premiers",
     prompt: `Calcule le nombre N dont la décomposition en produit de facteurs premiers est \\(N = ${expr}\\).`,
     answer: n,
-    steps: [`${expr} = ${n}`],
+    steps: [{ type: "calcul", text: `${expr} = ${n}` }],
   };
 }
 
@@ -277,7 +292,10 @@ function genExposantDecompositionNumeric() {
     chapter: "Nombres entiers — Décomposition en facteurs premiers",
     prompt: `Décompose ${n} en produit de facteurs premiers. Quel est l'exposant du facteur premier ${primes[idx]} dans cette décomposition ?`,
     answer: exps[idx],
-    steps: [`${n} = ${decompStr}`, `L'exposant de ${primes[idx]} est ${exps[idx]}.`],
+    steps: [
+      { type: "donnee", text: `${n} = ${decompStr}` },
+      { type: "resultat", text: `L'exposant de ${primes[idx]} est ${exps[idx]}.` },
+    ],
   };
 }
 
@@ -293,7 +311,10 @@ function genNombreDeDiviseursNumeric() {
     chapter: "Nombres entiers — Décomposition en facteurs premiers",
     prompt: `Un nombre N a pour décomposition en produit de facteurs premiers \\(N = ${decompStr}\\). Combien N a-t-il de diviseurs ?`,
     answer: nbDiviseurs,
-    steps: [`Formule : si \\(N = ${decompStr}\\), le nombre de diviseurs est \\((${exps.map((e) => `${e}+1`).join(") \\times (")})\\).`, `${exps.map((e) => e + 1).join(" \\times ")} = ${nbDiviseurs}`],
+    steps: [
+      { type: "regle", text: `Formule : si \\(N = ${decompStr}\\), le nombre de diviseurs est \\((${exps.map((e) => `${e}+1`).join(") \\times (")})\\).` },
+      { type: "resultat", text: `${exps.map((e) => e + 1).join(" \\times ")} = ${nbDiviseurs}` },
+    ],
   };
 }
 
@@ -310,7 +331,11 @@ function genPGCDNumeric() {
     chapter: "Nombres entiers — PGCD",
     prompt: `Quel est le PGCD (plus grand commun diviseur) de ${a} et ${b} ?`,
     answer: g,
-    steps: [`${a} = ${g} \\times ${a0}`, `${b} = ${g} \\times ${b0}`, `${a0} et ${b0} n'ont aucun diviseur commun (à part 1), donc PGCD(${a} ; ${b}) = ${g}.`],
+    steps: [
+      { type: "calcul", text: `${a} = ${g} \\times ${a0}` },
+      { type: "calcul", text: `${b} = ${g} \\times ${b0}` },
+      { type: "resultat", text: `${a0} et ${b0} n'ont aucun diviseur commun (à part 1), donc PGCD(${a} ; ${b}) = ${g}.` },
+    ],
   };
 }
 
@@ -347,7 +372,11 @@ function genPGCDProblemeNumeric() {
     chapter: "Nombres entiers — PGCD",
     prompt,
     answer,
-    steps: [`PGCD(${A} ; ${B}) = ${g} : c'est le nombre maximum de lots.`, `${A} \\div ${g} = ${a0} ${objA} par lot.`, `${B} \\div ${g} = ${b0} ${objB} par lot.`],
+    steps: [
+      { type: "calcul", text: `PGCD(${A} ; ${B}) = ${g} : c'est le nombre maximum de lots.` },
+      { type: "calcul", text: `${A} \\div ${g} = ${a0} ${objA} par lot.` },
+      { type: "resultat", text: `${B} \\div ${g} = ${b0} ${objB} par lot.` },
+    ],
   };
 }
 
@@ -367,7 +396,10 @@ function genPGCDCarrelageNumeric() {
         ? `On veut carreler un rectangle de ${L} cm sur ${l} cm avec des carreaux carrés identiques, les plus grands possible, sans découpe. Quelle doit être la longueur du côté d'un carreau, en cm ?`
         : `On carrelle un rectangle de ${L} cm sur ${l} cm avec les plus grands carreaux carrés possibles, sans découpe. Combien de carreaux seront nécessaires ?`,
     answer: question === "cote" ? g : nbCarreaux,
-    steps: [`Le côté du carreau le plus grand possible est le PGCD(${L} ; ${l}) = ${g} cm.`, `Nombre de carreaux : (${L} \\div ${g}) \\times (${l} \\div ${g}) = ${a0} \\times ${b0} = ${nbCarreaux}.`],
+    steps: [
+      { type: "calcul", text: `Le côté du carreau le plus grand possible est le PGCD(${L} ; ${l}) = ${g} cm.` },
+      { type: "resultat", text: `Nombre de carreaux : (${L} \\div ${g}) \\times (${l} \\div ${g}) = ${a0} \\times ${b0} = ${nbCarreaux}.` },
+    ],
   };
 }
 
@@ -383,7 +415,10 @@ function genSimplifierFractionDecompositionNumeric() {
     chapter: "Nombres entiers — Simplifier une fraction",
     prompt: `Écris la fraction \\(\\dfrac{${num}}{${den}}\\) sous forme irréductible. Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? a0 : b0,
-    steps: [`PGCD(${num} ; ${den}) = ${g}.`, `\\dfrac{${num}}{${den}} = \\dfrac{${a0}}{${b0}}`],
+    steps: [
+      { type: "calcul", text: `PGCD(${num} ; ${den}) = ${g}.` },
+      { type: "resultat", text: `\\dfrac{${num}}{${den}} = \\dfrac{${a0}}{${b0}}` },
+    ],
   };
 }
 
@@ -401,8 +436,8 @@ function genFractionIrreductibleQCM() {
     answer: irreductible ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: irreductible
-      ? [`PGCD(${num} ; ${den}) = 1 : la fraction est déjà irréductible.`]
-      : [`PGCD(${num} ; ${den}) = ${g} : on peut simplifier par ${g}, la fraction n'est pas irréductible.`],
+      ? [{ type: "resultat", text: `PGCD(${num} ; ${den}) = 1 : la fraction est déjà irréductible.` }]
+      : [{ type: "resultat", text: `PGCD(${num} ; ${den}) = ${g} : on peut simplifier par ${g}, la fraction n'est pas irréductible.` }],
   };
 }
 
@@ -416,10 +451,16 @@ function genProgrammeCalculPariteGeneraleQCM() {
   let answer, steps;
   if (mult % 2 === 0) {
     answer = add % 2 === 0 ? "Toujours pair" : "Toujours impair";
-    steps = [`${mult} est pair, donc ${mult} \\times n est toujours pair, quel que soit l'entier n.`, `pair + ${add} est ${add % 2 === 0 ? "toujours pair" : "toujours impair"} (car ${add} est ${add % 2 === 0 ? "pair" : "impair"}).`];
+    steps = [
+      { type: "regle", text: `${mult} est pair, donc ${mult} \\times n est toujours pair, quel que soit l'entier n.` },
+      { type: "resultat", text: `pair + ${add} est ${add % 2 === 0 ? "toujours pair" : "toujours impair"} (car ${add} est ${add % 2 === 0 ? "pair" : "impair"}).` },
+    ];
   } else {
     answer = "Cela dépend du nombre choisi";
-    steps = [`${mult} est impair, donc ${mult} \\times n a la même parité que n.`, `Le résultat n'a donc pas toujours la même parité : cela dépend de n.`];
+    steps = [
+      { type: "regle", text: `${mult} est impair, donc ${mult} \\times n a la même parité que n.` },
+      { type: "resultat", text: `Le résultat n'a donc pas toujours la même parité : cela dépend de n.` },
+    ];
   }
   return {
     type: "qcm",
@@ -445,8 +486,14 @@ function genConjectureNombrePremierQCM() {
     answer: premier ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: premier
-      ? [`${n}^2 + ${n} + ${k} = ${valeur}`, `${valeur} est un nombre premier : la conjecture n'est pas mise en défaut ici.`]
-      : [`${n}^2 + ${n} + ${k} = ${valeur}`, `${valeur} = ${facteur} \\times ${valeur / facteur} : ce n'est pas un nombre premier, c'est un contre-exemple qui invalide la conjecture.`],
+      ? [
+          { type: "calcul", text: `${n}^2 + ${n} + ${k} = ${valeur}` },
+          { type: "resultat", text: `${valeur} est un nombre premier : la conjecture n'est pas mise en défaut ici.` },
+        ]
+      : [
+          { type: "calcul", text: `${n}^2 + ${n} + ${k} = ${valeur}` },
+          { type: "resultat", text: `${valeur} = ${facteur} \\times ${valeur / facteur} : ce n'est pas un nombre premier, c'est un contre-exemple qui invalide la conjecture.` },
+        ],
   };
 }
 
@@ -505,6 +552,7 @@ export default {
     id: "nombres-entiers-troisieme",
     title: "Nombres entiers",
     description: "Division euclidienne, critères de divisibilité, nombres premiers, décomposition en produit de facteurs premiers, PGCD et simplification de fractions.",
+    pourquoi: "La division euclidienne et les nombres premiers sont à la base de la cryptographie qui protège aujourd'hui nos données bancaires en ligne.",
     level: "troisieme",
     free: false,
     order: 2,

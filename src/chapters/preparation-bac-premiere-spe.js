@@ -407,6 +407,7 @@ export default {
     id: "preparation-bac-premiere-spe",
     title: "Préparation au Bac (EAM)",
     description: "Exercices dans l'esprit de l'Épreuve Anticipée de Mathématiques : automatismes-QCM, probabilités conditionnelles, vrai ou faux.",
+    pourquoi: "Ce chapitre te met dans les conditions réelles de l'épreuve, avec des sujets et formats officiels, pour arriver serein le jour J.",
     level: "premiere-spe",
     order: 12,
   },

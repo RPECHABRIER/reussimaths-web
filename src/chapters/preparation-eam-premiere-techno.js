@@ -556,6 +556,7 @@ export default {
     id: "preparation-eam-premiere-techno",
     title: "Préparation à l'EAM",
     description: "Sujets officiels 2026 (Métropole, Antilles-Guyane, Centres étrangers, Polynésie) et exercices originaux sur les mêmes compétences.",
+    pourquoi: "Ce chapitre te met dans les conditions réelles de l'épreuve, avec des sujets et formats officiels, pour arriver serein le jour J.",
     level: "premiere-techno",
     order: 9,
   },

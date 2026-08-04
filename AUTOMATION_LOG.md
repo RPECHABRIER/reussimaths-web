@@ -9,6 +9,95 @@ doit continuer à être synchronisée dans les deux dossiers
 (`Application TOP/reussimaths-web/` et `.../APPLI GITHUB/Sans titre`) et
 vérifiée via `git status --short`, mais aucun zip n'est à produire.
 
+## 2026-08-03 (suite 18) — Refonte apprentissage (neurosciences)
+
+Demande de Romain : dossier `Application TOP/Neurosciences` (7 PDF sur le
+fonctionnement du cerveau et les méthodes d'apprentissage des maths) à
+exploiter pour reprendre toute l'appli et la rendre plus efficace pour
+l'apprentissage réel, avec des propositions à valider puis une mise en
+œuvre "dans l'ordre que je veux", une seule notification à la fin, et des
+questions à chaque choix de design. Les 7 PDF ont été lus (extraction texte
++ synthèse), l'app auditée, 10 propositions envoyées et **toutes acceptées**
+par Romain, avec 4 réponses à des questions de design (voir ci-dessous).
+
+**Décisions de Romain (via questions à choix) :**
+- Liste des compétences à réviser (répétition espacée) → nouvel onglet
+  `/reviser` dédié (pas intégré ailleurs).
+- Phrase "pourquoi c'est utile" en tête de chapitre → sur tous les chapitres
+  existants immédiatement (pas progressif).
+- Étapes de correction en couleur → codage sémantique par étape (donnée /
+  règle / calcul / résultat), option la plus lente mais la plus fidèle.
+- Évolution Classique/Jeu → renommer et ajouter Découverte (Découverte /
+  Entraînement / Défi), Découverte en première position.
+
+**Nouveau schéma SQL** (`supabase/schema.sql`, à exécuter par Romain dans
+Supabase) : tables `skill_mastery` (suivi de maîtrise PAR COMPÉTENCE —
+`skill_id` = `exercise.chapter`, le libellé déjà présent sur chaque exercice,
+évite de retoucher les ~150 fichiers de chapitres — avec répétition espacée
+à intervalles croissants 0/+2j/+1sem/+2sem/+4sem) et `daily_streak` (streak
+quotidien de pratique, distinct du streak de bonnes réponses en session).
+
+**Nouveaux hooks** : `useSkillTracking` (enregistre chaque tentative, calcule
+la prochaine révision, expose `getDueSkills()`) et `useDailyStreak`
+(incrémente une fois par jour, remet à zéro si un jour est sauté).
+
+**Branchement dans les 3 lecteurs d'exercices** (`ChapterRunner`,
+`AutomatismesRunner`, `MiniDuel`) :
+- Suivi par compétence + streak quotidien branchés partout.
+- `AutomatismesRunner`/`MiniDuel` : les steps (méthode) sont maintenant
+  affichables sur une mauvaise réponse (bouton "Voir la méthode" +
+  "Suivant" manuel — avant, l'enchaînement était automatique après 500 ms
+  quelle que soit la réponse, empêchant de voir la correction).
+- `ChapterRunner` : difficulté adaptative en continu (fenêtre glissante des
+  3 à 5 dernières réponses, désactivée si un palier fixe est imposé par un
+  Parcours) ; rejouer une variante de la compétence ratée 2 à 3 questions
+  plus tard (`generateMatchingSkill`, tire jusqu'à retomber sur le même
+  libellé de compétence, avec repli si le générateur ne la ressort pas assez
+  vite) ; nouveau triptyque Découverte (méthode visible en permanence, pas
+  de score sauvegardé) / Entraînement (comportement historique) / Défi
+  (chronométré, sans bouton "Voir la méthode") ; prop `focusSkill` pour
+  rester concentré sur UNE compétence (utilisée par `/reviser`).
+
+**Nouvelle page `/reviser`** (route ajoutée dans `App.jsx`, lien ajouté sur
+les 4 écrans d'accueil/compte : `CycleSelect`, `CycleLevels`, `LevelSelect`,
+`Account`) : liste, tous niveaux confondus, les compétences dues (via
+`getDueSkills()`), avec lien direct `/chapitre/:id?competence=<skill>` qui
+ouvre `ChapterRunner` concentré sur cette compétence précise.
+
+**Nouveau composant `StepsList`** (`src/components/StepsList.jsx`) : rendu
+partagé des steps, rétro-compatible (chaîne simple = affichage neutre comme
+avant) ou objet `{ type, text }` avec `type` ∈ donnée/règle/calcul/résultat,
+chacun avec une couleur dédiée (dual coding). Utilisé par les 3 lecteurs et
+le nouveau panneau "Méthode" du mode Découverte.
+
+**Contenu — `pourquoi c'est utile`** : champ `meta.pourquoi` ajouté sur les
+131 chapitres existants (script Node ciblant la dernière occurrence de
+`description:` dans chaque fichier, avec un mapping id → phrase rédigé à la
+main ; 1 fichier avec description multi-ligne corrigé manuellement). Affiché
+dans l'en-tête de `ChapterRunner`.
+
+**Contenu — biais "nombre entier" sur les décimaux** : `genComparerDecimaux`
+et `genVraiFauxComparaison` (`nombres-decimaux.js`, 6e) et `genComparerDecimaux`
+(`reviser-les-bases-cinquieme.js`, 5e) mélangent désormais délibérément, une
+fois sur deux, un piège classique (ex. 0,7 > 0,65 : le décimal avec le plus
+de chiffres après la virgule n'est pas le plus grand) avec des paires
+"normales" — pour casser l'heuristique fausse plutôt que la laisser
+s'installer (interleaving, cf. dossier Neurosciences).
+
+**Contenu — codage sémantique des steps (retrofit)** : `second-degre.js`
+(chapitre "modèle" documenté dans `registry.js`) entièrement retaggé —
+10 générateurs + 8 entrées de la banque fixe — comme démonstration complète
+du pattern. `nombres-decimaux.js` : la section "Comparer, ranger, encadrer"
+retaggée. **Le reste des ~130 chapitres n'est pas encore retaggé** : c'est
+un travail de contenu long (chaque step doit être relu et classé), qui
+continue progressivement — zéro régression pour les chapitres non retouchés
+(un step non tagué s'affiche exactement comme avant, voir `StepsList.jsx`).
+
+Build vérifié (`npm run build`) après chaque étape, 0 erreur. Smoke tests
+Node sur les fichiers de chapitres modifiés (générations en masse, formes de
+steps valides). Synchronisation vérifiée par diff (pas juste `git status`)
+sur tous les fichiers touchés, dans les deux dossiers.
+
 ## 2026-08-03 (suite 17) — Niveaux Première technologique et Terminale STMG (complets)
 
 Demande de Romain : construire Première technologique à partir du dossier
@@ -935,3 +1024,53 @@ zip produced.
 Same known pre-existing issue as before (nested reussimaths-web/reussimaths-web
 duplicate, sandbox rm permission denied) — unchanged, doesn't affect the
 build, still needs manual cleanup before the eventual final zip.
+
+## 2026-08-04 — Codage sémantique des steps (collège complet) + refonte apprentissage
+
+**Contexte :** suite des 10 propositions neurosciences validées par Romain.
+Tâche #233 (codage sémantique des steps `{ type, text }` avec
+type ∈ donnée/règle/calcul/résultat, pour un rendu dual-coding distinct dans
+`StepsList.jsx`) terminée pour l'intégralité du collège (6e, 5e, 4e, 3e).
+
+**Net-new cette session (suite de la session précédente) :** conversion des
+steps de `statistiques-troisieme.js`, `thales-triangles-semblables-troisieme.js`,
+`transformations-plan-troisieme.js`, `trigonometrie-triangle-rectangle-troisieme.js`
+et `reviser-les-bases-troisieme.js` (les 5 derniers fichiers 3e restants) —
+chaque tableau `steps` retaggé selon l'heuristique établie : `donnee` pour la
+restitution d'une information donnée avant toute manipulation, `regle` pour
+l'énoncé d'une propriété/formule générale (y compris les justifications QCM
+mono-étape référençant les valeurs de l'instance), `calcul` pour une étape de
+manipulation numérique/algébrique par défaut, `resultat` pour la conclusion
+finale d'une chaîne à plusieurs étapes ou une réponse mono-étape énoncée sans
+justification. Vérifié par balayage anti-oubli (`grep steps: [\``) et test de
+génération (8000 itérations par fichier sur tous les paliers de difficulté
+présents, 0 erreur), puis synchronisé.
+
+**Bilan collège (task #233) :** 6e = 100 %, 5e = 100 %, 4e = 100 %, 3e = 17/17
+fichiers = 100 %. Le collège est donc entièrement retaggé.
+
+**Vérification finale :** `npm install` + `npm run build` (vite) passent sans
+erreur sur l'ensemble du dépôt (avertissement de taille de chunk uniquement,
+non bloquant).
+
+**Poussé sur GitHub cette session :** l'ensemble des changements accumulés
+depuis le dernier commit (« mise à jour filière technologique », Première/
+Terminale technologique), incluant tout le chantier neurosciences en cours :
+`StepsList.jsx`, `useSkillTracking.js`, `useDailyStreak.js`, `Reviser.jsx`,
+le triptyque Découverte/Entraînement/Défi, les phrases « pourquoi c'est
+utile » sur tous les chapitres, l'audit du biais « nombre entier » sur les
+décimaux, et le codage sémantique des steps pour tout le collège.
+
+**⚠️ Action manuelle requise (SQL) :** `supabase/schema.sql` contient deux
+nouvelles tables (`skill_mastery`, `daily_streak`) nécessaires au
+fonctionnement de `useSkillTracking.js` / `useDailyStreak.js` / la page
+Réviser. Cet environnement n'a pas d'accès direct à la base Supabase de
+production — Romain doit exécuter le contenu ajouté à la fin de
+`supabase/schema.sql` (section « Refonte apprentissage (neurosciences) »)
+dans l'éditeur SQL Supabase pour que le suivi par compétence et le streak
+quotidien fonctionnent en production.
+
+**Reste à faire (lycée, demain, mêmes principes) :** 2nde (15 fichiers),
+Première non spé (10), Première spé (12), Première techno (10), Terminale
+spé (17), Terminale techno (8) — codage sémantique des steps selon la même
+heuristique donnée/règle/calcul/résultat.

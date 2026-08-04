@@ -361,6 +361,7 @@ export default {
     id: "vecteurs-droites-plans-espace-terminale-spe",
     title: "Vecteurs, droites et plans de l'espace",
     description: "Coordonnées et norme d'un vecteur de l'espace, combinaisons linéaires, milieu d'un segment, alignement, représentation paramétrique d'une droite, coplanarité, positions relatives de droites et de plans.",
+    pourquoi: "Les vecteurs de l'espace sont le langage utilisé pour décrire des positions et des déplacements en 3D : architecture, jeux vidéo, robotique.",
     level: "terminale-spe",
     free: false,
     order: 3,

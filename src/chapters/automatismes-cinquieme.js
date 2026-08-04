@@ -49,8 +49,8 @@ function genDivisibiliteQCM() {
     options: ["Oui", "Non"],
     steps:
       d === 2 || d === 5 || d === 10
-        ? [`On regarde le chiffre des unités de ${n}.`]
-        : [`On additionne les chiffres de ${n} : ${digitSum}. On regarde si ${digitSum} est multiple de ${d}.`],
+        ? [{ type: "regle", text: `On regarde le chiffre des unités de ${n}.` }]
+        : [{ type: "calcul", text: `On additionne les chiffres de ${n} : ${digitSum}. On regarde si ${digitSum} est multiple de ${d}.` }],
   };
 }
 
@@ -67,7 +67,7 @@ function genDivisionEuclidienneCalcul() {
       chapter: "Automatismes — Division euclidienne",
       prompt: `Dans une division euclidienne par ${diviseur}, le quotient est ${quotient} et le reste est ${reste}. Quel est le dividende ?`,
       answer: dividende,
-      steps: [`${quotient} \\times ${diviseur} + ${reste} = ${dividende}`],
+      steps: [{ type: "calcul", text: `${quotient} \\times ${diviseur} + ${reste} = ${dividende}` }],
     };
   }
   return {
@@ -75,7 +75,7 @@ function genDivisionEuclidienneCalcul() {
     chapter: "Automatismes — Division euclidienne",
     prompt: `Quel est le ${mode === "quotient" ? "quotient entier" : "reste"} de la division euclidienne de ${dividende} par ${diviseur} ?`,
     answer: mode === "quotient" ? quotient : reste,
-    steps: [`${dividende} = ${diviseur} \\times ${quotient} + ${reste}`],
+    steps: [{ type: "calcul", text: `${dividende} = ${diviseur} \\times ${quotient} + ${reste}` }],
   };
 }
 
@@ -90,7 +90,7 @@ function genTrouverFacteurManquant() {
     chapter: "Automatismes — Facteur manquant",
     prompt: askA ? `${produit} = ? \\times ${b}` : `${produit} = ${a} \\times ?`,
     answer: askA ? a : b,
-    steps: [`${produit} \\div ${askA ? b : a} = ${askA ? a : b}`],
+    steps: [{ type: "calcul", text: `${produit} \\div ${askA ? b : a} = ${askA ? a : b}` }],
   };
 }
 
@@ -104,7 +104,7 @@ function genFactorisationDeuxFacteurs() {
     chapter: "Automatismes — Factoriser",
     prompt: `${n} peut s'écrire comme un produit de deux nombres entiers différents de 1, dont l'un est ${a}. Quel est l'autre facteur ?`,
     answer: b,
-    steps: [`${n} \\div ${a} = ${b}`],
+    steps: [{ type: "calcul", text: `${n} \\div ${a} = ${b}` }],
   };
 }
 
@@ -120,7 +120,7 @@ function genMultDiviserPuissanceDix() {
     prompt: `Calcule : \\(${frTex(n)} ${isMult ? "\\times" : "\\div"} ${p}\\)`,
     answer,
     tolerance: 0.0005,
-    steps: [`${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.`],
+    steps: [{ type: "regle", text: `${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.` }],
   };
 }
 
@@ -135,7 +135,7 @@ function genCompleterMultiplicateurPuissanceDix() {
     prompt: `Complète : \\(${frTex(a)} \\times ? = ${frTex(b)}\\)`,
     answer: `${p}`,
     options: shuffle(["10", "100", "1000"]),
-    steps: [`${fr(b)} \\div ${fr(a)} = ${p}`],
+    steps: [{ type: "calcul", text: `${fr(b)} \\div ${fr(a)} = ${p}` }],
   };
 }
 
@@ -153,7 +153,7 @@ function genCalculerAstucieusementRegroupement() {
       prompt: `Calcule astucieusement en regroupant : \\(${frTex(a)} \\times ${b} \\times ${frTex(c)}\\)`,
       answer: total,
       tolerance: 0.005,
-      steps: [`On peut regrouper les nombres pour simplifier le calcul avant de multiplier.`],
+      steps: [{ type: "regle", text: `On peut regrouper les nombres pour simplifier le calcul avant de multiplier.` }],
     };
   }
   const nums = Array.from({ length: 4 }, () => randInt(5, 95));
@@ -163,7 +163,7 @@ function genCalculerAstucieusementRegroupement() {
     chapter: "Automatismes — Calcul astucieux",
     prompt: `Calcule astucieusement : \\(${nums.join(" + ")}\\)`,
     answer: total,
-    steps: [`On peut regrouper les nombres pour former des dizaines ou centaines rondes avant d'additionner.`],
+    steps: [{ type: "regle", text: `On peut regrouper les nombres pour former des dizaines ou centaines rondes avant d'additionner.` }],
   };
 }
 
@@ -178,7 +178,7 @@ function genAdditionnerDecimaux() {
     prompt: `Calcule : \\(${frTex(a)} + ${frTex(b)}\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(a)} + ${fr(b)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} + ${fr(b)} = ${fr(answer)}` }],
   };
 }
 
@@ -193,7 +193,7 @@ function genSoustraireDecimaux() {
     prompt: `Calcule : \\(${frTex(a)} - ${frTex(b)}\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(a)} - ${fr(b)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} - ${fr(b)} = ${fr(answer)}` }],
   };
 }
 
@@ -208,7 +208,7 @@ function genCompleterEgaliteATrou() {
     chapter: "Automatismes — Égalité à trou",
     prompt: isAdd ? `Complète : \\(${frTex(a)} + ? = ${frTex(total)}\\)` : `Complète : \\(${frTex(a)} - ? = ${frTex(total)}\\)`,
     answer: b,
-    steps: isAdd ? [`${fr(total)} - ${fr(a)} = ${fr(b)}`] : [`${fr(a)} - ${fr(total)} = ${fr(b)}`],
+    steps: isAdd ? [{ type: "calcul", text: `${fr(total)} - ${fr(a)} = ${fr(b)}` }] : [{ type: "calcul", text: `${fr(a)} - ${fr(total)} = ${fr(b)}` }],
   };
 }
 
@@ -224,7 +224,7 @@ function genRepartirQuantiteEnUnites() {
     chapter: "Automatismes — Répartir une quantité",
     prompt: `On répartit ${fr(total)} L de ${pick(liquide)} dans des ${pick(contenants)} contenant chacun ${fr(unite)} L. Combien de ${pick(contenants)} faut-il prévoir ?`,
     answer: nbUnites,
-    steps: [`${fr(total)} \\div ${fr(unite)} = ${nbUnites}`],
+    steps: [{ type: "calcul", text: `${fr(total)} \\div ${fr(unite)} = ${nbUnites}` }],
   };
 }
 
@@ -241,7 +241,7 @@ function genDiviseurDeNombreQCM() {
     prompt: `${d} est-il un diviseur de ${n} ?`,
     answer: divisible ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${n} \\div ${d}${divisible ? " est un nombre entier." : " n'est pas un nombre entier."}`],
+    steps: [{ type: "calcul", text: `${n} \\div ${d}${divisible ? " est un nombre entier." : " n'est pas un nombre entier."}` }],
   };
 }
 
@@ -264,7 +264,7 @@ function genProblemeDePlusDeMoins() {
     prompt: `La ${c.obj} de ${p1} mesure ${fr(base)} ${c.unite}. Celle de ${p2} a ${fr(ecart)} ${c.unite} ${plus ? "de plus" : "de moins"}. Quelle est la mesure de la ${c.obj} de ${p2}, en ${c.unite} ?`,
     answer: autre,
     tolerance: 0.01,
-    steps: [`${fr(base)} ${plus ? "+" : "-"} ${fr(ecart)} = ${fr(autre)}`],
+    steps: [{ type: "calcul", text: `${fr(base)} ${plus ? "+" : "-"} ${fr(ecart)} = ${fr(autre)}` }],
   };
 }
 
@@ -279,7 +279,7 @@ function genProduitDecimalSimple() {
     prompt: `Calcule : \\(${frTex(a)} \\times ${b}\\)`,
     answer,
     tolerance: 0.002,
-    steps: [`${fr(a)} \\times ${b} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(a)} \\times ${b} = ${fr(answer)}` }],
   };
 }
 
@@ -297,7 +297,7 @@ function genEcritureDecimaleFractionSimple() {
     prompt: `Quelle est l'écriture décimale de \\(\\dfrac{${num}}{${den}}\\) ?`,
     answer: dec,
     tolerance: 0.001,
-    steps: [`\\dfrac{${num}}{${den}} = ${num} \\div ${den} = ${fr(dec)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} = ${num} \\div ${den} = ${fr(dec)}` }],
   };
 }
 
@@ -313,7 +313,10 @@ function genFractionDunNombreEntierMental() {
     chapter: "Automatismes — Fraction d'un nombre",
     prompt: `Calcule mentalement : \\(\\dfrac{${num}}{${den}}\\) de ${nombre}`,
     answer,
-    steps: [`${nombre} \\div ${den} = ${k}`, `${k} \\times ${num} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${nombre} \\div ${den} = ${k}` },
+      { type: "calcul", text: `${k} \\times ${num} = ${answer}` },
+    ],
   };
 }
 
@@ -327,7 +330,7 @@ function genCompleterProduitTrouEntier() {
     chapter: "Automatismes — Produit à trou",
     prompt: `Complète : \\(${a} \\times ? = ${produit}\\)`,
     answer: b,
-    steps: [`${produit} \\div ${a} = ${b}`],
+    steps: [{ type: "calcul", text: `${produit} \\div ${a} = ${b}` }],
   };
 }
 
@@ -343,7 +346,7 @@ function genProduitAvecUnite() {
       chapter: "Automatismes — Aires et volumes",
       prompt: `Calcule : ${a} cm × ${b} cm × ${c} cm = ? cm³`,
       answer: a * b * c,
-      steps: [`${a} \\times ${b} \\times ${c} = ${a * b * c}`],
+      steps: [{ type: "calcul", text: `${a} \\times ${b} \\times ${c} = ${a * b * c}` }],
     };
   }
   const a = randInt(2, 12);
@@ -353,7 +356,7 @@ function genProduitAvecUnite() {
     chapter: "Automatismes — Aires et volumes",
     prompt: `Calcule : ${a} cm × ${b} cm = ? cm²`,
     answer: a * b,
-    steps: [`${a} \\times ${b} = ${a * b}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${b} = ${a * b}` }],
   };
 }
 
@@ -367,7 +370,7 @@ function genCarreOuCubeMental() {
     chapter: "Automatismes — Carrés et cubes",
     prompt: `Quel est le ${mode === "carre" ? "carré" : "cube"} de ${n} ?`,
     answer,
-    steps: [mode === "carre" ? `${n} \\times ${n} = ${answer}` : `${n} \\times ${n} \\times ${n} = ${answer}`],
+    steps: [{ type: "calcul", text: mode === "carre" ? `${n} \\times ${n} = ${answer}` : `${n} \\times ${n} \\times ${n} = ${answer}` }],
   };
 }
 
@@ -383,8 +386,14 @@ function genAvecSansParenthesesPuissanceMental() {
     prompt: avecParentheses ? `Calcule : \\((${a} \\times ${b})^2\\)` : `Calcule : \\(${a} \\times ${b}^2\\)`,
     answer,
     steps: avecParentheses
-      ? [`${a} \\times ${b} = ${a * b}`, `${a * b}^2 = ${answer}`]
-      : [`${b}^2 = ${b * b}`, `${a} \\times ${b * b} = ${answer}`],
+      ? [
+          { type: "calcul", text: `${a} \\times ${b} = ${a * b}` },
+          { type: "calcul", text: `${a * b}^2 = ${answer}` },
+        ]
+      : [
+          { type: "calcul", text: `${b}^2 = ${b * b}` },
+          { type: "calcul", text: `${a} \\times ${b * b} = ${answer}` },
+        ],
   };
 }
 
@@ -411,7 +420,7 @@ function genAbscisseDemiDroiteGradueeFraction() {
     figure: buildFractionOnLineFigure(value, 3),
     answer: value,
     tolerance: 0.01,
-    steps: [`Le point M est placé sur la graduation ${fr(value)}.`],
+    steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${fr(value)}.` }],
   };
 }
 
@@ -461,7 +470,7 @@ function genCompleterEgaliteAdditionSoustractionTrou() {
     prompt,
     answer,
     tolerance: 0.01,
-    steps: [`On isole le terme manquant en utilisant l'opération inverse.`],
+    steps: [{ type: "regle", text: `On isole le terme manquant en utilisant l'opération inverse.` }],
   };
 }
 
@@ -476,7 +485,7 @@ function genEcartEntreDeuxNombres() {
     prompt: `Quel est l'écart entre ${fr(a)} et ${fr(b)} ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(b)} - ${fr(a)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${fr(b)} - ${fr(a)} = ${fr(answer)}` }],
   };
 }
 
@@ -490,7 +499,7 @@ function genSegmentComplementLongueur() {
     prompt: `A, C et B sont trois points alignés, avec C entre A et B. Sachant que AB = ${acLen + cbLen} cm et AC = ${acLen} cm, quelle est la longueur CB, en cm ?`,
     figure: buildSegmentAlignedFigure(acLen, cbLen),
     answer: cbLen,
-    steps: [`${acLen + cbLen} - ${acLen} = ${cbLen}`],
+    steps: [{ type: "calcul", text: `${acLen + cbLen} - ${acLen} = ${cbLen}` }],
   };
 }
 
@@ -506,7 +515,7 @@ function genMassePleinVideDifference() {
     prompt: `Un ${contenant} plein pèse ${fr(plein)} kg. Vide, il pèse ${fr(vide)} kg. Quelle est la masse de son contenu, en kg ?`,
     answer: contenu,
     tolerance: 0.001,
-    steps: [`${fr(plein)} - ${fr(vide)} = ${fr(contenu)}`],
+    steps: [{ type: "calcul", text: `${fr(plein)} - ${fr(vide)} = ${fr(contenu)}` }],
   };
 }
 
@@ -521,7 +530,7 @@ function genDistanceParcourueCompteur() {
     prompt: `Au départ d'un trajet, le compteur d'une voiture indiquait ${fr(depart)} km. Au retour, il indiquait ${fr(retour)} km. Quelle distance a été parcourue, en km ?`,
     answer: distance,
     tolerance: 0.01,
-    steps: [`${fr(retour)} - ${fr(depart)} = ${fr(distance)}`],
+    steps: [{ type: "calcul", text: `${fr(retour)} - ${fr(depart)} = ${fr(distance)}` }],
   };
 }
 
@@ -536,7 +545,7 @@ function genPrixTotalAchat() {
     prompt: `Calcule le prix total d'un achat composé d'articles à ${prix.map(fr).join(" € ; ")} €.`,
     answer: total,
     tolerance: 0.01,
-    steps: [`${prix.map(fr).join(" + ")} = ${fr(total)}`],
+    steps: [{ type: "calcul", text: `${prix.map(fr).join(" + ")} = ${fr(total)}` }],
   };
 }
 
@@ -553,7 +562,7 @@ function genEcartTemperatureReleves() {
     prompt: `${moment1[0].toUpperCase()}${moment1.slice(1)}, il fait ${fr(t1)}°C. ${moment2[0].toUpperCase()}${moment2.slice(1)}, il fait ${fr(t2)}°C. Quel est l'écart de température, en °C ?`,
     answer,
     tolerance: 0.01,
-    steps: [`On calcule la différence entre les deux températures : ${fr(Math.max(t1, t2))} - ${fr(Math.min(t1, t2))} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `On calcule la différence entre les deux températures : ${fr(Math.max(t1, t2))} - ${fr(Math.min(t1, t2))} = ${fr(answer)}` }],
   };
 }
 
@@ -569,7 +578,7 @@ function genTrouverTermeManquantSommeTrois() {
     prompt: `Complète : \\(${frTex(a)} + ${frTex(b)} + ? = ${frTex(total)}\\)`,
     answer: c,
     tolerance: 0.01,
-    steps: [`${fr(total)} - (${fr(a)} + ${fr(b)}) = ${fr(c)}`],
+    steps: [{ type: "calcul", text: `${fr(total)} - (${fr(a)} + ${fr(b)}) = ${fr(c)}` }],
   };
 }
 
@@ -584,7 +593,7 @@ function genDureeEntreDeuxInstants() {
     chapter: "Automatismes — Durées",
     prompt: `Un film commence à ${fmt(depart)} et se termine à ${fmt(arrivee)}. Combien de temps dure-t-il, en minutes ?`,
     answer: duree,
-    steps: [`Durée = heure de fin - heure de début = ${duree} minutes.`],
+    steps: [{ type: "calcul", text: `Durée = heure de fin - heure de début = ${duree} minutes.` }],
   };
 }
 
@@ -601,7 +610,10 @@ function genCompleterGraduationDemiDroiteAutomatisme() {
     chapter: "Automatismes — Graduations",
     prompt: `Une demi-droite est graduée régulièrement de ${min} à ${max} en ${nbIntervalles} intervalles égaux. Quelle est la valeur de la ${targetIndex}${targetIndex === 1 ? "re" : "e"} graduation après ${min} ?`,
     answer,
-    steps: [`Chaque intervalle vaut ${pas}.`, `${min} + ${targetIndex} \\times ${pas} = ${answer}`],
+    steps: [
+      { type: "donnee", text: `Chaque intervalle vaut ${pas}.` },
+      { type: "calcul", text: `${min} + ${targetIndex} \\times ${pas} = ${answer}` },
+    ],
   };
 }
 
@@ -615,7 +627,7 @@ function genLireAbscissePointDemiDroiteFigure() {
     prompt: `Quelle est l'abscisse du point M sur la demi-droite graduée ci-dessous ?`,
     figure: buildFractionOnLineFigure(value, max),
     answer: value,
-    steps: [`Le point M est placé sur la graduation ${value}.`],
+    steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${value}.` }],
   };
 }
 
@@ -629,7 +641,7 @@ function genAbscissePointDecimalUniteFigure() {
     figure: buildFractionOnLineFigure(value, 1),
     answer: value,
     tolerance: 0.01,
-    steps: [`Le point M est placé sur la graduation ${fr(value)}.`],
+    steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${fr(value)}.` }],
   };
 }
 
@@ -664,7 +676,7 @@ function genSuiteArithmetiqueTermeSuivant() {
     chapter: "Automatismes — Suites",
     prompt: `Voici une suite de nombres : ${termes.join(" ; ")} ; ... Quel est le nombre suivant ?`,
     answer,
-    steps: [`On passe d'un terme au suivant en ${raison > 0 ? `ajoutant ${raison}` : `soustrayant ${-raison}`}.`],
+    steps: [{ type: "regle", text: `On passe d'un terme au suivant en ${raison > 0 ? `ajoutant ${raison}` : `soustrayant ${-raison}`}.` }],
   };
 }
 
@@ -679,7 +691,7 @@ function genSuiteArithmetiqueNiemeTerme() {
     chapter: "Automatismes — Suites",
     prompt: `Une suite commence par ${premier} et on ajoute ${raison} à chaque étape. Quel est le ${n}${n === 1 ? "er" : "e"} terme de cette suite ?`,
     answer,
-    steps: [`${premier} + (${n} - 1) \\times ${raison} = ${answer}`],
+    steps: [{ type: "calcul", text: `${premier} + (${n} - 1) \\times ${raison} = ${answer}` }],
   };
 }
 
@@ -697,7 +709,7 @@ function genReglePassageDunTermeAuSuivantQCM() {
     prompt: `Voici une suite de nombres : ${termes.join(" ; ")} ; ... Quelle règle permet de passer d'un terme au suivant ?`,
     answer: correct,
     options: shuffle([correct, wrong1, wrong2]),
-    steps: [`On observe que chaque terme s'obtient à partir du précédent en ${correct.toLowerCase()}.`],
+    steps: [{ type: "regle", text: `On observe que chaque terme s'obtient à partir du précédent en ${correct.toLowerCase()}.` }],
   };
 }
 
@@ -710,7 +722,7 @@ function genPyramideBriquesNombreCarre() {
     chapter: "Automatismes — Suites",
     prompt: `Dans une pyramide de briques, il y a 1 brique au 1er niveau, 4 briques au 2e niveau, 9 briques au 3e niveau, et ainsi de suite (le niveau k contient k² briques). Combien de briques y a-t-il au ${n}e niveau ?`,
     answer,
-    steps: [`${n}^2 = ${answer}`],
+    steps: [{ type: "calcul", text: `${n}^2 = ${answer}` }],
   };
 }
 
@@ -728,7 +740,7 @@ function genPyramideBriquesTotalCumule() {
     chapter: "Automatismes — Suites",
     prompt: `Dans une pyramide de briques, le niveau k contient k² briques. Combien de briques y a-t-il au total pour une pyramide de ${n} niveaux ?`,
     answer: total,
-    steps: [`${detail.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${detail.join(" + ")} = ${total}` }],
   };
 }
 
@@ -743,7 +755,7 @@ function genMotifPointsCroissantLineaire() {
     chapter: "Automatismes — Suites",
     prompt: `Un motif de points évolue ainsi : à l'étape 1, il y a ${premier} point(s) ; à chaque étape suivante, on ajoute ${raison} points. Combien de points y a-t-il à l'étape ${n} ?`,
     answer,
-    steps: [`${premier} + (${n} - 1) \\times ${raison} = ${answer}`],
+    steps: [{ type: "calcul", text: `${premier} + (${n} - 1) \\times ${raison} = ${answer}` }],
   };
 }
 
@@ -757,7 +769,7 @@ function genMotifTrianglesAlterneCompte() {
     chapter: "Automatismes — Suites",
     prompt: `Un motif de triangles qui pointent alternativement évolue ainsi : la figure 1 contient 1 triangle, puis on ajoute ${raison} triangles à chaque figure suivante. Combien de triangles contient la figure ${n} ?`,
     answer,
-    steps: [`1 + (${n} - 1) \\times ${raison} = ${answer}`],
+    steps: [{ type: "calcul", text: `1 + (${n} - 1) \\times ${raison} = ${answer}` }],
   };
 }
 
@@ -810,7 +822,7 @@ function genAutoAnglesOpposesSommet() {
     chapter: "Automatismes — Angles opposés par le sommet",
     prompt: `Deux angles opposés par le sommet : l'un mesure ${angle}°. Quelle est la mesure de l'autre, en degrés ?`,
     answer: angle,
-    steps: [`Deux angles opposés par le sommet ont la même mesure.`],
+    steps: [{ type: "regle", text: `Deux angles opposés par le sommet ont la même mesure.` }],
   };
 }
 
@@ -823,7 +835,7 @@ function genAutoAnglesSupplementaires() {
     chapter: "Automatismes — Angles supplémentaires",
     prompt: `Deux angles supplémentaires : l'un mesure ${angle}°. Quelle est la mesure de l'autre, en degrés ?`,
     answer,
-    steps: [`180 - ${angle} = ${answer}`],
+    steps: [{ type: "calcul", text: `180 - ${angle} = ${answer}` }],
   };
 }
 
@@ -835,7 +847,7 @@ function genAutoBissectriceMoitie() {
     chapter: "Automatismes — Bissectrice",
     prompt: `Une bissectrice partage un angle de ${total}° en deux angles égaux. Quelle est la mesure de chacun de ces deux angles, en degrés ?`,
     answer: total / 2,
-    steps: [`${total} \\div 2 = ${total / 2}`],
+    steps: [{ type: "calcul", text: `${total} \\div 2 = ${total / 2}` }],
   };
 }
 
@@ -855,7 +867,7 @@ function genAutoCentreSymetrieNombre() {
     prompt: `Combien de centre(s) de symétrie possède ${nom} ?`,
     answer: `${n}`,
     options: ["0", "1", "2"],
-    steps: [n === 1 ? `${nom} possède un centre de symétrie.` : `${nom} ne possède pas de centre de symétrie.`],
+    steps: [{ type: "regle", text: n === 1 ? `${nom} possède un centre de symétrie.` : `${nom} ne possède pas de centre de symétrie.` }],
   };
 }
 
@@ -867,7 +879,7 @@ function genAutoParallelogrammeCoteOppose() {
     chapter: "Automatismes — Parallélogramme",
     prompt: `ABCD est un parallélogramme avec AB = ${fr(cote)} cm. Quelle est la longueur CD, en cm ?`,
     answer: cote,
-    steps: [`Dans un parallélogramme, les côtés opposés sont égaux : CD = AB = ${fr(cote)} cm.`],
+    steps: [{ type: "regle", text: `Dans un parallélogramme, les côtés opposés sont égaux : CD = AB = ${fr(cote)} cm.` }],
   };
 }
 
@@ -879,7 +891,7 @@ function genAutoParallelogrammeAngleOppose() {
     chapter: "Automatismes — Parallélogramme",
     prompt: `ABCD est un parallélogramme. L'angle \\(\\widehat{ABC}\\) mesure ${angle}°. Quelle est la mesure de l'angle \\(\\widehat{ADC}\\), en degrés ?`,
     answer: angle,
-    steps: [`Dans un parallélogramme, les angles opposés sont égaux : ${angle}°.`],
+    steps: [{ type: "regle", text: `Dans un parallélogramme, les angles opposés sont égaux : ${angle}°.` }],
   };
 }
 
@@ -906,7 +918,7 @@ function genAutoAngleManquantTriangle() {
     chapter: "Automatismes — Angles dans un triangle",
     prompt: `Un triangle a des angles de ${a}° et ${b}°. Quelle est la mesure du troisième angle, en degrés ?`,
     answer: c,
-    steps: [`180 - ${a} - ${b} = ${c}`],
+    steps: [{ type: "calcul", text: `180 - ${a} - ${b} = ${c}` }],
   };
 }
 
@@ -920,7 +932,7 @@ function genAutoTriangleIsoceleAngleBase() {
     chapter: "Automatismes — Triangle isocèle",
     prompt: `Un triangle isocèle a un angle au sommet de ${apex}°. Quelle est la mesure de chacun des deux angles à la base, en degrés ?`,
     answer: base,
-    steps: [`(180 - ${apex}) \\div 2 = ${base}`],
+    steps: [{ type: "calcul", text: `(180 - ${apex}) \\div 2 = ${base}` }],
   };
 }
 
@@ -934,7 +946,7 @@ function genAutoAireTriangleBaseHauteur() {
     chapter: "Automatismes — Aire d'un triangle",
     prompt: `Un triangle a une base de ${base} cm et une hauteur de ${hauteur} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [`(${base} \\times ${hauteur}) \\div 2 = ${answer}`],
+    steps: [{ type: "calcul", text: `(${base} \\times ${hauteur}) \\div 2 = ${answer}` }],
   };
 }
 
@@ -946,7 +958,7 @@ function genAutoMedianeMilieu() {
     chapter: "Automatismes — Médianes",
     prompt: `Dans un triangle ABC, M est le milieu de [BC]. Sachant que BC = ${bc} cm, quelle est la longueur BM, en cm ?`,
     answer: bc / 2,
-    steps: [`${bc} \\div 2 = ${bc / 2}`],
+    steps: [{ type: "calcul", text: `${bc} \\div 2 = ${bc / 2}` }],
   };
 }
 
@@ -959,7 +971,7 @@ function genAutoCentreGraviteRatio() {
     chapter: "Automatismes — Centre de gravité",
     prompt: `G est le centre de gravité d'un triangle, sur la médiane [AM]. Sachant que AM = ${am} cm, quelle est la longueur AG, en cm ?`,
     answer,
-    steps: [`AG = (2/3) \\times AM = (2/3) \\times ${am} = ${answer}`],
+    steps: [{ type: "calcul", text: `AG = (2/3) \\times AM = (2/3) \\times ${am} = ${answer}` }],
   };
 }
 
@@ -977,7 +989,7 @@ function genAutoVocabulaireTriangleQCM() {
     prompt: `Comment appelle-t-on le ${it.q} d'un triangle ?`,
     answer: it.r,
     options: shuffle(["L'orthocentre", "Le centre de gravité", "Le centre du cercle circonscrit"]),
-    steps: [`Il s'agit de : ${it.r.toLowerCase()}.`],
+    steps: [{ type: "donnee", text: `Il s'agit de : ${it.r.toLowerCase()}.` }],
   };
 }
 
@@ -1005,7 +1017,7 @@ function genAutoVolumePaveDroit() {
     chapter: "Automatismes — Volume d'un pavé droit",
     prompt: `Calcule le volume d'un pavé droit de dimensions ${L} cm × ${l} cm × ${h} cm, en cm³.`,
     answer,
-    steps: [`${L} \\times ${l} \\times ${h} = ${answer}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
   };
 }
 
@@ -1018,7 +1030,7 @@ function genAutoVolumeCube() {
     chapter: "Automatismes — Volume d'un cube",
     prompt: `Calcule le volume d'un cube d'arête ${c} cm, en cm³.`,
     answer,
-    steps: [`${c} \\times ${c} \\times ${c} = ${answer}`],
+    steps: [{ type: "calcul", text: `${c} \\times ${c} \\times ${c} = ${answer}` }],
   };
 }
 
@@ -1032,7 +1044,7 @@ function genAutoAireDisqueApprochee() {
     prompt: `Calcule l'aire d'un disque de rayon ${r} cm, en cm², arrondie au centième.`,
     answer,
     tolerance: Math.max(0.05, roundTo(answer * 0.005, 2)),
-    steps: [`\\pi \\times ${r}^2 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\pi \\times ${r}^2 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1046,7 +1058,7 @@ function genAutoConversionVolumeCapacite() {
     prompt: versLitres ? `Convertis ${fr(v)} dm³ en litres (L).` : `Convertis ${fr(v)} L en dm³.`,
     answer: v,
     tolerance: 0.01,
-    steps: [`1 dm³ = 1 L, donc les deux valeurs sont égales : ${fr(v)}.`],
+    steps: [{ type: "regle", text: `1 dm³ = 1 L, donc les deux valeurs sont égales : ${fr(v)}.` }],
   };
 }
 
@@ -1058,7 +1070,7 @@ function genAutoFacesLateralesPrisme() {
     chapter: "Automatismes — Patrons",
     prompt: `Un prisme droit a une base à ${n} côtés. Combien de faces latérales rectangulaires possède-t-il ?`,
     answer: n,
-    steps: [`Autant de faces latérales que de côtés à la base : ${n}.`],
+    steps: [{ type: "regle", text: `Autant de faces latérales que de côtés à la base : ${n}.` }],
   };
 }
 
@@ -1086,7 +1098,7 @@ function genAutoMoyenneSimple() {
     prompt: `Calcule la moyenne de : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [`(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1101,7 +1113,7 @@ function genAutoFrequencePourcentage() {
     prompt: `Sur ${total} personnes interrogées, ${effectif} répondent "oui". Quelle est la fréquence en pourcentage ?`,
     answer,
     tolerance: 0.1,
-    steps: [`(${effectif} \\div ${total}) \\times 100 = ${fr(answer)} \\%`],
+    steps: [{ type: "calcul", text: `(${effectif} \\div ${total}) \\times 100 = ${fr(answer)} \\%` }],
   };
 }
 
@@ -1120,7 +1132,7 @@ function genAutoProbabiliteDe() {
     prompt: `On lance un dé à 6 faces. Quelle est la probabilité de "${it.desc}" (sous forme décimale) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${it.favorables} \\div 6 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${it.favorables} \\div 6 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1133,7 +1145,7 @@ function genAutoEvenementContraire() {
     prompt: `Un événement A a une probabilité P(A) = ${fr(p)}. Quelle est la probabilité de l'événement contraire ?`,
     answer: roundTo(1 - p, 2),
     tolerance: 0.01,
-    steps: [`1 - ${fr(p)} = ${fr(roundTo(1 - p, 2))}`],
+    steps: [{ type: "calcul", text: `1 - ${fr(p)} = ${fr(roundTo(1 - p, 2))}` }],
   };
 }
 
@@ -1151,7 +1163,7 @@ function genAutoQualifierEvenementQCM() {
     prompt: `Comment qualifier l'événement : "${it.texte}" ?`,
     answer: it.r,
     options: ["Impossible", "Certain", "Probable"],
-    steps: [`On compare l'événement décrit aux issues possibles.`],
+    steps: [{ type: "regle", text: `On compare l'événement décrit aux issues possibles.` }],
   };
 }
 
@@ -1177,7 +1189,7 @@ function genAutoPourcentageDuneQuantite() {
     chapter: "Automatismes — Pourcentages",
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
-    steps: [`${total} \\times ${p} \\div 100 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${total} \\times ${p} \\div 100 = ${fr(answer)}` }],
   };
 }
 
@@ -1192,7 +1204,7 @@ function genAutoCoefficientProportionnalite() {
     prompt: `Dans un tableau de proportionnalité, ${a} correspond à ${fr(b)}. Quel est le coefficient de proportionnalité ?`,
     answer: k,
     tolerance: 0.01,
-    steps: [`${fr(b)} \\div ${a} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `${fr(b)} \\div ${a} = ${fr(k)}` }],
   };
 }
 
@@ -1206,7 +1218,7 @@ function genAutoVitesseDistanceTemps() {
     chapter: "Automatismes — Vitesse",
     prompt: `Un véhicule roule à ${vitesse} km/h pendant ${fr(temps)} h. Quelle distance parcourt-il, en km ?`,
     answer,
-    steps: [`${vitesse} \\times ${fr(temps)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${vitesse} \\times ${fr(temps)} = ${answer}` }],
   };
 }
 
@@ -1221,7 +1233,7 @@ function genAutoEchelleDistance() {
     prompt: `Sur une carte à l'échelle 1/${echelleN}, une distance mesure ${distanceCarte} cm. Quelle est la distance réelle, en mètres ?`,
     answer: answerM,
     tolerance: 0.02,
-    steps: [`${distanceCarte} \\times ${echelleN} = ${distanceCarte * echelleN} \\text{ cm} = ${fr(answerM)} \\text{ m}`],
+    steps: [{ type: "calcul", text: `${distanceCarte} \\times ${echelleN} = ${distanceCarte * echelleN} \\text{ cm} = ${fr(answerM)} \\text{ m}` }],
   };
 }
 
@@ -1233,7 +1245,7 @@ function genAutoReconnaitreProportionnaliteQCM() {
     prompt: `Sur un graphique, les points représentant deux grandeurs sont alignés sur une droite passant par l'origine du repère. La situation est-elle proportionnelle ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`Une droite passant par l'origine caractérise une situation de proportionnalité.`],
+    steps: [{ type: "regle", text: `Une droite passant par l'origine caractérise une situation de proportionnalité.` }],
   };
 }
 
@@ -1260,7 +1272,7 @@ function genAutoEvaluerFonctionAffine() {
     chapter: "Automatismes — Évaluer une fonction",
     prompt: `On considère \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -1275,7 +1287,7 @@ function genAutoProgrammeCalculMental() {
     chapter: "Automatismes — Programme de calcul",
     prompt: `Programme : ajouter ${add}, puis multiplier par ${mult}. Quel résultat obtient-on en partant de ${x} ?`,
     answer,
-    steps: [`(${x} + ${add}) \\times ${mult} = ${answer}`],
+    steps: [{ type: "calcul", text: `(${x} + ${add}) \\times ${mult} = ${answer}` }],
   };
 }
 
@@ -1287,7 +1299,7 @@ function genAutoVocabulaireFonctionsQCM() {
     prompt: `Sur un graphique représentant y en fonction de x, sur quel axe place-t-on x ?`,
     answer: "En abscisse",
     options: shuffle(["En abscisse", "En ordonnée", "Sur les deux axes"]),
-    steps: [`x est la variable, elle se place en abscisse.`],
+    steps: [{ type: "regle", text: `x est la variable, elle se place en abscisse.` }],
   };
 }
 
@@ -1300,7 +1312,7 @@ function genAutoAireCarreFonctionCote() {
     chapter: "Automatismes — Fonctions en contexte",
     prompt: `L'aire d'un carré de côté c vérifie A(c) = c × c. Quelle est l'aire d'un carré de côté ${c} cm, en cm² ?`,
     answer,
-    steps: [`${c} \\times ${c} = ${answer}`],
+    steps: [{ type: "calcul", text: `${c} \\times ${c} = ${answer}` }],
   };
 }
 
@@ -1340,6 +1352,7 @@ export default {
     id: "automatismes-cinquieme",
     title: "Automatismes",
     description: "Calcul rapide et automatismes du programme de 5e, chapitre après chapitre.",
+    pourquoi: "Les automatismes, c'est le calcul mental qui libère de la place dans ta tête pour réfléchir au problème plutôt qu'à l'arithmétique : quelques minutes régulières valent mieux qu'une révision unique la veille du contrôle.",
     level: "cinquieme",
     freemiumDaily: 5,
     order: 1,

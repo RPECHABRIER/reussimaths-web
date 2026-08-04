@@ -67,7 +67,10 @@ function genCalculerExpressionPriorites() {
     chapter: "Réviser les bases (4e) — Priorités",
     prompt: `Calcule en respectant les priorités : \\(${a} ${op1} ${b} \\times ${c}\\)`,
     answer: result,
-    steps: [`On calcule d'abord ${b} \\times ${c} = ${b * c}`, `Puis : ${a} ${op1} ${b * c} = ${result}`],
+    steps: [
+      { type: "calcul", text: `On calcule d'abord ${b} \\times ${c} = ${b * c}` },
+      { type: "resultat", text: `Puis : ${a} ${op1} ${b * c} = ${result}` },
+    ],
   };
 }
 
@@ -83,7 +86,7 @@ function genAdditionnerRelatifsSimple() {
     chapter: "Réviser les bases (4e) — Nombres relatifs",
     prompt: `Calcule : \\(${signedTex(a)} ${signedTex(b)}\\)`,
     answer,
-    steps: [`${a} + (${b}) = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} + (${b}) = ${answer}` }],
   };
 }
 function signedTex(n) {
@@ -100,7 +103,7 @@ function genSoustraireRelatifsSimple() {
     chapter: "Réviser les bases (4e) — Nombres relatifs",
     prompt: `Calcule : \\(${signedTex(a)} - (${signedTex(b)})\\)`,
     answer,
-    steps: [`${a} - (${b}) = ${a} + (${-b}) = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} - (${b}) = ${a} + (${-b}) = ${answer}` }],
   };
 }
 
@@ -119,7 +122,7 @@ function genSimplifierFraction() {
     chapter: "Réviser les bases (4e) — Fractions",
     prompt: `Simplifie la fraction \\(\\dfrac{${num}}{${den}}\\) le plus possible. Donne le ${askNum ? "numérateur" : "dénominateur"} de la fraction simplifiée.`,
     answer: askNum ? a : b,
-    steps: [`\\(\\dfrac{${num}}{${den}} = \\dfrac{${a}}{${b}}\\) (on divise haut et bas par ${g}).`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${num}}{${den}} = \\dfrac{${a}}{${b}}\\) (on divise haut et bas par ${g}).` }],
   };
 }
 
@@ -133,7 +136,7 @@ function genCarreOuCube() {
     chapter: "Réviser les bases (4e) — Puissances",
     prompt: `Quel est le ${mode === "carre" ? "carré" : "cube"} de ${n} ?`,
     answer,
-    steps: [mode === "carre" ? `${n} \\times ${n} = ${answer}` : `${n} \\times ${n} \\times ${n} = ${answer}`],
+    steps: [{ type: "calcul", text: mode === "carre" ? `${n} \\times ${n} = ${answer}` : `${n} \\times ${n} \\times ${n} = ${answer}` }],
   };
 }
 
@@ -149,7 +152,12 @@ function genMultDiviserPuissanceDix() {
     prompt: `Calcule : \\(${frTex(n)} ${isMult ? "\\times" : "\\div"} ${p}\\)`,
     answer,
     tolerance: 0.001,
-    steps: [`${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.`],
+    steps: [
+      {
+        type: "regle",
+        text: `${isMult ? "Multiplier" : "Diviser"} par ${p} déplace la virgule de ${Math.log10(p)} rang(s) vers ${isMult ? "la droite" : "la gauche"}.`,
+      },
+    ],
   };
 }
 
@@ -166,7 +174,7 @@ function genValeurExpressionLitterale() {
     chapter: "Réviser les bases (4e) — Calcul littéral",
     prompt: `Calcule la valeur de l'expression \\(${a}x + ${b}\\) pour \\(x = ${x}\\).`,
     answer,
-    steps: [`${a} \\times ${x} + ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} + ${b} = ${answer}` }],
   };
 }
 
@@ -182,7 +190,7 @@ function genTesterEgaliteQCM() {
     prompt: `Pour \\(x = ${x}\\), l'expression \\(${a} \\times (x + 2)\\) est-elle égale à ${propose} ?`,
     answer: propose === correct ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} \\times (${x} + 2) = ${a} \\times ${x + 2} = ${correct}`],
+    steps: [{ type: "calcul", text: `${a} \\times (${x} + 2) = ${a} \\times ${x + 2} = ${correct}` }],
   };
 }
 
@@ -199,7 +207,7 @@ function genAireRectangle() {
     prompt: `ABCD est un rectangle. Calcule son aire, en cm².`,
     figure: buildRectangleFigure(L, l),
     answer: aire,
-    steps: [`${L} \\times ${l} = ${aire}`],
+    steps: [{ type: "calcul", text: `${L} \\times ${l} = ${aire}` }],
   };
 }
 
@@ -213,7 +221,7 @@ function genAireTriangle() {
     chapter: "Réviser les bases (4e) — Géométrie",
     prompt: `Un triangle a une base de ${base} cm et une hauteur relative à cette base de ${hauteur} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [`(${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `(${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -229,7 +237,7 @@ function genSymetrieCentraleDistance() {
       : `M est le symétrique de A par rapport au point O, avec OM = ${fr(oa)} cm. Quelle est la longueur OA, en cm ?`,
     answer: oa,
     tolerance: 0.01,
-    steps: [`Le symétrique d'un point par rapport à un point O est à la même distance de O.`],
+    steps: [{ type: "regle", text: `Le symétrique d'un point par rapport à un point O est à la même distance de O.` }],
   };
 }
 
@@ -241,7 +249,7 @@ function genAnglesOpposesParSommet() {
     chapter: "Réviser les bases (4e) — Géométrie",
     prompt: `Deux angles opposés par le sommet : l'un mesure ${angle}°. Quelle est la mesure de l'autre, en degrés ?`,
     answer: angle,
-    steps: [`Deux angles opposés par le sommet ont la même mesure.`],
+    steps: [{ type: "regle", text: `Deux angles opposés par le sommet ont la même mesure.` }],
   };
 }
 
@@ -258,7 +266,7 @@ function genPourcentageDuneQuantite() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -273,7 +281,7 @@ function genCoefficientProportionnalite() {
     prompt: `Dans un tableau de proportionnalité, la valeur ${a} correspond à ${fr(b)}. Quel est le coefficient de proportionnalité ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `Coefficient = ${fr(b)} \\div ${a} = ${fr(k)}` }],
   };
 }
 
@@ -290,7 +298,7 @@ function genEvaluerFonctionAffine() {
     chapter: "Réviser les bases (4e) — Fonctions",
     prompt: `On considère \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
   };
 }
 
@@ -308,7 +316,7 @@ function genCalculerMoyenneSimple() {
     prompt: `Calcule la moyenne de la série statistique suivante (arrondie au centième si besoin) : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [`(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -340,6 +348,7 @@ export default {
     id: "reviser-les-bases-quatrieme",
     title: "Réviser les bases",
     description: "Nombres relatifs, fractions, puissances, calcul littéral, aires, symétrie centrale, angles, proportionnalité et fonctions de 5e — pour prendre un bon départ en 4e. Gratuit et illimité.",
+    pourquoi: "Ce chapitre gratuit consolide les bases indispensables du niveau précédent, pour démarrer l'année sur des fondations solides plutôt que de découvrir des lacunes en cours de route.",
     level: "quatrieme",
     free: true,
     order: 0,

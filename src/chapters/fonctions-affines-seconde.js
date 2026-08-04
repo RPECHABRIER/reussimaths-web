@@ -396,6 +396,7 @@ export default {
     id: "fonctions-affines-seconde",
     title: "Fonctions affines",
     description: "Coefficient directeur et ordonnée à l'origine, taux de variation, reconnaître une fonction affine, sens de variation, équations et inéquations affines, intersection de droites, problèmes de tarifs.",
+    pourquoi: "Une fonction affine décrit toute situation qui évolue à taux constant : un forfait téléphonique, un trajet à vitesse constante.",
     level: "seconde",
     free: false,
     order: 5,

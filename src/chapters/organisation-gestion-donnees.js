@@ -88,7 +88,7 @@ function genLireDiagrammeBatonsValeur() {
     prompt: `Ce diagramme en bâtons donne le mode de transport de plusieurs élèves pour venir au collège. Quel est l'effectif de la catégorie « ${categories[idx]} » ?`,
     answer: values[idx],
     figure,
-    steps: [`Le bâton « ${categories[idx]} » atteint la hauteur ${values[idx]}.`],
+    steps: [{ type: "donnee", text: `Le bâton « ${categories[idx]} » atteint la hauteur ${values[idx]}.` }],
   };
 }
 
@@ -104,7 +104,7 @@ function genLireDiagrammeBatonsTotal() {
     prompt: `Ce diagramme en bâtons donne le nombre de titres téléchargés par style musical dans une playlist. Quel est l'effectif total (nombre total de titres) ?`,
     answer: total,
     figure,
-    steps: [`${values.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${values.join(" + ")} = ${total}` }],
   };
 }
 
@@ -125,7 +125,7 @@ function genLireDiagrammeBatonsCategorieExtreme() {
     prompt: `Ce diagramme en bâtons donne le nombre de bonbons de chaque parfum dans un sachet. Quel est le parfum le ${askMax ? "plus" : "moins"} présent ?`,
     answer: target,
     options,
-    steps: [`Effectifs : ${categories.map((c, i) => `${c} → ${values[i]}`).join(", ")}.`],
+    steps: [{ type: "donnee", text: `Effectifs : ${categories.map((c, i) => `${c} → ${values[i]}`).join(", ")}.` }],
   };
 }
 
@@ -141,7 +141,7 @@ function genLireTableauDonneesValeur() {
     chapter: "Organisation et gestion de données — Tableau de données",
     prompt: `Voici l'évolution de la taille de ${n} (en cm) selon son âge (en mois) : ${ages.map((a, i) => `${a} mois → ${tailles[i]} cm`).join(" ; ")}. Quelle était la taille de ${n} à ${ages[idx]} mois ?`,
     answer: tailles[idx],
-    steps: [`On lit la valeur associée à ${ages[idx]} mois dans le tableau : ${tailles[idx]} cm.`],
+    steps: [{ type: "donnee", text: `On lit la valeur associée à ${ages[idx]} mois dans le tableau : ${tailles[idx]} cm.` }],
   };
 }
 
@@ -170,8 +170,8 @@ function genCompleterTableauDoubleEntreeCellule() {
     prompt: `Dans un collège : ${fillesDP} filles sont demi-pensionnaires et ${fillesExt} filles sont externes ; ${garconsDP} garçons sont demi-pensionnaires et ${garconsExt} garçons sont externes. Combien y a-t-il ${c.label} ?`,
     answer: c.val,
     steps: [
-      `Filles : ${fillesDP} + ${fillesExt} = ${totalFilles}. Garçons : ${garconsDP} + ${garconsExt} = ${totalGarcons}.`,
-      `Demi-pensionnaires : ${fillesDP} + ${garconsDP} = ${totalDP}. Externes : ${fillesExt} + ${garconsExt} = ${totalExt}. Total : ${total}.`,
+      { type: "calcul", text: `Filles : ${fillesDP} + ${fillesExt} = ${totalFilles}. Garçons : ${garconsDP} + ${garconsExt} = ${totalGarcons}.` },
+      { type: "calcul", text: `Demi-pensionnaires : ${fillesDP} + ${garconsDP} = ${totalDP}. Externes : ${fillesExt} + ${garconsExt} = ${totalExt}. Total : ${total}.` },
     ],
   };
 }
@@ -188,7 +188,7 @@ function genPourcentageSousGroupeTableau() {
     prompt: `Dans une classe de ${total} élèves, ${oui1} élèves pratiquent un sport. Quel pourcentage d'élèves pratiquent un sport ? (arrondis à 1 décimale)`,
     answer: pct,
     tolerance: 0.15,
-    steps: [`\\(\\dfrac{${oui1}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${oui1}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` }],
   };
 }
 
@@ -213,7 +213,7 @@ function genClasserEvenementProbabilite() {
     prompt: `Comment qualifier l'événement suivant : « ${c.texte} » ?`,
     answer: c.correct,
     options,
-    steps: [`On compare le nombre de cas favorables au nombre de cas possibles.`],
+    steps: [{ type: "regle", text: `On compare le nombre de cas favorables au nombre de cas possibles.` }],
   };
 }
 
@@ -227,7 +227,7 @@ function genConvertirChanceSurXValeur() {
     prompt: `On dit qu'un événement a « une chance sur ${x} » de se réaliser. Quelle est sa probabilité, sous forme décimale ?`,
     answer: dec,
     tolerance: 0.002,
-    steps: [`\\(\\dfrac{1}{${x}} = ${fr(dec)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{1}{${x}} = ${fr(dec)}\\)` }],
   };
 }
 
@@ -246,7 +246,7 @@ function genNombreIssuesExperience() {
     chapter: "Organisation et gestion de données — Expérience aléatoire",
     prompt: `${c.texte} Combien y a-t-il d'issues possibles différentes (couleurs ou valeurs distinctes) ?`,
     answer: c.n,
-    steps: [`On compte le nombre de résultats différents possibles : ${c.n}.`],
+    steps: [{ type: "calcul", text: `On compte le nombre de résultats différents possibles : ${c.n}.` }],
   };
 }
 
@@ -268,7 +268,7 @@ function genIssuesRealisantEvenementDe() {
     prompt: `On lance un dé équilibré à ${faces} faces numérotées de 1 à ${faces}. Sélectionne toutes les issues qui réalisent l'événement « ${ev.texte} ».`,
     answer,
     options,
-    steps: [`On regarde chaque face de 1 à ${faces} et on garde celles qui vérifient « ${ev.texte} ».`],
+    steps: [{ type: "regle", text: `On regarde chaque face de 1 à ${faces} et on garde celles qui vérifient « ${ev.texte} ».` }],
   };
 }
 
@@ -289,7 +289,7 @@ function genProbabiliteUrneCouleur() {
     prompt: `Un sac contient ${couleurs.map(([c, n]) => `${n} boules ${c}s`).join(", ")}. On tire une boule au hasard. Quelle est la probabilité, sous forme décimale, d'obtenir une boule ${couleur} ? (arrondis à 3 décimales si besoin)`,
     answer: p,
     tolerance: 0.003,
-    steps: [`\\(P(${couleur}) = \\dfrac{${effectif}}{${total}} \\approx ${fr(p)}\\)`],
+    steps: [{ type: "calcul", text: `\\(P(${couleur}) = \\dfrac{${effectif}}{${total}} \\approx ${fr(p)}\\)` }],
   };
 }
 
@@ -311,7 +311,7 @@ function genProbabiliteCarteJeu32() {
     prompt: `On tire une carte au hasard dans un jeu de 32 cartes (4 catégories : cœur, carreau, pique, trèfle ; dans chaque catégorie : As, Roi, Dame, Valet, 10, 9, 8 et 7). Quelle est la probabilité, sous forme décimale, d'obtenir ${c.texte} ?`,
     answer: p,
     tolerance: 0.003,
-    steps: [`\\(P = \\dfrac{${c.favorable}}{32} \\approx ${fr(p)}\\)`],
+    steps: [{ type: "calcul", text: `\\(P = \\dfrac{${c.favorable}}{32} \\approx ${fr(p)}\\)` }],
   };
 }
 
@@ -328,7 +328,7 @@ function genFrequenceExperienceEffectifs() {
     prompt: `On a tiré une boule dans un sac et noté sa couleur, en la remettant à chaque fois, ${total} fois au total. On a obtenu : ${couleurs.map((c, i) => `${effectifs[i]} fois ${c}`).join(", ")}. Quelle est la fréquence d'apparition de la couleur ${couleurs[idx]} (sous forme décimale, arrondie à 3 décimales) ?`,
     answer: freq,
     tolerance: 0.003,
-    steps: [`\\(\\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(freq)}\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(freq)}\\)` }],
   };
 }
 
@@ -343,7 +343,7 @@ function genCompleterEffectifPileFaceTotal() {
     chapter: "Organisation et gestion de données — Tableau d'expérience",
     prompt: `On lance ${total} fois une pièce et on obtient Pile ${pile} fois. Combien de fois a-t-on obtenu ${askFace ? "Face" : "Pile"} ?`,
     answer: askFace ? face : pile,
-    steps: [`Total = Pile + Face, donc Face = ${total} - ${pile} = ${face}.`],
+    steps: [{ type: "calcul", text: `Total = Pile + Face, donc Face = ${total} - ${pile} = ${face}.` }],
   };
 }
 
@@ -360,7 +360,7 @@ function genProbabiliteComplementaire() {
     prompt: `La probabilité qu'un événement A se réalise est \\(P(A) = ${frTex(p)}\\). Quelle est la probabilité que A ne se réalise pas ?`,
     answer: complement,
     tolerance: 0.003,
-    steps: [`\\(1 - ${fr(p)} = ${fr(complement)}\\)`],
+    steps: [{ type: "calcul", text: `\\(1 - ${fr(p)} = ${fr(complement)}\\)` }],
   };
 }
 
@@ -387,7 +387,7 @@ function genProbabiliteRoueLoterieSecteurs() {
     prompt: `Une roue de loterie est partagée en ${nSecteurs} secteurs identiques : ${usedColors.map((c, i) => `${repartition[i]} ${c}(s)`).join(", ")}. On fait tourner la roue. Quelle est la probabilité, sous forme décimale, d'obtenir un secteur ${usedColors[idx]} ?`,
     answer: p,
     tolerance: 0.003,
-    steps: [`\\(P = \\dfrac{${repartition[idx]}}{${nSecteurs}} \\approx ${fr(p)}\\)`],
+    steps: [{ type: "calcul", text: `\\(P = \\dfrac{${repartition[idx]}}{${nSecteurs}} \\approx ${fr(p)}\\)` }],
   };
 }
 
@@ -406,7 +406,7 @@ function genProbabiliteFeveGalette() {
     prompt: `On a confectionné deux galettes, chacune avec une seule fève. La première est coupée en ${parts1} parts égales, la deuxième en ${parts2} parts égales. Dans quelle galette a-t-on le plus de chances d'obtenir la fève en prenant une part au hasard ?`,
     answer: meilleure,
     options,
-    steps: [`\\(\\dfrac{1}{${parts1}} ${p1 > p2 ? ">" : "<"} \\dfrac{1}{${parts2}}\\) : moins de parts égales donne une plus grande probabilité.`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{1}{${parts1}} ${p1 > p2 ? ">" : "<"} \\dfrac{1}{${parts2}}\\) : moins de parts égales donne une plus grande probabilité.` }],
   };
 }
 
@@ -431,8 +431,8 @@ function genEgaliserProbabiliteRetraitBoules() {
     prompt: `On mélange des stylos rouges et bleus dans deux boîtes. Boîte 1 : ${rouge1} stylos rouges et ${bleu1} stylos bleus. Boîte 2 : ${rouge2} stylos rouges et ${bleu2} stylos bleus. On veut avoir la même probabilité de tirer un stylo rouge dans chaque boîte. Combien de stylos rouges faut-il retirer de la boîte 1 (sans rien retirer d'autre) ?`,
     answer: x,
     steps: [
-      `Dans la boîte 2 : \\(P = \\dfrac{${rouge2}}{${rouge2 + bleu2}} = \\dfrac{${a}}{${b}}\\).`,
-      `Dans la boîte 1, il faut qu'il reste ${rougeApres} stylos rouges pour ${bleu1} bleus (même probabilité \\(\\dfrac{${a}}{${b}}\\)). Comme il y en a ${rouge1} au départ, il faut en retirer ${rouge1} - ${rougeApres} = ${x}.`,
+      { type: "calcul", text: `Dans la boîte 2 : \\(P = \\dfrac{${rouge2}}{${rouge2 + bleu2}} = \\dfrac{${a}}{${b}}\\).` },
+      { type: "calcul", text: `Dans la boîte 1, il faut qu'il reste ${rougeApres} stylos rouges pour ${bleu1} bleus (même probabilité \\(\\dfrac{${a}}{${b}}\\)). Comme il y en a ${rouge1} au départ, il faut en retirer ${rouge1} - ${rougeApres} = ${x}.` },
     ],
   };
 }
@@ -492,6 +492,7 @@ export default {
     id: "organisation-gestion-donnees",
     title: "Organisation et gestion de données",
     description: "Lire et exploiter des tableaux et diagrammes, comprendre et calculer des probabilités.",
+    pourquoi: "Lire un tableau ou un diagramme, c'est une compétence utilisée tous les jours dans les médias, les factures et les bulletins scolaires.",
     level: "sixieme",
     free: false,
     order: 9,

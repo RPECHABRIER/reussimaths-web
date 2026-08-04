@@ -385,6 +385,7 @@ export default {
     id: "nombres-calculs-seconde",
     title: "Nombres et calculs",
     description: "Intervalles (conversion, appartenance, encadrement), valeur absolue et distance entre deux réels, racines carrées, puissances, écriture scientifique et fractions.",
+    pourquoi: "Les intervalles et la valeur absolue permettent d'exprimer précisément une marge d'erreur ou une plage de valeurs acceptables — utilisé en sciences et en génie industriel.",
     level: "seconde",
     free: false,
     order: 2,

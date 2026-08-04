@@ -352,6 +352,7 @@ export default {
     id: "complements-derivation-terminale-spe",
     title: "Compléments sur la dérivation",
     description: "Dérivée d'une composée, dérivée seconde, convexité, points d'inflexion et tangentes.",
+    pourquoi: "Étudier la convexité et les points d'inflexion, c'est affiner l'étude d'une courbe pour repérer précisément où un phénomène change de rythme.",
     level: "terminale-spe",
     free: false,
     order: 8,

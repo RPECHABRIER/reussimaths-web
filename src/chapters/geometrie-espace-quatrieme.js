@@ -35,7 +35,10 @@ function genVolumePyramideNumeric() {
     prompt: `Une pyramide a une base d'aire ${aireBase} cm² et une hauteur de ${hauteur} cm. Calcule son volume, en cm³ (arrondi au centième si nécessaire).`,
     answer: volume,
     tolerance: 0.02,
-    steps: [`V = \\dfrac{\\text{aire de la base} \\times \\text{hauteur}}{3}`, `V = \\dfrac{${aireBase} \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3`],
+    steps: [
+      { type: "regle", text: `V = \\dfrac{\\text{aire de la base} \\times \\text{hauteur}}{3}` },
+      { type: "resultat", text: `V = \\dfrac{${aireBase} \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3` },
+    ],
   };
 }
 
@@ -51,8 +54,8 @@ function genVolumeConeNumeric() {
     answer: volume,
     tolerance: 0.5,
     steps: [
-      `V = \\dfrac{\\pi \\times \\text{rayon}^2 \\times \\text{hauteur}}{3}`,
-      `V = \\dfrac{\\pi \\times ${rayon}^2 \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3`,
+      { type: "regle", text: `V = \\dfrac{\\pi \\times \\text{rayon}^2 \\times \\text{hauteur}}{3}` },
+      { type: "resultat", text: `V = \\dfrac{\\pi \\times ${rayon}^2 \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3` },
     ],
   };
 }
@@ -67,7 +70,7 @@ function genAireBaseConeNumeric() {
     prompt: `La base d'un cône de révolution est un disque de rayon ${rayon} cm. Calcule l'aire de cette base, en cm² (arrondie au centième).`,
     answer: aire,
     tolerance: 0.5,
-    steps: [`\\text{Aire} = \\pi \\times \\text{rayon}^2 = \\pi \\times ${rayon}^2 \\approx ${fr(aire)}\\ cm^2`],
+    steps: [{ type: "calcul", text: `\\text{Aire} = \\pi \\times \\text{rayon}^2 = \\pi \\times ${rayon}^2 \\approx ${fr(aire)}\\ cm^2` }],
   };
 }
 
@@ -83,8 +86,8 @@ function genGeneratriceConeNumeric() {
     answer: generatrice,
     tolerance: 0.02,
     steps: [
-      `\\text{génératrice}^2 = ${rayon}^2 + ${hauteur}^2 = ${rayon * rayon} + ${hauteur * hauteur} = ${rayon * rayon + hauteur * hauteur}`,
-      `\\text{génératrice} = \\sqrt{${rayon * rayon + hauteur * hauteur}} \\approx ${fr(generatrice)}\\ cm`,
+      { type: "calcul", text: `\\text{génératrice}^2 = ${rayon}^2 + ${hauteur}^2 = ${rayon * rayon} + ${hauteur * hauteur} = ${rayon * rayon + hauteur * hauteur}` },
+      { type: "resultat", text: `\\text{génératrice} = \\sqrt{${rayon * rayon + hauteur * hauteur}} \\approx ${fr(generatrice)}\\ cm` },
     ],
   };
 }
@@ -105,8 +108,8 @@ function genComparerVolumesQCM() {
     answer: reponse,
     options: ["La pyramide", "Le cône", "Les deux volumes sont égaux"],
     steps: [
-      `V_{pyramide} = \\dfrac{${airePyramide} \\times ${hauteurPyramide}}{3} \\approx ${fr(roundTo(volPyramide, 2))}\\ cm^3`,
-      `V_{cône} = \\dfrac{\\pi \\times ${rayonCone}^2 \\times ${hauteurCone}}{3} \\approx ${fr(roundTo(volCone, 2))}\\ cm^3`,
+      { type: "calcul", text: `V_{pyramide} = \\dfrac{${airePyramide} \\times ${hauteurPyramide}}{3} \\approx ${fr(roundTo(volPyramide, 2))}\\ cm^3` },
+      { type: "calcul", text: `V_{cône} = \\dfrac{\\pi \\times ${rayonCone}^2 \\times ${hauteurCone}}{3} \\approx ${fr(roundTo(volCone, 2))}\\ cm^3` },
     ],
   };
 }
@@ -127,9 +130,9 @@ function genProblemeVolumeConeContextualiseNumeric() {
     prompt: `${prenom} vend des bonbons en forme de cône de révolution, de hauteur ${fr(hauteur)} cm et dont le rayon de la base mesure ${fr(rayon)} cm. La masse volumique d'un bonbon est de ${masseVolumique} g/cm³. Combien de bonbons ${prenom} peut-il mettre au maximum dans un sachet de ${masseSachet} g ?`,
     answer: nombre,
     steps: [
-      `\\text{Volume d'un bonbon} \\approx \\dfrac{\\pi \\times ${fr(rayon)}^2 \\times ${fr(hauteur)}}{3} \\approx ${fr(roundTo(volumeUnite, 2))}\\ cm^3`,
-      `\\text{Masse d'un bonbon} \\approx ${fr(roundTo(volumeUnite, 2))} \\times ${masseVolumique} \\approx ${fr(roundTo(masseUnite, 2))}\\ g`,
-      `${masseSachet} \\div ${fr(roundTo(masseUnite, 2))} \\approx ${fr(roundTo(masseSachet / masseUnite, 2))}\\ \\text{donc au maximum } ${nombre}\\ \\text{bonbons}`,
+      { type: "calcul", text: `\\text{Volume d'un bonbon} \\approx \\dfrac{\\pi \\times ${fr(rayon)}^2 \\times ${fr(hauteur)}}{3} \\approx ${fr(roundTo(volumeUnite, 2))}\\ cm^3` },
+      { type: "calcul", text: `\\text{Masse d'un bonbon} \\approx ${fr(roundTo(volumeUnite, 2))} \\times ${masseVolumique} \\approx ${fr(roundTo(masseUnite, 2))}\\ g` },
+      { type: "resultat", text: `${masseSachet} \\div ${fr(roundTo(masseUnite, 2))} \\approx ${fr(roundTo(masseSachet / masseUnite, 2))}\\ \\text{donc au maximum } ${nombre}\\ \\text{bonbons}` },
     ],
   };
 }
@@ -149,7 +152,7 @@ function genVocabulaireConeQCM() {
     prompt: `Dans un cône de révolution, comment appelle-t-on ${cas.desc} ?`,
     answer: cas.reponse,
     options: ["La génératrice", "La hauteur", "Le rayon"],
-    steps: [`Le cône de révolution a pour éléments : le rayon (base), la hauteur (sommet-centre) et la génératrice (sommet-cercle de base).`],
+    steps: [{ type: "regle", text: `Le cône de révolution a pour éléments : le rayon (base), la hauteur (sommet-centre) et la génératrice (sommet-cercle de base).` }],
   };
 }
 
@@ -167,11 +170,15 @@ function genElementsPyramideNumeric() {
     prompt: `Une pyramide a une base qui est un polygone à ${n} côtés. Combien cette pyramide a-t-elle de ${quantite} ?`,
     answer: reponse,
     steps: [
-      quantite === "faces"
-        ? `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{faces latérales} + 1\\ \\text{base} = ${reponse}\\ \\text{faces}.`
-        : quantite === "sommets"
-        ? `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{sommets de la base} + 1\\ \\text{sommet principal} = ${reponse}\\ \\text{sommets}.`
-        : `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{arêtes de base} + ${n}\\ \\text{arêtes latérales} = ${reponse}\\ \\text{arêtes}.`,
+      {
+        type: "regle",
+        text:
+          quantite === "faces"
+            ? `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{faces latérales} + 1\\ \\text{base} = ${reponse}\\ \\text{faces}.`
+            : quantite === "sommets"
+            ? `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{sommets de la base} + 1\\ \\text{sommet principal} = ${reponse}\\ \\text{sommets}.`
+            : `\\text{Une pyramide à base } ${n}\\text{-gonale a } ${n}\\ \\text{arêtes de base} + ${n}\\ \\text{arêtes latérales} = ${reponse}\\ \\text{arêtes}.`,
+      },
     ],
   };
 }
@@ -187,8 +194,8 @@ function genPatronConeArcNumeric() {
     answer: arc,
     tolerance: 0.1,
     steps: [
-      `\\text{L'arc doit avoir la même longueur que le périmètre du cercle de base.}`,
-      `\\text{Périmètre} = 2 \\times \\pi \\times ${rayon} \\approx ${fr(arc)}\\ cm`,
+      { type: "regle", text: `\\text{L'arc doit avoir la même longueur que le périmètre du cercle de base.}` },
+      { type: "resultat", text: `\\text{Périmètre} = 2 \\times \\pi \\times ${rayon} \\approx ${fr(arc)}\\ cm` },
     ],
   };
 }
@@ -205,8 +212,8 @@ function genPatronConeAngleNumeric() {
     answer: angle,
     tolerance: 0.5,
     steps: [
-      `\\text{L'arc du secteur a pour longueur } 2\\pi \\times ${rayon}, \\text{ et le cercle complet de rayon } ${generatrice}\\ \\text{a pour périmètre } 2\\pi \\times ${generatrice}.`,
-      `\\text{angle} = 360 \\times \\dfrac{${rayon}}{${generatrice}} \\approx ${fr(angle)}°`,
+      { type: "regle", text: `\\text{L'arc du secteur a pour longueur } 2\\pi \\times ${rayon}, \\text{ et le cercle complet de rayon } ${generatrice}\\ \\text{a pour périmètre } 2\\pi \\times ${generatrice}.` },
+      { type: "resultat", text: `\\text{angle} = 360 \\times \\dfrac{${rayon}}{${generatrice}} \\approx ${fr(angle)}°` },
     ],
   };
 }
@@ -242,7 +249,10 @@ function genCoordonneesSommetPaveNumeric() {
     chapter: "Géométrie dans l'espace — Repérage",
     prompt: `ABCDEFGH est un pavé droit tel que AB = ${L} cm, AD = ${l} cm et AE = ${h} cm, muni du repère d'origine A (axes (AB), (AD), (AE)). Quelle est ${info.label === "abscisse" ? "l'" : "l'"}${info.label} du point ${nom} ?`,
     answer: coords[info.index],
-    steps: [`\\text{Les coordonnées du point } ${nom} \\text{ sont } (${coords.join(" ; ")}).`, `\\text{Son ${info.label} vaut donc } ${coords[info.index]}.`],
+    steps: [
+      { type: "donnee", text: `\\text{Les coordonnées du point } ${nom} \\text{ sont } (${coords.join(" ; ")}).` },
+      { type: "resultat", text: `\\text{Son ${info.label} vaut donc } ${coords[info.index]}.` },
+    ],
   };
 }
 
@@ -263,7 +273,10 @@ function genMilieuSegmentEspaceNumeric() {
     prompt: `Dans un repère de l'espace, on donne les points R(${P1.join(" ; ")}) et S(${P2.join(" ; ")}). Soit M le milieu du segment [RS]. Quelle est ${info.label === "abscisse" ? "l'" : "l'"}${info.label} du point M ?`,
     answer: milieu[info.index],
     tolerance: 0.01,
-    steps: [`\\text{Le milieu M a pour coordonnées la moyenne des coordonnées de R et de S.}`, `${info.label} = \\dfrac{${P1[info.index]} + ${P2[info.index]}}{2} = ${fr(milieu[info.index])}`],
+    steps: [
+      { type: "regle", text: `\\text{Le milieu M a pour coordonnées la moyenne des coordonnées de R et de S.}` },
+      { type: "resultat", text: `${info.label} = \\dfrac{${P1[info.index]} + ${P2[info.index]}}{2} = ${fr(milieu[info.index])}` },
+    ],
   };
 }
 
@@ -275,7 +288,7 @@ function genOrdreCoordonneesQCM() {
     prompt: `Dans un repère de l'espace muni d'un pavé droit, un point est repéré par un triplet de nombres donné dans quel ordre ?`,
     answer: "(abscisse ; ordonnée ; altitude)",
     options: ["(abscisse ; ordonnée ; altitude)", "(longueur ; largeur ; hauteur)", "(ordonnée ; abscisse ; altitude)"],
-    steps: [`Un point de l'espace est repéré par trois nombres : son abscisse, son ordonnée et son altitude, dans cet ordre.`],
+    steps: [{ type: "regle", text: `Un point de l'espace est repéré par trois nombres : son abscisse, son ordonnée et son altitude, dans cet ordre.` }],
   };
 }
 
@@ -296,7 +309,10 @@ function genSymetriquePointEspaceNumeric() {
     chapter: "Géométrie dans l'espace — Repérage",
     prompt: `Dans un repère de l'espace, on donne les points K(${K.join(" ; ")}) et L(${L.join(" ; ")}). Soit O le symétrique du point K par rapport au point L. Quelle est ${info.label === "abscisse" ? "l'" : "l'"}${info.label} du point O ?`,
     answer: O[info.index],
-    steps: [`\\text{L étant le milieu de [KO], on a } ${info.label}(O) = 2 \\times ${info.label}(L) - ${info.label}(K).`, `${info.label}(O) = 2 \\times ${L[info.index]} - ${K[info.index]} = ${O[info.index]}`],
+    steps: [
+      { type: "regle", text: `\\text{L étant le milieu de [KO], on a } ${info.label}(O) = 2 \\times ${info.label}(L) - ${info.label}(K).` },
+      { type: "resultat", text: `${info.label}(O) = 2 \\times ${L[info.index]} - ${K[info.index]} = ${O[info.index]}` },
+    ],
   };
 }
 
@@ -347,6 +363,7 @@ export default {
     id: "geometrie-espace-quatrieme",
     title: "Géométrie dans l'espace",
     description: "Pyramides et cônes de révolution (vocabulaire, patrons, volumes), repérage dans l'espace.",
+    pourquoi: "Calculer le volume d'une pyramide ou d'un cône, c'est ce qui sert à estimer une quantité de matière, d'eau ou d'espace dans la vie réelle.",
     level: "quatrieme",
     free: false,
     order: 15,

@@ -885,6 +885,8 @@ export default {
     title: "Préparation à l'EAM",
     description:
       "Exercices dans l'esprit de l'Épreuve Anticipée de Mathématiques (EAM) : automatismes-QCM, probabilités conditionnelles (tableau croisé, arbre pondéré), suites arithmétiques et géométriques, signe d'une dérivée. Comprend des sujets officiels de la session 2026 (source précisée : lieu, période, année) et des exercices originaux sur les mêmes compétences.",
+    pourquoi:
+      "Ce chapitre te met dans les conditions réelles de l'épreuve, avec des sujets et formats officiels, pour arriver serein le jour J.",
     level: "premiere-non-spe",
     order: 9,
   },

@@ -53,8 +53,8 @@ function genAdditionnerRelatifsMemeSigneNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `Les deux nombres ont le même signe : on conserve le signe commun et on ajoute leurs distances à 0.`,
-      `${sign > 0 ? "+" : "-"} (${fr(Math.abs(a))} + ${fr(Math.abs(b))}) = ${fr(answer)}`,
+      { type: "regle", text: `Les deux nombres ont le même signe : on conserve le signe commun et on ajoute leurs distances à 0.` },
+      { type: "resultat", text: `${sign > 0 ? "+" : "-"} (${fr(Math.abs(a))} + ${fr(Math.abs(b))}) = ${fr(answer)}` },
     ],
   };
 }
@@ -73,8 +73,8 @@ function genAdditionnerRelatifsSignesDifferentsNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `Les deux nombres ont des signes différents : le résultat a le signe du nombre ayant la plus grande distance à 0.`,
-      `${answer >= 0 ? "+" : "-"} (${fr(Math.max(posVal, negVal))} - ${fr(Math.min(posVal, negVal))}) = ${fr(answer)}`,
+      { type: "regle", text: `Les deux nombres ont des signes différents : le résultat a le signe du nombre ayant la plus grande distance à 0.` },
+      { type: "resultat", text: `${answer >= 0 ? "+" : "-"} (${fr(Math.max(posVal, negVal))} - ${fr(Math.min(posVal, negVal))}) = ${fr(answer)}` },
     ],
   };
 }
@@ -90,7 +90,10 @@ function genSoustraireViaOpposeNumeric() {
     prompt: `Calcule : \\(${frTex(a)} - (${signedTex(b)})\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`Soustraire un nombre revient à ajouter son opposé : ${fr(a)} - (${fr(b)}) = ${fr(a)} + (${fr(-b)})`, `= ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `Soustraire un nombre revient à ajouter son opposé : ${fr(a)} - (${fr(b)}) = ${fr(a)} + (${fr(-b)})` },
+      { type: "resultat", text: `= ${fr(answer)}` },
+    ],
   };
 }
 
@@ -106,7 +109,7 @@ function genCompleterDifferenceTrouNumeric() {
     prompt: trouEnPremier ? `Complète : \\(? - (${signedTex(b)}) = ${frTex(total)}\\)` : `Complète : \\(${frTex(a)} - ? = ${frTex(total)}\\)`,
     answer: trouEnPremier ? a : b,
     tolerance: 0.01,
-    steps: [`On utilise l'opération inverse pour isoler le terme manquant.`],
+    steps: [{ type: "regle", text: `On utilise l'opération inverse pour isoler le terme manquant.` }],
   };
 }
 
@@ -125,7 +128,10 @@ function genProgrammeCalculAdditionSoustractionNumeric() {
     chapter: "Nombres relatifs — Programme de calcul",
     prompt: `Programme de calcul : choisir un nombre, ${step1} ${val1}, puis ${step2} ${val2}. Quel résultat obtient-on en partant de ${depart} ?`,
     answer,
-    steps: [`${depart} ${step1 === "ajouter" ? "+" : "-"} (${val1}) = ${etape1}`, `${etape1} ${step2 === "ajouter" ? "+" : "-"} (${val2}) = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${depart} ${step1 === "ajouter" ? "+" : "-"} (${val1}) = ${etape1}` },
+      { type: "resultat", text: `${etape1} ${step2 === "ajouter" ? "+" : "-"} (${val2}) = ${answer}` },
+    ],
   };
 }
 
@@ -145,7 +151,7 @@ function genChaineAdditionsSoustractionsNumeric() {
     prompt: `Calcule : \\(${parts.join(" ")}\\)`,
     answer: total,
     tolerance: 0.02,
-    steps: [`On additionne les termes de gauche à droite : ${fr(total)}`],
+    steps: [{ type: "calcul", text: `On additionne les termes de gauche à droite : ${fr(total)}` }],
   };
 }
 
@@ -162,7 +168,10 @@ function genMultiplierRelatifsNumeric() {
     prompt: `Calcule : \\(${frTex(a)} \\times ${signedTex(b)}\\)`,
     answer,
     tolerance: 0.01,
-    steps: [`Règle des signes : les deux nombres sont ${Math.sign(a) === Math.sign(b) ? "de même signe, le résultat est positif" : "de signes différents, le résultat est négatif"}.`, `${fr(Math.abs(a))} \\times ${fr(Math.abs(b))} = ${fr(Math.abs(answer))}`],
+    steps: [
+      { type: "regle", text: `Règle des signes : les deux nombres sont ${Math.sign(a) === Math.sign(b) ? "de même signe, le résultat est positif" : "de signes différents, le résultat est négatif"}.` },
+      { type: "resultat", text: `${fr(Math.abs(a))} \\times ${fr(Math.abs(b))} = ${fr(Math.abs(answer))}` },
+    ],
   };
 }
 
@@ -177,7 +186,7 @@ function genDiviserRelatifsNumeric() {
     prompt: `Calcule : \\(${frTex(dividende)} \\div (${frTex(diviseur)})\\)`,
     answer: roundTo(quotient, 3),
     tolerance: 0.01,
-    steps: [`Règle des signes : les deux nombres sont ${Math.sign(dividende) === Math.sign(diviseur) ? "de même signe, le résultat est positif" : "de signes différents, le résultat est négatif"}.`],
+    steps: [{ type: "regle", text: `Règle des signes : les deux nombres sont ${Math.sign(dividende) === Math.sign(diviseur) ? "de même signe, le résultat est positif" : "de signes différents, le résultat est négatif"}.` }],
   };
 }
 
@@ -192,7 +201,7 @@ function genSigneProduitPlusieursFacteursQCM() {
     prompt: `Un produit est composé de ${nbNegatifs} facteur(s) négatif(s)${nbPositifs > 0 ? ` et ${nbPositifs} facteur(s) positif(s)` : ""}. Quel est le signe de ce produit ?`,
     answer: positif ? "Positif" : "Négatif",
     options: ["Positif", "Négatif"],
-    steps: [`Le nombre de facteurs négatifs est ${positif ? "pair" : "impair"} : le produit est ${positif ? "positif" : "négatif"}. Les facteurs positifs n'influencent pas le signe.`],
+    steps: [{ type: "regle", text: `Le nombre de facteurs négatifs est ${positif ? "pair" : "impair"} : le produit est ${positif ? "positif" : "négatif"}. Les facteurs positifs n'influencent pas le signe.` }],
   };
 }
 
@@ -207,7 +216,7 @@ function genProduitFacteursEgauxNumeric() {
     chapter: "Nombres relatifs — Produit de facteurs égaux",
     prompt: `Quel est le produit de ${n} facteurs tous égaux à ${a} ?`,
     answer,
-    steps: [`${facteurs} = ${answer}`],
+    steps: [{ type: "calcul", text: `${facteurs} = ${answer}` }],
   };
 }
 
@@ -223,7 +232,10 @@ function genProgrammeCalculMultiplicationNumeric() {
     chapter: "Nombres relatifs — Programme de calcul",
     prompt: `Programme de calcul : choisir un nombre, le multiplier par ${mult1}, puis ajouter ${add1}. Quel résultat obtient-on en partant de ${depart} ?`,
     answer,
-    steps: [`${depart} \\times ${mult1} = ${etape1}`, `${etape1} + (${add1}) = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${depart} \\times ${mult1} = ${etape1}` },
+      { type: "resultat", text: `${etape1} + (${add1}) = ${answer}` },
+    ],
   };
 }
 
@@ -236,7 +248,10 @@ function genCarreDunRelatifNumeric() {
     chapter: "Nombres relatifs — Carré d'un relatif",
     prompt: `Calcule : \\((${n})^2\\)`,
     answer,
-    steps: [`(${n}) \\times (${n}) = ${answer}`, `Le carré d'un nombre relatif (positif ou négatif) est toujours positif.`],
+    steps: [
+      { type: "calcul", text: `(${n}) \\times (${n}) = ${answer}` },
+      { type: "regle", text: `Le carré d'un nombre relatif (positif ou négatif) est toujours positif.` },
+    ],
   };
 }
 
@@ -256,7 +271,10 @@ function genPrioriteCalculDecimalNumeric() {
     prompt: `Calcule en respectant les priorités : \\(${frTex(a)} ${op1} ${frTex(b)} \\times (${frTex(c)})\\)`,
     answer,
     tolerance: 0.02,
-    steps: [`On calcule d'abord la multiplication : ${fr(b)} \\times (${fr(c)}) = ${fr(produit)}`, `${fr(a)} ${op1} ${fr(produit)} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `On calcule d'abord la multiplication : ${fr(b)} \\times (${fr(c)}) = ${fr(produit)}` },
+      { type: "resultat", text: `${fr(a)} ${op1} ${fr(produit)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -278,7 +296,10 @@ function genCompleterChaineCalculsNumeric() {
       ? `On part de ${depart}, on applique l'opération "${op1} ${val1}", puis "${op2} ${val2}". Quelle est la valeur obtenue après la première opération ?`
       : `On part de ${depart}, on applique l'opération "${op1} ${val1}", puis "${op2} ${val2}". Quel est le résultat final ?`,
     answer: askEtape1 ? etape1 : answer,
-    steps: [`${depart} ${op1} ${val1} = ${etape1}`, `${etape1} ${op2} ${val2} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${depart} ${op1} ${val1} = ${etape1}` },
+      { type: "resultat", text: `${etape1} ${op2} ${val2} = ${answer}` },
+    ],
   };
 }
 
@@ -298,7 +319,11 @@ function genErreurCalculatriceQCM() {
     prompt: `${p1} et ${p2} calculent \\(${a} - ${b} \\times (${c} + (${d}))\\). ${p1} trouve ${correct} et ${p2} trouve ${sansParentheses}. Qui a la bonne réponse ?`,
     answer: p1,
     options: [p1, p2],
-    steps: [`Il faut calculer d'abord la parenthèse : ${c} + (${d}) = ${c + d}`, `Puis la multiplication : ${b} \\times ${c + d} = ${b * (c + d)}`, `Puis : ${a} - ${b * (c + d)} = ${correct}`],
+    steps: [
+      { type: "calcul", text: `Il faut calculer d'abord la parenthèse : ${c} + (${d}) = ${c + d}` },
+      { type: "calcul", text: `Puis la multiplication : ${b} \\times ${c + d} = ${b * (c + d)}` },
+      { type: "resultat", text: `Puis : ${a} - ${b * (c + d)} = ${correct}` },
+    ],
   };
 }
 
@@ -320,7 +345,10 @@ function genPrioriteReseauSocialQCM() {
     prompt: `Sur un fil de discussion, quelqu'un demande : quel est le résultat de \\(${fr(a)} - ${fr(a)} \\times ${b}\\) ?`,
     answer: `${fr(correct)}`,
     options,
-    steps: [`La multiplication est prioritaire : ${fr(a)} \\times ${b} = ${fr(roundTo(a * b, 2))}`, `${fr(a)} - ${fr(roundTo(a * b, 2))} = ${fr(correct)}`],
+    steps: [
+      { type: "calcul", text: `La multiplication est prioritaire : ${fr(a)} \\times ${b} = ${fr(roundTo(a * b, 2))}` },
+      { type: "resultat", text: `${fr(a)} - ${fr(roundTo(a * b, 2))} = ${fr(correct)}` },
+    ],
   };
 }
 
@@ -342,7 +370,10 @@ function genComparerDeuxProgrammesQCM() {
     prompt: `Programme A : choisir un nombre, ajouter ${m}, puis multiplier par ${k}. Programme B : choisir un nombre, ${texteB}. En partant de ${depart}, les deux programmes donnent-ils le même résultat ?`,
     answer: resultA === resultB ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Programme A : (${depart} + (${m})) \\times ${k} = ${resultA}`, `Programme B : ${depart} \\times ${k} + (${memeResultat ? m * k : m}) = ${resultB}`],
+    steps: [
+      { type: "calcul", text: `Programme A : (${depart} + (${m})) \\times ${k} = ${resultA}` },
+      { type: "calcul", text: `Programme B : ${depart} \\times ${k} + (${memeResultat ? m * k : m}) = ${resultB}` },
+    ],
   };
 }
 
@@ -357,7 +388,7 @@ function genDureeEntreDeuxAnneesNumeric() {
     chapter: "Nombres relatifs — Durées",
     prompt: `${civilisation[0].toUpperCase()}${civilisation.slice(1)} a existé de l'an ${debut} à l'an ${fin >= 0 ? "+" : ""}${fin}. Combien d'années cette période a-t-elle duré ?`,
     answer: duree,
-    steps: [`${fin} - (${debut}) = ${fin} + (${-debut}) = ${duree}`],
+    steps: [{ type: "calcul", text: `${fin} - (${debut}) = ${fin} + (${-debut}) = ${duree}` }],
   };
 }
 
@@ -374,7 +405,7 @@ function genSigneFacteurInconnuProduitQCM() {
     prompt: `Un produit est ${produitPositif ? "positif" : "négatif"}. Il contient déjà ${nbNegatifsConnus} facteur(s) négatif(s) connu(s), et un dernier facteur x dont on ne connaît pas le signe. Quel est le signe de x ?`,
     answer: inconnuNegatif ? "Négatif" : "Positif",
     options: ["Positif", "Négatif"],
-    steps: [`Pour que le produit soit ${produitPositif ? "positif" : "négatif"}, le nombre total de facteurs négatifs doit être ${produitPositif ? "pair" : "impair"}. Il y en a déjà ${nbNegatifsConnus} : x doit donc être ${inconnuNegatif ? "négatif" : "positif"}.`],
+    steps: [{ type: "regle", text: `Pour que le produit soit ${produitPositif ? "positif" : "négatif"}, le nombre total de facteurs négatifs doit être ${produitPositif ? "pair" : "impair"}. Il y en a déjà ${nbNegatifsConnus} : x doit donc être ${inconnuNegatif ? "négatif" : "positif"}.` }],
   };
 }
 
@@ -389,7 +420,7 @@ function genSigneQuotientInconnuQCM() {
     prompt: `Le quotient \\(\\dfrac{a}{b}\\) est ${quotientPositif ? "positif" : "négatif"}. Sachant que a est ${numerateurNegatif ? "négatif" : "positif"}, quel est le signe de b ?`,
     answer: denominateurNegatif ? "Négatif" : "Positif",
     options: ["Positif", "Négatif"],
-    steps: [`Un quotient est ${quotientPositif ? "positif si le numérateur et le dénominateur sont de même signe" : "négatif si le numérateur et le dénominateur sont de signes différents"}. Comme a est ${numerateurNegatif ? "négatif" : "positif"}, b doit être ${denominateurNegatif ? "négatif" : "positif"}.`],
+    steps: [{ type: "regle", text: `Un quotient est ${quotientPositif ? "positif si le numérateur et le dénominateur sont de même signe" : "négatif si le numérateur et le dénominateur sont de signes différents"}. Comme a est ${numerateurNegatif ? "négatif" : "positif"}, b doit être ${denominateurNegatif ? "négatif" : "positif"}.` }],
   };
 }
 
@@ -408,7 +439,7 @@ function genBaremeQCMNumeric() {
     prompt: `Lors d'un QCM de ${nbQuestions} questions, une bonne réponse rapporte ${fr(pointsBonne)} point(s), une mauvaise réponse retire ${fr(Math.abs(pointsMauvaise))} point(s), et une absence de réponse ne change rien. ${prenom} a coché ${bonnes} bonnes réponses et ${mauvaises} mauvaises réponses. Quelle note obtient ${prenom} ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${bonnes} \\times ${fr(pointsBonne)} + ${mauvaises} \\times (${fr(pointsMauvaise)}) = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${bonnes} \\times ${fr(pointsBonne)} + ${mauvaises} \\times (${fr(pointsMauvaise)}) = ${fr(answer)}` }],
   };
 }
 
@@ -423,7 +454,10 @@ function genTrouverDepartSchemaNumeric() {
     chapter: "Nombres relatifs — Chaîne de calculs",
     prompt: `On applique à un nombre de départ les opérations "multiplier par ${mult}" puis "ajouter ${add}", et on obtient ${resultat}. Quel était le nombre de départ ?`,
     answer: depart,
-    steps: [`${resultat} - (${add}) = ${resultat - add}`, `${resultat - add} \\div ${mult} = ${depart}`],
+    steps: [
+      { type: "calcul", text: `${resultat} - (${add}) = ${resultat - add}` },
+      { type: "resultat", text: `${resultat - add} \\div ${mult} = ${depart}` },
+    ],
   };
 }
 
@@ -490,6 +524,7 @@ export default {
     id: "nombres-relatifs-quatrieme",
     title: "Nombres relatifs",
     description: "Additionner, soustraire, multiplier et diviser des nombres relatifs décimaux, priorités opératoires, signe d'un produit ou d'un quotient, programmes de calcul.",
+    pourquoi: "Manipuler les nombres relatifs, c'est indispensable pour comprendre les températures négatives, les altitudes ou un compte bancaire en débit.",
     level: "quatrieme",
     free: false,
     order: 2,

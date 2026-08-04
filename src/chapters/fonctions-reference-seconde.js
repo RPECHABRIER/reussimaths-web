@@ -402,6 +402,7 @@ export default {
     id: "fonctions-reference-seconde",
     title: "Fonctions de référence",
     description: "Fonctions carré, cube, racine carrée et inverse : images, antécédents, sens de variation, parité, comparaison d'images par monotonie, équations et inéquations simples.",
+    pourquoi: "Connaître l'allure des fonctions carré, cube, racine et inverse, c'est reconnaître immédiatement le comportement d'un phénomène physique ou économique courant.",
     level: "seconde",
     free: false,
     order: 6,

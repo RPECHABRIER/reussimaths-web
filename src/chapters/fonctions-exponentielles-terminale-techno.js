@@ -207,6 +207,7 @@ export default {
     id: "fonctions-exponentielles-terminale-techno",
     title: "Fonctions exponentielles",
     description: "x↦a^x pour a>0, sens de variation et allure selon a, propriétés algébriques, taux d'évolution moyen.",
+    pourquoi: "x ↦ a^x modélise les évolutions en pourcentage constant (intérêts, inflation, décroissance d'un stock) qu'on retrouve partout en gestion et en économie.",
     level: "terminale-techno",
     order: 3,
   },

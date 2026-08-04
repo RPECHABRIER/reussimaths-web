@@ -352,6 +352,7 @@ export default {
     id: "fonctions-trigonometriques-terminale-spe",
     title: "Fonctions trigonométriques",
     description: "Valeurs remarquables, dérivée, parité, périodicité, formules de réduction et d'addition.",
+    pourquoi: "Les fonctions trigonométriques modélisent tous les phénomènes périodiques : marées, sons, saisons, signaux électriques.",
     level: "terminale-spe",
     free: false,
     order: 10,

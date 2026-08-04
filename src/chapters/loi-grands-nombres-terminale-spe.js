@@ -295,6 +295,7 @@ export default {
     id: "loi-grands-nombres-terminale-spe",
     title: "Loi des grands nombres",
     description: "Inégalité de Markov, inégalité de Bienaymé-Tchebychev, inégalité de concentration, moyenne empirique.",
+    pourquoi: "Ces inégalités expliquent pourquoi, en répétant une expérience un grand nombre de fois, la moyenne observée se rapproche de la moyenne théorique — le fondement des sondages et des assurances.",
     level: "terminale-spe",
     free: false,
     order: 15,

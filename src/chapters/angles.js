@@ -527,6 +527,7 @@ export default {
     id: "angles",
     title: "Angles",
     description: "Nature des angles, angles supplémentaires, bissectrice, angles d'un triangle.",
+    pourquoi: "Reconnaître et mesurer des angles, c'est ce qui permet de lire un plan, régler une pente ou comprendre l'architecture qui nous entoure.",
     level: "sixieme",
     free: false,
     order: 7,

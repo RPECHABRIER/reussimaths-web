@@ -373,6 +373,7 @@ export default {
     id: "vecteurs-produit-scalaire-premiere-spe",
     title: "Calcul vectoriel et produit scalaire",
     description: "Produit scalaire (coordonnées, normes et angle), orthogonalité, formule d'Al-Kashi, bilinéarité.",
+    pourquoi: "Le produit scalaire permet de calculer un angle ou de démontrer une perpendicularité sans rapporteur — utilisé en physique pour calculer un travail ou une force.",
     level: "premiere-spe",
     order: 8,
   },

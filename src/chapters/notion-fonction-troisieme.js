@@ -53,7 +53,7 @@ function genImageFonctionLineaireNumeric() {
     chapter: "Notion de fonction — Vocabulaire, image, antécédent",
     prompt: `On définit la fonction f par \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\). Calcule \\(f(${x0})\\).`,
     answer,
-    steps: [`f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${answer}` }],
   };
 }
 
@@ -68,7 +68,7 @@ function genImageFonctionQuadratiqueNumeric() {
     chapter: "Notion de fonction — Vocabulaire, image, antécédent",
     prompt: `On définit la fonction g par \\(g(x) = ${a}x^{2} ${sgn(b)} ${abs(b)}\\). Calcule \\(g(${x0})\\).`,
     answer,
-    steps: [`g(${x0}) = ${a} \\times \\left(${x0}\\right)^{2} ${sgn(b)} ${abs(b)} = ${a * x0 * x0} ${sgn(b)} ${abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `g(${x0}) = ${a} \\times \\left(${x0}\\right)^{2} ${sgn(b)} ${abs(b)} = ${a * x0 * x0} ${sgn(b)} ${abs(b)} = ${answer}` }],
   };
 }
 
@@ -83,7 +83,7 @@ function genImageFonctionCubiqueNumeric() {
     chapter: "Notion de fonction — Vocabulaire, image, antécédent",
     prompt: `On définit la fonction h par \\(h(x) = ${a}x^{3} ${sgn(b)} ${abs(b)}\\). Calcule \\(h(${x0})\\).`,
     answer,
-    steps: [`h(${x0}) = ${a} \\times \\left(${x0}\\right)^{3} ${sgn(b)} ${abs(b)} = ${a * x0 ** 3} ${sgn(b)} ${abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `h(${x0}) = ${a} \\times \\left(${x0}\\right)^{3} ${sgn(b)} ${abs(b)} = ${a * x0 ** 3} ${sgn(b)} ${abs(b)} = ${answer}` }],
   };
 }
 
@@ -98,7 +98,11 @@ function genAntecedentFonctionLineaireNumeric() {
     chapter: "Notion de fonction — Vocabulaire, image, antécédent",
     prompt: `On définit la fonction f par \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\). Trouve un antécédent de ${target} par f.`,
     answer: x0,
-    steps: [`${a}x ${sgn(b)} ${abs(b)} = ${target}`, `${a}x = ${target - b}`, `x = \\dfrac{${target - b}}{${a}} = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${a}x ${sgn(b)} ${abs(b)} = ${target}` },
+      { type: "calcul", text: `${a}x = ${target - b}` },
+      { type: "resultat", text: `x = \\dfrac{${target - b}}{${a}} = ${x0}` },
+    ],
   };
 }
 
@@ -112,7 +116,11 @@ function genAntecedentFonctionQuadratiqueNumeric() {
     chapter: "Notion de fonction — Vocabulaire, image, antécédent",
     prompt: `On définit la fonction f par \\(f(x) = x^{2} ${sgn(b)} ${abs(b)}\\). Trouve l'antécédent positif de ${target} par f.`,
     answer: r,
-    steps: [`x^{2} ${sgn(b)} ${abs(b)} = ${target}`, `x^{2} = ${target - b} = ${r * r}`, `x = ${r} \\text{ (solution positive)}`],
+    steps: [
+      { type: "donnee", text: `x^{2} ${sgn(b)} ${abs(b)} = ${target}` },
+      { type: "calcul", text: `x^{2} = ${target - b} = ${r * r}` },
+      { type: "resultat", text: `x = ${r} \\text{ (solution positive)}` },
+    ],
   };
 }
 
@@ -134,7 +142,7 @@ function genVocabulaireImageAntecedentQCM() {
     prompt: `On sait que \\(${fname}(${x0}) = ${y0}\\). Quelle affirmation est correcte ?`,
     answer: correct,
     options,
-    steps: [`${fname}(${x0}) = ${y0} \\text{ signifie que } ${y0} \\text{ est l'image de } ${x0} \\text{ par } ${fname}, \\text{ et que } ${x0} \\text{ est un antécédent de } ${y0} \\text{ par } ${fname}.`],
+    steps: [{ type: "regle", text: `${fname}(${x0}) = ${y0} \\text{ signifie que } ${y0} \\text{ est l'image de } ${x0} \\text{ par } ${fname}, \\text{ et que } ${x0} \\text{ est un antécédent de } ${y0} \\text{ par } ${fname}.` }],
   };
 }
 
@@ -151,7 +159,7 @@ function genLectureTableauImageNumeric() {
     chapter: "Notion de fonction — Tableau de valeurs",
     prompt: `Voici les images de quelques nombres par une fonction f : ${table}. Quelle est l'image de ${xs[idx]} par f ?`,
     answer: ys[idx],
-    steps: [`f(${xs[idx]}) = ${ys[idx]}`],
+    steps: [{ type: "donnee", text: `f(${xs[idx]}) = ${ys[idx]}` }],
   };
 }
 
@@ -166,7 +174,7 @@ function genLectureTableauAntecedentNumeric() {
     chapter: "Notion de fonction — Tableau de valeurs",
     prompt: `Voici les images de quelques nombres par une fonction f : ${table}. Quel est l'antécédent de ${ys[idx]} par f ?`,
     answer: xs[idx],
-    steps: [`f(${xs[idx]}) = ${ys[idx]}, \\text{ donc } ${xs[idx]} \\text{ est l'antécédent de } ${ys[idx]}.`],
+    steps: [{ type: "resultat", text: `f(${xs[idx]}) = ${ys[idx]}, \\text{ donc } ${xs[idx]} \\text{ est l'antécédent de } ${ys[idx]}.` }],
   };
 }
 
@@ -185,7 +193,7 @@ function genPuissanceDixAntecedentNumeric() {
     chapter: "Notion de fonction — Cas particuliers",
     prompt: `On définit la fonction m par \\(m(x) = 10^{x}\\). Quel est l'antécédent de ${pow10Display(k)} par m ?`,
     answer: k,
-    steps: [`10^{${k}} = ${pow10Display(k)}`],
+    steps: [{ type: "calcul", text: `10^{${k}} = ${pow10Display(k)}` }],
   };
 }
 
@@ -201,9 +209,12 @@ function genFonctionConstanteAntecedentsQCM() {
     answer: askSameValue ? "Une infinité" : "0",
     options: ["0", "1", "Une infinité"],
     steps: [
-      askSameValue
-        ? `f(x) \\text{ vaut toujours } ${k}, \\text{ donc tout nombre x est un antécédent de } ${k} : \\text{une infinité d'antécédents.}`
-        : `f(x) \\text{ vaut toujours } ${k} \\text{ et jamais } ${target}, \\text{ donc } ${target} \\text{ n'a aucun antécédent par f.}`,
+      {
+        type: "regle",
+        text: askSameValue
+          ? `f(x) \\text{ vaut toujours } ${k}, \\text{ donc tout nombre x est un antécédent de } ${k} : \\text{une infinité d'antécédents.}`
+          : `f(x) \\text{ vaut toujours } ${k} \\text{ et jamais } ${target}, \\text{ donc } ${target} \\text{ n'a aucun antécédent par f.}`,
+      },
     ],
   };
 }
@@ -221,7 +232,7 @@ function genProgrammeCalculExpressionFonctionNumeric() {
     chapter: "Notion de fonction — Programmes de calcul",
     prompt: `Un programme de calcul définit une fonction p : choisir un nombre x, lui ajouter ${a}, puis multiplier le résultat par ${k}. Calcule \\(p(${x0})\\).`,
     answer,
-    steps: [`p(${x0}) = ${k}\\left(${x0} ${sgn(a)} ${abs(a)}\\right) = ${k} \\times ${x0 + a} = ${answer}`],
+    steps: [{ type: "calcul", text: `p(${x0}) = ${k}\\left(${x0} ${sgn(a)} ${abs(a)}\\right) = ${k} \\times ${x0 + a} = ${answer}` }],
   };
 }
 
@@ -236,7 +247,11 @@ function genProgrammeCalculAntecedentNumeric() {
     chapter: "Notion de fonction — Programmes de calcul",
     prompt: `Un programme de calcul définit une fonction p : choisir un nombre x, lui ajouter ${a}, puis multiplier le résultat par ${k}. Quel nombre de départ x donne \\(p(x) = ${target}\\) ?`,
     answer: x0,
-    steps: [`${k}\\left(x ${sgn(a)} ${abs(a)}\\right) = ${target}`, `x ${sgn(a)} ${abs(a)} = \\dfrac{${target}}{${k}} = ${x0 + a}`, `x = ${x0}`],
+    steps: [
+      { type: "donnee", text: `${k}\\left(x ${sgn(a)} ${abs(a)}\\right) = ${target}` },
+      { type: "calcul", text: `x ${sgn(a)} ${abs(a)} = \\dfrac{${target}}{${k}} = ${x0 + a}` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -252,11 +267,11 @@ function genEgaliteDeuxFonctionsNumeric() {
     prompt: `On définit \\(f(x) = ${a}x\\) et \\(g(x) = x^{2} ${sgn(c)} ${abs(c)}x\\). Pour quelle valeur de x non nulle a-t-on \\(f(x) = g(x)\\) ?`,
     answer: r,
     steps: [
-      `${a}x = x^{2} ${sgn(c)} ${abs(c)}x`,
-      `0 = x^{2} ${sgn(diff)} ${abs(diff)}x`,
-      `0 = x\\left(x ${sgn(diff)} ${abs(diff)}\\right)`,
-      `x = 0 \\text{ ou } x = ${r}`,
-      `\\text{La valeur non nulle est } x = ${r}`,
+      { type: "donnee", text: `${a}x = x^{2} ${sgn(c)} ${abs(c)}x` },
+      { type: "calcul", text: `0 = x^{2} ${sgn(diff)} ${abs(diff)}x` },
+      { type: "calcul", text: `0 = x\\left(x ${sgn(diff)} ${abs(diff)}\\right)` },
+      { type: "calcul", text: `x = 0 \\text{ ou } x = ${r}` },
+      { type: "resultat", text: `\\text{La valeur non nulle est } x = ${r}` },
     ],
   };
 }
@@ -275,7 +290,7 @@ function genVraiFauxImageQCM() {
     prompt: `On définit \\(f(x) = ${a}x ${sgn(b)} ${abs(b)}\\). Est-il vrai que \\(f(${x0}) = ${claimedVal}\\) ?`,
     answer: isTrue ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [`f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${trueVal}`],
+    steps: [{ type: "calcul", text: `f(${x0}) = ${a} \\times ${x0} ${sgn(b)} ${abs(b)} = ${trueVal}` }],
   };
 }
 
@@ -326,6 +341,7 @@ export default {
     id: "notion-fonction-troisieme",
     title: "Notion de fonction",
     description: "Vocabulaire (image, antécédent), calculer une image ou trouver un antécédent par une fonction, lecture dans un tableau de valeurs, cas particuliers, programmes de calcul et égalité de deux fonctions.",
+    pourquoi: "Trouver une image ou un antécédent, c'est apprendre à lire n'importe quel graphique scientifique du quotidien.",
     level: "troisieme",
     free: false,
     order: 6,

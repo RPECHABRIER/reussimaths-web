@@ -347,6 +347,7 @@ export default {
     id: "analyse-information-chiffree-premiere-non-spe",
     title: "Analyse de l'information chiffrée",
     description: "Tableaux croisés d'effectifs, proportions et proportions conditionnelles, taux de réussite et d'évolution, points de pourcentage, lecture critique de diagrammes, corrélation depuis un nuage de points.",
+    pourquoi: "Lire des tableaux croisés et des taux d'évolution, c'est décoder les chiffres des médias, des études et des bulletins de salaire — une compétence citoyenne autant que mathématique.",
     level: "premiere-non-spe",
     free: false,
     order: 2,

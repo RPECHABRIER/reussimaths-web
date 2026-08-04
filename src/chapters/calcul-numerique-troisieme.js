@@ -82,7 +82,10 @@ function genAdditionSoustractionFractionsNumeric() {
     chapter: "Calcul numérique — Fractions",
     prompt: `Calcule et donne le résultat sous forme de fraction irréductible (dénominateur positif) : \\(\\dfrac{${n1}}{${d1}} ${op} \\dfrac{${n2}}{${d2}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
-    steps: [`\\dfrac{${n1}}{${d1}} ${op} \\dfrac{${n2}}{${d2}} = \\dfrac{${num1Scaled}}{${commonDen}} ${op} \\dfrac{${num2Scaled}}{${commonDen}} = \\dfrac{${totalNum}}{${commonDen}}`, `Sous forme irréductible : \\dfrac{${rn}}{${rd}}`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${n1}}{${d1}} ${op} \\dfrac{${n2}}{${d2}} = \\dfrac{${num1Scaled}}{${commonDen}} ${op} \\dfrac{${num2Scaled}}{${commonDen}} = \\dfrac{${totalNum}}{${commonDen}}` },
+      { type: "resultat", text: `Sous forme irréductible : \\dfrac{${rn}}{${rd}}` },
+    ],
   };
 }
 
@@ -101,7 +104,10 @@ function genMultiplicationFractionsNumeric() {
     chapter: "Calcul numérique — Fractions",
     prompt: `Calcule et donne le résultat sous forme de fraction irréductible (dénominateur positif) : \\(\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
-    steps: [`\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}} = \\dfrac{${numProd}}{${denProd}}`, `Sous forme irréductible : \\dfrac{${rn}}{${rd}}`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}} = \\dfrac{${numProd}}{${denProd}}` },
+      { type: "resultat", text: `Sous forme irréductible : \\dfrac{${rn}}{${rd}}` },
+    ],
   };
 }
 
@@ -121,7 +127,10 @@ function genDivisionFractionsNumeric() {
     chapter: "Calcul numérique — Fractions",
     prompt: `Calcule et donne le résultat sous forme de fraction irréductible (dénominateur positif) : \\(\\dfrac{${n1}}{${d1}} \\div \\dfrac{${n2}}{${d2}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
-    steps: [`\\dfrac{${n1}}{${d1}} \\div \\dfrac{${n2}}{${d2}} = \\dfrac{${n1}}{${d1}} \\times \\dfrac{${d2}}{${n2}} = \\dfrac{${numRes}}{${denRes}}`, `Sous forme irréductible : \\dfrac{${rn}}{${rd}}`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${n1}}{${d1}} \\div \\dfrac{${n2}}{${d2}} = \\dfrac{${n1}}{${d1}} \\times \\dfrac{${d2}}{${n2}} = \\dfrac{${numRes}}{${denRes}}` },
+      { type: "resultat", text: `Sous forme irréductible : \\dfrac{${rn}}{${rd}}` },
+    ],
   };
 }
 
@@ -148,9 +157,9 @@ function genPrioriteFractionsNumeric() {
     prompt: `Calcule en respectant les priorités, et donne le résultat sous forme de fraction irréductible (dénominateur positif) : \\(\\dfrac{${a}}{${b}} ${op} \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
     steps: [
-      `On calcule d'abord le produit : \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} = \\dfrac{${prodNum}}{${prodDen}}`,
-      `\\dfrac{${a}}{${b}} ${op} \\dfrac{${prodNum}}{${prodDen}} = \\dfrac{${totalNum}}{${commonDen}}`,
-      `Sous forme irréductible : \\dfrac{${rn}}{${rd}}`,
+      { type: "calcul", text: `On calcule d'abord le produit : \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} = \\dfrac{${prodNum}}{${prodDen}}` },
+      { type: "calcul", text: `\\dfrac{${a}}{${b}} ${op} \\dfrac{${prodNum}}{${prodDen}} = \\dfrac{${totalNum}}{${commonDen}}` },
+      { type: "resultat", text: `Sous forme irréductible : \\dfrac{${rn}}{${rd}}` },
     ],
   };
 }
@@ -178,9 +187,9 @@ function genFractionResteProblemeNumeric() {
     prompt: `${p1} et ${p2} se partagent ${objet}. ${p1} en mange \\(\\dfrac{1}{${d1}}\\), puis ${p2} mange \\(\\dfrac{1}{${d2}}\\) de ce qu'il reste. Quelle fraction de ${objet} reste-t-il, sous forme irréductible ? Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
     steps: [
-      `${p1} mange \\dfrac{1}{${d1}} = \\dfrac{${consumed1}}{${restDen}}. Il reste \\dfrac{${remainingAfter1}}{${restDen}}.`,
-      `${p2} mange \\dfrac{1}{${d2}} de ce reste, soit \\dfrac{${consumed2}}{${restDen}}.`,
-      `Il reste : \\dfrac{${restDen}}{${restDen}} - \\dfrac{${totalConsumed}}{${restDen}} = \\dfrac{${restNum}}{${restDen}} = \\dfrac{${rn}}{${rd}}`,
+      { type: "calcul", text: `${p1} mange \\dfrac{1}{${d1}} = \\dfrac{${consumed1}}{${restDen}}. Il reste \\dfrac{${remainingAfter1}}{${restDen}}.` },
+      { type: "calcul", text: `${p2} mange \\dfrac{1}{${d2}} de ce reste, soit \\dfrac{${consumed2}}{${restDen}}.` },
+      { type: "resultat", text: `Il reste : \\dfrac{${restDen}}{${restDen}} - \\dfrac{${totalConsumed}}{${restDen}} = \\dfrac{${restNum}}{${restDen}} = \\dfrac{${rn}}{${rd}}` },
     ],
   };
 }
@@ -197,7 +206,7 @@ function genCalculerPuissanceSimpleNumeric() {
     chapter: "Calcul numérique — Puissances",
     prompt: `Calcule : \\((${base})^{${exp}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exp }, () => `(${base})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Array.from({ length: exp }, () => `(${base})`).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -211,7 +220,7 @@ function genPuissanceNegativeNumeric() {
     chapter: "Calcul numérique — Puissances",
     prompt: `On écrit \\(${base}^{${-exp}}\\) sous la forme d'une fraction \\(\\dfrac{1}{${base}^{${exp}}}\\). Quel est le dénominateur de cette fraction ?`,
     answer: denom,
-    steps: [`${base}^{${-exp}} = \\dfrac{1}{${base}^{${exp}}} = \\dfrac{1}{${denom}}`],
+    steps: [{ type: "regle", text: `${base}^{${-exp}} = \\dfrac{1}{${base}^{${exp}}} = \\dfrac{1}{${denom}}` }],
   };
 }
 
@@ -227,7 +236,16 @@ function genPrioritePuissanceSommeNumeric() {
     chapter: "Calcul numérique — Priorités avec puissances",
     prompt: `Calcule : \\(${expr}\\)`,
     answer,
-    steps: withParen ? [`${a} + ${b} = ${a + b}`, `${a + b}^2 = ${answer}`] : [`${a}^2 = ${a * a}`, `${b}^2 = ${b * b}`, `${a * a} + ${b * b} = ${answer}`],
+    steps: withParen
+      ? [
+          { type: "calcul", text: `${a} + ${b} = ${a + b}` },
+          { type: "resultat", text: `${a + b}^2 = ${answer}` },
+        ]
+      : [
+          { type: "calcul", text: `${a}^2 = ${a * a}` },
+          { type: "calcul", text: `${b}^2 = ${b * b}` },
+          { type: "resultat", text: `${a * a} + ${b * b} = ${answer}` },
+        ],
   };
 }
 
@@ -245,7 +263,16 @@ function genPrioritePuissanceProduitNumeric() {
     chapter: "Calcul numérique — Priorités avec puissances",
     prompt: `Calcule : \\(${expr}\\)`,
     answer,
-    steps: withParen ? [`${a} \\times ${b} = ${a * b}`, `${a * b}^{${pa}} = ${answer}`] : [`${a}^{${pa}} = ${a ** pa}`, `${b}^{${pb}} = ${b ** pb}`, `${a ** pa} \\times ${b ** pb} = ${answer}`],
+    steps: withParen
+      ? [
+          { type: "calcul", text: `${a} \\times ${b} = ${a * b}` },
+          { type: "resultat", text: `${a * b}^{${pa}} = ${answer}` },
+        ]
+      : [
+          { type: "calcul", text: `${a}^{${pa}} = ${a ** pa}` },
+          { type: "calcul", text: `${b}^{${pb}} = ${b ** pb}` },
+          { type: "resultat", text: `${a ** pa} \\times ${b ** pb} = ${answer}` },
+        ],
   };
 }
 
@@ -259,7 +286,7 @@ function genProduitPuissancesMemeBaseNumeric() {
     chapter: "Calcul numérique — Règles des puissances",
     prompt: `On écrit \\(${base}^{${m}} \\times ${base}^{${n}}\\) sous la forme \\(${base}^{k}\\). Quelle est la valeur de k ?`,
     answer: m + n,
-    steps: [`${base}^{${m}} \\times ${base}^{${n}} = ${base}^{${m} + (${n})} = ${base}^{${m + n}}`],
+    steps: [{ type: "regle", text: `${base}^{${m}} \\times ${base}^{${n}} = ${base}^{${m} + (${n})} = ${base}^{${m + n}}` }],
   };
 }
 
@@ -273,7 +300,7 @@ function genQuotientPuissancesMemeBaseNumeric() {
     chapter: "Calcul numérique — Règles des puissances",
     prompt: `On écrit \\(\\dfrac{${base}^{${m}}}{${base}^{${n}}}\\) sous la forme \\(${base}^{k}\\). Quelle est la valeur de k ?`,
     answer: m - n,
-    steps: [`\\dfrac{${base}^{${m}}}{${base}^{${n}}} = ${base}^{${m} - (${n})} = ${base}^{${m - n}}`],
+    steps: [{ type: "regle", text: `\\dfrac{${base}^{${m}}}{${base}^{${n}}} = ${base}^{${m} - (${n})} = ${base}^{${m - n}}` }],
   };
 }
 
@@ -287,7 +314,7 @@ function genPuissanceDePuissanceNumeric() {
     chapter: "Calcul numérique — Règles des puissances",
     prompt: `On écrit \\((${base}^{${m}})^{${n}}\\) sous la forme \\(${base}^{k}\\). Quelle est la valeur de k ?`,
     answer: m * n,
-    steps: [`(${base}^{${m}})^{${n}} = ${base}^{${m} \\times ${n}} = ${base}^{${m * n}}`],
+    steps: [{ type: "regle", text: `(${base}^{${m}})^{${n}} = ${base}^{${m} \\times ${n}} = ${base}^{${m * n}}` }],
   };
 }
 
@@ -301,7 +328,7 @@ function genProduitMemeExposantNumeric() {
     chapter: "Calcul numérique — Règles des puissances",
     prompt: `On écrit \\(${a}^{${n}} \\times ${b}^{${n}}\\) sous la forme \\(k^{${n}}\\). Quelle est la valeur de k ?`,
     answer: a * b,
-    steps: [`${a}^{${n}} \\times ${b}^{${n}} = (${a} \\times ${b})^{${n}} = ${a * b}^{${n}}`],
+    steps: [{ type: "regle", text: `${a}^{${n}} \\times ${b}^{${n}} = (${a} \\times ${b})^{${n}} = ${a * b}^{${n}}` }],
   };
 }
 
@@ -319,7 +346,11 @@ function genEncadrementRacineCarreeNumeric() {
     chapter: "Calcul numérique — Racines carrées",
     prompt: `Sachant que \\(${lower} < ${k} < ${upper}\\), encadre \\(\\sqrt{${k}}\\) entre deux entiers consécutifs. Donne ${askLower ? "l'entier le plus petit" : "l'entier le plus grand"} de cet encadrement.`,
     answer: askLower ? n : n + 1,
-    steps: [`${lower} = ${n}^2`, `${upper} = (${n + 1})^2`, `${n} < \\sqrt{${k}} < ${n + 1}`],
+    steps: [
+      { type: "calcul", text: `${lower} = ${n}^2` },
+      { type: "calcul", text: `${upper} = (${n + 1})^2` },
+      { type: "resultat", text: `${n} < \\sqrt{${k}} < ${n + 1}` },
+    ],
   };
 }
 
@@ -343,7 +374,9 @@ function genEstCarreParfaitQCM() {
     prompt: `${n} est-il un carré parfait (le carré d'un nombre entier) ?`,
     answer: carre ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: carre ? [`${n} = ${racine}^2, donc ${n} est bien un carré parfait.`] : [`Il n'existe aucun nombre entier dont le carré vaut ${n}, donc ${n} n'est pas un carré parfait.`],
+    steps: carre
+      ? [{ type: "regle", text: `${n} = ${racine}^2, donc ${n} est bien un carré parfait.` }]
+      : [{ type: "regle", text: `Il n'existe aucun nombre entier dont le carré vaut ${n}, donc ${n} n'est pas un carré parfait.` }],
   };
 }
 
@@ -363,7 +396,10 @@ function genEcritureScientifiqueExposantNumeric() {
     chapter: "Calcul numérique — Écriture scientifique",
     prompt: `On écrit un nombre sous la forme \\(${fr(mDisplay)} \\times 10^{${eDisplay}}\\). Écris ce nombre en notation scientifique, avec une mantisse comprise entre 1 et 10 (en valeur absolue). Quel est l'exposant de cette écriture ?`,
     answer: e,
-    steps: [`${fr(mDisplay)} \\times 10^{${eDisplay}} = ${fr(m)} \\times 10^{${e}}`, `La mantisse ${fr(m)} est bien comprise entre 1 et 10.`],
+    steps: [
+      { type: "resultat", text: `${fr(mDisplay)} \\times 10^{${eDisplay}} = ${fr(m)} \\times 10^{${e}}` },
+      { type: "regle", text: `La mantisse ${fr(m)} est bien comprise entre 1 et 10.` },
+    ],
   };
 }
 
@@ -418,6 +454,7 @@ export default {
     id: "calcul-numerique-troisieme",
     title: "Calcul numérique",
     description: "Opérations et priorités avec des fractions, calcul avec les puissances (puissances négatives, règles de calcul), encadrement d'une racine carrée, carrés parfaits, écriture scientifique.",
+    pourquoi: "Maîtriser fractions et puissances, c'est ce qui rend accessibles les calculs scientifiques (notation scientifique, ordres de grandeur) sans calculatrice.",
     level: "troisieme",
     free: false,
     order: 3,

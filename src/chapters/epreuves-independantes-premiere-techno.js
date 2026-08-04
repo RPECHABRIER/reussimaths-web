@@ -170,6 +170,7 @@ export default {
     id: "epreuves-independantes-premiere-techno",
     title: "Épreuves indépendantes et répétition de Bernoulli",
     description: "Épreuve de Bernoulli, répétition de n ≤ 4 épreuves indépendantes, arbre pondéré, dénombrement des chemins.",
+    pourquoi: "Modéliser une répétition d'épreuves indépendantes, c'est ce qui permet de calculer le risque d'un événement répété (contrôle qualité, sondage, jeu de hasard).",
     level: "premiere-techno",
     order: 7,
   },

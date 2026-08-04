@@ -136,6 +136,9 @@ export default function Account() {
             <Link to="/amis" className="text-xs font-medium" style={{ color: colors.slate }}>
               Amis & défis
             </Link>
+            <Link to="/reviser" className="text-xs font-medium" style={{ color: colors.slate }}>
+              Réviser
+            </Link>
           </div>
 
           {referralLink && (

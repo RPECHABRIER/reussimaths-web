@@ -36,7 +36,10 @@ function genAngleInconnuTriangleNumeric() {
     chapter: "Géométrie plane — Égalité de triangles",
     prompt: `Dans un triangle ${noms.join("")}, on a \\(\\widehat{${noms[0]}} = ${a1}°\\) et \\(\\widehat{${noms[1]}} = ${a2}°\\). Calcule la mesure de l'angle \\(\\widehat{${noms[2]}}\\), en degrés.`,
     answer: a3,
-    steps: [`\\text{La somme des angles d'un triangle vaut } 180°.`, `\\widehat{${noms[2]}} = 180 - ${a1} - ${a2} = ${a3}°`],
+    steps: [
+      { type: "regle", text: `\\text{La somme des angles d'un triangle vaut } 180°.` },
+      { type: "resultat", text: `\\widehat{${noms[2]}} = 180 - ${a1} - ${a2} = ${a3}°` },
+    ],
   };
 }
 
@@ -52,7 +55,10 @@ function genAngleInconnuTriangleIsoceleNumeric() {
       prompt: `MNP est un triangle isocèle en M, avec \\(\\widehat{M} = ${apex}°\\). Calcule la mesure de l'angle \\(\\widehat{N}\\), en degrés (arrondie au dixième si nécessaire).`,
       answer: base,
       tolerance: 0.1,
-      steps: [`\\text{Le triangle étant isocèle en M, on a } \\widehat{N} = \\widehat{P}.`, `\\widehat{N} = \\dfrac{180 - ${apex}}{2} = ${fr(base)}°`],
+      steps: [
+        { type: "regle", text: `\\text{Le triangle étant isocèle en M, on a } \\widehat{N} = \\widehat{P}.` },
+        { type: "resultat", text: `\\widehat{N} = \\dfrac{180 - ${apex}}{2} = ${fr(base)}°` },
+      ],
     };
   }
   const base = randInt(20, 80);
@@ -62,7 +68,10 @@ function genAngleInconnuTriangleIsoceleNumeric() {
     chapter: "Géométrie plane — Égalité de triangles",
     prompt: `MNP est un triangle isocèle en M, avec \\(\\widehat{N} = ${base}°\\). Calcule la mesure de l'angle \\(\\widehat{M}\\), en degrés.`,
     answer: apex,
-    steps: [`\\text{Le triangle étant isocèle en M, on a } \\widehat{N} = \\widehat{P} = ${base}°.`, `\\widehat{M} = 180 - 2 \\times ${base} = ${apex}°`],
+    steps: [
+      { type: "regle", text: `\\text{Le triangle étant isocèle en M, on a } \\widehat{N} = \\widehat{P} = ${base}°.` },
+      { type: "resultat", text: `\\widehat{M} = 180 - 2 \\times ${base} = ${apex}°` },
+    ],
   };
 }
 
@@ -84,7 +93,7 @@ function genCritereEgaliteTrianglesQCM() {
     prompt: `On sait que ${cas.desc}. Quelle propriété permet de conclure que les triangles ABC et DEF sont égaux ?`,
     answer: cas.reponse,
     options,
-    steps: [`Deux triangles sont égaux si leurs côtés sont deux à deux de même longueur, ou si un angle (ou un côté) est situé entre deux éléments respectivement égaux.`],
+    steps: [{ type: "regle", text: `Deux triangles sont égaux si leurs côtés sont deux à deux de même longueur, ou si un angle (ou un côté) est situé entre deux éléments respectivement égaux.` }],
   };
 }
 
@@ -103,7 +112,7 @@ function genTriangleEgalNecessaireQCM() {
     prompt: `Un triangle égal au triangle ABC tel que AB = ${AB} cm, BC = ${BC} cm et \\(\\widehat{ABC} = ${angle}°\\) a nécessairement...`,
     answer: correct,
     options: finalOptions.length >= 2 ? finalOptions : [correct, wrong1],
-    steps: [`Deux triangles égaux ont exactement les mêmes longueurs de côtés et les mêmes mesures d'angles (dans le même ordre).`],
+    steps: [{ type: "regle", text: `Deux triangles égaux ont exactement les mêmes longueurs de côtés et les mêmes mesures d'angles (dans le même ordre).` }],
   };
 }
 
@@ -119,7 +128,10 @@ function genTranslationConserveLongueurNumeric() {
     chapter: "Géométrie plane — Translations",
     prompt: `Le polygone ${R}${S}... est l'image du polygone ${P}${Q}... par une translation, avec [${R}${S}] l'image de [${P}${Q}]. Sachant que ${P}${Q} = ${fr(longueur)} cm, quelle est la longueur du segment [${R}${S}], en cm ?`,
     answer: longueur,
-    steps: [`\\text{Une translation conserve les longueurs.}`, `${R}${S} = ${P}${Q} = ${fr(longueur)}\\ \\text{cm}`],
+    steps: [
+      { type: "regle", text: `\\text{Une translation conserve les longueurs.}` },
+      { type: "resultat", text: `${R}${S} = ${P}${Q} = ${fr(longueur)}\\ \\text{cm}` },
+    ],
   };
 }
 
@@ -134,7 +146,10 @@ function genTranslationConserveAngleNumeric() {
     chapter: "Géométrie plane — Translations",
     prompt: `Le triangle ${X}${Y}${Z} est l'image du triangle ${P}${Q}${R} par une translation, avec l'angle \\(\\widehat{${X}${Y}${Z}}\\) image de l'angle \\(\\widehat{${P}${Q}${R}}\\). Sachant que \\(\\widehat{${P}${Q}${R}} = ${angle}°\\), quelle est la mesure de l'angle \\(\\widehat{${X}${Y}${Z}}\\), en degrés ?`,
     answer: angle,
-    steps: [`\\text{Une translation conserve les mesures d'angles.}`, `\\widehat{${X}${Y}${Z}} = \\widehat{${P}${Q}${R}} = ${angle}°`],
+    steps: [
+      { type: "regle", text: `\\text{Une translation conserve les mesures d'angles.}` },
+      { type: "resultat", text: `\\widehat{${X}${Y}${Z}} = \\widehat{${P}${Q}${R}} = ${angle}°` },
+    ],
   };
 }
 
@@ -149,7 +164,10 @@ function genTranslationConserveAireNumeric() {
     prompt: `Le triangle DEF est l'image du triangle ABC (rectangle en B, de base BC = ${base} m et de hauteur AB = ${hauteur} m) par une translation. Calcule l'aire du triangle DEF, en m².`,
     answer: aire,
     tolerance: 0.01,
-    steps: [`\\text{Aire}(ABC) = \\dfrac{${base} \\times ${hauteur}}{2} = ${fr(aire)}\\ m^2`, `\\text{Une translation conserve les aires, donc Aire}(DEF) = ${fr(aire)}\\ m^2`],
+    steps: [
+      { type: "calcul", text: `\\text{Aire}(ABC) = \\dfrac{${base} \\times ${hauteur}}{2} = ${fr(aire)}\\ m^2` },
+      { type: "resultat", text: `\\text{Une translation conserve les aires, donc Aire}(DEF) = ${fr(aire)}\\ m^2` },
+    ],
   };
 }
 
@@ -166,7 +184,7 @@ function genTransformationTypeQCM() {
     prompt: `On observe que ${cas.desc}. De quelle transformation s'agit-il ?`,
     answer: cas.reponse,
     options: ["Translation", "Retournement", "Déformation"],
-    steps: [`Une translation fait glisser une figure sans la retourner ni la déformer : les longueurs, les angles et le parallélisme sont conservés.`],
+    steps: [{ type: "regle", text: `Une translation fait glisser une figure sans la retourner ni la déformer : les longueurs, les angles et le parallélisme sont conservés.` }],
   };
 }
 
@@ -189,10 +207,10 @@ function genQuadrilatereTranslationQCM() {
     answer: reponse,
     options: ["Parallélogramme", "Rectangle", "Losange", "Carré"],
     steps: [
-      `\\text{Une translation donne (CD)} // \\text{(BA) et CD = BA : ABCD est un parallélogramme.}`,
-      avecAngleDroit ? "Un parallélogramme avec un angle droit est un rectangle." : "",
-      cotesEgaux ? "Un parallélogramme avec deux côtés consécutifs égaux est un losange." : "",
-      avecAngleDroit && cotesEgaux ? "Un rectangle qui est aussi un losange est un carré." : "",
+      { type: "regle", text: `\\text{Une translation donne (CD)} // \\text{(BA) et CD = BA : ABCD est un parallélogramme.}` },
+      avecAngleDroit ? { type: "regle", text: "Un parallélogramme avec un angle droit est un rectangle." } : null,
+      cotesEgaux ? { type: "regle", text: "Un parallélogramme avec deux côtés consécutifs égaux est un losange." } : null,
+      avecAngleDroit && cotesEgaux ? { type: "resultat", text: "Un rectangle qui est aussi un losange est un carré." } : null,
     ].filter(Boolean),
   };
 }
@@ -208,7 +226,10 @@ function genProblemeFriseTranslationNumeric() {
     chapter: "Géométrie plane — Translations",
     prompt: `${prenom} réalise une frise en appliquant ${repetitions} fois de suite à un motif la translation qui transforme le point E en F, avec EF = ${distance} cm. Quelle est la distance totale, en cm, parcourue par un point du motif initial jusqu'à sa dernière image ?`,
     answer: distanceTotale,
-    steps: [`\\text{Chaque translation déplace le motif de } ${distance}\\ \\text{cm}.`, `${repetitions} \\times ${distance} = ${distanceTotale}\\ \\text{cm}`],
+    steps: [
+      { type: "regle", text: `\\text{Chaque translation déplace le motif de } ${distance}\\ \\text{cm}.` },
+      { type: "resultat", text: `${repetitions} \\times ${distance} = ${distanceTotale}\\ \\text{cm}` },
+    ],
   };
 }
 
@@ -221,7 +242,10 @@ function genImageHexagoneReguliereNumeric() {
     chapter: "Géométrie plane — Translations",
     prompt: `Un hexagone régulier a un côté de ${cote} cm. Quel est le périmètre de son image par une translation, en cm ?`,
     answer: perimetre,
-    steps: [`\\text{Une translation conserve les longueurs, donc l'image est aussi un hexagone régulier de côté } ${cote}\\ \\text{cm}.`, `\\text{Périmètre} = 6 \\times ${cote} = ${perimetre}\\ \\text{cm}`],
+    steps: [
+      { type: "regle", text: `\\text{Une translation conserve les longueurs, donc l'image est aussi un hexagone régulier de côté } ${cote}\\ \\text{cm}.` },
+      { type: "resultat", text: `\\text{Périmètre} = 6 \\times ${cote} = ${perimetre}\\ \\text{cm}` },
+    ],
   };
 }
 
@@ -236,7 +260,10 @@ function genPavageAireTotaleNumeric() {
     prompt: `Un pavage est constitué de ${nombre} hexagones, tous images les uns des autres par des translations, chacun d'aire ${fr(aireUnite)} cm². Quelle est l'aire totale du pavage, en cm² ?`,
     answer: aireTotale,
     tolerance: 0.01,
-    steps: [`\\text{Une translation conserve les aires : chaque hexagone a la même aire.}`, `${nombre} \\times ${fr(aireUnite)} = ${fr(aireTotale)}\\ cm^2`],
+    steps: [
+      { type: "regle", text: `\\text{Une translation conserve les aires : chaque hexagone a la même aire.}` },
+      { type: "resultat", text: `${nombre} \\times ${fr(aireUnite)} = ${fr(aireTotale)}\\ cm^2` },
+    ],
   };
 }
 
@@ -283,6 +310,7 @@ export default {
     id: "geometrie-plane",
     title: "Géométrie plane",
     description: "Égalité de triangles et propriétés des translations (longueurs, angles, aires, parallélisme).",
+    pourquoi: "Comprendre les translations et l'égalité de figures, c'est la base du raisonnement géométrique utilisé en dessin technique et en architecture.",
     level: "quatrieme",
     free: false,
     order: 14,

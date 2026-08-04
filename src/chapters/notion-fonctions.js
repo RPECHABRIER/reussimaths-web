@@ -39,7 +39,7 @@ function genImageParFormuleLineaireNumeric() {
     chapter: "Notion de fonctions — Image, antécédent",
     prompt: `Soit f une fonction qui, à chaque nombre x, associe le nombre \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quel est le nombre associé à ${x} par f ?`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -54,7 +54,7 @@ function genImageParFormuleQuadratiqueNumeric() {
     chapter: "Notion de fonctions — Image, antécédent",
     prompt: `Soit f une fonction qui, à chaque nombre x, associe le nombre \\(${a}x^{2} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quel est le nombre associé à ${x} par f ?`,
     answer,
-    steps: [`${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -69,7 +69,11 @@ function genAntecedentParFormuleLineaireNumeric() {
     chapter: "Notion de fonctions — Image, antécédent",
     prompt: `Soit f une fonction qui, à chaque nombre x, associe le nombre \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quel nombre est associé à ${y} par f (autrement dit, quel est l'antécédent de ${y}) ?`,
     answer: xSol,
-    steps: [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}`, `${a}x = ${y - b}`, `x = ${y - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${y}` },
+      { type: "calcul", text: `${a}x = ${y - b}` },
+      { type: "resultat", text: `x = ${y - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -88,8 +92,11 @@ function genAppartientCourbeQCM() {
     answer: testBelongs ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${yCorrect}`,
-      testBelongs ? `${yTest} = ${yCorrect}, donc le point appartient à la courbe.` : `${yTest} \\neq ${yCorrect}, donc le point n'appartient pas à la courbe.`,
+      { type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${yCorrect}` },
+      {
+        type: "resultat",
+        text: testBelongs ? `${yTest} = ${yCorrect}, donc le point appartient à la courbe.` : `${yTest} \\neq ${yCorrect}, donc le point n'appartient pas à la courbe.`,
+      },
     ],
   };
 }
@@ -110,7 +117,7 @@ function genErreurCalculImageQCM() {
     prompt: `Soit f la fonction qui, à chaque nombre x, associe le nombre \\(x^{2} - 1\\). Quel est le nombre associé à ${x} par f ?`,
     answer: String(correct),
     options: options.length >= 2 ? options : [String(correct), String(wrongLinear)],
-    steps: [`${x}^2 - 1 = ${correct}`],
+    steps: [{ type: "calcul", text: `${x}^2 - 1 = ${correct}` }],
   };
 }
 
@@ -126,7 +133,7 @@ function genImageFormuleCubeNumeric() {
     chapter: "Notion de fonctions — Image, antécédent",
     prompt: `Soit k une fonction qui, à chaque nombre x, associe le nombre \\(${a}x^{3} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x^{2} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\). À l'aide de la calculatrice, calcule le nombre associé à ${x} par k.`,
     answer,
-    steps: [`${a} \\times ${x}^3 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x}^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x}^3 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${x}^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${answer}` }],
   };
 }
 
@@ -142,7 +149,7 @@ function genFonctionDepuisTableauLireNumeric() {
     chapter: "Notion de fonctions — Tableau de valeurs",
     prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Quel est le nombre associé à ${xs[idx]} par f ?`,
     answer: ys[idx],
-    steps: [`D'après le tableau, à x = ${xs[idx]} on associe ${ys[idx]}.`],
+    steps: [{ type: "donnee", text: `D'après le tableau, à x = ${xs[idx]} on associe ${ys[idx]}.` }],
   };
 }
 
@@ -164,7 +171,7 @@ function genFonctionDepuisTableauAntecedentNumeric() {
     chapter: "Notion de fonctions — Tableau de valeurs",
     prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Quel nombre a pour image ${ys[idx]} par f (antécédent de ${ys[idx]}) ?`,
     answer: xs[idx],
-    steps: [`D'après le tableau, ${ys[idx]} est associé à x = ${xs[idx]}.`],
+    steps: [{ type: "donnee", text: `D'après le tableau, ${ys[idx]} est associé à x = ${xs[idx]}.` }],
   };
 }
 
@@ -182,7 +189,7 @@ function genProportionnaliteOuNonQCM() {
     prompt: `Voici un tableau de valeurs : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Cette fonction correspond-elle à une situation de proportionnalité ?`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`On vérifie si le quotient y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.`],
+    steps: [{ type: "calcul", text: `On vérifie si le quotient y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.` }],
   };
 }
 
@@ -203,7 +210,7 @@ function genQuelleFormuleCorrespondQCM() {
     prompt: `Une fonction associe à ${x} le nombre ${correctY}. Laquelle de ces expressions peut correspondre à cette fonction ?`,
     answer: correctExpr,
     options: options.length >= 2 ? options : [correctExpr, wrong1Expr],
-    steps: [`${a1} \\times ${x} ${b1 >= 0 ? "+" : "-"} ${Math.abs(b1)} = ${correctY}`],
+    steps: [{ type: "calcul", text: `${a1} \\times ${x} ${b1 >= 0 ? "+" : "-"} ${Math.abs(b1)} = ${correctY}` }],
   };
 }
 
@@ -220,7 +227,9 @@ function genPerimetreAireRectangleFonctionNumeric() {
     chapter: "Notion de fonctions — Problèmes",
     prompt: `Un rectangle a pour largeur x et pour longueur \\(x + ${decalage}\\). On définit une fonction qui, à x, associe ${askAire ? "l'aire" : "le périmètre"} du rectangle. Quelle est l'image de ${x} par cette fonction ?`,
     answer,
-    steps: askAire ? [`${x} \\times (${x} + ${decalage}) = ${answer}`] : [`2 \\times ${x} + 2 \\times (${x} + ${decalage}) = ${answer}`],
+    steps: askAire
+      ? [{ type: "calcul", text: `${x} \\times (${x} + ${decalage}) = ${answer}` }]
+      : [{ type: "calcul", text: `2 \\times ${x} + 2 \\times (${x} + ${decalage}) = ${answer}` }],
   };
 }
 
@@ -238,7 +247,10 @@ function genFonctionPourcentageReductionNumeric() {
     prompt: `Dans un magasin, chaque boîte de macarons coûte ${prixUnitaire} €. À partir de ${seuil + 1} boîtes, on bénéficie de ${reduction} % de réduction sur l'ensemble des boîtes achetées. Quel est le prix payé pour ${nbBoites} boîtes ?`,
     answer: prixAvecReduction,
     tolerance: 0.01,
-    steps: [`${prixUnitaire} \\times ${nbBoites} = ${prixSansReduction}`, `${prixSansReduction} \\times (1 - ${reduction}/100) = ${fr(prixAvecReduction)}`],
+    steps: [
+      { type: "calcul", text: `${prixUnitaire} \\times ${nbBoites} = ${prixSansReduction}` },
+      { type: "resultat", text: `${prixSansReduction} \\times (1 - ${reduction}/100) = ${fr(prixAvecReduction)}` },
+    ],
   };
 }
 
@@ -285,6 +297,7 @@ export default {
     id: "notion-fonctions",
     title: "Notion de fonctions",
     description: "Calculer une image ou un antécédent par une fonction définie par une formule ou un tableau, tester l'appartenance à une courbe, reconnaître une situation de proportionnalité.",
+    pourquoi: "Calculer une image ou un antécédent, c'est le premier pas pour lire et interpréter n'importe quel graphique.",
     level: "quatrieme",
     free: false,
     order: 10,

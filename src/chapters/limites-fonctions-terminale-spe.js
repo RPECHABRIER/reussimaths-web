@@ -321,6 +321,7 @@ export default {
     id: "limites-fonctions-terminale-spe",
     title: "Limites de fonctions",
     description: "Limites de fonctions rationnelles et polynomiales en ±∞, croissance comparée, asymptotes horizontales et verticales, opérations sur les limites, formes indéterminées, théorème des gendarmes.",
+    pourquoi: "Étudier une limite, c'est prévoir le comportement à long terme d'un phénomène — population, stock, signal — sans attendre d'en observer la fin.",
     level: "terminale-spe",
     free: false,
     order: 6,

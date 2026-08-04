@@ -88,7 +88,10 @@ function genChiffrePositionDecimal() {
     chapter: "Nombres décimaux — Écriture décimale",
     prompt: `Dans le nombre ${fr(value)}, quel est le chiffre des ${positions[posIndex]} ?`,
     answer: digit,
-    steps: [`On compte les rangs après la virgule : dixièmes, centièmes, millièmes.`, `Le chiffre des ${positions[posIndex]} est ${digit}.`],
+    steps: [
+      { type: "regle", text: `On compte les rangs après la virgule : dixièmes, centièmes, millièmes.` },
+      { type: "resultat", text: `Le chiffre des ${positions[posIndex]} est ${digit}.` },
+    ],
   };
 }
 
@@ -104,7 +107,7 @@ function genFractionDecimaleVersDecimal() {
       chapter: "Nombres décimaux — Fractions décimales",
       prompt: `\\(\\dfrac{${n}}{${k}} = ?\\) (écriture décimale)`,
       answer: value,
-      steps: [`\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)`],
+      steps: [{ type: "calcul", text: `\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)` }],
     };
   }
   return {
@@ -112,7 +115,7 @@ function genFractionDecimaleVersDecimal() {
     chapter: "Nombres décimaux — Fractions décimales",
     prompt: `Quel numérateur complète \\(\\dfrac{?}{${k}} = ${frTex(value)}\\) ?`,
     answer: n,
-    steps: [`${fr(value)} \\times ${k} = ${n}`],
+    steps: [{ type: "calcul", text: `${fr(value)} \\times ${k} = ${n}` }],
   };
 }
 
@@ -126,7 +129,7 @@ function genDecompositionSommeDecimale() {
     chapter: "Nombres décimaux — Décomposition",
     prompt: `\\(${whole} + \\dfrac{${num}}{${k}} = ?\\)`,
     answer: value,
-    steps: [`${whole} + ${num}/${k} = ${fr(value)}`],
+    steps: [{ type: "calcul", text: `${whole} + ${num}/${k} = ${fr(value)}` }],
   };
 }
 
@@ -163,7 +166,10 @@ function genLireAbscisseDecimale() {
     prompt: `La demi-droite ci-dessous est graduée de ${fr(step)} en ${fr(step)}, de ${fr(left)} à ${fr(right)}. Quelle est l'abscisse du point ${letter} ?`,
     figure,
     answer: value,
-    steps: [`Chaque graduation vaut ${fr(step)}.`, `${letter} est à ${idx} graduation${idx > 1 ? "s" : ""} de ${fr(left)} : ${fr(left)} + ${idx} \\times ${fr(step)} = ${fr(value)}`],
+    steps: [
+      { type: "donnee", text: `Chaque graduation vaut ${fr(step)}.` },
+      { type: "calcul", text: `${letter} est à ${idx} graduation${idx > 1 ? "s" : ""} de ${fr(left)} : ${fr(left)} + ${idx} \\times ${fr(step)} = ${fr(value)}` },
+    ],
   };
 }
 
@@ -206,18 +212,32 @@ function genPlacerPointQCM() {
     figure,
     answer: targetLetter,
     options: shuffle(letters),
-    steps: [`${targetLetter} correspond à ${fr(targetValue)}.`],
+    steps: [{ type: "resultat", text: `${targetLetter} correspond à ${fr(targetValue)}.` }],
   };
 }
 
 // ---------- Comparer, ranger, encadrer (Mémo 4) ----------
 
 function genComparerDecimaux() {
-  const decimalsA = pick([1, 2]);
-  const decimalsB = pick([1, 2]);
-  const a = randDecimal(0.01, 90, decimalsA);
-  let b = randDecimal(0.01, 90, decimalsB);
-  while (b === a) b = randDecimal(0.01, 90, decimalsB);
+  // Un décimal sur deux (en moyenne) est délibérément un "piège" : le
+  // nombre qui a LE PLUS de chiffres après la virgule n'est pas forcément
+  // le plus grand (biais du nombre entier appliqué aux décimaux, ex.
+  // 0,7 > 0,65 alors que 65 > 7). Mélanger ce piège avec des paires
+  // "normales" dans la même série casse l'heuristique fausse plutôt que de
+  // la laisser s'installer (cf. dossier Neurosciences — interleaving).
+  const trap = Math.random() < 0.5;
+  let a, b;
+  if (trap) {
+    const shortVal = randDecimal(0.1, 0.9, 1); // ex : 0,7 (1 chiffre après la virgule)
+    const longVal = randDecimal(0.01, shortVal - 0.01, 2); // ex : 0,65 (2 chiffres), strictement < shortVal
+    [a, b] = Math.random() < 0.5 ? [shortVal, longVal] : [longVal, shortVal];
+  } else {
+    const decimalsA = pick([1, 2]);
+    const decimalsB = pick([1, 2]);
+    a = randDecimal(0.01, 90, decimalsA);
+    b = randDecimal(0.01, 90, decimalsB);
+    while (b === a) b = randDecimal(0.01, 90, decimalsB);
+  }
   const correct = a > b ? ">" : "<";
   return {
     type: "qcm",
@@ -225,7 +245,13 @@ function genComparerDecimaux() {
     prompt: `Complète par < ou > : \\(${frTex(a)}\\) ... \\(${frTex(b)}\\)`,
     answer: correct,
     options: ["<", ">"],
-    steps: [`On compare d'abord la partie entière, puis les chiffres après la virgule un par un.`, `${fr(a)} ${correct} ${fr(b)}`],
+    steps: [
+      {
+        type: "regle",
+        text: `On compare d'abord la partie entière, puis les chiffres après la virgule un par un — le nombre de chiffres après la virgule ne dit rien sur la taille du nombre.`,
+      },
+      { type: "resultat", text: `${fr(a)} ${correct} ${fr(b)}` },
+    ],
   };
 }
 
@@ -237,7 +263,7 @@ function genEncadrerEntierConsecutif() {
     chapter: "Nombres décimaux — Encadrer",
     prompt: `Quel est l'entier immédiatement inférieur à ${fr(x)} ?`,
     answer,
-    steps: [`${answer} < ${fr(x)} < ${answer + 1}`],
+    steps: [{ type: "resultat", text: `${answer} < ${fr(x)} < ${answer + 1}` }],
   };
 }
 
@@ -260,7 +286,10 @@ function genRangerDecimaux() {
     prompt: `Range dans l'ordre ${asc ? "croissant" : "décroissant"} les nombres suivants : ${nums.map(fr).join(" ; ")}`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On compare les nombres un par un.`, `Ordre correct : ${correctOrder}`],
+    steps: [
+      { type: "regle", text: `On compare les nombres un par un.` },
+      { type: "resultat", text: `Ordre correct : ${correctOrder}` },
+    ],
   };
 }
 
@@ -274,13 +303,25 @@ function genEcritureLettresDecimal() {
     chapter: "Nombres décimaux — Écrire en chiffres",
     prompt: `Écris en chiffres : « ${words} ».`,
     answer: value,
-    steps: [`${unitPart} + ${centPart}/100 = ${fr(value)}`],
+    steps: [{ type: "calcul", text: `${unitPart} + ${centPart}/100 = ${fr(value)}` }],
   };
 }
 
 function genVraiFauxComparaison() {
-  const a = randDecimal(0.01, 40, pick([1, 2]));
-  const b = randDecimal(0.01, 40, pick([1, 2]));
+  // Même logique de piège délibéré que genComparerDecimaux ci-dessus : une
+  // fois sur deux, on compare un décimal "court" à un décimal "long" plus
+  // petit que lui, pour ne pas laisser s'installer le réflexe "plus de
+  // chiffres = plus grand".
+  const trap = Math.random() < 0.5;
+  let a, b;
+  if (trap) {
+    const shortVal = randDecimal(0.1, 0.9, 1);
+    const longVal = randDecimal(0.01, shortVal - 0.01, 2);
+    [a, b] = Math.random() < 0.5 ? [shortVal, longVal] : [longVal, shortVal];
+  } else {
+    a = randDecimal(0.01, 40, pick([1, 2]));
+    b = randDecimal(0.01, 40, pick([1, 2]));
+  }
   const op = pick([">", "<"]);
   const statementHolds = op === ">" ? a > b : a < b;
   const correct = statementHolds ? "Vrai" : "Faux";
@@ -290,7 +331,10 @@ function genVraiFauxComparaison() {
     prompt: `Vrai ou faux ? \\(${frTex(a)} ${op} ${frTex(b)}\\)`,
     answer: correct,
     options: ["Vrai", "Faux"],
-    steps: [`En réalité, ${fr(a)} ${a > b ? ">" : a < b ? "<" : "="} ${fr(b)}.`, `L'affirmation est donc ${correct.toLowerCase()}.`],
+    steps: [
+      { type: "calcul", text: `En réalité, ${fr(a)} ${a > b ? ">" : a < b ? "<" : "="} ${fr(b)}.` },
+      { type: "resultat", text: `L'affirmation est donc ${correct.toLowerCase()}.` },
+    ],
   };
 }
 
@@ -315,8 +359,8 @@ function genProblemeCocheQuestions() {
     options,
     answer,
     steps: [
-      `On peut calculer une différence avec un montant donné, ou comparer à un prix donné.`,
-      `On ne peut pas savoir combien de pièces il y a sans connaître leur valeur individuelle.`,
+      { type: "regle", text: `On peut calculer une différence avec un montant donné, ou comparer à un prix donné.` },
+      { type: "regle", text: `On ne peut pas savoir combien de pièces il y a sans connaître leur valeur individuelle.` },
     ],
   };
 }
@@ -342,7 +386,7 @@ function genProblemeVraiFauxAffirmations() {
     prompt: `${pick(prenoms)} a déjà ${fr(depart)} L d'eau dans sa ${contenant}. Il en verse encore ${fr(ajout)} L. Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`Total dans la ${contenant} : ${fr(depart)} + ${fr(ajout)} = ${fr(total)} L.`],
+    steps: [{ type: "calcul", text: `Total dans la ${contenant} : ${fr(depart)} + ${fr(ajout)} = ${fr(total)} L.` }],
   };
 }
 
@@ -364,7 +408,7 @@ function genProblemeRecetteSuffisante() {
     prompt: `Pour un gâteau, il faut ${fr(flourNeeded)} kg de farine et ${fr(sugarNeeded)} kg de sucre. ${pick(prenoms)} a ${fr(flourHave)} kg de farine et ${fr(sugarHave)} kg de sucre dans son placard. Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`On compare ce qu'il faut à ce qui est disponible, pour un gâteau puis pour deux.`],
+    steps: [{ type: "regle", text: `On compare ce qu'il faut à ce qui est disponible, pour un gâteau puis pour deux.` }],
   };
 }
 
@@ -379,7 +423,7 @@ function genProblemeCompletePhrase() {
       chapter: "Nombres décimaux — Problèmes",
       prompt: `${pick(prenoms)} est parti(e) faire une randonnée de ${fr(total)} km. Il/elle a déjà parcouru ${fr(parcouru)} km. Combien de kilomètres lui reste-t-il à parcourir ?`,
       answer: restant,
-      steps: [`${fr(total)} - ${fr(parcouru)} = ${fr(restant)}`],
+      steps: [{ type: "calcul", text: `${fr(total)} - ${fr(parcouru)} = ${fr(restant)}` }],
     };
   }
   const wallet = randDecimal(5, 20, 2);
@@ -393,7 +437,7 @@ function genProblemeCompletePhrase() {
       chapter: "Nombres décimaux — Problèmes",
       prompt: `${prenom} a ${fr(wallet)} €. Il/elle s'achète un article à ${fr(price)} €. Combien lui reste-t-il ?`,
       answer: remaining,
-      steps: [`${fr(wallet)} - ${fr(price)} = ${fr(remaining)}`],
+      steps: [{ type: "calcul", text: `${fr(wallet)} - ${fr(price)} = ${fr(remaining)}` }],
     };
   }
   return {
@@ -401,7 +445,7 @@ function genProblemeCompletePhrase() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${prenom} avait ${fr(wallet)} €. Après un achat, il/elle lui reste ${fr(remaining)} €. Combien a coûté l'article ?`,
     answer: price,
-    steps: [`${fr(wallet)} - ${fr(remaining)} = ${fr(price)}`],
+    steps: [{ type: "calcul", text: `${fr(wallet)} - ${fr(remaining)} = ${fr(price)}` }],
   };
 }
 
@@ -416,7 +460,7 @@ function genProblemeDifferenceLongueur() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${p1} a un fil de ${fr(fil1)} m et ${p2} a un fil de ${fr(fil2)} m. Quelle longueur ${p2} doit-${pronom} couper pour avoir la même longueur que ${p1} ?`,
     answer: needed,
-    steps: [`${fr(fil2)} - ${fr(fil1)} = ${fr(needed)}`],
+    steps: [{ type: "calcul", text: `${fr(fil2)} - ${fr(fil1)} = ${fr(needed)}` }],
   };
 }
 
@@ -431,7 +475,7 @@ function genProblemeTrouverPlusGrand() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${p1} a ${fr(base)} €, il/elle a ${fr(diff)} € de moins que ${p2}. Combien d'argent ${p2} a-t-${pronom} ?`,
     answer: larger,
-    steps: [`${fr(base)} + ${fr(diff)} = ${fr(larger)}`],
+    steps: [{ type: "calcul", text: `${fr(base)} + ${fr(diff)} = ${fr(larger)}` }],
   };
 }
 
@@ -447,7 +491,7 @@ function genProblemeTrouverPlusPetit() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${p1} a ${fr(larger)} €, ${mot} plus que ${p2}. Combien d'argent ${p2} a-t-${pronom} ?`,
     answer: smaller,
-    steps: [`${fr(larger)} \\div ${mult} = ${fr(smaller)}`],
+    steps: [{ type: "calcul", text: `${fr(larger)} \\div ${mult} = ${fr(smaller)}` }],
   };
 }
 
@@ -486,7 +530,10 @@ function genProblemeTarifPoids() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${prenom} veut envoyer un colis contenant ${objets[0]} (${fr(item1)} kg), ${objets[1]} (${fr(item2)} kg) et ${objets[2]} (${fr(item3)} kg). L'emballage vide pèse ${fr(packaging)} kg. Tarifs : ${tarifText}. Combien doit payer ${prenom} pour envoyer ce colis (en €) ?`,
     answer: price,
-    steps: [`Poids total : ${fr(item1)} + ${fr(item2)} + ${fr(item3)} + ${fr(packaging)} = ${fr(total)} kg`, `Ce poids correspond au tarif : ${fr(price)} €`],
+    steps: [
+      { type: "calcul", text: `Poids total : ${fr(item1)} + ${fr(item2)} + ${fr(item3)} + ${fr(packaging)} = ${fr(total)} kg` },
+      { type: "resultat", text: `Ce poids correspond au tarif : ${fr(price)} €` },
+    ],
   };
 }
 
@@ -504,7 +551,10 @@ function genProblemeRubanRestant() {
     chapter: "Nombres décimaux — Problèmes",
     prompt: `${prenom} a besoin de ruban pour décorer un cadeau : ${fr(besoin1)} m pour le premier nœud et ${fr(besoin2)} m pour le second. Combien de ruban lui restera-t-il si ${pronom} achète un rouleau de ${roll} m ?`,
     answer: restant,
-    steps: [`Besoin total : ${fr(besoin1)} + ${fr(besoin2)} = ${fr(totalBesoin)} m`, `${roll} - ${fr(totalBesoin)} = ${fr(restant)}`],
+    steps: [
+      { type: "calcul", text: `Besoin total : ${fr(besoin1)} + ${fr(besoin2)} = ${fr(totalBesoin)} m` },
+      { type: "calcul", text: `${roll} - ${fr(totalBesoin)} = ${fr(restant)}` },
+    ],
   };
 }
 
@@ -527,9 +577,9 @@ function genProblemeArgentSuffisant() {
     prompt,
     answer: diff,
     steps: [
-      `${p2} a ${centimesCount} \\times 0,10 = ${fr(amount2)} €.`,
-      `Total : ${fr(amount1)} + ${fr(amount2)} = ${fr(total)} €.`,
-      enough ? `${fr(total)} - ${fr(price)} = ${fr(diff)}` : `${fr(price)} - ${fr(total)} = ${fr(diff)}`,
+      { type: "calcul", text: `${p2} a ${centimesCount} \\times 0,10 = ${fr(amount2)} €.` },
+      { type: "calcul", text: `Total : ${fr(amount1)} + ${fr(amount2)} = ${fr(total)} €.` },
+      { type: "calcul", text: enough ? `${fr(total)} - ${fr(price)} = ${fr(diff)}` : `${fr(price)} - ${fr(total)} = ${fr(diff)}` },
     ],
   };
 }
@@ -600,6 +650,7 @@ export default {
     id: "nombres-decimaux",
     title: "Nombres décimaux",
     description: "Écriture décimale, fractions décimales, droite graduée, comparaison et problèmes.",
+    pourquoi: "Bien écrire et comparer les nombres décimaux, c'est éviter les erreurs les plus fréquentes sur les prix, les mesures et les notes.",
     level: "sixieme",
     free: false,
     order: 2,

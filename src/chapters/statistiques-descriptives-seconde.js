@@ -362,6 +362,7 @@ export default {
     id: "statistiques-descriptives-seconde",
     title: "Statistiques descriptives",
     description: "Moyenne simple et pondérée, médiane, quartiles Q1 et Q3, écart interquartile, effectifs cumulés, comparaison de séries, linéarité de la moyenne, lecture critique de graphiques.",
+    pourquoi: "Moyenne, médiane et quartiles permettent de résumer un grand nombre de données pour en tirer une information claire — utilisé dans tous les métiers qui manipulent des chiffres.",
     level: "seconde",
     free: false,
     order: 12,

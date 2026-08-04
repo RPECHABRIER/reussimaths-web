@@ -58,7 +58,11 @@ function genCalculerLongueurThalesANNumeric() {
     figure: buildThalesFigure(ratio),
     answer: AN,
     tolerance: 0.01,
-    steps: [`\\dfrac{AM}{AB} = \\dfrac{AN}{AC}`, `\\dfrac{${AM}}{${AB}} = \\dfrac{AN}{${AC}}`, `AN = \\dfrac{${AM} \\times ${AC}}{${AB}} \\approx ${fr(AN)}`],
+    steps: [
+      { type: "regle", text: `\\dfrac{AM}{AB} = \\dfrac{AN}{AC}` },
+      { type: "donnee", text: `\\dfrac{${AM}}{${AB}} = \\dfrac{AN}{${AC}}` },
+      { type: "resultat", text: `AN = \\dfrac{${AM} \\times ${AC}}{${AB}} \\approx ${fr(AN)}` },
+    ],
   };
 }
 
@@ -76,7 +80,10 @@ function genCalculerLongueurThalesMNNumeric() {
     figure: buildThalesFigure(ratio),
     answer: MN,
     tolerance: 0.01,
-    steps: [`\\dfrac{AM}{AB} = \\dfrac{MN}{BC}`, `MN = \\dfrac{${AM} \\times ${BC}}{${AB}} \\approx ${fr(MN)}`],
+    steps: [
+      { type: "regle", text: `\\dfrac{AM}{AB} = \\dfrac{MN}{BC}` },
+      { type: "resultat", text: `MN = \\dfrac{${AM} \\times ${BC}}{${AB}} \\approx ${fr(MN)}` },
+    ],
   };
 }
 
@@ -92,7 +99,7 @@ function genResoudreProportionThalesNumeric() {
     prompt: `Sachant que \\(\\dfrac{${a}}{${b}} = \\dfrac{${c}}{x}\\), calcule x (arrondi au centième si nécessaire).`,
     answer: x,
     tolerance: 0.01,
-    steps: [`x = \\dfrac{${b} \\times ${c}}{${a}} \\approx ${fr(x)}`],
+    steps: [{ type: "calcul", text: `x = \\dfrac{${b} \\times ${c}}{${a}} \\approx ${fr(x)}` }],
   };
 }
 
@@ -112,7 +119,7 @@ function genFormeCorrecteEgaliteThalesQCM() {
     prompt: `Dans un triangle ABC avec M sur [AB], N sur [AC], (MN) parallèle à (BC), AM = ${AM}, AB = ${AB}, AC = ${AC}. Quelle égalité de quotients permet de calculer AN d'après le théorème de Thalès ?`,
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
-    steps: [`D'après le théorème de Thalès : \\dfrac{AM}{AB} = \\dfrac{AN}{AC} = \\dfrac{MN}{BC}.`],
+    steps: [{ type: "regle", text: `D'après le théorème de Thalès : \\dfrac{AM}{AB} = \\dfrac{AN}{AC} = \\dfrac{MN}{BC}.` }],
   };
 }
 
@@ -134,11 +141,14 @@ function genReciproqueThalesParallelesQCM() {
     answer: isParallel ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `\\dfrac{AM}{AB} = \\dfrac{${AM}}{${AB}}`,
-      `\\dfrac{AN}{AC} = \\dfrac{${AN}}{${AC}}`,
-      isParallel
-        ? "Les quotients sont égaux : d'après la réciproque du théorème de Thalès, les droites sont parallèles."
-        : "Les quotients sont différents : les droites ne sont pas parallèles.",
+      { type: "calcul", text: `\\dfrac{AM}{AB} = \\dfrac{${AM}}{${AB}}` },
+      { type: "calcul", text: `\\dfrac{AN}{AC} = \\dfrac{${AN}}{${AC}}` },
+      {
+        type: "resultat",
+        text: isParallel
+          ? "Les quotients sont égaux : d'après la réciproque du théorème de Thalès, les droites sont parallèles."
+          : "Les quotients sont différents : les droites ne sont pas parallèles.",
+      },
     ],
   };
 }
@@ -158,7 +168,7 @@ function genVerifierConditionsApplicationQCM() {
     prompt: `${s.desc} Peut-on appliquer le théorème de Thalès (ou sa réciproque) dans cette configuration ?`,
     answer: s.valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Le théorème de Thalès s'applique lorsque les points sont alignés dans une configuration triangulaire (ou en papillon) avec deux droites parallèles.`],
+    steps: [{ type: "regle", text: `Le théorème de Thalès s'applique lorsque les points sont alignés dans une configuration triangulaire (ou en papillon) avec deux droites parallèles.` }],
   };
 }
 
@@ -176,7 +186,12 @@ function genRapportAgrandissementReductionThalesQCM() {
     prompt: `Soit PRS un triangle tel que T appartient au côté [PR] et V appartient au côté [PS], avec les droites (TV) et (RS) parallèles. On donne PT = ${a} cm et PR = ${b} cm. Le triangle PTV est-il un agrandissement ou une réduction du triangle PRS ?`,
     answer,
     options: ["Agrandissement", "Réduction"],
-    steps: [`Le rapport PT/PR = ${fr(roundTo(a / b, 3))} ${a < b ? "< 1" : "> 1"} : c'est ${answer === "Réduction" ? "une réduction" : "un agrandissement"}.`],
+    steps: [
+      {
+        type: "regle",
+        text: `Le rapport PT/PR = ${fr(roundTo(a / b, 3))} ${a < b ? "< 1" : "> 1"} : c'est ${answer === "Réduction" ? "une réduction" : "un agrandissement"}.`,
+      },
+    ],
   };
 }
 
@@ -195,9 +210,9 @@ function genProblemeHauteurAvecViseeNumeric() {
     answer: hauteurImmeuble,
     tolerance: 0.2,
     steps: [
-      `\\dfrac{${reculArbre}}{${distanceArbreImmeuble} + ${reculArbre}} = \\dfrac{${fr(roundTo(hauteurArbre - hauteurYeux, 2))}}{h - ${fr(hauteurYeux)}}`,
-      `h - ${fr(hauteurYeux)} \\approx ${fr(hauteurImmeubleMoinsYeux)}`,
-      `h \\approx ${fr(hauteurImmeuble)}`,
+      { type: "donnee", text: `\\dfrac{${reculArbre}}{${distanceArbreImmeuble} + ${reculArbre}} = \\dfrac{${fr(roundTo(hauteurArbre - hauteurYeux, 2))}}{h - ${fr(hauteurYeux)}}` },
+      { type: "calcul", text: `h - ${fr(hauteurYeux)} \\approx ${fr(hauteurImmeubleMoinsYeux)}` },
+      { type: "resultat", text: `h \\approx ${fr(hauteurImmeuble)}` },
     ],
   };
 }
@@ -218,9 +233,9 @@ function genProblemeCordesEtendoirNumeric() {
     answer: totalFinal,
     tolerance: 0.5,
     steps: [
-      `\\text{Chaque corde } i \\text{ mesure } \\dfrac{i}{${nSegments}} \\times ${BC}\\ \\text{cm}.`,
-      `\\text{Somme pour un triangle} \\approx ${fr(totalPerStructure)}\\ \\text{cm}`,
-      `${fr(totalPerStructure)} \\times ${nStructures} \\approx ${fr(totalFinal)}\\ \\text{cm}`,
+      { type: "regle", text: `\\text{Chaque corde } i \\text{ mesure } \\dfrac{i}{${nSegments}} \\times ${BC}\\ \\text{cm}.` },
+      { type: "calcul", text: `\\text{Somme pour un triangle} \\approx ${fr(totalPerStructure)}\\ \\text{cm}` },
+      { type: "resultat", text: `${fr(totalPerStructure)} \\times ${nStructures} \\approx ${fr(totalFinal)}\\ \\text{cm}` },
     ],
   };
 }
@@ -262,6 +277,7 @@ export default {
     id: "theoreme-thales",
     title: "Théorème de Thalès",
     description: "Calculer une longueur grâce au théorème de Thalès, utiliser la réciproque pour démontrer un parallélisme, problèmes contextualisés.",
+    pourquoi: "Le théorème de Thalès permet de calculer une longueur inaccessible (une hauteur, une distance) sans la mesurer directement.",
     level: "quatrieme",
     free: false,
     order: 12,

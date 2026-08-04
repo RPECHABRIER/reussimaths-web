@@ -323,6 +323,7 @@ export default {
     id: "exercices-rituels-premiere-non-spe",
     title: "Exercices rituels",
     description: "Brassage final de l'année de Première non spé : automatismes rapides (équations, ordres de grandeur, pourcentages, aires, identités remarquables) et rappel d'une compétence clé de chacun des 6 chapitres du programme.",
+    pourquoi: "Ce brassage final mélange volontairement les notions de l'année pour t'entraîner à les reconnaître sans indice, comme le jour de l'épreuve.",
     level: "premiere-non-spe",
     free: false,
     order: 8,

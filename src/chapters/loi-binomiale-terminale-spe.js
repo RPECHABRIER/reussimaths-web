@@ -322,6 +322,7 @@ export default {
     id: "loi-binomiale-terminale-spe",
     title: "Loi binomiale",
     description: "Paramètres n et p, espérance, variance, écart-type, calcul de probabilités.",
+    pourquoi: "La loi binomiale modélise toute répétition d'expériences identiques et indépendantes : contrôle qualité, sondages, jeux de hasard.",
     level: "terminale-spe",
     free: false,
     order: 13,

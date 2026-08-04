@@ -45,9 +45,9 @@ function genDiscriminant() {
     prompt: `Calculer le discriminant de l'équation \\(${quadL(a, b, c)} = 0\\).`,
     answer: delta,
     steps: [
-      `\\(\\Delta = b^2 - 4ac\\)`,
-      `\\(\\Delta = (${b})^2 - 4 \\times ${a} \\times (${c})\\)`,
-      `\\(\\Delta = ${b * b} - ${4 * a * c} = ${delta}\\)`,
+      { type: "regle", text: `\\(\\Delta = b^2 - 4ac\\)` },
+      { type: "calcul", text: `\\(\\Delta = (${b})^2 - 4 \\times ${a} \\times (${c})\\)` },
+      { type: "resultat", text: `\\(\\Delta = ${b * b} - ${4 * a * c} = ${delta}\\)` },
     ],
   };
 }
@@ -63,9 +63,9 @@ function genFactoredEquation() {
     prompt: `Résoudre : \\((x ${signedL(-r1)})(x ${signedL(-r2)}) = 0\\). Donner la plus petite des deux solutions.`,
     answer: smaller,
     steps: [
-      `Un produit de facteurs est nul si l'un au moins des facteurs est nul.`,
-      `\\(x ${signedL(-r1)} = 0 \\Rightarrow x = ${r1}\\), ou \\(x ${signedL(-r2)} = 0 \\Rightarrow x = ${r2}\\)`,
-      `Les deux solutions sont ${r1} et ${r2}. La plus petite est ${smaller}.`,
+      { type: "regle", text: `Un produit de facteurs est nul si l'un au moins des facteurs est nul.` },
+      { type: "calcul", text: `\\(x ${signedL(-r1)} = 0 \\Rightarrow x = ${r1}\\), ou \\(x ${signedL(-r2)} = 0 \\Rightarrow x = ${r2}\\)` },
+      { type: "resultat", text: `Les deux solutions sont ${r1} et ${r2}. La plus petite est ${smaller}.` },
     ],
   };
 }
@@ -89,11 +89,14 @@ function genExpandQCM() {
     answer: correct,
     options,
     steps: [
-      `\\((A + B)^2 = A^2 + 2AB + B^2\\), avec \\(A = ${a}x\\) et \\(B = ${b}\\)`,
-      `\\((${a}x)^2 = ${a * a}x^2\\), puis \\(2 \\times ${a}x \\times (${b}) = ${
-        2 * a * b >= 0 ? "+" : "-"
-      } ${Math.abs(2 * a * b)}x\\), et \\((${b})^2 = ${b * b}\\)`,
-      `Résultat : ${correct}`,
+      { type: "regle", text: `\\((A + B)^2 = A^2 + 2AB + B^2\\), avec \\(A = ${a}x\\) et \\(B = ${b}\\)` },
+      {
+        type: "calcul",
+        text: `\\((${a}x)^2 = ${a * a}x^2\\), puis \\(2 \\times ${a}x \\times (${b}) = ${
+          2 * a * b >= 0 ? "+" : "-"
+        } ${Math.abs(2 * a * b)}x\\), et \\((${b})^2 = ${b * b}\\)`,
+      },
+      { type: "resultat", text: `Résultat : ${correct}` },
     ],
   };
 }
@@ -112,9 +115,9 @@ function genFactorQCM() {
     answer: correct,
     options,
     steps: [
-      `On reconnaît une identité remarquable \\(a^2 - b^2\\), avec \\(a = ${k}x\\) et \\(b = ${m}\\)`,
-      `\\(a^2 - b^2 = (a - b)(a + b)\\)`,
-      `Résultat : ${correct}`,
+      { type: "regle", text: `On reconnaît une identité remarquable \\(a^2 - b^2\\), avec \\(a = ${k}x\\) et \\(b = ${m}\\)` },
+      { type: "regle", text: `\\(a^2 - b^2 = (a - b)(a + b)\\)` },
+      { type: "resultat", text: `Résultat : ${correct}` },
     ],
   };
 }
@@ -133,12 +136,16 @@ function genNombreSolutions() {
     answer: correct,
     options,
     steps: [
-      `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)`,
-      delta > 0
-        ? `\\(\\Delta > 0\\) donc l'équation admet deux solutions distinctes.`
-        : delta === 0
-        ? `\\(\\Delta = 0\\) donc l'équation admet une unique solution.`
-        : `\\(\\Delta < 0\\) donc l'équation n'admet aucune solution réelle.`,
+      { type: "calcul", text: `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)` },
+      {
+        type: "resultat",
+        text:
+          delta > 0
+            ? `\\(\\Delta > 0\\) donc l'équation admet deux solutions distinctes.`
+            : delta === 0
+            ? `\\(\\Delta = 0\\) donc l'équation admet une unique solution.`
+            : `\\(\\Delta < 0\\) donc l'équation n'admet aucune solution réelle.`,
+      },
     ],
   };
 }
@@ -155,9 +162,9 @@ function genSommetCanonique() {
     prompt: `On considère \\(f(x) = ${quadL(a, b, c)}\\). Déterminer l'abscisse du sommet de la parabole représentant \\(f\\).`,
     answer: k,
     steps: [
-      `La forme canonique de \\(f\\) s'écrit \\(a(x - \\alpha)^2 + \\beta\\), avec \\(\\alpha = \\dfrac{-b}{2a}\\).`,
-      `\\(\\alpha = \\dfrac{-(${b})}{2 \\times ${a}} = ${k}\\)`,
-      `Le sommet a donc pour abscisse ${k} (et pour ordonnée \\(\\beta = f(${k}) = ${beta}\\)).`,
+      { type: "regle", text: `La forme canonique de \\(f\\) s'écrit \\(a(x - \\alpha)^2 + \\beta\\), avec \\(\\alpha = \\dfrac{-b}{2a}\\).` },
+      { type: "calcul", text: `\\(\\alpha = \\dfrac{-(${b})}{2 \\times ${a}} = ${k}\\)` },
+      { type: "resultat", text: `Le sommet a donc pour abscisse ${k} (et pour ordonnée \\(\\beta = f(${k}) = ${beta}\\)).` },
     ],
   };
 }
@@ -177,9 +184,9 @@ function genResoudreDiscriminant() {
     prompt: `Résoudre dans \\(\\mathbb{R}\\) : \\(${quadL(a, b, c)} = 0\\). Donner la plus petite des deux solutions.`,
     answer: smaller,
     steps: [
-      `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)`,
-      `\\(\\Delta > 0\\) donc l'équation admet deux solutions : \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)`,
-      `On trouve \\(x_1 = ${r1}\\) et \\(x_2 = ${r2}\\). La plus petite est ${smaller}.`,
+      { type: "calcul", text: `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)` },
+      { type: "regle", text: `\\(\\Delta > 0\\) donc l'équation admet deux solutions : \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)` },
+      { type: "resultat", text: `On trouve \\(x_1 = ${r1}\\) et \\(x_2 = ${r2}\\). La plus petite est ${smaller}.` },
     ],
   };
 }
@@ -209,9 +216,9 @@ function genFactorisationGenerale() {
       answer: correct,
       options,
       steps: [
-        `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${b * b - 4 * a * c}\\)`,
-        `\\(\\Delta > 0\\), le polynôme admet deux racines : ${r1} et ${r2}.`,
-        `Forme factorisée : \\(a(x - x_1)(x - x_2) = ${correctRaw}\\)`,
+        { type: "calcul", text: `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${b * b - 4 * a * c}\\)` },
+        { type: "regle", text: `\\(\\Delta > 0\\), le polynôme admet deux racines : ${r1} et ${r2}.` },
+        { type: "resultat", text: `Forme factorisée : \\(a(x - x_1)(x - x_2) = ${correctRaw}\\)` },
       ],
     };
   }
@@ -236,9 +243,9 @@ function genFactorisationGenerale() {
     answer: nonFactor,
     options,
     steps: [
-      `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)`,
-      `\\(\\Delta < 0\\), donc le polynôme n'admet aucune racine réelle.`,
-      `On en déduit qu'il n'est pas factorisable sur \\(\\mathbb{R}\\).`,
+      { type: "calcul", text: `\\(\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}\\)` },
+      { type: "regle", text: `\\(\\Delta < 0\\), donc le polynôme n'admet aucune racine réelle.` },
+      { type: "resultat", text: `On en déduit qu'il n'est pas factorisable sur \\(\\mathbb{R}\\).` },
     ],
   };
 }
@@ -269,9 +276,9 @@ function genInequation() {
     answer: correct,
     options,
     steps: [
-      `Les racines du polynôme sont ${lo} et ${hi}.`,
-      `Un polynôme du second degré est du signe de \\(a\\) (ici ${a}) à l'extérieur des racines, et du signe opposé entre les racines.`,
-      `Solution : ${correct}`,
+      { type: "donnee", text: `Les racines du polynôme sont ${lo} et ${hi}.` },
+      { type: "regle", text: `Un polynôme du second degré est du signe de \\(a\\) (ici ${a}) à l'extérieur des racines, et du signe opposé entre les racines.` },
+      { type: "resultat", text: `Solution : ${correct}` },
     ],
   };
 }
@@ -290,9 +297,9 @@ function genConstructionRacines() {
     prompt: `\\(f\\) est une fonction polynomiale du second degré qui s'annule en \\(x = ${r1}\\) et \\(x = ${r2}\\). Sa parabole passe par le point \\((${x0} ; ${y0})\\). Sachant que \\(f(x) = a(x - ${r1})(x - ${r2})\\), déterminer \\(a\\).`,
     answer: aTrue,
     steps: [
-      `\\(f(x) = a(x - ${r1})(x - ${r2})\\) car ${r1} et ${r2} sont racines de \\(f\\).`,
-      `\\(f(${x0}) = ${y0}\\) donc \\(a \\times (${x0} - ${r1}) \\times (${x0} - ${r2}) = ${y0}\\)`,
-      `\\(a = \\dfrac{${y0}}{${(x0 - r1) * (x0 - r2)}} = ${aTrue}\\)`,
+      { type: "donnee", text: `\\(f(x) = a(x - ${r1})(x - ${r2})\\) car ${r1} et ${r2} sont racines de \\(f\\).` },
+      { type: "calcul", text: `\\(f(${x0}) = ${y0}\\) donc \\(a \\times (${x0} - ${r1}) \\times (${x0} - ${r2}) = ${y0}\\)` },
+      { type: "resultat", text: `\\(a = \\dfrac{${y0}}{${(x0 - r1) * (x0 - r2)}} = ${aTrue}\\)` },
     ],
   };
 }
@@ -305,9 +312,9 @@ const FIXED_BANK = [
     prompt: `On donne \\(f(x) = -3(x + 5)^2 + 3\\). Résoudre \\(f(x) = 3\\).`,
     answer: -5,
     steps: [
-      `\\(-3(x + 5)^2 + 3 = 3 \\Leftrightarrow -3(x + 5)^2 = 0 \\Leftrightarrow (x + 5)^2 = 0\\)`,
-      `\\(x + 5 = 0\\)`,
-      `\\(x = -5\\) (solution unique)`,
+      { type: "calcul", text: `\\(-3(x + 5)^2 + 3 = 3 \\Leftrightarrow -3(x + 5)^2 = 0 \\Leftrightarrow (x + 5)^2 = 0\\)` },
+      { type: "calcul", text: `\\(x + 5 = 0\\)` },
+      { type: "resultat", text: `\\(x = -5\\) (solution unique)` },
     ],
   },
   {
@@ -316,9 +323,9 @@ const FIXED_BANK = [
     prompt: `On donne \\(f(x) = -3x^2 - 30x - 72\\). Résoudre \\(f(x) = -72\\) et donner la plus grande solution.`,
     answer: 0,
     steps: [
-      `\\(-3x^2 - 30x - 72 = -72 \\Leftrightarrow -3x^2 - 30x = 0 \\Leftrightarrow x(-3x - 30) = 0\\)`,
-      `\\(x = 0\\) ou \\(x = -10\\)`,
-      `La plus grande solution est 0.`,
+      { type: "calcul", text: `\\(-3x^2 - 30x - 72 = -72 \\Leftrightarrow -3x^2 - 30x = 0 \\Leftrightarrow x(-3x - 30) = 0\\)` },
+      { type: "calcul", text: `\\(x = 0\\) ou \\(x = -10\\)` },
+      { type: "resultat", text: `La plus grande solution est 0.` },
     ],
   },
   {
@@ -327,9 +334,9 @@ const FIXED_BANK = [
     prompt: `On donne \\(f(x) = 3(x - 9)^2 - 48 = 3(x - 5)(x - 13)\\). Résoudre \\(f(x) = 195\\) et donner la plus grande solution.`,
     answer: 18,
     steps: [
-      `\\(3x^2 - 54x + 195 = 195 \\Leftrightarrow 3x^2 - 54x = 0 \\Leftrightarrow x(3x - 54) = 0\\)`,
-      `\\(x = 0\\) ou \\(x = 18\\)`,
-      `La plus grande solution est 18.`,
+      { type: "calcul", text: `\\(3x^2 - 54x + 195 = 195 \\Leftrightarrow 3x^2 - 54x = 0 \\Leftrightarrow x(3x - 54) = 0\\)` },
+      { type: "calcul", text: `\\(x = 0\\) ou \\(x = 18\\)` },
+      { type: "resultat", text: `La plus grande solution est 18.` },
     ],
   },
   {
@@ -338,9 +345,9 @@ const FIXED_BANK = [
     prompt: `Toujours pour \\(f(x) = 3(x - 5)(x - 13)\\), résoudre \\(f(x) = 0\\) et donner la plus petite solution.`,
     answer: 5,
     steps: [
-      `\\(f(x) = 0 \\Leftrightarrow x - 5 = 0\\) ou \\(x - 13 = 0\\)`,
-      `\\(x = 5\\) ou \\(x = 13\\)`,
-      `La plus petite solution est 5.`,
+      { type: "calcul", text: `\\(f(x) = 0 \\Leftrightarrow x - 5 = 0\\) ou \\(x - 13 = 0\\)` },
+      { type: "calcul", text: `\\(x = 5\\) ou \\(x = 13\\)` },
+      { type: "resultat", text: `La plus petite solution est 5.` },
     ],
   },
   {
@@ -355,9 +362,9 @@ const FIXED_BANK = [
       "\\(\\varnothing\\)",
     ]),
     steps: [
-      `Comme \\(a = -4 < 0\\), \\(f(x)\\) est du signe de \\(a\\) à l'extérieur des racines et positif entre les racines.`,
-      `\\(f(x) \\geq 0\\) sur l'intervalle formé par les racines.`,
-      `\\(S = [-5 ; -1]\\)`,
+      { type: "regle", text: `Comme \\(a = -4 < 0\\), \\(f(x)\\) est du signe de \\(a\\) à l'extérieur des racines et positif entre les racines.` },
+      { type: "regle", text: `\\(f(x) \\geq 0\\) sur l'intervalle formé par les racines.` },
+      { type: "resultat", text: `\\(S = [-5 ; -1]\\)` },
     ],
   },
   {
@@ -367,9 +374,9 @@ const FIXED_BANK = [
     answer: "\\(f(-6) = f(0)\\)",
     options: shuffle(["\\(f(-6) = f(0)\\)", "\\(f(-6) > f(0)\\)", "\\(f(-6) < f(0)\\)", "On ne peut pas comparer"]),
     steps: [
-      `L'axe de symétrie de la parabole est \\(x = -3\\).`,
-      `\\(-6\\) et \\(0\\) sont symétriques par rapport à \\(-3\\) (\\(-6 = -3 - 3\\) et \\(0 = -3 + 3\\)).`,
-      `Donc \\(f(-6) = f(0)\\).`,
+      { type: "donnee", text: `L'axe de symétrie de la parabole est \\(x = -3\\).` },
+      { type: "calcul", text: `\\(-6\\) et \\(0\\) sont symétriques par rapport à \\(-3\\) (\\(-6 = -3 - 3\\) et \\(0 = -3 + 3\\)).` },
+      { type: "resultat", text: `Donc \\(f(-6) = f(0)\\).` },
     ],
   },
   {
@@ -384,8 +391,8 @@ const FIXED_BANK = [
       "\\([-5 ; -1]\\)",
     ]),
     steps: [
-      `\\(g(x)\\) est définie lorsque le dénominateur est non nul, c'est-à-dire lorsque \\(x \\neq -5\\) et \\(x \\neq -1\\).`,
-      `Ensemble de définition : \\(\\mathbb{R} \\setminus \\{-5 ; -1\\}\\)`,
+      { type: "regle", text: `\\(g(x)\\) est définie lorsque le dénominateur est non nul, c'est-à-dire lorsque \\(x \\neq -5\\) et \\(x \\neq -1\\).` },
+      { type: "resultat", text: `Ensemble de définition : \\(\\mathbb{R} \\setminus \\{-5 ; -1\\}\\)` },
     ],
   },
   {
@@ -394,9 +401,9 @@ const FIXED_BANK = [
     prompt: `La fonction \\(i(x) = ax^2 + bx - 5\\) passe par les points \\((-4 ; 11)\\) et \\((4 ; 43)\\). Déterminer \\(a\\).`,
     answer: 2,
     steps: [
-      `\\(i(4) = 16a + 4b - 5 = 43\\) et \\(i(-4) = 16a - 4b - 5 = 11\\)`,
-      `En additionnant les deux équations : \\(32a - 10 = 54\\), donc \\(32a = 64\\)`,
-      `\\(a = 2\\)`,
+      { type: "calcul", text: `\\(i(4) = 16a + 4b - 5 = 43\\) et \\(i(-4) = 16a - 4b - 5 = 11\\)` },
+      { type: "calcul", text: `En additionnant les deux équations : \\(32a - 10 = 54\\), donc \\(32a = 64\\)` },
+      { type: "resultat", text: `\\(a = 2\\)` },
     ],
   },
 ];
@@ -424,6 +431,7 @@ export default {
     id: "second-degre",
     title: "Second degré",
     description: "Discriminant, formes canonique/factorisée, résolution, inéquations, lecture de courbe.",
+    pourquoi: "Étudier le second degré, c'est savoir trouver un maximum de profit, un minimum de coût, ou résoudre un problème d'optimisation.",
     level: "premiere-spe",
     free: true,
     order: 2,

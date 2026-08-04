@@ -78,7 +78,7 @@ function genAutoDivisionEuclidienneMental() {
     chapter: "Automatismes — Nombres entiers",
     prompt: `Dans la division euclidienne de ${dividende} par ${diviseur}, quel est le ${askQuotient ? "quotient" : "reste"} ?`,
     answer: askQuotient ? quotient : reste,
-    steps: [`${dividende} = ${diviseur} \\times ${quotient} + ${reste}`],
+    steps: [{ type: "calcul", text: `${dividende} = ${diviseur} \\times ${quotient} + ${reste}` }],
   };
 }
 
@@ -102,7 +102,7 @@ function genAutoCritereDivisibiliteMental() {
     prompt: `${n} est-il divisible par ${d} ?`,
     answer: divisible ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Critère : ${criteresTextMental[d]}.`],
+    steps: [{ type: "regle", text: `Critère : ${criteresTextMental[d]}.` }],
   };
 }
 
@@ -115,7 +115,12 @@ function genAutoEstPremierMental() {
     prompt: `${n} est-il un nombre premier ?`,
     answer: isPrime(n) ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [isPrime(n) ? `${n} n'a que deux diviseurs : 1 et lui-même.` : `${n} a au moins un diviseur autre que 1 et lui-même.`],
+    steps: [
+      {
+        type: "regle",
+        text: isPrime(n) ? `${n} n'a que deux diviseurs : 1 et lui-même.` : `${n} a au moins un diviseur autre que 1 et lui-même.`,
+      },
+    ],
   };
 }
 
@@ -130,7 +135,10 @@ function genAutoPGCDMental() {
     chapter: "Automatismes — Nombres entiers",
     prompt: `Quel est le PGCD de ${a} et ${b} ?`,
     answer: g,
-    steps: [`${a} = ${g} \\times ${a0}`, `${b} = ${g} \\times ${b0}`],
+    steps: [
+      { type: "calcul", text: `${a} = ${g} \\times ${a0}` },
+      { type: "calcul", text: `${b} = ${g} \\times ${b0}` },
+    ],
   };
 }
 
@@ -148,7 +156,7 @@ function genAutoMultipleOuDiviseurQCM() {
     prompt: `${gauche} est-il un multiple de ${droite}, ou un diviseur de ${droite} ?`,
     answer: aEstMultiple ? "Multiple" : "Diviseur",
     options: ["Multiple", "Diviseur"],
-    steps: [`${b} = ${a} \\times ${k}, donc ${b} est un multiple de ${a}, et ${a} est un diviseur de ${b}.`],
+    steps: [{ type: "regle", text: `${b} = ${a} \\times ${k}, donc ${b} est un multiple de ${a}, et ${a} est un diviseur de ${b}.` }],
   };
 }
 
@@ -177,7 +185,7 @@ function genAutoAdditionFractionsMemeDenominateurMental() {
     chapter: "Automatismes — Calcul numérique",
     prompt: `Calcule (fraction irréductible, dénominateur positif) : \\(\\dfrac{${numA}}{${den}} + \\dfrac{${numB}}{${den}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
-    steps: [`\\dfrac{${numA}}{${den}} + \\dfrac{${numB}}{${den}} = \\dfrac{${numA + numB}}{${den}} = \\dfrac{${rn}}{${rd}}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${numA}}{${den}} + \\dfrac{${numB}}{${den}} = \\dfrac{${numA + numB}}{${den}} = \\dfrac{${rn}}{${rd}}` }],
   };
 }
 
@@ -194,7 +202,7 @@ function genAutoMultiplierFractionsMental() {
     chapter: "Automatismes — Calcul numérique",
     prompt: `Calcule (fraction irréductible, dénominateur positif) : \\(\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}}\\). Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? rn : rd,
-    steps: [`\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}} = \\dfrac{${n1 * n2}}{${d1 * d2}} = \\dfrac{${rn}}{${rd}}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${n1}}{${d1}} \\times \\dfrac{${n2}}{${d2}} = \\dfrac{${n1 * n2}}{${d1 * d2}} = \\dfrac{${rn}}{${rd}}` }],
   };
 }
 
@@ -207,7 +215,7 @@ function genAutoCalculerPuissanceMental() {
     chapter: "Automatismes — Calcul numérique",
     prompt: `Calcule : \\((${base})^{${exp}}\\)`,
     answer: base ** exp,
-    steps: [`${Array.from({ length: exp }, () => `(${base})`).join(" \\times ")} = ${base ** exp}`],
+    steps: [{ type: "calcul", text: `${Array.from({ length: exp }, () => `(${base})`).join(" \\times ")} = ${base ** exp}` }],
   };
 }
 
@@ -221,7 +229,7 @@ function genAutoProduitPuissancesMemeBaseMental() {
     chapter: "Automatismes — Calcul numérique",
     prompt: `Écris \\(${base}^{${m}} \\times ${base}^{${n}}\\) sous la forme \\(${base}^{k}\\). Quelle est la valeur de k ?`,
     answer: m + n,
-    steps: [`${base}^{${m}} \\times ${base}^{${n}} = ${base}^{${m + n}}`],
+    steps: [{ type: "calcul", text: `${base}^{${m}} \\times ${base}^{${n}} = ${base}^{${m + n}}` }],
   };
 }
 
@@ -237,7 +245,7 @@ function genAutoCarreParfaitMental() {
     prompt: `${n} est-il un carré parfait ?`,
     answer: carre ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [carre ? `${n} = ${Math.round(Math.sqrt(n))}^2.` : `Aucun entier n'a ${n} pour carré.`],
+    steps: [{ type: "regle", text: carre ? `${n} = ${Math.round(Math.sqrt(n))}^2.` : `Aucun entier n'a ${n} pour carré.` }],
   };
 }
 
@@ -267,7 +275,7 @@ function genAutoDevelopperSimpleMental() {
     chapter: "Automatismes — Calcul littéral",
     prompt: `On développe \\(${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)\\). Quel est ${askCoefX ? "le coefficient de x" : "le terme constant"} ?`,
     answer: askCoefX ? coefX : constant,
-    steps: [`${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}`],
+    steps: [{ type: "calcul", text: `${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}` }],
   };
 }
 
@@ -283,7 +291,12 @@ function genAutoSigneDevantParentheseMental() {
     chapter: "Automatismes — Calcul littéral",
     prompt: `On développe \\(${isNeg ? "-" : "+"}\\left(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)\\). Quel est le terme constant ?`,
     answer: constant,
-    steps: [`${isNeg ? "-" : "+"}\\left(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${coefX}x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}`],
+    steps: [
+      {
+        type: "calcul",
+        text: `${isNeg ? "-" : "+"}\\left(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${coefX}x ${constant >= 0 ? "+" : "-"} ${Math.abs(constant)}`,
+      },
+    ],
   };
 }
 
@@ -298,7 +311,7 @@ function genAutoReduireExpressionMental() {
     chapter: "Automatismes — Calcul littéral",
     prompt: `On réduit \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x\\). Quel est le coefficient de x dans la forme réduite ?`,
     answer: coefX,
-    steps: [`${a} + ${c} = ${coefX}`],
+    steps: [{ type: "calcul", text: `${a} + ${c} = ${coefX}` }],
   };
 }
 
@@ -311,7 +324,12 @@ function genAutoFactoriserFacteurCommunMental() {
     chapter: "Automatismes — Calcul littéral",
     prompt: `On factorise \\(${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ?\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)\\). Quel est ce facteur commun ?`,
     answer: k,
-    steps: [`${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)`],
+    steps: [
+      {
+        type: "calcul",
+        text: `${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)`,
+      },
+    ],
   };
 }
 
@@ -326,7 +344,7 @@ function genAutoEvaluerExpressionMental() {
     chapter: "Automatismes — Calcul littéral",
     prompt: `Évalue \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\) pour \\(x = ${x}\\).`,
     answer,
-    steps: [`${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -353,7 +371,7 @@ function genAutoResoudreAxMental() {
     chapter: "Automatismes — Équations",
     prompt: `Résous : \\(${a}x = ${b}\\)`,
     answer: x0,
-    steps: [`x = \\dfrac{${b}}{${a}} = ${x0}`],
+    steps: [{ type: "calcul", text: `x = \\dfrac{${b}}{${a}} = ${x0}` }],
   };
 }
 
@@ -368,7 +386,10 @@ function genAutoResoudreAxPlusBMental() {
     chapter: "Automatismes — Équations",
     prompt: `Résous : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: x0,
-    steps: [`${a}x = ${c - b}`, `x = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c - b}` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -387,7 +408,10 @@ function genAutoResoudreProduitMental() {
     chapter: "Automatismes — Équations",
     prompt: `Résous : \\(\\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right)\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = 0\\). Donne la solution associée au ${askFirst ? "premier" : "second"} facteur.`,
     answer: askFirst ? r1 : r2,
-    steps: [`x ${a >= 0 ? "+" : "-"} ${Math.abs(a)} = 0 \\Rightarrow x = ${r1}`, `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0 \\Rightarrow x = ${r2}`],
+    steps: [
+      { type: "calcul", text: `x ${a >= 0 ? "+" : "-"} ${Math.abs(a)} = 0 \\Rightarrow x = ${r1}` },
+      { type: "calcul", text: `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0 \\Rightarrow x = ${r2}` },
+    ],
   };
 }
 
@@ -402,7 +426,12 @@ function genAutoCombienSolutionsCarreMental() {
     prompt: `Combien de solutions a l'équation \\(x^{2} = ${a}\\) ?`,
     answer,
     options: ["0", "1", "2"],
-    steps: [kind === "pos" ? `${a} > 0 : deux solutions.` : kind === "zero" ? `x = 0 : une seule solution.` : `${a} < 0 : aucune solution.`],
+    steps: [
+      {
+        type: "regle",
+        text: kind === "pos" ? `${a} > 0 : deux solutions.` : kind === "zero" ? `x = 0 : une seule solution.` : `${a} < 0 : aucune solution.`,
+      },
+    ],
   };
 }
 
@@ -415,7 +444,7 @@ function genAutoResoudreCarreMental() {
     chapter: "Automatismes — Équations",
     prompt: `Résous \\(x^{2} = ${a}\\). Donne la solution positive.`,
     answer: r,
-    steps: [`\\sqrt{${a}} = ${r}`],
+    steps: [{ type: "calcul", text: `\\sqrt{${a}} = ${r}` }],
   };
 }
 
@@ -443,7 +472,7 @@ function genAutoImageFonctionAffineMental() {
     chapter: "Automatismes — Notion de fonction",
     prompt: `On définit \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x0})\\).`,
     answer,
-    steps: [`f(${x0}) = ${a} \\times ${x0} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `f(${x0}) = ${a} \\times ${x0} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -457,7 +486,10 @@ function genAutoAntecedentSimpleMental() {
     chapter: "Automatismes — Notion de fonction",
     prompt: `On définit \\(f(x) = ${a}x\\). Quel est l'antécédent de ${target} par f ?`,
     answer: x0,
-    steps: [`${a}x = ${target}`, `x = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${target}` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -476,7 +508,12 @@ function genAutoVocabulaireImageMental() {
     prompt: `On sait que \\(${fname}(${x0}) = ${y0}\\). ${isImage ? `${y0} est-il l'image de ${x0} par ${fname} ?` : `${y0} est-il un antécédent de ${x0} par ${fname} ?`}`,
     answer: isImage ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${fname}(${x0}) = ${y0}, \\text{ donc } ${y0} \\text{ est l'image de } ${x0}, \\text{ et } ${x0} \\text{ est l'antécédent de } ${y0}.`],
+    steps: [
+      {
+        type: "regle",
+        text: `${fname}(${x0}) = ${y0}, \\text{ donc } ${y0} \\text{ est l'image de } ${x0}, \\text{ et } ${x0} \\text{ est l'antécédent de } ${y0}.`,
+      },
+    ],
   };
 }
 
@@ -495,7 +532,7 @@ function genAutoLectureTableauMental() {
     chapter: "Automatismes — Notion de fonction",
     prompt: `${table}. Quelle est l'image de ${xs[idx]} par f ?`,
     answer: ys[idx],
-    steps: [`f(${xs[idx]}) = ${ys[idx]}`],
+    steps: [{ type: "donnee", text: `f(${xs[idx]}) = ${ys[idx]}` }],
   };
 }
 
@@ -510,7 +547,12 @@ function genAutoConstanteAntecedentsMental() {
     prompt: `\\(f(x) = ${k}\\) pour tout x. Combien ${target} a-t-il d'antécédents par f ?`,
     answer: same ? "Une infinité" : "0",
     options: ["0", "1", "Une infinité"],
-    steps: [same ? `f \\text{ vaut toujours } ${k} : \\text{une infinité d'antécédents.}` : `f \\text{ ne vaut jamais } ${target} : \\text{aucun antécédent.}`],
+    steps: [
+      {
+        type: "regle",
+        text: same ? `f \\text{ vaut toujours } ${k} : \\text{une infinité d'antécédents.}` : `f \\text{ ne vaut jamais } ${target} : \\text{aucun antécédent.}`,
+      },
+    ],
   };
 }
 
@@ -537,7 +579,7 @@ function genAutoIdentifierABMental() {
     chapter: "Automatismes — Fonctions affines",
     prompt: `\\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quelle est ${askA ? "la valeur de a" : "la valeur de b"} ?`,
     answer: askA ? a : b,
-    steps: [`a = ${a}, b = ${b}`],
+    steps: [{ type: "donnee", text: `a = ${a}, b = ${b}` }],
   };
 }
 
@@ -551,7 +593,7 @@ function genAutoSensVariationMental() {
     prompt: `\\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\) est-elle croissante ou décroissante ?`,
     answer: a > 0 ? "Croissante" : "Décroissante",
     options: ["Croissante", "Décroissante"],
-    steps: [`a = ${a} \\text{ est } ${a > 0 ? "positif" : "négatif"}.`],
+    steps: [{ type: "regle", text: `a = ${a} \\text{ est } ${a > 0 ? "positif" : "négatif"}.` }],
   };
 }
 
@@ -569,7 +611,7 @@ function genAutoPointSurDroiteMental() {
     prompt: `\\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Le point \\((${x0}\\,;\\,${y0})\\) est-il sur la droite ?`,
     answer: isOn ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`f(${x0}) = ${trueY}`],
+    steps: [{ type: "calcul", text: `f(${x0}) = ${trueY}` }],
   };
 }
 
@@ -586,7 +628,7 @@ function genAutoComparerCoefMental() {
     prompt: `f a pour coefficient directeur ${a1} et g a pour coefficient directeur ${a2}. Laquelle a la droite la plus "pentue" vers le haut ?`,
     answer: a1 > a2 ? "f" : "g",
     options: ["f", "g"],
-    steps: [`${a1} ${a1 > a2 ? ">" : "<"} ${a2}`],
+    steps: [{ type: "calcul", text: `${a1} ${a1 > a2 ? ">" : "<"} ${a2}` }],
   };
 }
 
@@ -600,7 +642,7 @@ function genAutoAntecedentLineaireMental() {
     chapter: "Automatismes — Fonctions affines",
     prompt: `\\(f(x) = ${a}x\\). Quel est l'antécédent de ${target} par f ?`,
     answer: x0,
-    steps: [`${a}x = ${target}, \\text{ donc } x = ${x0}`],
+    steps: [{ type: "calcul", text: `${a}x = ${target}, \\text{ donc } x = ${x0}` }],
   };
 }
 
@@ -627,7 +669,7 @@ function genAutoSimplifierRatioMental() {
     chapter: "Automatismes — Proportionnalité",
     prompt: `Simplifie le ratio ${p * k} : ${q * k} sous sa forme irréductible p : q. Donne ${askP ? "p" : "q"}.`,
     answer: askP ? p : q,
-    steps: [`${p * k} : ${q * k} = ${p} : ${q}`],
+    steps: [{ type: "calcul", text: `${p * k} : ${q * k} = ${p} : ${q}` }],
   };
 }
 
@@ -642,7 +684,7 @@ function genAutoCoefficientMultiplicateurMental() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [{ type: "resultat", text: `${fr(answer)}` }],
   };
 }
 
@@ -659,7 +701,7 @@ function genAutoPrixApresEvolutionMental() {
     prompt: `Un article à ${P0} € ${direction === "augmente" ? "augmente" : "diminue"} de ${p} %. Nouveau prix ?`,
     answer: P1,
     tolerance: 0.01,
-    steps: [`${P0} \\times ${fr(cm)} = ${fr(P1)}`],
+    steps: [{ type: "calcul", text: `${P0} \\times ${fr(cm)} = ${fr(P1)}` }],
   };
 }
 
@@ -674,7 +716,7 @@ function genAutoPartagerRatioMental() {
     chapter: "Automatismes — Proportionnalité",
     prompt: `On partage ${total} selon le ratio ${p} : ${q}. Quelle est ${askP ? "la première part" : "la seconde part"} ?`,
     answer: askP ? p * k : q * k,
-    steps: [`\\text{Une part} = \\dfrac{${total}}{${p + q}} = ${k}`],
+    steps: [{ type: "calcul", text: `\\text{Une part} = \\dfrac{${total}}{${p + q}} = ${k}` }],
   };
 }
 
@@ -688,7 +730,7 @@ function genAutoPourcentageDepuisCoefMental() {
     chapter: "Automatismes — Proportionnalité",
     prompt: `Un coefficient multiplicateur de ${fr(cm)} correspond à une ${direction === "augmente" ? "augmentation" : "diminution"} de quel pourcentage ?`,
     answer: p,
-    steps: [`${p}\\%`],
+    steps: [{ type: "resultat", text: `${p}\\%` }],
   };
 }
 
@@ -723,7 +765,7 @@ function genAutoMoyenneRapideMental() {
     chapter: "Automatismes — Statistiques",
     prompt,
     answer,
-    steps: [`${a} + ${b} + ${c} = ${somme}`],
+    steps: [{ type: "calcul", text: `${a} + ${b} + ${c} = ${somme}` }],
   };
 }
 
@@ -737,7 +779,7 @@ function genAutoEtendueRapideMental() {
     chapter: "Automatismes — Statistiques",
     prompt: `Calcule l'étendue de la série : ${values.join(" ; ")}.`,
     answer,
-    steps: [`${Math.max(...values)} - ${Math.min(...values)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Math.max(...values)} - ${Math.min(...values)} = ${answer}` }],
   };
 }
 
@@ -751,7 +793,7 @@ function genAutoMedianeRapideMental() {
     chapter: "Automatismes — Statistiques",
     prompt: `Détermine la médiane de la série : ${values.join(" ; ")}.`,
     answer,
-    steps: [`Ordre croissant : ${sorted.join(" ; ")}. Médiane = ${answer}.`],
+    steps: [{ type: "calcul", text: `Ordre croissant : ${sorted.join(" ; ")}. Médiane = ${answer}.` }],
   };
 }
 
@@ -766,7 +808,7 @@ function genAutoAngleSecteurMental() {
     chapter: "Automatismes — Statistiques",
     prompt: `Dans un diagramme circulaire, une catégorie représente ${num}/${den} de l'effectif total. Quel est l'angle de son secteur (en degrés) ?`,
     answer,
-    steps: [`\\dfrac{${num}}{${den}} \\times 360 = ${answer}\\text{°}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} \\times 360 = ${answer}\\text{°}` }],
   };
 }
 
@@ -781,7 +823,7 @@ function genAutoFrequenceRapideMental() {
     prompt: `Sur ${total} valeurs, une catégorie en compte ${effectif}. Quelle est sa fréquence en pourcentage ?`,
     answer,
     tolerance: 0.2,
-    steps: [`\\dfrac{${effectif}}{${total}} \\times 100 = ${fr(answer)}\\ \\%`],
+    steps: [{ type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 100 = ${fr(answer)}\\ \\%` }],
   };
 }
 
@@ -810,7 +852,7 @@ function genAutoProbabiliteUrneMental() {
     prompt: `Une urne contient ${total} boules dont ${favorables} rouges. Donne la probabilité d'obtenir une boule rouge (fraction ${favorables}/${total} acceptée, ou valeur décimale).`,
     answer,
     tolerance: 0.002,
-    steps: [`P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -823,7 +865,7 @@ function genAutoEvenementContraireMental() {
     prompt: `P(A) = ${fr(pA)}. Quelle est la probabilité de l'événement contraire de A ?`,
     answer: roundTo(1 - pA, 2),
     tolerance: 0.01,
-    steps: [`1 - ${fr(pA)} = ${fr(roundTo(1 - pA, 2))}`],
+    steps: [{ type: "calcul", text: `1 - ${fr(pA)} = ${fr(roundTo(1 - pA, 2))}` }],
   };
 }
 
@@ -838,7 +880,7 @@ function genAutoProbabiliteDeMental() {
     prompt: `On lance un dé à 6 faces. Donne la probabilité d'obtenir un nombre ${critere} (fraction ou valeur décimale).`,
     answer,
     tolerance: 0.002,
-    steps: [`\\dfrac{${favorables}}{6} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${favorables}}{6} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -853,7 +895,7 @@ function genAutoSommeProbabilitesMental() {
     prompt: `Une expérience a 3 issues A, B et C. P(A) = ${fr(pA)} et P(B) = ${fr(pB)}. Quelle est P(C) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`1 - ${fr(pA)} - ${fr(pB)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `1 - ${fr(pA)} - ${fr(pB)} = ${fr(answer)}` }],
   };
 }
 
@@ -866,7 +908,7 @@ function genAutoProbabiliteDepuisPourcentageMental() {
     prompt: `Un événement a ${p} % de chances de se réaliser. Donne sa probabilité sous forme décimale.`,
     answer: roundTo(p / 100, 2),
     tolerance: 0.005,
-    steps: [`${p}\\% = ${fr(roundTo(p / 100, 2))}`],
+    steps: [{ type: "calcul", text: `${p}\\% = ${fr(roundTo(p / 100, 2))}` }],
   };
 }
 
@@ -894,7 +936,7 @@ function genAutoThalesMental() {
     prompt: `Dans une configuration de Thalès, AB = ${AB} cm et le coefficient entre AM et AB est ${fr(k)}. Calcule AM.`,
     answer: AM,
     tolerance: 0.05,
-    steps: [`${AB} \\times ${fr(k)} = ${fr(AM)}`],
+    steps: [{ type: "calcul", text: `${AB} \\times ${fr(k)} = ${fr(AM)}` }],
   };
 }
 
@@ -909,7 +951,7 @@ function genAutoCoefficientAgrandissementMental() {
     prompt: `Un côté de ${c1} cm devient ${fr(c2)} cm après transformation. Quel est le coefficient ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`${fr(c2)} \\div ${c1} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `${fr(c2)} \\div ${c1} = ${fr(k)}` }],
   };
 }
 
@@ -924,7 +966,7 @@ function genAutoTroisiemeAngleMental() {
     chapter: "Automatismes — Thalès et triangles semblables",
     prompt: `Un triangle a des angles de ${a1}° et ${a2}°. Quel est le troisième ?`,
     answer: a3,
-    steps: [`180 - ${a1} - ${a2} = ${a3}`],
+    steps: [{ type: "calcul", text: `180 - ${a1} - ${a2} = ${a3}` }],
   };
 }
 
@@ -937,7 +979,7 @@ function genAutoAireAgrandissementMental() {
     chapter: "Automatismes — Thalès et triangles semblables",
     prompt: `Une figure d'aire ${aire} cm² est agrandie avec un coefficient ${k}. Quelle est la nouvelle aire ?`,
     answer: aire * k * k,
-    steps: [`${aire} \\times ${k}^2 = ${aire * k * k}`],
+    steps: [{ type: "calcul", text: `${aire} \\times ${k}^2 = ${aire * k * k}` }],
   };
 }
 
@@ -951,7 +993,7 @@ function genAutoAgrandissementReductionMental() {
     prompt: `Un coefficient de ${fr(k)} correspond-il à un agrandissement ou à une réduction ?`,
     answer,
     options: ["Agrandissement", "Réduction"],
-    steps: [k > 1 ? `${fr(k)} > 1 : agrandissement.` : `${fr(k)} < 1 : réduction.`],
+    steps: [{ type: "regle", text: k > 1 ? `${fr(k)} > 1 : agrandissement.` : `${fr(k)} < 1 : réduction.` }],
   };
 }
 
@@ -981,7 +1023,7 @@ function genAutoIdentifierRatioMental() {
     prompt: `On connaît les côtés ${connus.cotes}. Quelle relation utiliser ?`,
     answer: connus.ratio,
     options: ["Cosinus", "Sinus", "Tangente"],
-    steps: [connus.ratio],
+    steps: [{ type: "resultat", text: connus.ratio }],
   };
 }
 
@@ -996,7 +1038,7 @@ function genAutoLongueurCosinusMental() {
     prompt: `Hypoténuse = ${hyp} cm, angle = ${angle}°. Calcule le côté adjacent (arrondi au centième).`,
     answer,
     tolerance: 0.05,
-    steps: [`${hyp} \\times \\cos(${angle}°) \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${hyp} \\times \\cos(${angle}°) \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1011,7 +1053,7 @@ function genAutoLongueurSinusMental() {
     prompt: `Hypoténuse = ${hyp} cm, angle = ${angle}°. Calcule le côté opposé (arrondi au centième).`,
     answer,
     tolerance: 0.05,
-    steps: [`${hyp} \\times \\sin(${angle}°) \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${hyp} \\times \\sin(${angle}°) \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1025,7 +1067,7 @@ function genAutoAngleArctanMental() {
     chapter: "Automatismes — Trigonométrie",
     prompt: `Côté opposé = ${opp} cm, côté adjacent = ${adj} cm. Calcule l'angle (arrondi au degré).`,
     answer,
-    steps: [`\\tan^{-1}\\left(\\dfrac{${opp}}{${adj}}\\right) \\approx ${answer}°`],
+    steps: [{ type: "calcul", text: `\\tan^{-1}\\left(\\dfrac{${opp}}{${adj}}\\right) \\approx ${answer}°` }],
   };
 }
 
@@ -1037,7 +1079,7 @@ function genAutoAnglesComplementairesMental() {
     chapter: "Automatismes — Trigonométrie",
     prompt: `Dans un triangle rectangle, un angle aigu mesure ${angle}°. Quel est l'autre angle aigu ?`,
     answer: 90 - angle,
-    steps: [`90 - ${angle} = ${90 - angle}`],
+    steps: [{ type: "calcul", text: `90 - ${angle} = ${90 - angle}` }],
   };
 }
 
@@ -1064,7 +1106,7 @@ function genAutoCoefficientHomothetieMental() {
     prompt: `OM = ${OM} cm, OM' = ${fr(OMprime)} cm. Quel est le coefficient de l'homothétie (positif) ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`${fr(OMprime)} \\div ${OM} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `${fr(OMprime)} \\div ${OM} = ${fr(k)}` }],
   };
 }
 
@@ -1078,7 +1120,7 @@ function genAutoLongueurHomothetieMental() {
     prompt: `Un segment de ${longueur} cm subit une homothétie de coefficient ${fr(k)}. Nouvelle longueur ?`,
     answer: roundTo(longueur * k, 2),
     tolerance: 0.02,
-    steps: [`${longueur} \\times ${fr(k)} = ${fr(roundTo(longueur * k, 2))}`],
+    steps: [{ type: "calcul", text: `${longueur} \\times ${fr(k)} = ${fr(roundTo(longueur * k, 2))}` }],
   };
 }
 
@@ -1091,7 +1133,7 @@ function genAutoAireHomothetieMental() {
     chapter: "Automatismes — Transformations",
     prompt: `Une figure d'aire ${aire} cm² subit une homothétie de coefficient ${k}. Nouvelle aire ?`,
     answer: aire * k * k,
-    steps: [`${aire} \\times ${k}^2 = ${aire * k * k}`],
+    steps: [{ type: "calcul", text: `${aire} \\times ${k}^2 = ${aire * k * k}` }],
   };
 }
 
@@ -1105,7 +1147,7 @@ function genAutoSymetrieCentraleOrigineMental() {
     chapter: "Automatismes — Transformations",
     prompt: `M(${x} ; ${y}). Donne ${askX ? "l'abscisse" : "l'ordonnée"} de l'image de M par la symétrie centrale de centre O(0 ; 0).`,
     answer: askX ? -x : -y,
-    steps: [`(-${x}\\, ;\\ -${y})`],
+    steps: [{ type: "resultat", text: `(-${x}\\, ;\\ -${y})` }],
   };
 }
 
@@ -1119,7 +1161,7 @@ function genAutoProprieteConserveeMental() {
     prompt: `${transfo.charAt(0).toUpperCase() + transfo.slice(1)} conserve-t-elle les longueurs ?`,
     answer: conserveLongueurs ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [conserveLongueurs ? "Oui." : "Non, elle les multiplie par 3."],
+    steps: [{ type: "regle", text: conserveLongueurs ? "Oui." : "Non, elle les multiplie par 3." }],
   };
 }
 
@@ -1145,7 +1187,7 @@ function genAutoAireSphereMental() {
     prompt: `Aire d'une sphère de rayon ${R} cm (arrondie au dixième) ?`,
     answer,
     tolerance: Math.max(0.5, answer * 0.01),
-    steps: [`4 \\times \\pi \\times ${R}^2 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `4 \\times \\pi \\times ${R}^2 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1159,7 +1201,7 @@ function genAutoVolumeSphereMental() {
     prompt: `Volume d'une boule de rayon ${R} cm (arrondi au dixième) ?`,
     answer,
     tolerance: Math.max(0.5, answer * 0.01),
-    steps: [`\\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{4}{3} \\times \\pi \\times ${R}^3 \\approx ${fr(answer)}` }],
   };
 }
 
@@ -1172,7 +1214,7 @@ function genAutoLatitudeLongitudeMental() {
     prompt: askLatitude ? `Quelle coordonnée mesure la position Nord/Sud ?` : `Quelle coordonnée mesure la position Est/Ouest ?`,
     answer: askLatitude ? "Latitude" : "Longitude",
     options: ["Latitude", "Longitude"],
-    steps: [askLatitude ? "Latitude" : "Longitude"],
+    steps: [{ type: "resultat", text: askLatitude ? "Latitude" : "Longitude" }],
   };
 }
 
@@ -1184,7 +1226,7 @@ function genAutoSectionCubeMental() {
     prompt: `Un plan de coupe parallèle à une face d'un cube donne une section de quelle forme ?`,
     answer: "Un carré",
     options: ["Un carré", "Un rectangle", "Un disque"],
-    steps: [`Un carré identique à la face.`],
+    steps: [{ type: "regle", text: `Un carré identique à la face.` }],
   };
 }
 
@@ -1196,7 +1238,7 @@ function genAutoSectionCylindreMental() {
     prompt: `Un plan de coupe parallèle à la base d'un cylindre donne une section de quelle forme ?`,
     answer: "Un disque",
     options: ["Un disque", "Un rectangle", "Un carré"],
-    steps: [`Un disque de même rayon que la base.`],
+    steps: [{ type: "regle", text: `Un disque de même rayon que la base.` }],
   };
 }
 
@@ -1222,7 +1264,7 @@ function genAutoVitesseMental() {
     chapter: "Automatismes — Mesures et grandeurs",
     prompt: `Distance = ${d} km, temps = ${t} h. Vitesse (en km/h) ?`,
     answer: v,
-    steps: [`${d} \\div ${t} = ${v}`],
+    steps: [{ type: "calcul", text: `${d} \\div ${t} = ${v}` }],
   };
 }
 
@@ -1236,7 +1278,7 @@ function genAutoConversionKmhMsMental() {
     prompt: `Convertis ${vKmh} km/h en m/s.`,
     answer,
     tolerance: 0.1,
-    steps: [`${vKmh} \\div 3,6 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${vKmh} \\div 3,6 = ${fr(answer)}` }],
   };
 }
 
@@ -1250,7 +1292,7 @@ function genAutoDebitMental() {
     chapter: "Automatismes — Mesures et grandeurs",
     prompt: `Un robinet remplit ${volume} L en ${temps} min. Débit (en L/min) ?`,
     answer: debit,
-    steps: [`${volume} \\div ${temps} = ${debit}`],
+    steps: [{ type: "calcul", text: `${volume} \\div ${temps} = ${debit}` }],
   };
 }
 
@@ -1265,7 +1307,7 @@ function genAutoEchelleMental() {
     prompt: `Sur un plan à l'échelle 1/${echelle}, une distance mesure ${distancePlanCm} cm. Distance réelle (en m) ?`,
     answer: distanceReelleM,
     tolerance: 0.05,
-    steps: [`${distancePlanCm} \\times ${echelle} \\div 100 = ${fr(distanceReelleM)}`],
+    steps: [{ type: "calcul", text: `${distancePlanCm} \\times ${echelle} \\div 100 = ${fr(distanceReelleM)}` }],
   };
 }
 
@@ -1278,7 +1320,7 @@ function genAutoEnergieMental() {
     chapter: "Automatismes — Mesures et grandeurs",
     prompt: `Puissance = ${P} W, temps = ${t} h. Énergie consommée (en Wh) ?`,
     answer: P * t,
-    steps: [`${P} \\times ${t} = ${P * t}`],
+    steps: [{ type: "calcul", text: `${P} \\times ${t} = ${P * t}` }],
   };
 }
 
@@ -1322,6 +1364,7 @@ export default {
     id: "automatismes-troisieme",
     title: "Automatismes",
     description: "Calcul rapide et automatismes du programme de 3e, chapitre après chapitre.",
+    pourquoi: "Les automatismes, c'est le calcul mental qui libère de la place dans ta tête pour réfléchir au problème plutôt qu'à l'arithmétique : quelques minutes régulières valent mieux qu'une révision unique la veille du contrôle.",
     level: "troisieme",
     freemiumDaily: 5,
     order: 1,

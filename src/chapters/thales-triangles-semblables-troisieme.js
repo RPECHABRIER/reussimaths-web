@@ -53,7 +53,10 @@ function genThalesCalculerLongueurNumeric() {
     prompt: `Dans un triangle ABC, les points M et N appartiennent respectivement aux droites (AB) et (AC), avec (MN) parallèle à (BC). On donne AB = ${AB} cm, AC = ${AC} cm et ${askAM ? `AN = ${fr(AN)} cm` : `AM = ${fr(AM)} cm`}. D'après le théorème de Thalès, calcule ${askAM ? "AM" : "AN"} (en cm).`,
     answer: askAM ? AM : AN,
     tolerance: 0.05,
-    steps: [`\\dfrac{AM}{AB} = \\dfrac{AN}{AC}`, askAM ? `AM = \\dfrac{AB \\times AN}{AC} = \\dfrac{${AB} \\times ${fr(AN)}}{${AC}} = ${fr(AM)}` : `AN = \\dfrac{AC \\times AM}{AB} = \\dfrac{${AC} \\times ${fr(AM)}}{${AB}} = ${fr(AN)}`],
+    steps: [
+      { type: "regle", text: `\\dfrac{AM}{AB} = \\dfrac{AN}{AC}` },
+      { type: "resultat", text: askAM ? `AM = \\dfrac{AB \\times AN}{AC} = \\dfrac{${AB} \\times ${fr(AN)}}{${AC}} = ${fr(AM)}` : `AN = \\dfrac{AC \\times AM}{AB} = \\dfrac{${AC} \\times ${fr(AM)}}{${AB}} = ${fr(AN)}` },
+    ],
   };
 }
 
@@ -70,7 +73,10 @@ function genThalesTroisiemeLongueurNumeric() {
     prompt: `Dans un triangle ABC, M appartient à (AB), N appartient à (AC), et (MN) est parallèle à (BC). On donne AB = ${AB} cm, AM = ${fr(AM)} cm et BC = ${BC} cm. Calcule MN (en cm, arrondi au centième si besoin).`,
     answer: MN,
     tolerance: 0.02,
-    steps: [`\\dfrac{AM}{AB} = \\dfrac{MN}{BC}`, `MN = \\dfrac{${fr(AM)} \\times ${BC}}{${AB}} \\approx ${fr(MN)}`],
+    steps: [
+      { type: "regle", text: `\\dfrac{AM}{AB} = \\dfrac{MN}{BC}` },
+      { type: "resultat", text: `MN = \\dfrac{${fr(AM)} \\times ${BC}}{${AB}} \\approx ${fr(MN)}` },
+    ],
   };
 }
 
@@ -88,10 +94,10 @@ function genThalesEquationNumeric() {
     prompt: `Une configuration de Thalès donne l'égalité \\(\\dfrac{x + ${xSol}}{${den1}} = \\dfrac{${m}x}{${den2}}\\). Résous cette équation pour trouver x.`,
     answer: xSol,
     steps: [
-      `${den2} \\times (x + ${xSol}) = ${m} \\times ${den1} \\times x`,
-      `${den2}x + ${den2 * xSol} = ${m * den1}x`,
-      `${den2 * xSol} = ${m * den1 - den2}x`,
-      `x = ${xSol}`,
+      { type: "calcul", text: `${den2} \\times (x + ${xSol}) = ${m} \\times ${den1} \\times x` },
+      { type: "calcul", text: `${den2}x + ${den2 * xSol} = ${m * den1}x` },
+      { type: "calcul", text: `${den2 * xSol} = ${m * den1 - den2}x` },
+      { type: "resultat", text: `x = ${xSol}` },
     ],
   };
 }
@@ -112,8 +118,8 @@ function genVerifierAlignementQCM() {
     answer: aligned ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : pour appliquer la réciproque du théorème de Thalès, il faut que les points soient alignés dans le même ordre sur chaque droite.`,
-      aligned ? `C'est bien le cas ici : on peut appliquer la réciproque.` : `Ce n'est pas le cas ici : on ne peut pas appliquer la réciproque.`,
+      { type: "regle", text: `Rappel : pour appliquer la réciproque du théorème de Thalès, il faut que les points soient alignés dans le même ordre sur chaque droite.` },
+      { type: "resultat", text: aligned ? `C'est bien le cas ici : on peut appliquer la réciproque.` : `Ce n'est pas le cas ici : on ne peut pas appliquer la réciproque.` },
     ],
   };
 }
@@ -136,9 +142,9 @@ function genReciproqueThalesRapportsQCM() {
     answer,
     options: ["Oui", "Non"],
     steps: [
-      `\\dfrac{AM}{AB} = \\dfrac{${fr(AM)}}{${AB}} \\approx ${fr(rapport1)}`,
-      `\\dfrac{AN}{AC} = \\dfrac{${fr(AN)}}{${AC}} \\approx ${fr(rapport2)}`,
-      answer === "Oui" ? `Les rapports sont égaux : d'après la réciproque du théorème de Thalès, (MN) et (BC) sont parallèles.` : `Les rapports ne sont pas égaux : (MN) et (BC) ne sont pas parallèles.`,
+      { type: "calcul", text: `\\dfrac{AM}{AB} = \\dfrac{${fr(AM)}}{${AB}} \\approx ${fr(rapport1)}` },
+      { type: "calcul", text: `\\dfrac{AN}{AC} = \\dfrac{${fr(AN)}}{${AC}} \\approx ${fr(rapport2)}` },
+      { type: "resultat", text: answer === "Oui" ? `Les rapports sont égaux : d'après la réciproque du théorème de Thalès, (MN) et (BC) sont parallèles.` : `Les rapports ne sont pas égaux : (MN) et (BC) ne sont pas parallèles.` },
     ],
   };
 }
@@ -156,7 +162,7 @@ function genCoefficientAgrandissementNumeric() {
     prompt: `Un triangle a un côté de ${cote1} cm. Sur une figure agrandie ou réduite à partir de ce triangle, le côté correspondant mesure ${fr(cote2)} cm. Quel est le coefficient d'agrandissement ou de réduction ?`,
     answer: k,
     tolerance: 0.02,
-    steps: [`k = \\dfrac{${fr(cote2)}}{${cote1}} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `k = \\dfrac{${fr(cote2)}}{${cote1}} = ${fr(k)}` }],
   };
 }
 
@@ -174,7 +180,7 @@ function genIdentifierAgrandissementReductionQCM() {
     answer,
     options: ["Agrandissement", "Réduction", "Reproduction à l'identique"],
     steps: [
-      k > 1 ? `Le coefficient est supérieur à 1 : c'est un agrandissement.` : k < 1 ? `Le coefficient est inférieur à 1 : c'est une réduction.` : `Le coefficient est égal à 1 : la figure ne change pas de taille.`,
+      { type: "regle", text: k > 1 ? `Le coefficient est supérieur à 1 : c'est un agrandissement.` : k < 1 ? `Le coefficient est inférieur à 1 : c'est une réduction.` : `Le coefficient est égal à 1 : la figure ne change pas de taille.` },
     ],
   };
 }
@@ -190,7 +196,7 @@ function genLongueurApresAgrandissementNumeric() {
     prompt: `Une figure de ${longueur} cm de long est transformée avec un coefficient de ${fr(k)}. Quelle est la longueur correspondante sur la figure transformée (en cm) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`${longueur} \\times ${fr(k)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${longueur} \\times ${fr(k)} = ${fr(answer)}` }],
   };
 }
 
@@ -205,7 +211,7 @@ function genPerimetreApresAgrandissementNumeric() {
     prompt: `Un triangle a un périmètre de ${perimetre} cm. On l'agrandit ou on le réduit avec un coefficient de ${fr(k)}. Quel est le périmètre du triangle obtenu (en cm) ?`,
     answer,
     tolerance: 0.02,
-    steps: [`Le périmètre est multiplié par le coefficient : ${perimetre} \\times ${fr(k)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Le périmètre est multiplié par le coefficient : ${perimetre} \\times ${fr(k)} = ${fr(answer)}` }],
   };
 }
 
@@ -220,7 +226,7 @@ function genAireApresAgrandissementNumeric() {
     prompt: `Une figure a une aire de ${aire} cm². On l'agrandit (ou on la réduit) avec un coefficient de ${fr(k)}. Quelle est l'aire de la figure obtenue (en cm²) ?`,
     answer,
     tolerance: 0.05,
-    steps: [`L'aire est multipliée par le carré du coefficient : ${aire} \\times ${fr(k)}^2 = ${aire} \\times ${fr(roundTo(k * k, 3))} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `L'aire est multipliée par le carré du coefficient : ${aire} \\times ${fr(k)}^2 = ${aire} \\times ${fr(roundTo(k * k, 3))} = ${fr(answer)}` }],
   };
 }
 
@@ -234,7 +240,7 @@ function genCoefficientReciproqueNumeric() {
     prompt: `Une figure B est obtenue à partir d'une figure A avec un coefficient de ${fr(k)}. Quel coefficient permet de repasser de la figure B à la figure A ?`,
     answer,
     tolerance: 0.01,
-    steps: [`\\text{Coefficient réciproque} = \\dfrac{1}{${fr(k)}} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\text{Coefficient réciproque} = \\dfrac{1}{${fr(k)}} = ${fr(answer)}` }],
   };
 }
 
@@ -249,7 +255,7 @@ function genTroisiemeAngleTriangleNumeric() {
     chapter: "Thalès et triangles semblables — Agrandissement, réduction",
     prompt: `Dans un triangle, deux angles mesurent ${a1}° et ${a2}°. Calcule la mesure du troisième angle.`,
     answer: a3,
-    steps: [`180 - ${a1} - ${a2} = ${a3}`],
+    steps: [{ type: "calcul", text: `180 - ${a1} - ${a2} = ${a3}` }],
   };
 }
 
@@ -279,8 +285,8 @@ function genTrianglesSemblablesAnglesQCM() {
     answer,
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : deux triangles sont semblables si leurs angles sont deux à deux égaux (dans un ordre correspondant).`,
-      semblables ? `Les angles de DEF (${b1}°, ${b2}°, ${b3}°) sont bien les mêmes que ceux de ABC : les triangles sont semblables.` : `Les angles de DEF (${b1}°, ${b2}°, ${b3}°) ne correspondent pas à ceux de ABC (${a1}°, ${a2}°, ${a3}°) : les triangles ne sont pas semblables.`,
+      { type: "regle", text: `Rappel : deux triangles sont semblables si leurs angles sont deux à deux égaux (dans un ordre correspondant).` },
+      { type: "resultat", text: semblables ? `Les angles de DEF (${b1}°, ${b2}°, ${b3}°) sont bien les mêmes que ceux de ABC : les triangles sont semblables.` : `Les angles de DEF (${b1}°, ${b2}°, ${b3}°) ne correspondent pas à ceux de ABC (${a1}°, ${a2}°, ${a3}°) : les triangles ne sont pas semblables.` },
     ],
   };
 }
@@ -306,8 +312,8 @@ function genTrianglesSemblablesRapportsQCM() {
     answer,
     options: ["Oui", "Non"],
     steps: [
-      `\\dfrac{${fr(d1)}}{${c1}} \\approx ${fr(r1)}, \\ \\dfrac{${fr(d2)}}{${c2}} \\approx ${fr(r2)}, \\ \\dfrac{${fr(d3)}}{${c3}} \\approx ${fr(r3)}`,
-      answer === "Oui" ? `Les trois rapports sont égaux : les triangles sont semblables.` : `Les trois rapports ne sont pas tous égaux : les triangles ne sont pas semblables.`,
+      { type: "calcul", text: `\\dfrac{${fr(d1)}}{${c1}} \\approx ${fr(r1)}, \\ \\dfrac{${fr(d2)}}{${c2}} \\approx ${fr(r2)}, \\ \\dfrac{${fr(d3)}}{${c3}} \\approx ${fr(r3)}` },
+      { type: "resultat", text: answer === "Oui" ? `Les trois rapports sont égaux : les triangles sont semblables.` : `Les trois rapports ne sont pas tous égaux : les triangles ne sont pas semblables.` },
     ],
   };
 }
@@ -328,7 +334,11 @@ function genThalesPapillonNumeric() {
     prompt: `Les droites (AE) et (BF) sont sécantes en D, avec (AB) parallèle à (EF). On donne DA = ${DA} cm, DB = ${DB} cm, AB = ${AB} cm et ${askDF ? `DE = ${fr(DE)} cm` : `DF = ${fr(DF)} cm`}. D'après le théorème de Thalès, calcule ${askDF ? "DF" : "DE"} (en cm).`,
     answer: askDF ? DF : DE,
     tolerance: 0.05,
-    steps: [`\\dfrac{DA}{DF} = \\dfrac{DB}{DE} = \\dfrac{AB}{EF}`, `\\text{Coefficient} = \\dfrac{EF}{AB} = ${fr(k)}`, askDF ? `DF = DA \\times ${fr(k)} = ${fr(DF)}` : `DE = DB \\times ${fr(k)} = ${fr(DE)}`],
+    steps: [
+      { type: "regle", text: `\\dfrac{DA}{DF} = \\dfrac{DB}{DE} = \\dfrac{AB}{EF}` },
+      { type: "calcul", text: `\\text{Coefficient} = \\dfrac{EF}{AB} = ${fr(k)}` },
+      { type: "resultat", text: askDF ? `DF = DA \\times ${fr(k)} = ${fr(DF)}` : `DE = DB \\times ${fr(k)} = ${fr(DE)}` },
+    ],
   };
 }
 
@@ -381,6 +391,7 @@ export default {
     id: "thales-triangles-semblables-troisieme",
     title: "Théorème de Thalès et triangles semblables",
     description: "Théorème de Thalès (configurations triangle et papillon), réciproque et parallélisme, agrandissement/réduction (longueur, périmètre, aire) et reconnaissance de triangles semblables.",
+    pourquoi: "Le théorème de Thalès permet de calculer une hauteur ou une distance inaccessible (un arbre, un bâtiment) sans la mesurer directement.",
     level: "troisieme",
     free: false,
     order: 11,

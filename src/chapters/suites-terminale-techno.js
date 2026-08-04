@@ -230,6 +230,7 @@ export default {
     id: "suites-terminale-techno",
     title: "Suites numériques",
     description: "Moyenne arithmétique/géométrique, terme de rang n, somme des n premiers termes, preuve de suites consécutives, versements réguliers.",
+    pourquoi: "Les suites modélisent l'évolution d'un capital, d'un stock ou d'une population, année après année ou terme après terme.",
     level: "terminale-techno",
     order: 2,
   },

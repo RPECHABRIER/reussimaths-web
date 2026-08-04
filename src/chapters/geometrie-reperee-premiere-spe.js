@@ -400,6 +400,7 @@ export default {
     id: "geometrie-reperee-premiere-spe",
     title: "Géométrie repérée",
     description: "Vecteur normal à une droite, équation de cercle, projection orthogonale d'un point sur une droite.",
+    pourquoi: "Passer du vecteur à l'équation de droite ou de cercle, c'est le langage utilisé en physique et en informatique graphique pour décrire des positions.",
     level: "premiere-spe",
     order: 9,
   },

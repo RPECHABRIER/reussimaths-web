@@ -343,6 +343,7 @@ export default {
     id: "informations-chiffrees-seconde",
     title: "Informations chiffrées",
     description: "Proportions (partie, total), proportion d'une proportion, coefficient multiplicateur, variation absolue et relative, évolutions successives et réciproques.",
+    pourquoi: "Savoir lire un pourcentage d'évolution ou un coefficient multiplicateur, c'est décrypter les soldes, les statistiques et les résultats d'élections.",
     level: "seconde",
     free: false,
     order: 11,

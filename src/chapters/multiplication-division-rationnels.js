@@ -39,7 +39,10 @@ function genMultiplierDeuxFractionsSigneesNumeric() {
     chapter: "Multiplication, division de rationnels — Multiplier",
     prompt: `\\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}} = \\dfrac{?}{${b * d}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${a} \\times ${c} = ${answer}`, `${b} \\times ${d} = ${b * d}`],
+    steps: [
+      { type: "resultat", text: `${a} \\times ${c} = ${answer}` },
+      { type: "calcul", text: `${b} \\times ${d} = ${b * d}` },
+    ],
   };
 }
 
@@ -58,7 +61,10 @@ function genChaineMultiplicationsSigneesNumeric() {
     chapter: "Multiplication, division de rationnels — Multiplier",
     prompt: `\\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} = \\dfrac{?}{${answerDen}}\\) — quel est ce numérateur ?`,
     answer: answerNum,
-    steps: [`${a} \\times ${c} \\times ${e} = ${answerNum}`, `${b} \\times ${d} \\times ${f} = ${answerDen}`],
+    steps: [
+      { type: "resultat", text: `${a} \\times ${c} \\times ${e} = ${answerNum}` },
+      { type: "calcul", text: `${b} \\times ${d} \\times ${f} = ${answerDen}` },
+    ],
   };
 }
 
@@ -74,7 +80,7 @@ function genFractionDUnNombreNumeric() {
     prompt: `Calcule les \\(\\dfrac{${num}}{${den}}\\) de ${nombre}.`,
     answer,
     tolerance: 0.05,
-    steps: [`\\dfrac{${num}}{${den}} \\times ${nombre} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nombre} = ${fr(answer)}` }],
   };
 }
 
@@ -97,7 +103,7 @@ function genTraduireExpressionQCM() {
     prompt: `Quelle expression mathématique traduit correctement la phrase suivante : "Calculer les \\(\\dfrac{${num}}{${den}}\\) de ${nombre}" ?`,
     answer: correct,
     options,
-    steps: [`Calculer une fraction d'un nombre revient à multiplier ce nombre par la fraction : \\dfrac{${num}}{${den}} \\times ${nombre}.`],
+    steps: [{ type: "regle", text: `Calculer une fraction d'un nombre revient à multiplier ce nombre par la fraction : \\dfrac{${num}}{${den}} \\times ${nombre}.` }],
   };
 }
 
@@ -123,7 +129,7 @@ function genInverseDUneFractionQCM() {
     prompt: `Quel est l'inverse de \\(\\dfrac{${a}}{${b}}\\) ?`,
     answer: correct,
     options: shuffle(options),
-    steps: [`L'inverse de \\dfrac{${a}}{${b}} est \\dfrac{${b}}{${a}} car \\dfrac{${a}}{${b}} \\times \\dfrac{${b}}{${a}} = 1.`],
+    steps: [{ type: "regle", text: `L'inverse de \\dfrac{${a}}{${b}} est \\dfrac{${b}}{${a}} car \\dfrac{${a}}{${b}} \\times \\dfrac{${b}}{${a}} = 1.` }],
   };
 }
 
@@ -143,9 +149,12 @@ function genDistinguerOpposeInverseQCM() {
     answer: correct,
     options,
     steps: [
-      askOppose
-        ? `L'opposé change le signe : \\dfrac{${a}}{${b}} \\to ${oppose}.`
-        : `L'inverse échange le numérateur et le dénominateur : \\dfrac{${a}}{${b}} \\to ${inverse}.`,
+      {
+        type: "regle",
+        text: askOppose
+          ? `L'opposé change le signe : \\dfrac{${a}}{${b}} \\to ${oppose}.`
+          : `L'inverse échange le numérateur et le dénominateur : \\dfrac{${a}}{${b}} \\to ${inverse}.`,
+      },
     ],
   };
 }
@@ -166,8 +175,8 @@ function genInverseOpposeDoubleQCM() {
     answer: correct,
     options: options.length >= 2 ? options : [correct, wrong1],
     steps: [
-      `L'opposé de \\dfrac{${a}}{${b}} est \\dfrac{${-a}}{${b}}.`,
-      `L'inverse de \\dfrac{${-a}}{${b}} est \\dfrac{${b}}{${-a}} = \\dfrac{${-b}}{${a}}.`,
+      { type: "calcul", text: `L'opposé de \\dfrac{${a}}{${b}} est \\dfrac{${-a}}{${b}}.` },
+      { type: "resultat", text: `L'inverse de \\dfrac{${-a}}{${b}} est \\dfrac{${b}}{${-a}} = \\dfrac{${-b}}{${a}}.` },
     ],
   };
 }
@@ -185,9 +194,9 @@ function genDiviserParUneFractionNumeric() {
     prompt: `\\(\\dfrac{${a}}{${b}} \\div \\dfrac{${c}}{${d}} = \\dfrac{?}{${b * c}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      `Diviser par \\dfrac{${c}}{${d}}, c'est multiplier par son inverse \\dfrac{${d}}{${c}}.`,
-      `${a} \\times ${d} = ${answer}`,
-      `${b} \\times ${c} = ${b * c}`,
+      { type: "regle", text: `Diviser par \\dfrac{${c}}{${d}}, c'est multiplier par son inverse \\dfrac{${d}}{${c}}.` },
+      { type: "resultat", text: `${a} \\times ${d} = ${answer}` },
+      { type: "calcul", text: `${b} \\times ${c} = ${b * c}` },
     ],
   };
 }
@@ -203,7 +212,7 @@ function genDiviserNombreDecimalParFractionNumeric() {
     chapter: "Multiplication, division de rationnels — Diviser",
     prompt: `Pour un anniversaire, on a préparé ${fr(totalDecimal)} kg de mousse au chocolat. Chaque ramequin peut contenir \\(\\dfrac{${num}}{${den}}\\) kg de mousse. Combien de ramequins peut-on remplir ?`,
     answer: nbUnitsWanted,
-    steps: [`${fr(totalDecimal)} \\div \\dfrac{${num}}{${den}} = ${fr(totalDecimal)} \\times \\dfrac{${den}}{${num}} = ${nbUnitsWanted}`],
+    steps: [{ type: "calcul", text: `${fr(totalDecimal)} \\div \\dfrac{${num}}{${den}} = ${fr(totalDecimal)} \\times \\dfrac{${den}}{${num}} = ${nbUnitsWanted}` }],
   };
 }
 
@@ -225,7 +234,10 @@ function genPrioriteOperatoireFractionsNumeric() {
     prompt: `Calcule, en respectant les priorités opératoires : \\(\\dfrac{${a}}{${b}} + \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}}\\) (résultat en écriture décimale, arrondi au centième).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} \\approx ${fr(produit)}`, `\\dfrac{${a}}{${b}} + ${fr(produit)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} \\approx ${fr(produit)}` },
+      { type: "resultat", text: `\\dfrac{${a}}{${b}} + ${fr(produit)} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -245,7 +257,10 @@ function genProgrammeCalculAvecInverseNumeric() {
     prompt: `Un programme de calcul consiste à : prendre un nombre, lui ajouter ${p}, puis prendre l'inverse du résultat. Quel résultat obtient-on si on choisit initialement \\(\\dfrac{${numStart}}{${denStart}}\\) ? (Écriture décimale, arrondie au centième si nécessaire.)`,
     answer,
     tolerance: 0.01,
-    steps: [`\\dfrac{${numStart}}{${denStart}} + ${p} = \\dfrac{${sumNum}}{${denStart}}`, `\\text{Inverse} = \\dfrac{${denStart}}{${sumNum}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${numStart}}{${denStart}} + ${p} = \\dfrac{${sumNum}}{${denStart}}` },
+      { type: "resultat", text: `\\text{Inverse} = \\dfrac{${denStart}}{${sumNum}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -262,7 +277,7 @@ function genPourcentageEffectifNumeric() {
     prompt: `Dans un collège de ${effectif} élèves, ${pourcentage} % ont obtenu une mention. Combien d'élèves ont obtenu une mention (arrondi à l'unité) ?`,
     answer,
     tolerance: 0.5,
-    steps: [`${pourcentage}/100 \\times ${effectif} \\approx ${answer}`],
+    steps: [{ type: "calcul", text: `${pourcentage}/100 \\times ${effectif} \\approx ${answer}` }],
   };
 }
 
@@ -281,7 +296,10 @@ function genComparerDeuxPourcentagesQCM() {
     prompt: `Dans le collège A, ${p1} % des ${n1} élèves de troisième ont obtenu une mention. Dans le collège B, ${p2} % des ${n2} élèves de troisième ont obtenu une mention. Quel collège compte le plus de lauréats avec mention ?`,
     answer: winner,
     options: ["Collège A", "Collège B", "Égalité"],
-    steps: [`Collège A : ${p1}/100 \\times ${n1} \\approx ${c1}`, `Collège B : ${p2}/100 \\times ${n2} \\approx ${c2}`],
+    steps: [
+      { type: "calcul", text: `Collège A : ${p1}/100 \\times ${n1} \\approx ${c1}` },
+      { type: "calcul", text: `Collège B : ${p2}/100 \\times ${n2} \\approx ${c2}` },
+    ],
   };
 }
 
@@ -305,9 +323,9 @@ function genProportionDeuxEtapesNumeric() {
     prompt: `Une boîte contient ${totalCount} friandises. \\(\\dfrac{${numA}}{${totalDen}}\\) sont de type « ${categorieA} », et la moitié du reste est de type « ${categorieB} ». Combien y a-t-il de friandises « ${categorieB} » dans la boîte ?`,
     answer: countB,
     steps: [
-      `\\dfrac{${numA}}{${totalDen}} \\times ${totalCount} = ${countA}`,
-      `${totalCount} - ${countA} = ${remaining}\\ \\text{friandises restantes}`,
-      `${remaining} \\div 2 = ${countB}`,
+      { type: "calcul", text: `\\dfrac{${numA}}{${totalDen}} \\times ${totalCount} = ${countA}` },
+      { type: "calcul", text: `${totalCount} - ${countA} = ${remaining}\\ \\text{friandises restantes}` },
+      { type: "resultat", text: `${remaining} \\div 2 = ${countB}` },
     ],
   };
 }
@@ -325,7 +343,7 @@ function genAireRectangleFractionsNumeric() {
     prompt: `Un rectangle a pour longueur \\(\\dfrac{${numL}}{${denL}}\\) cm et pour largeur \\(\\dfrac{${numW}}{${denW}}\\) cm. Calcule son aire, en cm² (écriture décimale, arrondie au centième).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\dfrac{${numL}}{${denL}} \\times \\dfrac{${numW}}{${denW}} = \\dfrac{${numL * numW}}{${denL * denW}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${numL}}{${denL}} \\times \\dfrac{${numW}}{${denW}} = \\dfrac{${numL * numW}}{${denL * denW}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -378,6 +396,7 @@ export default {
     id: "multiplication-division-rationnels",
     title: "Multiplication et division de nombres rationnels",
     description: "Multiplier et diviser des nombres rationnels, fraction d'un nombre, inverse et opposé, priorités opératoires, programmes de calcul, problèmes de proportions et d'aires.",
+    pourquoi: "Multiplier et diviser des nombres relatifs, c'est un prérequis incontournable pour tout calcul algébrique plus avancé.",
     level: "quatrieme",
     free: false,
     order: 4,

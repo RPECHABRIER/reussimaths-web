@@ -224,6 +224,7 @@ export default {
     id: "variables-aleatoires-terminale-techno",
     title: "Variables aléatoires et loi binomiale",
     description: "Espérance d'une variable aléatoire discrète, loi binomiale B(n,p), coefficients binomiaux et triangle de Pascal.",
+    pourquoi: "La loi binomiale et l'espérance permettent de prévoir le résultat moyen d'une répétition d'expériences identiques.",
     level: "terminale-techno",
     order: 8,
   },

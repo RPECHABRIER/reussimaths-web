@@ -362,6 +362,7 @@ export default {
     id: "croissance-lineaire-premiere-non-spe",
     title: "Croissance linéaire",
     description: "Suites arithmétiques (raison, expression explicite, récurrence, résolution d'inéquations), modélisation de situations discrètes, fonctions affines et phénomènes continus à croissance linéaire.",
+    pourquoi: "Les suites arithmétiques modélisent toute évolution à vitesse constante : un salaire qui augmente chaque année du même montant, un réservoir qui se vide au même débit.",
     level: "premiere-non-spe",
     free: false,
     order: 4,

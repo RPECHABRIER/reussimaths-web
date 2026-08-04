@@ -44,7 +44,12 @@ function genMoyennePondereeSimpleNumeric() {
     prompt: `Une série statistique a pour valeurs ${valeurs.join(", ")} avec pour effectifs respectifs ${effectifs.join(", ")}. Calcule la moyenne pondérée de cette série (arrondie au centième si nécessaire).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\text{Moyenne} = \\dfrac{${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")}}{${totalEffectif}} = \\dfrac{${sommeProduits}}{${totalEffectif}} \\approx ${fr(answer)}`],
+    steps: [
+      {
+        type: "calcul",
+        text: `\\text{Moyenne} = \\dfrac{${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")}}{${totalEffectif}} = \\dfrac{${sommeProduits}}{${totalEffectif}} \\approx ${fr(answer)}`,
+      },
+    ],
   };
 }
 
@@ -70,7 +75,12 @@ function genMoyennePondereeCoefficientsNumeric() {
     prompt: `Un élève a obtenu les notes suivantes : ${notes.map((n, i) => `${n} (coefficient ${coefs[i]})`).join(", ")}. Calcule sa moyenne pondérée (arrondie au centième).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\text{Moyenne} = \\dfrac{${notes.map((n, i) => `${n} \\times ${coefs[i]}`).join(" + ")}}{${sommeCoefs}} \\approx ${fr(answer)}`],
+    steps: [
+      {
+        type: "calcul",
+        text: `\\text{Moyenne} = \\dfrac{${notes.map((n, i) => `${n} \\times ${coefs[i]}`).join(" + ")}}{${sommeCoefs}} \\approx ${fr(answer)}`,
+      },
+    ],
   };
 }
 
@@ -97,7 +107,10 @@ function genComparerMoyennesQCM() {
     prompt: `L'entreprise A a des salaires de ${A.vals.join(", ")} €. L'entreprise B a des salaires de ${B.vals.join(", ")} €. Quelle entreprise a le salaire moyen le plus élevé ?`,
     answer: winner,
     options: ["Entreprise A", "Entreprise B"],
-    steps: [`Moyenne A = ${fr(roundTo(A.mean, 2))} €`, `Moyenne B = ${fr(roundTo(B.mean, 2))} €`],
+    steps: [
+      { type: "calcul", text: `Moyenne A = ${fr(roundTo(A.mean, 2))} €` },
+      { type: "calcul", text: `Moyenne B = ${fr(roundTo(B.mean, 2))} €` },
+    ],
   };
 }
 
@@ -113,7 +126,7 @@ function genMedianeEffectifImpairNumeric() {
     chapter: "Statistiques — Médiane",
     prompt: `Voici une série de valeurs rangées dans l'ordre croissant : ${values.join(" ; ")}. Quelle est la médiane de cette série ?`,
     answer: median,
-    steps: [`L'effectif total est ${n} (impair). La médiane est la valeur centrale : ${median}.`],
+    steps: [{ type: "regle", text: `L'effectif total est ${n} (impair). La médiane est la valeur centrale : ${median}.` }],
   };
 }
 
@@ -131,7 +144,12 @@ function genMedianeEffectifPairNumeric() {
     prompt: `Voici une série de valeurs rangées dans l'ordre croissant : ${values.join(" ; ")}. Quelle est la médiane de cette série ?`,
     answer: median,
     tolerance: 0.01,
-    steps: [`L'effectif total est ${n} (pair). La médiane est la moyenne des deux valeurs centrales : \\dfrac{${v1} + ${v2}}{2} = ${fr(median)}`],
+    steps: [
+      {
+        type: "regle",
+        text: `L'effectif total est ${n} (pair). La médiane est la moyenne des deux valeurs centrales : \\dfrac{${v1} + ${v2}}{2} = ${fr(median)}`,
+      },
+    ],
   };
 }
 
@@ -152,7 +170,7 @@ function genInterpreterMedianeQCM() {
     prompt: `La médiane d'une série de ${contexte.sujet} est ${fr(contexte.valeur)} ${contexte.unite}. Que peut-on en conclure ?`,
     answer: correct,
     options: shuffle([correct, wrong1, wrong2]),
-    steps: [`La médiane partage la série en deux groupes de même effectif : au moins la moitié des valeurs lui sont inférieures ou égales.`],
+    steps: [{ type: "regle", text: `La médiane partage la série en deux groupes de même effectif : au moins la moitié des valeurs lui sont inférieures ou égales.` }],
   };
 }
 
@@ -169,7 +187,7 @@ function genAngleSecteurCirculaireNumeric() {
     prompt: `Dans un diagramme circulaire représentant ${total} personnes, une catégorie regroupe ${effectif} personnes. Quelle est la mesure de l'angle du secteur correspondant, en degrés (arrondie au dixième) ?`,
     answer: angle,
     tolerance: 0.1,
-    steps: [`\\dfrac{${effectif}}{${total}} \\times 360 \\approx ${fr(angle)}°`],
+    steps: [{ type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 360 \\approx ${fr(angle)}°` }],
   };
 }
 
@@ -184,7 +202,7 @@ function genEffectifDepuisAngleNumeric() {
     prompt: `Dans un diagramme circulaire représentant ${total} personnes, un secteur a un angle de ${fr(angle)}°. Combien de personnes ce secteur représente-t-il (arrondi à l'unité) ?`,
     answer: effectif,
     tolerance: 1,
-    steps: [`\\dfrac{${fr(angle)}}{360} \\times ${total} \\approx ${effectif}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${fr(angle)}}{360} \\times ${total} \\approx ${effectif}` }],
   };
 }
 
@@ -198,7 +216,7 @@ function genPourcentageDepuisAngleNumeric() {
     prompt: `Un secteur d'un diagramme circulaire a un angle de ${fr(angle)}°. Quel pourcentage cela représente-t-il ?`,
     answer: pourcentage,
     tolerance: 0.5,
-    steps: [`${fr(angle)} \\div 3,6 = ${pourcentage}\\%`],
+    steps: [{ type: "calcul", text: `${fr(angle)} \\div 3,6 = ${pourcentage}\\%` }],
   };
 }
 
@@ -220,7 +238,7 @@ function genAngleManquantCercleNumeric() {
     chapter: "Statistiques — Diagrammes",
     prompt: `Dans un diagramme ${isSemiCirculaire ? "semi-circulaire" : "circulaire"}, les secteurs connus ont pour mesures ${angles.map((a) => `${a}°`).join(", ")}. Sachant que la somme totale des angles vaut ${totalAngle}°, quelle est la mesure du dernier secteur, en degrés ?`,
     answer: manquant,
-    steps: [`${totalAngle} - (${angles.join(" + ")}) = ${manquant}`],
+    steps: [{ type: "calcul", text: `${totalAngle} - (${angles.join(" + ")}) = ${manquant}` }],
   };
 }
 
@@ -244,7 +262,12 @@ function genCaracterePopulationQCM() {
     prompt: `Dans une étude statistique sur ${ctx.population}, on étudie ${ctx.caractere}. Quel est ${askPopulation ? "la population étudiée" : "le caractère étudié"} ?`,
     answer: correct,
     options: [correct, wrong],
-    steps: [`La population est l'ensemble des individus étudiés (${ctx.population}), le caractère est la donnée observée (${ctx.caractere}).`],
+    steps: [
+      {
+        type: "regle",
+        text: `La population est l'ensemble des individus étudiés (${ctx.population}), le caractère est la donnée observée (${ctx.caractere}).`,
+      },
+    ],
   };
 }
 
@@ -258,7 +281,7 @@ function genEffectifTotalTableauNumeric() {
     chapter: "Statistiques — Vocabulaire",
     prompt: `Un tableau d'effectifs donne les valeurs suivantes : ${effectifs.join(", ")}. Quel est l'effectif total ?`,
     answer: total,
-    steps: [`${effectifs.join(" + ")} = ${total}`],
+    steps: [{ type: "calcul", text: `${effectifs.join(" + ")} = ${total}` }],
   };
 }
 
@@ -273,7 +296,7 @@ function genFrequenceNumeric() {
     prompt: `Dans une série de ${total} valeurs, une catégorie a un effectif de ${effectif}. Quelle est la fréquence de cette catégorie, en écriture décimale (arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${effectif} \\div ${total} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${effectif} \\div ${total} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -299,7 +322,12 @@ function genCategorieExtremeQCM() {
     prompt: `Voici un tableau d'effectifs : ${categories.map((c, i) => `${c} : ${effectifs[i]}`).join(", ")}. Quelle catégorie a l'effectif le ${askMax ? "plus grand" : "plus petit"} ?`,
     answer: targetCat,
     options: categories,
-    steps: [`Les effectifs sont ${categories.map((c, i) => `${c} = ${effectifs[i]}`).join(", ")}. Le ${askMax ? "plus grand" : "plus petit"} est ${target} (catégorie ${targetCat}).`],
+    steps: [
+      {
+        type: "regle",
+        text: `Les effectifs sont ${categories.map((c, i) => `${c} = ${effectifs[i]}`).join(", ")}. Le ${askMax ? "plus grand" : "plus petit"} est ${target} (catégorie ${targetCat}).`,
+      },
+    ],
   };
 }
 
@@ -317,7 +345,10 @@ function genMoyennePondereeSousGroupesNumeric() {
     chapter: "Statistiques — Problèmes",
     prompt: `On interroge ${totalPersonnes} personnes. ${pourcentageParticipants} % d'entre elles comptent faire des achats, chacune dépensant en moyenne ${depenseMoyenne} €. Quel est le montant total des dépenses de ces personnes ?`,
     answer: totalDepense,
-    steps: [`${pourcentageParticipants}/100 \\times ${totalPersonnes} = ${nbParticipants}\\ \\text{personnes}`, `${nbParticipants} \\times ${depenseMoyenne} = ${totalDepense}`],
+    steps: [
+      { type: "calcul", text: `${pourcentageParticipants}/100 \\times ${totalPersonnes} = ${nbParticipants}\\ \\text{personnes}` },
+      { type: "resultat", text: `${nbParticipants} \\times ${depenseMoyenne} = ${totalDepense}` },
+    ],
   };
 }
 
@@ -370,6 +401,7 @@ export default {
     id: "statistiques-quatrieme",
     title: "Statistiques",
     description: "Calculer une moyenne pondérée, calculer et interpréter une médiane, lire et construire des diagrammes, vocabulaire des statistiques.",
+    pourquoi: "Moyenne, médiane et diagrammes permettent de résumer et comparer des séries de données réelles.",
     level: "quatrieme",
     free: false,
     order: 8,

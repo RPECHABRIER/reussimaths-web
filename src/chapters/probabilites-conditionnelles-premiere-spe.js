@@ -342,6 +342,7 @@ export default {
     id: "probabilites-conditionnelles-premiere-spe",
     title: "Probabilités conditionnelles et indépendance",
     description: "Indépendance de deux évènements, partition et probabilités totales, arbres, répétition d'épreuves de Bernoulli.",
+    pourquoi: "Les probabilités conditionnelles permettent d'actualiser un risque quand une information nouvelle arrive — un test médical positif, un email détecté comme spam.",
     level: "premiere-spe",
     order: 10,
   },

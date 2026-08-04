@@ -80,7 +80,7 @@ function genDecompositionFacteursPremiersQCM() {
     prompt: `Quelle est la décomposition en produit de facteurs premiers de ${n} ?`,
     answer: correct,
     options: shuffle(options),
-    steps: [`${n} = ${correct}`],
+    steps: [{ type: "calcul", text: `${n} = ${correct}` }],
   };
 }
 
@@ -99,7 +99,10 @@ function genSimplifierFractionCriteresDivisibilite() {
     chapter: "Addition, soustraction de rationnels — Rappels",
     prompt: `En utilisant les critères de divisibilité, simplifie au maximum : \\(\\dfrac{${num}}{${den}} = \\dfrac{?}{${b0}}\\)`,
     answer: a0,
-    steps: [`${num} \\div ${k} = ${a0}`, `${den} \\div ${k} = ${b0}`],
+    steps: [
+      { type: "calcul", text: `${num} \\div ${k} = ${a0}` },
+      { type: "calcul", text: `${den} \\div ${k} = ${b0}` },
+    ],
   };
 }
 
@@ -119,7 +122,7 @@ function genComparerDeuxFractionsSigneesQCM() {
     prompt: `Compare : \\(\\dfrac{${a}}{${b}}\\) ... \\(\\dfrac{${c}}{${d}}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [`On compare ${a} \\times ${d} = ${a * d} et ${c} \\times ${b} = ${c * b} (produits en croix).`],
+    steps: [{ type: "calcul", text: `On compare ${a} \\times ${d} = ${a * d} et ${c} \\times ${b} = ${c * b} (produits en croix).` }],
   };
 }
 
@@ -134,7 +137,7 @@ function genPlusGrandDiviseurCommunNumeric() {
     chapter: "Addition, soustraction de rationnels — Rappels",
     prompt: `Quel est le plus grand diviseur commun (PGCD) à ${a} et ${b} ?`,
     answer: pg,
-    steps: [`PGCD(${a}, ${b}) = ${pg}.`],
+    steps: [{ type: "resultat", text: `PGCD(${a}, ${b}) = ${pg}.` }],
   };
 }
 
@@ -149,7 +152,7 @@ function genPlacerFractionSurDroiteGradueeNumeric() {
     prompt: `Sur une droite graduée, à quelle valeur décimale correspond le point d'abscisse \\(\\dfrac{${num}}{${den}}\\) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${num} \\div ${den} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` }],
   };
 }
 
@@ -175,7 +178,7 @@ function genRangerRationnelsCroissantQCM() {
     prompt: `Range dans l'ordre ${asc ? "croissant" : "décroissant"} les nombres rationnels suivants : \\(${entries.map((e) => e[0]).join(", ")}\\)`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [`On convertit chaque écriture fractionnaire en écriture décimale pour comparer.`],
+    steps: [{ type: "regle", text: `On convertit chaque écriture fractionnaire en écriture décimale pour comparer.` }],
   };
 }
 
@@ -190,7 +193,7 @@ function genErreurSimplificationAdditiveQCM() {
     prompt: `Pour simplifier une fraction, peut-on supprimer un même nombre ajouté au numérateur et au dénominateur (par exemple, simplifier \\(\\dfrac{${a}+${k}}{${b}+${k}}\\) en supprimant les deux \\(${k}\\)) ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`On ne peut simplifier une fraction qu'en divisant le numérateur et le dénominateur par un même facteur non nul (multiplication), jamais en retirant un même terme ajouté (addition).`],
+    steps: [{ type: "regle", text: `On ne peut simplifier une fraction qu'en divisant le numérateur et le dénominateur par un même facteur non nul (multiplication), jamais en retirant un même terme ajouté (addition).` }],
   };
 }
 
@@ -207,7 +210,7 @@ function genAdditionnerRationnelsMemeDenominateurSigne() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${numA}}{${den}} + \\dfrac{${numB}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${numA} + ${numB} = ${answer}`],
+    steps: [{ type: "calcul", text: `${numA} + ${numB} = ${answer}` }],
   };
 }
 
@@ -222,7 +225,7 @@ function genSoustraireRationnelsMemeDenominateurSigne() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${numA}}{${den}} - \\dfrac{${numB}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${numA} - ${numB} = ${answer}`],
+    steps: [{ type: "calcul", text: `${numA} - ${numB} = ${answer}` }],
   };
 }
 
@@ -245,9 +248,9 @@ function genAdditionnerRationnelsDenominateursDifferentsSigne() {
     prompt: `\\(\\dfrac{${numA}}{${b}} + \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.`,
-      `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}`,
-      `${newNumA} + ${newNumD} = ${answer}`,
+      { type: "regle", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
+      { type: "resultat", text: `${newNumA} + ${newNumD} = ${answer}` },
     ],
   };
 }
@@ -271,9 +274,9 @@ function genSoustraireRationnelsDenominateursDifferentsSigne() {
     prompt: `\\(\\dfrac{${numA}}{${b}} - \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.`,
-      `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}`,
-      `${newNumA} - ${newNumD} = ${answer}`,
+      { type: "regle", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
+      { type: "resultat", text: `${newNumA} - ${newNumD} = ${answer}` },
     ],
   };
 }
@@ -295,9 +298,9 @@ function genChaineTroisFractionsAdditionSoustraction() {
     prompt: `\\(${promptExpr} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer: total,
     steps: [
-      `Dénominateur commun : ${L}.`,
-      `\\dfrac{${nums[0]}}{${dens[0]}} = \\dfrac{${scaled[0]}}{${L}},\\ \\dfrac{${nums[1]}}{${dens[1]}} = \\dfrac{${scaled[1]}}{${L}},\\ \\dfrac{${nums[2]}}{${dens[2]}} = \\dfrac{${scaled[2]}}{${L}}`,
-      `${scaled[0]} ${ops[0]} ${scaled[1]} ${ops[1]} ${scaled[2]} = ${total}`,
+      { type: "regle", text: `Dénominateur commun : ${L}.` },
+      { type: "calcul", text: `\\dfrac{${nums[0]}}{${dens[0]}} = \\dfrac{${scaled[0]}}{${L}},\\ \\dfrac{${nums[1]}}{${dens[1]}} = \\dfrac{${scaled[1]}}{${L}},\\ \\dfrac{${nums[2]}}{${dens[2]}} = \\dfrac{${scaled[2]}}{${L}}` },
+      { type: "resultat", text: `${scaled[0]} ${ops[0]} ${scaled[1]} ${ops[1]} ${scaled[2]} = ${total}` },
     ],
   };
 }
@@ -315,7 +318,10 @@ function genSommeFractionEtEntierSigne() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${numFrac}}{${den}} ${opStr} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${entier} = \\dfrac{${entierScaled}}{${den}}`, `${numFrac} ${entier >= 0 ? "+" : "-"} ${Math.abs(entierScaled)} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${entier} = \\dfrac{${entierScaled}}{${den}}` },
+      { type: "calcul", text: `${numFrac} ${entier >= 0 ? "+" : "-"} ${Math.abs(entierScaled)} = ${answer}` },
+    ],
   };
 }
 
@@ -331,7 +337,7 @@ function genExpressionParenthesesFractionsSignees() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${na}}{${den}} - \\left(\\dfrac{${nb}}{${den}} - \\dfrac{${nc}}{${den}}\\right) = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [`${na} - (${nb} - ${nc}) = ${na} - ${nb - nc} = ${answer}`],
+    steps: [{ type: "calcul", text: `${na} - (${nb} - ${nc}) = ${na} - ${nb - nc} = ${answer}` }],
   };
 }
 
@@ -375,9 +381,9 @@ function genProportionEleveTransportNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `Dénominateur commun : ${L}.`,
-      `\\dfrac{${a}}{${dens0}} = \\dfrac{${scaledA}}{${L}}\\ \\text{et}\\ \\dfrac{${b}}{${dens1}} = \\dfrac{${scaledB}}{${L}}`,
-      `1 - \\dfrac{${scaledA}}{${L}} - \\dfrac{${scaledB}}{${L}} = \\dfrac{${voitureNum}}{${L}} \\approx ${fr(answer)}`,
+      { type: "regle", text: `Dénominateur commun : ${L}.` },
+      { type: "calcul", text: `\\dfrac{${a}}{${dens0}} = \\dfrac{${scaledA}}{${L}}\\ \\text{et}\\ \\dfrac{${b}}{${dens1}} = \\dfrac{${scaledB}}{${L}}` },
+      { type: "resultat", text: `1 - \\dfrac{${scaledA}}{${L}} - \\dfrac{${scaledB}}{${L}} = \\dfrac{${voitureNum}}{${L}} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -399,7 +405,7 @@ function genComparerDeuxProportionsChoixQCM() {
     prompt: `Un client compare deux produits selon leur proportion de ${ingredient}. Le produit A en contient \\(\\dfrac{${numA}}{${denA}}\\) et le produit B en contient \\(\\dfrac{${numB}}{${denB}}\\). Quel produit contient la plus grande proportion de ${ingredient} ?`,
     answer: `Produit ${winner}`,
     options: ["Produit A", "Produit B"],
-    steps: [`On compare ${numA} \\times ${denB} = ${numA * denB} et ${numB} \\times ${denA} = ${numB * denA}.`],
+    steps: [{ type: "calcul", text: `On compare ${numA} \\times ${denB} = ${numA * denB} et ${numB} \\times ${denA} = ${numB * denA}.` }],
   };
 }
 
@@ -424,8 +430,8 @@ function genProgrammeDeCalculFractionNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `Dénominateur commun : ${L}.`,
-      `\\dfrac{${numStart}}{${denStart}} + \\dfrac{${p}}{${q}} - \\dfrac{${r}}{${s}} = \\dfrac{${resultNum}}{${L}} \\approx ${fr(answer)}`,
+      { type: "regle", text: `Dénominateur commun : ${L}.` },
+      { type: "resultat", text: `\\dfrac{${numStart}}{${denStart}} + \\dfrac{${p}}{${q}} - \\dfrac{${r}}{${s}} = \\dfrac{${resultNum}}{${L}} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -449,10 +455,14 @@ function genConstructibiliteTriangleFractionsQCM() {
     answer: constructible ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `On met les trois longueurs au même dénominateur (${L}) : on obtient ${scaled.join(", ")}.`,
-      constructible
-        ? `Le plus grand côté est inférieur à la somme des deux autres longueurs : le triangle est constructible.`
-        : `Le plus grand côté n'est pas inférieur à la somme des deux autres longueurs : le triangle n'est pas constructible.`,
+      { type: "calcul", text: `On met les trois longueurs au même dénominateur (${L}) : on obtient ${scaled.join(", ")}.` },
+      {
+        type: "regle",
+        text:
+          constructible
+            ? `Le plus grand côté est inférieur à la somme des deux autres longueurs : le triangle est constructible.`
+            : `Le plus grand côté n'est pas inférieur à la somme des deux autres longueurs : le triangle n'est pas constructible.`,
+      },
     ],
   };
 }
@@ -512,6 +522,7 @@ export default {
     id: "addition-soustraction-rationnels",
     title: "Addition et soustraction de nombres rationnels",
     description: "Rappels (nombres premiers, simplifier, comparer), additionner et soustraire des nombres rationnels positifs ou négatifs, problèmes de proportions.",
+    pourquoi: "Additionner et soustraire des nombres relatifs et des fractions, c'est la base de tout calcul en physique, en budget ou en programmation : sans cette maîtrise, chaque étape suivante devient fragile.",
     level: "quatrieme",
     free: false,
     order: 3,

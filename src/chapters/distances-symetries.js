@@ -53,7 +53,7 @@ function genMilieuSegmentAdditivite() {
       chapter: "Distances et symétries — Distances",
       prompt: `M est le milieu du segment [AB]. AM = ${fr(AM)} cm. Quelle est la longueur AB ?`,
       answer: roundTo(AM * 2, 2),
-      steps: [`AB = 2 \\times AM = 2 \\times ${fr(AM)} = ${fr(roundTo(AM * 2, 2))}`],
+      steps: [{ type: "calcul", text: `AB = 2 \\times AM = 2 \\times ${fr(AM)} = ${fr(roundTo(AM * 2, 2))}` }],
     };
   }
   const AB = roundTo(AM * 2, 2);
@@ -62,7 +62,7 @@ function genMilieuSegmentAdditivite() {
     chapter: "Distances et symétries — Distances",
     prompt: `M est le milieu du segment [AB]. AB = ${fr(AB)} cm. Quelle est la longueur AM ?`,
     answer: AM,
-    steps: [`AM = AB \\div 2 = ${fr(AB)} \\div 2 = ${fr(AM)}`],
+    steps: [{ type: "calcul", text: `AM = AB \\div 2 = ${fr(AB)} \\div 2 = ${fr(AM)}` }],
   };
 }
 
@@ -78,7 +78,7 @@ function genAdditiviteAlignes() {
       chapter: "Distances et symétries — Distances",
       prompt: `Les points A, C et B sont alignés dans cet ordre, avec AC = ${fr(AC)} cm et CB = ${fr(CB)} cm. Quelle est la longueur AB ?`,
       answer: AB,
-      steps: [`AB = AC + CB = ${fr(AC)} + ${fr(CB)} = ${fr(AB)}`],
+      steps: [{ type: "calcul", text: `AB = AC + CB = ${fr(AC)} + ${fr(CB)} = ${fr(AB)}` }],
     };
   }
   return {
@@ -86,7 +86,7 @@ function genAdditiviteAlignes() {
     chapter: "Distances et symétries — Distances",
     prompt: `Les points A, C et B sont alignés dans cet ordre, avec AB = ${fr(AB)} cm et AC = ${fr(AC)} cm. Quelle est la longueur CB ?`,
     answer: CB,
-    steps: [`CB = AB - AC = ${fr(AB)} - ${fr(AC)} = ${fr(CB)}`],
+    steps: [{ type: "calcul", text: `CB = AB - AC = ${fr(AB)} - ${fr(AC)} = ${fr(CB)}` }],
   };
 }
 
@@ -102,7 +102,7 @@ function genRayonDiametre() {
       chapter: "Distances et symétries — Cercles et disques",
       prompt: `Un cercle a un rayon de ${fr(r)} cm. Quel est son diamètre, en cm ?`,
       answer: roundTo(r * 2, 2),
-      steps: [`${fr(r)} \\times 2 = ${fr(roundTo(r * 2, 2))}`],
+      steps: [{ type: "calcul", text: `${fr(r)} \\times 2 = ${fr(roundTo(r * 2, 2))}` }],
     };
   }
   const D = randDecimal(1, 80, pick([0, 1]));
@@ -111,7 +111,7 @@ function genRayonDiametre() {
     chapter: "Distances et symétries — Cercles et disques",
     prompt: `Un cercle a un diamètre de ${fr(D)} cm. Quel est son rayon, en cm ?`,
     answer: roundTo(D / 2, 2),
-    steps: [`${fr(D)} \\div 2 = ${fr(roundTo(D / 2, 2))}`],
+    steps: [{ type: "calcul", text: `${fr(D)} \\div 2 = ${fr(roundTo(D / 2, 2))}` }],
   };
 }
 
@@ -128,7 +128,7 @@ function genPositionCercleDisque() {
     prompt: `Le cercle de centre O a pour rayon ${r} cm. Le point P est situé à ${OP} cm de O. Que peut-on dire de la position de P ?`,
     answer: correct,
     options,
-    steps: [`On compare OP = ${OP} cm au rayon ${r} cm.`],
+    steps: [{ type: "regle", text: `On compare OP = ${OP} cm au rayon ${r} cm.` }],
   };
 }
 
@@ -157,7 +157,7 @@ function genCerclePointsSurCercle() {
     figure,
     options,
     answer,
-    steps: [`Un point est sur le cercle si sa distance à O est exactement égale au rayon.`],
+    steps: [{ type: "regle", text: `Un point est sur le cercle si sa distance à O est exactement égale au rayon.` }],
   };
 }
 
@@ -171,7 +171,7 @@ function genMediatriceEquidistance() {
     chapter: "Distances et symétries — Médiatrice",
     prompt: `Le point M appartient à la médiatrice du segment [AB]. MA = ${fr(MA)} cm. Quelle est la longueur MB ?`,
     answer: MA,
-    steps: [`Tout point de la médiatrice de [AB] est à la même distance de A et de B.`],
+    steps: [{ type: "regle", text: `Tout point de la médiatrice de [AB] est à la même distance de A et de B.` }],
   };
 }
 
@@ -184,7 +184,12 @@ function genTriangleIsocelesMediatrice() {
     prompt: `${sommet}BC est un triangle isocèle en ${sommet}. I est le milieu de [BC]. Quel angle forme la droite (${sommet}I) avec la droite (BC) ?`,
     answer: "90°",
     options: ["90°", "45°", "60°", "Cela dépend du triangle"],
-    steps: [`Dans un triangle isocèle, la droite qui joint le sommet principal au milieu du côté opposé est la médiatrice de ce côté : elle lui est perpendiculaire.`],
+    steps: [
+      {
+        type: "regle",
+        text: `Dans un triangle isocèle, la droite qui joint le sommet principal au milieu du côté opposé est la médiatrice de ce côté : elle lui est perpendiculaire.`,
+      },
+    ],
   };
 }
 
@@ -204,7 +209,9 @@ function genVraiFauxSymetrieMediatrice() {
     prompt: `(d) est la médiatrice du segment [FF']. Un point A est situé sur la droite (d). Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`Tout point de la médiatrice de [FF'] est équidistant de F et F' ; F et F' sont symétriques par rapport à (d).`],
+    steps: [
+      { type: "regle", text: `Tout point de la médiatrice de [FF'] est équidistant de F et F' ; F et F' sont symétriques par rapport à (d).` },
+    ],
   };
 }
 
@@ -218,7 +225,7 @@ function genProprieteSymetrieLongueur() {
     chapter: "Distances et symétries — Symétrie axiale",
     prompt: `Le segment [A'B'] est le symétrique du segment [AB] par rapport à une droite (d). AB = ${fr(AB)} cm. Quelle est la longueur A'B' ?`,
     answer: AB,
-    steps: [`Deux segments symétriques ont toujours la même longueur.`],
+    steps: [{ type: "regle", text: `Deux segments symétriques ont toujours la même longueur.` }],
   };
 }
 
@@ -230,7 +237,7 @@ function genProprieteSymetrieAngle() {
     chapter: "Distances et symétries — Symétrie axiale",
     prompt: `L'angle A'B'C' est le symétrique de l'angle ABC par rapport à une droite (d). L'angle ABC mesure ${angle}°. Quelle est la mesure de l'angle A'B'C' ?`,
     answer: angle,
-    steps: [`Deux angles symétriques ont toujours la même mesure.`],
+    steps: [{ type: "regle", text: `Deux angles symétriques ont toujours la même mesure.` }],
   };
 }
 
@@ -242,7 +249,9 @@ function genSymetriqueReciproque() {
     chapter: "Distances et symétries — Symétrie axiale",
     prompt: `Le point ${p1} est le symétrique du point ${p2} par rapport à la droite (d). Quel est le symétrique du point ${p2} par rapport à (d) ?`,
     answer: [p1],
-    steps: [`La symétrie axiale est réciproque : si ${p1} est le symétrique de ${p2}, alors ${p2} est le symétrique de ${p1}.`],
+    steps: [
+      { type: "regle", text: `La symétrie axiale est réciproque : si ${p1} est le symétrique de ${p2}, alors ${p2} est le symétrique de ${p1}.` },
+    ],
   };
 }
 
@@ -280,7 +289,7 @@ function genFigureCodageSegmentsEgaux() {
     figure,
     answer: `[O${correctLabel}]`,
     options,
-    steps: [`[O${refLabel}] et [O${correctLabel}] portent le même nombre de marques : ils ont la même longueur.`],
+    steps: [{ type: "regle", text: `[O${refLabel}] et [O${correctLabel}] portent le même nombre de marques : ils ont la même longueur.` }],
   };
 }
 
@@ -301,7 +310,7 @@ function genProblemeCocheQuestionsDistances() {
     prompt: `Un cercle de centre O a pour rayon ${r} cm. Coche les questions auxquelles tu pourrais répondre avec cette seule information.`,
     options,
     answer,
-    steps: [`Connaître le rayon permet de déduire le diamètre, mais pas des informations sur d'autres figures.`],
+    steps: [{ type: "regle", text: `Connaître le rayon permet de déduire le diamètre, mais pas des informations sur d'autres figures.` }],
   };
 }
 
@@ -325,7 +334,7 @@ function genComparerLongueursQCM() {
     prompt: `Quelle est la longueur la plus grande ?`,
     answer: correct,
     options: [e1.text, e2.text],
-    steps: [`${e1.text} = ${e1.base} mm ; ${e2.text} = ${e2.base} mm`],
+    steps: [{ type: "calcul", text: `${e1.text} = ${e1.base} mm ; ${e2.text} = ${e2.base} mm` }],
   };
 }
 
@@ -342,7 +351,7 @@ function genConvertirContenances() {
     chapter: "Distances et symétries — Convertir des contenances",
     prompt: `Convertis ${fr(value)} ${UNITES_CONTENANCE[i]} en ${UNITES_CONTENANCE[j]}.`,
     answer: result,
-    steps: [`1 ${UNITES_CONTENANCE[i]} = ${facteur} ${UNITES_CONTENANCE[j]}`],
+    steps: [{ type: "regle", text: `1 ${UNITES_CONTENANCE[i]} = ${facteur} ${UNITES_CONTENANCE[j]}` }],
   };
 }
 
@@ -361,7 +370,7 @@ function genProblemeDureeSimple() {
       chapter: "Distances et symétries — Durées",
       prompt: `Paul part à ${h1} h ${String(m1).padStart(2, "0")} et rentre à ${h2} h ${String(m2).padStart(2, "0")}. Combien de temps est-il parti, en minutes ?`,
       answer: dureeMin,
-      steps: [`${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}`],
+      steps: [{ type: "calcul", text: `${h2 * 60 + m2} - ${h1 * 60 + m1} = ${dureeMin}` }],
     };
   }
   const h1 = randInt(6, 20);
@@ -381,7 +390,7 @@ function genProblemeDureeSimple() {
     chapter: "Distances et symétries — Durées",
     prompt: `Paul part à ${h1} h ${String(m1).padStart(2, "0")} et revient ${hSup} h ${String(mSup).padStart(2, "0")} plus tard. À quelle heure rentre-t-il ? (réponds au format 14h30)`,
     answer: accepted,
-    steps: [`${h1 * 60 + m1} + ${dureeMin} = ${totalMin} min → ${h2} h ${String(m2).padStart(2, "0")}`],
+    steps: [{ type: "calcul", text: `${h1 * 60 + m1} + ${dureeMin} = ${totalMin} min → ${h2} h ${String(m2).padStart(2, "0")}` }],
   };
 }
 
@@ -436,6 +445,7 @@ export default {
     id: "distances-symetries",
     title: "Distances et symétries",
     description: "Cercles, médiatrices, symétrie axiale, distances et longueurs.",
+    pourquoi: "Mesurer une distance ou repérer un axe de symétrie, c'est ce qui permet de construire des objets précis et de reconnaître les régularités du monde qui nous entoure.",
     level: "sixieme",
     free: false,
     order: 6,

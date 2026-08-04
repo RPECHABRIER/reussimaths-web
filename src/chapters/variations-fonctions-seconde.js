@@ -364,6 +364,7 @@ export default {
     id: "variations-fonctions-seconde",
     title: "Variations de fonctions",
     description: "Lecture d'un tableau de variations, maximum et minimum sur un intervalle, comparaison et encadrement d'images à partir de la monotonie, extremums locaux et globaux.",
+    pourquoi: "Lire un tableau de variations, c'est trouver rapidement où un phénomène est le plus grand ou le plus petit.",
     level: "seconde",
     free: false,
     order: 4,

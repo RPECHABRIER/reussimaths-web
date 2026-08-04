@@ -70,7 +70,10 @@ function genQuatriemeProportionnelleGenerique() {
     chapter: "Proportionnalité — Quatrième proportionnelle",
     prompt: tpl(a, b, c),
     answer: d,
-    steps: [`Coefficient : ${fr(b)} \\div ${a} = ${fr(k)}`, `${c} \\times ${fr(k)} = ${fr(d)}`],
+    steps: [
+      { type: "calcul", text: `Coefficient : ${fr(b)} \\div ${a} = ${fr(k)}` },
+      { type: "calcul", text: `${c} \\times ${fr(k)} = ${fr(d)}` },
+    ],
   };
 }
 
@@ -86,7 +89,7 @@ function genCoefficientDeProportionnalite() {
     chapter: "Proportionnalité — Coefficient de proportionnalité",
     prompt: `Un tableau de proportionnalité donne : \\(${a1} \\to ${fr(b1)}\\) et \\(${a2} \\to ${fr(b2)}\\). Quel est le coefficient de proportionnalité (pour passer de la première ligne à la deuxième) ?`,
     answer: k,
-    steps: [`${fr(b1)} \\div ${a1} = ${fr(k)}`],
+    steps: [{ type: "calcul", text: `${fr(b1)} \\div ${a1} = ${fr(k)}` }],
   };
 }
 
@@ -106,7 +109,7 @@ function genEstTableauProportionnel() {
     prompt: `Ce tableau est-il un tableau de proportionnalité ?\\\\ \\(${tops.join(" \\quad ")}\\)\\\\ \\(${bottoms.map(fr).join(" \\quad ")}\\)`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`On calcule les rapports : ${tops.map((t, i) => `${fr(bottoms[i])} \\div ${t} = ${fr(roundTo(bottoms[i] / t, 3))}`).join(" ; ")}.`],
+    steps: [{ type: "calcul", text: `On calcule les rapports : ${tops.map((t, i) => `${fr(bottoms[i])} \\div ${t} = ${fr(roundTo(bottoms[i] / t, 3))}`).join(" ; ")}.` }],
   };
 }
 
@@ -123,7 +126,10 @@ function genCompleterTableauProportionnaliteManquant() {
     chapter: "Proportionnalité — Compléter un tableau",
     prompt: `Voici un tableau de proportionnalité :\\\\ \\(${a1} \\quad ${a2} \\quad ${a3}\\)\\\\ \\(${fr(b1)} \\quad ${fr(b2)} \\quad ?\\)\\\\ Quelle est la valeur manquante ?`,
     answer: roundTo(a3 * k, 2),
-    steps: [`Coefficient : ${fr(b1)} \\div ${a1} = ${fr(k)}`, `${a3} \\times ${fr(k)} = ${fr(roundTo(a3 * k, 2))}`],
+    steps: [
+      { type: "calcul", text: `Coefficient : ${fr(b1)} \\div ${a1} = ${fr(k)}` },
+      { type: "calcul", text: `${a3} \\times ${fr(k)} = ${fr(roundTo(a3 * k, 2))}` },
+    ],
   };
 }
 
@@ -143,7 +149,7 @@ function genPourcentageEffectifCombien() {
     chapter: "Proportionnalité — Appliquer un pourcentage",
     prompt: `Dans une école de ${n} élèves, ${pct} % des élèves ${act}. Combien d'élèves cela représente-t-il ?`,
     answer: effectif,
-    steps: [`${n} \\times \\dfrac{${pct}}{100} = ${effectif}`],
+    steps: [{ type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${effectif}` }],
   };
 }
 function pgcdPct(a, b) {
@@ -165,7 +171,7 @@ function genProportionEnPourcentageDepuisEffectifs() {
     prompt: `Parmi les ${total} élèves du collège, ${part} ${act}. Exprime cela en pourcentage (arrondis à 1 décimale).`,
     answer: pct,
     tolerance: 0.15,
-    steps: [`\\(\\dfrac{${part}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)`],
+    steps: [{ type: "calcul", text: `\\(\\dfrac{${part}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` }],
   };
 }
 
@@ -180,7 +186,7 @@ function genRemisePourcentagePrixFinal() {
     prompt: `Un article coûte ${fr(prix)} €. On bénéficie d'une remise de ${remise} %. Combien doit-on payer après la réduction ? (arrondis au centime)`,
     answer: prixFinal,
     tolerance: 0.02,
-    steps: [`${fr(prix)} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixFinal)}`],
+    steps: [{ type: "calcul", text: `${fr(prix)} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixFinal)}` }],
   };
 }
 
@@ -198,7 +204,10 @@ function genRemiseAchatMultiple() {
     prompt: `Paul achète ${quantite} ${obj} qui coûtaient initialement ${fr(prixUnite)} € l'unité. En caisse, il bénéficie d'une remise de ${remise} % sur son achat. Combien paie-t-il en tout ? (arrondis au centime)`,
     answer: prixTotal,
     tolerance: 0.02,
-    steps: [`${quantite} \\times ${fr(prixUnite)} = ${fr(roundTo(prixUnite * quantite, 2))}`, `${fr(roundTo(prixUnite * quantite, 2))} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixTotal)}`],
+    steps: [
+      { type: "calcul", text: `${quantite} \\times ${fr(prixUnite)} = ${fr(roundTo(prixUnite * quantite, 2))}` },
+      { type: "calcul", text: `${fr(roundTo(prixUnite * quantite, 2))} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixTotal)}` },
+    ],
   };
 }
 
@@ -214,7 +223,7 @@ function genEchelleCarteDistance() {
     chapter: "Proportionnalité — Échelles",
     prompt: `Sur une carte, l'échelle est représentée ainsi : 1 cm sur la carte correspond à ${echelleM} m dans la réalité. Une route mesure ${longueurCm} cm sur la carte. Quelle est sa longueur réelle, en mètres ?`,
     answer: distanceM,
-    steps: [`${longueurCm} \\times ${echelleM} = ${distanceM}`],
+    steps: [{ type: "calcul", text: `${longueurCm} \\times ${echelleM} = ${distanceM}` }],
   };
 }
 
@@ -236,7 +245,10 @@ function genRecetteProportionnelle() {
     chapter: "Proportionnalité — Recettes",
     prompt: `Pour préparer une recette, il faut ${a} ${ing1} et ${b} ${ing2}. Avec ${c} ${ing1}, combien faut-il de ${ing2} ?`,
     answer,
-    steps: [`Coefficient : ${c} \\div ${a} = ${fr(roundTo(c / a, 3))}`, `${b} \\times ${fr(roundTo(c / a, 3))} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `Coefficient : ${c} \\div ${a} = ${fr(roundTo(c / a, 3))}` },
+      { type: "calcul", text: `${b} \\times ${fr(roundTo(c / a, 3))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -251,7 +263,7 @@ function genConsommationEssenceProportionnelle() {
     prompt: `Une voiture consomme ${fr(consoAux100)} litres d'essence pour parcourir 100 km. Combien de litres consomme-t-elle pour parcourir ${distanceKm} km ? (arrondis à 2 décimales)`,
     answer: litres,
     tolerance: 0.05,
-    steps: [`\\dfrac{${fr(consoAux100)}}{100} \\times ${distanceKm} = ${fr(litres)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{${fr(consoAux100)}}{100} \\times ${distanceKm} = ${fr(litres)}` }],
   };
 }
 
@@ -268,7 +280,10 @@ function genPeintureSurfaceTotale() {
     prompt: `Un peintre utilise une peinture telle qu'il faut ${fr(litresParM2)} L de peinture par m². Il doit peindre deux pièces : une première pièce de ${surface1} m² et une deuxième pièce de ${surface2} m². Combien de litres de peinture sont nécessaires pour les deux pièces ?`,
     answer: litresNecessaires,
     tolerance: 0.05,
-    steps: [`${surface1} + ${surface2} = ${totalSurface} \\text{ m}^2`, `${totalSurface} \\times ${fr(litresParM2)} = ${fr(litresNecessaires)}`],
+    steps: [
+      { type: "calcul", text: `${surface1} + ${surface2} = ${totalSurface} \\text{ m}^2` },
+      { type: "calcul", text: `${totalSurface} \\times ${fr(litresParM2)} = ${fr(litresNecessaires)}` },
+    ],
   };
 }
 
@@ -284,7 +299,10 @@ function genPartageEquitableLots() {
     prompt: `Antoine achète un lot de ${nbTickets} tickets pour ${prixLot} €. Carole veut lui en racheter ${nbRachetes}. Afin d'être équitable, combien Carole doit-elle donner à Antoine ? (en €, arrondis au centime)`,
     answer: montant,
     tolerance: 0.02,
-    steps: [`Prix d'un ticket : ${prixLot} \\div ${nbTickets} = ${fr(roundTo(prixLot / nbTickets, 3))}`, `${nbRachetes} \\times ${fr(roundTo(prixLot / nbTickets, 3))} = ${fr(montant)}`],
+    steps: [
+      { type: "calcul", text: `Prix d'un ticket : ${prixLot} \\div ${nbTickets} = ${fr(roundTo(prixLot / nbTickets, 3))}` },
+      { type: "calcul", text: `${nbRachetes} \\times ${fr(roundTo(prixLot / nbTickets, 3))} = ${fr(montant)}` },
+    ],
   };
 }
 
@@ -305,7 +323,7 @@ function genMeilleurLotAchat() {
     prompt: `Une boulangerie propose 30 croissants à commander, avec ces lots : ${lots.map((l) => `lot de ${l.n} pour ${fr(l.prix)} €`).join(", ")}. Quel lot a le meilleur prix par croissant ?`,
     answer,
     options,
-    steps: lots.map((l) => `Lot de ${l.n} : ${fr(l.prix)} \\div ${l.n} \\approx ${fr(roundTo(l.unitPrice, 3))} € par croissant`),
+    steps: lots.map((l) => ({ type: "calcul", text: `Lot de ${l.n} : ${fr(l.prix)} \\div ${l.n} \\approx ${fr(roundTo(l.unitPrice, 3))} € par croissant` })),
   };
 }
 
@@ -328,7 +346,7 @@ function genVraiFauxProportionnaliteConceptuel() {
     prompt: `Vrai ou faux ? « ${c.texte} »`,
     answer: c.correct,
     options: ["Vrai", "Faux"],
-    steps: [c.explication],
+    steps: [{ type: "regle", text: c.explication }],
   };
 }
 
@@ -351,7 +369,7 @@ function genPourcentageResultatMultiStatements() {
     prompt: `On calcule ${pct} % de ${n}. Sélectionne toutes les affirmations vraies.`,
     answer,
     options,
-    steps: [`${pct}\\% \\text{ de } ${n} = ${n} \\times \\dfrac{${pct}}{100} = ${fr(resultat)}`],
+    steps: [{ type: "calcul", text: `${pct}\\% \\text{ de } ${n} = ${n} \\times \\dfrac{${pct}}{100} = ${fr(resultat)}` }],
   };
 }
 
@@ -373,8 +391,8 @@ function genPourcentageComparerDeuxEcoles() {
     answer: askEcole1 ? pct1 : malades2,
     tolerance: askEcole1 ? 0.15 : 0.5,
     steps: askEcole1
-      ? [`\\(\\dfrac{${malades1}}{${total1}} \\times 100 \\approx ${fr(pct1)}\\%\\)`]
-      : [`${total2} \\times \\dfrac{${pct2}}{100} = ${malades2}`],
+      ? [{ type: "calcul", text: `\\(\\dfrac{${malades1}}{${total1}} \\times 100 \\approx ${fr(pct1)}\\%\\)` }]
+      : [{ type: "calcul", text: `${total2} \\times \\dfrac{${pct2}}{100} = ${malades2}` }],
   };
 }
 
@@ -388,7 +406,7 @@ function genPourcentageInverseTrouverNombreInitial() {
     chapter: "Proportionnalité — Pourcentage inverse",
     prompt: `${part} représente ${pct} % d'un nombre. Quel est ce nombre ?`,
     answer: total,
-    steps: [`${part} \\div \\dfrac{${pct}}{100} = ${part} \\times \\dfrac{100}{${pct}} = ${total}`],
+    steps: [{ type: "calcul", text: `${part} \\div \\dfrac{${pct}}{100} = ${part} \\times \\dfrac{100}{${pct}} = ${total}` }],
   };
 }
 
@@ -447,6 +465,7 @@ export default {
     id: "proportionnalite",
     title: "Proportionnalité",
     description: "Reconnaître, calculer et appliquer une situation de proportionnalité, pourcentages et problèmes contextualisés.",
+    pourquoi: "Reconnaître une situation de proportionnalité, c'est l'une des compétences les plus utilisées au quotidien : recettes de cuisine, pourcentages, échelles de carte, conversions de devises.",
     level: "sixieme",
     free: false,
     order: 10,

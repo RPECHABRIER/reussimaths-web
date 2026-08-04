@@ -48,7 +48,7 @@ function genVitesseNumeric() {
     chapter: "Mesures et grandeurs — Vitesse, énergie, débit",
     prompt: `Une voiture parcourt ${d} km en ${t} h. Calcule sa vitesse moyenne (en km/h).`,
     answer: v,
-    steps: [`v = \\dfrac{d}{t} = \\dfrac{${d}}{${t}} = ${v}`],
+    steps: [{ type: "calcul", text: `v = \\dfrac{d}{t} = \\dfrac{${d}}{${t}} = ${v}` }],
   };
 }
 
@@ -63,7 +63,7 @@ function genDistanceDepuisVitesseNumeric() {
     prompt: `Un train roule à une vitesse constante de ${v} km/h pendant ${fr(t)} h. Quelle distance parcourt-il (en km) ?`,
     answer,
     tolerance: 0.1,
-    steps: [`d = v \\times t = ${v} \\times ${fr(t)} = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `d = v \\times t = ${v} \\times ${fr(t)} = ${fr(answer)}` }],
   };
 }
 
@@ -78,7 +78,7 @@ function genTempsDepuisVitesseNumeric() {
     prompt: `Un cycliste roule à une vitesse constante de ${v} km/h et parcourt ${fr(d)} km. Combien de temps roule-t-il (en h) ?`,
     answer: t,
     tolerance: 0.05,
-    steps: [`t = \\dfrac{d}{v} = \\dfrac{${fr(d)}}{${v}} = ${fr(t)}`],
+    steps: [{ type: "calcul", text: `t = \\dfrac{d}{v} = \\dfrac{${fr(d)}}{${v}} = ${fr(t)}` }],
   };
 }
 
@@ -92,7 +92,7 @@ function genConversionKmhVersMsNumeric() {
     prompt: `Convertis une vitesse de ${vKmh} km/h en m/s.`,
     answer,
     tolerance: 0.05,
-    steps: [`${vKmh} \\text{ km/h} = \\dfrac{${vKmh} \\times 1000}{3600} \\text{ m/s} \\approx ${fr(answer)} \\text{ m/s}`],
+    steps: [{ type: "calcul", text: `${vKmh} \\text{ km/h} = \\dfrac{${vKmh} \\times 1000}{3600} \\text{ m/s} \\approx ${fr(answer)} \\text{ m/s}` }],
   };
 }
 
@@ -106,7 +106,7 @@ function genConversionMsVersKmhNumeric() {
     prompt: `Convertis une vitesse de ${vMs} m/s en km/h.`,
     answer,
     tolerance: 0.1,
-    steps: [`${vMs} \\text{ m/s} = ${vMs} \\times 3,6 \\text{ km/h} = ${fr(answer)} \\text{ km/h}`],
+    steps: [{ type: "calcul", text: `${vMs} \\text{ m/s} = ${vMs} \\times 3,6 \\text{ km/h} = ${fr(answer)} \\text{ km/h}` }],
   };
 }
 
@@ -123,7 +123,9 @@ function genEnergiePuissanceTempsNumeric() {
       ? `Un appareil électrique a une puissance de ${P} W et fonctionne pendant ${t} h. Calcule l'énergie consommée (en Wh), sachant que E = P × t.`
       : `Un appareil électrique de puissance ${P} W consomme une énergie de ${E} Wh. Combien de temps a-t-il fonctionné (en h), sachant que E = P × t ?`,
     answer: askE ? E : t,
-    steps: askE ? [`E = P \\times t = ${P} \\times ${t} = ${E}`] : [`t = \\dfrac{E}{P} = \\dfrac{${E}}{${P}} = ${t}`],
+    steps: askE
+      ? [{ type: "calcul", text: `E = P \\times t = ${P} \\times ${t} = ${E}` }]
+      : [{ type: "calcul", text: `t = \\dfrac{E}{P} = \\dfrac{${E}}{${P}} = ${t}` }],
   };
 }
 
@@ -140,7 +142,9 @@ function genDebitNumeric() {
       ? `Un robinet remplit un bassin de ${volume} L en ${temps} minutes, à débit constant. Calcule son débit (en L/min).`
       : `Un robinet a un débit de ${debit} L/min. Combien de temps (en minutes) faut-il pour remplir un bassin de ${volume} L ?`,
     answer: askDebit ? debit : temps,
-    steps: askDebit ? [`\\text{débit} = \\dfrac{${volume}}{${temps}} = ${debit}`] : [`t = \\dfrac{${volume}}{${debit}} = ${temps}`],
+    steps: askDebit
+      ? [{ type: "calcul", text: `\\text{débit} = \\dfrac{${volume}}{${temps}} = ${debit}` }]
+      : [{ type: "calcul", text: `t = \\dfrac{${volume}}{${debit}} = ${temps}` }],
   };
 }
 
@@ -158,7 +162,7 @@ function genEchelleDistanceReelleNumeric() {
     prompt: `Sur un plan à l'échelle 1/${echelle}, une distance mesure ${distancePlanCm} cm. Quelle est la distance réelle correspondante (en m) ?`,
     answer: distanceReelleM,
     tolerance: 0.05,
-    steps: [`${distancePlanCm} \\times ${echelle} = ${distanceReelleCm}\\text{ cm} = ${fr(distanceReelleM)}\\text{ m}`],
+    steps: [{ type: "calcul", text: `${distancePlanCm} \\times ${echelle} = ${distanceReelleCm}\\text{ cm} = ${fr(distanceReelleM)}\\text{ m}` }],
   };
 }
 
@@ -173,7 +177,10 @@ function genEchelleDistancePlanNumeric() {
     prompt: `Sur un plan à l'échelle 1/${echelle}, quelle distance (en cm) représente une distance réelle de ${distanceReelleM} m ?`,
     answer: distancePlanCm,
     tolerance: 0.05,
-    steps: [`${distanceReelleM}\\text{ m} = ${distanceReelleM * 100}\\text{ cm}`, `${distanceReelleM * 100} \\div ${echelle} = ${fr(distancePlanCm)}`],
+    steps: [
+      { type: "calcul", text: `${distanceReelleM}\\text{ m} = ${distanceReelleM * 100}\\text{ cm}` },
+      { type: "resultat", text: `${distanceReelleM * 100} \\div ${echelle} = ${fr(distancePlanCm)}` },
+    ],
   };
 }
 
@@ -189,7 +196,10 @@ function genEchelleSurfaceNumeric() {
     prompt: `Sur un plan à l'échelle 1/${echelle}, une pièce a une surface de ${fr(surfacePlanCm2)} cm². Quelle est sa surface réelle (en m², arrondie au centième) ?`,
     answer: surfaceReelleM2,
     tolerance: 0.05,
-    steps: [`\\text{Le coefficient s'applique au carré sur les surfaces : } ${fr(surfacePlanCm2)} \\times ${echelle}^2 = ${fr(surfaceReelleCm2)}\\text{ cm}^2`, `${fr(surfaceReelleCm2)}\\text{ cm}^2 \\approx ${fr(surfaceReelleM2)}\\text{ m}^2`],
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient s'applique au carré sur les surfaces : } ${fr(surfacePlanCm2)} \\times ${echelle}^2 = ${fr(surfaceReelleCm2)}\\text{ cm}^2` },
+      { type: "resultat", text: `${fr(surfaceReelleCm2)}\\text{ cm}^2 \\approx ${fr(surfaceReelleM2)}\\text{ m}^2` },
+    ],
   };
 }
 
@@ -212,8 +222,8 @@ function genRemplissagePiscineNumeric() {
     answer: tempsH,
     tolerance: 0.2,
     steps: [
-      `V = ${longueur} \\times ${largeur} \\times ${fr(hauteur)} = ${fr(volumeM3)}\\text{ m}^3 = ${fr(volumeL)}\\text{ L}`,
-      `t = \\dfrac{${fr(volumeL)}}{${debitLparS}} \\approx ${fr(tempsS)}\\text{ s} \\approx ${fr(tempsH)}\\text{ h}`,
+      { type: "calcul", text: `V = ${longueur} \\times ${largeur} \\times ${fr(hauteur)} = ${fr(volumeM3)}\\text{ m}^3 = ${fr(volumeL)}\\text{ L}` },
+      { type: "resultat", text: `t = \\dfrac{${fr(volumeL)}}{${debitLparS}} \\approx ${fr(tempsS)}\\text{ s} \\approx ${fr(tempsH)}\\text{ h}` },
     ],
   };
 }
@@ -229,7 +239,7 @@ function genAutonomieVehiculeNumeric() {
     prompt: `Une voiture consomme ${fr(consommation)} L pour 100 km. Son réservoir contient ${reservoir} L d'essence. Quelle distance (en km, arrondie à l'unité) peut-elle parcourir avec un plein ?`,
     answer,
     tolerance: 3,
-    steps: [`d = \\dfrac{${reservoir} \\times 100}{${fr(consommation)}} \\approx ${answer}\\text{ km}`],
+    steps: [{ type: "calcul", text: `d = \\dfrac{${reservoir} \\times 100}{${fr(consommation)}} \\approx ${answer}\\text{ km}` }],
   };
 }
 
@@ -247,7 +257,10 @@ function genVitesseMoyenneAvecMinutesNumeric() {
     prompt: `${prenom} parcourt ${d} km en ${heures} h ${minutes > 0 ? `${minutes} min` : ""}. Calcule sa vitesse moyenne (en km/h, arrondie au dixième).`,
     answer,
     tolerance: 0.2,
-    steps: [`${heures} \\text{ h } ${minutes}\\text{ min} = ${fr(tempsDecimal)}\\text{ h}`, `v = \\dfrac{${d}}{${fr(tempsDecimal)}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${heures} \\text{ h } ${minutes}\\text{ min} = ${fr(tempsDecimal)}\\text{ h}` },
+      { type: "resultat", text: `v = \\dfrac{${d}}{${fr(tempsDecimal)}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -263,7 +276,10 @@ function genEchelleVolumeNumeric() {
     prompt: `Une maquette est construite à l'échelle 1/${echelle}. Elle a un volume de ${fr(volumeMaquetteCm3)} cm³. Quel est le volume réel de l'objet représenté (en m³, arrondi au centième) ?`,
     answer: volumeReelM3,
     tolerance: 0.05,
-    steps: [`\\text{Le coefficient s'applique au cube sur les volumes : } ${fr(volumeMaquetteCm3)} \\times ${echelle}^3 = ${fr(volumeReelCm3)}\\text{ cm}^3`, `\\approx ${fr(volumeReelM3)}\\text{ m}^3`],
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient s'applique au cube sur les volumes : } ${fr(volumeMaquetteCm3)} \\times ${echelle}^3 = ${fr(volumeReelCm3)}\\text{ cm}^3` },
+      { type: "resultat", text: `\\approx ${fr(volumeReelM3)}\\text{ m}^3` },
+    ],
   };
 }
 
@@ -282,7 +298,10 @@ function genDureeTrajetAvecPausesNumeric() {
     chapter: "Mesures et grandeurs — Problèmes",
     prompt: `${prenom} prévoit ${dureeRouleHeures} h de route. Il prévoit de faire une pause de ${dureePauseMin} minutes toutes les 2 heures de conduite (on ne compte que les pauses complètes, une pause toutes les 2 h de conduite écoulées). Combien de minutes de pause au total ${prenom} doit-il prévoir ?`,
     answer: totalPausesMin,
-    steps: [`${dureeRouleHeures} \\div 2 = ${Math.floor(dureeRouleHeures / 2)} \\text{ pauses (partie entière)}`, `${nbPauses} \\times ${dureePauseMin} = ${totalPausesMin}\\text{ min}`],
+    steps: [
+      { type: "calcul", text: `${dureeRouleHeures} \\div 2 = ${Math.floor(dureeRouleHeures / 2)} \\text{ pauses (partie entière)}` },
+      { type: "resultat", text: `${nbPauses} \\times ${dureePauseMin} = ${totalPausesMin}\\text{ min}` },
+    ],
   };
 }
 
@@ -335,6 +354,7 @@ export default {
     id: "mesures-grandeurs-troisieme",
     title: "Mesures et grandeurs",
     description: "Vitesse, énergie et débit (grandeurs composées et conversions d'unités), échelles (distances, surfaces au carré, volumes au cube) et problèmes contextualisés.",
+    pourquoi: "Convertir vitesse, débit ou énergie, c'est ce qui permet de comparer des offres, lire une facture d'électricité ou comprendre une carte à l'échelle.",
     level: "troisieme",
     free: false,
     order: 15,

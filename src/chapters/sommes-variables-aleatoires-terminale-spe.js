@@ -313,6 +313,7 @@ export default {
     id: "sommes-variables-aleatoires-terminale-spe",
     title: "Sommes de variables aléatoires",
     description: "Linéarité de l'espérance, variance d'une somme de variables indépendantes, somme de n variables i.i.d.",
+    pourquoi: "Additionner des variables aléatoires indépendantes permet de modéliser un total (temps d'attente cumulé, somme de mesures) et d'en prévoir la fluctuation.",
     level: "terminale-spe",
     free: false,
     order: 14,

@@ -54,7 +54,7 @@ function genCalculerCarreCube() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Calcule : \\(${n}^{${mode === "carre" ? 2 : 3}}\\)`,
     answer,
-    steps: mode === "carre" ? [`${n} \\times ${n} = ${answer}`] : [`${n} \\times ${n} \\times ${n} = ${answer}`],
+    steps: mode === "carre" ? [{ type: "calcul", text: `${n} \\times ${n} = ${answer}` }] : [{ type: "calcul", text: `${n} \\times ${n} \\times ${n} = ${answer}` }],
   };
 }
 
@@ -70,7 +70,7 @@ function genEcriturePuissance() {
       chapter: "Puissances — Notion de puissance",
       prompt: `Dans l'écriture \\(${expr}\\), combien y a-t-il de facteurs ?`,
       answer: exposant,
-      steps: [`Cette écriture correspond à ${base}^{${exposant}} : il y a ${exposant} facteurs égaux à ${base}.`],
+      steps: [{ type: "regle", text: `Cette écriture correspond à ${base}^{${exposant}} : il y a ${exposant} facteurs égaux à ${base}.` }],
     };
   }
   const answer = base ** exposant;
@@ -79,7 +79,7 @@ function genEcriturePuissance() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Calcule : \\(${base}^{${exposant}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exposant }, () => base).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Array.from({ length: exposant }, () => base).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -93,7 +93,7 @@ function genPuissanceDeDixEcriture() {
       chapter: "Puissances — Notion de puissance",
       prompt: `Quelle est l'écriture décimale de \\(10^{${n}}\\) ?`,
       answer: 10 ** n,
-      steps: [`10^{${n}} = ${10 ** n}`],
+      steps: [{ type: "calcul", text: `10^{${n}} = ${10 ** n}` }],
     };
   }
   const value = 10 ** n;
@@ -102,7 +102,7 @@ function genPuissanceDeDixEcriture() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Écris ${value} sous la forme \\(10^{?}\\). Quel est l'exposant ?`,
     answer: n,
-    steps: [`${value} = 10^{${n}}`],
+    steps: [{ type: "calcul", text: `${value} = 10^{${n}}` }],
   };
 }
 
@@ -116,7 +116,7 @@ function genAireCarreCote() {
     prompt: `ABCD est un carré de côté ${c} cm. Quelle est son aire, en cm² ?`,
     figure: buildRectangleFigure(c, c),
     answer: aire,
-    steps: [`${c}^2 = ${aire}`],
+    steps: [{ type: "calcul", text: `${c}^2 = ${aire}` }],
   };
 }
 
@@ -129,7 +129,7 @@ function genVolumeCubeArete() {
     chapter: "Puissances — Notion de puissance",
     prompt: `Un cube a une arête de ${c} cm. Quel est son volume, en cm³ ?`,
     answer: volume,
-    steps: [`${c}^3 = ${volume}`],
+    steps: [{ type: "calcul", text: `${c}^3 = ${volume}` }],
   };
 }
 
@@ -152,7 +152,10 @@ function genCalculerExpressionPuissancesPriorites() {
     chapter: "Puissances — Enchaîner des calculs",
     prompt: `Calcule (en respectant les priorités) : \\(${t.expr}\\)`,
     answer: t.value,
-    steps: [`Les puissances se calculent avant les produits et les sommes, sauf indication contraire des parenthèses.`, t.explain],
+    steps: [
+      { type: "regle", text: `Les puissances se calculent avant les produits et les sommes, sauf indication contraire des parenthèses.` },
+      { type: "calcul", text: t.explain },
+    ],
   };
 }
 
@@ -170,7 +173,10 @@ function genValeurExpressionLitteraleSimplePuissance() {
     chapter: "Puissances — Enchaîner des calculs",
     prompt: `On considère l'expression \\(A = ${a}x^{${puissance}} ${signe} ${b}\\). Calcule A lorsque \\(x = ${x}\\).`,
     answer,
-    steps: [`${x}^{${puissance}} = ${valeurPuissance}`, `${a} \\times ${valeurPuissance} ${signe} ${b} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${x}^{${puissance}} = ${valeurPuissance}` },
+      { type: "calcul", text: `${a} \\times ${valeurPuissance} ${signe} ${b} = ${answer}` },
+    ],
   };
 }
 
@@ -207,6 +213,7 @@ export default {
     id: "puissances",
     title: "Puissances d'un nombre, carré et cube",
     description: "Notion de puissance, carré, cube, puissances de dix, calculs enchaînés avec puissances.",
+    pourquoi: "Les puissances de 10 permettent d'écrire simplement des très grands ou très petits nombres, comme la distance Terre-Lune ou la taille d'une cellule.",
     level: "cinquieme",
     free: false,
     order: 4,

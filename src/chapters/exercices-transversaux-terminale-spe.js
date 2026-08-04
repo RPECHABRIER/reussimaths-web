@@ -326,6 +326,7 @@ export default {
     id: "exercices-transversaux-terminale-spe",
     title: "Exercices transversaux",
     description: "Révisions croisant tous les grands thèmes de l'année de Terminale Spécialité.",
+    pourquoi: "Ces révisions croisées entraînent à mobiliser le bon outil parmi tous ceux vus dans l'année, comme le jour du Bac.",
     level: "terminale-spe",
     free: false,
     order: 16,

@@ -93,7 +93,7 @@ function genAngleManquantTriangleSomme() {
     prompt: `Dans un triangle ABC, l'angle en A mesure ${angA}° et l'angle en B mesure ${angB}°. Quelle est la mesure de l'angle en C, en degrés ?`,
     figure: buildTriangleFigure(angA, angB, angC, { labels: { A: `${angA}°`, B: `${angB}°` } }),
     answer: angC,
-    steps: [`La somme des angles d'un triangle vaut 180° : \\(180 - ${angA} - ${angB} = ${angC}\\)`],
+    steps: [{ type: "regle", text: `La somme des angles d'un triangle vaut 180° : \\(180 - ${angA} - ${angB} = ${angC}\\)` }],
   };
 }
 
@@ -123,7 +123,7 @@ function genClassifierTriangleAnglesQCM() {
     figure: buildTriangleFigure(angA, angB, angC, { rightAngleAt: type === "rectangle" ? "A" : undefined }),
     answer: label,
     options: shuffle(["acutangle (tous les angles sont aigus)", "rectangle (un angle droit)", "obtusangle (un angle obtus)"]),
-    steps: [`On observe la mesure des trois angles pour déterminer le type de triangle.`],
+    steps: [{ type: "regle", text: `On observe la mesure des trois angles pour déterminer le type de triangle.` }],
   };
 }
 
@@ -139,7 +139,7 @@ function genDemonstrationSommeAnglesQCM() {
       "Le théorème de Pythagore",
       "La conservation des aires par symétrie centrale",
     ]),
-    steps: [`En traçant la parallèle à (BC) passant par A, les angles en A deviennent égaux aux angles en B et C grâce aux angles alternes-internes, et leur somme forme un angle plat (180°).`],
+    steps: [{ type: "regle", text: `En traçant la parallèle à (BC) passant par A, les angles en A deviennent égaux aux angles en B et C grâce aux angles alternes-internes, et leur somme forme un angle plat (180°).` }],
   };
 }
 
@@ -153,7 +153,7 @@ function genAngleExterieurTriangle() {
     chapter: "Triangles — Angles",
     prompt: `Dans un triangle ABC, les angles en B et C mesurent respectivement ${angB}° et ${angC}°. Quelle est la mesure de l'angle extérieur au sommet A (formé par le prolongement d'un côté) ?`,
     answer,
-    steps: [`L'angle extérieur en A est égal à la somme des deux autres angles du triangle : \\(${angB} + ${angC} = ${answer}\\)`],
+    steps: [{ type: "regle", text: `L'angle extérieur en A est égal à la somme des deux autres angles du triangle : \\(${angB} + ${angC} = ${answer}\\)` }],
   };
 }
 
@@ -170,7 +170,7 @@ function genTriangleIsoceleAnglesEgaux() {
       figure: buildTriangleFigure(apex, base, base, { equalSides: ["AB", "AC"], labels: { A: `${apex}°` } }),
       answer: base,
       tolerance: 0.1,
-      steps: [`Les angles à la base d'un triangle isocèle sont égaux : \\((180 - ${apex}) \\div 2 = ${base}\\)`],
+      steps: [{ type: "regle", text: `Les angles à la base d'un triangle isocèle sont égaux : \\((180 - ${apex}) \\div 2 = ${base}\\)` }],
     };
   }
   const base = randInt(20, 80);
@@ -181,7 +181,7 @@ function genTriangleIsoceleAnglesEgaux() {
     prompt: `ABC est un triangle isocèle en A dont l'un des angles à la base mesure ${base}°. Quelle est la mesure de l'angle au sommet A, en degrés ?`,
     figure: buildTriangleFigure(apex, base, base, { equalSides: ["AB", "AC"], labels: { B: `${base}°` } }),
     answer: apex,
-    steps: [`Les deux angles à la base valent ${base}° chacun : \\(180 - 2 \\times ${base} = ${apex}\\)`],
+    steps: [{ type: "calcul", text: `Les deux angles à la base valent ${base}° chacun : \\(180 - 2 \\times ${base} = ${apex}\\)` }],
   };
 }
 
@@ -196,7 +196,7 @@ function genMediatriceEquidistanceNumeric() {
     prompt: `Le point M appartient à la médiatrice du segment [AB]. Sachant que MA = ${fr(dist)} cm, quelle est la longueur MB, en cm ?`,
     answer: dist,
     tolerance: 0.01,
-    steps: [`Tout point de la médiatrice d'un segment est équidistant de ses deux extrémités : MB = MA = ${fr(dist)} cm.`],
+    steps: [{ type: "regle", text: `Tout point de la médiatrice d'un segment est équidistant de ses deux extrémités : MB = MA = ${fr(dist)} cm.` }],
   };
 }
 
@@ -212,7 +212,7 @@ function genCercleCirconscritRayonDiametre() {
       : `Le cercle circonscrit à un triangle ABC a un diamètre de ${fr(roundTo(rayon * 2, 2))} cm. Quel est son rayon, en cm ?`,
     answer: askDiametre ? roundTo(rayon * 2, 2) : rayon,
     tolerance: 0.01,
-    steps: [askDiametre ? `Diamètre = 2 \\times rayon = 2 \\times ${fr(rayon)} = ${fr(roundTo(rayon * 2, 2))}` : `Rayon = diamètre \\div 2 = ${fr(roundTo(rayon * 2, 2))} \\div 2 = ${fr(rayon)}`],
+    steps: [{ type: "calcul", text: askDiametre ? `Diamètre = 2 \\times rayon = 2 \\times ${fr(rayon)} = ${fr(roundTo(rayon * 2, 2))}` : `Rayon = diamètre \\div 2 = ${fr(roundTo(rayon * 2, 2))} \\div 2 = ${fr(rayon)}` }],
   };
 }
 
@@ -225,7 +225,7 @@ function genTriangleRectangleHypotenuseDiametre() {
     prompt: `ABC est un triangle rectangle en A, avec BC = ${fr(hyp)} cm (l'hypoténuse). Quel est le rayon du cercle circonscrit à ce triangle, en cm ?`,
     answer: roundTo(hyp / 2, 2),
     tolerance: 0.01,
-    steps: [`Dans un triangle rectangle, le cercle circonscrit a pour diamètre l'hypoténuse : rayon = BC ÷ 2 = ${fr(hyp)} \\div 2 = ${fr(roundTo(hyp / 2, 2))}`],
+    steps: [{ type: "regle", text: `Dans un triangle rectangle, le cercle circonscrit a pour diamètre l'hypoténuse : rayon = BC ÷ 2 = ${fr(hyp)} \\div 2 = ${fr(roundTo(hyp / 2, 2))}` }],
   };
 }
 
@@ -241,9 +241,13 @@ function genReconnaitreTriangleRectangleViaCercleQCM() {
     answer: estDiametre ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      estDiametre
-        ? `Si un côté d'un triangle inscrit dans un cercle est un diamètre, alors le triangle est rectangle (l'angle opposé à ce côté est droit).`
-        : `Sans côté-diamètre, on ne peut rien affirmer sur l'angle droit.`,
+      {
+        type: "regle",
+        text:
+          estDiametre
+            ? `Si un côté d'un triangle inscrit dans un cercle est un diamètre, alors le triangle est rectangle (l'angle opposé à ce côté est droit).`
+            : `Sans côté-diamètre, on ne peut rien affirmer sur l'angle droit.`,
+      },
     ],
   };
 }
@@ -260,7 +264,7 @@ function genAireTriangleBaseHauteur() {
     chapter: "Triangles — Aire",
     prompt: `Un triangle a une base de ${base} cm et une hauteur relative à cette base de ${hauteur} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [`Aire = (base \\times hauteur) \\div 2 = (${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Aire = (base \\times hauteur) \\div 2 = (${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -279,9 +283,13 @@ function genAireTriangleTrouverBaseOuHauteur() {
     answer: askHauteur ? hauteur : base,
     tolerance: 0.01,
     steps: [
-      askHauteur
-        ? `Hauteur = (2 \\times Aire) \\div base = (2 \\times ${fr(aire)}) \\div ${base} = ${hauteur}`
-        : `Base = (2 \\times Aire) \\div hauteur = (2 \\times ${fr(aire)}) \\div ${hauteur} = ${base}`,
+      {
+        type: "calcul",
+        text:
+          askHauteur
+            ? `Hauteur = (2 \\times Aire) \\div base = (2 \\times ${fr(aire)}) \\div ${base} = ${hauteur}`
+            : `Base = (2 \\times Aire) \\div hauteur = (2 \\times ${fr(aire)}) \\div ${hauteur} = ${base}`,
+      },
     ],
   };
 }
@@ -294,7 +302,7 @@ function genOrthocentreDefinitionQCM() {
     prompt: `Comment appelle-t-on le point d'intersection des trois hauteurs d'un triangle ?`,
     answer: "L'orthocentre",
     options: shuffle(["L'orthocentre", "Le centre de gravité", "Le centre du cercle circonscrit"]),
-    steps: [`Le point de concours des trois hauteurs d'un triangle s'appelle l'orthocentre.`],
+    steps: [{ type: "donnee", text: `Le point de concours des trois hauteurs d'un triangle s'appelle l'orthocentre.` }],
   };
 }
 
@@ -306,7 +314,7 @@ function genHauteurTriangleRectangleParticulariteQCM() {
     prompt: `ABC est un triangle rectangle en A. Avec quels côtés du triangle deux de ses trois hauteurs sont-elles confondues ?`,
     answer: "Les côtés de l'angle droit (les cathètes)",
     options: shuffle(["Les côtés de l'angle droit (les cathètes)", "L'hypoténuse et une cathète", "Les trois médianes"]),
-    steps: [`Dans un triangle rectangle en A, les côtés [AB] et [AC] (les cathètes) sont eux-mêmes deux des trois hauteurs du triangle.`],
+    steps: [{ type: "regle", text: `Dans un triangle rectangle en A, les côtés [AB] et [AC] (les cathètes) sont eux-mêmes deux des trois hauteurs du triangle.` }],
   };
 }
 
@@ -321,7 +329,7 @@ function genMedianeMilieuNumeric() {
     prompt: `Dans un triangle ABC, la médiane issue de A coupe [BC] en son milieu M. Sachant que BC = ${fr(bc)} cm, quelle est la longueur BM, en cm ?`,
     answer: roundTo(bc / 2, 2),
     tolerance: 0.01,
-    steps: [`M est le milieu de [BC] : BM = BC \\div 2 = ${fr(bc)} \\div 2 = ${fr(roundTo(bc / 2, 2))}`],
+    steps: [{ type: "regle", text: `M est le milieu de [BC] : BM = BC \\div 2 = ${fr(bc)} \\div 2 = ${fr(roundTo(bc / 2, 2))}` }],
   };
 }
 
@@ -339,9 +347,13 @@ function genCentreDeGraviteRatioNumeric() {
     answer: askAG ? ag : am,
     tolerance: 0.02,
     steps: [
-      askAG
-        ? `Le centre de gravité se situe aux deux tiers de chaque médiane à partir du sommet : AG = (2/3) \\times AM = (2/3) \\times ${fr(am)} = ${fr(ag)}`
-        : `AM = (3/2) \\times AG = (3/2) \\times ${fr(ag)} = ${fr(am)}`,
+      {
+        type: "regle",
+        text:
+          askAG
+            ? `Le centre de gravité se situe aux deux tiers de chaque médiane à partir du sommet : AG = (2/3) \\times AM = (2/3) \\times ${fr(am)} = ${fr(ag)}`
+            : `AM = (3/2) \\times AG = (3/2) \\times ${fr(ag)} = ${fr(am)}`,
+      },
     ],
   };
 }
@@ -354,7 +366,7 @@ function genCentreDeGraviteDefinitionQCM() {
     prompt: `Comment appelle-t-on le point d'intersection des trois médianes d'un triangle ?`,
     answer: "Le centre de gravité",
     options: shuffle(["Le centre de gravité", "L'orthocentre", "Le centre du cercle circonscrit"]),
-    steps: [`Le point de concours des trois médianes d'un triangle s'appelle le centre de gravité.`],
+    steps: [{ type: "donnee", text: `Le point de concours des trois médianes d'un triangle s'appelle le centre de gravité.` }],
   };
 }
 
@@ -367,7 +379,7 @@ function genMedianePartageAireMoitieNumeric() {
     prompt: `Un triangle ABC a une aire de ${fr(aireTotale)} cm². La médiane issue de A le partage en deux triangles ABM et ACM. Quelle est l'aire du triangle ABM, en cm² ?`,
     answer: roundTo(aireTotale / 2, 2),
     tolerance: 0.02,
-    steps: [`Une médiane partage un triangle en deux triangles de même aire : ${fr(aireTotale)} \\div 2 = ${fr(roundTo(aireTotale / 2, 2))}`],
+    steps: [{ type: "regle", text: `Une médiane partage un triangle en deux triangles de même aire : ${fr(aireTotale)} \\div 2 = ${fr(roundTo(aireTotale / 2, 2))}` }],
   };
 }
 
@@ -384,7 +396,7 @@ function genAireDiagonalesPerpendiculairesNumeric() {
     chapter: "Quadrilatères — Aire",
     prompt: `Un ${forme} a des diagonales perpendiculaires de longueurs ${d1} cm et ${d2} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [`Aire = (d_1 \\times d_2) \\div 2 = (${d1} \\times ${d2}) \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Aire = (d_1 \\times d_2) \\div 2 = (${d1} \\times ${d2}) \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -399,7 +411,7 @@ function genAireTrapezeNumeric() {
     chapter: "Quadrilatères — Aire",
     prompt: `Un trapèze a une grande base de ${grandeBase} cm, une petite base de ${petiteBase} cm et une hauteur de ${hauteur} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [`Aire = ((grande base + petite base) \\times hauteur) \\div 2 = ((${grandeBase} + ${petiteBase}) \\times ${hauteur}) \\div 2 = ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `Aire = ((grande base + petite base) \\times hauteur) \\div 2 = ((${grandeBase} + ${petiteBase}) \\times ${hauteur}) \\div 2 = ${fr(answer)}` }],
   };
 }
 
@@ -418,9 +430,9 @@ function genFigureComposeeRectangleTriangleNumeric() {
     prompt: `${prenom} dessine une figure composée d'un rectangle de ${L} cm sur ${l} cm, surmonté d'un triangle de même base (${L} cm) et de hauteur ${hTriangle} cm. Quelle est l'aire totale de la figure, en cm² ?`,
     answer,
     steps: [
-      `Aire du rectangle = ${L} \\times ${l} = ${aireRectangle}`,
-      `Aire du triangle = (${L} \\times ${hTriangle}) \\div 2 = ${fr(aireTriangle)}`,
-      `Aire totale = ${aireRectangle} + ${fr(aireTriangle)} = ${fr(answer)}`,
+      { type: "calcul", text: `Aire du rectangle = ${L} \\times ${l} = ${aireRectangle}` },
+      { type: "calcul", text: `Aire du triangle = (${L} \\times ${hTriangle}) \\div 2 = ${fr(aireTriangle)}` },
+      { type: "resultat", text: `Aire totale = ${aireRectangle} + ${fr(aireTriangle)} = ${fr(answer)}` },
     ],
   };
 }
@@ -435,7 +447,7 @@ function genCultureDroiteEulerQCM() {
     prompt: `Dans un triangle non équilatéral, l'orthocentre, le centre de gravité et le centre du cercle circonscrit sont toujours alignés sur une même droite. Comment appelle-t-on cette droite ?`,
     answer: "La droite d'Euler",
     options: shuffle(["La droite d'Euler", "La droite de Thalès", "La droite des milieux"]),
-    steps: [`Ce résultat, découvert par le mathématicien suisse Leonhard Euler au XVIIIe siècle, porte le nom de droite d'Euler.`],
+    steps: [{ type: "donnee", text: `Ce résultat, découvert par le mathématicien suisse Leonhard Euler au XVIIIe siècle, porte le nom de droite d'Euler.` }],
   };
 }
 
@@ -447,7 +459,7 @@ function genCultureCercleNeufPointsQCM() {
     prompt: `Le "cercle des neuf points" d'un triangle passe notamment par les milieux des trois côtés et par les pieds des trois hauteurs. Combien de points remarquables ce cercle traverse-t-il en tout, comme son nom l'indique ?`,
     answer: "9",
     options: shuffle(["9", "6", "12"]),
-    steps: [`Ce cercle, aussi appelé cercle de Feuerbach, passe par neuf points remarquables du triangle : les milieux des côtés, les pieds des hauteurs, et les milieux des segments joignant l'orthocentre à chaque sommet.`],
+    steps: [{ type: "donnee", text: `Ce cercle, aussi appelé cercle de Feuerbach, passe par neuf points remarquables du triangle : les milieux des côtés, les pieds des hauteurs, et les milieux des segments joignant l'orthocentre à chaque sommet.` }],
   };
 }
 
@@ -514,6 +526,7 @@ export default {
     id: "triangles",
     title: "Triangles",
     description: "Angles dans un triangle, médiatrices et cercle circonscrit, hauteurs et orthocentre, médianes et centre de gravité, aires de quadrilatères, culture mathématique.",
+    pourquoi: "Médiatrices, hauteurs et médianes permettent de construire des triangles précis et de comprendre leurs points remarquables.",
     level: "cinquieme",
     free: false,
     order: 9,

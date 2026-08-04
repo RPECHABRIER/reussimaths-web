@@ -1563,3 +1563,58 @@ dans ce sandbox).
 
 **Terminale Spé intégralement auditée pour la tâche #236.** Reste :
 Première techno, Terminale STMG.
+
+## 2026-08-04 — Première technologique : repères pédagogiques + codage sémantique (tâche #236 / #233)
+
+Audit complet des 9 chapitres de Première technologique, en appliquant la
+même méthode que pour les niveaux précédents : conversion des `steps`
+en objets typés `{ type, text }` (donnee/regle/calcul/resultat), ajout
+d'un repère pédagogique (`regle`) partout où un générateur faisait un
+saut numérique ou conceptuel sans justification, et réécriture complète
+des générateurs à lacune sévère (QCM vrai/faux ou d'interprétation qui se
+contentaient de répéter la réponse sans aucune explication).
+
+- derivation-premiere-techno.js : lacune sévère sur le QCM sécante/tangente
+  (4 cas, justification de la définition de chacune).
+- epreuves-independantes-premiere-techno.js : lacune sévère sur le QCM
+  épreuve de Bernoulli (5 cas justifiés par le nombre d'issues possibles).
+- fonctions-second-degre-premiere-techno.js : repères pédagogiques ajoutés
+  sur la factorisation, la lecture graphique et les fonctions de référence
+  (aucune lacune sévère, uniquement des sauts numériques).
+- preparation-eam-premiere-techno.js (fichier le plus dense, 28
+  générateurs) : réécriture complète des 4 QCM automatismes issus des
+  sujets officiels (30 items au total, chacun avec une explication propre)
+  et de tous les autres générateurs (suites, fonctions, probabilités,
+  originaux) avec repères pédagogiques.
+- probabilites-conditionnelles-premiere-techno.js : lacune sévère sur le
+  vrai/faux indépendance et partitions (5 cas, correction des confusions
+  classiques : incompatible ≠ indépendant, P(A∩B)=P(A)×P(B) et non une
+  somme).
+- reviser-les-bases-premiere-techno.js : lacune sévère sur le coefficient
+  multiplicateur (steps ne faisait que répéter la réponse) ; repères
+  ajoutés sur les identités remarquables, équations/inéquations,
+  fonctions de référence.
+- statistiques-deux-variables-premiere-techno.js : lacune sévère sur le
+  QCM pertinence d'un ajustement affine (2 cas justifiés) ; distinction
+  interpolation/extrapolation explicitée.
+- suites-numeriques-premiere-techno.js : repères de référence ajoutés pour
+  les formules de raison (r = u_{n+1}-u_n, q = u_{n+1}/u_n) ; les
+  générateurs de sens de variation et de modélisation avaient déjà de
+  bonnes explications, converties au format typé.
+- variables-aleatoires-premiere-techno.js : lacune sévère sur le QCM
+  reconnaissance d'une loi de Bernoulli (4 cas justifiés par le nombre de
+  valeurs possibles de X).
+
+Chaque fichier : node --check, smoke test 8000 itérations (4 paliers ou
+générique selon le fichier), 0 erreur, sync vers les deux copies
+Application TOP (diff vide vérifié), 9 commits séparés dans le dépôt
+`APPLI GITHUB/Sans titre`.
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**Première technologique intégralement auditée pour la tâche #236.** Reste :
+Terminale STMG.

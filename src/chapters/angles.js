@@ -137,7 +137,7 @@ function genEstimerAngleQCM() {
     figure: buildAngleFigure(angle, startAngle),
     answer: `${angle}°`,
     options,
-    steps: [`L'angle mesure exactement ${angle}°.`],
+    steps: [{ type: "resultat", text: `L'angle mesure exactement ${angle}°.` }],
   };
 }
 
@@ -152,7 +152,7 @@ function genMesurerAngleFigure() {
     figure: buildAngleFigure(angle, startAngle),
     answer: angle,
     tolerance: 3,
-    steps: [`L'angle ASB mesure ${angle}°.`],
+    steps: [{ type: "resultat", text: `L'angle ASB mesure ${angle}°.` }],
   };
 }
 
@@ -174,7 +174,7 @@ function genNatureAngleQCM() {
     figure: buildAngleFigure(Math.max(angle, 2), randInt(0, 360)),
     answer: nature,
     options: ["nul", "aigu", "droit", "obtus", "plat"],
-    steps: [`Angle ${nature} : ${angle}°.`],
+    steps: [{ type: "resultat", text: `Angle ${nature} : ${angle}°.` }],
   };
 }
 
@@ -197,7 +197,7 @@ function genClassifierAngleMulti() {
     prompt: `Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`aigu : moins de 90° ; droit : 90° ; obtus : entre 90° et 180° ; plat : 180°.`],
+    steps: [{ type: "regle", text: `aigu : moins de 90° ; droit : 90° ; obtus : entre 90° et 180° ; plat : 180°.` }],
   };
 }
 
@@ -220,7 +220,10 @@ function genAnglesSupplementaires() {
       : `A, S et B sont alignés. L'angle CSB mesure ${b}°. Quelle est la mesure de l'angle ASC (supplémentaire) ?`,
     figure,
     answer: askB ? b : a,
-    steps: [`${a} + ${b} = 180`],
+    steps: [
+      { type: "regle", text: `Deux angles supplémentaires (formés de part et d'autre d'une droite) ont une somme de 180°.` },
+      { type: "calcul", text: `${a} + ${b} = 180` },
+    ],
   };
 }
 
@@ -240,7 +243,7 @@ function genAnglesOpposesParSommet() {
     prompt: `Les droites (AB) et (CD) se coupent en S. L'angle ASC mesure ${a}°. Quelle est la mesure de l'angle BSD, opposé par le sommet ?`,
     figure,
     answer: a,
-    steps: [`Deux angles opposés par le sommet ont toujours la même mesure.`],
+    steps: [{ type: "regle", text: `Deux angles opposés par le sommet ont toujours la même mesure.` }],
   };
 }
 
@@ -264,7 +267,10 @@ function genSommeAnglesAdjacents() {
       : `L'angle ASB mesure ${total}°. La demi-droite [SC] le partage en deux angles adjacents ASC et CSB. CSB mesure ${part2}°. Quelle est la mesure de ASC ?`,
     figure,
     answer: askPart2 ? part2 : part1,
-    steps: [`${total} - ${askPart2 ? part1 : part2} = ${askPart2 ? part2 : part1}`],
+    steps: [
+      { type: "regle", text: `Les angles adjacents ASC et CSB se partagent l'angle ASB : leur somme est égale à ASB.` },
+      { type: "calcul", text: `${total} - ${askPart2 ? part1 : part2} = ${askPart2 ? part2 : part1}` },
+    ],
   };
 }
 
@@ -289,7 +295,10 @@ function genBissectrice() {
       : `(d) est la bissectrice de l'angle ASB, qui mesure ${total}°. Quelle est la mesure de chacun des deux angles formés par (d) ?`,
     figure,
     answer: askTotal ? total : half,
-    steps: [askTotal ? `${half} \\times 2 = ${total}` : `${total} \\div 2 = ${half}`],
+    steps: [
+      { type: "regle", text: `Une bissectrice partage un angle en deux angles adjacents de même mesure.` },
+      { type: "calcul", text: askTotal ? `${half} \\times 2 = ${total}` : `${total} \\div 2 = ${half}` },
+    ],
   };
 }
 
@@ -306,7 +315,10 @@ function genTroisiemeAngleTriangle() {
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième angle ?`,
     figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     answer: c,
-    steps: [`180 - (${a} + ${b}) = ${c}`],
+    steps: [
+      { type: "regle", text: `La somme des angles d'un triangle vaut toujours 180°.` },
+      { type: "calcul", text: `180 - (${a} + ${b}) = ${c}` },
+    ],
   };
 }
 
@@ -320,7 +332,10 @@ function genTroisiemeAngleTriangleRectangle() {
     prompt: `Dans un triangle rectangle, un angle aigu mesure ${a}°. Quelle est la mesure de l'autre angle aigu ?`,
     figure: buildTriangleFigure(a, b, 90, { labels: { A: `${a}°` }, rightAngleAt: "C" }),
     answer: b,
-    steps: [`90 - ${a} = ${b}`],
+    steps: [
+      { type: "regle", text: `Dans un triangle rectangle, les deux angles aigus sont complémentaires (leur somme vaut 90°).` },
+      { type: "calcul", text: `90 - ${a} = ${b}` },
+    ],
   };
 }
 
@@ -337,7 +352,12 @@ function genTriangleExisteQCM() {
     prompt: `Un triangle peut-il avoir des angles de ${a}°, ${b}° et ${c}° ?`,
     answer: sum === 180 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} + ${b} + ${c} = ${sum}${sum === 180 ? " = 180°, le triangle existe." : ", ce n'est pas 180° donc ce triangle n'existe pas."}`],
+    steps: [
+      {
+        type: "calcul",
+        text: `${a} + ${b} + ${c} = ${sum}${sum === 180 ? " = 180°, le triangle existe." : ", ce n'est pas 180° donc ce triangle n'existe pas."}`,
+      },
+    ],
   };
 }
 
@@ -358,7 +378,7 @@ function genAnglesAlignesChaine() {
     prompt: `Les points A, B et C sont alignés. Trois demi-droites issues d'un même point de (AC) forment avec elle trois angles adjacents de ${a}°, ${b}° et x°, dont la somme vaut 180° (angle plat). Quelle est la valeur de x ?`,
     figure,
     answer: c,
-    steps: [`180 - (${a} + ${b}) = ${c}`],
+    steps: [{ type: "calcul", text: `180 - (${a} + ${b}) = ${c}` }],
   };
 }
 
@@ -377,7 +397,12 @@ function genAngleExterieurTriangle() {
       : `L'angle extérieur d'un triangle mesure ${ext}°. L'un des deux angles intérieurs non adjacents mesure ${int1}°. Quelle est la mesure de l'autre ?`,
     figure: buildTriangleFigure(int1, int2, int3, { labels: { A: `${int1}°`, B: `${int2}°` } }),
     answer: askExt ? ext : int2,
-    steps: [`Un angle extérieur d'un triangle est égal à la somme des deux angles intérieurs non adjacents : ${int1} + ${int2} = ${ext}`],
+    steps: [
+      {
+        type: "regle",
+        text: `Un angle extérieur d'un triangle est égal à la somme des deux angles intérieurs non adjacents : ${int1} + ${int2} = ${ext}`,
+      },
+    ],
   };
 }
 
@@ -401,7 +426,9 @@ function genProblemeCocheQuestionsAngles() {
     figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     options,
     answer,
-    steps: [`Connaître deux angles permet de déduire le troisième et de savoir si un angle est droit, mais pas les longueurs des côtés.`],
+    steps: [
+      { type: "regle", text: `Connaître deux angles permet de déduire le troisième et de savoir si un angle est droit, mais pas les longueurs des côtés.` },
+    ],
   };
 }
 
@@ -429,7 +456,7 @@ function genProblemeVraiFauxAngles() {
     figure,
     options,
     answer,
-    steps: [`${total} \\div 2 = ${half}`],
+    steps: [{ type: "calcul", text: `${total} \\div 2 = ${half}` }],
   };
 }
 
@@ -452,7 +479,10 @@ function genProblemeBissectriceAngleEntre() {
     prompt: `On considère deux angles adjacents zOy et yOx. yOx mesure ${yOx}°. On trace les bissectrices de ces deux angles : l'angle qu'elles forment entre elles mesure ${uOv}°. Combien mesure zOy ?`,
     figure,
     answer: zOy,
-    steps: [`L'angle entre les deux bissectrices vaut la moitié de (zOy + yOx).`, `zOy = ${uOv} \\times 2 - ${yOx} = ${zOy}`],
+    steps: [
+      { type: "regle", text: `L'angle entre les deux bissectrices vaut la moitié de (zOy + yOx).` },
+      { type: "resultat", text: `zOy = ${uOv} \\times 2 - ${yOx} = ${zOy}` },
+    ],
   };
 }
 
@@ -470,7 +500,10 @@ function genProblemeTriangleIsoceleAngles() {
       : `Un triangle isocèle a un angle au sommet de ${sommetAngle}°. Quelle est la mesure de chacun des deux angles à la base (égaux) ?`,
     figure: buildTriangleFigure(sommetAngle, baseAngle, baseAngle, { labels, equalSides: ["AB", "CA"] }),
     answer: askSommet ? sommetAngle : baseAngle,
-    steps: [`180 - 2 \\times ${baseAngle} = ${sommetAngle}`],
+    steps: [
+      { type: "regle", text: `Dans un triangle isocèle, les deux angles à la base sont égaux, et la somme des trois angles vaut 180°.` },
+      { type: "calcul", text: `180 - 2 \\times ${baseAngle} = ${sommetAngle}` },
+    ],
   };
 }
 

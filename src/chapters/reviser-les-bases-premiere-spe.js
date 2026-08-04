@@ -46,7 +46,10 @@ function genIdentiteRemarquableCarreQCM() {
     prompt: `Développer : \\((${a}x ${signe} ${b})^2\\)`,
     answer: correctRaw,
     options,
-    steps: [`\\((A ${signe} B)^2 = A^2 ${signe} 2AB + B^2\\)`, `\\text{Résultat : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\((A ${signe} B)^2 = A^2 ${signe} 2AB + B^2\\)` },
+      { type: "resultat", text: correctRaw },
+    ],
   };
 }
 
@@ -61,7 +64,7 @@ function genFactorisationDifferenceCarresNumeric() {
     chapter: "Réviser les bases (Première Spé) — Calcul littéral",
     prompt: `On sait que \\(${k * k}x^2 - ${m * m} = (${k}x - ${m})(${k}x + ${m})\\). Calcule la valeur de cette expression pour \\(x = ${x}\\).`,
     answer,
-    steps: [`(${k} \\times ${x} - ${m})(${k} \\times ${x} + ${m}) = (${k * x - m}) \\times (${k * x + m}) = ${answer}`],
+    steps: [{ type: "resultat", text: `(${k} \\times ${x} - ${m})(${k} \\times ${x} + ${m}) = (${k * x - m}) \\times (${k * x + m}) = ${answer}` }],
   };
 }
 
@@ -78,7 +81,10 @@ function genResoudreEquationSimpleNumeric() {
     chapter: "Réviser les bases (Première Spé) — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -105,9 +111,9 @@ function genResoudreInequationSimpleQCM() {
     answer: correctRaw,
     options,
     steps: [
-      `${a}x ${op} ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`,
-      flip ? `\\text{On divise par un nombre négatif : le sens de l'inégalité change.}` : `\\text{On divise par un nombre positif : le sens de l'inégalité ne change pas.}`,
-      `\\text{Solution : } ${correctRaw}`,
+      { type: "calcul", text: `${a}x ${op} ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "regle", text: flip ? `\\text{On divise par un nombre négatif : le sens de l'inégalité change.}` : `\\text{On divise par un nombre positif : le sens de l'inégalité ne change pas.}` },
+      { type: "resultat", text: `\\text{Solution : } ${correctRaw}` },
     ],
   };
 }
@@ -125,7 +131,7 @@ function genImageFonctionAffineNumeric() {
     chapter: "Réviser les bases (Première Spé) — Fonctions de référence",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "resultat", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -141,7 +147,7 @@ function genSensVariationCarreQCM() {
     prompt: `Quel est le sens de variation de la fonction carré ${cas.intervalle} ?`,
     answer: cas.reponse,
     options: ["croissante", "décroissante"],
-    steps: [`\\text{La fonction carré est ${cas.reponse} ${cas.intervalle}.}`],
+    steps: [{ type: "regle", text: `\\text{La fonction carré est ${cas.reponse} ${cas.intervalle}.}` }],
   };
 }
 
@@ -155,7 +161,7 @@ function genImageFonctionInverseNumeric() {
     prompt: `On considère la fonction inverse définie par \\(f(x) = \\dfrac{1}{x}\\). Calcule \\(f(${x})\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`f(${x}) = \\dfrac{1}{${x}} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `f(${x}) = \\dfrac{1}{${x}} = ${fr(answer)}` }],
   };
 }
 
@@ -173,7 +179,7 @@ function genCoordonneesVecteurNumeric() {
     chapter: "Réviser les bases (Première Spé) — Vecteurs",
     prompt: `On donne \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Le vecteur \\(\\overrightarrow{AB}\\) a pour coordonnées \\((x_B - x_A ; y_B - y_A)\\). Donne sa première coordonnée.`,
     answer,
-    steps: [`x_B - x_A = ${xB} - (${xA}) = ${answer}`],
+    steps: [{ type: "resultat", text: `x_B - x_A = ${xB} - (${xA}) = ${answer}` }],
   };
 }
 
@@ -194,7 +200,10 @@ function genNormeVecteurNumeric() {
     chapter: "Réviser les bases (Première Spé) — Vecteurs",
     prompt: `Un vecteur \\(\\vec{u}\\) a pour coordonnées \\((${signeX * x} ; ${signeY * y})\\). Calcule sa norme \\(\\|\\vec{u}\\|\\).`,
     answer,
-    steps: [`\\|\\vec{u}\\| = \\sqrt{(${signeX * x})^2 + (${signeY * y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${x * x + y * y}} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{La norme d'un vecteur de coordonnées } (x ; y) \\text{ se calcule par } \\|\\vec{u}\\| = \\sqrt{x^2 + y^2}.` },
+      { type: "resultat", text: `\\|\\vec{u}\\| = \\sqrt{(${signeX * x})^2 + (${signeY * y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${x * x + y * y}} = ${answer}` },
+    ],
   };
 }
 
@@ -211,7 +220,7 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -226,7 +235,10 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur associé ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      { type: "regle", text: direction === "augmente" ? `\\text{Une augmentation de } t \\% \\text{ correspond à un coefficient multiplicateur } 1 + \\dfrac{t}{100}.` : `\\text{Une diminution de } t \\% \\text{ correspond à un coefficient multiplicateur } 1 - \\dfrac{t}{100}.` },
+      { type: "resultat", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -242,7 +254,7 @@ function genPuissanceRelatifNumeric() {
     chapter: "Réviser les bases (Première Spé) — Calcul numérique",
     prompt: `Calcule : \\((${n})^{${exp}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "resultat", text: `${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -255,7 +267,7 @@ function genRacineCarreeNumeric() {
     chapter: "Réviser les bases (Première Spé) — Calcul numérique",
     prompt: `Calcule : \\(\\sqrt{${n * n}}\\)`,
     answer,
-    steps: [`\\sqrt{${n * n}} = ${n} \\text{ car } ${n}^2 = ${n * n}`],
+    steps: [{ type: "resultat", text: `\\sqrt{${n * n}} = ${n} \\text{ car } ${n}^2 = ${n * n}` }],
   };
 }
 

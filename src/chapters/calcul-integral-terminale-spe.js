@@ -28,7 +28,11 @@ function genIntegralePolynomeNumeric() {
     chapter: "Calcul intégral — Intégrale d'une fonction",
     prompt: `Calcule \\(\\displaystyle\\int_{${a}}^{${b}} ${2 * p}x \\, \\mathrm{d}x\\).`,
     answer,
-    steps: [`F(x) = ${p}x^2`, `F(${b}) - F(${a}) = ${p} \\times ${b}^2 - ${p} \\times ${a}^2 = ${answer}`],
+    steps: [
+      { type: "regle", text: "Une intégrale se calcule à l'aide d'une primitive : ∫ₐᵇ f(x)dx = F(b) - F(a)." },
+      { type: "calcul", text: `F(x) = ${p}x^2` },
+      { type: "resultat", text: `F(${b}) - F(${a}) = ${p} \\times ${b}^2 - ${p} \\times ${a}^2 = ${answer}` },
+    ],
   };
 }
 
@@ -47,8 +51,8 @@ function genIntegraleExpAffineNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `\\text{Une primitive de } ${a}\\mathrm{e}^{${a}x${b >= 0 ? "+" : ""}${b}} \\text{ est } \\mathrm{e}^{${a}x${b >= 0 ? "+" : ""}${b}}`,
-      `\\mathrm{e}^{${a}\\times${x1}${b >= 0 ? "+" : ""}${b}} - \\mathrm{e}^{${a}\\times${x0}${b >= 0 ? "+" : ""}${b}} \\approx ${fr(answer)}`,
+      { type: "regle", text: `\\text{Une primitive de } ${a}\\mathrm{e}^{${a}x${b >= 0 ? "+" : ""}${b}} \\text{ est } \\mathrm{e}^{${a}x${b >= 0 ? "+" : ""}${b}}` },
+      { type: "resultat", text: `\\mathrm{e}^{${a}\\times${x1}${b >= 0 ? "+" : ""}${b}} - \\mathrm{e}^{${a}\\times${x0}${b >= 0 ? "+" : ""}${b}} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -65,7 +69,10 @@ function genValeurMoyenneNumeric() {
     chapter: "Calcul intégral — Valeur moyenne",
     prompt: `On donne \\(\\displaystyle\\int_{${a}}^{${b}} f(x)\\,\\mathrm{d}x = ${V}\\). Calcule la valeur moyenne de f sur \\([${a};${b}]\\).`,
     answer: m,
-    steps: [`\\dfrac{1}{${b} - ${a}} \\times ${V} = ${m}`],
+    steps: [
+      { type: "regle", text: "La valeur moyenne de f sur [a;b] est m = (1/(b-a)) × ∫ₐᵇ f(x)dx." },
+      { type: "resultat", text: `\\dfrac{1}{${b} - ${a}} \\times ${V} = ${m}` },
+    ],
   };
 }
 
@@ -80,7 +87,10 @@ function genLineariteIntegraleNumeric() {
     chapter: "Calcul intégral — Linéarité",
     prompt: `On sait que \\(\\displaystyle\\int_a^b f(x)\\,\\mathrm{d}x = ${F}\\) et \\(\\displaystyle\\int_a^b g(x)\\,\\mathrm{d}x = ${G}\\). Calcule \\(\\displaystyle\\int_a^b \\left[${k}f(x) + g(x)\\right] \\mathrm{d}x\\).`,
     answer,
-    steps: [`${k} \\times ${F} + ${G} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Linéarité de l'intégrale : ∫ₐᵇ[k·f(x) + g(x)]dx = k·∫ₐᵇf(x)dx + ∫ₐᵇg(x)dx." },
+      { type: "resultat", text: `${k} \\times ${F} + ${G} = ${answer}` },
+    ],
   };
 }
 
@@ -97,7 +107,10 @@ function genChaslesNumeric() {
     chapter: "Calcul intégral — Relation de Chasles",
     prompt: `On sait que \\(\\displaystyle\\int_{${a}}^{${b}} f(x)\\,\\mathrm{d}x = ${V1}\\) et \\(\\displaystyle\\int_{${b}}^{${c}} f(x)\\,\\mathrm{d}x = ${V2}\\). Calcule \\(\\displaystyle\\int_{${a}}^{${c}} f(x)\\,\\mathrm{d}x\\).`,
     answer,
-    steps: [`${V1} + ${V2} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Relation de Chasles : ∫ₐᶜf(x)dx = ∫ₐᵇf(x)dx + ∫ᵇᶜf(x)dx." },
+      { type: "resultat", text: `${V1} + ${V2} = ${answer}` },
+    ],
   };
 }
 
@@ -112,7 +125,7 @@ function genSigneIntegraleQCM() {
     prompt: `Sur \\([${a};${b}]\\) (avec ${a} < ${b}), on a f ${positive ? "\\geqslant" : "\\leqslant"} 0. Quel est le signe de \\(\\displaystyle\\int_{${a}}^{${b}} f(x)\\,\\mathrm{d}x\\) ?`,
     answer: positive ? "Positif" : "Négatif",
     options: ["Positif", "Négatif"],
-    steps: [positive ? "f est positive donc l'intégrale est positive." : "f est négative donc l'intégrale est négative."],
+    steps: [{ type: "regle", text: positive ? "f est positive donc l'intégrale est positive." : "f est négative donc l'intégrale est négative." }],
   };
 }
 
@@ -128,7 +141,10 @@ function genEncadrementIntegraleNumeric() {
     chapter: "Calcul intégral — Signe et encadrement",
     prompt: `Pour tout x, on a \\(${m} \\leqslant f(x) \\leqslant ${M}\\) sur \\([${a};${b}]\\). Détermine le majorant de \\(\\displaystyle\\int_{${a}}^{${b}} f(x)\\,\\mathrm{d}x\\) obtenu en intégrant cette inégalité.`,
     answer,
-    steps: [`\\displaystyle\\int_{${a}}^{${b}} ${M}\\,\\mathrm{d}x = ${M} \\times (${b} - ${a}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "Si f(x) ≤ M sur [a;b], alors ∫ₐᵇf(x)dx ≤ ∫ₐᵇM dx = M×(b-a)." },
+      { type: "resultat", text: `\\displaystyle\\int_{${a}}^{${b}} ${M}\\,\\mathrm{d}x = ${M} \\times (${b} - ${a}) = ${answer}` },
+    ],
   };
 }
 
@@ -142,7 +158,10 @@ function genAireSousCourbeNumeric() {
     chapter: "Calcul intégral — Aire sous une courbe",
     prompt: `Calcule l'aire, en unités d'aire, du domaine délimité par la courbe de \\(f(x) = ${2 * p}x\\), l'axe des abscisses, et les droites d'équations x=0 et x=${b}.`,
     answer,
-    steps: [`\\text{Aire} = \\displaystyle\\int_0^{${b}} ${2 * p}x\\,\\mathrm{d}x = \\left[${p}x^2\\right]_0^{${b}} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Comme f ≥ 0 sur l'intervalle, l'aire sous la courbe est égale à l'intégrale de f." },
+      { type: "resultat", text: `\\text{Aire} = \\displaystyle\\int_0^{${b}} ${2 * p}x\\,\\mathrm{d}x = \\left[${p}x^2\\right]_0^{${b}} = ${answer}` },
+    ],
   };
 }
 
@@ -157,7 +176,10 @@ function genAireEntreCourbesNumeric() {
     chapter: "Calcul intégral — Aire entre deux courbes",
     prompt: `Sur \\([${a};${b}]\\), on a \\(g(x) - f(x) = ${k}\\) (avec g au-dessus de f). Calcule l'aire, en unités d'aire, comprise entre les courbes de f et g sur \\([${a};${b}]\\).`,
     answer,
-    steps: [`\\text{Aire} = \\displaystyle\\int_{${a}}^{${b}} \\left[g(x)-f(x)\\right]\\mathrm{d}x = \\displaystyle\\int_{${a}}^{${b}} ${k}\\,\\mathrm{d}x = ${k} \\times (${b}-${a}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "Comme g est au-dessus de f, l'aire entre les deux courbes est égale à l'intégrale de g(x)-f(x)." },
+      { type: "resultat", text: `\\text{Aire} = \\displaystyle\\int_{${a}}^{${b}} \\left[g(x)-f(x)\\right]\\mathrm{d}x = \\displaystyle\\int_{${a}}^{${b}} ${k}\\,\\mathrm{d}x = ${k} \\times (${b}-${a}) = ${answer}` },
+    ],
   };
 }
 
@@ -172,18 +194,21 @@ function genFonctionDefinieIntegraleNumeric() {
     chapter: "Calcul intégral — Fonction définie par une intégrale",
     prompt: `On définit \\(f(x) = \\displaystyle\\int_{c}^{x} u(t)\\,\\mathrm{d}t\\), où \\(u(t) = ${p}t ${q >= 0 ? "+" : "-"} ${Math.abs(q)}\\) est continue. Calcule \\(f'(${x0})\\).`,
     answer,
-    steps: [`f'(x) = u(x)`, `f'(${x0}) = u(${x0}) = ${p} \\times ${x0} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${answer}`],
+    steps: [
+      { type: "regle", text: "f'(x) = u(x) : c'est le théorème fondamental de l'analyse, la dérivée d'une fonction définie par une intégrale est la fonction intégrée." },
+      { type: "resultat", text: `f'(${x0}) = u(${x0}) = ${p} \\times ${x0} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${answer}` },
+    ],
   };
 }
 
 // ---------- 11. Vrai ou faux sur les intégrales (QCM) ----------
 function genVraiFauxIntegralesQCM() {
   const cas = pick([
-    { description: "Si \\(f \\leqslant 0\\) sur \\([a;b]\\) (avec \\(a<b\\)), alors \\(\\int_a^b f(x)\\,\\mathrm{d}x \\leqslant 0\\).", reponse: "Vrai" },
-    { description: "\\(\\int_a^b f(x)\\,\\mathrm{d}x = -\\int_b^a f(x)\\,\\mathrm{d}x\\).", reponse: "Vrai" },
-    { description: "La valeur moyenne d'une fonction sur \\([a;b]\\) est toujours positive.", reponse: "Faux" },
-    { description: "Si f est impaire, \\(\\int_{-a}^{a} f(x)\\,\\mathrm{d}x = 0\\).", reponse: "Vrai" },
-    { description: "L'intégrale d'un produit de fonctions est le produit des intégrales.", reponse: "Faux" },
+    { description: "Si \\(f \\leqslant 0\\) sur \\([a;b]\\) (avec \\(a<b\\)), alors \\(\\int_a^b f(x)\\,\\mathrm{d}x \\leqslant 0\\).", reponse: "Vrai", explication: "C'est vrai : si f est négative sur tout l'intervalle et que a<b, l'intégrale hérite de ce signe." },
+    { description: "\\(\\int_a^b f(x)\\,\\mathrm{d}x = -\\int_b^a f(x)\\,\\mathrm{d}x\\).", reponse: "Vrai", explication: "C'est vrai : inverser les bornes d'une intégrale change son signe." },
+    { description: "La valeur moyenne d'une fonction sur \\([a;b]\\) est toujours positive.", reponse: "Faux", explication: "C'est faux : la valeur moyenne a le même signe que l'intégrale, elle peut donc être négative si f est négative sur l'intervalle." },
+    { description: "Si f est impaire, \\(\\int_{-a}^{a} f(x)\\,\\mathrm{d}x = 0\\).", reponse: "Vrai", explication: "C'est vrai : pour une fonction impaire, la partie négative sur [-a;0] compense exactement la partie positive sur [0;a] (symétrie par rapport à l'origine)." },
+    { description: "L'intégrale d'un produit de fonctions est le produit des intégrales.", reponse: "Faux", explication: "C'est faux : contrairement à la somme, il n'existe pas de formule générale exprimant ∫(f×g) à partir de ∫f et ∫g." },
   ]);
   return {
     type: "qcm",
@@ -191,7 +216,7 @@ function genVraiFauxIntegralesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -203,7 +228,7 @@ function genInverserBornesNumeric() {
     chapter: "Calcul intégral — Relation de Chasles",
     prompt: `On sait que \\(\\displaystyle\\int_a^b f(x)\\,\\mathrm{d}x = ${V}\\). Calcule \\(\\displaystyle\\int_b^a f(x)\\,\\mathrm{d}x\\).`,
     answer: -V,
-    steps: [`\\int_b^a f(x)\\,\\mathrm{d}x = -\\int_a^b f(x)\\,\\mathrm{d}x = ${-V}`],
+    steps: [{ type: "regle", text: `\\int_b^a f(x)\\,\\mathrm{d}x = -\\int_a^b f(x)\\,\\mathrm{d}x = ${-V}` }],
   };
 }
 
@@ -215,7 +240,7 @@ function genComparerIntegralesQCM() {
     prompt: `Si \\(f \\leqslant g\\) sur \\([a;b]\\) (avec \\(a<b\\)), que peut-on dire de \\(\\int_a^b f(x)\\,\\mathrm{d}x\\) et \\(\\int_a^b g(x)\\,\\mathrm{d}x\\) ?`,
     answer: "\\int_a^b f(x)\\,dx \\leqslant \\int_a^b g(x)\\,dx",
     options: ["\\int_a^b f(x)\\,dx \\leqslant \\int_a^b g(x)\\,dx", "\\int_a^b f(x)\\,dx \\geqslant \\int_a^b g(x)\\,dx", "\\int_a^b f(x)\\,dx = \\int_a^b g(x)\\,dx"],
-    steps: ["L'intégration conserve l'ordre : si f \\leqslant g alors \\int f \\leqslant \\int g."],
+    steps: [{ type: "regle", text: "L'intégration conserve l'ordre : si f \\leqslant g alors \\int f \\leqslant \\int g." }],
   };
 }
 
@@ -230,7 +255,7 @@ function genIntegraleParieImpaireQCM() {
       prompt: `f est impaire. Quelle est la valeur de \\(\\displaystyle\\int_{-a}^{a} f(x)\\,\\mathrm{d}x\\) ?`,
       answer: "0",
       options,
-      steps: ["Pour une fonction impaire, l'intégrale sur un intervalle symétrique par rapport à 0 est nulle."],
+      steps: [{ type: "regle", text: "Pour une fonction impaire, l'intégrale sur un intervalle symétrique par rapport à 0 est nulle." }],
     };
   }
   return {
@@ -239,7 +264,7 @@ function genIntegraleParieImpaireQCM() {
     prompt: `f est paire. Comment exprimer \\(\\displaystyle\\int_{-a}^{a} f(x)\\,\\mathrm{d}x\\) en fonction de \\(\\displaystyle\\int_0^a f(x)\\,\\mathrm{d}x\\) ?`,
     answer: "2\\displaystyle\\int_0^a f(x)\\,\\mathrm{d}x",
     options,
-    steps: ["Pour une fonction paire, l'intégrale sur un intervalle symétrique vaut le double de l'intégrale sur la moitié positive."],
+    steps: [{ type: "regle", text: "Pour une fonction paire, l'intégrale sur un intervalle symétrique vaut le double de l'intégrale sur la moitié positive." }],
   };
 }
 
@@ -254,7 +279,10 @@ function genIntegraleConstanteNumeric() {
     chapter: "Calcul intégral — Intégrale d'une fonction",
     prompt: `Calcule \\(\\displaystyle\\int_{${a}}^{${b}} ${k}\\,\\mathrm{d}x\\).`,
     answer,
-    steps: [`${k} \\times (${b} - ${a}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "L'intégrale d'une fonction constante k sur [a;b] vaut k×(b-a)." },
+      { type: "resultat", text: `${k} \\times (${b} - ${a}) = ${answer}` },
+    ],
   };
 }
 

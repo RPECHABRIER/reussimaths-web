@@ -50,6 +50,35 @@ function primeFactorsList(n) {
   return factors;
 }
 
+// Étapes détaillées de la décomposition en facteurs premiers (divisions successives).
+function primeFactorDivisionSteps(n) {
+  let x = n;
+  const steps = [];
+  let d = 2;
+  while (d * d <= x) {
+    while (x % d === 0) {
+      steps.push(`${x} \\div ${d} = ${x / d}`);
+      x /= d;
+    }
+    d++;
+  }
+  if (x > 1 && x !== n) steps.push(`${x} est un nombre premier : on s'arrête.`);
+  return steps;
+}
+
+// Étapes détaillées de l'algorithme d'Euclide pour calculer un PGCD.
+function pgcdEuclideSteps(a, b) {
+  let x = a, y = b;
+  const steps = [];
+  while (y !== 0) {
+    const q = Math.floor(x / y);
+    const r = x % y;
+    steps.push(r === 0 ? `${x} = ${q} \\times ${y}` : `${x} = ${q} \\times ${y} + ${r}`);
+    [x, y] = [y, r];
+  }
+  return steps;
+}
+
 // =========================== Rappels : nombres premiers, simplifier, comparer ===========================
 
 // ---------- 1. Décomposition en produit de facteurs premiers (QCM) ----------
@@ -80,7 +109,11 @@ function genDecompositionFacteursPremiersQCM() {
     prompt: `Quelle est la décomposition en produit de facteurs premiers de ${n} ?`,
     answer: correct,
     options: shuffle(options),
-    steps: [{ type: "calcul", text: `${n} = ${correct}` }],
+    steps: [
+      { type: "regle", text: `On divise ${n} successivement par les nombres premiers (2, 3, 5, 7, ...) jusqu'à obtenir 1.` },
+      ...primeFactorDivisionSteps(n).map((text) => ({ type: "calcul", text })),
+      { type: "resultat", text: `${n} = ${correct}` },
+    ],
   };
 }
 
@@ -122,7 +155,11 @@ function genComparerDeuxFractionsSigneesQCM() {
     prompt: `Compare : \\(\\dfrac{${a}}{${b}}\\) ... \\(\\dfrac{${c}}{${d}}\\)`,
     answer: correct,
     options: ["<", ">", "="],
-    steps: [{ type: "calcul", text: `On compare ${a} \\times ${d} = ${a * d} et ${c} \\times ${b} = ${c * b} (produits en croix).` }],
+    steps: [
+      { type: "regle", text: `${b} et ${d} sont positifs : comparer \\(\\dfrac{${a}}{${b}}\\) et \\(\\dfrac{${c}}{${d}}\\) revient à comparer les produits en croix ${a} \\times ${d} et ${c} \\times ${b}.` },
+      { type: "calcul", text: `${a} \\times ${d} = ${a * d}\\ \\text{et}\\ ${c} \\times ${b} = ${c * b}` },
+      { type: "resultat", text: `${a * d} ${correct} ${c * b}, donc \\(\\dfrac{${a}}{${b}}\\) ${correct} \\(\\dfrac{${c}}{${d}}\\).` },
+    ],
   };
 }
 
@@ -137,7 +174,11 @@ function genPlusGrandDiviseurCommunNumeric() {
     chapter: "Addition, soustraction de rationnels — Rappels",
     prompt: `Quel est le plus grand diviseur commun (PGCD) à ${a} et ${b} ?`,
     answer: pg,
-    steps: [{ type: "resultat", text: `PGCD(${a}, ${b}) = ${pg}.` }],
+    steps: [
+      { type: "regle", text: `On applique l'algorithme d'Euclide : on divise le plus grand nombre par le plus petit, puis on recommence avec le diviseur et le reste, jusqu'à obtenir un reste nul. Le PGCD est le dernier diviseur utilisé.` },
+      ...pgcdEuclideSteps(a, b).map((text) => ({ type: "calcul", text })),
+      { type: "resultat", text: `PGCD(${a}, ${b}) = ${pg}.` },
+    ],
   };
 }
 
@@ -405,7 +446,11 @@ function genComparerDeuxProportionsChoixQCM() {
     prompt: `Un client compare deux produits selon leur proportion de ${ingredient}. Le produit A en contient \\(\\dfrac{${numA}}{${denA}}\\) et le produit B en contient \\(\\dfrac{${numB}}{${denB}}\\). Quel produit contient la plus grande proportion de ${ingredient} ?`,
     answer: `Produit ${winner}`,
     options: ["Produit A", "Produit B"],
-    steps: [{ type: "calcul", text: `On compare ${numA} \\times ${denB} = ${numA * denB} et ${numB} \\times ${denA} = ${numB * denA}.` }],
+    steps: [
+      { type: "regle", text: `Pour comparer \\(\\dfrac{${numA}}{${denA}}\\) et \\(\\dfrac{${numB}}{${denB}}\\), on compare les produits en croix ${numA} \\times ${denB} et ${numB} \\times ${denA}.` },
+      { type: "calcul", text: `${numA} \\times ${denB} = ${numA * denB}\\ \\text{et}\\ ${numB} \\times ${denA} = ${numB * denA}` },
+      { type: "resultat", text: `Le produit ${winner} contient la plus grande proportion de ${ingredient}.` },
+    ],
   };
 }
 

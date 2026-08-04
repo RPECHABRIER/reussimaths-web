@@ -52,7 +52,7 @@ function genSigneRaisonQCM() {
     prompt: `La suite ${nomSuite} est arithmétique et ${sens}. Quel est le signe de sa raison r ?`,
     answer: sens === "croissante" ? "r > 0" : "r < 0",
     options: ["r > 0", "r < 0"],
-    steps: [sens === "croissante" ? "Une suite arithmétique est croissante si et seulement si sa raison est strictement positive." : "Une suite arithmétique est décroissante si et seulement si sa raison est strictement négative."],
+    steps: [{ type: "regle", text: sens === "croissante" ? "\\text{Une suite arithmétique est croissante si et seulement si sa raison est strictement positive.}" : "\\text{Une suite arithmétique est décroissante si et seulement si sa raison est strictement négative.}" }],
   };
 }
 
@@ -67,7 +67,10 @@ function genRaisonDepuisDeuxTermesNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} vérifie \\(${nomSuite}(0) = ${u0}\\) et \\(${nomSuite}(1) = ${u1}\\). Calcule sa raison r.`,
     answer: r,
-    steps: [`r = ${nomSuite}(1) - ${nomSuite}(0) = ${u1} - (${u0}) = ${r}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une suite arithmétique, la raison est la différence entre deux termes consécutifs.}` },
+      { type: "resultat", text: `r = ${nomSuite}(1) - ${nomSuite}(0) = ${u1} - (${u0}) = ${r}` },
+    ],
   };
 }
 
@@ -83,7 +86,10 @@ function genTermeSuivantRecurrenceNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} de raison \\(r = ${r}\\) vérifie \\(${nomSuite}(${n}) = ${un}\\). Calcule \\(${nomSuite}(${n + 1})\\).`,
     answer: unPlus1,
-    steps: [`${nomSuite}(${n + 1}) = ${nomSuite}(${n}) + r = ${un} + (${r}) = ${unPlus1}`],
+    steps: [
+      { type: "regle", text: `\\text{Relation de récurrence d'une suite arithmétique : } ${nomSuite}(n+1) = ${nomSuite}(n) + r.` },
+      { type: "resultat", text: `${nomSuite}(${n + 1}) = ${nomSuite}(${n}) + r = ${un} + (${r}) = ${unPlus1}` },
+    ],
   };
 }
 
@@ -99,7 +105,7 @@ function genTermeExpressionExpliciteNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} a pour expression explicite \\(${nomSuite}(n) = ${texSuiteExplicite(r, u0)}\\). Calcule \\(${nomSuite}(${n})\\).`,
     answer,
-    steps: [`${nomSuite}(${n}) = ${r} \\times ${n} ${u0 >= 0 ? "+" : "-"} ${Math.abs(u0)} = ${answer}`],
+    steps: [{ type: "resultat", text: `${nomSuite}(${n}) = ${r} \\times ${n} ${u0 >= 0 ? "+" : "-"} ${Math.abs(u0)} = ${answer}` }],
   };
 }
 
@@ -115,7 +121,10 @@ function genPremierTermeDepuisRaisonNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} a pour raison \\(r = ${r}\\) et vérifie \\(${nomSuite}(${n}) = ${un}\\). Calcule son premier terme \\(${nomSuite}(0)\\).`,
     answer: u0,
-    steps: [`${nomSuite}(${n}) = r \\times ${n} + ${nomSuite}(0) \\text{ donc } ${nomSuite}(0) = ${un} - ${r} \\times ${n} = ${u0}`],
+    steps: [
+      { type: "regle", text: `\\text{On part de l'expression explicite } ${nomSuite}(${n}) = r \\times ${n} + ${nomSuite}(0) \\text{ et on isole } ${nomSuite}(0).` },
+      { type: "resultat", text: `${nomSuite}(0) = ${un} - ${r} \\times ${n} = ${u0}` },
+    ],
   };
 }
 
@@ -135,7 +144,14 @@ function genResoudreInequationSeuilNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} a pour expression explicite \\(${nomSuite}(n) = ${texSuiteExplicite(r, u0)}\\). Détermine le plus petit rang entier n à partir duquel \\(${nomSuite}(n) ${sensInequation} ${k}\\).`,
     answer: nSol,
-    steps: [`${texSuiteExplicite(r, u0)} ${sensInequation} ${k}`, `n ${sensInequation} \\dfrac{${k} ${u0 >= 0 ? "-" : "+"} ${Math.abs(u0)}}{${r}}`, `\\text{Le plus petit entier convenable est } n = ${nSol}`],
+    steps: [
+      { type: "regle", text: croissante
+        ? `\\text{On isole n dans l'inéquation. Comme } r = ${r} > 0, \\text{ diviser par } r \\text{ ne change pas le sens de l'inégalité.}`
+        : `\\text{On isole n dans l'inéquation. Comme } r = ${r} < 0, \\text{ diviser par } r \\text{ } \\textbf{inverse le sens de l'inégalité}.` },
+      { type: "calcul", text: `${texSuiteExplicite(r, u0)} ${sensInequation} ${k}` },
+      { type: "calcul", text: `n \\geqslant \\dfrac{${k} ${u0 >= 0 ? "-" : "+"} ${Math.abs(u0)}}{${r}}` },
+      { type: "resultat", text: `\\text{Le plus petit entier convenable est } n = ${nSol}` },
+    ],
   };
 }
 
@@ -153,7 +169,7 @@ function genModeliserRaisonContexteNumeric() {
     chapter: "Croissance linéaire — Modélisation",
     prompt: `Dans une situation où ${contexte.sujet} de ${r} ${contexte.unite} ${contexte.verbe}, on modélise la quantité totale par une suite arithmétique. Quelle est la raison r de cette suite (en ${contexte.unite}) ?`,
     answer: r,
-    steps: [`\\text{L'augmentation étant constante et égale à } ${r} \\text{ ${contexte.unite} à chaque étape, la raison est } r = ${r}`],
+    steps: [{ type: "regle", text: `\\text{L'augmentation étant constante et égale à } ${r} \\text{ ${contexte.unite} à chaque étape, la raison est } r = ${r}` }],
   };
 }
 
@@ -173,7 +189,10 @@ function genModeliserCalculerTermeNumeric() {
     chapter: "Croissance linéaire — Modélisation",
     prompt: `${contexte.sujet} initialement ${u0} ${contexte.unite}, et cette quantité augmente de ${r} ${contexte.unite} ${contexte.verbe}. On modélise la quantité au bout de n étapes par une suite arithmétique h de premier terme \\(h(0) = ${u0}\\) et de raison \\(r = ${r}\\). Calcule \\(h(${n})\\).`,
     answer,
-    steps: [`h(${n}) = ${r} \\times ${n} + ${u0} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Après } n \\text{ étapes, la quantité est } h(n) = r \\times n + h(0).` },
+      { type: "resultat", text: `h(${n}) = ${r} \\times ${n} + ${u0} = ${answer}` },
+    ],
   };
 }
 
@@ -193,7 +212,11 @@ function genModeliserResoudreInequationNumeric() {
     chapter: "Croissance linéaire — Modélisation",
     prompt: `${contexte.sujet} ${r} ${contexte.unite} par ${contexte.uniteTemps.slice(0, -1)}. On modélise la quantité totale par une suite arithmétique h de premier terme \\(h(0) = ${u0}\\) et de raison \\(r = ${r}\\). Combien de ${contexte.uniteTemps} minimum faut-il attendre pour que la quantité atteigne ${k} ${contexte.unite} ?`,
     answer: nSol,
-    steps: [`h(n) = ${r}n + ${u0} \\geqslant ${k}`, `n \\geqslant \\dfrac{${k} - ${u0}}{${r}}`, `\\text{Le plus petit entier convenable est } n = ${nSol}`],
+    steps: [
+      { type: "calcul", text: `h(n) = ${r}n + ${u0} \\geqslant ${k}` },
+      { type: "calcul", text: `n \\geqslant \\dfrac{${k} - ${u0}}{${r}}` },
+      { type: "resultat", text: `\\text{Le plus petit entier convenable est } n = ${nSol}` },
+    ],
   };
 }
 
@@ -211,7 +234,7 @@ function genCoefficientDirecteurDeuxPointsNumeric() {
     chapter: "Croissance linéaire — Fonctions affines",
     prompt: `Une droite représentant un phénomène continu à croissance linéaire passe par les points \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule son coefficient directeur.`,
     answer: m,
-    steps: [`m = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}`],
+    steps: [{ type: "resultat", text: `m = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}` }],
   };
 }
 
@@ -231,7 +254,7 @@ function genDiscretOuContinuQCM() {
     prompt: `« ${cas.description} » Quel type de modèle est le plus adapté pour décrire cette situation ?`,
     answer: cas.reponse,
     options: ["Modèle discret (suite)", "Modèle continu (fonction)"],
-    steps: [`\\text{Cette situation correspond à un ${cas.reponse === "Modèle discret (suite)" ? "relevé à des instants séparés (valeurs entières) : c'est un modèle discret." : "phénomène qui évolue de façon continue au cours du temps : c'est un modèle continu."}}`],
+    steps: [{ type: "regle", text: `\\text{Cette situation correspond à un ${cas.reponse === "Modèle discret (suite)" ? "relevé à des instants séparés (valeurs entières) : c'est un modèle discret." : "phénomène qui évolue de façon continue au cours du temps : c'est un modèle continu."}}` }],
   };
 }
 
@@ -249,7 +272,10 @@ function genRaisonDepuisDeuxTermesNonConsecutifsNumeric() {
     chapter: "Croissance linéaire — Suites arithmétiques",
     prompt: `Une suite arithmétique ${nomSuite} vérifie \\(${nomSuite}(${p}) = ${up}\\) et \\(${nomSuite}(${q}) = ${uq}\\). Calcule sa raison r.`,
     answer: r,
-    steps: [`r = \\dfrac{${nomSuite}(${q}) - ${nomSuite}(${p})}{${q} - ${p}} = \\dfrac{${uq} - (${up})}{${q - p}} = ${r}`],
+    steps: [
+      { type: "regle", text: `\\text{Même quand les rangs ne sont pas consécutifs, la raison s'obtient en divisant la variation totale par le nombre de « pas » entre les deux rangs.}` },
+      { type: "resultat", text: `r = \\dfrac{${nomSuite}(${q}) - ${nomSuite}(${p})}{${q} - ${p}} = \\dfrac{${uq} - (${up})}{${q - p}} = ${r}` },
+    ],
   };
 }
 
@@ -275,18 +301,41 @@ function genEcrireExpressionExpliciteQCM() {
     prompt: `Une suite arithmétique ${nomSuite} a pour premier terme \\(${nomSuite}(0) = ${u0}\\) et pour raison \\(r = ${r}\\). Quelle est son expression explicite ?`,
     answer: bonneReponse,
     options: shuffle([...optionsSet]),
-    steps: [`${nomSuite}(n) = r \\times n + ${nomSuite}(0) = ${texSuiteExplicite(r, u0)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'expression explicite d'une suite arithmétique est } ${nomSuite}(n) = r \\times n + ${nomSuite}(0).` },
+      { type: "resultat", text: `${nomSuite}(n) = ${texSuiteExplicite(r, u0)}` },
+    ],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les suites arithmétiques ----------
 function genVraiFauxSuitesQCM() {
   const cas = pick([
-    { description: "Une suite arithmétique de raison nulle est constante.", reponse: "Vrai" },
-    { description: "Pour une suite arithmétique, la différence entre deux termes consécutifs est toujours la même.", reponse: "Vrai" },
-    { description: "Une suite arithmétique de raison négative est croissante.", reponse: "Faux" },
-    { description: "Pour calculer un terme d'une suite arithmétique, il est toujours nécessaire de calculer tous les termes précédents un par un.", reponse: "Faux" },
-    { description: "Une suite arithmétique modélise une situation où la quantité augmente (ou diminue) toujours de la même valeur à chaque étape.", reponse: "Vrai" },
+    {
+      description: "Une suite arithmétique de raison nulle est constante.",
+      reponse: "Vrai",
+      explication: `\\text{Si } r = 0, \\text{ chaque terme est égal au précédent (} ${"u"}(n+1) = u(n) + 0\\text{) : la suite ne varie jamais.}`,
+    },
+    {
+      description: "Pour une suite arithmétique, la différence entre deux termes consécutifs est toujours la même.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même d'une suite arithmétique : cette différence constante est la raison } r.`,
+    },
+    {
+      description: "Une suite arithmétique de raison négative est croissante.",
+      reponse: "Faux",
+      explication: `\\text{Une raison négative signifie qu'on soustrait une quantité positive à chaque étape : la suite est } \\textbf{décroissante}, \\text{ pas croissante.}`,
+    },
+    {
+      description: "Pour calculer un terme d'une suite arithmétique, il est toujours nécessaire de calculer tous les termes précédents un par un.",
+      reponse: "Faux",
+      explication: `\\text{L'expression explicite } u(n) = r \\times n + u(0) \\text{ permet de calculer directement n'importe quel terme, sans passer par les précédents.}`,
+    },
+    {
+      description: "Une suite arithmétique modélise une situation où la quantité augmente (ou diminue) toujours de la même valeur à chaque étape.",
+      reponse: "Vrai",
+      explication: `\\text{C'est exactement la caractéristique d'une évolution à raison constante, modélisée par une suite arithmétique.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -294,7 +343,7 @@ function genVraiFauxSuitesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -309,7 +358,7 @@ function genLectureGraphiqueImageNumeric() {
     chapter: "Croissance linéaire — Fonctions affines",
     prompt: `Un phénomène continu à croissance linéaire est représenté par une droite d'équation \\(f(x) = ${texSuiteExplicite(m, p).replace("n", "x")}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${m} \\times ${x} ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${answer}`],
+    steps: [{ type: "resultat", text: `f(${x}) = ${m} \\times ${x} ${p >= 0 ? "+" : "-"} ${Math.abs(p)} = ${answer}` }],
   };
 }
 

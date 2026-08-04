@@ -560,3 +560,16 @@ create policy "daily_activity: self read/write" on public.daily_activity
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create index if not exists daily_activity_user_date_idx on public.daily_activity (user_id, activity_date);
+
+-- ---------------------------------------------------------------------------
+-- Résiliation en libre-service (2026-08-04) : voir src/pages/Account.jsx +
+-- api/cancel-subscription.js. Ne concerne que le plan "mensuel" (abonnement
+-- Stripe classique, renouvellement automatique) — "special_examen" est un
+-- paiement unique déjà non reconductible (voir api/create-checkout-session.js),
+-- rien à résilier dessus. Résilier = cancel_at_period_end: true côté Stripe :
+-- l'accès reste actif jusqu'à current_period_end, sans reconduction ensuite.
+-- Écrit par api/cancel-subscription.js (à l'action de l'utilisateur) ET par
+-- api/stripe-webhook.js (pour rester synchro si l'abonnement est géré
+-- autrement, ex. directement dans le dashboard Stripe).
+-- ---------------------------------------------------------------------------
+alter table public.subscriptions add column if not exists cancel_at_period_end boolean not null default false;

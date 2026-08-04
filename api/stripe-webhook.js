@@ -128,11 +128,16 @@ export default async function handler(req, res) {
       case "customer.subscription.deleted": {
         const sub = event.data.object;
         // On retrouve l'utilisateur via le customer_id déjà enregistré.
+        // cancel_at_period_end resynchronisé ici aussi (pas seulement dans
+        // api/cancel-subscription.js) pour rester cohérent même si
+        // l'abonnement est résilié/réactivé directement dans le dashboard
+        // Stripe plutôt que depuis l'app.
         await supabaseAdmin
           .from("subscriptions")
           .update({
             status: sub.status, // active | trialing | canceled | past_due ...
             current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+            cancel_at_period_end: !!sub.cancel_at_period_end,
             updated_at: new Date().toISOString(),
           })
           .eq("stripe_customer_id", sub.customer);

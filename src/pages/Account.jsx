@@ -34,6 +34,9 @@ export default function Account() {
   const { count: referralCount } = useReferrals(user?.id);
   const { chapterId: referralBonusChapterId, reload: reloadReferralBonus } = useReferralBonus(user?.id);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [confirmingCancel, setConfirmingCancel] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -61,6 +64,30 @@ export default function Account() {
       if (url) window.location.href = url;
     } finally {
       setCheckoutLoading(false);
+    }
+  };
+
+  // Résiliation en libre-service (voir api/cancel-subscription.js) : ne
+  // concerne que le plan "mensuel", laisse l'accès actif jusqu'à la fin de
+  // la période déjà payée (cancel_at_period_end côté Stripe, pas une
+  // annulation immédiate).
+  const handleCancelAction = async (action) => {
+    setCancelLoading(true);
+    setCancelError(null);
+    try {
+      const res = await fetch("/api/cancel-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, action }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Une erreur est survenue.");
+      setConfirmingCancel(false);
+      reloadSubscription();
+    } catch (err) {
+      setCancelError(err.message);
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -115,6 +142,73 @@ export default function Account() {
               Accès jusqu'au {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")} (offre non
               reconductible)
             </p>
+          )}
+
+          {fullAccess && !admin && subscription?.plan === "mensuel" && subscription?.current_period_end && (
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
+              {!subscription.cancel_at_period_end ? (
+                <>
+                  <p className="text-xs" style={{ color: colors.slate }}>
+                    Renouvellement automatique le {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")}.
+                  </p>
+                  {!confirmingCancel ? (
+                    <button
+                      onClick={() => setConfirmingCancel(true)}
+                      className="text-xs font-medium mt-2"
+                      style={{ color: colors.red }}
+                    >
+                      Résilier mon abonnement
+                    </button>
+                  ) : (
+                    <div className="mt-2 flex flex-col gap-2">
+                      <p className="text-xs" style={{ color: colors.ink }}>
+                        Tu garderas l'accès jusqu'au{" "}
+                        {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")}, sans reconduction
+                        ensuite. Confirmer la résiliation ?
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          disabled={cancelLoading}
+                          onClick={() => handleCancelAction("cancel")}
+                          className="text-xs font-semibold py-1.5 px-3 rounded-full"
+                          style={{ backgroundColor: colors.red, color: "#fff" }}
+                        >
+                          {cancelLoading ? "…" : "Confirmer"}
+                        </button>
+                        <button
+                          disabled={cancelLoading}
+                          onClick={() => setConfirmingCancel(false)}
+                          className="text-xs font-medium py-1.5 px-3 rounded-full"
+                          style={{ color: colors.slate }}
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="text-xs" style={{ color: colors.slate }}>
+                    Résiliation prévue — accès jusqu'au{" "}
+                    {new Date(subscription.current_period_end).toLocaleDateString("fr-FR")}, sans renouvellement.
+                  </p>
+                  <button
+                    disabled={cancelLoading}
+                    onClick={() => handleCancelAction("reactivate")}
+                    className="text-xs font-medium mt-2"
+                    style={{ color: colors.gold }}
+                  >
+                    {cancelLoading ? "…" : "Annuler la résiliation"}
+                  </button>
+                </>
+              )}
+              {cancelError && (
+                <p className="text-xs mt-2" style={{ color: colors.red }}>
+                  {cancelError}
+                </p>
+              )}
+            </div>
           )}
 
           {packExamenNeedsChoice && <PackExamenChoice onDone={reloadSubscription} />}

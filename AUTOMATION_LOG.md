@@ -1839,3 +1839,54 @@ les deux copies Application TOP.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain (pas
 d'identifiants dans ce sandbox).
+
+
+## 2026-08-04 (suite 8) — Résiliation d'abonnement en libre-service
+
+Romain a demandé un lien dans Mon compte pour résilier facilement,
+l'utilisateur gardant l'accès jusqu'à la fin de la période déjà payée
+(mois en cours ou 3 mois du Pack Examen).
+
+Ne concerne en pratique que le plan "mensuel" (abonnement Stripe
+classique, renouvellement automatique) : le Pack Examen ("special_examen")
+est un paiement UNIQUE (mode Stripe "payment", voir
+create-checkout-session.js), déjà non reconductible par nature — il n'y a
+donc rien à résilier dessus côté Stripe, l'accès s'arrête déjà tout seul à
++3 mois (déjà affiché dans Account.jsx : "Accès jusqu'au [date] (offre non
+reconductible)").
+
+Nouvelle colonne subscriptions.cancel_at_period_end (SQL, migration
+additive comme les précédentes). Nouvel endpoint POST
+/api/cancel-subscription (body { userId, action: "cancel" | "reactivate" })
+: retrouve l'abonnement Stripe actif du client via son stripe_customer_id
+déjà enregistré, appelle
+stripe.subscriptions.update(id, { cancel_at_period_end }) — PAS
+stripe.subscriptions.cancel() qui couperait l'accès immédiatement — puis
+répercute le flag en base. api/stripe-webhook.js persiste aussi ce flag
+sur customer.subscription.updated/deleted, pour rester synchro même si
+l'abonnement est modifié directement dans le dashboard Stripe plutôt que
+depuis l'app.
+
+Account.jsx : pour un abonné complet (plan mensuel, pas admin), nouvelle
+carte affichant soit "Renouvellement automatique le [date]" + bouton
+"Résilier mon abonnement" (avec confirmation inline avant l'appel API),
+soit, si déjà résilié, "Résiliation prévue — accès jusqu'au [date]" +
+bouton "Annuler la résiliation" (permet de revenir en arrière tant que la
+période n'est pas terminée).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis
+le dépôt Git `APPLI GITHUB/Sans titre`) + `node --check` sur les 3
+fonctions serverless Stripe (api/cancel-subscription.js,
+api/stripe-webhook.js, api/create-checkout-session.js), syntaxe ESM
+valide. Fichiers synchronisés (diff vide vérifié) vers les deux copies
+Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox), ET la migration SQL ci-dessous doit être
+collée dans l'éditeur SQL Supabase avant que le bouton de résiliation ne
+fonctionne réellement (sinon l'écriture de cancel_at_period_end échouera,
+colonne inexistante) :
+
+```sql
+alter table public.subscriptions add column if not exists cancel_at_period_end boolean not null default false;
+```

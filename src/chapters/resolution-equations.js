@@ -65,7 +65,10 @@ function genResoudreEquationAdditionSoustractionNumeric() {
     chapter: "Résolution d'équations — Résoudre",
     prompt: `Résous l'équation : \\(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)} = ${b}\\)`,
     answer: xSol,
-    steps: [{ type: "calcul", text: `x = ${b} ${a >= 0 ? "-" : "+"} ${Math.abs(a)} = ${xSol}` }],
+    steps: [
+      { type: "regle", text: `Pour isoler x, on effectue la même opération des deux côtés de l'égalité : on ${a >= 0 ? "soustrait" : "ajoute"} ${Math.abs(a)}.` },
+      { type: "calcul", text: `x = ${b} ${a >= 0 ? "-" : "+"} ${Math.abs(a)} = ${xSol}` },
+    ],
   };
 }
 
@@ -82,7 +85,10 @@ function genResoudreEquationMultiplicationNumeric() {
     prompt: `Résous l'équation : \\(${a}x = ${fr(b)}\\)`,
     answer: xSol,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSol)}` }],
+    steps: [
+      { type: "regle", text: `Pour isoler x, on divise les deux côtés de l'égalité par ${a}.` },
+      { type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSol)}` },
+    ],
   };
 }
 
@@ -98,6 +104,7 @@ function genResoudreEquationDeuxEtapesNumeric() {
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `On isole d'abord le terme en x en ${b >= 0 ? "soustrayant" : "ajoutant"} ${Math.abs(b)} des deux côtés, puis on divise par ${a}.` },
       { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
       { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
     ],
@@ -120,6 +127,7 @@ function genResoudreEquationDesDeuxCotesNumeric() {
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\)`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `On regroupe les termes en x d'un côté et les termes constants de l'autre, en effectuant la même opération des deux côtés.` },
       { type: "calcul", text: `${a}x - (${c}x) = ${d} - (${b})` },
       { type: "calcul", text: `${a - c}x = ${d - b}` },
       { type: "resultat", text: `x = ${d - b} \\div ${a - c} = ${xSol}` },
@@ -141,6 +149,7 @@ function genResoudreEquationAvecParenthesesNumeric() {
     prompt: `Résous l'équation : \\(${k}\\left(x ${m >= 0 ? "+" : "-"} ${Math.abs(m)}\\right) ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `On développe d'abord la parenthèse (distributivité), puis on isole x comme pour une équation à deux étapes.` },
       { type: "calcul", text: `${k}x ${km >= 0 ? "+" : "-"} ${Math.abs(km)} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}` },
       { type: "calcul", text: `${k}x = ${c} ${km + b >= 0 ? "-" : "+"} ${Math.abs(km + b)} = ${c - (km + b)}` },
       { type: "resultat", text: `x = ${c - (km + b)} \\div ${k} = ${xSol}` },

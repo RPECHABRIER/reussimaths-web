@@ -16,6 +16,7 @@ import {
 import { getAdminPreview } from "../lib/adminPreview";
 import PackExamenChoice from "../components/PackExamenChoice";
 import ReferralBonusChoice from "../components/ReferralBonusChoice";
+import ReviserCard from "../components/ReviserCard";
 import { getChapter } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -150,15 +151,14 @@ export default function Account() {
             </Link>
           )}
 
+          <ReviserCard />
+
           <div className="flex items-center justify-center gap-4">
             <Link to="/pseudo" className="text-xs font-medium" style={{ color: colors.slate }}>
               Changer de pseudo
             </Link>
             <Link to="/amis" className="text-xs font-medium" style={{ color: colors.slate }}>
               Amis & défis
-            </Link>
-            <Link to="/reviser" className="text-xs font-medium" style={{ color: colors.slate }}>
-              Réviser
             </Link>
           </div>
 

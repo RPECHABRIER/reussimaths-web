@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { GraduationCap, School, Sparkles, Brain } from "lucide-react";
 import { CYCLES } from "../levels";
+import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 
 // Nouvelle page d'accueil (/) : premier choix, avant même les niveaux —
@@ -70,9 +71,11 @@ export default function CycleSelect() {
           })}
         </div>
 
+        <ReviserCard className="block mt-6" />
+
         <Link to="/parcours/decouverte">
           <div
-            className="rounded-3xl px-5 py-4 flex items-center gap-3 mt-6 transition-transform active:scale-[0.98]"
+            className="rounded-3xl px-5 py-4 flex items-center gap-3 mt-3 transition-transform active:scale-[0.98]"
             style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}33` }}
           >
             <div
@@ -98,9 +101,6 @@ export default function CycleSelect() {
           </Link>
           <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
             Amis & défis
-          </Link>
-          <Link to="/reviser" className="text-sm font-medium" style={{ color: colors.ink }}>
-            Réviser
           </Link>
         </div>
 

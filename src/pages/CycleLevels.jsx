@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { getLevelsByCycle, CYCLES } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
+import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 
 // Deuxième étape de l'accueil (/college ou /lycee) : la liste des niveaux du
@@ -41,6 +42,8 @@ export default function CycleLevels() {
           </p>
         </div>
 
+        <ReviserCard className="block mb-4" />
+
         <div className="flex flex-col gap-3">
           {levels.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
@@ -74,9 +77,6 @@ export default function CycleLevels() {
           </Link>
           <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
             Amis & défis
-          </Link>
-          <Link to="/reviser" className="text-sm font-medium" style={{ color: colors.ink }}>
-            Réviser
           </Link>
         </div>
 

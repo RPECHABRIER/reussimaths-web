@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { LEVELS } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
+import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 
 export default function LevelSelect() {
@@ -31,6 +32,8 @@ export default function LevelSelect() {
             </p>
           </div>
         </div>
+
+        <ReviserCard className="block mb-4" />
 
         <div className="flex flex-col gap-3">
           {LEVELS.map((level) => {
@@ -65,9 +68,6 @@ export default function LevelSelect() {
           </Link>
           <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
             Amis & défis
-          </Link>
-          <Link to="/reviser" className="text-sm font-medium" style={{ color: colors.ink }}>
-            Réviser
           </Link>
         </div>
 

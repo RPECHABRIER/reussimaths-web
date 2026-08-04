@@ -61,7 +61,10 @@ function genNombreDeriveDeuxPointsNumeric() {
     chapter: "Variations instantanées — Nombre dérivé",
     prompt: `On donne ci-dessous la tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a}, ainsi que deux points \\(A\\) et \\(B\\) de cette tangente. Calcule \\(${nomFonction}'(${a})\\).`,
     answer: m,
-    steps: [`${nomFonction}'(${a}) = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre dérivé } ${nomFonction}'(${a}) \\text{ est le coefficient directeur de la tangente au point d'abscisse } ${a}, \\text{ que l'on calcule à partir de deux de ses points.}` },
+      { type: "resultat", text: `${nomFonction}'(${a}) = \\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}` },
+    ],
     graph: {
       xMin: Math.min(...xs) - 2,
       xMax: Math.max(...xs) + 2,
@@ -87,7 +90,10 @@ function genNombreDeriveDeplacementNumeric() {
     chapter: "Variations instantanées — Nombre dérivé",
     prompt: `On donne ci-dessous la tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a}. Lorsqu'on se déplace d'une unité vers la droite sur cette tangente, l'ordonnée ${variation >= 0 ? "augmente" : "diminue"} de ${Math.abs(variation)}. Calcule \\(${nomFonction}'(${a})\\).`,
     answer: variation,
-    steps: [`${nomFonction}'(${a}) = ${variation}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre dérivé est le coefficient directeur de la tangente, c'est-à-dire la variation de l'ordonnée pour un déplacement horizontal de 1 unité : } ${nomFonction}'(${a}) = \\dfrac{\\text{variation verticale}}{1}.` },
+      { type: "resultat", text: `${nomFonction}'(${a}) = ${variation}` },
+    ],
     graph: {
       xMin: a - 4,
       xMax: a + 4,
@@ -113,7 +119,7 @@ function genTangenteHorizontaleQCM() {
     prompt: `La tangente à la courbe représentative de ${nomFonction} au point d'abscisse ${a} est ${horizontale ? "horizontale" : "non horizontale, de coefficient directeur 3"}. Que peut-on en déduire sur \\(${nomFonction}'(${a})\\) ?`,
     answer: horizontale ? `${nomFonction}'(${a}) = 0` : `${nomFonction}'(${a}) = 3`,
     options: [`${nomFonction}'(${a}) = 0`, `${nomFonction}'(${a}) = 3`],
-    steps: [horizontale ? "Une tangente horizontale a un coefficient directeur nul, donc le nombre dérivé vaut 0." : "Le nombre dérivé est égal au coefficient directeur de la tangente, soit 3."],
+    steps: [{ type: "regle", text: horizontale ? `\\text{Une tangente horizontale a un coefficient directeur nul, donc le nombre dérivé vaut 0.}` : `\\text{Le nombre dérivé est égal au coefficient directeur de la tangente, soit 3.}` }],
   };
 }
 
@@ -127,7 +133,10 @@ function genNombreDeriveFonctionAffineNumeric() {
     chapter: "Variations instantanées — Nombre dérivé",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${texAffine(m, p)}\\). Calcule \\(f'(${a})\\).`,
     answer: m,
-    steps: [`\\text{La courbe de f est une droite : la tangente en tout point est confondue avec cette droite.}`, `f'(${a}) = m = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{La courbe de f est une droite : la tangente en tout point est confondue avec cette droite, donc le nombre dérivé est constant et égal au coefficient directeur m.}` },
+      { type: "resultat", text: `f'(${a}) = m = ${m}` },
+    ],
   };
 }
 
@@ -145,7 +154,7 @@ function genEquationTangenteNumeric() {
     chapter: "Variations instantanées — Tangente",
     prompt: `On sait que \\(${nomFonction}(${a}) = ${fa}\\) et \\(${nomFonction}'(${a}) = ${fprime}\\). La tangente à la courbe de ${nomFonction} au point d'abscisse ${a} a pour équation \\(y = ${nomFonction}'(${a})(x - ${a}) + ${nomFonction}(${a})\\). Calcule l'ordonnée du point de cette tangente d'abscisse ${x}.`,
     answer,
-    steps: [`y = ${fprime}(${x} - ${a}) + ${fa} = ${fprime} \\times ${x - a} + ${fa} = ${answer}`],
+    steps: [{ type: "resultat", text: `y = ${fprime}(${x} - ${a}) + ${fa} = ${fprime} \\times ${x - a} + ${fa} = ${answer}` }],
   };
 }
 
@@ -162,7 +171,10 @@ function genVitesseDeriveePositionNumeric() {
     chapter: "Variations instantanées — Interprétation physique",
     prompt: `La distance parcourue par un mobile est donnée par une fonction f. La tangente à la courbe de f au point d'abscisse ${t} passe par \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule la vitesse du mobile à l'instant \\(t = ${t}\\) s (en m/s), sachant que la vitesse est égale au nombre dérivé de la position.`,
     answer: vitesse,
-    steps: [`f'(${t}) = \\dfrac{${yB} - ${yA}}{${xB} - ${xA}} = ${vitesse} \\text{ m/s}`],
+    steps: [
+      { type: "regle", text: `\\text{La vitesse instantanée est le nombre dérivé de la position, donc le coefficient directeur de la tangente à la courbe de position.}` },
+      { type: "resultat", text: `f'(${t}) = \\dfrac{${yB} - ${yA}}{${xB} - ${xA}} = ${vitesse} \\text{ m/s}` },
+    ],
   };
 }
 
@@ -177,7 +189,10 @@ function genAccelerationDeriveeVitesseNumeric() {
     chapter: "Variations instantanées — Interprétation physique",
     prompt: `La vitesse d'un véhicule, en m/s, est une fonction affine du temps. Elle passe de ${vitesseA} m/s à ${vitesseB} m/s en ${duree} secondes. Sachant que l'accélération est égale au nombre dérivé de la vitesse (constant pour une fonction affine), calcule l'accélération du véhicule (en m/s²).`,
     answer: acceleration,
-    steps: [`\\dfrac{${vitesseB} - ${vitesseA}}{${duree}} = ${acceleration} \\text{ m/s}^2`],
+    steps: [
+      { type: "regle", text: `\\text{L'accélération est le nombre dérivé de la vitesse : pour une fonction affine, ce nombre dérivé est constant et égal au taux de variation de la vitesse entre les deux instants.}` },
+      { type: "resultat", text: `\\dfrac{${vitesseB} - ${vitesseA}}{${duree}} = ${acceleration} \\text{ m/s}^2` },
+    ],
   };
 }
 
@@ -192,7 +207,7 @@ function genSigneNombreDeriveQCM() {
     prompt: `On sait que \\(${nomFonction}'(${a}) = ${fprime}\\). Que peut-on en déduire sur le comportement local de ${nomFonction} au voisinage de ${a} ?`,
     answer: fprime > 0 ? `${nomFonction} \\text{ est localement croissante}` : `${nomFonction} \\text{ est localement décroissante}`,
     options: [`${nomFonction} \\text{ est localement croissante}`, `${nomFonction} \\text{ est localement décroissante}`],
-    steps: [fprime > 0 ? `${nomFonction}'(${a}) > 0 \\text{ donc } ${nomFonction} \\text{ est localement croissante en } ${a}.` : `${nomFonction}'(${a}) < 0 \\text{ donc } ${nomFonction} \\text{ est localement décroissante en } ${a}.`],
+    steps: [{ type: "regle", text: fprime > 0 ? `${nomFonction}'(${a}) > 0 \\text{ donc } ${nomFonction} \\text{ est localement croissante en } ${a}.` : `${nomFonction}'(${a}) < 0 \\text{ donc } ${nomFonction} \\text{ est localement décroissante en } ${a}.` }],
   };
 }
 
@@ -211,7 +226,7 @@ function genLectureTableauNombreDeriveNumeric() {
     chapter: "Variations instantanées — Nombre dérivé",
     prompt: `Un tableau donne, pour une fonction ${nomFonction} : a = [${abscisses.join(" ; ")}], ${nomFonction}(a) = [${valeurs.map((v) => fr(v)).join(" ; ")}], ${nomFonction}'(a) = [${derivees.map((v) => fr(roundTo(v, 1))).join(" ; ")}]. Donne la valeur de \\(${nomFonction}'(${abscisses[indexChoisi]})\\).`,
     answer: roundTo(derivees[indexChoisi], 1),
-    steps: [`${nomFonction}'(${abscisses[indexChoisi]}) = ${fr(roundTo(derivees[indexChoisi], 1))}`],
+    steps: [{ type: "resultat", text: `${nomFonction}'(${abscisses[indexChoisi]}) = ${fr(roundTo(derivees[indexChoisi], 1))}` }],
   };
 }
 
@@ -231,7 +246,10 @@ function genComparerNombresDerivesQCM() {
     prompt: `On sait que \\(${nomFonction}'(${a}) = ${fprimeA}\\) et \\(${nomFonction}'(${b}) = ${fprimeB}\\). En quel point la tangente a-t-elle le coefficient directeur le plus élevé ?`,
     answer: `${nomFonction}'(${plusGrand})`,
     options: [`${nomFonction}'(${a})`, `${nomFonction}'(${b})`],
-    steps: [`\\max(${fprimeA} ; ${fprimeB}) = ${Math.max(fprimeA, fprimeB)}, \\text{ atteint en } ${plusGrand}`],
+    steps: [
+      { type: "regle", text: `\\text{Plus le nombre dérivé est grand, plus la tangente est \\textit{pentue} : il suffit donc de comparer les deux valeurs.}` },
+      { type: "resultat", text: `\\max(${fprimeA} ; ${fprimeB}) = ${Math.max(fprimeA, fprimeB)}, \\text{ atteint en } ${plusGrand}` },
+    ],
   };
 }
 
@@ -247,18 +265,38 @@ function genIdentifierTangenteHorizontaleQCM() {
     prompt: `On donne : ${abscisses.map((a, i) => `${nomFonction}'(${a}) = ${valeurs[i]}`).join(", ")}. En quel point d'abscisse la tangente à la courbe de ${nomFonction} est-elle horizontale ?`,
     answer: `${abscisses[indexHorizontale]}`,
     options: abscisses.map(String),
-    steps: [`\\text{La tangente est horizontale là où le nombre dérivé est nul : en } ${abscisses[indexHorizontale]}`],
+    steps: [{ type: "regle", text: `\\text{La tangente est horizontale là où le nombre dérivé est nul : en } ${abscisses[indexHorizontale]}` }],
   };
 }
 
 // ---------- 12. Vrai ou faux sur le nombre dérivé ----------
 function genVraiFauxNombreDeriveQCM() {
   const cas = pick([
-    { description: "Le nombre dérivé f'(a) est le coefficient directeur de la tangente à la courbe de f au point d'abscisse a.", reponse: "Vrai" },
-    { description: "Si f'(a) > 0, alors f(a) est nécessairement positif.", reponse: "Faux" },
-    { description: "Le nombre dérivé d'une fonction affine est constant, quel que soit le point considéré.", reponse: "Vrai" },
-    { description: "Une tangente horizontale signifie que le nombre dérivé en ce point est égal à 1.", reponse: "Faux" },
-    { description: "Si la tangente en un point a un coefficient directeur négatif, la fonction est localement décroissante en ce point.", reponse: "Vrai" },
+    {
+      description: "Le nombre dérivé f'(a) est le coefficient directeur de la tangente à la courbe de f au point d'abscisse a.",
+      reponse: "Vrai",
+      explication: "\\text{C'est la définition même du nombre dérivé : } f'(a) \\text{ mesure la pente de la tangente en } a.",
+    },
+    {
+      description: "Si f'(a) > 0, alors f(a) est nécessairement positif.",
+      reponse: "Faux",
+      explication: "\\text{Il ne faut pas confondre } f(a) \\text{ (l'image, la hauteur de la courbe) et } f'(a) \\text{ (le nombre dérivé, la pente de la tangente). Une courbe peut monter (}f'(a)>0\\text{) tout en restant en dessous de l'axe des abscisses, donc } f(a) \\text{ peut être négatif.}",
+    },
+    {
+      description: "Le nombre dérivé d'une fonction affine est constant, quel que soit le point considéré.",
+      reponse: "Vrai",
+      explication: "\\text{La courbe d'une fonction affine est une droite : sa tangente en tout point est la droite elle-même, de coefficient directeur constant.}",
+    },
+    {
+      description: "Une tangente horizontale signifie que le nombre dérivé en ce point est égal à 1.",
+      reponse: "Faux",
+      explication: "\\text{Une droite horizontale a un coefficient directeur nul, pas égal à 1. Une tangente horizontale signifie donc } f'(a) = 0.",
+    },
+    {
+      description: "Si la tangente en un point a un coefficient directeur négatif, la fonction est localement décroissante en ce point.",
+      reponse: "Vrai",
+      explication: "\\text{Le signe du nombre dérivé donne le sens de variation local : } f'(a) < 0 \\text{ signifie que } f \\text{ décroît au voisinage de } a.",
+    },
   ]);
   return {
     type: "qcm",
@@ -266,7 +304,7 @@ function genVraiFauxNombreDeriveQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -282,7 +320,10 @@ function genDistinguerImageEtNombreDeriveQCM() {
     chapter: "Variations instantanées — Nombre dérivé",
     prompt: `On sait que \\(${nomFonction}(${a}) = ${fa}\\) (l'image de ${a} par ${nomFonction}) et \\(${nomFonction}'(${a}) = ${fprime}\\) (le nombre dérivé de ${nomFonction} en ${a}). Donne la valeur de \\(${demandeImage ? `${nomFonction}(${a})` : `${nomFonction}'(${a})`}\\).`,
     answer: demandeImage ? fa : fprime,
-    steps: [demandeImage ? `${nomFonction}(${a}) = ${fa}` : `${nomFonction}'(${a}) = ${fprime}`],
+    steps: [
+      { type: "regle", text: `\\text{Ne pas confondre } ${nomFonction}(${a}) \\text{ (l'image de } ${a}\\text{, la hauteur de la courbe) et } ${nomFonction}'(${a}) \\text{ (le nombre dérivé, la pente de la tangente) : ce sont deux nombres différents.}` },
+      { type: "resultat", text: demandeImage ? `${nomFonction}(${a}) = ${fa}` : `${nomFonction}'(${a}) = ${fprime}` },
+    ],
   };
 }
 
@@ -300,7 +341,7 @@ function genTauxAccroissementApprocheNumeric() {
     prompt: `On sait que \\(${nomFonction}(${a}) = ${fa}\\) et \\(${nomFonction}(${a} + ${fr(h)}) = ${fr(faPlusH)}\\). Calcule le taux d'accroissement \\(\\dfrac{${nomFonction}(${a}+${fr(h)}) - ${nomFonction}(${a})}{${fr(h)}}\\), qui donne une approximation de \\(${nomFonction}'(${a})\\).`,
     answer: taux,
     tolerance: 0.01,
-    steps: [`\\dfrac{${fr(faPlusH)} - ${fa}}{${fr(h)}} = ${taux}`],
+    steps: [{ type: "resultat", text: `\\dfrac{${fr(faPlusH)} - ${fa}}{${fr(h)}} = ${taux}` }],
   };
 }
 
@@ -317,7 +358,10 @@ function genOrdonneeOrigineTangenteNumeric() {
     chapter: "Variations instantanées — Tangente",
     prompt: `On sait que \\(${nomFonction}(${a}) = ${fa}\\) et \\(${nomFonction}'(${a}) = ${fprime}\\). La tangente à la courbe de ${nomFonction} au point d'abscisse ${a} a pour équation réduite \\(y = ${fprime}x + p\\). Calcule p.`,
     answer: p,
-    steps: [`p = ${nomFonction}(${a}) - ${nomFonction}'(${a}) \\times ${a} = ${fa} - ${fprime} \\times ${a} = ${p}`],
+    steps: [
+      { type: "regle", text: `\\text{En remplaçant } x \\text{ par } ${a} \\text{ et } y \\text{ par } ${nomFonction}(${a}) \\text{ dans } y = ${nomFonction}'(${a})x + p, \\text{ on isole p.}` },
+      { type: "resultat", text: `p = ${nomFonction}(${a}) - ${nomFonction}'(${a}) \\times ${a} = ${fa} - ${fprime} \\times ${a} = ${p}` },
+    ],
   };
 }
 

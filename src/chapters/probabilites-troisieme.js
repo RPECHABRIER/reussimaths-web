@@ -91,11 +91,20 @@ function genIdentifierEvenementQCM() {
 function genNombreIssuesQCM() {
   const total = randInt(15, 40);
   const critere = pick(["un nombre pair", "un nombre impair", "un multiple de 3", "un multiple de 5"]);
-  let favorables;
-  if (critere === "un nombre pair") favorables = Math.floor(total / 2);
-  else if (critere === "un nombre impair") favorables = Math.ceil(total / 2);
-  else if (critere === "un multiple de 3") favorables = Math.floor(total / 3);
-  else favorables = Math.floor(total / 5);
+  let favorables, explication;
+  if (critere === "un nombre pair") {
+    favorables = Math.floor(total / 2);
+    explication = `Un nombre sur deux est pair : ${total} \\div 2 = ${favorables}.`;
+  } else if (critere === "un nombre impair") {
+    favorables = Math.ceil(total / 2);
+    explication = `Un nombre sur deux est impair (en comptant les deux bornes) : ${favorables} nombres impairs entre 1 et ${total}.`;
+  } else if (critere === "un multiple de 3") {
+    favorables = Math.floor(total / 3);
+    explication = `Un nombre sur trois est multiple de 3 : ${total} \\div 3 = ${favorables} (partie entière).`;
+  } else {
+    favorables = Math.floor(total / 5);
+    explication = `Un nombre sur cinq est multiple de 5 : ${total} \\div 5 = ${favorables} (partie entière).`;
+  }
   const propositionsSet = new Set([favorables, favorables + randInt(1, 3), Math.max(1, favorables - randInt(1, 3))]);
   while (propositionsSet.size < 3) propositionsSet.add(favorables + propositionsSet.size + 1);
   const options = shuffle([...propositionsSet].map(String));
@@ -105,7 +114,10 @@ function genNombreIssuesQCM() {
     prompt: `On tire au hasard un jeton numéroté parmi ${total} jetons numérotés de 1 à ${total}. Combien de jetons portent ${critere} ?`,
     answer: String(favorables),
     options,
-    steps: [{ type: "resultat", text: `Parmi les nombres de 1 à ${total}, il y en a exactement ${favorables} qui portent ${critere}.` }],
+    steps: [
+      { type: "calcul", text: explication },
+      { type: "resultat", text: `Parmi les nombres de 1 à ${total}, il y en a exactement ${favorables} qui portent ${critere}.` },
+    ],
   };
 }
 
@@ -178,7 +190,10 @@ function genEffectifAttenduNumeric() {
     chapter: "Probabilités — Calculs de probabilités",
     prompt: `Un événement a une probabilité de ${num}/${den} de se réaliser à chaque expérience. On répète l'expérience ${nbExperiences} fois. Combien de fois peut-on s'attendre à ce que cet événement se réalise, en théorie ?`,
     answer,
-    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nbExperiences} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Effectif attendu = probabilité × nombre d'expériences.` },
+      { type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nbExperiences} = ${answer}` },
+    ],
   };
 }
 

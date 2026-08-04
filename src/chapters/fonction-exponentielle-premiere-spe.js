@@ -37,7 +37,10 @@ function genProduitExponentiellesNumeric() {
     chapter: "Fonction exponentielle — Propriétés algébriques",
     prompt: `On simplifie \\(e^{${a}} \\times e^{${b}}\\) sous la forme \\(e^{k}\\), avec \\(k\\) un entier. Donne la valeur de \\(k\\).`,
     answer,
-    steps: [`e^{${a}} \\times e^{${b}} = e^{${a} + ${b}} = e^{${answer}}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de référence : } e^{x} \\times e^{y} = e^{x+y}.` },
+      { type: "resultat", text: `e^{${a}} \\times e^{${b}} = e^{${a} + ${b}} = e^{${answer}}` },
+    ],
   };
 }
 
@@ -50,7 +53,10 @@ function genProduitOpposesQCM() {
     prompt: `Simplifier : \\(e^{${a}} \\times e^{${-a}}\\)`,
     answer: "1",
     options: ["1", "0", `e^{${2 * a}}`],
-    steps: [`e^{${a}} \\times e^{-${a}} = e^{${a} - ${a}} = e^0 = 1`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de référence : } e^{x} \\times e^{-x} = e^{0} = 1.` },
+      { type: "resultat", text: `e^{${a}} \\times e^{-${a}} = e^{${a} - ${a}} = e^0 = 1` },
+    ],
   };
 }
 
@@ -64,7 +70,10 @@ function genPuissanceExponentielleNumeric() {
     chapter: "Fonction exponentielle — Propriétés algébriques",
     prompt: `On simplifie \\(\\left(e^{${a}}\\right)^{${n}}\\) sous la forme \\(e^{k}\\), avec \\(k\\) un entier. Donne la valeur de \\(k\\).`,
     answer,
-    steps: [`\\left(e^{${a}}\\right)^{${n}} = e^{${a} \\times ${n}} = e^{${answer}}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de référence : } \\left(e^{x}\\right)^{n} = e^{n \\times x}.` },
+      { type: "resultat", text: `\\left(e^{${a}}\\right)^{${n}} = e^{${a} \\times ${n}} = e^{${answer}}` },
+    ],
   };
 }
 
@@ -78,7 +87,10 @@ function genQuotientExponentiellesNumeric() {
     chapter: "Fonction exponentielle — Propriétés algébriques",
     prompt: `On simplifie \\(\\dfrac{e^{${a}}}{e^{${b}}}\\) sous la forme \\(e^{k}\\), avec \\(k\\) un entier. Donne la valeur de \\(k\\).`,
     answer,
-    steps: [`\\dfrac{e^{${a}}}{e^{${b}}} = e^{${a} - (${b})} = e^{${answer}}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de référence : } \\dfrac{e^{x}}{e^{y}} = e^{x-y}.` },
+      { type: "resultat", text: `\\dfrac{e^{${a}}}{e^{${b}}} = e^{${a} - (${b})} = e^{${answer}}` },
+    ],
   };
 }
 
@@ -91,7 +103,7 @@ function genSigneExponentielleQCM() {
     prompt: `Quel est le signe de \\(e^{${x}}\\) ?`,
     answer: "Toujours strictement positif",
     options: ["Toujours strictement positif", "Toujours strictement négatif", "Cela dépend du signe de x"],
-    steps: [`\\text{La fonction exponentielle est strictement positive sur } \\mathbb{R}, \\text{ quel que soit le signe de l'exposant.}`],
+    steps: [{ type: "regle", text: `\\text{La fonction exponentielle est strictement positive sur } \\mathbb{R}, \\text{ quel que soit le signe de l'exposant.}` }],
   };
 }
 
@@ -103,7 +115,7 @@ function genSensVariationExponentielleQCM() {
     prompt: `Quel est le sens de variation de la fonction exponentielle sur \\(\\mathbb{R}\\) ?`,
     answer: "strictement croissante",
     options: ["strictement croissante", "strictement décroissante", "elle n'est pas monotone"],
-    steps: [`\\text{La fonction exponentielle est strictement croissante sur } \\mathbb{R}.`],
+    steps: [{ type: "regle", text: `\\text{La fonction exponentielle est strictement croissante sur } \\mathbb{R}.` }],
   };
 }
 
@@ -115,7 +127,10 @@ function genValeurExponentielleZeroNumeric() {
     chapter: "Fonction exponentielle — Valeurs particulières",
     prompt: `Sachant que \\(e^0 = 1\\), calcule \\(${k} \\times e^0\\).`,
     answer: k,
-    steps: [`${k} \\times e^0 = ${k} \\times 1 = ${k}`],
+    steps: [
+      { type: "regle", text: `\\text{Valeur particulière à connaître : } e^{0} = 1.` },
+      { type: "resultat", text: `${k} \\times e^0 = ${k} \\times 1 = ${k}` },
+    ],
   };
 }
 
@@ -131,7 +146,10 @@ function genDeriveeExponentielleAffineQCM() {
     prompt: `Quelle est la dérivée de la fonction \\(t \\mapsto e^{${a}t}\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{La dérivée de } t \\mapsto e^{at} \\text{ est } t \\mapsto ae^{at}.`, `\\text{Ici : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : la dérivée de } t \\mapsto e^{at} \\text{ est } t \\mapsto ae^{at}.` },
+      { type: "resultat", text: `\\text{Ici : } ${correctRaw}` },
+    ],
   };
 }
 
@@ -148,7 +166,10 @@ function genDeriveeExponentielleComposeeQCM() {
     prompt: `Quelle est la dérivée de la fonction \\(f(x) = e^{${a}x ${signedL(b)}}\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{Pour } f(x) = e^{ax+b}, \\text{ on a } f'(x) = ae^{ax+b}.`, `f'(x) = ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : pour } f(x) = e^{ax+b}, \\text{ on a } f'(x) = ae^{ax+b}.` },
+      { type: "resultat", text: `f'(x) = ${correctRaw}` },
+    ],
   };
 }
 
@@ -160,7 +181,10 @@ function genResoudreEgaliteExponentiellesNumeric() {
     chapter: "Fonction exponentielle — Équations",
     prompt: `Résoudre dans \\(\\mathbb{R}\\) l'équation \\(e^{x} = e^{${a}}\\).`,
     answer: a,
-    steps: [`\\text{La fonction exponentielle est strictement croissante, donc injective : } e^x = e^a \\Leftrightarrow x = a.`, `x = ${a}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction exponentielle est strictement croissante, donc injective : } e^x = e^a \\Leftrightarrow x = a.` },
+      { type: "resultat", text: `x = ${a}` },
+    ],
   };
 }
 
@@ -175,9 +199,9 @@ function genResoudreEquationAffineExponentielleNumeric() {
     prompt: `Résoudre dans \\(\\mathbb{R}\\) l'équation \\(e^{2x ${signedL(b)}} = e^{${a}}\\).`,
     answer: xSol,
     steps: [
-      `e^{2x ${signedL(b)}} = e^{${a}} \\Leftrightarrow 2x ${signedL(b)} = ${a}`,
-      `2x = ${a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${a - b}`,
-      `x = ${a - b} \\div 2 = ${xSol}`,
+      { type: "regle", text: `\\text{La fonction exponentielle est injective : } e^{2x${signedL(b)}} = e^{${a}} \\Leftrightarrow 2x ${signedL(b)} = ${a}.` },
+      { type: "calcul", text: `2x = ${a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${a - b}` },
+      { type: "resultat", text: `x = ${a - b} \\div 2 = ${xSol}` },
     ],
   };
 }
@@ -194,7 +218,10 @@ function genResoudreInequationExponentielleQCM() {
     prompt: `Résoudre dans \\(\\mathbb{R}\\) : \\(e^{x} ${sens} e^{${a}}\\)`,
     answer: correctRaw,
     options: [correctRaw, wrongRaw, `x = ${a}`],
-    steps: [`\\text{La fonction exponentielle est strictement croissante : elle conserve le sens de l'inégalité.}`, `\\text{Solution : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction exponentielle est strictement croissante : elle conserve le sens de l'inégalité.}` },
+      { type: "resultat", text: `\\text{Solution : } ${correctRaw}` },
+    ],
   };
 }
 
@@ -211,7 +238,10 @@ function genComparerExponentiellesQCM() {
     prompt: `Compare \\(e^{${a}}\\) et \\(e^{${b}}\\), sans calculatrice.`,
     answer,
     options: [answer, autre, `e^{${a}} = e^{${b}}`],
-    steps: [`\\text{La fonction exponentielle est strictement croissante, donc elle conserve l'ordre des exposants.}`, `\\text{Comme } ${a} ${a < b ? "<" : ">"} ${b}, \\text{ on a } ${answer}.`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction exponentielle est strictement croissante, donc elle conserve l'ordre des exposants.}` },
+      { type: "resultat", text: `\\text{Comme } ${a} ${a < b ? "<" : ">"} ${b}, \\text{ on a } ${answer}.` },
+    ],
   };
 }
 
@@ -228,7 +258,11 @@ function genModeliserCroissanceDecroissanceQCM() {
     prompt: `${cas.description} S'agit-il d'une croissance ou d'une décroissance exponentielle ?`,
     answer: cas.reponse,
     options: ["croissance exponentielle", "décroissance exponentielle"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text:
+      cas.reponse === "croissance exponentielle"
+        ? `\\text{Dans } e^{kt}, \\text{ le coefficient } k \\text{ est strictement positif : la fonction } t \\mapsto e^{kt} \\text{ est croissante, la quantité augmente donc au cours du temps.}`
+        : `\\text{Dans } e^{kt}, \\text{ le coefficient } k \\text{ est strictement négatif : la fonction } t \\mapsto e^{kt} \\text{ est décroissante, la quantité diminue donc au cours du temps.}`,
+    }],
   };
 }
 
@@ -243,7 +277,10 @@ function genSimplifierProduitTripleNumeric() {
     chapter: "Fonction exponentielle — Propriétés algébriques",
     prompt: `On simplifie \\(e^{${a}} \\times e^{${b}} \\times e^{${c}}\\) sous la forme \\(e^{k}\\), avec \\(k\\) un entier. Donne la valeur de \\(k\\).`,
     answer,
-    steps: [`e^{${a}} \\times e^{${b}} \\times e^{${c}} = e^{${a} + ${b} + ${c}} = e^{${answer}}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de référence : } e^{x} \\times e^{y} = e^{x+y} \\text{ (applicable de proche en proche à plusieurs facteurs).}` },
+      { type: "resultat", text: `e^{${a}} \\times e^{${b}} \\times e^{${c}} = e^{${a} + ${b} + ${c}} = e^{${answer}}` },
+    ],
   };
 }
 

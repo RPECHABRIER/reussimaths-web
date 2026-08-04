@@ -54,7 +54,10 @@ function genConversionDegresRadiansQCM() {
     prompt: `Convertis \\(${cas.degres}°\\) en radians.`,
     answer: cas.radLabel,
     options,
-    steps: [`\\text{On utilise la proportionnalité } 180° \\leftrightarrow \\pi \\text{ radians.}`, `${cas.degres}° = ${cas.radLabel} \\text{ rad}`],
+    steps: [
+      { type: "regle", text: `\\text{On utilise la proportionnalité } 180° \\leftrightarrow \\pi \\text{ radians.}` },
+      { type: "resultat", text: `${cas.degres}° = ${cas.radLabel} \\text{ rad}` },
+    ],
   };
 }
 
@@ -66,7 +69,10 @@ function genConversionRadiansDegresNumeric() {
     chapter: "Trigonométrie — Radian",
     prompt: `Convertis \\(${cas.radLabel}\\) radians en degrés.`,
     answer: cas.degres,
-    steps: [`\\text{On utilise la proportionnalité } \\pi \\text{ rad} \\leftrightarrow 180°.`, `${cas.radLabel} \\text{ rad} = ${cas.degres}°`],
+    steps: [
+      { type: "regle", text: `\\text{On utilise la proportionnalité } \\pi \\text{ rad} \\leftrightarrow 180°.` },
+      { type: "resultat", text: `${cas.radLabel} \\text{ rad} = ${cas.degres}°` },
+    ],
   };
 }
 
@@ -83,7 +89,10 @@ function genLongueurArcNumeric() {
     prompt: `Un cercle a pour rayon \\(r = ${r}\\). Calcule la longueur de l'arc correspondant à un angle de \\(${cas.radLabel}\\) radian (formule \\(\\ell = r \\times \\theta\\)), valeur arrondie au centième.`,
     answer,
     tolerance: 0.01,
-    steps: [`\\ell = r \\times \\theta = ${r} \\times ${cas.radLabel} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } \\ell = r \\times \\theta, \\text{ avec } \\theta \\text{ en radians.}` },
+      { type: "resultat", text: `\\ell = ${r} \\times ${cas.radLabel} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -98,7 +107,7 @@ function genValeurCosinusQCM() {
     prompt: `Quelle est la valeur de \\(\\cos\\left(${cas.radLabel}\\right)\\) ?`,
     answer: cas.cos,
     options,
-    steps: [`\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}`],
+    steps: [{ type: "regle", text: `\\text{Valeur remarquable à connaître par cœur : } \\cos\\left(${cas.radLabel}\\right) = ${cas.cos}.` }],
   };
 }
 
@@ -113,7 +122,7 @@ function genValeurSinusQCM() {
     prompt: `Quelle est la valeur de \\(\\sin\\left(${cas.radLabel}\\right)\\) ?`,
     answer: cas.sin,
     options,
-    steps: [`\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}`],
+    steps: [{ type: "regle", text: `\\text{Valeur remarquable à connaître par cœur : } \\sin\\left(${cas.radLabel}\\right) = ${cas.sin}.` }],
   };
 }
 
@@ -134,7 +143,7 @@ function genIdentifierAngleQCM() {
     prompt: `Pour quelle valeur remarquable de \\(x\\) (parmi les propositions) a-t-on \\(${fonction}(x) = ${valeurCible}\\) ?`,
     answer: cas.radLabel,
     options,
-    steps: [`${fonction}\\left(${cas.radLabel}\\right) = ${valeurCible}`],
+    steps: [{ type: "regle", text: `\\text{On cherche l'angle remarquable dont la valeur est connue par cœur : } ${fonction}\\left(${cas.radLabel}\\right) = ${valeurCible}.` }],
   };
 }
 
@@ -149,7 +158,10 @@ function genRelationFondamentaleNumeric() {
     prompt: `On sait que \\(\\sin(x) = ${fr(sinX)}\\). En utilisant la relation \\(\\cos^2(x) + \\sin^2(x) = 1\\), calcule \\(\\cos^2(x)\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\cos^2(x) = 1 - \\sin^2(x) = 1 - (${fr(sinX)})^2 = 1 - ${fr(roundTo(sinX * sinX, 2))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } \\cos^2(x) + \\sin^2(x) = 1 \\Rightarrow \\cos^2(x) = 1 - \\sin^2(x).` },
+      { type: "resultat", text: `\\cos^2(x) = 1 - (${fr(sinX)})^2 = 1 - ${fr(roundTo(sinX * sinX, 2))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -162,7 +174,10 @@ function genPariteCosinusQCM() {
     prompt: `Sachant que \\(\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}\\), quelle est la valeur de \\(\\cos\\left(-${cas.radLabel}\\right)\\) ?`,
     answer: cas.cos,
     options: [cas.cos, `-${cas.cos}`, cas.sin],
-    steps: [`\\text{La fonction cosinus est paire : } \\cos(-x) = \\cos(x)`, `\\cos\\left(-${cas.radLabel}\\right) = ${cas.cos}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction cosinus est paire : } \\cos(-x) = \\cos(x).` },
+      { type: "resultat", text: `\\cos\\left(-${cas.radLabel}\\right) = ${cas.cos}` },
+    ],
   };
 }
 
@@ -176,7 +191,10 @@ function genImparitéSinusQCM() {
     prompt: `Sachant que \\(\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}\\), quelle est la valeur de \\(\\sin\\left(-${cas.radLabel}\\right)\\) ?`,
     answer: negRaw,
     options: [negRaw, cas.sin, cas.cos],
-    steps: [`\\text{La fonction sinus est impaire : } \\sin(-x) = -\\sin(x)`, `\\sin\\left(-${cas.radLabel}\\right) = ${negRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction sinus est impaire : } \\sin(-x) = -\\sin(x).` },
+      { type: "resultat", text: `\\sin\\left(-${cas.radLabel}\\right) = ${negRaw}` },
+    ],
   };
 }
 
@@ -190,7 +208,10 @@ function genAngleAssocieCosPiMoinsXQCM() {
     prompt: `Sachant que \\(\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}\\), quelle est la valeur de \\(\\cos\\left(\\pi - ${cas.radLabel}\\right)\\) ?`,
     answer: negRaw,
     options: [negRaw, cas.cos, cas.sin],
-    steps: [`\\cos(\\pi - x) = -\\cos(x)`, `\\cos\\left(\\pi - ${cas.radLabel}\\right) = ${negRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule des angles associés à connaître : } \\cos(\\pi - x) = -\\cos(x).` },
+      { type: "resultat", text: `\\cos\\left(\\pi - ${cas.radLabel}\\right) = ${negRaw}` },
+    ],
   };
 }
 
@@ -203,7 +224,10 @@ function genAngleAssocieSinPiMoinsXQCM() {
     prompt: `Sachant que \\(\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}\\), quelle est la valeur de \\(\\sin\\left(\\pi - ${cas.radLabel}\\right)\\) ?`,
     answer: cas.sin,
     options: [cas.sin, `-${cas.sin}`, cas.cos],
-    steps: [`\\sin(\\pi - x) = \\sin(x)`, `\\sin\\left(\\pi - ${cas.radLabel}\\right) = ${cas.sin}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule des angles associés à connaître : } \\sin(\\pi - x) = \\sin(x).` },
+      { type: "resultat", text: `\\sin\\left(\\pi - ${cas.radLabel}\\right) = ${cas.sin}` },
+    ],
   };
 }
 
@@ -217,7 +241,10 @@ function genAngleAssocieCosPiPlusXQCM() {
     prompt: `Sachant que \\(\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}\\), quelle est la valeur de \\(\\cos\\left(\\pi + ${cas.radLabel}\\right)\\) ?`,
     answer: negRaw,
     options: [negRaw, cas.cos, cas.sin],
-    steps: [`\\cos(\\pi + x) = -\\cos(x)`, `\\cos\\left(\\pi + ${cas.radLabel}\\right) = ${negRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule des angles associés à connaître : } \\cos(\\pi + x) = -\\cos(x).` },
+      { type: "resultat", text: `\\cos\\left(\\pi + ${cas.radLabel}\\right) = ${negRaw}` },
+    ],
   };
 }
 
@@ -231,7 +258,10 @@ function genAngleAssocieSinPiPlusXQCM() {
     prompt: `Sachant que \\(\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}\\), quelle est la valeur de \\(\\sin\\left(\\pi + ${cas.radLabel}\\right)\\) ?`,
     answer: negRaw,
     options: [negRaw, cas.sin, cas.cos],
-    steps: [`\\sin(\\pi + x) = -\\sin(x)`, `\\sin\\left(\\pi + ${cas.radLabel}\\right) = ${negRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule des angles associés à connaître : } \\sin(\\pi + x) = -\\sin(x).` },
+      { type: "resultat", text: `\\sin\\left(\\pi + ${cas.radLabel}\\right) = ${negRaw}` },
+    ],
   };
 }
 
@@ -258,7 +288,7 @@ function genSigneQuadrantQCM() {
     prompt: `Pour \\(x \\in ${intervalles[quadrant]}\\) (${quadrant}${quadrant === 1 ? "er" : "e"} quadrant), quel est le signe de \\(${fonction}(x)\\) ?`,
     answer,
     options: ["positif", "négatif"],
-    steps: [`\\text{Dans le ${quadrant}${quadrant === 1 ? "er" : "e"} quadrant du cercle trigonométrique, } ${fonction}(x) \\text{ est ${answer}.}`],
+    steps: [{ type: "regle", text: `\\text{Dans le ${quadrant}${quadrant === 1 ? "er" : "e"} quadrant du cercle trigonométrique, } ${fonction}(x) \\text{ est ${answer}.}` }],
   };
 }
 
@@ -274,7 +304,7 @@ function genLienTriangleRectangleQCM() {
     prompt: `Dans un triangle rectangle, un angle aigu mesure \\(${cas.degres}°\\) (soit \\(${cas.radLabel}\\) rad). Quel est le cosinus de cet angle ?`,
     answer: cas.cos,
     options,
-    steps: [`\\text{Dans le triangle rectangle, } \\cos(${cas.radLabel}) = \\dfrac{\\text{adjacent}}{\\text{hypoténuse}} = ${cas.cos}`],
+    steps: [{ type: "regle", text: `\\text{Dans le triangle rectangle, } \\cos(${cas.radLabel}) = \\dfrac{\\text{adjacent}}{\\text{hypoténuse}} = ${cas.cos}.` }],
   };
 }
 

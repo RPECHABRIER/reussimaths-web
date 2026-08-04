@@ -45,7 +45,7 @@ function genCalculDeterminantNumeric() {
     chapter: "Colinéarité — Déterminant de deux vecteurs",
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${c} ; ${d})\\). Calcule le déterminant \\(\\det(\\vec{u} , \\vec{v}) = x_{\\vec{u}} y_{\\vec{v}} - x_{\\vec{v}} y_{\\vec{u}}\\).`,
     answer: det,
-    steps: [`${a} \\times ${d} - ${c} \\times ${b} = ${a * d} - ${c * b} = ${det}`],
+    steps: [{ type: "calcul", text: `${a} \\times ${d} - ${c} \\times ${b} = ${a * d} - ${c * b} = ${det}` }],
   };
 }
 
@@ -70,7 +70,11 @@ function genVecteursColineaireQCM() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${c} ; ${d})\\). Ces deux vecteurs sont-ils colinéaires ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\det(\\vec{u} , \\vec{v}) = ${a} \\times ${d} - ${c} \\times ${b} = ${det}`, det === 0 ? "Le déterminant est nul : les vecteurs sont colinéaires." : "Le déterminant n'est pas nul : les vecteurs ne sont pas colinéaires."],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs sont colinéaires si et seulement si leur déterminant est nul : } \\det(\\vec{u},\\vec{v}) = x_{\\vec{u}} y_{\\vec{v}} - x_{\\vec{v}} y_{\\vec{u}} = 0.` },
+      { type: "calcul", text: `\\det(\\vec{u} , \\vec{v}) = ${a} \\times ${d} - ${c} \\times ${b} = ${det}` },
+      { type: "resultat", text: det === 0 ? `\\text{Le déterminant est nul : les vecteurs sont colinéaires.}` : `\\text{Le déterminant n'est pas nul : les vecteurs ne sont pas colinéaires.}` },
+    ],
   };
 }
 
@@ -97,7 +101,11 @@ function genAlignementViaDeterminantQCM() {
     prompt: `${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}), ${nomC}(${xC} ; ${yC}). En utilisant le déterminant des vecteurs ${`\\overrightarrow{${nomA}${nomB}}`} et ${`\\overrightarrow{${nomA}${nomC}}`}, ces trois points sont-ils alignés ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`\\det(\\overrightarrow{${nomA}${nomB}} , \\overrightarrow{${nomA}${nomC}}) = ${xB - xA} \\times ${yC - yA} - ${xC - xA} \\times ${yB - yA} = ${detAB_AC}`, reponse === "Oui" ? "Le déterminant est nul : les points sont alignés." : "Le déterminant n'est pas nul : les points ne sont pas alignés."],
+    steps: [
+      { type: "regle", text: `\\text{A, B, C sont alignés si et seulement si les vecteurs } \\overrightarrow{AB} \\text{ et } \\overrightarrow{AC} \\text{ sont colinéaires, c'est-à-dire si leur déterminant est nul.}` },
+      { type: "calcul", text: `\\det(\\overrightarrow{${nomA}${nomB}} , \\overrightarrow{${nomA}${nomC}}) = ${xB - xA} \\times ${yC - yA} - ${xC - xA} \\times ${yB - yA} = ${detAB_AC}` },
+      { type: "resultat", text: reponse === "Oui" ? `\\text{Le déterminant est nul : les points sont alignés.}` : `\\text{Le déterminant n'est pas nul : les points ne sont pas alignés.}` },
+    ],
   };
 }
 
@@ -125,7 +133,11 @@ function genParallelismeDroitesQCM() {
     prompt: `${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}), ${nomC}(${xC} ; ${yC}), ${nomD}(${xD} ; ${yD}). Les droites (${nomA}${nomB}) et (${nomC}${nomD}) sont-elles parallèles ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\det(\\overrightarrow{${nomA}${nomB}} , \\overrightarrow{${nomC}${nomD}}) = ${dxAB} \\times ${dyCD} - ${dxCD} \\times ${dyAB} = ${det}`, det === 0 ? "Les vecteurs directeurs sont colinéaires : les droites sont parallèles." : "Les vecteurs directeurs ne sont pas colinéaires : les droites ne sont pas parallèles."],
+    steps: [
+      { type: "regle", text: `\\text{Deux droites sont parallèles si et seulement si leurs vecteurs directeurs sont colinéaires, c'est-à-dire si le déterminant de ces vecteurs est nul.}` },
+      { type: "calcul", text: `\\det(\\overrightarrow{${nomA}${nomB}} , \\overrightarrow{${nomC}${nomD}}) = ${dxAB} \\times ${dyCD} - ${dxCD} \\times ${dyAB} = ${det}` },
+      { type: "resultat", text: det === 0 ? `\\text{Les vecteurs directeurs sont colinéaires : les droites sont parallèles.}` : `\\text{Les vecteurs directeurs ne sont pas colinéaires : les droites ne sont pas parallèles.}` },
+    ],
   };
 }
 
@@ -143,8 +155,8 @@ function genTrouverParametreColinéaireNumeric() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\). Détermine ${demanderAbscisseDeV ? "l'abscisse" : "l'ordonnée"} du vecteur \\(\\vec{v}(${demanderAbscisseDeV ? "x" : xV} ; ${demanderAbscisseDeV ? yV : "y"})\\) pour que \\(\\vec{u}\\) et \\(\\vec{v}\\) soient colinéaires.`,
     answer: demanderAbscisseDeV ? xV : yV,
     steps: [
-      `\\text{On veut } \\det(\\vec{u},\\vec{v}) = 0 \\text{, soit } ${a} \\times y_{\\vec{v}} - x_{\\vec{v}} \\times ${b} = 0`,
-      demanderAbscisseDeV ? `${a} \\times ${yV} - x \\times ${b} = 0 \\text{, donc } x = ${xV}` : `${a} \\times y - ${xV} \\times ${b} = 0 \\text{, donc } y = ${yV}`,
+      { type: "regle", text: `\\text{Deux vecteurs sont colinéaires si et seulement si leur déterminant est nul : on pose } \\det(\\vec{u},\\vec{v}) = 0 \\text{, soit } ${a} \\times y_{\\vec{v}} - x_{\\vec{v}} \\times ${b} = 0.` },
+      { type: "resultat", text: demanderAbscisseDeV ? `${a} \\times ${yV} - x \\times ${b} = 0 \\text{, donc } x = ${xV}` : `${a} \\times y - ${xV} \\times ${b} = 0 \\text{, donc } y = ${yV}` },
     ],
   };
 }
@@ -165,19 +177,46 @@ function genReconnaitreColineaireMultipleQCM() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${c} ; ${d})\\). Le vecteur \\(\\vec{v}\\) est-il un multiple du vecteur \\(\\vec{u}\\) (c'est-à-dire \\(\\vec{u}\\) et \\(\\vec{v}\\) colinéaires) ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [reponse === "Oui" ? `\\vec{v} = ${k}\\vec{u}` : `Il n'existe pas de nombre k tel que \\vec{v} = k\\vec{u}.`],
+    steps: [
+      { type: "regle", text: `\\vec{v} \\text{ est un multiple de } \\vec{u} \\text{ (donc colinéaire à } \\vec{u}\\text{) s'il existe un nombre k tel que chaque coordonnée de } \\vec{v} \\text{ vaut k fois la coordonnée correspondante de } \\vec{u}.` },
+      { type: "resultat", text: reponse === "Oui" ? `\\vec{v} = ${k}\\vec{u} : \\text{ oui, c'est bien un multiple.}` : `\\text{Il n'existe pas de nombre k tel que } \\vec{v} = k\\vec{u}.` },
+    ],
   };
 }
 
 // ---------- 7. Vrai ou faux sur les propriétés de la colinéarité ----------
 function genVraiFauxColinéariteQCM() {
   const cas = pick([
-    { affirmation: "Si deux vecteurs sont colinéaires, alors ils sont nécessairement égaux.", reponse: "Faux" },
-    { affirmation: "Le vecteur nul est colinéaire à tout vecteur.", reponse: "Vrai" },
-    { affirmation: "Deux vecteurs colinéaires ont forcément la même norme.", reponse: "Faux" },
-    { affirmation: "Si trois points sont alignés, alors deux vecteurs formés à partir de ces points sont colinéaires.", reponse: "Vrai" },
-    { affirmation: "Si le déterminant de deux vecteurs est nul, alors ces vecteurs sont colinéaires.", reponse: "Vrai" },
-    { affirmation: "Deux droites de vecteurs directeurs colinéaires sont toujours confondues.", reponse: "Faux" },
+    {
+      affirmation: "Si deux vecteurs sont colinéaires, alors ils sont nécessairement égaux.",
+      reponse: "Faux",
+      explication: `\\text{Deux vecteurs colinéaires ont la même direction, mais peuvent avoir des normes ou des sens différents (} \\vec{v} = k\\vec{u} \\text{ avec } k \\neq 1 \\text{, par exemple).}`,
+    },
+    {
+      affirmation: "Le vecteur nul est colinéaire à tout vecteur.",
+      reponse: "Vrai",
+      explication: `\\text{Pour tout } \\vec{u}(x;y), \\ \\det(\\vec{u}, \\vec{0}) = x \\times 0 - 0 \\times y = 0 : \\text{ le déterminant est toujours nul, donc le vecteur nul est colinéaire à tout vecteur.}`,
+    },
+    {
+      affirmation: "Deux vecteurs colinéaires ont forcément la même norme.",
+      reponse: "Faux",
+      explication: `\\text{Si } \\vec{v} = k\\vec{u}, \\text{ alors } \\|\\vec{v}\\| = |k| \\times \\|\\vec{u}\\| : \\text{ les normes ne sont égales que si } |k| = 1.`,
+    },
+    {
+      affirmation: "Si trois points sont alignés, alors deux vecteurs formés à partir de ces points sont colinéaires.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même de l'alignement : A, B, C sont alignés si et seulement si } \\overrightarrow{AB} \\text{ et } \\overrightarrow{AC} \\text{ sont colinéaires.}`,
+    },
+    {
+      affirmation: "Si le déterminant de deux vecteurs est nul, alors ces vecteurs sont colinéaires.",
+      reponse: "Vrai",
+      explication: `\\text{C'est exactement le critère de colinéarité : } \\det(\\vec{u},\\vec{v}) = 0 \\iff \\vec{u} \\text{ et } \\vec{v} \\text{ sont colinéaires.}`,
+    },
+    {
+      affirmation: "Deux droites de vecteurs directeurs colinéaires sont toujours confondues.",
+      reponse: "Faux",
+      explication: `\\text{Des vecteurs directeurs colinéaires garantissent que les droites sont parallèles, mais elles peuvent être strictement parallèles (disjointes) ou confondues — il faut vérifier en plus qu'elles partagent un point.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -185,7 +224,7 @@ function genVraiFauxColinéariteQCM() {
     prompt: `Affirmation : « ${cas.affirmation} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "resultat", text: cas.explication }],
   };
 }
 
@@ -199,7 +238,10 @@ function genCoefficientColinéaireNumeric() {
     chapter: "Colinéarité — Coefficient de colinéarité",
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${k * a} ; ${k * b})\\) sont colinéaires, avec \\(\\vec{v} = k\\vec{u}\\). Détermine k.`,
     answer: k,
-    steps: [`k = \\dfrac{x_{\\vec{v}}}{x_{\\vec{u}}} = \\dfrac{${k * a}}{${a}} = ${k}`],
+    steps: [
+      { type: "regle", text: `\\text{Si } \\vec{v} = k\\vec{u} \\text{ avec } x_{\\vec{u}} \\neq 0, \\text{ alors } k \\text{ est le rapport entre coordonnées correspondantes : } k = \\dfrac{x_{\\vec{v}}}{x_{\\vec{u}}}.` },
+      { type: "resultat", text: `k = \\dfrac{x_{\\vec{v}}}{x_{\\vec{u}}} = \\dfrac{${k * a}}{${a}} = ${k}` },
+    ],
   };
 }
 
@@ -223,7 +265,11 @@ function genDroitesParallelesOuSecantesQCM() {
     prompt: `La droite (d) a pour vecteur directeur \\(\\vec{u}(${dxAB} ; ${dyAB})\\) et la droite (d') a pour vecteur directeur \\(\\vec{v}(${dxCD} ; ${dyCD})\\). Ces deux droites sont-elles parallèles ou sécantes ?`,
     answer: reponse,
     options: ["parallèles", "sécantes"],
-    steps: [`\\det(\\vec{u},\\vec{v}) = ${dxAB} \\times ${dyCD} - ${dxCD} \\times ${dyAB} = ${det}`, reponse === "parallèles" ? "Le déterminant est nul : les vecteurs directeurs sont colinéaires, les droites sont parallèles." : "Le déterminant n'est pas nul : les droites sont sécantes."],
+    steps: [
+      { type: "regle", text: `\\text{Deux droites sont parallèles si et seulement si leurs vecteurs directeurs sont colinéaires (déterminant nul) ; sinon elles sont sécantes.}` },
+      { type: "calcul", text: `\\det(\\vec{u},\\vec{v}) = ${dxAB} \\times ${dyCD} - ${dxCD} \\times ${dyAB} = ${det}` },
+      { type: "resultat", text: reponse === "parallèles" ? `\\text{Le déterminant est nul : les droites sont parallèles.}` : `\\text{Le déterminant n'est pas nul : les droites sont sécantes.}` },
+    ],
   };
 }
 
@@ -246,9 +292,10 @@ function genCoordonneeInconnuePourAlignementNumeric() {
     prompt: `${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Le point ${nomC} de coordonnées \\(${demanderAbscisse ? `(x ; ${yCfinal})` : `(${xC} ; y)`}\\) est aligné avec ${nomA} et ${nomB}. Détermine ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomC}.`,
     answer: demanderAbscisse ? xC : yCfinal,
     steps: [
-      `\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})`,
-      `\\text{On veut } \\det(\\overrightarrow{${nomA}${nomB}}, \\overrightarrow{${nomA}${nomC}}) = 0`,
-      demanderAbscisse ? `${dx} \\times (${yCfinal} - ${yA}) - x_{${nomC}} \\times ${dy} \\text{, en résolvant : } x_{${nomC}} = ${xC}` : `${dx} \\times y_{${nomC}} - (${xC} - ${xA}) \\times ${dy} \\text{, en résolvant : } y_{${nomC}} = ${yCfinal}`,
+      { type: "regle", text: `\\text{A, B, C alignés} \\iff \\det(\\overrightarrow{AB}, \\overrightarrow{AC}) = 0.` },
+      { type: "donnee", text: `\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})` },
+      { type: "calcul", text: `\\det(\\overrightarrow{${nomA}${nomB}}, \\overrightarrow{${nomA}${nomC}}) = 0` },
+      { type: "resultat", text: demanderAbscisse ? `${dx} \\times (${yCfinal} - ${yA}) - x_{${nomC}} \\times ${dy} = 0 \\text{, en résolvant : } x_{${nomC}} = ${xC}` : `${dx} \\times y_{${nomC}} - (${xC} - ${xA}) \\times ${dy} = 0 \\text{, en résolvant : } y_{${nomC}} = ${yCfinal}` },
     ],
   };
 }
@@ -264,7 +311,10 @@ function genVecteurColineaireAxeQCM() {
     prompt: `Le vecteur \\(\\vec{u}(${a} ; ${b})\\) est-il colinéaire à l'axe des ${axeHorizontal ? "abscisses" : "ordonnées"} ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [axeHorizontal ? `\\vec{u} a une ordonnée nulle : il est colinéaire au vecteur (1;0), donc à l'axe des abscisses.` : `\\vec{u} a une abscisse nulle : il est colinéaire au vecteur (0;1), donc à l'axe des ordonnées.`],
+    steps: [
+      { type: "regle", text: `\\text{L'axe des abscisses est dirigé par le vecteur } (1;0), \\text{ l'axe des ordonnées par } (0;1). \\text{ Un vecteur } (x;0) \\text{ est colinéaire à l'axe des abscisses ; un vecteur } (0;y) \\text{ est colinéaire à l'axe des ordonnées.}` },
+      { type: "resultat", text: axeHorizontal ? `\\vec{u} \\text{ a une ordonnée nulle : il est colinéaire à l'axe des abscisses.}` : `\\vec{u} \\text{ a une abscisse nulle : il est colinéaire à l'axe des ordonnées.}` },
+    ],
   };
 }
 
@@ -278,7 +328,10 @@ function genConstruireVecteurColineaireDeterminantNumeric() {
     chapter: "Colinéarité — Déterminant de deux vecteurs",
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v} = ${k}\\vec{u}\\). Calcule le déterminant \\(\\det(\\vec{u} , \\vec{v})\\) (il doit être nul, car les vecteurs sont colinéaires par construction).`,
     answer: 0,
-    steps: [`\\vec{v}(${k * a} ; ${k * b})`, `\\det(\\vec{u},\\vec{v}) = ${a} \\times ${k * b} - ${k * a} \\times ${b} = ${a * k * b} - ${k * a * b} = 0`],
+    steps: [
+      { type: "donnee", text: `\\vec{v}(${k * a} ; ${k * b})` },
+      { type: "resultat", text: `\\det(\\vec{u},\\vec{v}) = ${a} \\times ${k * b} - ${k * a} \\times ${b} = ${a * k * b} - ${k * a * b} = 0` },
+    ],
   };
 }
 
@@ -292,7 +345,10 @@ function genColineaireAvecVecteurNulQCM() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{0}(0 ; 0)\\). Ces deux vecteurs sont-ils colinéaires ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`\\det(\\vec{u}, \\vec{0}) = ${a} \\times 0 - 0 \\times ${b} = 0`, "Le déterminant est nul : le vecteur nul est colinéaire à tout vecteur."],
+    steps: [
+      { type: "calcul", text: `\\det(\\vec{u}, \\vec{0}) = ${a} \\times 0 - 0 \\times ${b} = 0` },
+      { type: "resultat", text: `\\text{Le déterminant est nul : le vecteur nul est colinéaire à tout vecteur.}` },
+    ],
   };
 }
 
@@ -311,7 +367,10 @@ function genVecteurDirecteurDroiteQCM() {
     prompt: `Une droite (d) admet \\(\\vec{u}(${dx} ; ${dy})\\) comme vecteur directeur. Parmi les vecteurs suivants, lequel est aussi un vecteur directeur de (d) ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`Un vecteur directeur de (d) doit être colinéaire à \\(\\vec{u}\\). ${bonneReponse} = ${k}\\vec{u} : il convient.`],
+    steps: [
+      { type: "regle", text: `\\text{Un vecteur directeur de (d) doit être colinéaire à } \\vec{u}.` },
+      { type: "resultat", text: `${bonneReponse} = ${k}\\vec{u} : \\text{ il convient.}` },
+    ],
   };
 }
 
@@ -330,8 +389,8 @@ function genResoudreEquationColineaireAutreInconnueNumeric() {
     prompt: `\\(\\vec{v}(${c} ; ${d})\\). Détermine ${demanderAbscisseDeU ? "l'abscisse" : "l'ordonnée"} du vecteur \\(\\vec{u}(${demanderAbscisseDeU ? "x" : xU} ; ${demanderAbscisseDeU ? yU : "y"})\\) pour que \\(\\vec{u}\\) et \\(\\vec{v}\\) soient colinéaires.`,
     answer: demanderAbscisseDeU ? xU : yU,
     steps: [
-      `\\text{On veut } \\det(\\vec{u},\\vec{v}) = 0 \\text{, soit } x_{\\vec{u}} \\times ${d} - ${c} \\times y_{\\vec{u}} = 0`,
-      demanderAbscisseDeU ? `x \\times ${d} - ${c} \\times ${yU} = 0 \\text{, donc } x = ${xU}` : `${xU} \\times ${d} - ${c} \\times y = 0 \\text{, donc } y = ${yU}`,
+      { type: "regle", text: `\\text{Deux vecteurs sont colinéaires si et seulement si leur déterminant est nul : on pose } \\det(\\vec{u},\\vec{v}) = 0 \\text{, soit } x_{\\vec{u}} \\times ${d} - ${c} \\times y_{\\vec{u}} = 0.` },
+      { type: "resultat", text: demanderAbscisseDeU ? `x \\times ${d} - ${c} \\times ${yU} = 0 \\text{, donc } x = ${xU}` : `${xU} \\times ${d} - ${c} \\times y = 0 \\text{, donc } y = ${yU}` },
     ],
   };
 }

@@ -368,7 +368,10 @@ function genDureeVieHistorique() {
       chapter: "Nombres relatifs — Soustraire",
       prompt: `${nom} est né(e) en l'an ${naissance} et est mort(e) en l'an ${mortAn}. À quel âge est-il/elle mort(e) ?`,
       answer: dureeVie,
-      steps: [{ type: "calcul", text: `${mortAn} - (${naissance}) = ${dureeVie}` }],
+      steps: [
+        { type: "regle", text: `Soustraire un nombre négatif revient à ajouter son opposé.` },
+        { type: "calcul", text: `${mortAn} - (${naissance}) = ${mortAn} + ${-naissance} = ${dureeVie}` },
+      ],
     };
   }
   return {
@@ -392,7 +395,10 @@ function genVariationMasseSemaine() {
     prompt: `Voici ${grandeur} sur deux semaines : semaine 1 : ${fr(semaine1)} ; semaine 2 : ${fr(semaine2)}. Calcule la variation entre la semaine 1 et la semaine 2.`,
     answer,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `${fr(semaine2)} - (${fr(semaine1)}) = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Soustraire un nombre revient à ajouter son opposé.` },
+      { type: "calcul", text: `${fr(semaine2)} - (${fr(semaine1)}) = ${fr(answer)}` },
+    ],
   };
 }
 

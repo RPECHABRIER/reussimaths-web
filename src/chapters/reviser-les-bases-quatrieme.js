@@ -207,7 +207,10 @@ function genAireRectangle() {
     prompt: `ABCD est un rectangle. Calcule son aire, en cm².`,
     figure: buildRectangleFigure(L, l),
     answer: aire,
-    steps: [{ type: "calcul", text: `${L} \\times ${l} = ${aire}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un rectangle = longueur × largeur.` },
+      { type: "calcul", text: `${L} \\times ${l} = ${aire}` },
+    ],
   };
 }
 
@@ -221,7 +224,10 @@ function genAireTriangle() {
     chapter: "Réviser les bases (4e) — Géométrie",
     prompt: `Un triangle a une base de ${base} cm et une hauteur relative à cette base de ${hauteur} cm. Quelle est son aire, en cm² ?`,
     answer,
-    steps: [{ type: "calcul", text: `(${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un triangle = (base × hauteur) ÷ 2.` },
+      { type: "calcul", text: `(${base} \\times ${hauteur}) \\div 2 = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -266,7 +272,10 @@ function genPourcentageDuneQuantite() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Calculer ${p} % d'un nombre, c'est le multiplier par \\(\\dfrac{${p}}{100}\\).` },
+      { type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -316,7 +325,10 @@ function genCalculerMoyenneSimple() {
     prompt: `Calcule la moyenne de la série statistique suivante (arrondie au centième si besoin) : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Moyenne = (somme des valeurs) ÷ (nombre de valeurs).` },
+      { type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` },
+    ],
   };
 }
 

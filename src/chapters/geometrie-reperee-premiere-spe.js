@@ -40,7 +40,10 @@ function genLireVecteurNormalNumeric() {
     chapter: "Géométrie repérée — Vecteur normal",
     prompt: `On considère la droite \\(d\\) d'équation \\(${a}x ${signedL(b, "y")} ${signedL(c)} = 0\\). Le vecteur \\(\\vec{n}(${a} ; b)\\) est normal à \\(d\\). Donne la valeur de \\(b\\).`,
     answer: b,
-    steps: [`\\text{Pour une droite d'équation } ax + by + c = 0, \\text{ le vecteur } (a ; b) \\text{ est normal à la droite.}`, `\\text{Ici : } b = ${b}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une droite d'équation } ax + by + c = 0, \\text{ le vecteur } (a ; b) \\text{ est normal à la droite.}` },
+      { type: "resultat", text: `\\text{Ici : } b = ${b}` },
+    ],
   };
 }
 
@@ -57,8 +60,8 @@ function genEquationDroitePointVecteurNormalNumeric() {
     prompt: `La droite \\(d\\) passe par \\(A(${x0} ; ${y0})\\) et admet \\(\\vec{n}(${a} ; ${b})\\) comme vecteur normal. Son équation est de la forme \\(${a}x ${signedL(b, "y")} + c = 0\\). Détermine la valeur de \\(c\\).`,
     answer: c,
     steps: [
-      `\\text{Le point A vérifie l'équation : } ${a} \\times ${x0} + ${b} \\times ${y0} + c = 0`,
-      `c = -(${a} \\times ${x0} + ${b} \\times ${y0}) = -(${a * x0} + ${b * y0}) = ${c}`,
+      { type: "regle", text: `\\text{Le point A appartient à la droite, donc ses coordonnées vérifient l'équation : } ${a} \\times ${x0} + ${b} \\times ${y0} + c = 0.` },
+      { type: "resultat", text: `c = -(${a} \\times ${x0} + ${b} \\times ${y0}) = -(${a * x0} + ${b * y0}) = ${c}` },
     ],
   };
 }
@@ -88,9 +91,9 @@ function genVerifierVecteurNormalQCM() {
     answer,
     options: ["normal", "non normal"],
     steps: [
-      `\\text{Le vecteur } (${a} ; ${b}) \\text{ est normal à } d. \\text{ On vérifie si } (${xn} ; ${yn}) \\text{ lui est colinéaire.}`,
-      `${xn} \\times ${b} - ${yn} \\times ${a} = ${xn * b - yn * a}`,
-      answer === "normal" ? `\\text{Ce produit est nul : } \\vec{w} \\text{ est normal à } d.` : `\\text{Ce produit n'est pas nul : } \\vec{w} \\text{ n'est pas normal à } d.`,
+      { type: "regle", text: `\\text{Le vecteur } (${a} ; ${b}) \\text{ est normal à } d. \\text{ On vérifie si } (${xn} ; ${yn}) \\text{ lui est colinéaire (produit en croix nul).}` },
+      { type: "calcul", text: `${xn} \\times ${b} - ${yn} \\times ${a} = ${xn * b - yn * a}` },
+      { type: "resultat", text: answer === "normal" ? `\\text{Ce produit est nul : } \\vec{w} \\text{ est normal à } d.` : `\\text{Ce produit n'est pas nul : } \\vec{w} \\text{ n'est pas normal à } d.` },
     ],
   };
 }
@@ -105,7 +108,7 @@ function genEquationCercleR2Numeric() {
     chapter: "Géométrie repérée — Équation de cercle",
     prompt: `Le cercle \\(\\mathcal{C}\\) a pour centre \\(\\Omega(${a} ; ${b})\\) et pour rayon \\(r = ${r}\\). Son équation est \\((x - ${a})^2 + (y - ${b})^2 = k\\). Donne la valeur de \\(k\\).`,
     answer: r * r,
-    steps: [`k = r^2 = ${r}^2 = ${r * r}`],
+    steps: [{ type: "resultat", text: `k = r^2 = ${r}^2 = ${r * r}` }],
   };
 }
 
@@ -119,7 +122,7 @@ function genCentreRayonCanoniqueNumeric() {
     chapter: "Géométrie repérée — Équation de cercle",
     prompt: `Le cercle \\(\\mathcal{C}\\) a pour équation \\((x - ${a})^2 + (y ${signedL(-b)})^2 = ${r * r}\\). Donne le rayon de ce cercle.`,
     answer: r,
-    steps: [`\\text{L'équation est de la forme } (x-a)^2+(y-b)^2=r^2, \\text{ donc } r^2 = ${r * r} \\Rightarrow r = ${r}`],
+    steps: [{ type: "regle", text: `\\text{L'équation est de la forme } (x-a)^2+(y-b)^2=r^2, \\text{ donc } r^2 = ${r * r} \\Rightarrow r = ${r}.` }],
   };
 }
 
@@ -137,7 +140,7 @@ function genCentreEquationDeveloppeeNumeric() {
     chapter: "Géométrie repérée — Équation de cercle développée",
     prompt: `Le cercle \\(\\mathcal{C}\\) a pour équation \\(x^2 + y^2 ${signedL(D, "x")} ${signedL(E, "y")} ${signedL(F)} = 0\\). Donne l'abscisse du centre de \\(\\mathcal{C}\\) (formule : abscisse \\(= -\\dfrac{D}{2}\\), où \\(D\\) est le coefficient de \\(x\\)).`,
     answer: a,
-    steps: [`\\text{abscisse du centre} = -\\dfrac{${D}}{2} = ${a}`],
+    steps: [{ type: "resultat", text: `\\text{abscisse du centre} = -\\dfrac{${D}}{2} = ${a}` }],
   };
 }
 
@@ -154,7 +157,10 @@ function genRayonEquationDeveloppeeNumeric() {
     chapter: "Géométrie repérée — Équation de cercle développée",
     prompt: `Le cercle \\(\\mathcal{C}\\) a pour équation \\(x^2 + y^2 ${signedL(D, "x")} ${signedL(E, "y")} ${signedL(F)} = 0\\), de centre \\(\\Omega(${a} ; ${b})\\). Calcule son rayon \\(r\\) (formule \\(r^2 = a^2 + b^2 - F\\), où \\(F\\) est le terme constant).`,
     answer: r,
-    steps: [`r^2 = ${a}^2 + ${b}^2 - (${F}) = ${a * a} + ${b * b} - (${F}) = ${r * r}`, `r = \\sqrt{${r * r}} = ${r}`],
+    steps: [
+      { type: "calcul", text: `r^2 = ${a}^2 + ${b}^2 - (${F}) = ${a * a} + ${b * b} - (${F}) = ${r * r}` },
+      { type: "resultat", text: `r = \\sqrt{${r * r}} = ${r}` },
+    ],
   };
 }
 
@@ -195,9 +201,9 @@ function genAppartenanceCercleQCM() {
       answer,
       options: ["appartient au cercle", "n'appartient pas au cercle"],
       steps: [
-        `\\Omega M^2 = (${x} - ${a})^2 + (${y} - ${b})^2 = ${(x - a) ** 2} + ${(y - b) ** 2} = ${distanceCarre}`,
-        `r^2 = ${rFinal}^2 = ${rFinal * rFinal}`,
-        answer === "appartient au cercle" ? `\\text{Comme } \\Omega M^2 = r^2, M \\text{ appartient au cercle.}` : `\\text{Comme } \\Omega M^2 \\neq r^2, M \\text{ n'appartient pas au cercle.}`,
+        { type: "regle", text: `\\text{M appartient au cercle si et seulement si } \\Omega M^2 = r^2.` },
+        { type: "calcul", text: `\\Omega M^2 = (${x} - ${a})^2 + (${y} - ${b})^2 = ${(x - a) ** 2} + ${(y - b) ** 2} = ${distanceCarre}, \\quad r^2 = ${rFinal}^2 = ${rFinal * rFinal}` },
+        { type: "resultat", text: answer === "appartient au cercle" ? `\\text{Comme } \\Omega M^2 = r^2, M \\text{ appartient au cercle.}` : `\\text{Comme } \\Omega M^2 \\neq r^2, M \\text{ n'appartient pas au cercle.}` },
       ],
     };
   } else {
@@ -212,9 +218,9 @@ function genAppartenanceCercleQCM() {
       answer,
       options: ["appartient au cercle", "n'appartient pas au cercle"],
       steps: [
-        `\\Omega M^2 = (${x} - ${a})^2 + (${y} - ${b})^2 = ${(x - a) ** 2} + ${(y - b) ** 2} = ${distanceCarre}`,
-        `r^2 = ${r}^2 = ${r * r}`,
-        answer === "appartient au cercle" ? `\\text{Comme } \\Omega M^2 = r^2, M \\text{ appartient au cercle.}` : `\\text{Comme } \\Omega M^2 \\neq r^2, M \\text{ n'appartient pas au cercle.}`,
+        { type: "regle", text: `\\text{M appartient au cercle si et seulement si } \\Omega M^2 = r^2.` },
+        { type: "calcul", text: `\\Omega M^2 = (${x} - ${a})^2 + (${y} - ${b})^2 = ${(x - a) ** 2} + ${(y - b) ** 2} = ${distanceCarre}, \\quad r^2 = ${r}^2 = ${r * r}` },
+        { type: "resultat", text: answer === "appartient au cercle" ? `\\text{Comme } \\Omega M^2 = r^2, M \\text{ appartient au cercle.}` : `\\text{Comme } \\Omega M^2 \\neq r^2, M \\text{ n'appartient pas au cercle.}` },
       ],
     };
   }
@@ -230,7 +236,10 @@ function genProjectionDroiteHorizontaleNumeric() {
     chapter: "Géométrie repérée — Projection orthogonale",
     prompt: `On considère la droite \\(d\\) d'équation \\(y = ${k}\\) et le point \\(M(${x0} ; ${y0})\\). Le projeté orthogonal de \\(M\\) sur \\(d\\) est le point \\(H(x_H ; y_H)\\). Donne la valeur de \\(y_H\\).`,
     answer: k,
-    steps: [`\\text{La droite } d \\text{ est horizontale, donc le projeté orthogonal de M a la même abscisse et pour ordonnée celle de } d.`, `y_H = ${k}`],
+    steps: [
+      { type: "regle", text: `\\text{La droite } d \\text{ est horizontale, donc le projeté orthogonal de M a la même abscisse et pour ordonnée celle de } d.` },
+      { type: "resultat", text: `y_H = ${k}` },
+    ],
   };
 }
 
@@ -244,7 +253,10 @@ function genProjectionDroiteVerticaleNumeric() {
     chapter: "Géométrie repérée — Projection orthogonale",
     prompt: `On considère la droite \\(d\\) d'équation \\(x = ${k}\\) et le point \\(M(${x0} ; ${y0})\\). Le projeté orthogonal de \\(M\\) sur \\(d\\) est le point \\(H(x_H ; y_H)\\). Donne la valeur de \\(x_H\\).`,
     answer: k,
-    steps: [`\\text{La droite } d \\text{ est verticale, donc le projeté orthogonal de M a la même ordonnée et pour abscisse celle de } d.`, `x_H = ${k}`],
+    steps: [
+      { type: "regle", text: `\\text{La droite } d \\text{ est verticale, donc le projeté orthogonal de M a la même ordonnée et pour abscisse celle de } d.` },
+      { type: "resultat", text: `x_H = ${k}` },
+    ],
   };
 }
 
@@ -257,7 +269,10 @@ function genVecteurNormalDepuisDirecteurNumeric() {
     chapter: "Géométrie repérée — Vecteur normal",
     prompt: `Une droite \\(d\\) admet \\(\\vec{u}(${a} ; ${b})\\) comme vecteur directeur. Un vecteur normal à \\(d\\) est \\(\\vec{n}(-${b} ; k)\\). Donne la valeur de \\(k\\).`,
     answer: a,
-    steps: [`\\text{Si } \\vec{u}(a ; b) \\text{ dirige } d, \\text{ alors } \\vec{n}(-b ; a) \\text{ est normal à } d.`, `k = ${a}`],
+    steps: [
+      { type: "regle", text: `\\text{Si } \\vec{u}(a ; b) \\text{ dirige } d, \\text{ alors } \\vec{n}(-b ; a) \\text{ est normal à } d \\text{ (on échange les coordonnées et on change un signe).}` },
+      { type: "resultat", text: `k = ${a}` },
+    ],
   };
 }
 
@@ -282,17 +297,36 @@ function genRayonCerclePassantParPointNumeric() {
     chapter: "Géométrie repérée — Équation de cercle",
     prompt: `Le cercle \\(\\mathcal{C}\\) a pour centre \\(\\Omega(${a} ; ${b})\\) et passe par le point \\(A(${x0} ; ${y0})\\). Calcule son rayon \\(r = \\Omega A\\).`,
     answer: r,
-    steps: [`r = \\sqrt{(${x0} - ${a})^2 + (${y0} - ${b})^2} = \\sqrt{${(x0 - a) ** 2} + ${(y0 - b) ** 2}} = \\sqrt{${(x0 - a) ** 2 + (y0 - b) ** 2}} = ${r}`],
+    steps: [
+      { type: "regle", text: `\\text{Le rayon est la distance entre le centre et un point du cercle : } r = \\Omega A = \\sqrt{(x_A - x_\\Omega)^2 + (y_A - y_\\Omega)^2}.` },
+      { type: "resultat", text: `r = \\sqrt{(${x0} - ${a})^2 + (${y0} - ${b})^2} = \\sqrt{${(x0 - a) ** 2} + ${(y0 - b) ** 2}} = \\sqrt{${(x0 - a) ** 2 + (y0 - b) ** 2}} = ${r}` },
+    ],
   };
 }
 
 // ---------- 13. Vrai ou faux sur la géométrie repérée ----------
 function genVraiFauxGeometrieRepereeQCM() {
   const cas = pick([
-    { description: "Le vecteur (a ; b) est normal à la droite d'équation ax + by + c = 0.", reponse: "Vrai" },
-    { description: "Le projeté orthogonal d'un point sur une droite horizontale a la même abscisse que ce point.", reponse: "Vrai" },
-    { description: "Un cercle d'équation (x-a)² + (y-b)² = k n'existe que si k > 0.", reponse: "Vrai" },
-    { description: "Le centre d'un cercle d'équation x² + y² + Dx + Ey + F = 0 a pour abscisse D/2.", reponse: "Faux" },
+    {
+      description: "Le vecteur (a ; b) est normal à la droite d'équation ax + by + c = 0.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même du vecteur normal associé à une équation cartésienne } ax + by + c = 0.`,
+    },
+    {
+      description: "Le projeté orthogonal d'un point sur une droite horizontale a la même abscisse que ce point.",
+      reponse: "Vrai",
+      explication: `\\text{Le projeté se trouve sur la perpendiculaire à la droite horizontale passant par le point, donc sur la même verticale : l'abscisse ne change pas.}`,
+    },
+    {
+      description: "Un cercle d'équation (x-a)² + (y-b)² = k n'existe que si k > 0.",
+      reponse: "Vrai",
+      explication: `\\text{Comme } k = r^2 \\text{ et qu'un rayon est strictement positif, il faut } k > 0 \\text{ (si } k \\leq 0 \\text{, l'ensemble des solutions est vide ou réduit à un point).}`,
+    },
+    {
+      description: "Le centre d'un cercle d'équation x² + y² + Dx + Ey + F = 0 a pour abscisse D/2.",
+      reponse: "Faux",
+      explication: `\\text{Attention au signe : en complétant le carré, on trouve que l'abscisse du centre est } -\\dfrac{D}{2}, \\text{ pas } \\dfrac{D}{2}.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -300,7 +334,7 @@ function genVraiFauxGeometrieRepereeQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -327,7 +361,11 @@ function genReconnaitreEquationCercleQCM() {
     prompt: `L'équation \\(x^2 + y^2 ${signedL(D, "x")} ${signedL(E, "y")} ${signedL(F)} = 0\\) est-elle celle d'un cercle ?`,
     answer,
     options: ["C'est l'équation d'un cercle", "Ce n'est pas l'équation d'un cercle"],
-    steps: [`r^2 = a^2 + b^2 - F = ${a * a} + ${b * b} - (${F}) = ${rCarre}`, rCarre > 0 ? `\\text{Comme } r^2 > 0, \\text{ c'est bien l'équation d'un cercle.}` : `\\text{Comme } r^2 \\leq 0, \\text{ ce n'est pas l'équation d'un cercle.}`],
+    steps: [
+      { type: "regle", text: `\\text{On calcule } r^2 = a^2 + b^2 - F \\text{ : l'équation ne représente un cercle que si cette valeur est strictement positive.}` },
+      { type: "calcul", text: `r^2 = ${a * a} + ${b * b} - (${F}) = ${rCarre}` },
+      { type: "resultat", text: rCarre > 0 ? `\\text{Comme } r^2 > 0, \\text{ c'est bien l'équation d'un cercle.}` : `\\text{Comme } r^2 \\leq 0, \\text{ ce n'est pas l'équation d'un cercle.}` },
+    ],
   };
 }
 
@@ -343,11 +381,11 @@ function genDistancePointDroiteAxeNumeric() {
     chapter: "Géométrie repérée — Projection orthogonale",
     prompt: `Calcule la distance du point \\(M(${x0} ; ${y0})\\) à la droite \\(d\\) d'équation \\(${horizontale ? `y = ${k}` : `x = ${k}`}\\).`,
     answer,
-    steps: [
+    steps: [{ type: "regle", text:
       horizontale
-        ? `\\text{La distance à une droite horizontale est } |y_M - ${k}| = |${y0} - ${k}| = ${answer}`
-        : `\\text{La distance à une droite verticale est } |x_M - ${k}| = |${x0} - ${k}| = ${answer}`,
-    ],
+        ? `\\text{La distance à une droite horizontale est } |y_M - ${k}| = |${y0} - ${k}| = ${answer}.`
+        : `\\text{La distance à une droite verticale est } |x_M - ${k}| = |${x0} - ${k}| = ${answer}.`,
+    }],
   };
 }
 

@@ -68,7 +68,10 @@ function genMoyenneSimpleNumeric() {
     chapter: "Statistiques descriptives — Moyenne",
     prompt: `Calcule la moyenne de la série suivante : ${valeurs.join(" ; ")}.`,
     answer: moy,
-    steps: [`\\text{Moyenne} = \\dfrac{${valeurs.join(" + ")}}{${n}} = \\dfrac{${sommeFinale}}{${n}} = ${moy}`],
+    steps: [
+      { type: "regle", text: `\\text{La moyenne d'une série est la somme des valeurs divisée par leur effectif.}` },
+      { type: "resultat", text: `\\text{Moyenne} = \\dfrac{${valeurs.join(" + ")}}{${n}} = \\dfrac{${sommeFinale}}{${n}} = ${moy}` },
+    ],
   };
 }
 
@@ -85,7 +88,10 @@ function genMoyennePondereeNumeric() {
     prompt: `Une série statistique est donnée par ce tableau : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")}. Calcule la moyenne de cette série (arrondie au centième).`,
     answer: moy,
     tolerance: 0.01,
-    steps: [`\\text{Moyenne} = \\dfrac{${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")}}{${effectifTotal}} = \\dfrac{${somme}}{${effectifTotal}} \\approx ${moy}`],
+    steps: [
+      { type: "regle", text: `\\text{La moyenne pondérée se calcule en multipliant chaque valeur par son effectif, en additionnant, puis en divisant par l'effectif total.}` },
+      { type: "resultat", text: `\\text{Moyenne} = \\dfrac{${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")}}{${effectifTotal}} = \\dfrac{${somme}}{${effectifTotal}} \\approx ${moy}` },
+    ],
   };
 }
 
@@ -98,7 +104,10 @@ function genMedianeImpairNumeric() {
     chapter: "Statistiques descriptives — Médiane",
     prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine la médiane de cette série.`,
     answer: mediane(valeurs),
-    steps: [`\\text{L'effectif } ${n} \\text{ est impair : la médiane est la valeur de rang } \\dfrac{${n}+1}{2} = ${(n + 1) / 2}, \\text{ soit } ${mediane(valeurs)}.`],
+    steps: [
+      { type: "regle", text: `\\text{Si l'effectif N est impair, la médiane est la valeur de rang } \\dfrac{N+1}{2}.` },
+      { type: "resultat", text: `\\text{L'effectif } ${n} \\text{ est impair : rang } \\dfrac{${n}+1}{2} = ${(n + 1) / 2}, \\text{ soit } ${mediane(valeurs)}.` },
+    ],
   };
 }
 
@@ -112,7 +121,10 @@ function genMedianePairNumeric() {
     chapter: "Statistiques descriptives — Médiane",
     prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine la médiane de cette série.`,
     answer: med,
-    steps: [`\\text{L'effectif } ${n} \\text{ est pair : la médiane est la moyenne des valeurs de rang } ${n / 2} \\text{ et } ${n / 2 + 1}, \\text{ soit } \\dfrac{${valeurs[n / 2 - 1]} + ${valeurs[n / 2]}}{2} = ${med}.`],
+    steps: [
+      { type: "regle", text: `\\text{Si l'effectif N est pair, la médiane est la moyenne des deux valeurs de rangs } \\dfrac{N}{2} \\text{ et } \\dfrac{N}{2}+1.` },
+      { type: "resultat", text: `\\text{L'effectif } ${n} \\text{ est pair : moyenne des valeurs de rang } ${n / 2} \\text{ et } ${n / 2 + 1}, \\text{ soit } \\dfrac{${valeurs[n / 2 - 1]} + ${valeurs[n / 2]}}{2} = ${med}.` },
+    ],
   };
 }
 
@@ -126,7 +138,11 @@ function genQuartile1Numeric() {
     chapter: "Statistiques descriptives — Quartiles",
     prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine le premier quartile \\(Q_1\\) de cette série.`,
     answer: quartile1(valeurs),
-    steps: [`\\text{Rang de } Q_1 = \\left\\lceil \\dfrac{${n}}{4} \\right\\rceil = ${rang}`, `Q_1 = ${quartile1(valeurs)} \\text{ (valeur de rang } ${rang}\\text{)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le premier quartile } Q_1 \\text{ est la valeur de rang } \\left\\lceil \\dfrac{N}{4} \\right\\rceil \\text{ dans la série ordonnée (au moins un quart des valeurs lui sont inférieures ou égales).}` },
+      { type: "calcul", text: `\\text{Rang de } Q_1 = \\left\\lceil \\dfrac{${n}}{4} \\right\\rceil = ${rang}` },
+      { type: "resultat", text: `Q_1 = ${quartile1(valeurs)} \\text{ (valeur de rang } ${rang}\\text{)}` },
+    ],
   };
 }
 
@@ -140,7 +156,11 @@ function genQuartile3Numeric() {
     chapter: "Statistiques descriptives — Quartiles",
     prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine le troisième quartile \\(Q_3\\) de cette série.`,
     answer: quartile3(valeurs),
-    steps: [`\\text{Rang de } Q_3 = \\left\\lceil \\dfrac{3 \\times ${n}}{4} \\right\\rceil = ${rang}`, `Q_3 = ${quartile3(valeurs)} \\text{ (valeur de rang } ${rang}\\text{)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le troisième quartile } Q_3 \\text{ est la valeur de rang } \\left\\lceil \\dfrac{3N}{4} \\right\\rceil \\text{ dans la série ordonnée (au moins trois quarts des valeurs lui sont inférieures ou égales).}` },
+      { type: "calcul", text: `\\text{Rang de } Q_3 = \\left\\lceil \\dfrac{3 \\times ${n}}{4} \\right\\rceil = ${rang}` },
+      { type: "resultat", text: `Q_3 = ${quartile3(valeurs)} \\text{ (valeur de rang } ${rang}\\text{)}` },
+    ],
   };
 }
 
@@ -155,7 +175,11 @@ function genEcartInterquartileNumeric() {
     chapter: "Statistiques descriptives — Quartiles",
     prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Calcule l'écart interquartile \\(Q_3 - Q_1\\) de cette série.`,
     answer: q3 - q1,
-    steps: [`Q_1 = ${q1}, \\quad Q_3 = ${q3}`, `Q_3 - Q_1 = ${q3} - ${q1} = ${q3 - q1}`],
+    steps: [
+      { type: "regle", text: `\\text{L'écart interquartile mesure la dispersion de la moitié centrale de la série : } Q_3 - Q_1.` },
+      { type: "calcul", text: `Q_1 = ${q1}, \\quad Q_3 = ${q3}` },
+      { type: "resultat", text: `Q_3 - Q_1 = ${q3} - ${q1} = ${q3 - q1}` },
+    ],
   };
 }
 
@@ -175,7 +199,10 @@ function genEffectifCumuleNumeric() {
     chapter: "Statistiques descriptives — Effectifs cumulés",
     prompt: `Tableau d'effectifs : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")}. Quel est l'effectif cumulé croissant de la valeur ${valeurs[idx]} ?`,
     answer: cumules[idx],
-    steps: [`\\text{Effectif cumulé} = ${effectifs.slice(0, idx + 1).join(" + ")} = ${cumules[idx]}`],
+    steps: [
+      { type: "regle", text: `\\text{L'effectif cumulé croissant d'une valeur est le nombre total d'individus ayant une valeur inférieure ou égale à celle-ci : on additionne les effectifs de toutes les valeurs jusqu'à elle incluse.}` },
+      { type: "resultat", text: `\\text{Effectif cumulé} = ${effectifs.slice(0, idx + 1).join(" + ")} = ${cumules[idx]}` },
+    ],
   };
 }
 
@@ -191,7 +218,10 @@ function genRangMedianeQCM() {
     prompt: `Une série ordonnée comporte ${n} valeurs. Comment détermine-t-on sa médiane ?`,
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
-    steps: [impair ? `${n} est impair : la médiane est ${bonneReponse}.` : `${n} est pair : la médiane est ${bonneReponse}.`],
+    steps: [
+      { type: "regle", text: `\\text{Si l'effectif } N \\text{ est impair, la médiane est la valeur de rang } \\dfrac{N+1}{2}. \\text{ Si } N \\text{ est pair, c'est la moyenne des valeurs de rang } \\dfrac{N}{2} \\text{ et } \\dfrac{N}{2}+1.` },
+      { type: "resultat", text: impair ? `${n} \\text{ est impair : la médiane est } ${bonneReponse}.` : `${n} \\text{ est pair : la médiane est } ${bonneReponse}.` },
+    ],
   };
 }
 
@@ -217,7 +247,11 @@ function genComparerMedianesQCM() {
     prompt: `Notes de ${nomA} : ${valeursA.join(" ; ")}. Notes de ${nomB} : ${valeursB.join(" ; ")}. Quelle classe a obtenu de meilleurs résultats, au sens de la médiane ?`,
     answer: meilleure,
     options: [nomA, nomB],
-    steps: [`\\text{Médiane de } ${nomA} = ${medA}`, `\\text{Médiane de } ${nomB} = ${medB}`, `\\text{La médiane la plus élevée correspond aux meilleurs résultats : } ${meilleure}.`],
+    steps: [
+      { type: "regle", text: `\\text{Pour comparer deux séries au sens de la médiane, on calcule la médiane de chacune : la série ayant la médiane la plus élevée obtient les meilleurs résultats.}` },
+      { type: "calcul", text: `\\text{Médiane de } ${nomA} = ${medA}, \\quad \\text{Médiane de } ${nomB} = ${medB}` },
+      { type: "resultat", text: `\\text{La classe avec la meilleure médiane est : } ${meilleure}.` },
+    ],
   };
 }
 
@@ -243,7 +277,11 @@ function genComparerDispersionQCM() {
     prompt: `${nomA} : ${valeursA.join(" ; ")}. ${nomB} : ${valeursB.join(" ; ")}. Quelle série présente les résultats les plus dispersés, au sens de l'écart interquartile ?`,
     answer: plusDispersee,
     options: [nomA, nomB],
-    steps: [`\\text{Écart interquartile de } ${nomA} = ${ecartA}`, `\\text{Écart interquartile de } ${nomB} = ${ecartB}`, `\\text{Le plus grand écart interquartile correspond à la série la plus dispersée : } ${plusDispersee}.`],
+    steps: [
+      { type: "regle", text: `\\text{Pour comparer la dispersion de deux séries, on calcule leur écart interquartile } (Q_3 - Q_1) : \\text{ le plus grand écart correspond à la série la plus dispersée.}` },
+      { type: "calcul", text: `\\text{Écart interquartile de } ${nomA} = ${ecartA}, \\quad \\text{Écart interquartile de } ${nomB} = ${ecartB}` },
+      { type: "resultat", text: `\\text{La série la plus dispersée est : } ${plusDispersee}.` },
+    ],
   };
 }
 
@@ -260,18 +298,46 @@ function genLectureTableauEffectifsQCM() {
     chapter: "Statistiques descriptives — Effectifs cumulés",
     prompt: `Tableau d'effectifs : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")} (effectif total : ${effectifTotal}). Combien d'individus ont une valeur ${auMoins ? `supérieure ou égale à ${valeurs[idx]}` : `inférieure ou égale à ${valeurs[idx]}`} ?`,
     answer: nb,
-    steps: [auMoins ? `${effectifs.slice(idx).join(" + ")} = ${nb}` : `${effectifs.slice(0, idx + 1).join(" + ")} = ${nb}`],
+    steps: [
+      {
+        type: "regle",
+        text: auMoins
+          ? `\\text{« Au moins } ${valeurs[idx]} \\text{ » signifie : on additionne les effectifs de toutes les valeurs supérieures ou égales à } ${valeurs[idx]}.`
+          : `\\text{« Au plus } ${valeurs[idx]} \\text{ » signifie : on additionne les effectifs de toutes les valeurs inférieures ou égales à } ${valeurs[idx]}.`,
+      },
+      { type: "resultat", text: auMoins ? `${effectifs.slice(idx).join(" + ")} = ${nb}` : `${effectifs.slice(0, idx + 1).join(" + ")} = ${nb}` },
+    ],
   };
 }
 
 // ---------- 13. Vrai ou faux sur la signification de la médiane ----------
 function genSignificationMedianeQCM() {
   const cas = pick([
-    { affirmation: "Au moins la moitié des valeurs de la série sont inférieures ou égales à la médiane.", reponse: "Vrai" },
-    { affirmation: "La médiane est toujours égale à la moyenne de la série.", reponse: "Faux" },
-    { affirmation: "Au moins un quart des valeurs de la série sont inférieures ou égales à Q1.", reponse: "Vrai" },
-    { affirmation: "L'écart interquartile mesure la dispersion de la moitié centrale de la série.", reponse: "Vrai" },
-    { affirmation: "La médiane est toujours l'une des valeurs de la série.", reponse: "Faux" },
+    {
+      affirmation: "Au moins la moitié des valeurs de la série sont inférieures ou égales à la médiane.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même de la médiane : elle partage la série ordonnée en deux moitiés, donc au moins la moitié des valeurs lui sont inférieures ou égales.}`,
+    },
+    {
+      affirmation: "La médiane est toujours égale à la moyenne de la série.",
+      reponse: "Faux",
+      explication: `\\text{Médiane et moyenne ne coïncident que pour des séries symétriques. Par exemple, pour la série } 1, 2, 3, 4, 100, \\text{ la médiane vaut } 3 \\text{ mais la moyenne vaut } 22.`,
+    },
+    {
+      affirmation: "Au moins un quart des valeurs de la série sont inférieures ou égales à Q1.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même du premier quartile } Q_1 : \\text{ au moins un quart des valeurs de la série lui sont inférieures ou égales.}`,
+    },
+    {
+      affirmation: "L'écart interquartile mesure la dispersion de la moitié centrale de la série.",
+      reponse: "Vrai",
+      explication: `\\text{L'écart interquartile } Q_3 - Q_1 \\text{ délimite l'intervalle contenant la moitié des valeurs centrales de la série : c'est bien une mesure de dispersion.}`,
+    },
+    {
+      affirmation: "La médiane est toujours l'une des valeurs de la série.",
+      reponse: "Faux",
+      explication: `\\text{Quand l'effectif } N \\text{ est pair, la médiane est la moyenne des deux valeurs centrales, ce qui peut donner un nombre qui n'apparaît pas dans la série (par exemple, la médiane de } 2, 4 \\text{ est } 3).`,
+    },
   ]);
   return {
     type: "qcm",
@@ -279,7 +345,7 @@ function genSignificationMedianeQCM() {
     prompt: `Affirmation : « ${cas.affirmation} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }, { type: "resultat", text: cas.reponse === "Vrai" ? `\\text{L'affirmation est } \\textbf{vraie}.` : `\\text{L'affirmation est } \\textbf{fausse}.` }],
   };
 }
 
@@ -297,7 +363,10 @@ function genLineariteMoyenneNumeric() {
     chapter: "Statistiques descriptives — Linéarité de la moyenne",
     prompt: `${contexte.sujet.charAt(0).toUpperCase() + contexte.sujet.slice(1)} valait ${moyenneInitiale} ${contexte.unite}. Chaque valeur de la série a ensuite ${variation >= 0 ? "augmenté" : "diminué"} de ${Math.abs(variation)} ${contexte.unite}. Quelle est la nouvelle moyenne ?`,
     answer: moyenneInitiale + variation,
-    steps: [`\\text{Si toutes les valeurs varient de la même quantité, la moyenne varie de cette même quantité.}`, `${moyenneInitiale} ${variation >= 0 ? "+" : "-"} ${Math.abs(variation)} = ${moyenneInitiale + variation}`],
+    steps: [
+      { type: "regle", text: `\\text{Si toutes les valeurs varient de la même quantité, la moyenne varie de cette même quantité.}` },
+      { type: "resultat", text: `${moyenneInitiale} ${variation >= 0 ? "+" : "-"} ${Math.abs(variation)} = ${moyenneInitiale + variation}` },
+    ],
   };
 }
 
@@ -309,7 +378,7 @@ function genDiagrammeTronqueQCM() {
     prompt: `Un diagramme en barres représentant deux valeurs proches (par exemple 42 % et 44 %) est tracé avec un axe vertical qui commence à 40 % au lieu de 0 %. Quel est l'effet de ce choix sur la lecture visuelle du graphique ?`,
     answer: "Il exagère visuellement la différence entre les deux valeurs",
     options: ["Il exagère visuellement la différence entre les deux valeurs", "Il n'a aucun effet sur la lecture du graphique", "Il réduit visuellement la différence entre les deux valeurs"],
-    steps: ["Une échelle tronquée (qui ne part pas de 0) fait paraître les écarts entre les barres beaucoup plus importants qu'ils ne le sont réellement."],
+    steps: [{ type: "regle", text: `\\text{Une échelle tronquée (qui ne part pas de 0) fait paraître les écarts entre les barres beaucoup plus importants qu'ils ne le sont réellement.}` }],
   };
 }
 

@@ -75,7 +75,7 @@ function genLireImageBorneNumeric() {
     chapter: "Variations de fonctions — Lecture d'un tableau de variations",
     prompt: `${decrireTableau(profile)} D'après ce tableau de variations, que vaut \\(${profile.nomF}(${profile.xs[idx]})\\) ?`,
     answer: profile.ys[idx],
-    steps: [`Le tableau de variations donne directement \\(${profile.nomF}(${profile.xs[idx]}) = ${profile.ys[idx]}\\).`],
+    steps: [{ type: "donnee", text: `\\text{Le tableau de variations donne directement } ${profile.nomF}(${profile.xs[idx]}) = ${profile.ys[idx]}.` }],
   };
 }
 
@@ -88,7 +88,10 @@ function genMaximumFonctionNumeric() {
     chapter: "Variations de fonctions — Maximum et minimum",
     prompt: `${decrireTableau(profile)} Quel est le maximum de ${profile.nomF} sur \\([${profile.xs[0]} ; ${profile.xs[profile.xs.length - 1]}]\\) ?`,
     answer: maxY,
-    steps: [`Le maximum est la plus grande des valeurs indiquées dans le tableau de variations : ${maxY}.`],
+    steps: [
+      { type: "regle", text: `\\text{Le maximum d'une fonction lue sur un tableau de variations est la plus grande des valeurs indiquées (aux bornes et aux changements de sens).}` },
+      { type: "resultat", text: `\\text{Maximum} = ${maxY}.` },
+    ],
   };
 }
 
@@ -101,7 +104,10 @@ function genMinimumFonctionNumeric() {
     chapter: "Variations de fonctions — Maximum et minimum",
     prompt: `${decrireTableau(profile)} Quel est le minimum de ${profile.nomF} sur \\([${profile.xs[0]} ; ${profile.xs[profile.xs.length - 1]}]\\) ?`,
     answer: minY,
-    steps: [`Le minimum est la plus petite des valeurs indiquées dans le tableau de variations : ${minY}.`],
+    steps: [
+      { type: "regle", text: `\\text{Le minimum d'une fonction lue sur un tableau de variations est la plus petite des valeurs indiquées (aux bornes et aux changements de sens).}` },
+      { type: "resultat", text: `\\text{Minimum} = ${minY}.` },
+    ],
   };
 }
 
@@ -115,7 +121,7 @@ function genValeurXpourMaximumNumeric() {
     chapter: "Variations de fonctions — Maximum et minimum",
     prompt: `${decrireTableau(profile)} En quelle valeur de x le maximum de ${profile.nomF} est-il atteint ?`,
     answer: profile.xs[idx],
-    steps: [`Le maximum ${maxY} est atteint pour \\(x = ${profile.xs[idx]}\\).`],
+    steps: [{ type: "resultat", text: `\\text{Le maximum } ${maxY} \\text{ est atteint pour } x = ${profile.xs[idx]}.` }],
   };
 }
 
@@ -129,7 +135,7 @@ function genValeurXpourMinimumNumeric() {
     chapter: "Variations de fonctions — Maximum et minimum",
     prompt: `${decrireTableau(profile)} En quelle valeur de x le minimum de ${profile.nomF} est-il atteint ?`,
     answer: profile.xs[idx],
-    steps: [`Le minimum ${minY} est atteint pour \\(x = ${profile.xs[idx]}\\).`],
+    steps: [{ type: "resultat", text: `\\text{Le minimum } ${minY} \\text{ est atteint pour } x = ${profile.xs[idx]}.` }],
   };
 }
 
@@ -143,7 +149,7 @@ function genLireSensVariationQCM() {
     prompt: `${decrireTableau(profile)} Quel est le sens de variation de ${profile.nomF} sur \\([${profile.xs[idx]} ; ${profile.xs[idx + 1]}]\\) ?`,
     answer: profile.directions[idx],
     options: ["croissante", "décroissante"],
-    steps: [`D'après le tableau, ${profile.nomF} est ${profile.directions[idx]} sur cet intervalle.`],
+    steps: [{ type: "donnee", text: `\\text{D'après le tableau, } ${profile.nomF} \\text{ est } ${profile.directions[idx]} \\text{ sur cet intervalle.}` }],
   };
 }
 
@@ -161,7 +167,10 @@ function genComparerImagesMemeSensQCM() {
     prompt: `${decrireTableau(profile)} On a \\(${xa} < ${xb}\\) et ${profile.nomF} est ${profile.directions[idx]} sur \\([${xa} ; ${xb}]\\). Que peut-on en déduire ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise, "On ne peut pas savoir"]),
-    steps: [`${profile.nomF} est ${profile.directions[idx]} sur cet intervalle et \\(${xa} < ${xb}\\), donc ${bonneReponse}.`],
+    steps: [
+      { type: "regle", text: `\\text{Si une fonction est croissante sur un intervalle, l'ordre des images suit l'ordre des antécédents ; si elle est décroissante, l'ordre est inversé.}` },
+      { type: "resultat", text: `${profile.nomF} \\text{ est } ${profile.directions[idx]} \\text{ sur cet intervalle et } ${xa} < ${xb}, \\text{ donc } ${bonneReponse}.` },
+    ],
   };
 }
 
@@ -185,7 +194,10 @@ function genEncadrerImageQCM() {
     prompt: `${decrireTableau(profile)} ${profile.nomF} est ${profile.directions[idx]} sur \\([${xa} ; ${xb}]\\). Que peut-on affirmer sur \\(${profile.nomF}(${x0})\\), sachant que \\(${xa} < ${x0} < ${xb}\\) ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`Comme ${profile.nomF} est ${profile.directions[idx]} sur \\([${xa} ; ${xb}]\\) et que \\(${xa} < ${x0} < ${xb}\\), l'image de ${x0} est strictement comprise entre ${profile.nomF}(${xa}) = ${ya} et ${profile.nomF}(${xb}) = ${yb}, soit : ${bonneReponse}.`],
+    steps: [
+      { type: "regle", text: `\\text{Sur un intervalle de monotonie, l'image d'un nombre compris entre deux bornes est strictement comprise entre les images de ces deux bornes.}` },
+      { type: "resultat", text: `${profile.nomF}(${xa}) = ${ya} \\text{ et } ${profile.nomF}(${xb}) = ${yb}, \\text{ donc } ${bonneReponse}.` },
+    ],
   };
 }
 
@@ -203,7 +215,10 @@ function genNombreSolutionsExtremumQCM() {
     prompt: `${decrireTableau(profile)} Le nombre ${yExtremum} est le ${typeExtremum} de ${profile.nomF} sur \\([${x0} ; ${x2}]\\), atteint en \\(x = ${x1}\\). Combien l'équation \\(${profile.nomF}(x) = ${yExtremum}\\) a-t-elle de solutions sur \\([${x0} ; ${x2}]\\) ?`,
     answer: "1",
     options: ["0", "1", "2"],
-    steps: [`${profile.nomF} est strictement ${premiereDirection} puis strictement ${secondeDirection} : elle n'atteint la valeur ${yExtremum} (son ${typeExtremum}) qu'une seule fois, en \\(x = ${x1}\\).`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction strictement monotone sur un intervalle prend chaque valeur au plus une fois sur cet intervalle.}` },
+      { type: "resultat", text: `${profile.nomF} \\text{ est strictement } ${premiereDirection} \\text{ puis strictement } ${secondeDirection} : \\text{ elle n'atteint la valeur } ${yExtremum} \\text{ (son } ${typeExtremum}\\text{) qu'une seule fois, en } x = ${x1}.` },
+    ],
   };
 }
 
@@ -221,7 +236,7 @@ function genVraiFauxSensVariationQCM() {
     prompt: `${decrireTableau(profile)} Affirmation : « ${profile.nomF} est ${directionAffichee} sur \\([${profile.xs[idx]} ; ${profile.xs[idx + 1]}]\\) ». Cette affirmation est-elle vraie ou fausse ?`,
     answer: affirmationVraie ? "Vraie" : "Fausse",
     options: ["Vraie", "Fausse"],
-    steps: [`D'après le tableau, ${profile.nomF} est ${direction} sur cet intervalle, donc l'affirmation est ${affirmationVraie ? "vraie" : "fausse"}.`],
+    steps: [{ type: "resultat", text: `\\text{D'après le tableau, } ${profile.nomF} \\text{ est } ${direction} \\text{ sur cet intervalle, donc l'affirmation est } ${affirmationVraie ? "vraie" : "fausse"}.` }],
   };
 }
 
@@ -240,7 +255,7 @@ function genTableauVersPhraseQCM() {
     prompt: `${decrireTableau(profile)} Laquelle de ces phrases décrit correctement les variations de ${profile.nomF} ?`,
     answer: phraseCorrecte,
     options: shuffle([phraseCorrecte, phraseFausse1, phraseFausse2]),
-    steps: [`La phrase correcte est : « ${phraseCorrecte} ».`],
+    steps: [{ type: "resultat", text: `\\text{La phrase correcte est : « } ${phraseCorrecte} \\text{ ».}` }],
   };
 }
 
@@ -255,7 +270,7 @@ function genIntervalleDeDefinitionNumeric() {
     chapter: "Variations de fonctions — Lecture d'un tableau de variations",
     prompt: `${decrireTableau(profile)} Quelle est la borne ${demanderBorneInf ? "inférieure" : "supérieure"} de l'ensemble de définition de ${profile.nomF} ?`,
     answer: demanderBorneInf ? xMin : xMax,
-    steps: [`L'ensemble de définition est \\([${xMin} ; ${xMax}]\\), donc la borne ${demanderBorneInf ? "inférieure" : "supérieure"} est ${demanderBorneInf ? xMin : xMax}.`],
+    steps: [{ type: "resultat", text: `\\text{L'ensemble de définition est } [${xMin} ; ${xMax}], \\text{ donc la borne } ${demanderBorneInf ? "inférieure" : "supérieure"} \\text{ est } ${demanderBorneInf ? xMin : xMax}.` }],
   };
 }
 
@@ -272,7 +287,7 @@ function genNombreChangementsSensQCM() {
     prompt: `${decrireTableau(profile)} Combien de fois le sens de variation de ${profile.nomF} change-t-il sur \\([${profile.xs[0]} ; ${profile.xs[profile.xs.length - 1]}]\\) ?`,
     answer: String(changements),
     options: ["0", "1", "2"],
-    steps: [`On compte le nombre de fois où le sens passe de croissant à décroissant (ou l'inverse) : ${changements}.`],
+    steps: [{ type: "resultat", text: `\\text{On compte le nombre de fois où le sens passe de croissant à décroissant (ou l'inverse) : } ${changements}.` }],
   };
 }
 
@@ -294,7 +309,15 @@ function genCompareExtremumsLocauxGlobalQCM() {
     prompt: `${decrireTableau(profile)} En \\(x = ${profile.xs[1]}\\), ${profile.nomF} admet un ${typeLocal} local (égal à ${y1}). Ce ${typeLocal} local est-il aussi le ${typeLocal} global de ${profile.nomF} sur \\([${profile.xs[0]} ; ${profile.xs[3]}]\\) ?`,
     answer: estGlobal ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`Le ${typeLocal} global de ${profile.nomF} sur tout l'intervalle vaut ${typeLocal === "maximum" ? maxY : minY}. ${estGlobal ? `C'est bien la valeur atteinte en x = ${profile.xs[1]}.` : `Ce n'est pas la valeur atteinte en x = ${profile.xs[1]} (${y1}), il existe donc un ${typeLocal} encore plus ${typeLocal === "maximum" ? "grand" : "petit"} ailleurs.`}`],
+    steps: [
+      { type: "regle", text: `\\text{Un extremum local n'est un extremum global que s'il est aussi le plus grand (ou le plus petit) sur tout l'ensemble de définition.}` },
+      {
+        type: "resultat",
+        text: estGlobal
+          ? `\\text{Le } ${typeLocal} \\text{ global vaut } ${typeLocal === "maximum" ? maxY : minY} \\text{, c'est bien la valeur atteinte en } x = ${profile.xs[1]}.`
+          : `\\text{Le } ${typeLocal} \\text{ global vaut } ${typeLocal === "maximum" ? maxY : minY} \\text{, ce n'est pas la valeur atteinte en } x = ${profile.xs[1]} \\text{ (} ${y1}\\text{) : il existe donc un } ${typeLocal} \\text{ encore plus } ${typeLocal === "maximum" ? "grand" : "petit"} \\text{ ailleurs.}`,
+      },
+    ],
   };
 }
 
@@ -311,7 +334,10 @@ function genMaxMinSousIntervalleQCM() {
     chapter: "Variations de fonctions — Maximum et minimum",
     prompt: `${decrireTableau(profile)} Quel est le ${demanderMax ? "maximum" : "minimum"} de ${profile.nomF} sur \\([${profile.xs[si]} ; ${profile.xs[ei]}]\\) (et non sur tout l'ensemble de définition) ?`,
     answer,
-    steps: [`Sur \\([${profile.xs[si]} ; ${profile.xs[ei]}]\\), les valeurs prises aux bornes des morceaux sont : ${sousYs.join(", ")}. Le ${demanderMax ? "maximum" : "minimum"} est ${answer}.`],
+    steps: [
+      { type: "regle", text: `\\text{Sur un sous-intervalle, on ne considère que les valeurs prises aux bornes des morceaux monotones à l'intérieur de ce sous-intervalle.}` },
+      { type: "resultat", text: `\\text{Valeurs prises} : ${sousYs.join(", ")}. \\text{ Le } ${demanderMax ? "maximum" : "minimum"} \\text{ est } ${answer}.` },
+    ],
   };
 }
 

@@ -44,7 +44,11 @@ function genResoudreEquationDeuxCotesNumeric() {
     chapter: "Exercices rituels — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\)`,
     answer: xSol,
-    steps: [`${a - c}x = ${d - b}`, `x = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{On regroupe les termes en x d'un côté et les nombres de l'autre.}` },
+      { type: "calcul", text: `${a - c}x = ${d - b}` },
+      { type: "resultat", text: `x = ${xSol}` },
+    ],
   };
 }
 
@@ -58,7 +62,7 @@ function genResoudreCarreEgalKNumeric() {
     chapter: "Exercices rituels — Équations",
     prompt: `Résous l'équation \\(x^2 = ${k}\\) et donne ${demandeNegative ? "la solution négative" : "la solution positive"}.`,
     answer: demandeNegative ? -r : r,
-    steps: [`x = ${r} \\text{ ou } x = ${-r}`],
+    steps: [{ type: "regle", text: `\\text{Une équation } x^2 = k \\text{ (avec } k>0\\text{) admet } \\textbf{deux} \\text{ solutions opposées : } x = ${r} \\text{ ou } x = ${-r}.` }],
   };
 }
 
@@ -73,7 +77,10 @@ function genOrdreGrandeurProduitNumeric() {
     chapter: "Exercices rituels — Ordres de grandeur",
     prompt: `Donne un ordre de grandeur du produit \\(${a} \\times ${b}\\) en arrondissant chaque facteur à la dizaine la plus proche.`,
     answer: aArrondi * bArrondi,
-    steps: [`${a} \\approx ${aArrondi} \\text{ et } ${b} \\approx ${bArrondi}`, `${aArrondi} \\times ${bArrondi} = ${aArrondi * bArrondi}`],
+    steps: [
+      { type: "calcul", text: `${a} \\approx ${aArrondi} \\text{ et } ${b} \\approx ${bArrondi}` },
+      { type: "resultat", text: `${aArrondi} \\times ${bArrondi} = ${aArrondi * bArrondi}` },
+    ],
   };
 }
 
@@ -87,7 +94,10 @@ function genVitesseMoyenneNumeric() {
     chapter: "Exercices rituels — Vitesse moyenne",
     prompt: `Un véhicule parcourt ${fr(distance)} km en ${fr(temps)} h. Calcule sa vitesse moyenne (en km/h).`,
     answer: vitesse,
-    steps: [`\\dfrac{${fr(distance)}}{${fr(temps)}} = ${vitesse} \\text{ km/h}`],
+    steps: [
+      { type: "regle", text: `\\text{La vitesse moyenne est le rapport de la distance parcourue sur le temps mis : } v = \\dfrac{d}{t}.` },
+      { type: "resultat", text: `\\dfrac{${fr(distance)}}{${fr(temps)}} = ${vitesse} \\text{ km/h}` },
+    ],
   };
 }
 
@@ -101,7 +111,7 @@ function genAireDisqueNumeric() {
     prompt: `Calcule l'aire d'un disque de rayon ${rayon} cm (arrondie au centième, en cm²).`,
     answer,
     tolerance: 0.1,
-    steps: [`\\pi \\times ${rayon}^2 \\approx ${fr(answer)} \\text{ cm}^2`],
+    steps: [{ type: "resultat", text: `\\pi \\times ${rayon}^2 \\approx ${fr(answer)} \\text{ cm}^2` }],
   };
 }
 
@@ -117,7 +127,7 @@ function genIdentiteRemarquableCalculRapideNumeric() {
     chapter: "Exercices rituels — Calcul rapide",
     prompt: `En utilisant l'identité \\((a+b)(a-b) = a^2 - b^2\\), calcule rapidement \\(${a} \\times ${b}\\).`,
     answer,
-    steps: [`${a} \\times ${b} = (${centre} + ${ecart})(${centre} - ${ecart}) = ${centre}^2 - ${ecart}^2 = ${centre * centre} - ${ecart * ecart} = ${answer}`],
+    steps: [{ type: "resultat", text: `${a} \\times ${b} = (${centre} + ${ecart})(${centre} - ${ecart}) = ${centre}^2 - ${ecart}^2 = ${centre * centre} - ${ecart * ecart} = ${answer}` }],
   };
 }
 
@@ -141,7 +151,10 @@ function genComparerFractionsQCM() {
     prompt: `Quelle est la plus grande des deux fractions : \\(\\dfrac{${num1}}{${den1}}\\) ou \\(\\dfrac{${num2}}{${den2}}\\) ?`,
     answer: plusGrande,
     options: [`\\dfrac{${num1}}{${den1}}`, `\\dfrac{${num2}}{${den2}}`],
-    steps: [`\\dfrac{${num1}}{${den1}} \\approx ${fr(roundTo(num1 / den1, 3))} \\text{ et } \\dfrac{${num2}}{${den2}} \\approx ${fr(roundTo(num2 / den2, 3))}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour comparer deux fractions, on peut les convertir en écriture décimale.}` },
+      { type: "resultat", text: `\\dfrac{${num1}}{${den1}} \\approx ${fr(roundTo(num1 / den1, 3))} \\text{ et } \\dfrac{${num2}}{${den2}} \\approx ${fr(roundTo(num2 / den2, 3))}` },
+    ],
   };
 }
 
@@ -156,7 +169,10 @@ function genCoefficientMultiplicateurRappelNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Donne le coefficient multiplicateur associé.`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      { type: "regle", text: direction === "augmente" ? `\\text{Une augmentation de } t \\% \\text{ correspond à un coefficient multiplicateur } 1 + \\dfrac{t}{100}.` : `\\text{Une diminution de } t \\% \\text{ correspond à un coefficient multiplicateur } 1 - \\dfrac{t}{100}.` },
+      { type: "resultat", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -172,7 +188,7 @@ function genRappelProportionTableauNumeric() {
     prompt: `Dans un groupe de ${total} personnes, ${a} répondent « oui » à une question. Quelle proportion (arrondie au centième) cela représente-t-il ?`,
     answer,
     tolerance: 0.01,
-    steps: [`\\dfrac{${a}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `\\dfrac{${a}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -187,7 +203,10 @@ function genRappelProbabiliteConditionnelleNumeric() {
     prompt: `On sait que \\(P(A) = ${fr(pA)}\\) et \\(P_A(B) = ${fr(pB_A)}\\). Calcule \\(P(A \\cap B)\\).`,
     answer: pAB,
     tolerance: 0.001,
-    steps: [`${fr(pA)} \\times ${fr(pB_A)} = ${fr(pAB)}`],
+    steps: [
+      { type: "regle", text: `\\text{On utilise la formule des probabilités composées : } P(A \\cap B) = P(A) \\times P_A(B).` },
+      { type: "resultat", text: `${fr(pA)} \\times ${fr(pB_A)} = ${fr(pAB)}` },
+    ],
   };
 }
 
@@ -201,7 +220,10 @@ function genRappelTermeSuiteArithmetiqueNumeric() {
     chapter: "Exercices rituels — Rappel : suites arithmétiques",
     prompt: `Une suite arithmétique u a pour premier terme \\(u(0) = ${u0}\\) et pour raison \\(r = ${r}\\). Calcule \\(u(${n})\\).`,
     answer: r * n + u0,
-    steps: [`${r} \\times ${n} + ${u0} = ${r * n + u0}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une suite arithmétique, le terme de rang n s'exprime par } u(n) = r \\times n + u(0).` },
+      { type: "resultat", text: `${r} \\times ${n} + ${u0} = ${r * n + u0}` },
+    ],
   };
 }
 
@@ -217,7 +239,10 @@ function genRappelTermeSuiteGeometriqueNumeric() {
     prompt: `Une suite géométrique u a pour premier terme \\(u(0) = ${u0}\\) et pour raison \\(q = ${fr(q)}\\). Calcule \\(u(${n})\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une suite géométrique, le terme de rang n s'exprime par } u(n) = u(0) \\times q^n.` },
+      { type: "resultat", text: `${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -237,7 +262,10 @@ function genRappelNombreDeriveNumeric() {
     chapter: "Exercices rituels — Rappel : nombre dérivé",
     prompt: `La tangente à la courbe de ${nomFonction} au point d'abscisse ${a} passe par \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule \\(${nomFonction}'(${a})\\).`,
     answer: m,
-    steps: [`\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre dérivé } ${nomFonction}'(${a}) \\text{ est le coefficient directeur de la tangente, calculé à partir de deux de ses points.}` },
+      { type: "resultat", text: `\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}` },
+    ],
   };
 }
 
@@ -253,7 +281,11 @@ function genRappelDeriveeTrinomeNumeric() {
     chapter: "Exercices rituels — Rappel : fonction dérivée",
     prompt: `On considère \\(${nomFonction}(x) = ${a}x^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x\\). Calcule \\(${nomFonction}'(${x})\\).`,
     answer,
-    steps: [`${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}`, `${nomFonction}'(${x}) = ${2 * a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{On dérive terme par terme : la dérivée de } ax^2 \\text{ est } 2ax, \\text{ et celle de } bx \\text{ est } b.` },
+      { type: "calcul", text: `${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `${nomFonction}'(${x}) = ${2 * a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` },
+    ],
   };
 }
 
@@ -270,7 +302,7 @@ function genConversionDureeNumeric() {
       : `Une durée de ${minutes} minutes correspond à combien d'heures (valeur décimale) ?`,
     answer: demanderMinutes ? minutes : heures,
     tolerance: demanderMinutes ? 0 : 0.01,
-    steps: [demanderMinutes ? `${fr(heures)} \\times 60 = ${minutes} \\text{ min}` : `${minutes} \\div 60 = ${fr(heures)} \\text{ h}`],
+    steps: [{ type: "resultat", text: demanderMinutes ? `${fr(heures)} \\times 60 = ${minutes} \\text{ min}` : `${minutes} \\div 60 = ${fr(heures)} \\text{ h}` }],
   };
 }
 

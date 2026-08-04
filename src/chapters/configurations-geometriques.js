@@ -127,7 +127,10 @@ function genTriangleExisteInegalite() {
     prompt: `Peut-on construire un triangle ABC tel que AB = ${a} cm, AC = ${b} cm et BC = ${c} cm ?`,
     answer: valid ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${sorted[0]} + ${sorted[1]} ${valid ? ">" : "≤"} ${sorted[2]}`],
+    steps: [
+      { type: "regle", text: `Un triangle existe si la somme des deux plus petits côtés est strictement supérieure au plus grand côté.` },
+      { type: "calcul", text: `${sorted[0]} + ${sorted[1]} ${valid ? ">" : "≤"} ${sorted[2]}` },
+    ],
   };
 }
 
@@ -144,7 +147,7 @@ function genTroisiemeCoteQCM() {
     prompt: `AB = ${a} cm et AC = ${b} cm. Laquelle de ces longueurs peut être BC pour que le triangle ABC existe ?`,
     answer: `${validC} cm`,
     options,
-    steps: [`Il faut que BC soit strictement compris entre ${Math.abs(a - b)} et ${a + b} cm.`],
+    steps: [{ type: "regle", text: `Il faut que BC soit strictement compris entre ${Math.abs(a - b)} et ${a + b} cm.` }],
   };
 }
 
@@ -182,7 +185,7 @@ function genTriangleParticulierNatureQCM() {
     figure,
     answer: nature,
     options: ["isocèle", "équilatéral", "rectangle", "rectangle isocèle", "quelconque"],
-    steps: [desc],
+    steps: [{ type: "donnee", text: desc }],
   };
 }
 
@@ -201,7 +204,10 @@ function genAngleTriangleIsocele() {
       : `Un triangle isocèle en ${sommetLettre} a un angle de ${sommetAngle}° en ${sommetLettre}. Quelle est la mesure de chacun des deux angles à la base ?`,
     figure: buildTriangleFigure(sommetAngle, baseAngle, baseAngle, { labels, equalSides: ["AB", "CA"] }),
     answer: askSommet ? sommetAngle : baseAngle,
-    steps: [`180 - 2 \\times ${baseAngle} = ${sommetAngle}`],
+    steps: [
+      { type: "regle", text: `Dans un triangle isocèle, les deux angles à la base sont égaux, et la somme des trois angles vaut 180°.` },
+      { type: "calcul", text: `180 - 2 \\times ${baseAngle} = ${sommetAngle}` },
+    ],
   };
 }
 
@@ -213,7 +219,10 @@ function genAngleTriangleEquilateral() {
     prompt: `ABC est un triangle équilatéral. Quelle est la mesure de chacun de ses angles ?`,
     figure: buildTriangleFigure(60, 60, 60, { equalSides: ["AB", "BC", "CA"] }),
     answer: 60,
-    steps: [`180 \\div 3 = 60`],
+    steps: [
+      { type: "regle", text: `Un triangle équilatéral a ses trois angles égaux, et leur somme vaut 180°.` },
+      { type: "calcul", text: `180 \\div 3 = 60` },
+    ],
   };
 }
 
@@ -228,7 +237,10 @@ function genAngleTriangleRectangleIsocele() {
       : `Un triangle a un angle droit et deux angles de 45°. Quelle est la mesure de l'angle droit ?`,
     figure: buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"], labels: askAigu ? {} : { B: "45°", C: "45°" } }),
     answer: askAigu ? 45 : 90,
-    steps: [askAigu ? `(180 - 90) \\div 2 = 45` : `180 - 45 - 45 = 90`],
+    steps: [
+      { type: "regle", text: `Dans un triangle rectangle isocèle, les deux angles aigus sont égaux, et la somme des trois angles vaut 180°.` },
+      { type: "calcul", text: askAigu ? `(180 - 90) \\div 2 = 45` : `180 - 45 - 45 = 90` },
+    ],
   };
 }
 
@@ -242,7 +254,10 @@ function genProblemeIsoceleRectangleCombine() {
       prompt: `Le triangle FIJ est rectangle isocèle en I. Quelle est la mesure de l'angle F ?`,
       figure: buildTriangleFigure(45, 90, 45, { rightAngleAt: "B", equalSides: ["AB", "BC"] }),
       answer: 45,
-      steps: [`(180 - 90) \\div 2 = 45`],
+      steps: [
+        { type: "regle", text: `Dans un triangle rectangle isocèle, les deux angles aigus sont égaux, et la somme des trois angles vaut 180°.` },
+        { type: "calcul", text: `(180 - 90) \\div 2 = 45` },
+      ],
     };
   }
   return {
@@ -252,7 +267,7 @@ function genProblemeIsoceleRectangleCombine() {
     figure: buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"] }),
     answer: "Rectangle isocèle",
     options: ["Rectangle", "Isocèle", "Rectangle isocèle", "Équilatéral"],
-    steps: [`Angle droit + deux angles égaux de 45° : le triangle est à la fois rectangle et isocèle.`],
+    steps: [{ type: "regle", text: `Angle droit + deux angles égaux de 45° : le triangle est à la fois rectangle et isocèle.` }],
   };
 }
 
@@ -267,7 +282,10 @@ function genTroisiemeAngleTriangleGeneral() {
     prompt: `Dans un triangle, deux angles mesurent ${a}° et ${b}°. Quelle est la mesure du troisième ?`,
     figure: buildTriangleFigure(a, b, c, { labels: { A: `${a}°`, B: `${b}°` } }),
     answer: c,
-    steps: [`180 - (${a} + ${b}) = ${c}`],
+    steps: [
+      { type: "regle", text: `La somme des angles d'un triangle vaut toujours 180°.` },
+      { type: "calcul", text: `180 - (${a} + ${b}) = ${c}` },
+    ],
   };
 }
 
@@ -295,7 +313,12 @@ function genAlignementViaAnglesQCM() {
     figure,
     answer: sum === 180 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} + ${b} + ${displayedC} = ${sum}${sum === 180 ? " = 180°, donc alignés." : ", ce n'est pas 180° donc pas alignés."}`],
+    steps: [
+      {
+        type: "calcul",
+        text: `${a} + ${b} + ${displayedC} = ${sum}${sum === 180 ? " = 180°, donc alignés." : ", ce n'est pas 180° donc pas alignés."}`,
+      },
+    ],
   };
 }
 
@@ -318,7 +341,12 @@ function genProblemeCocheQuestionsTriangle() {
     prompt: `Un triangle a pour côtés ${a} cm, ${b} cm et ${c} cm. Coche les questions auxquelles tu pourrais répondre avec ces seules informations.`,
     options,
     answer,
-    steps: [`Connaître les 3 côtés permet de vérifier l'existence et de calculer le périmètre, mais pas les angles (sauf cas particulier, comme un triangle équilatéral).`],
+    steps: [
+      {
+        type: "regle",
+        text: `Connaître les 3 côtés permet de vérifier l'existence et de calculer le périmètre, mais pas les angles (sauf cas particulier, comme un triangle équilatéral).`,
+      },
+    ],
   };
 }
 
@@ -339,7 +367,7 @@ function genProblemeVraiFauxTriangleConstructible() {
     prompt: `On veut construire un triangle ABC avec AB = ${AB} cm et AC = ${AC} cm. Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [`BC doit être strictement compris entre ${Math.abs(AB - AC)} et ${AB + AC} cm.`],
+    steps: [{ type: "regle", text: `BC doit être strictement compris entre ${Math.abs(AB - AC)} et ${AB + AC} cm.` }],
   };
 }
 
@@ -361,7 +389,7 @@ function genProblemeAnglesComplementairesBissectrice() {
     prompt: `Dans une figure, l'angle ABC mesure ${abc}° et l'angle ABD est droit, avec D situé de sorte que ABD = ABC + CBD. Quelle est la mesure de l'angle CBD ?`,
     figure,
     answer,
-    steps: [`90 - ${abc} = ${answer}`],
+    steps: [{ type: "calcul", text: `90 - ${abc} = ${answer}` }],
   };
 }
 
@@ -373,7 +401,7 @@ function genProblemeDeNombrePoints() {
     chapter: "Configurations géométriques — Problèmes",
     prompt: `Sur un dé, la somme des points de deux faces opposées est toujours égale à 7. Une face affiche ${face} points. Combien de points affiche la face opposée ?`,
     answer: 7 - face,
-    steps: [`7 - ${face} = ${7 - face}`],
+    steps: [{ type: "calcul", text: `7 - ${face} = ${7 - face}` }],
   };
 }
 
@@ -388,7 +416,10 @@ function genProblemeVolumeCubesSimple() {
     chapter: "Configurations géométriques — Représenter l'espace",
     prompt: `Un empilement rectangulaire de petits cubes identiques mesure ${L} cubes de long, ${l} cubes de large et ${h} cubes de haut. Combien de petits cubes contient cet empilement ?`,
     answer,
-    steps: [`${L} \\times ${l} \\times ${h} = ${answer}`],
+    steps: [
+      { type: "regle", text: `Nombre de cubes = longueur × largeur × hauteur (en nombre de cubes).` },
+      { type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` },
+    ],
   };
 }
 

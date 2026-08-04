@@ -44,7 +44,10 @@ function genResoudreEquationAxNumeric() {
     chapter: "Équations — Premier degré",
     prompt: `Résous l'équation \\(${a}x = ${b}\\).`,
     answer: x0,
-    steps: [{ type: "resultat", text: `x = \\dfrac{${b}}{${a}} = ${x0}` }],
+    steps: [
+      { type: "regle", text: `Pour isoler x, on divise les deux côtés de l'égalité par ${a}.` },
+      { type: "resultat", text: `x = \\dfrac{${b}}{${a}} = ${x0}` },
+    ],
   };
 }
 
@@ -60,6 +63,7 @@ function genResoudreEquationAxPlusBNumeric() {
     prompt: `Résous l'équation \\(${a}x ${sgn(b)} ${abs(b)} = ${c}\\).`,
     answer: x0,
     steps: [
+      { type: "regle", text: `On isole d'abord le terme en x en ${b >= 0 ? "soustrayant" : "ajoutant"} ${abs(b)} des deux côtés, puis on divise par ${a}.` },
       { type: "calcul", text: `${a}x = ${c} ${sgn(-b)} ${abs(b)} = ${c - b}` },
       { type: "resultat", text: `x = \\dfrac{${c - b}}{${a}} = ${x0}` },
     ],
@@ -82,6 +86,7 @@ function genResoudreEquationDeuxCotesNumeric() {
     prompt: `Résous l'équation \\(${a}x ${sgn(b)} ${abs(b)} = ${c}x ${sgn(d)} ${abs(d)}\\).`,
     answer: x0,
     steps: [
+      { type: "regle", text: `On regroupe les termes en x d'un côté et les termes constants de l'autre, en effectuant la même opération des deux côtés.` },
       { type: "calcul", text: `${a - c}x ${sgn(b)} ${abs(b)} = ${d}` },
       { type: "calcul", text: `${a - c}x = ${d - b}` },
       { type: "resultat", text: `x = \\dfrac{${d - b}}{${a - c}} = ${x0}` },

@@ -49,7 +49,7 @@ function genAutoTermeSuivantGeometriqueNumeric() {
     prompt: `Une suite géométrique u de raison \\(q = ${fr(q)}\\) vérifie \\(u(n) = ${un}\\). Calcule \\(u(n+1)\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`u(n+1) = q \\times u(n) = ${fr(q)} \\times ${un} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `u(n+1) = q \\times u(n) = ${fr(q)} \\times ${un} = ${fr(answer)}` }],
   };
 }
 
@@ -64,7 +64,10 @@ function genRaisonDepuisDeuxTermesGeometriqueNumeric() {
     prompt: `Une suite géométrique u vérifie \\(u(0) = ${u0}\\) et \\(u(1) = ${fr(u1)}\\). Calcule sa raison q.`,
     answer: q,
     tolerance: 0.001,
-    steps: [`q = \\dfrac{u(1)}{u(0)} = \\dfrac{${fr(u1)}}{${u0}} = ${fr(q)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une suite géométrique, la raison est le } \\textbf{quotient} \\text{ de deux termes consécutifs (contrairement à une suite arithmétique où l'on soustrait).}` },
+      { type: "resultat", text: `q = \\dfrac{u(1)}{u(0)} = \\dfrac{${fr(u1)}}{${u0}} = ${fr(q)}` },
+    ],
   };
 }
 
@@ -80,7 +83,7 @@ function genTermeExpressionExpliciteGeometriqueNumeric() {
     prompt: `Une suite géométrique u a pour premier terme \\(u(0) = ${u0}\\) et pour raison \\(q = ${fr(q)}\\). Calcule \\(u(${n})\\) grâce à la formule \\(u(n) = u(0) \\times q^n\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`u(${n}) = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `u(${n}) = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}` }],
   };
 }
 
@@ -103,7 +106,10 @@ function genSensVariationSuiteGeometriqueQCM() {
     prompt: `Une suite géométrique à termes positifs a pour raison \\(q = ${fr(cas.q)}\\). Cette suite est-elle croissante, décroissante ou constante ?`,
     answer: cas.reponse,
     options: ["croissante", "décroissante", "constante"],
-    steps: [cas.q > 1 ? `q = ${fr(cas.q)} > 1 \\text{ donc la suite est croissante.}` : cas.q === 1 ? `q = 1 \\text{ donc la suite est constante.}` : `0 < q = ${fr(cas.q)} < 1 \\text{ donc la suite est décroissante.}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une suite géométrique à termes positifs : si } q > 1, \\text{ elle est croissante ; si } q = 1, \\text{ elle est constante ; si } 0 < q < 1, \\text{ elle est décroissante.}` },
+      { type: "resultat", text: cas.q > 1 ? `q = ${fr(cas.q)} > 1 \\text{ donc la suite est croissante.}` : cas.q === 1 ? `q = 1 \\text{ donc la suite est constante.}` : `0 < q = ${fr(cas.q)} < 1 \\text{ donc la suite est décroissante.}` },
+    ],
   };
 }
 
@@ -117,7 +123,10 @@ function genSensVariationExponentielleQCM() {
     prompt: `On considère la fonction exponentielle définie par \\(f(x) = ${fr(base)}^x\\). Cette fonction est-elle croissante ou décroissante sur \\(\\mathbb{R}\\) ?`,
     answer: reponse,
     options: ["croissante", "décroissante"],
-    steps: [base > 1 ? `\\text{La base } ${fr(base)} > 1 \\text{ donc f est croissante.}` : `\\text{La base } 0 < ${fr(base)} < 1 \\text{ donc f est décroissante.}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une fonction exponentielle } x \\mapsto a^x : \\text{ si } a > 1, \\text{ elle est croissante ; si } 0 < a < 1, \\text{ elle est décroissante.}` },
+      { type: "resultat", text: base > 1 ? `\\text{La base } ${fr(base)} > 1 \\text{ donc f est croissante.}` : `\\text{La base } 0 < ${fr(base)} < 1 \\text{ donc f est décroissante.}` },
+    ],
   };
 }
 
@@ -132,7 +141,10 @@ function genCoefficientMultiplicateurGlobalNumeric() {
     prompt: `Une grandeur subit deux évolutions successives de coefficients multiplicateurs \\(${fr(cm1)}\\) puis \\(${fr(cm2)}\\). Calcule le coefficient multiplicateur global de ces deux évolutions (arrondi au millième).`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(cm1)} \\times ${fr(cm2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour des évolutions successives, on ne les additionne pas : le coefficient multiplicateur global est le } \\textbf{produit} \\text{ des coefficients multiplicateurs de chaque évolution.}` },
+      { type: "resultat", text: `${fr(cm1)} \\times ${fr(cm2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -148,7 +160,11 @@ function genTauxMoyenParPeriodeNumeric() {
     prompt: `Sur ${n} périodes identiques, une grandeur a subi une évolution globale de coefficient multiplicateur \\(${fr(cmGlobal)}\\). Calcule le taux d'évolution moyen par période (en %, arrondi au dixième).`,
     answer,
     tolerance: 0.2,
-    steps: [`\\text{Coefficient multiplicateur moyen} = ${fr(cmGlobal)}^{\\frac{1}{${n}}} \\approx ${fr(roundTo(cmMoyen, 4))}`, `\\text{Taux moyen} \\approx ${fr(answer)}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Sur } ${n} \\text{ périodes identiques, le coefficient multiplicateur global est le coefficient moyen élevé à la puissance } ${n}. \\text{ On retrouve donc le coefficient moyen en prenant la racine } ${n}\\text{-ième (puissance } \\frac{1}{${n}}\\text{) du coefficient global.}` },
+      { type: "calcul", text: `\\text{Coefficient multiplicateur moyen} = ${fr(cmGlobal)}^{\\frac{1}{${n}}} \\approx ${fr(roundTo(cmMoyen, 4))}` },
+      { type: "resultat", text: `\\text{Taux moyen} \\approx ${fr(answer)}\\%` },
+    ],
   };
 }
 
@@ -164,7 +180,7 @@ function genPiegeTauxGlobalQCM() {
     prompt: `Un prix augmente de ${t} % chaque mois pendant ${n} mois. Le taux d'évolution global sur ces ${n} mois est-il exactement de ${naif} % ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`\\text{Le taux global n'est pas la somme des taux périodiques : il vaut } (1{,}${String(t).padStart(2, "0")})^{${n}} - 1 \\approx ${fr(roundTo(reel, 2))}\\%, \\text{ différent de } ${naif}\\%.`],
+    steps: [{ type: "regle", text: `\\text{Le taux global n'est pas la somme des taux périodiques : il vaut } (1{,}${String(t).padStart(2, "0")})^{${n}} - 1 \\approx ${fr(roundTo(reel, 2))}\\%, \\text{ différent de } ${naif}\\%.` }],
   };
 }
 
@@ -179,7 +195,10 @@ function genModeliserRaisonEvolutionNumeric() {
     prompt: `Une grandeur ${hausse ? "augmente" : "diminue"} de ${p} % à chaque période. On modélise son évolution par une suite géométrique. Quelle est la raison q de cette suite ?`,
     answer,
     tolerance: 0.001,
-    steps: [`q = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Coefficient multiplicateur : } ${hausse ? "1 + \\dfrac{t}{100}" : "1 - \\dfrac{t}{100}"} \\text{ pour une ${hausse ? "hausse" : "baisse"} de } t \\%.` },
+      { type: "resultat", text: hausse ? `q = 1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `q = 1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -201,18 +220,38 @@ function genModeliserCalculerTermeGeometriqueNumeric() {
     prompt: `${contexte.sujet} ${u0} ${contexte.unite} ${contexte.verbe} de ${p} % chaque année. On modélise la quantité au bout de n années par une suite géométrique u de premier terme \\(u(0) = ${u0}\\) et de raison \\(q = ${fr(roundTo(q, 4))}\\). Calcule \\(u(${n})\\) (arrondi au centième).`,
     answer,
     tolerance: 1,
-    steps: [`u(${n}) = ${u0} \\times ${fr(roundTo(q, 4))}^{${n}} \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `u(${n}) = ${u0} \\times ${fr(roundTo(q, 4))}^{${n}} \\approx ${fr(answer)}` }],
   };
 }
 
 // ---------- 11. Vrai ou faux sur les suites géométriques et fonctions exponentielles ----------
 function genVraiFauxGeometriqueQCM() {
   const cas = pick([
-    { description: "Une suite géométrique de raison q = 1 est constante.", reponse: "Vrai" },
-    { description: "Une suite géométrique à termes positifs de raison q > 1 est croissante.", reponse: "Vrai" },
-    { description: "Une suite géométrique de raison négative peut avoir des termes qui changent de signe.", reponse: "Vrai" },
-    { description: "Une fonction exponentielle de base a avec 0 < a < 1 est croissante.", reponse: "Faux" },
-    { description: "Pour une suite géométrique, chaque terme s'obtient en ajoutant toujours le même nombre au terme précédent.", reponse: "Faux" },
+    {
+      description: "Une suite géométrique de raison q = 1 est constante.",
+      reponse: "Vrai",
+      explication: `\\text{Si } q = 1, \\text{ chaque terme est égal au précédent multiplié par } 1 : \\text{ la suite ne varie jamais.}`,
+    },
+    {
+      description: "Une suite géométrique à termes positifs de raison q > 1 est croissante.",
+      reponse: "Vrai",
+      explication: `\\text{Multiplier un terme positif par un nombre supérieur à } 1 \\text{ l'augmente : la suite est bien croissante.}`,
+    },
+    {
+      description: "Une suite géométrique de raison négative peut avoir des termes qui changent de signe.",
+      reponse: "Vrai",
+      explication: `\\text{Si } q < 0, \\text{ chaque terme change de signe par rapport au précédent (multiplication par un nombre négatif) : les termes alternent positif/négatif.}`,
+    },
+    {
+      description: "Une fonction exponentielle de base a avec 0 < a < 1 est croissante.",
+      reponse: "Faux",
+      explication: `\\text{Pour } 0 < a < 1, \\text{ la fonction } x \\mapsto a^x \\text{ est } \\textbf{décroissante}, \\text{ pas croissante.}`,
+    },
+    {
+      description: "Pour une suite géométrique, chaque terme s'obtient en ajoutant toujours le même nombre au terme précédent.",
+      reponse: "Faux",
+      explication: `\\text{C'est la définition d'une suite } \\textbf{arithmétique}. \\text{ Pour une suite géométrique, on } \\textbf{multiplie} \\text{ par la raison } q, \\text{ on n'ajoute pas.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -220,7 +259,7 @@ function genVraiFauxGeometriqueQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -236,7 +275,10 @@ function genTermeAnterieurNumeric() {
     chapter: "Croissance exponentielle — Suites géométriques",
     prompt: `Une suite géométrique v de raison \\(q = ${q}\\) vérifie \\(v(n) = ${uSuivant}\\). Calcule \\(v(n-1)\\).`,
     answer: uPrecedent,
-    steps: [`v(n-1) = \\dfrac{v(n)}{q} = \\dfrac{${uSuivant}}{${q}} = ${uPrecedent}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour reculer d'un rang dans une suite géométrique, on } \\textbf{divise} \\text{ par la raison (opération inverse de la multiplication par } q\\text{).}` },
+      { type: "resultat", text: `v(n-1) = \\dfrac{v(n)}{q} = \\dfrac{${uSuivant}}{${q}} = ${uPrecedent}` },
+    ],
   };
 }
 
@@ -251,7 +293,7 @@ function genPremierTermeGraphiqueNumeric() {
     prompt: `Le nuage de points d'une suite géométrique u montre que \\(u(1) = ${fr(u1)}\\) et que la raison est \\(q = ${fr(q)}\\). Calcule le premier terme \\(u(0)\\).`,
     answer: u0,
     tolerance: 0.001,
-    steps: [`u(0) = \\dfrac{u(1)}{q} = \\dfrac{${fr(u1)}}{${fr(q)}} = ${u0}`],
+    steps: [{ type: "resultat", text: `u(0) = \\dfrac{u(1)}{q} = \\dfrac{${fr(u1)}}{${fr(q)}} = ${u0}` }],
   };
 }
 
@@ -267,7 +309,7 @@ function genComparerCroissanceQCM() {
     prompt: `Deux suites géométriques à termes positifs u et v ont pour raisons respectives \\(q_u = ${fr(qA)}\\) et \\(q_v = ${fr(qB)}\\). Laquelle croît le plus rapidement à long terme ?`,
     answer: plusRapide,
     options: ["la suite u", "la suite v"],
-    steps: [`\\text{Plus la raison est grande (supérieure à 1), plus la croissance est rapide : } ${fr(Math.max(qA, qB))} > ${fr(Math.min(qA, qB))}`],
+    steps: [{ type: "regle", text: `\\text{Plus la raison est grande (supérieure à 1), plus la croissance est rapide à long terme : } ${fr(Math.max(qA, qB))} > ${fr(Math.min(qA, qB))}` }],
   };
 }
 
@@ -282,7 +324,10 @@ function genCoefficientMultiplicateurReciproqueNumeric() {
     prompt: `Une grandeur augmente de ${p} % (coefficient multiplicateur \\(${fr(roundTo(cm, 2))}\\)). Quel coefficient multiplicateur permettrait de revenir exactement à la valeur initiale (arrondi au dix-millième) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`\\dfrac{1}{${fr(roundTo(cm, 2))}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient multiplicateur réciproque est l'} \\textbf{inverse} \\text{ du coefficient d'origine : leur produit doit redonner } 1 \\text{ (retour à la valeur initiale).}` },
+      { type: "resultat", text: `\\dfrac{1}{${fr(roundTo(cm, 2))}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 

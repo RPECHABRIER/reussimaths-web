@@ -119,6 +119,7 @@ function genResoudreEquationSimple() {
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `On isole d'abord le terme en x en ${b >= 0 ? "soustrayant" : "ajoutant"} ${Math.abs(b)} des deux côtés, puis on divise par ${a}.` },
       { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
       { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
     ],
@@ -177,7 +178,10 @@ function genPourcentageDuneQuantite() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Calculer ${p} % d'un nombre, c'est le multiplier par \\(\\dfrac{${p}}{100}\\).` },
+      { type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -221,6 +225,7 @@ function genPythagoreHypotenuseNumeric() {
     prompt: `ABC est un triangle rectangle en A, avec AB = ${a} cm et AC = ${b} cm. Calcule la longueur BC, en cm.`,
     answer: c,
     steps: [
+      { type: "regle", text: `BC^2 = AB^2 + AC^2` },
       { type: "calcul", text: `BC^2 = AB^2 + AC^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${a * a + b * b}` },
       { type: "resultat", text: `BC = \\sqrt{${a * a + b * b}} = ${c}` },
     ],
@@ -298,7 +303,10 @@ function genCalculerMoyenneSimple() {
     prompt: `Calcule la moyenne de la série statistique suivante (arrondie au centième si besoin) : ${valeurs.join(" ; ")}`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Moyenne = (somme des valeurs) ÷ (nombre de valeurs).` },
+      { type: "calcul", text: `(${valeurs.join(" + ")}) \\div ${n} \\approx ${fr(answer)}` },
+    ],
   };
 }
 

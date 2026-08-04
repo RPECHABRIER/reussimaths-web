@@ -122,7 +122,10 @@ function genPerimetreCercle() {
       : `Un cercle a un rayon de ${r} cm. Quel est son périmètre, arrondi au centième ?`,
     answer,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `\\pi \\times ${D} \\approx ${answer}` }],
+    steps: [
+      { type: "regle", text: `Périmètre d'un cercle = π × diamètre` },
+      { type: "calcul", text: `\\pi \\times ${D} \\approx ${answer}` },
+    ],
   };
 }
 
@@ -137,7 +140,10 @@ function genPerimetreDemiCercle() {
     prompt: `Un demi-disque a un rayon de ${r} cm. Quel est le périmètre de ce demi-disque (demi-cercle + diamètre), arrondi au centième ?`,
     answer,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `\\pi \\times ${r} + ${D} \\approx ${answer}` }],
+    steps: [
+      { type: "regle", text: `Périmètre du demi-disque = demi-cercle (π × rayon) + diamètre.` },
+      { type: "calcul", text: `\\pi \\times ${r} + ${D} \\approx ${answer}` },
+    ],
   };
 }
 
@@ -214,7 +220,10 @@ function genVolumePave() {
     chapter: "Grandeurs et mesures — Volume",
     prompt: `Un pavé droit a pour dimensions ${L} cm × ${l} cm × ${h} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Volume d'un pavé droit = longueur × largeur × hauteur` },
+      { type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` },
+    ],
   };
 }
 
@@ -233,7 +242,10 @@ function genConvertirUnitesLongueur() {
     chapter: "Grandeurs et mesures — Unités de longueur",
     prompt: `Convertis ${fr(value)} ${UNITES_LONGUEUR[i]} en ${UNITES_LONGUEUR[j]}.`,
     answer: result,
-    steps: [{ type: "regle", text: `1 ${UNITES_LONGUEUR[i]} = ${facteur} ${UNITES_LONGUEUR[j]}` }],
+    steps: [
+      { type: "regle", text: `1 ${UNITES_LONGUEUR[i]} = ${facteur} ${UNITES_LONGUEUR[j]}` },
+      { type: "resultat", text: `${fr(value)} \\times ${facteur} = ${fr(result)}` },
+    ],
   };
 }
 
@@ -251,7 +263,10 @@ function genConvertirUnitesAire() {
     chapter: "Grandeurs et mesures — Unités d'aire",
     prompt: `Convertis ${fr(value)} ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} en ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}.`,
     answer: result,
-    steps: [{ type: "regle", text: `1 ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} = ${facteur} ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}` }],
+    steps: [
+      { type: "regle", text: `1 ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} = ${facteur} ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}` },
+      { type: "resultat", text: `${fr(value)} \\times ${facteur} = ${fr(result)}` },
+    ],
   };
 }
 

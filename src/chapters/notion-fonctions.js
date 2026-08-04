@@ -228,8 +228,14 @@ function genPerimetreAireRectangleFonctionNumeric() {
     prompt: `Un rectangle a pour largeur x et pour longueur \\(x + ${decalage}\\). On définit une fonction qui, à x, associe ${askAire ? "l'aire" : "le périmètre"} du rectangle. Quelle est l'image de ${x} par cette fonction ?`,
     answer,
     steps: askAire
-      ? [{ type: "calcul", text: `${x} \\times (${x} + ${decalage}) = ${answer}` }]
-      : [{ type: "calcul", text: `2 \\times ${x} + 2 \\times (${x} + ${decalage}) = ${answer}` }],
+      ? [
+          { type: "regle", text: `Aire d'un rectangle = longueur × largeur.` },
+          { type: "calcul", text: `${x} \\times (${x} + ${decalage}) = ${answer}` },
+        ]
+      : [
+          { type: "regle", text: `Périmètre d'un rectangle = 2 × longueur + 2 × largeur.` },
+          { type: "calcul", text: `2 \\times ${x} + 2 \\times (${x} + ${decalage}) = ${answer}` },
+        ],
   };
 }
 

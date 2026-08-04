@@ -38,7 +38,10 @@ function genLoiProbabiliteCompleterNumeric() {
     prompt: `Une variable aléatoire \\(X\\) prend les valeurs \\(1\\), \\(2\\), \\(3\\), \\(4\\), avec \\(P(X=1) = ${fr(p1)}\\), \\(P(X=2) = ${fr(p2)}\\), \\(P(X=3) = ${fr(p3)}\\). Calcule \\(P(X=4)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{La somme des probabilités vaut 1.}`, `P(X=4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{La somme des probabilités d'une loi vaut toujours 1.}` },
+      { type: "resultat", text: `P(X=4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -56,9 +59,9 @@ function genEsperanceNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `E(X) = \\sum x_i \\times p_i`,
-      `E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)} + ${valeurs[2]} \\times ${fr(p3)}`,
-      `E(X) = ${fr(roundTo(valeurs[0] * p1, 4))} + ${fr(roundTo(valeurs[1] * p2, 4))} + ${fr(roundTo(valeurs[2] * p3, 4))} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Formule de référence : } E(X) = \\sum x_i \\times p_i.` },
+      { type: "calcul", text: `E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)} + ${valeurs[2]} \\times ${fr(p3)}` },
+      { type: "resultat", text: `E(X) = ${fr(roundTo(valeurs[0] * p1, 4))} + ${fr(roundTo(valeurs[1] * p2, 4))} + ${fr(roundTo(valeurs[2] * p3, 4))} = ${fr(answer)}` },
     ],
   };
 }
@@ -73,7 +76,7 @@ function genVarianceKonigHuygensNumeric() {
     chapter: "Variables aléatoires — Variance",
     prompt: `Une variable aléatoire \\(X\\) vérifie \\(E(X) = ${EX}\\) et \\(E(X^2) = ${EX2}\\). Calcule la variance \\(V(X)\\) à l'aide de la formule de König-Huygens \\(V(X) = E(X^2) - [E(X)]^2\\).`,
     answer,
-    steps: [`V(X) = ${EX2} - (${EX})^2 = ${EX2} - ${EX * EX} = ${answer}`],
+    steps: [{ type: "resultat", text: `V(X) = ${EX2} - (${EX})^2 = ${EX2} - ${EX * EX} = ${answer}` }],
   };
 }
 
@@ -87,7 +90,7 @@ function genEcartTypeNumeric() {
     chapter: "Variables aléatoires — Écart-type",
     prompt: `Une variable aléatoire \\(X\\) a pour variance \\(V(X) = ${V}\\). Calcule son écart-type \\(\\sigma(X) = \\sqrt{V(X)}\\).`,
     answer,
-    steps: [`\\sigma(X) = \\sqrt{${V}} = ${answer}`],
+    steps: [{ type: "resultat", text: `\\sigma(X) = \\sqrt{${V}} = ${answer}` }],
   };
 }
 
@@ -102,7 +105,7 @@ function genLineariteEsperanceNumeric() {
     chapter: "Variables aléatoires — Linéarité de l'espérance",
     prompt: `Une variable aléatoire \\(X\\) vérifie \\(E(X) = ${EX}\\). Calcule \\(E(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)})\\) (formule \\(E(aX+b) = aE(X)+b\\)).`,
     answer,
-    steps: [`E(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${a} \\times ${EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a * EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "resultat", text: `E(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${a} \\times ${EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a * EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -116,7 +119,7 @@ function genLineariteVarianceNumeric() {
     chapter: "Variables aléatoires — Linéarité de la variance",
     prompt: `Une variable aléatoire \\(X\\) vérifie \\(V(X) = ${VX}\\). Calcule \\(V(${a}X + 5)\\) (formule \\(V(aX+b) = a^2 V(X)\\), le terme \\(b\\) n'a aucun effet sur la variance).`,
     answer,
-    steps: [`V(${a}X + 5) = ${a}^2 \\times V(X) = ${a * a} \\times ${VX} = ${answer}`],
+    steps: [{ type: "resultat", text: `V(${a}X + 5) = ${a}^2 \\times V(X) = ${a * a} \\times ${VX} = ${answer}` }],
   };
 }
 
@@ -134,8 +137,8 @@ function genJeuEquitableNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `E(\\text{gain}) = g \\times ${fr(p1)} - ${perte} \\times ${fr(p2)} = 0`,
-      `g = \\dfrac{${perte} \\times ${fr(p2)}}{${fr(p1)}} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Un jeu est équitable quand l'espérance de gain est nulle : } E(\\text{gain}) = g \\times ${fr(p1)} - ${perte} \\times ${fr(p2)} = 0.` },
+      { type: "resultat", text: `g = \\dfrac{${perte} \\times ${fr(p2)}}{${fr(p1)}} = ${fr(answer)}` },
     ],
   };
 }
@@ -151,7 +154,7 @@ function genLecturePXEgalANumeric() {
     prompt: `Une variable aléatoire \\(X\\) suit la loi : \\(P(X=1) = ${fr(p1)}\\), \\(P(X=2) = ${fr(p2)}\\), \\(P(X=3) = ${fr(p3)}\\). Donne la valeur de \\(P(X=3)\\).`,
     answer: p3,
     tolerance: 0.0005,
-    steps: [`P(X=3) = ${fr(p3)}`],
+    steps: [{ type: "regle", text: `\\text{On lit directement la probabilité associée à la valeur 3 dans la loi de probabilité : } P(X=3) = ${fr(p3)}.` }],
   };
 }
 
@@ -168,15 +171,26 @@ function genPXInferieurEgalNumeric() {
     prompt: `Une variable aléatoire \\(X\\) prend les valeurs \\(1, 2, 3, 4\\) avec \\(P(X=1) = ${fr(p1)}\\), \\(P(X=2) = ${fr(p2)}\\), \\(P(X=3) = ${fr(p3)}\\), \\(P(X=4) = ${fr(p4)}\\). Calcule \\(P(X \\leq 3)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(X \\leq 3) = P(X=1) + P(X=2) + P(X=3) = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `P(X \\leq 3) \\text{ est la somme des probabilités de toutes les valeurs inférieures ou égales à 3.}` },
+      { type: "resultat", text: `P(X \\leq 3) = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 10. Interpréter les notations {X=a} et {X≤a} ----------
 function genInterpreterNotationsQCM() {
   const cas = pick([
-    { description: "\\(P(X = 3)\\)", reponse: "La probabilité que X soit exactement égal à 3" },
-    { description: "\\(P(X \\leq 3)\\)", reponse: "La probabilité que X soit inférieur ou égal à 3" },
+    {
+      description: "\\(P(X = 3)\\)",
+      reponse: "La probabilité que X soit exactement égal à 3",
+      explication: `\\text{Le symbole '=' dans } P(X=3) \\text{ désigne une égalité stricte : c'est la probabilité que la variable prenne précisément la valeur 3, ni plus ni moins.}`,
+    },
+    {
+      description: "\\(P(X \\leq 3)\\)",
+      reponse: "La probabilité que X soit inférieur ou égal à 3",
+      explication: `\\text{Le symbole '} \\leq \\text{' désigne un cumul : } P(X \\leq 3) \\text{ additionne les probabilités de toutes les valeurs possibles jusqu'à 3 inclus.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -184,7 +198,7 @@ function genInterpreterNotationsQCM() {
     prompt: `Comment interprète-t-on \\(${cas.description}\\) ?`,
     answer: cas.reponse,
     options: ["La probabilité que X soit exactement égal à 3", "La probabilité que X soit inférieur ou égal à 3"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -201,7 +215,10 @@ function genEsperanceJeuNumeric() {
     prompt: `Dans un jeu, un joueur gagne \\(${gain}\\) euros avec une probabilité de \\(${fr(p)}\\), ou perd \\(${perte}\\) euros avec une probabilité de \\(${fr(q)}\\). Calcule l'espérance de gain de ce jeu.`,
     answer,
     tolerance: 0.0005,
-    steps: [`E(\\text{gain}) = ${gain} \\times ${fr(p)} - ${perte} \\times ${fr(q)} = ${fr(roundTo(gain * p, 4))} - ${fr(roundTo(perte * q, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'espérance de gain est la somme des gains pondérés par leur probabilité (une perte compte négativement).}` },
+      { type: "resultat", text: `E(\\text{gain}) = ${gain} \\times ${fr(p)} - ${perte} \\times ${fr(q)} = ${fr(roundTo(gain * p, 4))} - ${fr(roundTo(perte * q, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -217,17 +234,33 @@ function genComparerJeuxQCM() {
     prompt: `Le jeu 1 a une espérance de gain de \\(${fr(e1)}\\) euros. Le jeu 2 a une espérance de gain de \\(${fr(e2)}\\) euros. Quel jeu est le plus avantageux pour le joueur ?`,
     answer: meilleur,
     options: ["Jeu 1", "Jeu 2"],
-    steps: [`\\text{Le jeu le plus avantageux est celui dont l'espérance de gain est la plus élevée : ${meilleur}.}`],
+    steps: [{ type: "regle", text: `\\text{Le jeu le plus avantageux est celui dont l'espérance de gain est la plus élevée : ${meilleur}.}` }],
   };
 }
 
 // ---------- 13. Vrai ou faux sur l'espérance et la variance ----------
 function genVraiFauxVariablesAleatoiresQCM() {
   const cas = pick([
-    { description: "L'espérance E(aX+b) est égale à aE(X)+b.", reponse: "Vrai" },
-    { description: "La variance mesure la dispersion des valeurs autour de l'espérance.", reponse: "Vrai" },
-    { description: "V(X) = E(X²) + [E(X)]².", reponse: "Faux" },
-    { description: "L'écart-type est toujours positif ou nul.", reponse: "Vrai" },
+    {
+      description: "L'espérance E(aX+b) est égale à aE(X)+b.",
+      reponse: "Vrai",
+      explication: `\\text{C'est la formule de linéarité de l'espérance, qui s'applique à toute transformation affine de X.}`,
+    },
+    {
+      description: "La variance mesure la dispersion des valeurs autour de l'espérance.",
+      reponse: "Vrai",
+      explication: `\\text{Par définition, } V(X) = E\\left[(X - E(X))^2\\right] \\text{ : plus les valeurs de X s'écartent de sa moyenne, plus la variance est grande.}`,
+    },
+    {
+      description: "V(X) = E(X²) + [E(X)]².",
+      reponse: "Faux",
+      explication: `\\text{Attention au signe : la formule de König-Huygens est } V(X) = E(X^2) - [E(X)]^2, \\text{ avec un MOINS, pas un plus.}`,
+    },
+    {
+      description: "L'écart-type est toujours positif ou nul.",
+      reponse: "Vrai",
+      explication: `\\text{L'écart-type est défini comme } \\sigma(X) = \\sqrt{V(X)}, \\text{ une racine carrée, donc toujours} \\geq 0.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -235,7 +268,7 @@ function genVraiFauxVariablesAleatoiresQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -255,9 +288,9 @@ function genVarianceLoiDeuxValeursNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `E(X) = 1 \\times ${fr(p)} + 0 \\times ${fr(q)} = ${fr(p)}`,
-      `E(X^2) = 1^2 \\times ${fr(p)} + 0^2 \\times ${fr(q)} = ${fr(p)}`,
-      `V(X) = E(X^2) - [E(X)]^2 = ${fr(p)} - (${fr(p)})^2 = ${fr(answer)}`,
+      { type: "regle", text: `\\text{On calcule d'abord } E(X) \\text{ et } E(X^2), \\text{ puis on applique } V(X) = E(X^2) - [E(X)]^2.` },
+      { type: "calcul", text: `E(X) = 1 \\times ${fr(p)} + 0 \\times ${fr(q)} = ${fr(p)}, \\quad E(X^2) = 1^2 \\times ${fr(p)} + 0^2 \\times ${fr(q)} = ${fr(p)}` },
+      { type: "resultat", text: `V(X) = ${fr(p)} - (${fr(p)})^2 = ${fr(answer)}` },
     ],
   };
 }
@@ -273,7 +306,10 @@ function genRetrouverEsperanceNumeric() {
     chapter: "Variables aléatoires — Linéarité de l'espérance",
     prompt: `On sait que \\(E(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${EaXb}\\). Calcule \\(E(X)\\).`,
     answer: EX,
-    steps: [`${a} \\times E(X) ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${EaXb}`, `E(X) = \\dfrac{${EaXb} ${b >= 0 ? "-" : "+"} ${Math.abs(b)}}{${a}} = \\dfrac{${EaXb - b}}{${a}} = ${EX}`],
+    steps: [
+      { type: "regle", text: `\\text{On part de la formule de linéarité : } ${a} \\times E(X) ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${EaXb}, \\text{ et on isole } E(X).` },
+      { type: "resultat", text: `E(X) = \\dfrac{${EaXb} ${b >= 0 ? "-" : "+"} ${Math.abs(b)}}{${a}} = \\dfrac{${EaXb - b}}{${a}} = ${EX}` },
+    ],
   };
 }
 

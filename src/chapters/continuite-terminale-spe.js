@@ -49,7 +49,11 @@ function genTVIGarantieSolutionQCM() {
     prompt: `Une fonction f est continue sur \\([a;b]\\), avec \\(f(a) = ${fa}\\) et \\(f(b) = ${fb}\\). D'après le théorème des valeurs intermédiaires, l'équation \\(f(x) = ${k}\\) admet-elle nécessairement au moins une solution sur \\([a;b]\\) ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`f(x) \\text{ prend toutes les valeurs entre } ${bas} \\text{ et } ${haut}`, reponse === "Oui" ? `${k} \\text{ est bien compris entre } ${bas} \\text{ et } ${haut} : \\text{une solution existe.}` : `${k} \\text{ n'est pas compris entre } ${bas} \\text{ et } ${haut} : \\text{le théorème ne garantit rien.}`],
+    steps: [
+      { type: "regle", text: `\\text{Théorème des valeurs intermédiaires : si f est continue sur [a;b], elle prend toutes les valeurs entre f(a) et f(b).}` },
+      { type: "donnee", text: `f(x) \\text{ prend toutes les valeurs entre } ${bas} \\text{ et } ${haut}` },
+      { type: "resultat", text: reponse === "Oui" ? `${k} \\text{ est bien compris entre } ${bas} \\text{ et } ${haut} : \\text{une solution existe.}` : `${k} \\text{ n'est pas compris entre } ${bas} \\text{ et } ${haut} : \\text{le théorème ne garantit rien.}` },
+    ],
   };
 }
 
@@ -66,19 +70,19 @@ function genCorollaireTVIUniciteQCM() {
     prompt: `Une fonction f est continue et strictement monotone sur \\([a;b]\\), avec \\(f(a) = ${fa}\\) et \\(f(b) = ${fb}\\). Combien de solutions l'équation \\(f(x) = ${k}\\) admet-elle sur \\([a;b]\\) ?`,
     answer: "Exactement une",
     options: ["Exactement une", "Aucune", "Une infinité"],
-    steps: [`\\text{D'après le corollaire du TVI, une fonction continue et strictement monotone réalise une bijection : chaque valeur entre } ${bas} \\text{ et } ${haut} \\text{ est atteinte exactement une fois.}`],
+    steps: [{ type: "regle", text: `\\text{D'après le corollaire du TVI, une fonction continue et strictement monotone réalise une bijection : chaque valeur entre } ${bas} \\text{ et } ${haut} \\text{ est atteinte exactement une fois.}` }],
   };
 }
 
 // ---------- 3. Continuité des fonctions usuelles ----------
 function genContinuiteFonctionsUsuellesQCM() {
   const cas = pick([
-    { description: "La fonction racine carrée est continue sur \\(\\mathbb{R}\\).", reponse: "Faux" },
-    { description: "La fonction racine carrée est continue sur \\([0 ; +\\infty[\\).", reponse: "Vrai" },
-    { description: "La fonction exponentielle est continue sur \\(\\mathbb{R}\\).", reponse: "Vrai" },
-    { description: "La fonction valeur absolue est continue sur \\(\\mathbb{R}\\).", reponse: "Vrai" },
-    { description: "La fonction inverse \\(x \\mapsto \\frac{1}{x}\\) est continue sur \\(\\mathbb{R}\\).", reponse: "Faux" },
-    { description: "Toute fonction dérivable sur un intervalle est continue sur cet intervalle.", reponse: "Vrai" },
+    { description: "La fonction racine carrée est continue sur \\(\\mathbb{R}\\).", reponse: "Faux", explication: "C'est faux : la racine carrée n'est même pas définie pour x<0, elle ne peut donc pas être continue sur R tout entier — seulement sur son domaine [0 ; +∞[." },
+    { description: "La fonction racine carrée est continue sur \\([0 ; +\\infty[\\).", reponse: "Vrai", explication: "C'est vrai : c'est une fonction usuelle continue sur tout son domaine de définition [0 ; +∞[." },
+    { description: "La fonction exponentielle est continue sur \\(\\mathbb{R}\\).", reponse: "Vrai", explication: "C'est vrai : l'exponentielle est continue (et même dérivable) sur R tout entier." },
+    { description: "La fonction valeur absolue est continue sur \\(\\mathbb{R}\\).", reponse: "Vrai", explication: "C'est vrai : la valeur absolue est continue sur R, bien qu'elle ne soit pas dérivable en 0 (continuité et dérivabilité sont deux notions différentes)." },
+    { description: "La fonction inverse \\(x \\mapsto \\frac{1}{x}\\) est continue sur \\(\\mathbb{R}\\).", reponse: "Faux", explication: "C'est faux : la fonction inverse n'est pas définie en 0, elle est seulement continue sur ]-∞;0[ et sur ]0;+∞[, pas sur R tout entier." },
+    { description: "Toute fonction dérivable sur un intervalle est continue sur cet intervalle.", reponse: "Vrai", explication: "C'est vrai : la dérivabilité est une propriété plus forte que la continuité — toute fonction dérivable est automatiquement continue. La réciproque est fausse (par exemple |x| est continue en 0 mais pas dérivable)." },
   ]);
   return {
     type: "qcm",
@@ -86,18 +90,18 @@ function genContinuiteFonctionsUsuellesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
 // ---------- 4. Opérations sur les fonctions continues ----------
 function genOperationsFonctionsContinuesQCM() {
   const cas = pick([
-    { description: "La somme de deux fonctions continues sur I est continue sur I.", reponse: "Vrai" },
-    { description: "Le produit de deux fonctions continues sur I est continu sur I.", reponse: "Vrai" },
-    { description: "Le quotient de deux fonctions continues sur I est toujours continu sur I, même si le dénominateur s'annule.", reponse: "Faux" },
-    { description: "La racine carrée d'une fonction continue et positive sur I est continue sur I.", reponse: "Vrai" },
-    { description: "La composée de deux fonctions continues est continue.", reponse: "Vrai" },
+    { description: "La somme de deux fonctions continues sur I est continue sur I.", reponse: "Vrai", explication: "C'est vrai : la somme de deux fonctions continues sur I est continue sur I." },
+    { description: "Le produit de deux fonctions continues sur I est continu sur I.", reponse: "Vrai", explication: "C'est vrai : le produit de deux fonctions continues sur I est continu sur I." },
+    { description: "Le quotient de deux fonctions continues sur I est toujours continu sur I, même si le dénominateur s'annule.", reponse: "Faux", explication: "C'est faux : le quotient de deux fonctions continues n'est continu que là où le dénominateur ne s'annule pas. Par exemple 1/x est continue sur R* mais n'est même pas définie (donc pas continue) en 0." },
+    { description: "La racine carrée d'une fonction continue et positive sur I est continue sur I.", reponse: "Vrai", explication: "C'est vrai : la composée d'une fonction continue positive avec la racine carrée (elle-même continue sur son domaine) reste continue." },
+    { description: "La composée de deux fonctions continues est continue.", reponse: "Vrai", explication: "C'est vrai : la composée de deux fonctions continues est continue." },
   ]);
   return {
     type: "qcm",
@@ -105,7 +109,7 @@ function genOperationsFonctionsContinuesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -119,7 +123,10 @@ function genNombreSolutionsTableauVariationsNumeric() {
     chapter: "Continuité — Nombre de solutions",
     prompt: `Une fonction f est continue et strictement croissante sur \\([a;b]\\), avec \\(f(a) = ${fa}\\) et \\(f(b) = ${fb}\\). Combien de solutions l'équation \\(f(x) = ${k}\\) admet-elle sur \\([a;b]\\) ?`,
     answer: 1,
-    steps: [`\\text{D'après le corollaire du TVI, exactement 1 solution.}`],
+    steps: [
+      { type: "donnee", text: `f(a) = ${fa}, \\ f(b) = ${fb}, \\ k = ${k} \\text{ est compris entre } f(a) \\text{ et } f(b).` },
+      { type: "resultat", text: `\\text{f est continue et strictement croissante : d'après le corollaire du TVI, exactement 1 solution.}` },
+    ],
   };
 }
 
@@ -134,7 +141,12 @@ function genNombreSolutionsTableauEnVNumeric() {
     chapter: "Continuité — Nombre de solutions",
     prompt: `Une fonction f est continue sur \\([a;b]\\), strictement décroissante sur \\([a;c]\\) puis strictement croissante sur \\([c;b]\\), avec \\(f(a) = ${gauche}\\), \\(f(c) = ${minimum}\\) (minimum) et \\(f(b) = ${droite}\\). Combien de solutions l'équation \\(f(x) = ${k}\\) admet-elle sur \\([a;b]\\) (avec ${k} strictement supérieur au minimum et strictement inférieur à ${Math.min(gauche, droite)}) ?`,
     answer: 2,
-    steps: [`\\text{Sur } [a;c], \\text{ f est continue et strictement décroissante : 1 solution.}`, `\\text{Sur } [c;b], \\text{ f est continue et strictement croissante : 1 solution.}`, `\\text{Total : 2 solutions.}`],
+    steps: [
+      { type: "regle", text: `\\text{On applique le corollaire du TVI séparément sur chaque branche monotone, puis on additionne les solutions trouvées.}` },
+      { type: "donnee", text: `\\text{Sur } [a;c], \\text{ f est continue et strictement décroissante : 1 solution.}` },
+      { type: "donnee", text: `\\text{Sur } [c;b], \\text{ f est continue et strictement croissante : 1 solution.}` },
+      { type: "resultat", text: `\\text{Total : 2 solutions.}` },
+    ],
   };
 }
 
@@ -150,7 +162,11 @@ function genSigneProduitDichotomieQCM() {
     prompt: `Une fonction f est continue sur \\([a;b]\\), avec \\(f(a) = ${fa}\\) et \\(f(b) = ${fb}\\). Le signe de \\(f(a) \\times f(b)\\) garantit-il l'existence d'une solution à \\(f(x) = 0\\) sur \\([a;b]\\) ?`,
     answer: garantie ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`f(a) \\times f(b) = ${fa} \\times ${fb} = ${produit}`, garantie ? "Le produit est négatif : f(a) et f(b) sont de signes opposés, une solution existe (TVI)." : "Le produit est positif : f(a) et f(b) sont de même signe, on ne peut rien conclure directement."],
+    steps: [
+      { type: "regle", text: `\\text{Si f(a) et f(b) sont de signes opposés (produit négatif), le TVI garantit l'existence d'une solution à f(x)=0 entre a et b.}` },
+      { type: "calcul", text: `f(a) \\times f(b) = ${fa} \\times ${fb} = ${produit}` },
+      { type: "resultat", text: garantie ? "Le produit est négatif : f(a) et f(b) sont de signes opposés, une solution existe (TVI)." : "Le produit est positif : f(a) et f(b) sont de même signe, on ne peut rien conclure directement." },
+    ],
   };
 }
 
@@ -169,7 +185,10 @@ function genIntervalleContientSolutionQCM() {
     prompt: `Une fonction continue f vérifie \\(f(1) = ${f1}\\), \\(f(2) = ${f2}\\) et \\(f(3) = ${f3}\\). L'équation f(x) = 0 admet-elle une solution garantie sur l'intervalle \\([1;2]\\) ?`,
     answer: contientEntre12 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`f(1) \\times f(2) = ${f1} \\times ${f2} = ${f1 * f2}`, contientEntre12 ? "Le produit est négatif : une solution est garantie sur [1;2]." : "Le produit est positif ou nul : rien n'est garanti sur [1;2]."],
+    steps: [
+      { type: "calcul", text: `f(1) \\times f(2) = ${f1} \\times ${f2} = ${f1 * f2}` },
+      { type: "resultat", text: contientEntre12 ? "Le produit est négatif : une solution est garantie sur [1;2]." : "Le produit est positif ou nul : rien n'est garanti sur [1;2]." },
+    ],
   };
 }
 
@@ -184,18 +203,23 @@ function genPointFixeSuiteRecurrenteNumeric() {
     prompt: `Une suite u vérifie \\(u_{n+1} = f(u_n)\\) avec \\(f(x) = ${fr(m)}x ${p >= 0 ? "+" : "-"} ${fr(Math.abs(p))}\\). Si la suite converge, sa limite l vérifie \\(f(l) = l\\). Résous cette équation pour trouver l.`,
     answer: l,
     tolerance: 0.01,
-    steps: [`l = ${fr(m)}l ${p >= 0 ? "+" : "-"} ${fr(Math.abs(p))}`, `l(1 - ${fr(m)}) = ${fr(p)}`, `l = ${l}`],
+    steps: [
+      { type: "regle", text: `\\text{Si une suite définie par } u_{n+1}=f(u_n) \\text{ converge vers l, alors l vérifie } f(l) = l \\text{ (par continuité de f).}` },
+      { type: "calcul", text: `l = ${fr(m)}l ${p >= 0 ? "+" : "-"} ${fr(Math.abs(p))}` },
+      { type: "calcul", text: `l(1 - ${fr(m)}) = ${fr(p)}` },
+      { type: "resultat", text: `l = ${l}` },
+    ],
   };
 }
 
 // ---------- 10. Vrai ou faux sur le théorème des valeurs intermédiaires ----------
 function genVraiFauxTVIQCM() {
   const cas = pick([
-    { description: "Le théorème des valeurs intermédiaires nécessite que la fonction soit continue sur l'intervalle considéré.", reponse: "Vrai" },
-    { description: "Le théorème des valeurs intermédiaires garantit toujours l'unicité de la solution.", reponse: "Faux" },
-    { description: "Si une fonction n'est pas continue, on ne peut pas appliquer le théorème des valeurs intermédiaires.", reponse: "Vrai" },
-    { description: "Le corollaire du TVI (fonction strictement monotone) garantit l'existence ET l'unicité de la solution.", reponse: "Vrai" },
-    { description: "La méthode de dichotomie permet de trouver une valeur exacte de la solution en une seule étape.", reponse: "Faux" },
+    { description: "Le théorème des valeurs intermédiaires nécessite que la fonction soit continue sur l'intervalle considéré.", reponse: "Vrai", explication: "C'est vrai : la continuité de f sur l'intervalle est une hypothèse indispensable du théorème." },
+    { description: "Le théorème des valeurs intermédiaires garantit toujours l'unicité de la solution.", reponse: "Faux", explication: "C'est faux : le TVI seul garantit seulement l'existence d'au moins une solution. C'est son corollaire (fonction strictement monotone) qui garantit en plus l'unicité." },
+    { description: "Si une fonction n'est pas continue, on ne peut pas appliquer le théorème des valeurs intermédiaires.", reponse: "Vrai", explication: "C'est vrai : sans continuité, l'hypothèse du théorème n'est pas vérifiée, on ne peut rien conclure avec le TVI." },
+    { description: "Le corollaire du TVI (fonction strictement monotone) garantit l'existence ET l'unicité de la solution.", reponse: "Vrai", explication: "C'est vrai : c'est précisément l'apport du corollaire par rapport au TVI simple." },
+    { description: "La méthode de dichotomie permet de trouver une valeur exacte de la solution en une seule étape.", reponse: "Faux", explication: "C'est faux : la dichotomie est une méthode itérative qui approche progressivement la solution en divisant l'intervalle par 2 à chaque étape ; elle ne donne qu'une valeur approchée après plusieurs itérations." },
   ]);
   return {
     type: "qcm",
@@ -203,17 +227,17 @@ function genVraiFauxTVIQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
 // ---------- 11. Identifier une fonction continue mais non dérivable en un point ----------
 function genContinueNonDerivableQCM() {
   const cas = pick([
-    { description: "La fonction racine carrée en x = 0", reponse: "Continue mais non dérivable" },
-    { description: "La fonction valeur absolue en x = 0", reponse: "Continue mais non dérivable" },
-    { description: "La fonction carrée en x = 0", reponse: "Continue et dérivable" },
-    { description: "La fonction exponentielle en x = 0", reponse: "Continue et dérivable" },
+    { description: "La fonction racine carrée en x = 0", reponse: "Continue mais non dérivable", explication: "La racine carrée est continue en 0, mais sa courbe présente une tangente verticale en ce point : elle n'est pas dérivable en 0." },
+    { description: "La fonction valeur absolue en x = 0", reponse: "Continue mais non dérivable", explication: "La valeur absolue est continue en 0, mais sa courbe présente un point anguleux (les pentes à gauche et à droite sont différentes, -1 et 1) : elle n'est pas dérivable en 0." },
+    { description: "La fonction carrée en x = 0", reponse: "Continue et dérivable", explication: "La fonction carrée est continue et dérivable en 0 : sa dérivée y vaut 0, la tangente est horizontale." },
+    { description: "La fonction exponentielle en x = 0", reponse: "Continue et dérivable", explication: "La fonction exponentielle est continue et dérivable en tout point, y compris en 0." },
   ]);
   return {
     type: "qcm",
@@ -221,7 +245,7 @@ function genContinueNonDerivableQCM() {
     prompt: `« ${cas.description} » est-elle continue et dérivable, ou seulement continue ?`,
     answer: cas.reponse,
     options: ["Continue et dérivable", "Continue mais non dérivable"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -234,7 +258,10 @@ function genNombreSolutionsDeuxIntervallesNumeric() {
     chapter: "Continuité — Nombre de solutions",
     prompt: `Une équation f(x) = k admet ${solutions1} solution${solutions1 > 1 ? "s" : ""} sur un intervalle \\(I_1\\) et ${solutions2} solution${solutions2 > 1 ? "s" : ""} sur un intervalle disjoint \\(I_2\\). Combien de solutions au total sur \\(I_1 \\cup I_2\\) ?`,
     answer: solutions1 + solutions2,
-    steps: [`${solutions1} + ${solutions2} = ${solutions1 + solutions2}`],
+    steps: [
+      { type: "regle", text: `\\text{Sur des intervalles disjoints, on additionne le nombre de solutions trouvées sur chacun.}` },
+      { type: "resultat", text: `${solutions1} + ${solutions2} = ${solutions1 + solutions2}` },
+    ],
   };
 }
 
@@ -248,7 +275,10 @@ function genInitialisationRecurrenceQCM() {
     prompt: `On veut démontrer par récurrence que, pour tout entier naturel n, \\(u_n \\in [0;2]\\). On sait que \\(u_0 = ${fr(u0)}\\). L'initialisation de la récurrence est-elle vérifiée ?`,
     answer: dansIntervalle ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [dansIntervalle ? `${fr(u0)} \\in [0;2] : \\text{l'initialisation est vérifiée.}` : `${fr(u0)} \\notin [0;2] : \\text{l'initialisation n'est pas vérifiée.}`],
+    steps: [
+      { type: "regle", text: `\\text{L'initialisation d'une récurrence consiste à vérifier la propriété au premier rang (ici, } u_0 \\in [0;2] \\text{).}` },
+      { type: "resultat", text: dansIntervalle ? `${fr(u0)} \\in [0;2] : \\text{l'initialisation est vérifiée.}` : `${fr(u0)} \\notin [0;2] : \\text{l'initialisation n'est pas vérifiée.}` },
+    ],
   };
 }
 
@@ -261,7 +291,10 @@ function genCalculerProduitImagesNumeric() {
     chapter: "Continuité — Dichotomie",
     prompt: `Une fonction continue f vérifie \\(f(a) = ${fa}\\) et \\(f(b) = ${fb}\\). Calcule \\(f(a) \\times f(b)\\).`,
     answer: fa * fb,
-    steps: [`${fa} \\times ${fb} = ${fa * fb}`],
+    steps: [
+      { type: "regle", text: `\\text{Ce produit sert à amorcer le TVI/la dichotomie : son signe indique si f(a) et f(b) sont de signes opposés.}` },
+      { type: "resultat", text: `${fa} \\times ${fb} = ${fa * fb}` },
+    ],
   };
 }
 
@@ -279,7 +312,10 @@ function genEtapeDichotomieQCM() {
     prompt: `Dans la méthode de dichotomie : « ${descriptions[etape]} ». À quelle étape cela correspond-il ?`,
     answer: etape,
     options: ["milieu", "signe", "recommencer"],
-    steps: [`\\text{Étape : ${etape}}`],
+    steps: [
+      { type: "regle", text: `\\text{La dichotomie répète 3 étapes : calculer le milieu m, étudier le signe de f(m) pour choisir le sous-intervalle, puis recommencer sur un intervalle deux fois plus petit.}` },
+      { type: "resultat", text: `\\text{Étape : ${etape}}` },
+    ],
   };
 }
 

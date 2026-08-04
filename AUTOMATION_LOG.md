@@ -1074,3 +1074,40 @@ quotidien fonctionnent en production.
 Première non spé (10), Première spé (12), Première techno (10), Terminale
 spé (17), Terminale techno (8) — codage sémantique des steps selon la même
 heuristique donnée/règle/calcul/résultat.
+
+## 2026-08-04 (suite) — Repères pédagogiques : 6e complet
+
+Poursuite de la demande de Romain : "il faut donner un repère à l'élève" avant
+un résultat numérique, uniquement là où c'était nécessaire (pas de refonte
+systématique). Audit complet des 10 fichiers de générateurs de 6e :
+
+- fractions.js : fractions égales, décomposition entier+fraction, additions/
+  soustractions de fractions, multiplication par un entier, comparaison
+  vrai/faux (sucre en %).
+- operations-decimaux.js : multiplier/diviser par 10/100/1000 (décalage de
+  virgule), multiplier deux décimaux (placement de la virgule).
+- grandeurs-mesures.js : conversions longueur/aire (calcul manquant après la
+  règle), formules périmètre du cercle/volume nommées avant application.
+- distances-symetries.js : conversion de contenances.
+- angles.js : angles supplémentaires/adjacents/bissectrice, angles d'un
+  triangle/triangle rectangle/isocèle — règle rappelée avant le calcul.
+- configurations-geometriques.js : inégalité triangulaire, triangles
+  particuliers, troisième angle, volume d'un empilement de cubes.
+- organisation-gestion-donnees.js : pourcentages, chance sur X, probabilités
+  (urne/cartes/roue), fréquence, événement contraire — formule avant calcul.
+- proportionnalite.js : appliquer un pourcentage, remise, comparer deux
+  écoles, pourcentage inverse.
+- reviser-les-bases.js : conversion d'unités (dizaines/centaines/milliers).
+- nombres-decimaux.js : déjà fait en amont dans la session (fraction→décimal,
+  décomposition en somme décimale — exemple d'origine de Romain "9 + 71/100").
+
+Chaque fichier : node --check, smoke test (8000 itérations, 0 erreur),
+sync vers les deux copies (dossier utilisateur + repo git), commit séparé.
+Build final vérifié (`npm run build`, succès, cache .vite nettoyé au
+préalable).
+
+⚠️ Comme pour chaque commit de cette session, le push GitHub doit être fait
+manuellement par Romain (pas d'identifiants dans ce sandbox).
+
+Prochaine étape (non commencée) : même audit pour la 5e, la 4e et la 3e, puis
+le lycée (reporté à plus tard selon l'instruction initiale de Romain).

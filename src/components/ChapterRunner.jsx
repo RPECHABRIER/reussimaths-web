@@ -6,6 +6,7 @@ import { useProgress, useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
 import { useSkillTracking } from "../hooks/useSkillTracking";
 import { useDailyStreak } from "../hooks/useDailyStreak";
+import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import MathText from "./MathText";
 import StepsList from "./StepsList";
@@ -84,6 +85,7 @@ function generateMatchingSkill(chapter, difficulty, skillLabel) {
 
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill }) {
   const { user } = useAuth();
+  usePracticeHeartbeat(user?.id);
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
   const { subscription: rawSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);

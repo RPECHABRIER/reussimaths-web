@@ -8,6 +8,7 @@ import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch
 import { useAuth } from "../hooks/useAuth";
 import { useSkillTracking } from "../hooks/useSkillTracking";
 import { useDailyStreak } from "../hooks/useDailyStreak";
+import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
 import { colors, fonts, shadow } from "../theme";
 
 const ink = colors.ink;
@@ -36,6 +37,7 @@ function formatDuration(ms) {
 // aléatoire indépendant de chaque côté (voir Amis.jsx, describeChallenge).
 export default function MiniDuel({ chapter, count, themeId, onFinish }) {
   const { user } = useAuth();
+  usePracticeHeartbeat(user?.id);
   const skillTracking = useSkillTracking(user?.id);
   const dailyStreak = useDailyStreak(user?.id);
   const [index, setIndex] = useState(0);

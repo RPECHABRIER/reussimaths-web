@@ -11,6 +11,7 @@ import { useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
 import { useSkillTracking } from "../hooks/useSkillTracking";
 import { useDailyStreak } from "../hooks/useDailyStreak";
+import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import { useAutomatismesBestTime } from "../hooks/useAutomatismesBestTime";
 import { colors, fonts, shadow } from "../theme";
@@ -39,6 +40,7 @@ function formatDuration(ms) {
 // ---------------------------------------------------------------------------
 export default function AutomatismesRunner({ chapter }) {
   const { user } = useAuth();
+  usePracticeHeartbeat(user?.id);
   const { subscription: rawSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const unlimited = hasUnlimitedQuota(chapter, { user, subscription });

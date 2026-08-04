@@ -39,7 +39,7 @@ function genImageFonctionAffineNumeric() {
     chapter: "Réviser les bases (Première) — Fonctions affines",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "resultat", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -57,7 +57,10 @@ function genTauxVariationNumeric() {
     chapter: "Réviser les bases (Première) — Fonctions affines",
     prompt: `Une fonction affine f vérifie \\(f(${xA}) = ${yA}\\) et \\(f(${xB}) = ${yB}\\). Calcule le taux de variation de f entre ${xA} et ${xB} (c'est-à-dire son coefficient directeur).`,
     answer: a,
-    steps: [`\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} = ${a}`],
+    steps: [
+      { type: "regle", text: `\\text{Le taux de variation (coefficient directeur) entre deux points s'obtient en divisant la variation de } f \\text{ par la variation de } x : \\dfrac{f(x_B) - f(x_A)}{x_B - x_A}.` },
+      { type: "resultat", text: `\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} = ${a}` },
+    ],
   };
 }
 
@@ -74,7 +77,10 @@ function genResoudreEquationSimpleNumeric() {
     chapter: "Réviser les bases (Première) — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -97,7 +103,11 @@ function genEquationProduitNulQCM() {
     prompt: `On considère l'équation \\((x ${r1 >= 0 ? "-" : "+"} ${Math.abs(r1)})(x ${r2 >= 0 ? "-" : "+"} ${Math.abs(r2)}) = 0\\). Quel est son ensemble de solutions ?`,
     answer: bonneReponse,
     options: shuffle([...options]),
-    steps: [`\\text{Un produit de facteurs est nul si et seulement si l'un au moins des facteurs est nul.}`, `x - (${r1}) = 0 \\text{ ou } x - (${r2}) = 0`, `S = \\{${bonneReponse}\\}`],
+    steps: [
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si et seulement si l'un au moins des facteurs est nul.}` },
+      { type: "calcul", text: `x - (${r1}) = 0 \\text{ ou } x - (${r2}) = 0` },
+      { type: "resultat", text: `S = \\{${bonneReponse}\\}` },
+    ],
   };
 }
 
@@ -111,7 +121,7 @@ function genImageFonctionCarreNumeric() {
     chapter: "Réviser les bases (Première) — Fonction carré",
     prompt: `On considère la fonction carré définie par \\(f(x) = x^2\\). Calcule \\(f(${x})\\).`,
     answer: x * x,
-    steps: [`f(${x}) = ${x}^2 = ${x * x}`],
+    steps: [{ type: "resultat", text: `f(${x}) = ${x}^2 = ${x * x}` }],
   };
 }
 
@@ -127,7 +137,7 @@ function genSensVariationCarreQCM() {
     prompt: `Quel est le sens de variation de la fonction carré ${cas.intervalle} ?`,
     answer: cas.reponse,
     options: ["croissante", "décroissante"],
-    steps: [`\\text{La fonction carré est ${cas.reponse} ${cas.intervalle}.}`],
+    steps: [{ type: "regle", text: `\\text{La fonction carré est ${cas.reponse} ${cas.intervalle}.}` }],
   };
 }
 
@@ -144,7 +154,7 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
   };
 }
 
@@ -159,7 +169,10 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur associé ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Coefficient multiplicateur : } ${direction === "augmente" ? "1 + \\dfrac{t}{100}" : "1 - \\dfrac{t}{100}"} \\text{ pour une ${direction === "augmente" ? "hausse" : "baisse"} de } t \\%.` },
+      { type: "resultat", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -175,7 +188,10 @@ function genMedianeNumeric() {
     chapter: "Réviser les bases (Première) — Statistiques",
     prompt: `Calcule la médiane de la série suivante, déjà triée : ${valeurs.join(" ; ")}.`,
     answer,
-    steps: [`\\text{La série contient } ${n} \\text{ valeurs, la médiane est la valeur centrale : } ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{L'effectif } ${n} \\text{ est impair : la médiane est la valeur centrale de la série ordonnée.}` },
+      { type: "resultat", text: `\\text{Valeur centrale} = ${answer}` },
+    ],
   };
 }
 
@@ -191,7 +207,10 @@ function genEtendueNumeric() {
     chapter: "Réviser les bases (Première) — Statistiques",
     prompt: `Calcule l'étendue de la série suivante : ${values.join(" ; ")}.`,
     answer,
-    steps: [`${max} - ${min} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{L'étendue d'une série est la différence entre sa plus grande et sa plus petite valeur.}` },
+      { type: "resultat", text: `${max} - ${min} = ${answer}` },
+    ],
   };
 }
 
@@ -208,7 +227,10 @@ function genProbabiliteSimpleNumeric() {
     prompt: `Un sac contient ${total} jetons indiscernables au toucher, dont ${favorables} sont rouges. Quelle est la probabilité de tirer un jeton rouge (valeur décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.002,
-    steps: [`P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un modèle équiprobable, } P = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}.` },
+      { type: "resultat", text: `P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -224,7 +246,7 @@ function genPuissanceRelatifNumeric() {
     chapter: "Réviser les bases (Première) — Calcul numérique",
     prompt: `Calcule : \\((${n})^{${exp}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "resultat", text: `${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}` }],
   };
 }
 
@@ -245,7 +267,7 @@ function genLectureTableauVariationsQCM() {
       `f(0) \\text{ est supérieur à } ${Math.max(yMin, yMax)}`,
       `f(0) \\text{ est inférieur à } ${Math.min(yMin, yMax)}`,
     ]),
-    steps: [`\\text{Comme } f \\text{ est ${sens} sur } [${xMin} ; ${xMax}] \\text{ et que } 0 \\text{ est entre } ${xMin} \\text{ et } ${xMax}, \\text{ f(0) est encadré par les images des bornes.}`],
+    steps: [{ type: "regle", text: `\\text{Comme } f \\text{ est ${sens} sur } [${xMin} ; ${xMax}] \\text{ et que } 0 \\text{ est entre } ${xMin} \\text{ et } ${xMax}, \\text{ f(0) est encadré par les images des bornes.}` }],
   };
 }
 

@@ -59,7 +59,10 @@ function genDeriveeFonctionAffineNumeric() {
     chapter: "Variations globales — Fonction dérivée",
     prompt: `On considère la fonction ${nomFonction} définie par \\(${nomFonction}(x) = ${texAffine(a, b)}\\). Donne le coefficient de x dans l'expression de \\(${nomFonction}'(x)\\).`,
     answer: a,
-    steps: [`\\text{La dérivée d'une fonction affine } x \\mapsto ax+b \\text{ est la fonction constante } x \\mapsto a.`, `${nomFonction}'(x) = ${a}`],
+    steps: [
+      { type: "regle", text: `\\text{La dérivée d'une fonction affine } x \\mapsto ax+b \\text{ est la fonction constante } x \\mapsto a.` },
+      { type: "resultat", text: `${nomFonction}'(x) = ${a}` },
+    ],
   };
 }
 
@@ -82,7 +85,10 @@ function genDeriveeTrinomeQCM() {
     prompt: `On considère la fonction ${nomFonction} définie par \\(${nomFonction}(x) = ${texTrinome(a, b, c)}\\). Quelle est l'expression de \\(${nomFonction}'(x)\\) ?`,
     answer: bonneReponse,
     options: shuffle([...optionsSet]),
-    steps: [`${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${bonneReponse}`],
+    steps: [
+      { type: "regle", text: `\\text{On dérive terme par terme : la dérivée de } ax^2 \\text{ est } 2ax, \\text{ la dérivée de } bx \\text{ est } b, \\text{ et la dérivée d'une constante } c \\text{ est nulle.}` },
+      { type: "resultat", text: `${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${bonneReponse}` },
+    ],
   };
 }
 
@@ -98,7 +104,7 @@ function genCalculerValeurDeriveeNumeric() {
     chapter: "Variations globales — Fonction dérivée",
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${texAffine(2 * a, b)}\\). Calcule \\(${nomFonction}'(${x})\\).`,
     answer,
-    steps: [`${nomFonction}'(${x}) = ${2 * a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "resultat", text: `${nomFonction}'(${x}) = ${2 * a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -113,7 +119,11 @@ function genAbscisseTangenteHorizontaleNumeric() {
     chapter: "Variations globales — Tangentes horizontales",
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${texAffine(2 * a, b)}\\). En quel point d'abscisse la courbe représentative de ${nomFonction} admet-elle une tangente horizontale ?`,
     answer: x0,
-    steps: [`${texAffine(2 * a, b)} = 0`, `x = ${x0}`],
+    steps: [
+      { type: "regle", text: `\\text{Une tangente horizontale correspond à un nombre dérivé nul : on résout } ${nomFonction}'(x) = 0.` },
+      { type: "calcul", text: `${texAffine(2 * a, b)} = 0` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -129,7 +139,12 @@ function genDeuxTangentesHorizontalesNumeric() {
     chapter: "Variations globales — Tangentes horizontales",
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${3 * a}x^2 - ${k}\\). La courbe représentative de ${nomFonction} admet deux tangentes horizontales, aux points d'abscisses opposées. Donne ${demandeNegative ? "la valeur négative" : "la valeur positive"}.`,
     answer: demandeNegative ? -r : r,
-    steps: [`${3 * a}x^2 = ${k}`, `x^2 = ${r * r}`, `x = ${r} \\text{ ou } x = ${-r}`],
+    steps: [
+      { type: "regle", text: `\\text{Une tangente horizontale correspond à un nombre dérivé nul. Attention : une équation } x^2 = k \\text{ (avec } k>0\\text{) a } \\textbf{deux} \\text{ solutions opposées.}` },
+      { type: "calcul", text: `${3 * a}x^2 = ${k}` },
+      { type: "calcul", text: `x^2 = ${r * r}` },
+      { type: "resultat", text: `x = ${r} \\text{ ou } x = ${-r}` },
+    ],
   };
 }
 
@@ -145,7 +160,7 @@ function genSensVariationDepuisSigneDeriveeQCM() {
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${texAffine(a, b)}\\) sur un intervalle où elle garde un signe ${positive ? "positif" : "négatif"} constant. Quel est le sens de variation de ${nomFonction} sur cet intervalle ?`,
     answer: positive ? "croissante" : "décroissante",
     options: ["croissante", "décroissante"],
-    steps: [positive ? `${nomFonction}' > 0 \\text{ donc } ${nomFonction} \\text{ est croissante.}` : `${nomFonction}' < 0 \\text{ donc } ${nomFonction} \\text{ est décroissante.}`],
+    steps: [{ type: "regle", text: positive ? `${nomFonction}' > 0 \\text{ donc } ${nomFonction} \\text{ est croissante.}` : `${nomFonction}' < 0 \\text{ donc } ${nomFonction} \\text{ est décroissante.}` }],
   };
 }
 
@@ -160,7 +175,10 @@ function genStrictementCroissanteSurRQCM() {
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${a}x^2 + ${k}\\). Peut-on affirmer que ${nomFonction} est strictement croissante sur \\(\\mathbb{R}\\) ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`\\text{Pour tout réel } x, \\ x^2 \\geqslant 0 \\text{ donc } ${a}x^2 \\geqslant 0 \\text{ et } ${a}x^2 + ${k} \\geqslant ${k} > 0.`, `${nomFonction}' \\text{ est donc strictement positive sur } \\mathbb{R} : ${nomFonction} \\text{ est strictement croissante sur } \\mathbb{R}.`],
+    steps: [
+      { type: "regle", text: `\\text{Pour tout réel } x, \\ x^2 \\geqslant 0 \\text{ donc } ${a}x^2 \\geqslant 0 \\text{ et } ${a}x^2 + ${k} \\geqslant ${k} > 0.` },
+      { type: "resultat", text: `${nomFonction}' \\text{ est donc strictement positive sur } \\mathbb{R} : ${nomFonction} \\text{ est strictement croissante sur } \\mathbb{R}.` },
+    ],
   };
 }
 
@@ -175,7 +193,7 @@ function genLireTableauSignesQCM() {
     prompt: `Le tableau de signes de \\(${nomFonction}'\\) montre que \\(${nomFonction}'(x)\\) est ${positifAvant ? "positive" : "négative"} sur \\(]-\\infty ; ${borne}]\\) et ${positifAvant ? "négative" : "positive"} sur \\([${borne} ; +\\infty[\\). Que peut-on en déduire sur ${nomFonction} au point d'abscisse ${borne} ?`,
     answer: positifAvant ? `${nomFonction} \\text{ admet un maximum en } ${borne}` : `${nomFonction} \\text{ admet un minimum en } ${borne}`,
     options: [`${nomFonction} \\text{ admet un maximum en } ${borne}`, `${nomFonction} \\text{ admet un minimum en } ${borne}`],
-    steps: [positifAvant ? `${nomFonction} \\text{ est croissante puis décroissante : elle admet un maximum en } ${borne}.` : `${nomFonction} \\text{ est décroissante puis croissante : elle admet un minimum en } ${borne}.`],
+    steps: [{ type: "regle", text: positifAvant ? `${nomFonction} \\text{ est croissante puis décroissante : elle admet un maximum en } ${borne}.` : `${nomFonction} \\text{ est décroissante puis croissante : elle admet un minimum en } ${borne}.` }],
   };
 }
 
@@ -191,7 +209,7 @@ function genLineariteDerivationNumeric() {
     chapter: "Variations globales — Fonction dérivée",
     prompt: `On sait que \\(${nomFonction}'(${x}) = ${fprimeX}\\). On considère la fonction \\(k(x) = ${lambda} \\times ${nomFonction}(x)\\). Calcule \\(k'(${x})\\), sachant que \\(k' = ${lambda} \\times ${nomFonction}'\\).`,
     answer,
-    steps: [`k'(${x}) = ${lambda} \\times ${nomFonction}'(${x}) = ${lambda} \\times ${fprimeX} = ${answer}`],
+    steps: [{ type: "resultat", text: `k'(${x}) = ${lambda} \\times ${nomFonction}'(${x}) = ${lambda} \\times ${fprimeX} = ${answer}` }],
   };
 }
 
@@ -208,18 +226,38 @@ function genNombreTangentesHorizontalesQCM() {
     prompt: `On donne : \\(${cas.description}\\) Combien la courbe représentative de f admet-elle de tangentes horizontales ?`,
     answer: cas.nombre,
     options: ["aucune", "une seule", "deux"],
-    steps: [`\\text{Le nombre de tangentes horizontales est égal au nombre de solutions de } f'(x) = 0.`],
+    steps: [{ type: "regle", text: `\\text{Le nombre de tangentes horizontales est égal au nombre de solutions de } f'(x) = 0.` }],
   };
 }
 
 // ---------- 11. Vrai ou faux sur la fonction dérivée et les variations ----------
 function genVraiFauxVariationsQCM() {
   const cas = pick([
-    { description: "Si f'(x) > 0 sur un intervalle, alors f est strictement croissante sur cet intervalle.", reponse: "Vrai" },
-    { description: "Si f'(a) = 0, alors f admet nécessairement un extremum en a.", reponse: "Faux" },
-    { description: "Deux fonctions qui diffèrent d'une constante ont la même fonction dérivée.", reponse: "Vrai" },
-    { description: "La dérivée d'une fonction constante est toujours égale à cette même constante.", reponse: "Faux" },
-    { description: "Si f' change de signe en changeant de croissante à décroissante, cela correspond à un minimum de f.", reponse: "Faux" },
+    {
+      description: "Si f'(x) > 0 sur un intervalle, alors f est strictement croissante sur cet intervalle.",
+      reponse: "Vrai",
+      explication: "\\text{C'est le théorème du lien signe de la dérivée / sens de variation : dérivée strictement positive sur un intervalle } \\Rightarrow \\text{ fonction strictement croissante sur cet intervalle.}",
+    },
+    {
+      description: "Si f'(a) = 0, alors f admet nécessairement un extremum en a.",
+      reponse: "Faux",
+      explication: "\\text{Contre-exemple : pour } f(x)=x^3, \\text{ on a } f'(0)=0 \\text{ mais } f \\text{ est croissante avant et après } 0 \\text{ (pas d'extremum, c'est un point d'inflexion). Il faut que } f' \\text{ change de signe en } a.",
+    },
+    {
+      description: "Deux fonctions qui diffèrent d'une constante ont la même fonction dérivée.",
+      reponse: "Vrai",
+      explication: "\\text{La dérivée d'une constante étant nulle, si } g(x) = f(x) + c, \\text{ alors } g'(x) = f'(x).",
+    },
+    {
+      description: "La dérivée d'une fonction constante est toujours égale à cette même constante.",
+      reponse: "Faux",
+      explication: "\\text{La dérivée d'une fonction constante est toujours } \\textbf{nulle}, \\text{ pas égale à la constante elle-même : si } f(x) = 7, \\text{ alors } f'(x) = 0 \\text{ (et non } 7\\text{).}",
+    },
+    {
+      description: "Si f' change de signe en changeant de croissante à décroissante, cela correspond à un minimum de f.",
+      reponse: "Faux",
+      explication: "\\text{Si } f' \\text{ passe de positive à négative, } f \\text{ passe de croissante à décroissante : cela correspond à un } \\textbf{maximum}, \\text{ pas un minimum.}",
+    },
   ]);
   return {
     type: "qcm",
@@ -227,7 +265,7 @@ function genVraiFauxVariationsQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -242,7 +280,10 @@ function genDeriveeFonctionCubeNumeric() {
     chapter: "Variations globales — Fonction dérivée",
     prompt: `On considère la fonction ${nomFonction} définie par \\(${nomFonction}(x) = ${lambda === 1 ? "" : lambda === -1 ? "-" : lambda}x^3\\). Sachant que la dérivée de \\(x \\mapsto x^3\\) est \\(x \\mapsto 3x^2\\), calcule \\(${nomFonction}'(${x})\\).`,
     answer,
-    steps: [`${nomFonction}'(x) = ${lambda} \\times 3x^2 = ${lambda * 3}x^2`, `${nomFonction}'(${x}) = ${lambda * 3} \\times ${x}^2 = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${nomFonction}'(x) = ${lambda} \\times 3x^2 = ${lambda * 3}x^2` },
+      { type: "resultat", text: `${nomFonction}'(${x}) = ${lambda * 3} \\times ${x}^2 = ${answer}` },
+    ],
   };
 }
 
@@ -256,7 +297,7 @@ function genOrdonneeTangenteHorizontaleNumeric() {
     chapter: "Variations globales — Tangentes horizontales",
     prompt: `La courbe représentative de ${nomFonction} admet une tangente horizontale au point d'abscisse ${x0}, et on sait que \\(${nomFonction}(${x0}) = ${y0}\\). Donne l'équation réduite de cette tangente sous la forme \\(y = k\\) : quelle est la valeur de k ?`,
     answer: y0,
-    steps: [`\\text{Une tangente horizontale a pour équation } y = ${nomFonction}(${x0}) = ${y0}`],
+    steps: [{ type: "regle", text: `\\text{Une tangente horizontale a pour équation } y = ${nomFonction}(${x0}) = ${y0}` }],
   };
 }
 
@@ -272,7 +313,7 @@ function genComparerDeriveesConstanteQCM() {
     prompt: `On considère \\(f(x) = ${texAffine(a, b)}\\) et \\(g(x) = ${texAffine(a, c)}\\) (elles ne diffèrent que par leur terme constant). Que peut-on dire de leurs fonctions dérivées \\(f'\\) et \\(g'\\) ?`,
     answer: "f' = g'",
     options: ["f' = g'", "f' \\neq g'"],
-    steps: [`\\text{La dérivée d'une constante étant nulle, ajouter une constante ne change pas la dérivée : } f'(x) = g'(x) = ${a}.`],
+    steps: [{ type: "regle", text: `\\text{La dérivée d'une constante étant nulle, ajouter une constante ne change pas la dérivée : } f'(x) = g'(x) = ${a}.` }],
   };
 }
 
@@ -289,7 +330,10 @@ function genSigneDeriveeValeurQCM() {
     prompt: `La fonction dérivée de ${nomFonction} est \\(${nomFonction}'(x) = ${texAffine(a, b)}\\). Quel est le signe de \\(${nomFonction}'(${x0})\\) ?`,
     answer: valeur > 0 ? "positif" : valeur < 0 ? "négatif" : "nul",
     options: ["positif", "négatif", "nul"],
-    steps: [`${nomFonction}'(${x0}) = ${a} \\times ${x0} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${valeur}`],
+    steps: [
+      { type: "calcul", text: `${nomFonction}'(${x0}) = ${a} \\times ${x0} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${valeur}` },
+      { type: "resultat", text: `\\text{On compare cette valeur à 0 pour déterminer son signe : } ${valeur > 0 ? "positif" : valeur < 0 ? "négatif" : "nul"}.` },
+    ],
   };
 }
 

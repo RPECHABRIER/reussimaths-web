@@ -54,13 +54,13 @@ function genPariteFonctionQCM() {
     prompt: `On considère la fonction \\(f\\) définie sur \\(\\mathbb{R}\\) par \\(f(x) = ${formule}\\). Cette fonction est-elle paire, impaire, ou ni l'une ni l'autre ?`,
     answer: reponse,
     options: ["paire", "impaire", "ni paire ni impaire"],
-    steps: [
+    steps: [{ type: "regle", text:
       reponse === "paire"
         ? `\\text{Seules des puissances paires de } x \\text{ apparaissent : } f(-x) = f(x) \\text{, la fonction est paire.}`
         : reponse === "impaire"
         ? `\\text{Seules des puissances impaires de } x \\text{ apparaissent (sans constante) : } f(-x) = -f(x) \\text{, la fonction est impaire.}`
         : `\\text{Le mélange d'un terme en } x^2 \\text{ et d'un terme en } x \\text{ (ou d'une constante non nulle avec un terme impair) empêche toute parité.}`,
-    ],
+    }],
   };
 }
 
@@ -74,7 +74,11 @@ function genTraductionGeometriqueQCM() {
     prompt: `La fonction \\(f\\) est ${paire ? "paire" : "impaire"}. Que peut-on dire de sa courbe représentative dans un repère ?`,
     answer: reponse,
     options: ["symétrique par rapport à l'axe des ordonnées", "symétrique par rapport à l'origine du repère"],
-    steps: [reponse],
+    steps: [{ type: "regle", text:
+      paire
+        ? `\\text{f paire signifie } f(-x) = f(x) \\text{ pour tout } x \\text{ : les points d'abscisses opposées ont la même image, la courbe est donc symétrique par rapport à l'axe des ordonnées.}`
+        : `\\text{f impaire signifie } f(-x) = -f(x) \\text{ pour tout } x \\text{ : les points d'abscisses opposées ont des images opposées, la courbe est donc symétrique par rapport à l'origine du repère.}`,
+    }],
   };
 }
 
@@ -88,7 +92,7 @@ function genSensVariationSigneDeriveeQCM() {
     prompt: `Sur un intervalle \\(I\\), la fonction dérivée de ${nomFonction} vérifie \\(${nomFonction}'(x) ${positive ? ">" : "<"} 0\\). Quel est le sens de variation de ${nomFonction} sur \\(I\\) ?`,
     answer: positive ? "croissante" : "décroissante",
     options: ["croissante", "décroissante"],
-    steps: [positive ? `\\text{f' positive} \\Rightarrow \\text{f croissante sur } I.` : `\\text{f' négative} \\Rightarrow \\text{f décroissante sur } I.`],
+    steps: [{ type: "regle", text: positive ? `\\text{f' positive} \\Rightarrow \\text{f croissante sur } I.` : `\\text{f' négative} \\Rightarrow \\text{f décroissante sur } I.` }],
   };
 }
 
@@ -102,7 +106,10 @@ function genExtremumSecondDegreNumeric() {
     chapter: "Variations et courbes — Extremum",
     prompt: `On considère \\(f(x) = ${a}(${carreTerm(alpha)})^2 ${signedL(beta)}\\), écrite sous forme canonique. Donne la valeur de l'extremum (minimum ou maximum) de \\(f\\).`,
     answer: beta,
-    steps: [`\\text{Le carré } (x - ${alpha})^2 \\text{ vaut } 0 \\text{ en } x = ${alpha}, \\text{ où } f \\text{ atteint son extremum : } f(${alpha}) = ${beta}.`],
+    steps: [
+      { type: "regle", text: `\\text{Le carré } (x - ${alpha})^2 \\text{ est toujours} \\geq 0 \\text{ et vaut } 0 \\text{ uniquement en } x = ${alpha} \\text{, c'est là que } f \\text{ atteint son extremum.}` },
+      { type: "resultat", text: `f(${alpha}) = ${a} \\times 0 ${signedL(beta)} = ${beta}` },
+    ],
   };
 }
 
@@ -116,7 +123,7 @@ function genAllureParaboleQCM() {
     prompt: `On considère la fonction polynôme du second degré \\(f(x) = ${a}x^2 + bx + c\\). La parabole représentant \\(f\\) admet-elle un minimum ou un maximum ?`,
     answer: reponse,
     options: ["un minimum", "un maximum"],
-    steps: [a > 0 ? `\\text{Comme } a = ${a} > 0, \\text{ la parabole est tournée vers le haut : elle admet un minimum.}` : `\\text{Comme } a = ${a} < 0, \\text{ la parabole est tournée vers le bas : elle admet un maximum.}`],
+    steps: [{ type: "regle", text: a > 0 ? `\\text{Comme } a = ${a} > 0, \\text{ la parabole est tournée vers le haut : elle admet un minimum.}` : `\\text{Comme } a = ${a} < 0, \\text{ la parabole est tournée vers le bas : elle admet un maximum.}` }],
   };
 }
 
@@ -134,7 +141,7 @@ function genInegaliteVariationsQCM() {
     prompt: `La fonction ${nomFonction} est ${croissante ? "croissante" : "décroissante"} sur un intervalle contenant ${xA} et ${xB}, avec \\(${xA} < ${xB}\\). Que peut-on en déduire ?`,
     answer: reponse,
     options: [reponse, autre, `${nomFonction}(${xA}) = ${nomFonction}(${xB})`],
-    steps: [`\\text{Comme } ${xA} < ${xB} \\text{ et que } ${nomFonction} \\text{ est ${croissante ? "croissante" : "décroissante"}, on a } ${reponse}.`],
+    steps: [{ type: "regle", text: `\\text{Comme } ${xA} < ${xB} \\text{ et que } ${nomFonction} \\text{ est ${croissante ? "croissante" : "décroissante"}, on a } ${reponse}.` }],
   };
 }
 
@@ -149,7 +156,10 @@ function genOptimisationAbscisseNumeric() {
     prompt: `On veut optimiser \\(f(x) = ${a}x^2 ${signedL(b, "x")} + 4\\). Calcule la valeur de \\(x\\) qui réalise l'extremum de \\(f\\) (formule \\(\\alpha = \\dfrac{-b}{2a}\\)).`,
     answer,
     tolerance: 0.01,
-    steps: [`\\alpha = \\dfrac{-(${b})}{2 \\times ${a}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'extremum d'une parabole est atteint en } \\alpha = \\dfrac{-b}{2a}.` },
+      { type: "resultat", text: `\\alpha = \\dfrac{-(${b})}{2 \\times ${a}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -164,7 +174,10 @@ function genAbscisseDeriveeNulleNumeric() {
     prompt: `Une fonction \\(f\\) a pour dérivée \\(f'(x) = ${2 * a2}x ${signedL(a1)}\\). En quelle valeur de \\(x\\) la fonction \\(f\\) admet-elle un extremum (c'est-à-dire \\(f'(x) = 0\\)) ?`,
     answer,
     tolerance: 0.01,
-    steps: [`${2 * a2}x ${signedL(a1)} = 0 \\Rightarrow x = \\dfrac{${-a1}}{${2 * a2}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Un extremum correspond à un point où la dérivée s'annule : on résout } f'(x) = 0.` },
+      { type: "resultat", text: `${2 * a2}x ${signedL(a1)} = 0 \\Rightarrow x = \\dfrac{${-a1}}{${2 * a2}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -182,7 +195,7 @@ function genLectureTableauVariationsQCM() {
     prompt: `Le tableau de variations d'une fonction f montre que f est ${sens} sur \\([${xMin} ; ${xMax}]\\), avec \\(f(${xMin}) = ${yMin}\\) et \\(f(${xMax}) = ${yMax}\\). Que peut-on dire de \\(f(0)\\) ?`,
     answer: correct,
     options: [correct, `f(0) \\text{ est supérieur à } ${Math.max(yMin, yMax)}`, `f(0) \\text{ est inférieur à } ${Math.min(yMin, yMax)}`],
-    steps: [`\\text{Comme } f \\text{ est ${sens} sur } [${xMin} ; ${xMax}] \\text{ et que } 0 \\text{ est entre les deux bornes, f(0) est encadré par les images des bornes.}`],
+    steps: [{ type: "regle", text: `\\text{Comme } f \\text{ est ${sens} sur } [${xMin} ; ${xMax}] \\text{ et que } 0 \\text{ est entre les deux bornes, f(0) est encadré par les images des bornes.}` }],
   };
 }
 
@@ -194,7 +207,7 @@ function genFonctionConstanteQCM() {
     prompt: `\\(f\\) est une fonction dérivable sur un intervalle \\(I\\) telle que, pour tout \\(x\\) de \\(I\\), \\(f'(x) = 0\\). Que peut-on en conclure sur \\(f\\) ?`,
     answer: "f est constante sur I",
     options: ["f est constante sur I", "f est croissante sur I", "f est décroissante sur I", "On ne peut rien conclure"],
-    steps: [`\\text{Une fonction dérivable dont la dérivée est nulle sur tout un intervalle est constante sur cet intervalle.}`],
+    steps: [{ type: "regle", text: `\\text{Une fonction dérivable dont la dérivée est nulle sur tout un intervalle est constante sur cet intervalle.}` }],
   };
 }
 
@@ -210,7 +223,10 @@ function genImageFonctionImpaireNumeric() {
     chapter: "Variations et courbes — Parité",
     prompt: `\\(f\\) est une fonction impaire telle que \\(f(${x0}) = ${fx0}\\). Calcule \\(f(${-x0})\\).`,
     answer,
-    steps: [`\\text{Comme } f \\text{ est impaire, } f(-x) = -f(x).`, `f(${-x0}) = -f(${x0}) = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Comme } f \\text{ est impaire, } f(-x) = -f(x).` },
+      { type: "resultat", text: `f(${-x0}) = -f(${x0}) = ${answer}` },
+    ],
   };
 }
 
@@ -223,7 +239,10 @@ function genImageFonctionPaireNumeric() {
     chapter: "Variations et courbes — Parité",
     prompt: `\\(f\\) est une fonction paire telle que \\(f(${x0}) = ${fx0}\\). Calcule \\(f(${-x0})\\).`,
     answer: fx0,
-    steps: [`\\text{Comme } f \\text{ est paire, } f(-x) = f(x).`, `f(${-x0}) = f(${x0}) = ${fx0}`],
+    steps: [
+      { type: "regle", text: `\\text{Comme } f \\text{ est paire, } f(-x) = f(x).` },
+      { type: "resultat", text: `f(${-x0}) = f(${x0}) = ${fx0}` },
+    ],
   };
 }
 
@@ -236,17 +255,33 @@ function genPositionRelativeCourbesQCM() {
     prompt: `On considère deux fonctions \\(f\\) et \\(g\\) telles que, pour tout \\(x\\), \\(f(x) - g(x) = ${k}\\). Que peut-on dire de la position de la courbe de \\(f\\) par rapport à celle de \\(g\\) ?`,
     answer: "La courbe de f est entièrement au-dessus de celle de g",
     options: ["La courbe de f est entièrement au-dessus de celle de g", "La courbe de f est entièrement en-dessous de celle de g", "Les deux courbes se croisent"],
-    steps: [`\\text{Comme } f(x) - g(x) = ${k} > 0 \\text{ pour tout } x, \\text{ on a toujours } f(x) > g(x) : \\text{la courbe de f est au-dessus.}`],
+    steps: [{ type: "regle", text: `\\text{Comme } f(x) - g(x) = ${k} > 0 \\text{ pour tout } x, \\text{ on a toujours } f(x) > g(x) : \\text{la courbe de f est au-dessus.}` }],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les variations et courbes ----------
 function genVraiFauxVariationsQCM() {
   const cas = pick([
-    { description: "Si f est croissante et g est croissante, alors f + g est croissante.", reponse: "Vrai" },
-    { description: "La courbe représentative d'une fonction paire est symétrique par rapport à l'origine du repère.", reponse: "Faux" },
-    { description: "Si f'(a) = 0, alors f admet nécessairement un extremum en a.", reponse: "Faux" },
-    { description: "Une fonction affine non constante est soit croissante, soit décroissante sur R.", reponse: "Vrai" },
+    {
+      description: "Si f est croissante et g est croissante, alors f + g est croissante.",
+      reponse: "Vrai",
+      explication: `\\text{Si } x_1 < x_2, \\text{ alors } f(x_1) < f(x_2) \\text{ et } g(x_1) < g(x_2) \\text{ (les deux croissantes), donc en additionnant : } f(x_1) + g(x_1) < f(x_2) + g(x_2). \\text{ La somme est bien croissante.}`,
+    },
+    {
+      description: "La courbe représentative d'une fonction paire est symétrique par rapport à l'origine du repère.",
+      reponse: "Faux",
+      explication: `\\text{Attention à la confusion : une fonction PAIRE a une courbe symétrique par rapport à l'AXE DES ORDONNÉES (comme } x \\mapsto x^2\\text{). C'est la fonction IMPAIRE qui a une courbe symétrique par rapport à l'ORIGINE du repère.}`,
+    },
+    {
+      description: "Si f'(a) = 0, alors f admet nécessairement un extremum en a.",
+      reponse: "Faux",
+      explication: `\\text{Contre-exemple : pour } f(x) = x^3, \\text{ on a } f'(x) = 3x^2 \\text{ donc } f'(0) = 0, \\text{ mais } f \\text{ est croissante sur } \\mathbb{R} \\text{ tout entier : } 0 \\text{ n'est pas un extremum, c'est un point d'inflexion.}`,
+    },
+    {
+      description: "Une fonction affine non constante est soit croissante, soit décroissante sur R.",
+      reponse: "Vrai",
+      explication: `\\text{Une fonction affine } f(x) = ax + b \\text{ non constante a un coefficient directeur } a \\neq 0. \\text{ Or } a \\text{ est forcément positif (f croissante) ou négatif (f décroissante) : il n'y a pas d'autre cas.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -254,7 +289,7 @@ function genVraiFauxVariationsQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -272,7 +307,7 @@ function genComparaisonImagesSommetQCM() {
     prompt: `La parabole représentant \\(f(x) = ${a}(${carreTerm(alpha)})^2 + 2\\) a pour axe de symétrie la droite d'équation \\(x = ${alpha}\\). On pose \\(x_A = ${xA}\\) et \\(x_B = ${xB}\\). Que peut-on dire de \\(f(x_A)\\) et \\(f(x_B)\\) ?`,
     answer: reponse,
     options: [reponse, "f(x_A) > f(x_B)", "f(x_A) < f(x_B)"],
-    steps: [`\\text{${xA} et ${xB} sont symétriques par rapport à ${alpha} (axe de symétrie de la parabole), donc } f(x_A) = f(x_B).`],
+    steps: [{ type: "regle", text: `\\text{${xA} et ${xB} sont symétriques par rapport à ${alpha} (axe de symétrie de la parabole), donc } f(x_A) = f(x_B).` }],
   };
 }
 

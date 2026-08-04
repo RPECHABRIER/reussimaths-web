@@ -81,7 +81,10 @@ function genConvertirInegaliteIntervalleQCM() {
     prompt: `Quel intervalle correspond à l'inégalité \\(${inegalite}\\) ?`,
     answer: bonneReponse,
     options,
-    steps: [`Une inégalité stricte (<) correspond à un crochet ouvert, une inégalité large (⩽) correspond à un crochet fermé.`, `\\(${inegalite}\\) correspond à ${bonneReponse}.`],
+    steps: [
+      { type: "regle", text: `\\text{Une inégalité stricte (<) correspond à un crochet ouvert, une inégalité large (⩽) correspond à un crochet fermé.}` },
+      { type: "resultat", text: `${inegalite} \\text{ correspond à } ${bonneReponse}.` },
+    ],
   };
 }
 
@@ -108,7 +111,15 @@ function genAppartientIntervalleQCM() {
     prompt: `Le nombre ${x} appartient-il à l'intervalle \\(${c1}${a} ; ${b}${c2}\\) ?`,
     answer: appartient ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [appartient ? `${x} est bien compris dans cet intervalle (en tenant compte des crochets).` : `${x} n'est pas compris dans cet intervalle (en tenant compte des crochets).`],
+    steps: [
+      { type: "regle", text: `\\text{Un crochet fermé ([ ou ]) inclut la borne, un crochet ouvert (] ou [) l'exclut.}` },
+      {
+        type: "resultat",
+        text: appartient
+          ? `${x} \\text{ est bien compris dans } ${c1}${a} ; ${b}${c2} \\text{ (en tenant compte des crochets).}`
+          : `${x} \\text{ n'est pas compris dans } ${c1}${a} ; ${b}${c2} \\text{ (en tenant compte des crochets).}`,
+      },
+    ],
   };
 }
 
@@ -128,7 +139,12 @@ function genEncadrementOperationNumeric() {
       chapter: "Nombres et calculs — Intervalles",
       prompt: `On sait que \\(x \\in [${a} ; ${b}]\\). Détermine ${askBorneInf ? "la borne inférieure" : "la borne supérieure"} de l'encadrement de \\(${k}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\).`,
       answer: askBorneInf ? newA : newB,
-      steps: [`${a} \\leqslant x \\leqslant ${b}`, `${k * a} \\leqslant ${k}x \\leqslant ${k * b}`, `${newA} \\leqslant ${k}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} \\leqslant ${newB}`],
+      steps: [
+        { type: "donnee", text: `${a} \\leqslant x \\leqslant ${b}` },
+        { type: "regle", text: `\\text{Multiplier une inégalité par un nombre positif conserve le sens des inégalités.}` },
+        { type: "calcul", text: `${k * a} \\leqslant ${k}x \\leqslant ${k * b}` },
+        { type: "resultat", text: `${newA} \\leqslant ${k}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} \\leqslant ${newB}` },
+      ],
     };
   } else {
     const kNeg = -k;
@@ -140,7 +156,12 @@ function genEncadrementOperationNumeric() {
       chapter: "Nombres et calculs — Intervalles",
       prompt: `On sait que \\(x \\in [${a} ; ${b}]\\). Détermine ${askBorneInf ? "la borne inférieure" : "la borne supérieure"} de l'encadrement de \\(${kNeg}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\) (attention au sens des inégalités, le coefficient est négatif).`,
       answer: askBorneInf ? newA : newB,
-      steps: [`${a} \\leqslant x \\leqslant ${b}`, `\\text{Coefficient négatif : les inégalités changent de sens.}`, `${kNeg * b} \\leqslant ${kNeg}x \\leqslant ${kNeg * a}`, `${newA} \\leqslant ${kNeg}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} \\leqslant ${newB}`],
+      steps: [
+        { type: "donnee", text: `${a} \\leqslant x \\leqslant ${b}` },
+        { type: "regle", text: `\\text{Multiplier une inégalité par un nombre négatif inverse le sens des inégalités.}` },
+        { type: "calcul", text: `${kNeg * b} \\leqslant ${kNeg}x \\leqslant ${kNeg * a}` },
+        { type: "resultat", text: `${newA} \\leqslant ${kNeg}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} \\leqslant ${newB}` },
+      ],
     };
   }
 }
@@ -157,7 +178,10 @@ function genValeurAbsolueNumeric() {
     chapter: "Nombres et calculs — Valeur absolue",
     prompt: `Calcule : \\(|${a} - (${b})|\\)`,
     answer,
-    steps: [`${a} - (${b}) = ${a - b}`, `|${a - b}| = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${a} - (${b}) = ${a - b}` },
+      { type: "resultat", text: `|${a - b}| = ${answer}` },
+    ],
   };
 }
 
@@ -171,7 +195,10 @@ function genDistanceDeuxReelsNumeric() {
     chapter: "Nombres et calculs — Valeur absolue",
     prompt: `Calcule la distance entre les nombres ${a} et ${b}.`,
     answer,
-    steps: [`\\text{distance} = |${a} - (${b})| = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{La distance entre deux réels a et b est } |a - b|.` },
+      { type: "resultat", text: `\\text{distance} = |${a} - (${b})| = ${answer}` },
+    ],
   };
 }
 
@@ -187,7 +214,11 @@ function genResoudreValeurAbsolueEgaliteNumeric() {
     chapter: "Nombres et calculs — Valeur absolue",
     prompt: `Résous l'équation \\(|x - ${a}| = ${b}\\) et donne ${askPlusGrande ? "la plus grande" : "la plus petite"} des deux solutions.`,
     answer: askPlusGrande ? Math.max(sol1, sol2) : Math.min(sol1, sol2),
-    steps: [`x - ${a} = ${b} \\text{ ou } x - ${a} = ${-b}`, `x = ${sol1} \\text{ ou } x = ${sol2}`],
+    steps: [
+      { type: "regle", text: `|X| = ${b} \\iff X = ${b} \\text{ ou } X = ${-b} \\text{ (un nombre a deux nombres qui ont pour valeur absolue } ${b}\\text{ : lui-même et son opposé).}` },
+      { type: "calcul", text: `x - ${a} = ${b} \\text{ ou } x - ${a} = ${-b}` },
+      { type: "resultat", text: `x = ${sol1} \\text{ ou } x = ${sol2}` },
+    ],
   };
 }
 
@@ -204,7 +235,11 @@ function genResoudreInequationValeurAbsolueQCM() {
     prompt: `Résous l'inéquation \\(|x - ${a}| \\leqslant ${b}\\) (sous forme d'intervalle).`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`|x - ${a}| \\leqslant ${b} \\iff ${-b} \\leqslant x - ${a} \\leqslant ${b} \\iff ${a - b} \\leqslant x \\leqslant ${a + b}`, `x \\in ${bonneReponse}`],
+    steps: [
+      { type: "regle", text: `|X| \\leqslant ${b} \\iff ${-b} \\leqslant X \\leqslant ${b} \\text{ (X est à une distance de 0 inférieure ou égale à } ${b}\\text{).}` },
+      { type: "calcul", text: `|x - ${a}| \\leqslant ${b} \\iff ${-b} \\leqslant x - ${a} \\leqslant ${b} \\iff ${a - b} \\leqslant x \\leqslant ${a + b}` },
+      { type: "resultat", text: `x \\in ${bonneReponse}` },
+    ],
   };
 }
 
@@ -218,7 +253,10 @@ function genSimplifierRacineCarreNumeric() {
     chapter: "Nombres et calculs — Racines carrées",
     prompt: `Calcule : \\(\\sqrt{${a}^2}\\)`,
     answer: Math.abs(a),
-    steps: [`\\sqrt{${a}^2} = |${a}| = ${Math.abs(a)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour tout réel a, } \\sqrt{a^2} = |a| \\text{ (la racine carrée d'un carré est toujours positive).}` },
+      { type: "resultat", text: `\\sqrt{${a}^2} = |${a}| = ${Math.abs(a)}` },
+    ],
   };
 }
 
@@ -234,7 +272,11 @@ function genSimplifierRacineFacteurCarreNumeric() {
     chapter: "Nombres et calculs — Racines carrées",
     prompt: `On sait que \\(\\sqrt{${n}} = k\\sqrt{${m}}\\) pour un certain entier k. Détermine k.`,
     answer: kRacine,
-    steps: [`${n} = ${k0} \\times ${m}`, `\\sqrt{${n}} = \\sqrt{${k0}} \\times \\sqrt{${m}} = ${kRacine}\\sqrt{${m}}`],
+    steps: [
+      { type: "regle", text: `\\text{On cherche le plus grand facteur carré parfait de } ${n}, \\text{ car } \\sqrt{a \\times b} = \\sqrt{a} \\times \\sqrt{b}.` },
+      { type: "calcul", text: `${n} = ${k0} \\times ${m}` },
+      { type: "resultat", text: `\\sqrt{${n}} = \\sqrt{${k0}} \\times \\sqrt{${m}} = ${kRacine}\\sqrt{${m}}` },
+    ],
   };
 }
 
@@ -249,7 +291,10 @@ function genSommeRacinesCarreesNumeric() {
     chapter: "Nombres et calculs — Racines carrées",
     prompt: `On sait que \\(${c1}\\sqrt{${m}} + ${c2}\\sqrt{${m}} = k\\sqrt{${m}}\\) pour un certain entier k. Détermine k.`,
     answer,
-    steps: [`${c1}\\sqrt{${m}} + ${c2}\\sqrt{${m}} = (${c1} + ${c2})\\sqrt{${m}} = ${answer}\\sqrt{${m}}`],
+    steps: [
+      { type: "regle", text: `\\text{On ne peut additionner que des racines carrées de même « partie irrationnelle » (ici } \\sqrt{${m}}\\text{), en additionnant leurs coefficients — comme pour } ax + bx = (a+b)x.` },
+      { type: "resultat", text: `${c1}\\sqrt{${m}} + ${c2}\\sqrt{${m}} = (${c1} + ${c2})\\sqrt{${m}} = ${answer}\\sqrt{${m}}` },
+    ],
   };
 }
 
@@ -264,7 +309,7 @@ function genPuissanceNegativeNumeric() {
     prompt: `Calcule : \\(${n}^{${exp}}\\) (donne le résultat sous forme décimale).`,
     answer,
     tolerance: 0.0001,
-    steps: [`${n}^{${exp}} = \\dfrac{1}{${n}^{${Math.abs(exp)}}} = ${fr(answer)}`],
+    steps: [{ type: "regle", text: `\\text{Rappel : } a^{-n} = \\dfrac{1}{a^{n}}.` }, { type: "resultat", text: `${n}^{${exp}} = \\dfrac{1}{${n}^{${Math.abs(exp)}}} = ${fr(answer)}` }],
   };
 }
 
@@ -280,7 +325,11 @@ function genComparerPuissanceZeroQCM() {
     prompt: `L'expression \\((${n})^{${exp}}\\) est-elle positive ou nulle (⩾ 0) ?`,
     answer: positif ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [`(${n})^{${exp}} = ${fr(roundTo(valeur, 4))}`, positif ? `C'est bien positif ou nul.` : `Ce n'est pas positif ou nul.`],
+    steps: [
+      { type: "regle", text: `\\text{Une puissance d'exposant pair est toujours positive ou nulle (le signe de la base n'a pas d'importance) ; une puissance d'exposant impair garde le signe de la base.}` },
+      { type: "calcul", text: `(${n})^{${exp}} = ${fr(roundTo(valeur, 4))}` },
+      { type: "resultat", text: positif ? `C'est bien positif ou nul.` : `Ce n'est pas positif ou nul.` },
+    ],
   };
 }
 
@@ -294,7 +343,7 @@ function genEcritureScientifiqueNumeric() {
     chapter: "Nombres et calculs — Puissances",
     prompt: `Le nombre \\(${fr(coeff)} \\times 10^{${exposant}}\\) est l'écriture scientifique d'un nombre. Quel est l'exposant de cette écriture scientifique ?`,
     answer: exposant,
-    steps: [`\\text{L'exposant est directement lisible dans l'écriture scientifique : } ${exposant}.`],
+    steps: [{ type: "resultat", text: `\\text{L'exposant est directement lisible dans l'écriture scientifique : } ${exposant}.` }],
   };
 }
 
@@ -315,7 +364,11 @@ function genAdditionFractionsNumeric() {
     chapter: "Nombres et calculs — Fractions",
     prompt: `Calcule \\(\\dfrac{${n1}}{${d1}} + \\dfrac{${n2}}{${d2}}\\), et donne le résultat sous forme de fraction irréductible p/q. Donne ${askNum ? "p (le numérateur)" : "q (le dénominateur)"}.`,
     answer: askNum ? numSimplifie : denSimplifie,
-    steps: [`\\dfrac{${n1}}{${d1}} + \\dfrac{${n2}}{${d2}} = \\dfrac{${n1 * d2}}{${d1 * d2}} + \\dfrac{${n2 * d1}}{${d1 * d2}} = \\dfrac{${numResult}}{${denResult}}`, `\\dfrac{${numResult}}{${denResult}} = \\dfrac{${numSimplifie}}{${denSimplifie}}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour additionner deux fractions, on les met au même dénominateur (ici } ${d1} \\times ${d2} = ${denResult}\\text{).}` },
+      { type: "calcul", text: `\\dfrac{${n1}}{${d1}} + \\dfrac{${n2}}{${d2}} = \\dfrac{${n1 * d2}}{${d1 * d2}} + \\dfrac{${n2 * d1}}{${d1 * d2}} = \\dfrac{${numResult}}{${denResult}}` },
+      { type: "resultat", text: `\\dfrac{${numResult}}{${denResult}} = \\dfrac{${numSimplifie}}{${denSimplifie}}` },
+    ],
   };
 }
 
@@ -332,7 +385,10 @@ function genComparerValeurAbsolueQCM() {
     prompt: `Un élève affirme que \\(|${a} - (${b})| \\leqslant ${c}\\). Cette affirmation est-elle vraie ?`,
     answer: propositionVraie ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [`|${a} - (${b})| = ${valeur}`, propositionVraie ? `${valeur} \\leqslant ${c} : c'est vrai.` : `${valeur} > ${c} : c'est faux.`],
+    steps: [
+      { type: "calcul", text: `|${a} - (${b})| = ${valeur}` },
+      { type: "resultat", text: propositionVraie ? `${valeur} \\leqslant ${c} : c'est vrai.` : `${valeur} > ${c} : c'est faux.` },
+    ],
   };
 }
 

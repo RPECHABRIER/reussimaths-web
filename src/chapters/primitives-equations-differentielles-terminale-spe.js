@@ -31,7 +31,11 @@ function genPrimitivePolynomeConstanteNumeric() {
     chapter: "Primitives, équations différentielles — Primitives",
     prompt: `On considère \\(f(x) = ${p}x ${q >= 0 ? "+" : "-"} ${Math.abs(q)}\\). Les primitives de f sont les fonctions \\(F(x) = ${a}x^2 ${q >= 0 ? "+" : "-"} ${Math.abs(q)}x + k\\), où k est une constante réelle. Sachant que \\(F(${x0}) = ${v0}\\), détermine k.`,
     answer: k,
-    steps: [`${a} \\times ${x0}^2 ${q >= 0 ? "+" : "-"} ${Math.abs(q)} \\times ${x0} + k = ${v0}`, `k = ${k}`],
+    steps: [
+      { type: "regle", text: "Substituer x = x₀ dans F(x) permet de déterminer k grâce à la valeur connue F(x₀)." },
+      { type: "calcul", text: `${a} \\times ${x0}^2 ${q >= 0 ? "+" : "-"} ${Math.abs(q)} \\times ${x0} + k = ${v0}` },
+      { type: "resultat", text: `k = ${k}` },
+    ],
   };
 }
 
@@ -47,7 +51,10 @@ function genPrimitiveExpCompositionCoefficientNumeric() {
     chapter: "Primitives, équations différentielles — Primitives",
     prompt: `On considère \\(f(x) = ${c}\\mathrm{e}^{${expo}}\\). Une primitive de f est de la forme \\(F(x) = k\\mathrm{e}^{${expo}}\\). Détermine k.`,
     answer: m,
-    steps: [`k = \\dfrac{${c}}{${a}} = ${m}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : une primitive de e^(ax+b) est (1/a)·e^(ax+b)." },
+      { type: "resultat", text: `k = \\dfrac{${c}}{${a}} = ${m}` },
+    ],
   };
 }
 
@@ -64,7 +71,10 @@ function genPrimitivePuissanceQCM() {
     prompt: `On considère \\(f(x) = ${c}x^{${n}}\\). Quelle est une primitive de f ?`,
     answer: correct,
     options,
-    steps: [`F(x) = \\dfrac{${c}}{${n + 1}}x^{${n + 1}} = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : une primitive de x^n est x^(n+1)/(n+1)." },
+      { type: "resultat", text: `F(x) = \\dfrac{${c}}{${n + 1}}x^{${n + 1}} = ${correct}` },
+    ],
   };
 }
 
@@ -84,7 +94,10 @@ function genPrimitiveExponentielleAffineQCM() {
     prompt: `On considère \\(f(x) = ${c}\\mathrm{e}^{${expo}}\\). Quelle est une primitive de f ?`,
     answer: correct,
     options,
-    steps: [`F(x) = \\dfrac{${c}}{${a}}\\mathrm{e}^{${expo}} = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : une primitive de e^(ax+b) est (1/a)·e^(ax+b)." },
+      { type: "resultat", text: `F(x) = \\dfrac{${c}}{${a}}\\mathrm{e}^{${expo}} = ${correct}` },
+    ],
   };
 }
 
@@ -104,7 +117,10 @@ function genPrimitiveCosAffineQCM() {
     prompt: `On considère \\(f(x) = ${c}\\cos(${expo})\\). Quelle est une primitive de f ?`,
     answer: correct,
     options,
-    steps: [`F(x) = \\dfrac{${c}}{${a}}\\sin(${expo}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : une primitive de cos(ax+b) est (1/a)·sin(ax+b)." },
+      { type: "resultat", text: `F(x) = \\dfrac{${c}}{${a}}\\sin(${expo}) = ${correct}` },
+    ],
   };
 }
 
@@ -124,7 +140,10 @@ function genPrimitiveSinAffineQCM() {
     prompt: `On considère \\(f(x) = ${c}\\sin(${expo})\\). Quelle est une primitive de f ?`,
     answer: correct,
     options,
-    steps: [`F(x) = -\\dfrac{${c}}{${a}}\\cos(${expo}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : une primitive de sin(ax+b) est -(1/a)·cos(ax+b)." },
+      { type: "resultat", text: `F(x) = -\\dfrac{${c}}{${a}}\\cos(${expo}) = ${correct}` },
+    ],
   };
 }
 
@@ -139,7 +158,7 @@ function genEquationDiffHomogeneQCM() {
     prompt: `Quelles sont les solutions de l'équation différentielle \\(y' = ${a}y\\) (avec C un réel quelconque) ?`,
     answer: correct,
     options,
-    steps: [`\\text{Les solutions de } y'=ay \\text{ sont les fonctions } x \\mapsto ${correct}`],
+    steps: [{ type: "regle", text: `\\text{Les solutions de } y'=ay \\text{ sont les fonctions } x \\mapsto ${correct}` }],
   };
 }
 
@@ -161,7 +180,7 @@ function genEquationDiffAvecSecondMembreQCM() {
     prompt: `On considère l'équation \\((E) : y' = ${a}y ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quelles sont les solutions de (E) (avec C un réel quelconque) ?`,
     answer: correct,
     options,
-    steps: [`\\text{Les solutions de } y'=ay+b \\text{ sont les fonctions } x \\mapsto C\\mathrm{e}^{ax} - \\dfrac{b}{a} = ${correct}`],
+    steps: [{ type: "regle", text: `\\text{Les solutions de } y'=ay+b \\text{ sont les fonctions } x \\mapsto C\\mathrm{e}^{ax} - \\dfrac{b}{a} = ${correct}` }],
   };
 }
 
@@ -174,7 +193,10 @@ function genDeterminerConstanteHomogeneNumeric() {
     chapter: "Primitives, équations différentielles — Équations différentielles",
     prompt: `Les solutions de \\(y' = ${a}y\\) sont les fonctions \\(x \\mapsto C\\mathrm{e}^{${a}x}\\), où C est un réel. Sachant que la solution F vérifie \\(F(0) = ${v0}\\), détermine C.`,
     answer: v0,
-    steps: [`F(0) = C\\mathrm{e}^{0} = C = ${v0}`],
+    steps: [
+      { type: "regle", text: "e^0 = 1, donc F(0) = C." },
+      { type: "resultat", text: `F(0) = C\\mathrm{e}^{0} = C = ${v0}` },
+    ],
   };
 }
 
@@ -190,18 +212,22 @@ function genDeterminerConstanteAvecSecondMembreNumeric() {
     chapter: "Primitives, équations différentielles — Équations différentielles",
     prompt: `Les solutions de \\((E) : y' = ${a}y ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\) sont les fonctions \\(x \\mapsto C\\mathrm{e}^{${a}x} ${q >= 0 ? "+" : "-"} ${Math.abs(q)}\\), où C est un réel. Sachant que la solution F vérifie \\(F(0) = ${v0}\\), détermine C.`,
     answer: C,
-    steps: [`F(0) = C ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${v0}`, `C = ${C}`],
+    steps: [
+      { type: "regle", text: "e^0 = 1, donc F(0) = C + q." },
+      { type: "calcul", text: `F(0) = C ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${v0}` },
+      { type: "resultat", text: `C = ${C}` },
+    ],
   };
 }
 
 // ---------- 11. Vrai ou faux sur les équations différentielles (QCM) ----------
 function genVraiFauxEquationDiffQCM() {
   const cas = pick([
-    { description: "L'équation \\(y' = ay\\) admet une infinité de solutions sur \\(\\mathbb{R}\\).", reponse: "Vrai" },
-    { description: "Si F et G sont deux solutions de \\(y' = ay+b\\), alors F−G est solution de l'équation homogène \\(y' = ay\\).", reponse: "Vrai" },
-    { description: "La fonction nulle est solution de l'équation homogène \\(y' = ay\\).", reponse: "Vrai" },
-    { description: "Une équation \\(y' = ay+b\\), associée à une condition initiale, admet une unique solution.", reponse: "Vrai" },
-    { description: "L'équation \\(y' = ay\\) admet une seule solution sur \\(\\mathbb{R}\\).", reponse: "Faux" },
+    { description: "L'équation \\(y' = ay\\) admet une infinité de solutions sur \\(\\mathbb{R}\\).", reponse: "Vrai", explication: "C'est vrai : chaque valeur de la constante C donne une solution différente x ↦ Ce^(ax), il y en a donc une infinité." },
+    { description: "Si F et G sont deux solutions de \\(y' = ay+b\\), alors F−G est solution de l'équation homogène \\(y' = ay\\).", reponse: "Vrai", explication: "C'est vrai : (F-G)' = F'-G' = (aF+b) - (aG+b) = a(F-G), donc F-G vérifie bien y'=ay." },
+    { description: "La fonction nulle est solution de l'équation homogène \\(y' = ay\\).", reponse: "Vrai", explication: "C'est vrai : la fonction nulle a pour dérivée 0, et a×0=0, donc l'égalité y'=ay est vérifiée." },
+    { description: "Une équation \\(y' = ay+b\\), associée à une condition initiale, admet une unique solution.", reponse: "Vrai", explication: "C'est vrai : la condition initiale permet de déterminer une unique valeur de la constante C parmi toutes les solutions." },
+    { description: "L'équation \\(y' = ay\\) admet une seule solution sur \\(\\mathbb{R}\\).", reponse: "Faux", explication: "C'est faux : sans condition initiale, l'équation admet une infinité de solutions, une pour chaque valeur de la constante C." },
   ]);
   return {
     type: "qcm",
@@ -209,7 +235,7 @@ function genVraiFauxEquationDiffQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -223,7 +249,11 @@ function genIdentifierCoefficientANumeric() {
     chapter: "Primitives, équations différentielles — Équations différentielles",
     prompt: `On écrit l'équation \\(y' ${p >= 0 ? "+" : "-"} ${Math.abs(p)}y = ${q}\\) sous la forme \\(y' = ay + b\\). Donne la valeur de a.`,
     answer: a,
-    steps: [`y' = ${a}y + ${q}`, `a = ${a}`],
+    steps: [
+      { type: "regle", text: "On isole y' pour identifier a et b dans la forme y' = ay + b." },
+      { type: "calcul", text: `y' = ${a}y + ${q}` },
+      { type: "resultat", text: `a = ${a}` },
+    ],
   };
 }
 
@@ -235,18 +265,18 @@ function genNombrePrimitivesQCM() {
     prompt: `Combien de primitives possède une fonction continue sur un intervalle I ?`,
     answer: "Une infinité",
     options: ["Une seule", "Aucune", "Une infinité"],
-    steps: ["Deux primitives d'une même fonction diffèrent toujours d'une constante réelle : il y en a une infinité."],
+    steps: [{ type: "regle", text: "Deux primitives d'une même fonction diffèrent toujours d'une constante réelle : il y en a une infinité." }],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les primitives (QCM) ----------
 function genVraiFauxPrimitivesQCM() {
   const cas = pick([
-    { description: "Deux primitives d'une même fonction sur un intervalle diffèrent d'une constante.", reponse: "Vrai" },
-    { description: "Si F est une primitive de f, alors \\(F' = f\\).", reponse: "Vrai" },
-    { description: "Une fonction continue sur un intervalle admet toujours des primitives.", reponse: "Vrai" },
-    { description: "Il existe une seule primitive pour chaque fonction continue.", reponse: "Faux" },
-    { description: "Si F est une primitive de f, alors \\(F + 5\\) est aussi une primitive de f.", reponse: "Vrai" },
+    { description: "Deux primitives d'une même fonction sur un intervalle diffèrent d'une constante.", reponse: "Vrai", explication: "C'est vrai : si F et G sont deux primitives de f, alors (F-G)' = f-f = 0, donc F-G est constante sur l'intervalle." },
+    { description: "Si F est une primitive de f, alors \\(F' = f\\).", reponse: "Vrai", explication: "C'est vrai : c'est la définition même d'une primitive." },
+    { description: "Une fonction continue sur un intervalle admet toujours des primitives.", reponse: "Vrai", explication: "C'est vrai : c'est un théorème du cours, toute fonction continue sur un intervalle admet des primitives sur cet intervalle." },
+    { description: "Il existe une seule primitive pour chaque fonction continue.", reponse: "Faux", explication: "C'est faux : il en existe une infinité, une pour chaque valeur de la constante ajoutée." },
+    { description: "Si F est une primitive de f, alors \\(F + 5\\) est aussi une primitive de f.", reponse: "Vrai", explication: "C'est vrai : (F+5)' = F' = f, donc F+5 est bien une primitive de f." },
   ]);
   return {
     type: "qcm",
@@ -254,7 +284,7 @@ function genVraiFauxPrimitivesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -269,7 +299,10 @@ function genValeurSolutionNumeric() {
     chapter: "Primitives, équations différentielles — Équations différentielles",
     prompt: `La solution d'une équation différentielle est \\(y(x) = ${C}\\mathrm{e}^{${a}x} ${q >= 0 ? "+" : "-"} ${Math.abs(q)}\\). Calcule \\(y(0)\\).`,
     answer,
-    steps: [`y(0) = ${C} \\times \\mathrm{e}^{0} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${C} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${answer}`],
+    steps: [
+      { type: "regle", text: "e^0 = 1." },
+      { type: "resultat", text: `y(0) = ${C} \\times \\mathrm{e}^{0} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${C} ${q >= 0 ? "+" : "-"} ${Math.abs(q)} = ${answer}` },
+    ],
   };
 }
 

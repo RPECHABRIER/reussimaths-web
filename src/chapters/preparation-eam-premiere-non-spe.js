@@ -84,7 +84,11 @@ function genQCMOfficielMetropole() {
       prompt: `Un article coûte initialement 50 €. Son prix diminue de 10 %, puis ce nouveau prix augmente de 10 %. Le prix final de cet article est :`,
       options: ["49,50 €", "49,90 €", "50 €", "50,10 €"],
       answer: "49,50 €",
-      steps: [`50 \\times 0,9 = 45`, `45 \\times 1,1 = 49,50`],
+      steps: [
+        { type: "regle", text: `\\text{Attention : des évolutions successives ne s'additionnent pas, elles se multiplient (coefficient multiplicateur par coefficient multiplicateur).}` },
+        { type: "calcul", text: `50 \\times 0,9 = 45` },
+        { type: "resultat", text: `45 \\times 1,1 = 49,50` },
+      ],
     },
     {
       prompt: `On considère la courbe d'équation \\(y = 2x^2 - x + 3\\). Le point de cette courbe d'abscisse \\(-1\\) a pour coordonnées :`,
@@ -267,25 +271,39 @@ function genQCMOfficielCentresEtrangers() {
       prompt: `L'ensemble des solutions de l'équation \\((2x+4)(-3x-9) = 0\\) est :`,
       options: ["\\{-5\\}", "\\{-4 ; 9\\}", "\\{-2 ; 3\\}", "\\{-3 ; -2\\}"],
       answer: "\\{-3 ; -2\\}",
-      steps: [`2x+4=0 \\iff x=-2`, `-3x-9=0 \\iff x=-3`, `S = \\{-3 ; -2\\}`],
+      steps: [
+        { type: "regle", text: `\\text{Un produit de facteurs est nul si et seulement si l'un au moins des facteurs est nul.}` },
+        { type: "calcul", text: `2x+4=0 \\iff x=-2` },
+        { type: "calcul", text: `-3x-9=0 \\iff x=-3` },
+        { type: "resultat", text: `S = \\{-3 ; -2\\}` },
+      ],
     },
     {
       prompt: `La loi de la gravitation universelle s'écrit \\(F = G \\times \\dfrac{m_1 \\times m_2}{R^2}\\). En isolant \\(m_1\\), on obtient :`,
       options: ["m_1 = \\dfrac{F \\times R^2}{G \\times m_2}", "m_1 = \\dfrac{G \\times m_2}{F \\times R^2}", "m_1 = F \\times G \\times m_2 \\times R^2", "m_1 = \\dfrac{F \\times G}{R^2 \\times m_2}"],
       answer: "m_1 = \\dfrac{F \\times R^2}{G \\times m_2}",
-      steps: [`F = G \\times \\dfrac{m_1 m_2}{R^2} \\iff m_1 = \\dfrac{F \\times R^2}{G \\times m_2}`],
+      steps: [
+        { type: "regle", text: `\\text{On multiplie les deux membres par } R^2 \\text{ puis on divise par } G \\times m_2 \\text{ pour isoler } m_1.` },
+        { type: "resultat", text: `F = G \\times \\dfrac{m_1 m_2}{R^2} \\iff m_1 = \\dfrac{F \\times R^2}{G \\times m_2}` },
+      ],
     },
     {
       prompt: `On considère un arbre pondéré à deux niveaux d'évènements \\(A\\) et \\(B\\), avec \\(P(A) = 0,2\\), \\(P_A(B) = 0,3\\) et \\(P_{\\overline{A}}(B) = 0,4\\). La probabilité \\(P_{\\overline{A}}(\\overline{B})\\) est égale à :`,
       options: ["0,3", "0,48", "0,8", "0,6"],
       answer: "0,6",
-      steps: [`P_{\\overline{A}}(\\overline{B}) = 1 - P_{\\overline{A}}(B) = 1 - 0,4 = 0,6`],
+      steps: [
+        { type: "regle", text: `\\text{Sachant } \\overline{A}, \\text{ les évènements } B \\text{ et } \\overline{B} \\text{ se partagent toute la probabilité : } P_{\\overline{A}}(B) + P_{\\overline{A}}(\\overline{B}) = 1.` },
+        { type: "resultat", text: `P_{\\overline{A}}(\\overline{B}) = 1 - P_{\\overline{A}}(B) = 1 - 0,4 = 0,6` },
+      ],
     },
     {
       prompt: `Avec le même arbre pondéré (\\(P(A) = 0,2\\), \\(P_A(B) = 0,3\\), \\(P_{\\overline{A}}(B) = 0,4\\)), la probabilité \\(P_A(\\overline{B})\\) est égale à :`,
       options: ["0,3", "0,2", "0,14", "0,7"],
       answer: "0,7",
-      steps: [`P_A(\\overline{B}) = 1 - P_A(B) = 1 - 0,3 = 0,7`],
+      steps: [
+        { type: "regle", text: `\\text{Sachant } A, \\text{ les évènements } B \\text{ et } \\overline{B} \\text{ se partagent toute la probabilité : } P_A(B) + P_A(\\overline{B}) = 1.` },
+        { type: "resultat", text: `P_A(\\overline{B}) = 1 - P_A(B) = 1 - 0,3 = 0,7` },
+      ],
     },
   ];
   const q = pick(banque);
@@ -305,7 +323,10 @@ function genProbaOfficielMetropole() {
   const contexte = `Dans un club sportif de 120 adhérents, chacun pratique soit le judo (évènement \\(J\\)), soit la natation en section aquatique (évènement \\(A\\)), et est scolarisé en seconde (\\(S\\)), en première (\\(P\\)) ou en terminale (\\(T\\)). Le tableau croisé des effectifs est le suivant. Judo : 10 en seconde, 6 en première, 8 en terminale (24 au total). Section aquatique : 40 en seconde, 50 en première, 6 en terminale (96 au total). Totaux par niveau : 50 en seconde, 56 en première, 14 en terminale, pour 120 adhérents en tout.`;
   const banque = [
     { question: `Calcule la probabilité \\(P(A \\cap S)\\) que l'adhérent choisi au hasard soit en section aquatique ET en seconde.`, answer: roundTo(40 / 120, 4), steps: [`P(A \\cap S) = \\dfrac{40}{120} = \\dfrac{1}{3} \\approx ${fr(roundTo(40 / 120, 4))}`] },
-    { question: `Calcule la probabilité conditionnelle \\(P_S(A)\\) (probabilité de pratiquer la section aquatique sachant que l'adhérent est en seconde).`, answer: roundTo(40 / 50, 4), steps: [`P_S(A) = \\dfrac{40}{50} = ${fr(roundTo(40 / 50, 4))}`] },
+    { question: `Calcule la probabilité conditionnelle \\(P_S(A)\\) (probabilité de pratiquer la section aquatique sachant que l'adhérent est en seconde).`, answer: roundTo(40 / 50, 4), steps: [
+      { type: "regle", text: `\\text{Pour une probabilité conditionnelle, on divise non pas par l'effectif total, mais par l'effectif du groupe déjà connu (ici les 50 élèves de seconde).}` },
+      { type: "resultat", text: `P_S(A) = \\dfrac{40}{50} = ${fr(roundTo(40 / 50, 4))}` },
+    ] },
     { question: `Calcule la probabilité \\(P(J)\\) que l'adhérent choisi au hasard pratique le judo.`, answer: roundTo(24 / 120, 4), steps: [`P(J) = \\dfrac{24}{120} = ${fr(roundTo(24 / 120, 4))}`] },
     { question: `Calcule la probabilité conditionnelle \\(P_T(J)\\) (probabilité de pratiquer le judo sachant que l'adhérent est en terminale).`, answer: roundTo(8 / 14, 4), steps: [`P_T(J) = \\dfrac{8}{14} = \\dfrac{4}{7} \\approx ${fr(roundTo(8 / 14, 4))}`] },
   ];
@@ -347,7 +368,10 @@ function genProbaOfficielCentresEtrangers() {
   const banque = [
     { type: "numeric", question: `Calcule \\(P(S)\\).`, answer: 0.9, tolerance: 0.0005, steps: [`P(S) = \\dfrac{900}{1000} = 0,9`] },
     { type: "numeric", question: `Calcule \\(P(S \\cap I)\\).`, answer: 0.72, tolerance: 0.0005, steps: [`P(S \\cap I) = \\dfrac{720}{1000} = 0,72`] },
-    { type: "numeric", question: `Calcule la probabilité conditionnelle \\(P_S(I)\\).`, answer: 0.8, tolerance: 0.0005, steps: [`P_S(I) = \\dfrac{720}{900} = 0,8`] },
+    { type: "numeric", question: `Calcule la probabilité conditionnelle \\(P_S(I)\\).`, answer: 0.8, tolerance: 0.0005, steps: [
+      { type: "regle", text: `\\text{Pour une probabilité conditionnelle, on divise par l'effectif du groupe déjà connu (ici les 900 clients satisfaits), pas par l'effectif total.}` },
+      { type: "resultat", text: `P_S(I) = \\dfrac{720}{900} = 0,8` },
+    ] },
     {
       type: "qcm",
       question: `Les évènements \\(I\\) et \\(S\\) sont-ils indépendants ?`,
@@ -388,7 +412,11 @@ function genSuitesOfficielAntilles() {
     { type: "numeric", question: `Calcule \\(u_1\\).`, answer: 1300, steps: [`u_1 = 1200 + 100 = 1300`] },
     { type: "numeric", question: `Calcule \\(u_2\\).`, answer: 1400, steps: [`u_2 = u_1 + 100 = 1400`] },
     { type: "qcm", question: `Quelle est la nature de la suite \\((u_n)\\) ?`, options: ["Arithmétique de raison 100", "Géométrique de raison 100", "Géométrique de raison 1,05", "Ni arithmétique, ni géométrique"], answer: "Arithmétique de raison 100", steps: [`(u_n) \\text{ est arithmétique de raison } 100.`] },
-    { type: "numeric", question: `On admet que \\(u_n = 1200 + 100n\\). À partir de quelle année a-t-on \\(u_n > 2950\\) ? (Donne l'année sous la forme AAAA.)`, answer: 2028, steps: [`1200 + 100n > 2950 \\iff n > 17,5 \\iff n \\geq 18`, `2010 + 18 = 2028`] },
+    { type: "numeric", question: `On admet que \\(u_n = 1200 + 100n\\). À partir de quelle année a-t-on \\(u_n > 2950\\) ? (Donne l'année sous la forme AAAA.)`, answer: 2028, steps: [
+      { type: "calcul", text: `1200 + 100n > 2950 \\iff n > 17,5` },
+      { type: "regle", text: `\\text{n représente un nombre d'années, donc un entier : comme } n > 17,5, \\text{ le plus petit entier qui convient est } n = 18.` },
+      { type: "resultat", text: `2010 + 18 = 2028` },
+    ] },
     { type: "numeric", question: `Calcule \\(v_1\\) (arrondi à l'unité).`, answer: 1050, steps: [`v_1 = 1000 \\times 1,05 = 1050`] },
     { type: "qcm", question: `Quelle est la nature de la suite \\((v_n)\\) ?`, options: ["Géométrique de raison 1,05", "Arithmétique de raison 1,05", "Géométrique de raison 1000", "Ni arithmétique, ni géométrique"], answer: "Géométrique de raison 1,05", steps: [`(v_n) \\text{ est géométrique de raison } 1,05.`] },
     { type: "numeric", question: `D'après un tableau de valeurs, en 2038 la forêt 1 est encore plus grande que la forêt 2, mais en 2039 la forêt 2 devient plus grande. À partir de quelle année la forêt 2 dépasse-t-elle la forêt 1 ? (AAAA)`, answer: 2039, steps: [`u_{29} = 1200 + 2900 = 4100`, `v_{29} = 1000 \\times 1,05^{29} \\approx 4116 > 4100`, `\\text{La forêt 2 dépasse la forêt 1 à partir de } 2010 + 29 = 2039.`] },
@@ -425,7 +453,10 @@ function genFonctionOfficielCentresEtrangers() {
       prompt: `On considère la fonction \\(f\\) définie sur \\([0 ; 10]\\) par \\(f(x) = -x^3 + 4,5x^2 - 6x + 2\\). L'expression de sa dérivée \\(f'(x)\\) est :`,
       options: ["-3x^2 + 9x - 6", "-3x^2 - 9x - 6", "3x^2 + 9x - 6", "-x^2 + 9x - 6"],
       answer: "-3x^2 + 9x - 6",
-      steps: [`f'(x) = -3x^2 + 2 \\times 4,5 x - 6 = -3x^2 + 9x - 6`],
+      steps: [
+        { type: "regle", text: `\\text{On dérive terme par terme : la dérivée de } -x^3 \\text{ est } -3x^2, \\text{ celle de } 4,5x^2 \\text{ est } 9x, \\text{ celle de } -6x \\text{ est } -6, \\text{ et celle de la constante } 2 \\text{ est nulle.}` },
+        { type: "resultat", text: `f'(x) = -3x^2 + 2 \\times 4,5 x - 6 = -3x^2 + 9x - 6` },
+      ],
     },
     {
       prompt: `Avec \\(f'(x) = -3x^2 + 9x - 6\\), cette expression se factorise sous la forme :`,
@@ -562,16 +593,19 @@ function genIdentiteRemarquableOriginalQCM() {
   const forme = pick(["carre_somme", "carre_difference", "produit_somme_difference"]);
   const a = pick([2, 3, 4, 5]);
   const b = nonZero(1, 9);
-  let expr, correct;
+  let expr, correct, identite;
   if (forme === "carre_somme") {
     expr = `(${a}x + ${b})^2`;
     correct = `${a * a}x^2 + ${2 * a * b}x + ${b * b}`;
+    identite = `(A+B)^2 = A^2 + 2AB + B^2`;
   } else if (forme === "carre_difference") {
     expr = `(${a}x - ${b})^2`;
     correct = `${a * a}x^2 - ${2 * a * b}x + ${b * b}`;
+    identite = `(A-B)^2 = A^2 - 2AB + B^2`;
   } else {
     expr = `(${a}x + ${b})(${a}x - ${b})`;
     correct = `${a * a}x^2 - ${b * b}`;
+    identite = `(A+B)(A-B) = A^2 - B^2`;
   }
   const wrong1 = `${a}x^2 ${signedL(b * b)}`;
   const wrong2 = forme === "produit_somme_difference" ? `${a * a}x^2 + ${b * b}` : `${a * a}x^2 ${signedL(b * b)}`;
@@ -583,7 +617,10 @@ function genIdentiteRemarquableOriginalQCM() {
     prompt: `La forme développée et réduite de \\(${expr}\\) est :`,
     answer: correct,
     options,
-    steps: [`\\text{Identité remarquable appliquée à } ${expr}`, correct],
+    steps: [
+      { type: "regle", text: `\\text{On applique l'identité remarquable } ${identite} \\text{ avec } A = ${a}x \\text{ et } B = ${b}.` },
+      { type: "resultat", text: correct },
+    ],
   };
 }
 
@@ -629,7 +666,10 @@ function genIsolerVariableFormuleOriginalQCM() {
     prompt: `On donne la formule \\(${f.enonce}\\). En isolant \\(${f.cible}\\), on obtient :`,
     answer: f.correct,
     options,
-    steps: [`\\text{On isole la variable demandée dans la formule } ${f.enonce}.`, f.correct],
+    steps: [
+      { type: "regle", text: `\\text{On isole la variable demandée dans la formule } ${f.enonce} \\text{ en multipliant ou divisant les deux membres par les mêmes quantités.}` },
+      { type: "resultat", text: f.correct },
+    ],
   };
 }
 
@@ -696,9 +736,15 @@ function genProbaTableauCroiseOriginalNumeric() {
   const total = totalE + totalNonE;
   const banque = [
     { question: `Calcule la probabilité \\(P(E \\cap F)\\).`, answer: roundTo(eEtF / total, 4), steps: [`P(E \\cap F) = \\dfrac{${eEtF}}{${total}} \\approx ${fr(roundTo(eEtF / total, 4))}`] },
-    { question: `Calcule la probabilité conditionnelle \\(P_E(F)\\).`, answer: roundTo(eEtF / totalE, 4), steps: [`P_E(F) = \\dfrac{${eEtF}}{${totalE}} \\approx ${fr(roundTo(eEtF / totalE, 4))}`] },
+    { question: `Calcule la probabilité conditionnelle \\(P_E(F)\\).`, answer: roundTo(eEtF / totalE, 4), steps: [
+      { type: "regle", text: `\\text{Pour une probabilité conditionnelle, on divise par l'effectif du groupe déjà connu (ici les } ${totalE} \\text{ personnes vérifiant } E\\text{), pas par l'effectif total.}` },
+      { type: "resultat", text: `P_E(F) = \\dfrac{${eEtF}}{${totalE}} \\approx ${fr(roundTo(eEtF / totalE, 4))}` },
+    ] },
     { question: `Calcule la probabilité \\(P(F)\\).`, answer: roundTo(totalF / total, 4), steps: [`P(F) = \\dfrac{${totalF}}{${total}} \\approx ${fr(roundTo(totalF / total, 4))}`] },
-    { question: `Calcule la probabilité conditionnelle \\(P_{\\overline{E}}(F)\\).`, answer: roundTo(nonEEtF / totalNonE, 4), steps: [`P_{\\overline{E}}(F) = \\dfrac{${nonEEtF}}{${totalNonE}} \\approx ${fr(roundTo(nonEEtF / totalNonE, 4))}`] },
+    { question: `Calcule la probabilité conditionnelle \\(P_{\\overline{E}}(F)\\).`, answer: roundTo(nonEEtF / totalNonE, 4), steps: [
+      { type: "regle", text: `\\text{Sachant } \\overline{E}, \\text{ on divise par l'effectif du groupe } \\overline{E} \\text{ (ici } ${totalNonE}\\text{), pas par l'effectif total.}` },
+      { type: "resultat", text: `P_{\\overline{E}}(F) = \\dfrac{${nonEEtF}}{${totalNonE}} \\approx ${fr(roundTo(nonEEtF / totalNonE, 4))}` },
+    ] },
   ];
   const q = pick(banque);
   return {
@@ -749,17 +795,21 @@ function genSuiteArithmetiqueModelisationOriginalNumeric() {
   const u0 = pick([80, 100, 150, 200, 300, 500]);
   const r = pick([10, 15, 20, 25, -10, -15, -20]);
   const banque = [
-    { question: `Calcule \\(u_1\\), le nombre de ${ctx.unite} un an après le début du suivi.`, answer: u0 + r },
-    { question: `Calcule \\(u_2\\), le nombre de ${ctx.unite} deux ans après le début du suivi.`, answer: u0 + 2 * r },
-    { question: `En utilisant \\(u_n = ${u0} ${signedL(r, "n")}\\), calcule \\(u_5\\).`, answer: u0 + 5 * r },
+    { n: 1, question: `Calcule \\(u_1\\), le nombre de ${ctx.unite} un an après le début du suivi.` },
+    { n: 2, question: `Calcule \\(u_2\\), le nombre de ${ctx.unite} deux ans après le début du suivi.` },
+    { n: 5, question: `En utilisant \\(u_n = ${u0} ${signedL(r, "n")}\\), calcule \\(u_5\\).` },
   ];
   const q = pick(banque);
+  const answer = u0 + q.n * r;
   return {
     type: "numeric",
     chapter: "Préparation EAM — Suites",
     prompt: `En 2025, ${ctx.nom} compte \\(u_0 = ${u0}\\) ${ctx.unite}. Chaque année, ce nombre ${r >= 0 ? "augmente" : "diminue"} de ${Math.abs(r)} : la suite \\((u_n)\\) est donc arithmétique de raison ${r}. ${q.question}`,
-    answer: q.answer,
-    steps: [`u_n = ${u0} ${signedL(r, "n")}`, `\\text{Réponse : } ${q.answer}`],
+    answer,
+    steps: [
+      { type: "regle", text: `u_n = ${u0} ${signedL(r, "n")}` },
+      { type: "resultat", text: `u_{${q.n}} = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${q.n} = ${answer}` },
+    ],
   };
 }
 
@@ -775,20 +825,22 @@ function genSuiteGeometriqueModelisationOriginalNumeric() {
   const hausse = Math.random() < 0.7;
   const p = pick([2, 3, 5, 8, 10]);
   const q = hausse ? roundTo(1 + p / 100, 3) : roundTo(1 - p / 100, 3);
-  const v1 = roundTo(v0 * q, 2);
-  const v2 = roundTo(v1 * q, 2);
   const banque = [
-    { question: `Calcule \\(v_1\\).`, answer: v1 },
-    { question: `Calcule \\(v_2\\).`, answer: v2 },
+    { n: 1, question: `Calcule \\(v_1\\).` },
+    { n: 2, question: `Calcule \\(v_2\\).` },
   ];
   const item = pick(banque);
+  const answer = roundTo(v0 * q ** item.n, 2);
   return {
     type: "numeric",
     chapter: "Préparation EAM — Suites",
     prompt: `${ctx.nom} compte initialement \\(v_0 = ${v0}\\) ${ctx.unite}. Chaque année, ce nombre ${hausse ? "augmente" : "diminue"} de ${p} % : la suite \\((v_n)\\) est donc géométrique de raison ${fr(q)}. ${item.question} (arrondi au centième si besoin.)`,
-    answer: item.answer,
+    answer,
     tolerance: 0.01,
-    steps: [`v_n = v_0 \\times ${fr(q)}^n`, `\\text{Réponse : } ${fr(item.answer)}`],
+    steps: [
+      { type: "regle", text: `v_n = v_0 \\times ${fr(q)}^n` },
+      { type: "resultat", text: `v_{${item.n}} = ${v0} \\times ${fr(q)}^{${item.n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -809,10 +861,10 @@ function genSigneDeriveeVariationsOriginalQCM() {
     answer: correctCroissant,
     options: [correctCroissant, correctDecroissant, `\\mathbb{R}`, `\\{${petit} ; ${grand}\\}`],
     steps: [
-      `\\text{Les racines de } f' \\text{ sont } ${petit} \\text{ et } ${grand}.`,
-      coeffPositif
+      { type: "regle", text: `\\text{Les racines de } f' \\text{ sont } ${petit} \\text{ et } ${grand}.` },
+      { type: "resultat", text: coeffPositif
         ? `f'(x) \\geq 0 \\text{ entre les racines : } f \\text{ est croissante sur } ${correctCroissant}.`
-        : `f'(x) \\geq 0 \\text{ à l'extérieur des racines (coefficient dominant négatif) : } f \\text{ est croissante sur } ${correctCroissant}.`,
+        : `f'(x) \\geq 0 \\text{ à l'extérieur des racines (coefficient dominant négatif) : } f \\text{ est croissante sur } ${correctCroissant}.` },
     ],
   };
 }

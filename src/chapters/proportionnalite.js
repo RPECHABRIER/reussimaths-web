@@ -149,7 +149,10 @@ function genPourcentageEffectifCombien() {
     chapter: "Proportionnalité — Appliquer un pourcentage",
     prompt: `Dans une école de ${n} élèves, ${pct} % des élèves ${act}. Combien d'élèves cela représente-t-il ?`,
     answer: effectif,
-    steps: [{ type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${effectif}` }],
+    steps: [
+      { type: "regle", text: `Prendre ${pct} % d'un nombre, c'est le multiplier par \\(\\dfrac{${pct}}{100}\\).` },
+      { type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${effectif}` },
+    ],
   };
 }
 function pgcdPct(a, b) {
@@ -171,7 +174,10 @@ function genProportionEnPourcentageDepuisEffectifs() {
     prompt: `Parmi les ${total} élèves du collège, ${part} ${act}. Exprime cela en pourcentage (arrondis à 1 décimale).`,
     answer: pct,
     tolerance: 0.15,
-    steps: [{ type: "calcul", text: `\\(\\dfrac{${part}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` }],
+    steps: [
+      { type: "regle", text: `Pour passer d'une fraction (effectif sur total) à un pourcentage, on multiplie par 100.` },
+      { type: "calcul", text: `\\(\\dfrac{${part}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` },
+    ],
   };
 }
 
@@ -186,7 +192,10 @@ function genRemisePourcentagePrixFinal() {
     prompt: `Un article coûte ${fr(prix)} €. On bénéficie d'une remise de ${remise} %. Combien doit-on payer après la réduction ? (arrondis au centime)`,
     answer: prixFinal,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${fr(prix)} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixFinal)}` }],
+    steps: [
+      { type: "regle", text: `Une remise de ${remise} % signifie qu'on paie ${100 - remise} % du prix, donc on multiplie par \\(1 - \\dfrac{${remise}}{100}\\).` },
+      { type: "calcul", text: `${fr(prix)} \\times (1 - \\dfrac{${remise}}{100}) = ${fr(prixFinal)}` },
+    ],
   };
 }
 
@@ -391,8 +400,14 @@ function genPourcentageComparerDeuxEcoles() {
     answer: askEcole1 ? pct1 : malades2,
     tolerance: askEcole1 ? 0.15 : 0.5,
     steps: askEcole1
-      ? [{ type: "calcul", text: `\\(\\dfrac{${malades1}}{${total1}} \\times 100 \\approx ${fr(pct1)}\\%\\)` }]
-      : [{ type: "calcul", text: `${total2} \\times \\dfrac{${pct2}}{100} = ${malades2}` }],
+      ? [
+          { type: "regle", text: `Pour passer d'une fraction (effectif sur total) à un pourcentage, on multiplie par 100.` },
+          { type: "calcul", text: `\\(\\dfrac{${malades1}}{${total1}} \\times 100 \\approx ${fr(pct1)}\\%\\)` },
+        ]
+      : [
+          { type: "regle", text: `Prendre ${pct2} % d'un nombre, c'est le multiplier par \\(\\dfrac{${pct2}}{100}\\).` },
+          { type: "calcul", text: `${total2} \\times \\dfrac{${pct2}}{100} = ${malades2}` },
+        ],
   };
 }
 
@@ -406,7 +421,10 @@ function genPourcentageInverseTrouverNombreInitial() {
     chapter: "Proportionnalité — Pourcentage inverse",
     prompt: `${part} représente ${pct} % d'un nombre. Quel est ce nombre ?`,
     answer: total,
-    steps: [{ type: "calcul", text: `${part} \\div \\dfrac{${pct}}{100} = ${part} \\times \\dfrac{100}{${pct}} = ${total}` }],
+    steps: [
+      { type: "regle", text: `Pour retrouver le nombre initial à partir d'un pourcentage, on divise par \\(\\dfrac{${pct}}{100}\\).` },
+      { type: "calcul", text: `${part} \\div \\dfrac{${pct}}{100} = ${part} \\times \\dfrac{100}{${pct}} = ${total}` },
+    ],
   };
 }
 

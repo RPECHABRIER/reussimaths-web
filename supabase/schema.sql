@@ -538,3 +538,25 @@ create policy "practice_time: self read/write" on public.practice_time
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create index if not exists practice_time_user_date_idx on public.practice_time (user_id, practice_date);
+
+-- Activité quotidienne agrégée (tentatives + bonnes réponses), pour le bilan
+-- hebdomadaire (% de réussite et priorités de la semaine suivante, voir
+-- src/pages/Bilan.jsx). skill_mastery ne garde que des compteurs CUMULATIFS
+-- par compétence (attempts/correct depuis toujours) — impossible d'en tirer
+-- un taux de réussite "cette semaine" précis. D'où cette table dédiée,
+-- incrémentée en même temps que skill_mastery (voir useSkillTracking.js,
+-- fonction recordAttempt).
+create table if not exists public.daily_activity (
+  user_id uuid references auth.users (id) on delete cascade,
+  activity_date date not null,
+  attempts integer not null default 0,
+  correct integer not null default 0,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, activity_date)
+);
+alter table public.daily_activity enable row level security;
+
+create policy "daily_activity: self read/write" on public.daily_activity
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create index if not exists daily_activity_user_date_idx on public.daily_activity (user_id, activity_date);

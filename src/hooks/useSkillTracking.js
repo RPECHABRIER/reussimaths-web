@@ -15,6 +15,11 @@ function addDays(date, days) {
   return d;
 }
 
+function todayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 // Suivi de maîtrise PAR COMPÉTENCE plutôt que par chapitre entier.
 // skillId = exercise.chapter (le libellé déjà présent sur chaque exercice
 // dans tous les générateurs, ex: "Second degré — Discriminant") : réutiliser
@@ -61,6 +66,33 @@ export function useSkillTracking(userId) {
         { onConflict: "user_id,skill_id" }
       );
       if (error) console.error("[useSkillTracking] save error:", error.message);
+
+      // Activité quotidienne agrégée (voir supabase/schema.sql, table
+      // daily_activity) — nécessaire au bilan hebdomadaire (% de réussite
+      // "cette semaine", impossible à obtenir depuis skill_mastery qui ne
+      // garde que des compteurs cumulatifs). Échec silencieux si ça rate :
+      // ça ne doit jamais bloquer l'expérience de l'exercice en cours.
+      const { data: existingDay, error: dayReadError } = await supabase
+        .from("daily_activity")
+        .select("attempts, correct")
+        .eq("user_id", userId)
+        .eq("activity_date", todayISO())
+        .maybeSingle();
+      if (dayReadError) {
+        console.error("[useSkillTracking] daily_activity read error:", dayReadError.message);
+        return;
+      }
+      const { error: dayError } = await supabase.from("daily_activity").upsert(
+        {
+          user_id: userId,
+          activity_date: todayISO(),
+          attempts: (existingDay?.attempts ?? 0) + 1,
+          correct: (existingDay?.correct ?? 0) + (correct ? 1 : 0),
+          updated_at: now.toISOString(),
+        },
+        { onConflict: "user_id,activity_date" }
+      );
+      if (dayError) console.error("[useSkillTracking] daily_activity save error:", dayError.message);
     },
     [userId]
   );

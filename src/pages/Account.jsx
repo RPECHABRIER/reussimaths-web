@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { BarChart3 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
@@ -152,6 +153,28 @@ export default function Account() {
           )}
 
           <ReviserCard />
+
+          <Link to="/bilan">
+            <div
+              className="rounded-3xl px-5 py-4 flex items-center gap-3 transition-transform active:scale-[0.98]"
+              style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}33` }}
+            >
+              <div
+                className="flex items-center justify-center rounded-2xl flex-shrink-0"
+                style={{ width: 44, height: 44, backgroundColor: `${colors.gold}22` }}
+              >
+                <BarChart3 size={20} color={colors.gold} />
+              </div>
+              <div className="min-w-0 text-left">
+                <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>
+                  Bilan de la semaine
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
+                  Temps passé, réussite, priorités — utile pour les parents
+                </p>
+              </div>
+            </div>
+          </Link>
 
           <div className="flex items-center justify-center gap-4">
             <Link to="/pseudo" className="text-xs font-medium" style={{ color: colors.slate }}>

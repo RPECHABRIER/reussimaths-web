@@ -41,7 +41,7 @@ function genParametresLoiBinomialeNumeric() {
     chapter: "Loi binomiale — Paramètres",
     prompt: `On tire une carte dans un jeu, on regarde si c'est un pique (succès de probabilité \\(p = \\dfrac{1}{4}\\)), puis on remet la carte. On répète cette expérience ${n} fois de manière identique et indépendante. La variable aléatoire X (nombre de piques obtenus) suit une loi binomiale \\(\\mathcal{B}(n;p)\\). Donne la valeur de n.`,
     answer: n,
-    steps: [`n = ${n}`],
+    steps: [{ type: "resultat", text: `n = ${n}` }],
   };
 }
 
@@ -56,7 +56,10 @@ function genEsperanceNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(p = ${fr(p)}\\). Calcule \\(E(X)\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`E(X) = np = ${n} \\times ${fr(p)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : E(X) = np." },
+      { type: "resultat", text: `E(X) = np = ${n} \\times ${fr(p)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -71,7 +74,10 @@ function genVarianceNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(p = ${fr(p)}\\). Calcule \\(V(X)\\), arrondie au centième si nécessaire.`,
     answer,
     tolerance: 0.01,
-    steps: [`V(X) = np(1-p) = ${n} \\times ${fr(p)} \\times ${fr(roundTo(1 - p, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : V(X) = np(1-p)." },
+      { type: "resultat", text: `V(X) = np(1-p) = ${n} \\times ${fr(p)} \\times ${fr(roundTo(1 - p, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -87,7 +93,10 @@ function genEcartTypeNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(p = ${fr(p)}\\). Calcule l'écart-type \\(\\sigma(X)\\), arrondi au centième.`,
     answer,
     tolerance: 0.01,
-    steps: [`\\sigma(X) = \\sqrt{np(1-p)} = \\sqrt{${fr(roundTo(variance, 4))}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : σ(X) = √(np(1-p))." },
+      { type: "resultat", text: `\\sigma(X) = \\sqrt{np(1-p)} = \\sqrt{${fr(roundTo(variance, 4))}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -103,7 +112,10 @@ function genProbabilitePonctuelleNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(p = ${fr(p)}\\). Calcule \\(P(X=${k})\\), arrondie au millième.`,
     answer,
     tolerance: 0.001,
-    steps: [`P(X=${k}) = \\dbinom{${n}}{${k}} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : P(X=k) = (n k)·p^k·(1-p)^(n-k)." },
+      { type: "resultat", text: `P(X=${k}) = \\dbinom{${n}}{${k}} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -125,7 +137,10 @@ function genFormuleProbabiliteQCM() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(${n};p)\\). Quelle est l'expression de \\(P(X=${k})\\) ?`,
     answer: correct,
     options,
-    steps: [`P(X=${k}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : P(X=k) = (n k)·p^k·(1-p)^(n-k)." },
+      { type: "resultat", text: `P(X=${k}) = ${correct}` },
+    ],
   };
 }
 
@@ -139,17 +154,20 @@ function genCoefficientBinomialSymetrieNumeric() {
     chapter: "Loi binomiale — Coefficients binomiaux",
     prompt: `On sait que \\(\\dbinom{${n}}{${k}} = ${V}\\). En utilisant la symétrie des coefficients binomiaux, donne la valeur de \\(\\dbinom{${n}}{${n - k}}\\).`,
     answer: V,
-    steps: [`\\dbinom{${n}}{${n - k}} = \\dbinom{${n}}{${k}} = ${V}`],
+    steps: [
+      { type: "regle", text: "Symétrie des coefficients binomiaux : (n k) = (n, n-k)." },
+      { type: "resultat", text: `\\dbinom{${n}}{${n - k}} = \\dbinom{${n}}{${k}} = ${V}` },
+    ],
   };
 }
 
 // ---------- 8. Identifier un schéma de succès valide (QCM Vrai/Faux) ----------
 function genIdentifierSuccesQCM() {
   const cas = pick([
-    { description: "On lance un dé et X donne le résultat obtenu (1 à 6). X suit une loi binomiale.", reponse: "Faux" },
-    { description: "On lance 5 fois une pièce et X compte le nombre de \"Face\" obtenus. X suit une loi binomiale.", reponse: "Vrai" },
-    { description: "On tire successivement et sans remise 3 boules dans une urne, et X compte le nombre de boules rouges. X suit une loi binomiale.", reponse: "Faux" },
-    { description: "On répète 10 fois, de manière indépendante, une épreuve de Bernoulli de paramètre p, et X compte le nombre de succès. X suit une loi binomiale.", reponse: "Vrai" },
+    { description: "On lance un dé et X donne le résultat obtenu (1 à 6). X suit une loi binomiale.", reponse: "Faux", explication: "C'est faux : X n'est pas le comptage d'un nombre de succès dans une répétition d'épreuves à deux issues, c'est directement le résultat d'un seul lancer à 6 issues." },
+    { description: "On lance 5 fois une pièce et X compte le nombre de \"Face\" obtenus. X suit une loi binomiale.", reponse: "Vrai", explication: "C'est vrai : 5 répétitions identiques et indépendantes d'une épreuve à deux issues (Face/Pile), X compte le nombre de succès." },
+    { description: "On tire successivement et sans remise 3 boules dans une urne, et X compte le nombre de boules rouges. X suit une loi binomiale.", reponse: "Faux", explication: "C'est faux : sans remise, la composition de l'urne change à chaque tirage, donc la probabilité de succès n'est pas constante — les tirages ne sont pas indépendants." },
+    { description: "On répète 10 fois, de manière indépendante, une épreuve de Bernoulli de paramètre p, et X compte le nombre de succès. X suit une loi binomiale.", reponse: "Vrai", explication: "C'est vrai : c'est exactement la définition d'une loi binomiale B(n;p)." },
   ]);
   return {
     type: "qcm",
@@ -157,18 +175,18 @@ function genIdentifierSuccesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
 // ---------- 9. Vrai ou faux sur les propriétés de la loi binomiale (QCM) ----------
 function genVraiFauxLoiBinomialeQCM() {
   const cas = pick([
-    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(E(X) = np\\).", reponse: "Vrai" },
-    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(V(X) = np(1-p)\\).", reponse: "Vrai" },
-    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(V(X) = (1-p)E(X)\\).", reponse: "Vrai" },
-    { description: "\\(P(X=k) = \\dbinom{n}{k}p^{n-k}(1-p)^{k}\\).", reponse: "Faux" },
-    { description: "\\(\\dbinom{n}{k} = \\dbinom{n}{n-k}\\).", reponse: "Vrai" },
+    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(E(X) = np\\).", reponse: "Vrai", explication: "C'est vrai : c'est la formule de référence de l'espérance d'une loi binomiale." },
+    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(V(X) = np(1-p)\\).", reponse: "Vrai", explication: "C'est vrai : c'est la formule de référence de la variance d'une loi binomiale." },
+    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(V(X) = (1-p)E(X)\\).", reponse: "Vrai", explication: "C'est vrai : comme E(X) = np, on a (1-p)E(X) = (1-p)np = np(1-p) = V(X)." },
+    { description: "\\(P(X=k) = \\dbinom{n}{k}p^{n-k}(1-p)^{k}\\).", reponse: "Faux", explication: "C'est faux : les exposants sont inversés. La formule correcte est P(X=k) = (n k)·p^k·(1-p)^(n-k)." },
+    { description: "\\(\\dbinom{n}{k} = \\dbinom{n}{n-k}\\).", reponse: "Vrai", explication: "C'est vrai : c'est la propriété de symétrie des coefficients binomiaux." },
   ]);
   return {
     type: "qcm",
@@ -176,7 +194,7 @@ function genVraiFauxLoiBinomialeQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -190,7 +208,10 @@ function genTrouverNNumeric() {
     chapter: "Loi binomiale — Espérance et variance",
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(p = ${fr(p)}\\) et \\(E(X) = ${fr(E)}\\). Détermine n.`,
     answer: n,
-    steps: [`n = \\dfrac{E(X)}{p} = \\dfrac{${fr(E)}}{${fr(p)}} = ${n}`],
+    steps: [
+      { type: "regle", text: "On inverse la formule E(X) = np pour isoler n : n = E(X)/p." },
+      { type: "resultat", text: `n = \\dfrac{E(X)}{p} = \\dfrac{${fr(E)}}{${fr(p)}} = ${n}` },
+    ],
   };
 }
 
@@ -205,7 +226,10 @@ function genTrouverPNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(E(X) = ${fr(E)}\\). Détermine p.`,
     answer: p,
     tolerance: 0.001,
-    steps: [`p = \\dfrac{E(X)}{n} = \\dfrac{${fr(E)}}{${n}} = ${fr(p)}`],
+    steps: [
+      { type: "regle", text: "On inverse la formule E(X) = np pour isoler p : p = E(X)/n." },
+      { type: "resultat", text: `p = \\dfrac{E(X)}{n} = \\dfrac{${fr(E)}}{${n}} = ${fr(p)}` },
+    ],
   };
 }
 
@@ -221,17 +245,21 @@ function genProbabiliteComplementaireNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(n = ${n}\\) et \\(p = ${fr(p)}\\). Calcule \\(P(X \\geqslant 1)\\), arrondie au millième, en utilisant l'événement contraire.`,
     answer,
     tolerance: 0.001,
-    steps: [`P(X=0) = (1-${fr(p)})^{${n}} \\approx ${fr(roundTo(p0, 4))}`, `P(X \\geqslant 1) = 1 - P(X=0) \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "L'événement contraire de « au moins un succès » est « aucun succès » : P(X≥1) = 1 - P(X=0)." },
+      { type: "calcul", text: `P(X=0) = (1-${fr(p)})^{${n}} \\approx ${fr(roundTo(p0, 4))}` },
+      { type: "resultat", text: `P(X \\geqslant 1) = 1 - P(X=0) \\approx ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 13. Conditions de validité du schéma de Bernoulli répété (QCM) ----------
 function genIdentifierLoiBinomialeQCM() {
   const cas = pick([
-    { description: "Une loi binomiale modélise la répétition d'expériences identiques et indépendantes.", reponse: "Vrai" },
-    { description: "Une loi binomiale peut s'appliquer même si la probabilité de succès change à chaque répétition.", reponse: "Faux" },
-    { description: "Une épreuve de Bernoulli n'admet que deux issues possibles : succès ou échec.", reponse: "Vrai" },
-    { description: "Un tirage sans remise donne toujours lieu à une loi binomiale.", reponse: "Faux" },
+    { description: "Une loi binomiale modélise la répétition d'expériences identiques et indépendantes.", reponse: "Vrai", explication: "C'est vrai : c'est la définition même du schéma de Bernoulli répété qui donne naissance à une loi binomiale." },
+    { description: "Une loi binomiale peut s'appliquer même si la probabilité de succès change à chaque répétition.", reponse: "Faux", explication: "C'est faux : la probabilité de succès p doit rester constante à chaque répétition pour que la loi binomiale s'applique." },
+    { description: "Une épreuve de Bernoulli n'admet que deux issues possibles : succès ou échec.", reponse: "Vrai", explication: "C'est vrai : c'est la définition d'une épreuve de Bernoulli." },
+    { description: "Un tirage sans remise donne toujours lieu à une loi binomiale.", reponse: "Faux", explication: "C'est faux : sans remise, la probabilité de succès change à chaque tirage (les épreuves ne sont pas indépendantes), donc ce n'est pas une loi binomiale." },
   ]);
   return {
     type: "qcm",
@@ -239,7 +267,7 @@ function genIdentifierLoiBinomialeQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -253,7 +281,10 @@ function genFormuleVarianceQCM() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\). Quelle est l'expression de \\(V(X)\\) ?`,
     answer: correct,
     options,
-    steps: [`V(X) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : V(X) = np(1-p)." },
+      { type: "resultat", text: `V(X) = ${correct}` },
+    ],
   };
 }
 
@@ -269,7 +300,10 @@ function genRelationVarianceEsperanceNumeric() {
     prompt: `X suit une loi binomiale \\(\\mathcal{B}(n;p)\\) avec \\(p = ${fr(p)}\\) et \\(E(X) = ${fr(E)}\\). En utilisant la relation \\(V(X) = (1-p)E(X)\\), calcule \\(V(X)\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`V(X) = (1-${fr(p)}) \\times ${fr(E)} = ${fr(roundTo(1 - p, 4))} \\times ${fr(E)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "On applique directement la relation donnée : V(X) = (1-p)E(X)." },
+      { type: "resultat", text: `V(X) = (1-${fr(p)}) \\times ${fr(E)} = ${fr(roundTo(1 - p, 4))} \\times ${fr(E)} = ${fr(answer)}` },
+    ],
   };
 }
 

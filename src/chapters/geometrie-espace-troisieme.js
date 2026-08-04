@@ -167,7 +167,10 @@ function genLongueurMeridienNumeric() {
     prompt: `Une planète (ou un astre) sphérique a un rayon de ${R} km. Un méridien est un demi grand cercle. Calcule la longueur d'un méridien (valeur approchée au km près).`,
     answer,
     tolerance: 5,
-    steps: [{ type: "calcul", text: `L = \\pi \\times R = \\pi \\times ${R} \\approx ${answer}\\text{ km}` }],
+    steps: [
+      { type: "regle", text: `\\text{La longueur d'un grand cercle (de rayon R) est } 2 \\times \\pi \\times R. \\text{ Un méridien est la moitié de ce grand cercle, donc } L = \\pi \\times R.` },
+      { type: "calcul", text: `L = \\pi \\times R = \\pi \\times ${R} \\approx ${answer}\\text{ km}` },
+    ],
   };
 }
 
@@ -182,7 +185,13 @@ function genRayonParalleleNumeric() {
     prompt: `La Terre a un rayon de ${R} km. Calcule le rayon du parallèle situé à la latitude ${latitude}° (valeur approchée au km près).`,
     answer,
     tolerance: 5,
-    steps: [{ type: "calcul", text: `r = R \\times \\cos(${latitude}°) = ${R} \\times \\cos(${latitude}°) \\approx ${answer}\\text{ km}` }],
+    steps: [
+      {
+        type: "regle",
+        text: `\\text{Dans le triangle rectangle formé par le centre de la Terre, le centre du parallèle et un point du parallèle, l'angle au centre de la Terre est la latitude. Le rayon du parallèle est le côté adjacent à cet angle, donc } r = R \\times \\cos(\\text{latitude}).`,
+      },
+      { type: "calcul", text: `r = R \\times \\cos(${latitude}°) = ${R} \\times \\cos(${latitude}°) \\approx ${answer}\\text{ km}` },
+    ],
   };
 }
 
@@ -199,6 +208,7 @@ function genLongueurParalleleNumeric() {
     answer,
     tolerance: 10,
     steps: [
+      { type: "regle", text: `\\text{Le rayon du parallèle est } r = R \\times \\cos(\\text{latitude}) \\text{ (voir la relation dans le triangle rectangle centre Terre/centre parallèle/point du parallèle), puis on calcule la circonférence du cercle de rayon r.}` },
       { type: "calcul", text: `r = ${R} \\times \\cos(${latitude}°) \\approx ${fr(roundTo(rayonParallele, 0))}\\text{ km}` },
       { type: "resultat", text: `L = 2 \\times \\pi \\times r \\approx ${answer}\\text{ km}` },
     ],
@@ -289,6 +299,7 @@ function genSectionPyramideLongueurNumeric() {
     answer,
     tolerance: 0.05,
     steps: [
+      { type: "regle", text: `\\text{La section est une réduction de la base : le rapport de réduction est égal au rapport des hauteurs (hauteur de la coupe depuis le sommet, sur hauteur totale de la pyramide).}` },
       { type: "calcul", text: `\\text{Coefficient de réduction} = \\dfrac{${hauteurCoupe}}{${hauteurTotale}} \\approx ${fr(k)}` },
       { type: "resultat", text: `\\text{Côté de la section} = ${coteBase} \\times ${fr(k)} \\approx ${fr(answer)}` },
     ],

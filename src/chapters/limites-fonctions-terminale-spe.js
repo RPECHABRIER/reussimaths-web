@@ -44,7 +44,10 @@ function genLimiteFonctionRationnelleNumeric() {
     prompt: `On considère la fonction f définie par \\(f(x) = \\dfrac{${a}x^2 + 3x}{${b}x^2 - 5}\\). Quelle est la limite de f(x) quand x tend vers \\(+\\infty\\) (valeur décimale, arrondie au millième si nécessaire) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`f(x) = \\dfrac{x^2(${a} + \\frac{3}{x})}{x^2(${b} - \\frac{5}{x^2})} \\to \\dfrac{${a}}{${b}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une fonction rationnelle en } \\pm\\infty, \\text{ on factorise numérateur et dénominateur par le terme de plus haut degré.}` },
+      { type: "resultat", text: `f(x) = \\dfrac{x^2(${a} + \\frac{3}{x})}{x^2(${b} - \\frac{5}{x^2})} \\to \\dfrac{${a}}{${b}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -67,7 +70,10 @@ function genLimiteFonctionPolynomialeQCM() {
     prompt: `On considère \\(f(x) = ${a}x^{${degre}} - 2x + 1\\). Quelle est la limite de f(x) quand x tend vers \\(${x0}\\) ?`,
     answer: reponse,
     options: ["+\\infty", "-\\infty"],
-    steps: [`\\text{En } ${x0}, \\text{ f(x) a même limite que son terme de plus haut degré } ${a}x^{${degre}}.`, `\\text{Limite : } ${reponse}`],
+    steps: [
+      { type: "regle", text: `\\text{En } ${x0}, \\text{ f(x) a même limite que son terme de plus haut degré } ${a}x^{${degre}}.` },
+      { type: "resultat", text: `\\text{Limite : } ${reponse}` },
+    ],
   };
 }
 
@@ -83,7 +89,7 @@ function genCroissanceCompareeQCM() {
     prompt: `D'après le théorème de croissance comparée, quelle est la limite de \\(${expr}\\) quand x tend vers \\(+\\infty\\) ?`,
     answer: reponse,
     options: ["+\\infty", "0"],
-    steps: [numerateurExp ? "L'exponentielle l'emporte toujours sur les puissances de x : la limite est +\\infty." : "L'exponentielle l'emporte toujours sur les puissances de x au dénominateur : la limite est 0."],
+    steps: [{ type: "regle", text: numerateurExp ? "L'exponentielle l'emporte toujours sur les puissances de x : la limite est +\\infty." : "L'exponentielle l'emporte toujours sur les puissances de x au dénominateur : la limite est 0." }],
   };
 }
 
@@ -95,7 +101,7 @@ function genAsymptoteVerticaleNumeric() {
     chapter: "Limites de fonctions — Asymptotes",
     prompt: `On considère la fonction f définie par \\(f(x) = \\dfrac{2x+1}{x - ${a}}\\), non définie en x = ${a}. Quelle est l'équation de l'asymptote verticale à la courbe de f (donne la valeur de x) ?`,
     answer: a,
-    steps: [`\\text{L'asymptote verticale a pour équation } x = ${a} \\text{ (valeur interdite du dénominateur).}`],
+    steps: [{ type: "regle", text: `\\text{L'asymptote verticale a pour équation } x = ${a} \\text{ (valeur interdite du dénominateur).}` }],
   };
 }
 
@@ -107,17 +113,21 @@ function genTheoremeGendarmesFonctionNumeric() {
     chapter: "Limites de fonctions — Théorème des gendarmes",
     prompt: `Pour tout réel x strictement positif, on a \\(${L} - \\dfrac{1}{x} \\leqslant f(x) \\leqslant ${L} + \\dfrac{1}{x}\\). D'après le théorème des gendarmes, vers quelle valeur converge f(x) quand x tend vers \\(+\\infty\\) ?`,
     answer: L,
-    steps: [`\\lim\\left(${L} - \\dfrac{1}{x}\\right) = \\lim\\left(${L} + \\dfrac{1}{x}\\right) = ${L}`, `\\text{Donc } \\lim_{x \\to +\\infty} f(x) = ${L}`],
+    steps: [
+      { type: "regle", text: `\\text{Théorème des gendarmes : si } f(x) \\text{ est encadrée par deux fonctions qui tendent vers la même limite, alors } f(x) \\text{ tend vers cette même limite.}` },
+      { type: "donnee", text: `\\lim\\left(${L} - \\dfrac{1}{x}\\right) = \\lim\\left(${L} + \\dfrac{1}{x}\\right) = ${L}` },
+      { type: "resultat", text: `\\text{Donc } \\lim_{x \\to +\\infty} f(x) = ${L}` },
+    ],
   };
 }
 
 // ---------- 6. Identifier une forme indéterminée pour des fonctions ----------
 function genFormeIndetermineeFonctionQCM() {
   const cas = pick([
-    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = -\\infty, \\text{ on cherche } \\lim (f+g)", reponse: "Forme indéterminée" },
-    { description: "\\lim_{x \\to +\\infty} f(x) = 0 \\text{ et } \\lim_{x \\to +\\infty} g(x) = +\\infty, \\text{ on cherche } \\lim (f \\times g)", reponse: "Forme indéterminée" },
-    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = 2, \\text{ on cherche } \\lim (f \\times g)", reponse: "Pas de forme indéterminée" },
-    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = +\\infty, \\text{ on cherche } \\lim \\dfrac{f}{g}", reponse: "Forme indéterminée" },
+    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = -\\infty, \\text{ on cherche } \\lim (f+g)", reponse: "Forme indéterminée", explication: "C'est une forme indéterminée du type ∞-∞ : selon les fonctions, la limite de f+g peut valoir +∞, -∞, un réel quelconque, ou ne pas exister." },
+    { description: "\\lim_{x \\to +\\infty} f(x) = 0 \\text{ et } \\lim_{x \\to +\\infty} g(x) = +\\infty, \\text{ on cherche } \\lim (f \\times g)", reponse: "Forme indéterminée", explication: "C'est une forme indéterminée du type 0×∞ : on ne peut pas conclure directement, il faut étudier plus finement (souvent en réécrivant le produit sous forme de quotient)." },
+    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = 2, \\text{ on cherche } \\lim (f \\times g)", reponse: "Pas de forme indéterminée", explication: "Ce n'est pas une forme indéterminée : par produit des limites, +∞ multiplié par un réel non nul strictement positif tend vers +∞." },
+    { description: "\\lim_{x \\to +\\infty} f(x) = +\\infty \\text{ et } \\lim_{x \\to +\\infty} g(x) = +\\infty, \\text{ on cherche } \\lim \\dfrac{f}{g}", reponse: "Forme indéterminée", explication: "C'est une forme indéterminée du type ∞/∞ : le résultat dépend des fonctions considérées (c'est ce que traite le théorème de croissance comparée pour e^x et x^n par exemple)." },
   ]);
   return {
     type: "qcm",
@@ -125,7 +135,7 @@ function genFormeIndetermineeFonctionQCM() {
     prompt: `On sait que \\(${cas.description}\\). S'agit-il d'une forme indéterminée ?`,
     answer: cas.reponse,
     options: ["Forme indéterminée", "Pas de forme indéterminée"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -143,7 +153,7 @@ function genLimiteSommeFonctionsQCM() {
     prompt: `On sait que \\(\\lim_{x \\to +\\infty} f(x) = ${cas.f}\\) et \\(\\lim_{x \\to +\\infty} g(x) = ${cas.g}\\). Quelle est la limite de \\(f(x)+g(x)\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "-\\infty"],
-    steps: [`\\text{Par somme des limites : } ${cas.reponse}`],
+    steps: [{ type: "resultat", text: `\\text{Par somme des limites : } ${cas.reponse}` }],
   };
 }
 
@@ -158,18 +168,21 @@ function genEquationAsymptoteHorizontaleNumeric() {
     prompt: `La courbe représentative d'une fonction f admet une asymptote horizontale en \\(+\\infty\\), sachant que \\(\\lim_{x \\to +\\infty} f(x) = \\dfrac{${a}}{${b}}\\). Donne l'ordonnée k de cette asymptote (droite d'équation y = k), arrondie au millième si nécessaire.`,
     answer,
     tolerance: 0.001,
-    steps: [`k = \\dfrac{${a}}{${b}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'équation d'une asymptote horizontale en } +\\infty \\text{ est } y = k, \\text{ où } k \\text{ est la limite de f en } +\\infty.` },
+      { type: "resultat", text: `k = \\dfrac{${a}}{${b}} = ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 9. Vrai ou faux sur les limites et asymptotes ----------
 function genVraiFauxLimitesQCM() {
   const cas = pick([
-    { description: "Si f(x) tend vers +∞ en +∞ et g(x) tend vers 0 en +∞, alors f(x)×g(x) tend nécessairement vers 0.", reponse: "Faux" },
-    { description: "Une fonction rationnelle a, en +∞ et -∞, la même limite que le quotient des termes de plus haut degré du numérateur et du dénominateur.", reponse: "Vrai" },
-    { description: "e^x l'emporte toujours sur x^n quand x tend vers +∞, quel que soit l'entier n.", reponse: "Vrai" },
-    { description: "Si une courbe admet une asymptote horizontale, elle ne peut jamais la croiser.", reponse: "Faux" },
-    { description: "Une asymptote verticale correspond à une limite infinie de la fonction en un point.", reponse: "Vrai" },
+    { description: "Si f(x) tend vers +∞ en +∞ et g(x) tend vers 0 en +∞, alors f(x)×g(x) tend nécessairement vers 0.", reponse: "Faux", explication: "C'est faux : c'est une forme indéterminée du type ∞×0, le résultat dépend des fonctions. Par exemple f(x)=x² et g(x)=1/x donnent f×g → +∞, alors que f(x)=x et g(x)=1/x² donnent f×g → 0." },
+    { description: "Une fonction rationnelle a, en +∞ et -∞, la même limite que le quotient des termes de plus haut degré du numérateur et du dénominateur.", reponse: "Vrai", explication: "C'est vrai : en factorisant numérateur et dénominateur par leur terme de plus haut degré, tous les autres termes deviennent négligeables à l'infini." },
+    { description: "e^x l'emporte toujours sur x^n quand x tend vers +∞, quel que soit l'entier n.", reponse: "Vrai", explication: "C'est vrai : c'est le théorème de croissance comparée du cours, valable pour tout entier naturel n." },
+    { description: "Si une courbe admet une asymptote horizontale, elle ne peut jamais la croiser.", reponse: "Faux", explication: "C'est faux : une courbe peut croiser son asymptote horizontale, tant qu'elle s'en rapproche indéfiniment à l'infini. Par exemple f(x) = sin(x)/x a pour asymptote y=0 mais la croise une infinité de fois." },
+    { description: "Une asymptote verticale correspond à une limite infinie de la fonction en un point.", reponse: "Vrai", explication: "C'est vrai : c'est la définition même d'une asymptote verticale." },
   ]);
   return {
     type: "qcm",
@@ -177,7 +190,7 @@ function genVraiFauxLimitesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -190,7 +203,10 @@ function genLimiteFonctionBorneeSurXQCM() {
     prompt: `Quelle est la limite de \\(\\dfrac{${fonction}(x)}{x}\\) quand x tend vers \\(+\\infty\\) ?`,
     answer: "0",
     options: ["0", "N'existe pas"],
-    steps: [`\\text{Pour tout } x > 0, \\ -\\dfrac{1}{x} \\leqslant \\dfrac{${fonction}(x)}{x} \\leqslant \\dfrac{1}{x}`, `\\text{Les deux bornes tendent vers 0 : d'après le théorème des gendarmes, la limite est 0.}`],
+    steps: [
+      { type: "donnee", text: `\\text{Pour tout } x > 0, \\ -\\dfrac{1}{x} \\leqslant \\dfrac{${fonction}(x)}{x} \\leqslant \\dfrac{1}{x}` },
+      { type: "resultat", text: `\\text{Les deux bornes tendent vers 0 : d'après le théorème des gendarmes, la limite est 0.}` },
+    ],
   };
 }
 
@@ -203,7 +219,7 @@ function genComparerVitessesCroissanceQCM() {
     prompt: `Parmi \\(e^x\\) et \\(x^{${n}}\\), laquelle de ces deux expressions "l'emporte" quand x tend vers \\(+\\infty\\) (c'est-à-dire que le rapport de l'une sur l'autre tend vers \\(+\\infty\\)) ?`,
     answer: "e^x",
     options: ["e^x", `x^{${n}}`],
-    steps: [`\\text{D'après le théorème de croissance comparée, l'exponentielle l'emporte toujours sur les puissances de x.}`],
+    steps: [{ type: "regle", text: `\\text{D'après le théorème de croissance comparée, l'exponentielle l'emporte toujours sur les puissances de x.}` }],
   };
 }
 
@@ -221,7 +237,7 @@ function genLimiteProduitFonctionsQCM() {
     prompt: `On sait que \\(\\lim_{x \\to +\\infty} f(x) = ${cas.f}\\) et \\(\\lim_{x \\to +\\infty} g(x) = ${cas.g}\\). Quelle est la limite de \\(f(x) \\times g(x)\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "-\\infty"],
-    steps: [`\\text{Par produit des limites (règle des signes) : } ${cas.reponse}`],
+    steps: [{ type: "resultat", text: `\\text{Par produit des limites (règle des signes) : } ${cas.reponse}` }],
   };
 }
 
@@ -239,7 +255,7 @@ function genLimiteQuotientFonctionsQCM() {
     prompt: `On sait que \\(\\lim_{x \\to +\\infty} f(x) = ${cas.f}\\) et \\(\\lim_{x \\to +\\infty} g(x) = ${cas.g}\\). Quelle est la limite de \\(\\dfrac{f(x)}{g(x)}\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "0", "-\\infty"],
-    steps: [`\\text{Par quotient des limites : } ${cas.reponse}`],
+    steps: [{ type: "resultat", text: `\\text{Par quotient des limites : } ${cas.reponse}` }],
   };
 }
 
@@ -252,15 +268,18 @@ function genLimitesGaucheDroiteQCM() {
     prompt: `Une fonction f a pour asymptote verticale la droite d'équation x = 2. On sait que le dénominateur de f s'annule et change de signe en x = 2, et que le numérateur est ${positif ? "positif" : "négatif"} au voisinage de 2. Quelle est la limite de f(x) quand x tend vers \\(2^+\\) (par valeurs supérieures, où le dénominateur est positif) ?`,
     answer: positif ? "+\\infty" : "-\\infty",
     options: ["+\\infty", "-\\infty"],
-    steps: [positif ? "Numérateur positif, dénominateur positif : le quotient tend vers +\\infty." : "Numérateur négatif, dénominateur positif : le quotient tend vers -\\infty."],
+    steps: [
+      { type: "regle", text: `\\text{Règle des signes du quotient : numérateur et dénominateur de même signe} \\Rightarrow +\\infty \\text{ ; signes opposés} \\Rightarrow -\\infty.` },
+      { type: "resultat", text: positif ? "Numérateur positif, dénominateur positif : le quotient tend vers +\\infty." : "Numérateur négatif, dénominateur positif : le quotient tend vers -\\infty." },
+    ],
   };
 }
 
 // ---------- 15. Contre-exemple sur une propriété fausse des limites ----------
 function genContreExempleQCM() {
   const cas = pick([
-    { description: "Si f(x) tend vers +∞ et g(x) tend vers +∞, alors f(x) - g(x) tend vers 0.", reponse: "Faux (forme indéterminée ∞-∞, le résultat dépend des fonctions)" },
-    { description: "Si f(x) < g(x) pour tout x et que f et g tendent vers l en +∞, alors on peut avoir des inégalités strictes qui deviennent des égalités à la limite.", reponse: "Vrai" },
+    { description: "Si f(x) tend vers +∞ et g(x) tend vers +∞, alors f(x) - g(x) tend vers 0.", reponse: "Faux (forme indéterminée ∞-∞, le résultat dépend des fonctions)", explication: "C'est faux : f(x)-g(x) est une forme indéterminée du type ∞-∞. Le résultat dépend des fonctions : par exemple f(x)=x²+x et g(x)=x² donnent f-g → +∞, alors que f(x)=x et g(x)=x donnent f-g → 0." },
+    { description: "Si f(x) < g(x) pour tout x et que f et g tendent vers l en +∞, alors on peut avoir des inégalités strictes qui deviennent des égalités à la limite.", reponse: "Vrai", explication: "C'est vrai : le passage à la limite peut transformer une inégalité stricte en égalité. Par exemple f(x)=1/x et g(x)=2/x vérifient f(x)<g(x) pour tout x>0, mais leurs limites en +∞ sont toutes deux égales à 0." },
   ]);
   return {
     type: "qcm",
@@ -268,7 +287,7 @@ function genContreExempleQCM() {
     prompt: `Affirmation : « ${cas.description} » Cette affirmation est-elle vraie ou fausse ?`,
     answer: cas.reponse.startsWith("Vrai") ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 

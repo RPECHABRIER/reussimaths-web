@@ -97,7 +97,13 @@ function buildPreviewSubscription(preview) {
     };
   }
   if (preview.mode === "mensuel") {
-    return { plan: "mensuel", status: "active", current_period_end: null };
+    // current_period_end simulé (+1 mois) pour que la préviz reste fidèle à
+    // un vrai abonnement Stripe — sinon la carte de résiliation
+    // (Account.jsx, qui a besoin d'une date à afficher) resterait masquée
+    // pendant la préviz alors qu'elle apparaît bien pour un vrai abonné.
+    const periodEnd = new Date();
+    periodEnd.setMonth(periodEnd.getMonth() + 1);
+    return { plan: "mensuel", status: "active", current_period_end: periodEnd.toISOString() };
   }
   return null;
 }

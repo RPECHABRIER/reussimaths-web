@@ -1890,3 +1890,32 @@ colonne inexistante) :
 ```sql
 alter table public.subscriptions add column if not exists cancel_at_period_end boolean not null default false;
 ```
+
+
+## 2026-08-04 (suite 9) — Correction : la carte de résiliation restait invisible en préviz admin "mensuel"
+
+Romain a signalé ne pas voir la carte de résiliation en testant via
+"prévisualisation abonnement complet" dans le panneau admin. Cause :
+buildPreviewSubscription() (src/lib/access.js) simule un abonnement
+"mensuel" avec current_period_end: null (aucune date réelle à
+simuler à l'origine) — or la nouvelle carte de résiliation
+(Account.jsx, tâche #302) n'affiche rien tant que current_period_end
+n'est pas renseigné (il lui faut une date à afficher). Corrigé en
+simulant une date réaliste (+1 mois) pour la préviz "mensuel", comme
+c'était déjà fait pour la préviz "special_examen" (+3 mois). Vérifié
+qu'aucune autre logique ne dépendait de cette valeur nulle
+(planIsCurrentlyValid traite l'absence de date comme "non expiré",
+donc aucun effet de bord sur isFullAccessSubscription).
+
+⚠️ En préviz, cliquer "Confirmer" sur la résiliation produira une
+erreur attendue ("Rien à résilier") : l'API cancel-subscription
+travaille sur la VRAIE ligne subscriptions de Romain en base (compte
+admin, sans abonnement Stripe réel derrière), pas sur l'abonnement
+simulé côté client. La préviz permet de vérifier l'affichage/le texte,
+pas le bout en bout — il faudra un vrai compte abonné mensuel pour ça.
+
+Build vérifié avec succès. Fichier synchronisé (diff vide vérifié) vers
+les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox).

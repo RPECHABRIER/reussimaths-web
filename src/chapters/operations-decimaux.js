@@ -60,12 +60,16 @@ function genMultiplierDiviserPuissanceDix() {
   const decimals = pick([1, 2, 3]);
   const x = randDecimal(0.01, 900, decimals);
   const answer = roundTo(isMult ? x * base : x / base, 6);
+  const rang = base === 10 ? "1 rang" : base === 100 ? "2 rangs" : "3 rangs";
   return {
     type: "numeric",
     chapter: "Opérations sur les décimaux — Puissances de dix",
     prompt: `\\(${frTex(x)} ${isMult ? "\\times" : "\\div"} ${base} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(x)} ${isMult ? "\\times" : "\\div"} ${base} = ${frTex(answer)}\\)`],
+    steps: [
+      { type: "regle", text: `${isMult ? "Multiplier" : "Diviser"} par ${base}, c'est décaler la virgule de ${rang} vers la ${isMult ? "droite" : "gauche"}.` },
+      { type: "resultat", text: `\\(${frTex(x)} ${isMult ? "\\times" : "\\div"} ${base} = ${frTex(answer)}\\)` },
+    ],
   };
 }
 
@@ -75,12 +79,16 @@ function genMultiplierParDecimalPuissance() {
   const decimals = pick([0, 1, 2]);
   const x = decimals === 0 ? randInt(2, 2000) : randDecimal(0.5, 900, decimals);
   const answer = roundTo(x * mult, 6);
+  const rang = mult === 0.1 ? "1 rang" : mult === 0.01 ? "2 rangs" : "3 rangs";
   return {
     type: "numeric",
     chapter: "Opérations sur les décimaux — Puissances de dix",
     prompt: `\\(${frTex(x)} \\times ${frTex(mult)} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(x)} \\times ${frTex(mult)} = ${frTex(answer)}\\)`],
+    steps: [
+      { type: "regle", text: `Multiplier par ${fr(mult)}, c'est décaler la virgule de ${rang} vers la gauche.` },
+      { type: "resultat", text: `\\(${frTex(x)} \\times ${frTex(mult)} = ${frTex(answer)}\\)` },
+    ],
   };
 }
 
@@ -143,12 +151,18 @@ function genMultiplierDeuxDecimaux() {
   const a = randDecimal(0.02, 9, pick([1, 2]));
   const b = randDecimal(0.02, 9, pick([1, 2]));
   const answer = roundTo(a * b, 4);
+  const decA = String(a).includes(".") ? String(a).split(".")[1].length : 0;
+  const decB = String(b).includes(".") ? String(b).split(".")[1].length : 0;
+  const totalDec = decA + decB;
   return {
     type: "numeric",
     chapter: "Opérations sur les décimaux — Multiplier deux décimaux",
     prompt: `\\(${frTex(a)} \\times ${frTex(b)} = ?\\)`,
     answer,
-    steps: [`\\(${frTex(a)} \\times ${frTex(b)} = ${frTex(answer)}\\)`],
+    steps: [
+      { type: "regle", text: `On multiplie comme des nombres entiers, puis on compte les chiffres après la virgule dans les deux facteurs (${decA} + ${decB} = ${totalDec}) pour placer la virgule dans le résultat.` },
+      { type: "resultat", text: `\\(${frTex(a)} \\times ${frTex(b)} = ${frTex(answer)}\\)` },
+    ],
   };
 }
 

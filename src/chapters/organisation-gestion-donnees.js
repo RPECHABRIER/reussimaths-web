@@ -188,7 +188,10 @@ function genPourcentageSousGroupeTableau() {
     prompt: `Dans une classe de ${total} élèves, ${oui1} élèves pratiquent un sport. Quel pourcentage d'élèves pratiquent un sport ? (arrondis à 1 décimale)`,
     answer: pct,
     tolerance: 0.15,
-    steps: [{ type: "calcul", text: `\\(\\dfrac{${oui1}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` }],
+    steps: [
+      { type: "regle", text: `Pour passer d'une fraction (effectif sur total) à un pourcentage, on multiplie par 100.` },
+      { type: "calcul", text: `\\(\\dfrac{${oui1}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` },
+    ],
   };
 }
 
@@ -227,7 +230,10 @@ function genConvertirChanceSurXValeur() {
     prompt: `On dit qu'un événement a « une chance sur ${x} » de se réaliser. Quelle est sa probabilité, sous forme décimale ?`,
     answer: dec,
     tolerance: 0.002,
-    steps: [{ type: "calcul", text: `\\(\\dfrac{1}{${x}} = ${fr(dec)}\\)` }],
+    steps: [
+      { type: "regle", text: `« Une chance sur ${x} » signifie une probabilité de \\(\\dfrac{1}{${x}}\\) : on divise 1 par ${x}.` },
+      { type: "calcul", text: `\\(\\dfrac{1}{${x}} = ${fr(dec)}\\)` },
+    ],
   };
 }
 
@@ -289,7 +295,10 @@ function genProbabiliteUrneCouleur() {
     prompt: `Un sac contient ${couleurs.map(([c, n]) => `${n} boules ${c}s`).join(", ")}. On tire une boule au hasard. Quelle est la probabilité, sous forme décimale, d'obtenir une boule ${couleur} ? (arrondis à 3 décimales si besoin)`,
     answer: p,
     tolerance: 0.003,
-    steps: [{ type: "calcul", text: `\\(P(${couleur}) = \\dfrac{${effectif}}{${total}} \\approx ${fr(p)}\\)` }],
+    steps: [
+      { type: "regle", text: `La probabilité d'un événement = nombre de cas favorables ÷ nombre de cas possibles.` },
+      { type: "calcul", text: `\\(P(${couleur}) = \\dfrac{${effectif}}{${total}} \\approx ${fr(p)}\\)` },
+    ],
   };
 }
 
@@ -311,7 +320,10 @@ function genProbabiliteCarteJeu32() {
     prompt: `On tire une carte au hasard dans un jeu de 32 cartes (4 catégories : cœur, carreau, pique, trèfle ; dans chaque catégorie : As, Roi, Dame, Valet, 10, 9, 8 et 7). Quelle est la probabilité, sous forme décimale, d'obtenir ${c.texte} ?`,
     answer: p,
     tolerance: 0.003,
-    steps: [{ type: "calcul", text: `\\(P = \\dfrac{${c.favorable}}{32} \\approx ${fr(p)}\\)` }],
+    steps: [
+      { type: "regle", text: `La probabilité d'un événement = nombre de cas favorables ÷ nombre de cas possibles.` },
+      { type: "calcul", text: `\\(P = \\dfrac{${c.favorable}}{32} \\approx ${fr(p)}\\)` },
+    ],
   };
 }
 
@@ -328,7 +340,10 @@ function genFrequenceExperienceEffectifs() {
     prompt: `On a tiré une boule dans un sac et noté sa couleur, en la remettant à chaque fois, ${total} fois au total. On a obtenu : ${couleurs.map((c, i) => `${effectifs[i]} fois ${c}`).join(", ")}. Quelle est la fréquence d'apparition de la couleur ${couleurs[idx]} (sous forme décimale, arrondie à 3 décimales) ?`,
     answer: freq,
     tolerance: 0.003,
-    steps: [{ type: "calcul", text: `\\(\\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(freq)}\\)` }],
+    steps: [
+      { type: "regle", text: `Fréquence = effectif de la catégorie ÷ effectif total.` },
+      { type: "calcul", text: `\\(\\dfrac{${effectifs[idx]}}{${total}} \\approx ${fr(freq)}\\)` },
+    ],
   };
 }
 
@@ -360,7 +375,10 @@ function genProbabiliteComplementaire() {
     prompt: `La probabilité qu'un événement A se réalise est \\(P(A) = ${frTex(p)}\\). Quelle est la probabilité que A ne se réalise pas ?`,
     answer: complement,
     tolerance: 0.003,
-    steps: [{ type: "calcul", text: `\\(1 - ${fr(p)} = ${fr(complement)}\\)` }],
+    steps: [
+      { type: "regle", text: `L'événement contraire a une probabilité \\(1 - P(A)\\) (la somme des deux vaut 1).` },
+      { type: "calcul", text: `\\(1 - ${fr(p)} = ${fr(complement)}\\)` },
+    ],
   };
 }
 
@@ -387,7 +405,10 @@ function genProbabiliteRoueLoterieSecteurs() {
     prompt: `Une roue de loterie est partagée en ${nSecteurs} secteurs identiques : ${usedColors.map((c, i) => `${repartition[i]} ${c}(s)`).join(", ")}. On fait tourner la roue. Quelle est la probabilité, sous forme décimale, d'obtenir un secteur ${usedColors[idx]} ?`,
     answer: p,
     tolerance: 0.003,
-    steps: [{ type: "calcul", text: `\\(P = \\dfrac{${repartition[idx]}}{${nSecteurs}} \\approx ${fr(p)}\\)` }],
+    steps: [
+      { type: "regle", text: `La probabilité d'un événement = nombre de cas favorables ÷ nombre de cas possibles.` },
+      { type: "calcul", text: `\\(P = \\dfrac{${repartition[idx]}}{${nSecteurs}} \\approx ${fr(p)}\\)` },
+    ],
   };
 }
 

@@ -1435,3 +1435,66 @@ dans ce sandbox).
 
 **Première non spé intégralement auditée pour la tâche #236.** Reste :
 Première Spé, Terminale Spé, Première techno, Terminale STMG.
+
+## Lycée — Première Spé intégralement auditée pour la tâche #236 (repères pédagogiques + codage sémantique)
+
+12 chapitres audités (le 12e, second-degre.js, était déjà entièrement
+conforme depuis une session antérieure — vérifié via grep, aucune édition
+nécessaire) :
+
+- reviser-les-bases-premiere-spe.js : lacune sévère sur le coefficient
+  multiplicateur (steps: [fr(answer)]) ; règles ajoutées pour l'identité
+  remarquable, le sens de l'inégalité selon le signe du diviseur, la
+  formule générale de la norme d'un vecteur.
+- second-degre.js : déjà conforme, aucune modification.
+- suites-numeriques-premiere-spe.js : ajout d'une règle distinguant la
+  raison arithmétique (différence de deux termes consécutifs) de la
+  raison géométrique (quotient, pas différence).
+- derivation-premiere-spe.js : lacune sévère sur le QCM vrai/faux
+  dérivation (4 cas réécrits avec justification : point anguleux de la
+  valeur absolue, tangente verticale de la racine carrée, existence de la
+  tangente, dérivée d'une constante) ; label « formule de référence à
+  connaître » ajouté sur les dérivées de 1/x, racine de x, produit et
+  quotient.
+- variations-courbes-premiere-spe.js : lacune sévère sur 2 QCM sans
+  aucune explication (traduction géométrique parité/symétrie ; vrai/faux
+  variations avec contre-exemple x³ pour « f'(a)=0 sans extremum » et
+  correction de la confusion parité/symétrie-origine).
+- fonction-exponentielle-premiere-spe.js : lacune sévère sur le QCM de
+  modélisation croissance/décroissance (distinction du signe de k dans
+  e^{kt}) ; label « propriété/formule de référence à connaître » sur les
+  propriétés algébriques et les dérivées.
+- trigonometrie-premiere-spe.js : aucune lacune sévère, codage sémantique
+  systématique avec label « valeur remarquable / formule de référence à
+  connaître » sur les valeurs de cos/sin et les formules d'angles associés.
+- vecteurs-produit-scalaire-premiere-spe.js : lacune sévère sur le
+  vrai/faux (4 cas réécrits, dont contre-exemple d'un angle obtus pour
+  « produit scalaire toujours positif ») ; label « formule de référence »
+  sur Al-Kashi, développement de normes, bilinéarité.
+- geometrie-reperee-premiere-spe.js : lacune sévère sur le vrai/faux
+  (4 cas réécrits, dont la correction du signe -D/2 pour l'abscisse du
+  centre d'un cercle, erreur classique).
+- probabilites-conditionnelles-premiere-spe.js : lacune sévère sur le
+  vrai/faux (4 cas réécrits, dont la correction « incompatible n'implique
+  pas indépendant », avec démonstration).
+- variables-aleatoires-premiere-spe.js : 2 lacunes sévères (interprétation
+  des notations P(X=a) vs P(X≤a) sans justification ; vrai/faux avec
+  correction du signe dans la formule de König-Huygens).
+- preparation-bac-premiere-spe.js : lacune sévère sur le QCM coefficient
+  multiplicateur (distinction hausse/baisse selon coefficient >1 ou <1) ;
+  rappel de la distinction dénominateur pour les probabilités
+  conditionnelles (sous-groupe connu, pas le total).
+
+Chaque fichier : node --check, smoke test 8000 itérations (4 paliers),
+0 erreur, sync vers les deux copies Application TOP (diff vide vérifié),
+commit séparé (11 commits, second-degre.js n'a nécessité aucun commit).
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`, après nettoyage du cache Vite qui provoquait une
+erreur de résolution transitoire).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**Première Spé intégralement auditée pour la tâche #236.** Reste :
+Terminale Spé, Première techno, Terminale STMG.

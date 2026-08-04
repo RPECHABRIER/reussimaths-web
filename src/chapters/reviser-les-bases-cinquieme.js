@@ -194,6 +194,7 @@ function genFractionDunNombre() {
     prompt: `Calcule \\(\\dfrac{${num}}{${den}}\\) de ${n}.`,
     answer,
     steps: [
+      { type: "regle", text: `Prendre \\(\\dfrac{${num}}{${den}}\\) d'un nombre, c'est diviser ce nombre par ${den} puis multiplier le résultat par ${num}.` },
       { type: "calcul", text: `${n} \\div ${den} = ${k}` },
       { type: "calcul", text: `${k} \\times ${num} = ${answer}` },
     ],
@@ -228,7 +229,10 @@ function genEcritureDecimaleFraction() {
     prompt: `Donne l'écriture décimale de \\(\\dfrac{${num}}{${den}}\\).`,
     answer,
     tolerance: 0.001,
-    steps: [{ type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `L'écriture décimale d'une fraction s'obtient en divisant le numérateur par le dénominateur.` },
+      { type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -261,7 +265,10 @@ function genCalculerPourcentage() {
     chapter: "Réviser les bases (5e) — Pourcentages",
     prompt: `Calcule ${pct} % de ${n}.`,
     answer,
-    steps: [{ type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Calculer ${pct} % d'un nombre, c'est le multiplier par \\(\\dfrac{${pct}}{100}\\).` },
+      { type: "calcul", text: `${n} \\times \\dfrac{${pct}}{100} = ${answer}` },
+    ],
   };
 }
 
@@ -311,7 +318,10 @@ function genPerimetreRectangle() {
     prompt: `ABCD est un rectangle. Calcule son périmètre, en cm.`,
     figure: buildRectangleFigure(L, l),
     answer: perim,
-    steps: [{ type: "calcul", text: `2 \\times (${L} + ${l}) = ${perim}` }],
+    steps: [
+      { type: "regle", text: `Périmètre d'un rectangle = 2 × (longueur + largeur).` },
+      { type: "calcul", text: `2 \\times (${L} + ${l}) = ${perim}` },
+    ],
   };
 }
 
@@ -326,7 +336,10 @@ function genAireRectangle() {
     prompt: `ABCD est un rectangle. Calcule son aire, en cm².`,
     figure: buildRectangleFigure(L, l),
     answer: aire,
-    steps: [{ type: "calcul", text: `${L} \\times ${l} = ${aire}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un rectangle = longueur × largeur.` },
+      { type: "calcul", text: `${L} \\times ${l} = ${aire}` },
+    ],
   };
 }
 

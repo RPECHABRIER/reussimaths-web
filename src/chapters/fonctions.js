@@ -231,6 +231,7 @@ function genDiametreEolienneNumeric() {
     answer: D,
     steps: [
       { type: "calcul", text: `D^2 = ${fr(roundTo(puissance, 2))} \\div 0,25 = ${roundTo(puissance / 0.25, 2)}` },
+      { type: "regle", text: `On cherche ensuite le nombre qui, multiplié par lui-même, donne ${roundTo(puissance / 0.25, 2)}.` },
       { type: "resultat", text: `D = ${D}` },
     ],
   };
@@ -260,7 +261,10 @@ function genDistanceFreinageNumeric() {
     prompt: `Sur route mouillée, la distance de freinage est 75 % plus grande que sur route sèche. Pour une distance de freinage de ${fr(distanceSeche)} m sur route sèche, quelle est la distance de freinage sur route mouillée, en m (arrondie au centième) ?`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${fr(distanceSeche)} \\times 1,75 = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `75 % de plus, c'est multiplier par \\(1 + 0,75 = 1,75\\).` },
+      { type: "calcul", text: `${fr(distanceSeche)} \\times 1,75 = ${fr(answer)}` },
+    ],
   };
 }
 

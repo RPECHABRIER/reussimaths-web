@@ -26,7 +26,10 @@ function genLoiProbabiliteCompleterNumeric() {
     prompt: `Une variable aléatoire \\(X\\) prend les valeurs \\(1\\), \\(2\\), \\(3\\), \\(4\\), avec \\(P(X=1) = ${fr(p1)}\\), \\(P(X=2) = ${fr(p2)}\\), \\(P(X=3) = ${fr(p3)}\\). Calcule \\(P(X=4)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{La somme des probabilités vaut 1.}`, `P(X=4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{La somme des probabilités vaut 1.}` },
+      { type: "resultat", text: `P(X=4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -42,7 +45,7 @@ function genInterpreterNotationsQCM() {
     prompt: `Comment interprète-t-on \\(${cas.description}\\) ?`,
     answer: cas.reponse,
     options: ["La probabilité que X soit exactement égal à 3", "La probabilité que X soit inférieur ou égal à 3"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.reponse }],
   };
 }
 
@@ -59,17 +62,20 @@ function genPXInferieurEgalNumeric() {
     prompt: `Une variable aléatoire \\(X\\) prend les valeurs \\(1, 2, 3, 4\\) avec \\(P(X=1) = ${fr(p1)}\\), \\(P(X=2) = ${fr(p2)}\\), \\(P(X=3) = ${fr(p3)}\\), \\(P(X=4) = ${fr(p4)}\\). Calcule \\(P(X \\leq 3)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(X \\leq 3) = P(X=1) + P(X=2) + P(X=3) = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "P(X ⩽ 3) est la somme des probabilités de toutes les valeurs de X inférieures ou égales à 3." },
+      { type: "resultat", text: `P(X \\leq 3) = P(X=1) + P(X=2) + P(X=3) = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 4. Reconnaître une situation de Bernoulli ----------
 function genReconnaitreBernoulliQCM() {
   const cas = pick([
-    { description: "X vaut 1 si une pièce tombe sur Pile, 0 sinon.", reponse: "Loi de Bernoulli" },
-    { description: "X est le numéro obtenu en lançant un dé à 6 faces.", reponse: "Pas une loi de Bernoulli" },
-    { description: "X vaut 1 si un produit testé est défectueux, 0 sinon.", reponse: "Loi de Bernoulli" },
-    { description: "X est le nombre de bonnes réponses sur 10 questions.", reponse: "Pas une loi de Bernoulli" },
+    { description: "X vaut 1 si une pièce tombe sur Pile, 0 sinon.", reponse: "Loi de Bernoulli", explication: "Loi de Bernoulli : X ne prend que deux valeurs, 0 et 1." },
+    { description: "X est le numéro obtenu en lançant un dé à 6 faces.", reponse: "Pas une loi de Bernoulli", explication: "Pas une loi de Bernoulli : X peut prendre 6 valeurs différentes (de 1 à 6), pas seulement 0 et 1." },
+    { description: "X vaut 1 si un produit testé est défectueux, 0 sinon.", reponse: "Loi de Bernoulli", explication: "Loi de Bernoulli : X ne prend que deux valeurs, 0 (conforme) et 1 (défectueux)." },
+    { description: "X est le nombre de bonnes réponses sur 10 questions.", reponse: "Pas une loi de Bernoulli", explication: "Pas une loi de Bernoulli : X peut prendre 11 valeurs différentes (de 0 à 10), pas seulement 0 et 1." },
   ]);
   return {
     type: "qcm",
@@ -77,7 +83,7 @@ function genReconnaitreBernoulliQCM() {
     prompt: `« ${cas.description} » S'agit-il d'une loi de Bernoulli ?`,
     answer: cas.reponse,
     options: ["Loi de Bernoulli", "Pas une loi de Bernoulli"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -90,7 +96,7 @@ function genEsperanceBernoulliNumeric() {
     prompt: `Une variable aléatoire \\(X\\) suit la loi de Bernoulli de paramètre \\(p = ${fr(p)}\\). Calcule son espérance \\(E(X)\\) (formule \\(E(X) = p\\)).`,
     answer: p,
     tolerance: 0.0005,
-    steps: [`E(X) = p = ${fr(p)}`],
+    steps: [{ type: "resultat", text: `E(X) = p = ${fr(p)}` }],
   };
 }
 
@@ -108,9 +114,9 @@ function genEsperanceNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `E(X) = \\sum x_i \\times p_i`,
-      `E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)} + ${valeurs[2]} \\times ${fr(p3)}`,
-      `E(X) = ${fr(roundTo(valeurs[0] * p1, 4))} + ${fr(roundTo(valeurs[1] * p2, 4))} + ${fr(roundTo(valeurs[2] * p3, 4))} = ${fr(answer)}`,
+      { type: "regle", text: `E(X) = \\sum x_i \\times p_i` },
+      { type: "calcul", text: `E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)} + ${valeurs[2]} \\times ${fr(p3)}` },
+      { type: "resultat", text: `E(X) = ${fr(roundTo(valeurs[0] * p1, 4))} + ${fr(roundTo(valeurs[1] * p2, 4))} + ${fr(roundTo(valeurs[2] * p3, 4))} = ${fr(answer)}` },
     ],
   };
 }
@@ -130,7 +136,11 @@ function genFluctuationEchantillonnageQCM() {
     prompt: `Dans un échantillon de taille \\(n = ${n}\\), on suppose \\(p = ${fr(p)}\\) (l'écart-type de la fréquence est de l'ordre de \\(\\dfrac{1}{\\sqrt{n}} \\approx ${fr(ecartType)}\\)). On observe une fréquence de \\(${fr(freqObservee)}\\). Comment interpréter cet écart avec \\(p\\) ?`,
     answer: reponse,
     options: ["Cet écart est cohérent avec la fluctuation d'échantillonnage attendue", "Cet écart est important, on peut s'interroger sur la valeur de p"],
-    steps: [`\\text{Écart observé : } |${fr(freqObservee)} - ${fr(p)}| = ${fr(ecart)}`, `\\text{Écart-type attendu de l'ordre de } \\dfrac{1}{\\sqrt{${n}}} \\approx ${fr(ecartType)}`, reponse],
+    steps: [
+      { type: "calcul", text: `\\text{Écart observé : } |${fr(freqObservee)} - ${fr(p)}| = ${fr(ecart)}` },
+      { type: "regle", text: `\\text{Écart-type attendu de l'ordre de } \\dfrac{1}{\\sqrt{${n}}} \\approx ${fr(ecartType)}\\text{ : on compare l'écart observé à environ 2 fois cette valeur.}` },
+      { type: "resultat", text: reponse },
+    ],
   };
 }
 
@@ -145,7 +155,10 @@ function genEcartTypeOrdreNQCM() {
     prompt: `L'écart-type de la fréquence observée sur un échantillon de taille \\(n\\) est de l'ordre de \\(\\dfrac{1}{\\sqrt{n}}\\). Si on passe d'un échantillon de taille ${n1} à un échantillon de taille ${n2} (${n2 / n1} fois plus grand), que devient cet écart-type ?`,
     answer: "Il diminue",
     options: ["Il diminue", "Il augmente", "Il reste identique"],
-    steps: [`\\dfrac{1}{\\sqrt{${n1}}} \\approx ${fr(roundTo(1 / Math.sqrt(n1), 4))} \\text{, et } \\dfrac{1}{\\sqrt{${n2}}} \\approx ${fr(roundTo(1 / Math.sqrt(n2), 4))}`, `\\text{Plus l'échantillon est grand, plus la fréquence observée se rapproche de } p.`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{1}{\\sqrt{${n1}}} \\approx ${fr(roundTo(1 / Math.sqrt(n1), 4))} \\text{, et } \\dfrac{1}{\\sqrt{${n2}}} \\approx ${fr(roundTo(1 / Math.sqrt(n2), 4))}` },
+      { type: "resultat", text: `\\text{Plus l'échantillon est grand, plus la fréquence observée se rapproche de } p.` },
+    ],
   };
 }
 
@@ -162,7 +175,10 @@ function genLectureHistogrammeFrequencesNumeric() {
     prompt: `On simule \\(N = ${N}\\) échantillons de taille \\(n = ${n}\\) d'une loi de Bernoulli de paramètre \\(p = ${fr(p)}\\), et on obtient les fréquences suivantes : ${freqs.map(fr).join(", ")}. Calcule la moyenne de ces fréquences observées (arrondie au millième), qui doit être proche de \\(p\\).`,
     answer: moyenneFreqs,
     tolerance: 0.01,
-    steps: [`\\text{Moyenne} = \\dfrac{${freqs.join(" + ")}}{${N}} \\approx ${fr(moyenneFreqs)}`, `\\text{Cette moyenne est proche de } p = ${fr(p)}.`],
+    steps: [
+      { type: "calcul", text: `\\text{Moyenne} = \\dfrac{${freqs.join(" + ")}}{${N}}` },
+      { type: "resultat", text: `\\text{Moyenne} \\approx ${fr(moyenneFreqs)}\\text{, proche de } p = ${fr(p)}.` },
+    ],
   };
 }
 

@@ -33,8 +33,9 @@ function genDeriveePuissanceNumeric() {
     prompt: `On considère \\(f(x) = (${texAffine(a, b)})^{${n}}\\). Calcule \\(f'(${x0})\\).`,
     answer,
     steps: [
-      `f'(x) = ${n} \\times ${a} \\times (${texAffine(a, b)})^{${n - 1}}`,
-      `f'(${x0}) = ${n} \\times ${a} \\times (${u0})^{${n - 1}} = ${answer}`,
+      { type: "regle", text: `\\text{Formule de référence : } (u^n)' = n \\times u' \\times u^{n-1}.` },
+      { type: "calcul", text: `f'(x) = ${n} \\times ${a} \\times (${texAffine(a, b)})^{${n - 1}}` },
+      { type: "resultat", text: `f'(${x0}) = ${n} \\times ${a} \\times (${u0})^{${n - 1}} = ${answer}` },
     ],
   };
 }
@@ -53,8 +54,9 @@ function genDeriveeRacineNumeric() {
     answer,
     tolerance: 0.001,
     steps: [
-      `f'(x) = \\dfrac{${a}}{2\\sqrt{${texAffine(a, b)}}}`,
-      `f'(${x0}) = \\dfrac{${a}}{2\\sqrt{${s * s}}} = \\dfrac{${a}}{2 \\times ${s}} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Formule de référence : } (\\sqrt{u})' = \\dfrac{u'}{2\\sqrt{u}}.` },
+      { type: "calcul", text: `f'(x) = \\dfrac{${a}}{2\\sqrt{${texAffine(a, b)}}}` },
+      { type: "resultat", text: `f'(${x0}) = \\dfrac{${a}}{2\\sqrt{${s * s}}} = \\dfrac{${a}}{2 \\times ${s}} = ${fr(answer)}` },
     ],
   };
 }
@@ -75,7 +77,10 @@ function genDeriveeExponentielleAffineQCM() {
     prompt: `On considère \\(f(x) = \\mathrm{e}^{${expo}}\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = (${a}) \\times \\mathrm{e}^{${expo}} = ${correct}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } (\\mathrm{e}^u)' = u' \\times \\mathrm{e}^u.` },
+      { type: "resultat", text: `f'(x) = (${a}) \\times \\mathrm{e}^{${expo}} = ${correct}` },
+    ],
   };
 }
 
@@ -93,9 +98,10 @@ function genDeriveeSecondeNumeric() {
     prompt: `On considère \\(f(x) = ${a}x^3 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\). Calcule \\(f''(${x0})\\).`,
     answer,
     steps: [
-      `f'(x) = ${3 * a}x^2 ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}`,
-      `f''(x) = ${6 * a}x ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}`,
-      `f''(${x0}) = ${6 * a} \\times ${x0} ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)} = ${answer}`,
+      { type: "regle", text: `\\text{La dérivée seconde f'' s'obtient en dérivant f' (on dérive deux fois de suite).}` },
+      { type: "calcul", text: `f'(x) = ${3 * a}x^2 ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}` },
+      { type: "calcul", text: `f''(x) = ${6 * a}x ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}` },
+      { type: "resultat", text: `f''(${x0}) = ${6 * a} \\times ${x0} ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)} = ${answer}` },
     ],
   };
 }
@@ -118,8 +124,9 @@ function genSigneConvexiteQCM() {
     answer: convexe ? "Convexe" : "Concave",
     options: ["Convexe", "Concave"],
     steps: [
-      `f''(${x0}) = ${6 * a} \\times ${x0} ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)} = ${valeur}`,
-      convexe ? "f'' est positive : f est convexe en ce point." : "f'' est négative : f est concave en ce point.",
+      { type: "regle", text: `\\text{Si } f''(x) > 0, \\text{ f est convexe ; si } f''(x) < 0, \\text{ f est concave.}` },
+      { type: "calcul", text: `f''(${x0}) = ${6 * a} \\times ${x0} ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)} = ${valeur}` },
+      { type: "resultat", text: convexe ? "f'' est positive : f est convexe en ce point." : "f'' est négative : f est concave en ce point." },
     ],
   };
 }
@@ -134,7 +141,11 @@ function genPointInflexionNumeric() {
     chapter: "Compléments sur la dérivation — Points d'inflexion",
     prompt: `Une fonction f vérifie, pour tout x, \\(f''(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Détermine l'abscisse du point d'inflexion de la courbe de f (résous \\(f''(x)=0\\)).`,
     answer: x0,
-    steps: [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0`, `x = ${x0}`],
+    steps: [
+      { type: "regle", text: `\\text{Un point d'inflexion correspond à un changement de signe de f'', donc à } f''(x) = 0.` },
+      { type: "calcul", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -162,8 +173,9 @@ function genNombrePointsInflexionQCM() {
     prompt: `Une fonction f vérifie, pour tout x, \\(f''(x) = ${a}x^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\). Combien de points d'inflexion la courbe de f admet-elle ?`,
     answer,
     steps: [
-      `\\Delta = ${b}^2 - 4 \\times ${a} \\times ${c} = ${b * b - 4 * a * c}`,
-      answer === 2 ? "Le discriminant est strictement positif : deux points d'inflexion." : "Le discriminant est strictement négatif : aucun point d'inflexion.",
+      { type: "regle", text: `\\text{Le nombre de points d'inflexion correspond au nombre de racines de } f''(x)=0 : \\text{on étudie le signe du discriminant de ce trinôme.}` },
+      { type: "calcul", text: `\\Delta = ${b}^2 - 4 \\times ${a} \\times ${c} = ${b * b - 4 * a * c}` },
+      { type: "resultat", text: answer === 2 ? "Le discriminant est strictement positif : deux points d'inflexion." : "Le discriminant est strictement négatif : aucun point d'inflexion." },
     ],
   };
 }
@@ -181,7 +193,10 @@ function genTangenteValeurNumeric() {
     chapter: "Compléments sur la dérivation — Tangentes",
     prompt: `On a \\(f(${a}) = ${p}\\) et \\(f'(${a}) = ${m}\\). La tangente à la courbe de f au point d'abscisse ${a} a pour équation \\(y = ${m}(x - (${a})) + ${p}\\). Quelle est l'ordonnée du point de cette tangente d'abscisse ${x1} ?`,
     answer,
-    steps: [`y = ${m} \\times (${x1} - (${a})) + ${p}`, `y = ${answer}`],
+    steps: [
+      { type: "calcul", text: `y = ${m} \\times (${x1} - (${a})) + ${p}` },
+      { type: "resultat", text: `y = ${answer}` },
+    ],
   };
 }
 
@@ -194,18 +209,18 @@ function genPositionRelativeQCM() {
     prompt: `Une fonction f est ${convexe ? "convexe" : "concave"} sur un intervalle I. Sur I, la courbe de f est-elle au-dessus ou en-dessous de ses tangentes ?`,
     answer: convexe ? "Au-dessus" : "En-dessous",
     options: ["Au-dessus", "En-dessous"],
-    steps: [convexe ? "Une fonction convexe a une courbe au-dessus de ses tangentes." : "Une fonction concave a une courbe en-dessous de ses tangentes."],
+    steps: [{ type: "regle", text: convexe ? "Une fonction convexe a une courbe au-dessus de ses tangentes." : "Une fonction concave a une courbe en-dessous de ses tangentes." }],
   };
 }
 
 // ---------- 10. Vrai ou faux sur la convexité (QCM) ----------
 function genVraiFauxConvexiteQCM() {
   const cas = pick([
-    { description: "Si \\(f''\\) est positive sur I, alors f est convexe sur I.", reponse: "Vrai" },
-    { description: "Un point d'inflexion est un point où la courbe traverse sa tangente.", reponse: "Vrai" },
-    { description: "Si f est convexe sur I, alors \\(f'\\) est décroissante sur I.", reponse: "Faux" },
-    { description: "Toute fonction affine est à la fois convexe et concave.", reponse: "Vrai" },
-    { description: "Si f est concave sur I, alors \\(f'\\) est croissante sur I.", reponse: "Faux" },
+    { description: "Si \\(f''\\) est positive sur I, alors f est convexe sur I.", reponse: "Vrai", explication: "C'est vrai : c'est la caractérisation du cours — le signe de f'' détermine la convexité de f." },
+    { description: "Un point d'inflexion est un point où la courbe traverse sa tangente.", reponse: "Vrai", explication: "C'est vrai : au point d'inflexion, la courbe change de convexité et passe donc d'un côté à l'autre de sa tangente." },
+    { description: "Si f est convexe sur I, alors \\(f'\\) est décroissante sur I.", reponse: "Faux", explication: "C'est faux : c'est l'inverse — si f est convexe (f''≥0), alors f' est croissante sur I, pas décroissante." },
+    { description: "Toute fonction affine est à la fois convexe et concave.", reponse: "Vrai", explication: "C'est vrai : pour une fonction affine, f''=0 partout (ni strictement positive ni strictement négative), donc elle est à la fois convexe et concave : sa courbe est confondue avec toutes ses tangentes." },
+    { description: "Si f est concave sur I, alors \\(f'\\) est croissante sur I.", reponse: "Faux", explication: "C'est faux : c'est l'inverse — si f est concave (f''≤0), alors f' est décroissante sur I, pas croissante." },
   ]);
   return {
     type: "qcm",
@@ -213,7 +228,7 @@ function genVraiFauxConvexiteQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -233,7 +248,7 @@ function genDeriveeRacineFormuleQCM() {
     prompt: `On considère \\(f(x) = \\sqrt{${expo}}\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = \\dfrac{u'(x)}{2\\sqrt{u(x)}} = ${correct}`],
+    steps: [{ type: "regle", text: `f'(x) = \\dfrac{u'(x)}{2\\sqrt{u(x)}} = ${correct}` }],
   };
 }
 
@@ -255,7 +270,7 @@ function genDeriveePuissanceFormuleQCM() {
     prompt: `On considère \\(f(x) = (${expo})^{${n}}\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = n \\times u'(x) \\times u(x)^{n-1} = ${correct}`],
+    steps: [{ type: "regle", text: `f'(x) = n \\times u'(x) \\times u(x)^{n-1} = ${correct}` }],
   };
 }
 
@@ -268,7 +283,7 @@ function genLienDeriveeSecondeVariationDeriveeQCM() {
     prompt: `Sur un intervalle I, on a \\(f''(x) ${positive ? ">" : "<"} 0\\). Que peut-on en déduire sur le sens de variation de \\(f'\\) sur I ?`,
     answer: positive ? "f' est croissante sur I" : "f' est décroissante sur I",
     options: ["f' est croissante sur I", "f' est décroissante sur I"],
-    steps: [positive ? "f'' > 0 signifie que f' est croissante." : "f'' < 0 signifie que f' est décroissante."],
+    steps: [{ type: "regle", text: positive ? "f'' est la dérivée de f' : f'' > 0 signifie donc que f' est croissante." : "f'' est la dérivée de f' : f'' < 0 signifie donc que f' est décroissante." }],
   };
 }
 
@@ -283,8 +298,9 @@ function genValeurDeriveeProduitSimpleNumeric() {
     prompt: `On considère \\(f(x) = (${texAffine(a, b)})\\mathrm{e}^{x}\\). Calcule \\(f'(0)\\).`,
     answer,
     steps: [
-      `f'(x) = ${a}\\mathrm{e}^{x} + (${texAffine(a, b)})\\mathrm{e}^{x}`,
-      `f'(0) = ${a} + (${texAffine(a, b)})\\big|_{x=0} = ${a} + ${b} = ${answer}`,
+      { type: "regle", text: `\\text{Formule de référence : } (uv)' = u'v + uv'.` },
+      { type: "calcul", text: `f'(x) = ${a}\\mathrm{e}^{x} + (${texAffine(a, b)})\\mathrm{e}^{x}` },
+      { type: "resultat", text: `f'(0) = ${a} + (${texAffine(a, b)})\\big|_{x=0} = ${a} + ${b} = ${answer}` },
     ],
   };
 }
@@ -299,7 +315,10 @@ function genBorneDomaineDeriveeNumeric() {
     chapter: "Compléments sur la dérivation — Domaine de dérivabilité",
     prompt: `On considère \\(f(x) = \\sqrt{${texAffine(a, b)}}\\). f est dérivable là où \\(${texAffine(a, b)} > 0\\). Détermine la valeur de x pour laquelle \\(${texAffine(a, b)} = 0\\) (borne du domaine de dérivabilité).`,
     answer: x0,
-    steps: [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0`, `x = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 

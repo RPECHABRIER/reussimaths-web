@@ -51,7 +51,11 @@ function genLimiteSuiteGeometriqueQCM() {
     prompt: `On considère la suite géométrique \\(u_n = ${cas.texte}^n\\). Quelle est la limite de \\(u_n\\) quand n tend vers \\(+\\infty\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "0", "1"],
-    steps: [`q = ${cas.texte}`, cas.q > 1 ? "q > 1 : la suite diverge vers +\\infty." : cas.q === 1 ? "q = 1 : la suite est constante égale à 1." : "-1 < q < 1 : la suite converge vers 0."],
+    steps: [
+      { type: "regle", text: `\\text{Limite de } q^n \\text{ : si } q>1, \\text{ elle tend vers } +\\infty ; \\text{ si } q=1, \\text{ elle est constante égale à 1 ; si } -1<q<1, \\text{ elle tend vers 0.}` },
+      { type: "donnee", text: `q = ${cas.texte}` },
+      { type: "resultat", text: cas.q > 1 ? "q > 1 : la suite diverge vers +\\infty." : cas.q === 1 ? "q = 1 : la suite est constante égale à 1." : "-1 < q < 1 : la suite converge vers 0." },
+    ],
   };
 }
 
@@ -66,7 +70,12 @@ function genLimiteSuitePolynomialeQCM() {
     prompt: `On considère la suite définie par \\(u_n = ${a}n^{${degre}} + 5n - 3\\). En factorisant par le terme de plus haut degré, quelle est la limite de \\(u_n\\) quand n tend vers \\(+\\infty\\) ?`,
     answer: reponse,
     options: ["+\\infty", "-\\infty"],
-    steps: [`u_n = n^{${degre}}\\left(${a} + \\dfrac{5}{n^{${degre - 1}}} - \\dfrac{3}{n^{${degre}}}\\right)`, `\\text{Le terme entre parenthèses tend vers } ${a}, \\text{ et } n^{${degre}} \\to +\\infty`, `\\text{Par produit, la limite est } ${reponse}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une limite de suite polynomiale en } +\\infty, \\text{ on factorise par le terme de plus haut degré.}` },
+      { type: "calcul", text: `u_n = n^{${degre}}\\left(${a} + \\dfrac{5}{n^{${degre - 1}}} - \\dfrac{3}{n^{${degre}}}\\right)` },
+      { type: "donnee", text: `\\text{Le terme entre parenthèses tend vers } ${a}, \\text{ et } n^{${degre}} \\to +\\infty` },
+      { type: "resultat", text: `\\text{Par produit, la limite est } ${reponse}` },
+    ],
   };
 }
 
@@ -81,7 +90,10 @@ function genLimiteQuotientMemeDegreNumeric() {
     prompt: `On considère la suite définie par \\(u_n = \\dfrac{${a}n + 7}{${b}n - 2}\\). Quelle est la limite de \\(u_n\\) quand n tend vers \\(+\\infty\\) (valeur décimale, arrondie au millième si nécessaire) ?`,
     answer,
     tolerance: 0.001,
-    steps: [`u_n = \\dfrac{n(${a} + \\frac{7}{n})}{n(${b} - \\frac{2}{n})} = \\dfrac{${a} + \\frac{7}{n}}{${b} - \\frac{2}{n}} \\to \\dfrac{${a}}{${b}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour un quotient de polynômes de même degré, on factorise numérateur et dénominateur par } n \\text{ (le terme de plus haut degré), puis on simplifie.}` },
+      { type: "resultat", text: `u_n = \\dfrac{n(${a} + \\frac{7}{n})}{n(${b} - \\frac{2}{n})} = \\dfrac{${a} + \\frac{7}{n}}{${b} - \\frac{2}{n}} \\to \\dfrac{${a}}{${b}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -101,7 +113,10 @@ function genIdentifierFormeIndetermineeQCM() {
     prompt: `On sait que \\(${cas.description}\\). S'agit-il d'une forme indéterminée ?`,
     answer: cas.reponse,
     options: ["Forme indéterminée", "Pas de forme indéterminée"],
-    steps: [cas.reponse === "Forme indéterminée" ? "Les théorèmes usuels sur les limites ne permettent pas de conclure directement." : "Les théorèmes usuels sur les limites permettent de conclure directement."],
+    steps: [
+      { type: "regle", text: `\\text{Les quatre formes indéterminées à connaître : } "\\infty - \\infty", \\ "0 \\times \\infty", \\ \\dfrac{\\infty}{\\infty}, \\ \\dfrac{0}{0}.` },
+      { type: "resultat", text: cas.reponse === "Forme indéterminée" ? "Les théorèmes usuels sur les limites ne permettent pas de conclure directement." : "Les théorèmes usuels sur les limites permettent de conclure directement." },
+    ],
   };
 }
 
@@ -116,7 +131,7 @@ function genTheoremeComparaisonQCM() {
       : "Pour tout entier naturel n, on a \\(u_n \\leqslant v_n\\), et \\(\\lim v_n = -\\infty\\). Que peut-on dire de la limite de \\(u_n\\) ?",
     answer: minoree ? "\\lim u_n = +\\infty" : "\\lim u_n = -\\infty",
     options: ["\\lim u_n = +\\infty", "\\lim u_n = -\\infty"],
-    steps: [minoree ? "D'après le théorème de comparaison, u_n est minorée par une suite qui tend vers +∞, donc u_n tend vers +∞." : "D'après le théorème de comparaison, u_n est majorée par une suite qui tend vers -∞, donc u_n tend vers -∞."],
+    steps: [{ type: "regle", text: minoree ? "D'après le théorème de comparaison, u_n est minorée par une suite qui tend vers +∞, donc u_n tend vers +∞." : "D'après le théorème de comparaison, u_n est majorée par une suite qui tend vers -∞, donc u_n tend vers -∞." }],
   };
 }
 
@@ -128,7 +143,11 @@ function genTheoremeGendarmesNumeric() {
     chapter: "Suites — Théorèmes de convergence",
     prompt: `Pour tout entier naturel n non nul, on a \\(${L} - \\dfrac{1}{n} \\leqslant u_n \\leqslant ${L} + \\dfrac{1}{n}\\). D'après le théorème des gendarmes, vers quelle valeur converge la suite \\((u_n)\\) ?`,
     answer: L,
-    steps: [`\\lim\\left(${L} - \\dfrac{1}{n}\\right) = \\lim\\left(${L} + \\dfrac{1}{n}\\right) = ${L}`, `\\text{Donc } \\lim u_n = ${L}`],
+    steps: [
+      { type: "regle", text: `\\text{Théorème des gendarmes : si } u_n \\text{ est encadrée par deux suites qui convergent vers la même limite, alors } u_n \\text{ converge vers cette même limite.}` },
+      { type: "donnee", text: `\\lim\\left(${L} - \\dfrac{1}{n}\\right) = \\lim\\left(${L} + \\dfrac{1}{n}\\right) = ${L}` },
+      { type: "resultat", text: `\\text{Donc } \\lim u_n = ${L}` },
+    ],
   };
 }
 
@@ -143,7 +162,11 @@ function genPointFixeNumeric() {
     prompt: `Une suite u vérifie, pour tout entier naturel n, \\(u_{n+1} = ${fr(aClean)}u_n + ${fr(b)}\\). Calcule le point fixe L de cette relation, c'est-à-dire la solution de l'équation \\(L = ${fr(aClean)}L + ${fr(b)}\\).`,
     answer: L,
     tolerance: 0.01,
-    steps: [`L(1 - ${fr(aClean)}) = ${fr(b)}`, `L = \\dfrac{${fr(b)}}{${fr(roundTo(1 - aClean, 4))}} = ${L}`],
+    steps: [
+      { type: "regle", text: `\\text{Le point fixe L vérifie } L = ${fr(aClean)}L + ${fr(b)} \\text{ : on regroupe les termes en L d'un côté.}` },
+      { type: "calcul", text: `L(1 - ${fr(aClean)}) = ${fr(b)}` },
+      { type: "resultat", text: `L = \\dfrac{${fr(b)}}{${fr(roundTo(1 - aClean, 4))}} = ${L}` },
+    ],
   };
 }
 
@@ -157,7 +180,7 @@ function genRaisonSuiteAuxiliaireNumeric() {
     prompt: `Une suite u vérifie, pour tout entier naturel n, \\(u_{n+1} = ${fr(a)}u_n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). On pose \\(v_n = u_n - L\\) où L est le point fixe de la relation. Quelle est la raison de la suite géométrique \\((v_n)\\) ?`,
     answer: a,
     tolerance: 0.001,
-    steps: [`\\text{La suite auxiliaire } (v_n) \\text{ a pour raison le coefficient de } u_n, \\text{ soit } ${fr(a)}`],
+    steps: [{ type: "regle", text: `\\text{La suite auxiliaire } (v_n) \\text{ a pour raison le coefficient de } u_n, \\text{ soit } ${fr(a)}` }],
   };
 }
 
@@ -170,19 +193,22 @@ function genLimiteSuiteArithmeticoGeometriqueNumeric() {
     chapter: "Suites — Suites arithmético-géométriques",
     prompt: `Une suite u est telle que \\(u_n = L + (u_0 - L) \\times ${fr(a)}^n\\) avec \\(L = ${L}\\). Sachant que \\(-1 < ${fr(a)} < 1\\), calcule la limite de \\(u_n\\) quand n tend vers \\(+\\infty\\).`,
     answer: L,
-    steps: [`${fr(a)}^n \\to 0 \\text{ car } -1 < ${fr(a)} < 1`, `\\text{Donc } u_n \\to ${L}`],
+    steps: [
+      { type: "donnee", text: `${fr(a)}^n \\to 0 \\text{ car } -1 < ${fr(a)} < 1` },
+      { type: "resultat", text: `\\text{Donc } u_n \\to ${L}` },
+    ],
   };
 }
 
 // ---------- 10. Vrai ou faux sur les suites convergentes/monotones/bornées ----------
 function genVraiFauxConvergenceQCM() {
   const cas = pick([
-    { description: "Une suite convergente est nécessairement bornée.", reponse: "Vrai" },
-    { description: "Une suite bornée est nécessairement convergente.", reponse: "Faux" },
-    { description: "Une suite croissante et majorée converge.", reponse: "Vrai" },
-    { description: "Une suite qui converge vers 1 est nécessairement croissante.", reponse: "Faux" },
-    { description: "Une suite décroissante et minorée converge.", reponse: "Vrai" },
-    { description: "Si deux suites u et v vérifient u_n ⩽ v_n pour tout n et convergent, alors leurs limites vérifient la même inégalité.", reponse: "Vrai" },
+    { description: "Une suite convergente est nécessairement bornée.", reponse: "Vrai", explication: "C'est vrai : si (u_n) converge vers L, alors à partir d'un certain rang tous les termes restent proches de L (dans un intervalle fixé), et il n'y a qu'un nombre fini de termes avant ce rang. La suite est donc bornée." },
+    { description: "Une suite bornée est nécessairement convergente.", reponse: "Faux", explication: "C'est faux : par exemple u_n = (-1)^n est bornée (toujours entre -1 et 1) mais elle oscille sans jamais se stabiliser autour d'une valeur, elle ne converge pas." },
+    { description: "Une suite croissante et majorée converge.", reponse: "Vrai", explication: "C'est vrai : c'est le théorème de convergence monotone du cours — une suite croissante et majorée converge nécessairement (vers sa borne supérieure)." },
+    { description: "Une suite qui converge vers 1 est nécessairement croissante.", reponse: "Faux", explication: "C'est faux : par exemple la suite u_n = 1 + (-1)^n/n converge vers 1 mais n'est pas croissante (elle oscille de part et d'autre de 1 en se rapprochant)." },
+    { description: "Une suite décroissante et minorée converge.", reponse: "Vrai", explication: "C'est vrai : c'est le théorème de convergence monotone appliqué au cas décroissant — une suite décroissante et minorée converge (vers sa borne inférieure)." },
+    { description: "Si deux suites u et v vérifient u_n ⩽ v_n pour tout n et convergent, alors leurs limites vérifient la même inégalité.", reponse: "Vrai", explication: "C'est vrai : le passage à la limite conserve les inégalités larges. Attention cependant : une inégalité stricte entre u_n et v_n peut devenir une égalité entre les limites." },
   ]);
   return {
     type: "qcm",
@@ -190,7 +216,7 @@ function genVraiFauxConvergenceQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -208,7 +234,7 @@ function genLimiteSommeQCM() {
     prompt: `On sait que \\(\\lim u_n = ${cas.u}\\) et \\(\\lim v_n = ${cas.v}\\). Quelle est la limite de \\(u_n + v_n\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "-\\infty"],
-    steps: [`\\text{Par somme des limites, } \\lim(u_n+v_n) = ${cas.reponse}`],
+    steps: [{ type: "resultat", text: `\\text{Par somme des limites, } \\lim(u_n+v_n) = ${cas.reponse}` }],
   };
 }
 
@@ -222,7 +248,7 @@ function genSuiteMajoreeQCM() {
     prompt: `Une suite u vérifie, pour tout entier naturel n, \\(u_n = ${M} - \\dfrac{1}{n+1}\\). Cette suite est-elle majorée par ${M} ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`\\text{Pour tout } n, \\ \\dfrac{1}{n+1} > 0 \\text{ donc } u_n < ${M} : \\text{la suite est bien majorée par } ${M}.`],
+    steps: [{ type: "resultat", text: `\\text{Pour tout } n, \\ \\dfrac{1}{n+1} > 0 \\text{ donc } u_n < ${M} : \\text{la suite est bien majorée par } ${M}.` }],
   };
 }
 
@@ -240,7 +266,10 @@ function genEtapesRecurrenceQCM() {
     prompt: `Dans un raisonnement par récurrence : « ${descriptions[etape]} ». À quelle étape du raisonnement cela correspond-il ?`,
     answer: etape,
     options: ["initialisation", "hérédité", "conclusion"],
-    steps: [`\\text{Il s'agit de l'étape : ${etape}}`],
+    steps: [
+      { type: "regle", text: `\\text{Un raisonnement par récurrence comporte 3 étapes : l'initialisation (vérifier le premier rang), l'hérédité (montrer que le rang n implique le rang n+1), et la conclusion (invoquer le principe de récurrence).}` },
+      { type: "resultat", text: `\\text{Il s'agit de l'étape : ${etape}}` },
+    ],
   };
 }
 
@@ -256,7 +285,10 @@ function genCalculerTermeRecurrenceNumeric() {
     prompt: `Une suite u vérifie, pour tout entier naturel n, \\(u_{n+1} = ${fr(a)}u_n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Sachant que \\(u_n = ${un}\\), calcule \\(u_{n+1}\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(a)} \\times ${un} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{On calcule } u_{n+1} \\text{ en remplaçant } u_n \\text{ par sa valeur dans la relation de récurrence.}` },
+      { type: "resultat", text: `${fr(a)} \\times ${un} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -269,7 +301,7 @@ function genLimiteProduitVersZeroQCM() {
     prompt: `On sait que \\(\\lim u_n = 0\\) et que la suite v est ${borne} (ses valeurs restent comprises entre deux réels fixes). Quelle est la limite de \\(u_n \\times v_n\\) ?`,
     answer: "0",
     options: ["0", "On ne peut pas conclure"],
-    steps: ["Le produit d'une suite qui tend vers 0 par une suite bornée tend vers 0 (théorème des gendarmes appliqué à |u_n × v_n|)."],
+    steps: [{ type: "regle", text: "Le produit d'une suite qui tend vers 0 par une suite bornée tend vers 0 (théorème des gendarmes appliqué à |u_n × v_n|)." }],
   };
 }
 

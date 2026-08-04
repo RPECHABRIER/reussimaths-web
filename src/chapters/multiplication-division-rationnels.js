@@ -40,6 +40,7 @@ function genMultiplierDeuxFractionsSigneesNumeric() {
     prompt: `\\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}} = \\dfrac{?}{${b * d}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
+      { type: "regle", text: `Pour multiplier deux fractions, on multiplie les numérateurs entre eux, et les dénominateurs entre eux.` },
       { type: "resultat", text: `${a} \\times ${c} = ${answer}` },
       { type: "calcul", text: `${b} \\times ${d} = ${b * d}` },
     ],
@@ -62,6 +63,7 @@ function genChaineMultiplicationsSigneesNumeric() {
     prompt: `\\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}} \\times \\dfrac{${e}}{${f}} = \\dfrac{?}{${answerDen}}\\) — quel est ce numérateur ?`,
     answer: answerNum,
     steps: [
+      { type: "regle", text: `Pour multiplier plusieurs fractions, on multiplie tous les numérateurs entre eux, et tous les dénominateurs entre eux.` },
       { type: "resultat", text: `${a} \\times ${c} \\times ${e} = ${answerNum}` },
       { type: "calcul", text: `${b} \\times ${d} \\times ${f} = ${answerDen}` },
     ],
@@ -80,7 +82,10 @@ function genFractionDUnNombreNumeric() {
     prompt: `Calcule les \\(\\dfrac{${num}}{${den}}\\) de ${nombre}.`,
     answer,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nombre} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Calculer une fraction d'un nombre revient à multiplier ce nombre par la fraction.` },
+      { type: "calcul", text: `\\dfrac{${num}}{${den}} \\times ${nombre} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -277,7 +282,10 @@ function genPourcentageEffectifNumeric() {
     prompt: `Dans un collège de ${effectif} élèves, ${pourcentage} % ont obtenu une mention. Combien d'élèves ont obtenu une mention (arrondi à l'unité) ?`,
     answer,
     tolerance: 0.5,
-    steps: [{ type: "calcul", text: `${pourcentage}/100 \\times ${effectif} \\approx ${answer}` }],
+    steps: [
+      { type: "regle", text: `Calculer ${pourcentage} % d'un effectif, c'est le multiplier par \\(\\dfrac{${pourcentage}}{100}\\).` },
+      { type: "calcul", text: `${pourcentage}/100 \\times ${effectif} \\approx ${answer}` },
+    ],
   };
 }
 
@@ -297,6 +305,7 @@ function genComparerDeuxPourcentagesQCM() {
     answer: winner,
     options: ["Collège A", "Collège B", "Égalité"],
     steps: [
+      { type: "regle", text: `On calcule le nombre d'élèves lauréats dans chaque collège en multipliant l'effectif par le pourcentage, puis on compare les deux nombres obtenus.` },
       { type: "calcul", text: `Collège A : ${p1}/100 \\times ${n1} \\approx ${c1}` },
       { type: "calcul", text: `Collège B : ${p2}/100 \\times ${n2} \\approx ${c2}` },
     ],
@@ -343,7 +352,10 @@ function genAireRectangleFractionsNumeric() {
     prompt: `Un rectangle a pour longueur \\(\\dfrac{${numL}}{${denL}}\\) cm et pour largeur \\(\\dfrac{${numW}}{${denW}}\\) cm. Calcule son aire, en cm² (écriture décimale, arrondie au centième).`,
     answer,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `\\dfrac{${numL}}{${denL}} \\times \\dfrac{${numW}}{${denW}} = \\dfrac{${numL * numW}}{${denL * denW}} \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un rectangle = longueur × largeur.` },
+      { type: "calcul", text: `\\dfrac{${numL}}{${denL}} \\times \\dfrac{${numW}}{${denW}} = \\dfrac{${numL * numW}}{${denL * denW}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 

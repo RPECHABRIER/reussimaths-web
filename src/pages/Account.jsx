@@ -11,10 +11,13 @@ import {
   isFullAccessSubscription,
   isPackExamenSubscription,
   getEffectiveSubscription,
+  EXAM_CHAPTER_BY_LEVEL,
 } from "../lib/access";
 import { getAdminPreview } from "../lib/adminPreview";
 import PackExamenChoice from "../components/PackExamenChoice";
 import ReferralBonusChoice from "../components/ReferralBonusChoice";
+import { getChapter } from "../chapters/registry";
+import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
@@ -112,16 +115,34 @@ export default function Account() {
 
           {packExamenNeedsChoice && <PackExamenChoice onDone={reloadSubscription} />}
 
-          {packExamen && subscription?.pack_examen_level && (
-            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
-              <p className="text-xs font-semibold" style={{ color: colors.ink }}>
-                Pack Examen — niveau choisi
-              </p>
-              <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                Ton choix est définitif : abonne-toi en complet pour débloquer tous les niveaux.
-              </p>
-            </div>
-          )}
+          {packExamen && subscription?.pack_examen_level && (() => {
+            const levelLabel = LEVELS.find((l) => l.id === subscription.pack_examen_level)?.label ?? subscription.pack_examen_level;
+            const examChapterId = EXAM_CHAPTER_BY_LEVEL[subscription.pack_examen_level];
+            const examChapter = examChapterId ? getChapter(examChapterId) : null;
+            const bonusChapters = (subscription.pack_examen_bonus_chapters ?? [])
+              .map((id) => getChapter(id))
+              .filter(Boolean);
+            return (
+              <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
+                <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                  Pack Examen — {levelLabel}
+                </p>
+                <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                  Ce que ça débloque, pour ce niveau uniquement :
+                </p>
+                <ul className="text-xs mt-1.5 flex flex-col gap-0.5" style={{ color: colors.slate }}>
+                  {examChapter && <li>• {examChapter.meta.title} (préparation à l'examen)</li>}
+                  <li>• Automatismes en illimité</li>
+                  {bonusChapters.map((c) => (
+                    <li key={c.meta.id}>• {c.meta.title} (bonus)</li>
+                  ))}
+                </ul>
+                <p className="text-xs mt-2" style={{ color: colors.slate }}>
+                  Ton choix est définitif : abonne-toi en complet pour débloquer tous les niveaux.
+                </p>
+              </div>
+            );
+          })()}
 
           {fullAccess && (
             <Link to="/idees" className="text-xs font-medium" style={{ color: colors.gold }}>
@@ -170,6 +191,26 @@ export default function Account() {
 
           {!isActive && !admin && (
             <>
+              <div className="rounded-2xl p-3.5 text-left flex flex-col gap-2" style={{ backgroundColor: colors.bg }}>
+                <div>
+                  <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                    Abonnement complet — 4,99 €/mois
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
+                    Accès à tous les niveaux et tous les chapitres, sans restriction.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                    Pack Examen — 9 € / 3 mois
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
+                    Pour UN niveau au choix (à choisir après l'achat) : le chapitre de préparation à l'examen (Brevet,
+                    EAM ou Bac selon le niveau), les Automatismes en illimité, et 2 chapitres bonus au choix. N'inclut
+                    pas les autres niveaux. Offre non reconductible.
+                  </p>
+                </div>
+              </div>
               <button
                 disabled={checkoutLoading}
                 onClick={() => startCheckout("mensuel")}

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, School, Sparkles } from "lucide-react";
+import { GraduationCap, School, Sparkles, Brain } from "lucide-react";
 import { CYCLES } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 
@@ -29,6 +29,16 @@ export default function CycleSelect() {
               Conforme aux nouveaux programmes 2026
             </p>
           </div>
+          <p
+            className="flex items-start justify-center gap-1.5 text-xs mt-3 max-w-[19rem] mx-auto leading-relaxed"
+            style={{ color: colors.slate }}
+          >
+            <Brain size={13} className="flex-shrink-0 mt-0.5" style={{ color: colors.ink }} />
+            <span>
+              Une pédagogie appuyée sur les sciences cognitives : répétition espacée, correction immédiate et méthode
+              visible avant le résultat.
+            </span>
+          </p>
         </div>
 
         <div className="flex flex-col gap-4">

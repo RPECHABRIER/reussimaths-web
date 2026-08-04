@@ -44,7 +44,7 @@ function genRevisionCombinatoireNumeric() {
     chapter: "Exercices transversaux — Combinatoire",
     prompt: `Calcule \\(\\dbinom{${n}}{${k}}\\).`,
     answer: combinaison(n, k),
-    steps: [`\\dbinom{${n}}{${k}} = ${combinaison(n, k)}`],
+    steps: [{ type: "resultat", text: `\\dbinom{${n}}{${k}} = ${combinaison(n, k)}` }],
   };
 }
 
@@ -58,17 +58,20 @@ function genRevisionProduitScalaireNumeric() {
     chapter: "Exercices transversaux — Vecteurs de l'espace",
     prompt: `\\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\) et \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\). Calcule \\(\\vec{u} \\cdot \\vec{v}\\).`,
     answer,
-    steps: [`${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : u·v = xᵤxᵥ + yᵤyᵥ + zᵤzᵥ." },
+      { type: "resultat", text: `${u.x} \\times ${v.x} + ${u.y} \\times ${v.y} + ${u.z} \\times ${v.z} = ${answer}` },
+    ],
   };
 }
 
 // ---------- 3. Suites : limite d'une suite géométrique (QCM) ----------
 function genRevisionLimiteGeometriqueQCM() {
   const cas = pick([
-    { texte: "3", reponse: "+\\infty" },
-    { texte: "0{,}5", reponse: "0" },
-    { texte: "1{,}2", reponse: "+\\infty" },
-    { texte: "0{,}2", reponse: "0" },
+    { texte: "3", reponse: "+\\infty", explication: "La raison q=3 vérifie q>1, donc la suite géométrique qⁿ tend vers +∞." },
+    { texte: "0{,}5", reponse: "0", explication: "La raison q=0,5 vérifie |q|<1, donc la suite géométrique qⁿ tend vers 0." },
+    { texte: "1{,}2", reponse: "+\\infty", explication: "La raison q=1,2 vérifie q>1, donc la suite géométrique qⁿ tend vers +∞." },
+    { texte: "0{,}2", reponse: "0", explication: "La raison q=0,2 vérifie |q|<1, donc la suite géométrique qⁿ tend vers 0." },
   ]);
   return {
     type: "qcm",
@@ -76,16 +79,16 @@ function genRevisionLimiteGeometriqueQCM() {
     prompt: `Quelle est la limite de \\(u_n = ${cas.texte}^n\\) quand n tend vers \\(+\\infty\\) ?`,
     answer: cas.reponse,
     options: ["+\\infty", "0"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
 // ---------- 4. Limites de fonctions : forme indéterminée (QCM) ----------
 function genRevisionFormeIndetermineeQCM() {
   const cas = pick([
-    { description: "\\infty - \\infty", reponse: "Forme indéterminée" },
-    { description: "0 \\times \\infty", reponse: "Forme indéterminée" },
-    { description: "\\infty + 5", reponse: "Pas de forme indéterminée" },
+    { description: "\\infty - \\infty", reponse: "Forme indéterminée", explication: "C'est une forme indéterminée : le résultat dépend de la façon dont chaque terme tend vers l'infini, on ne peut pas conclure directement." },
+    { description: "0 \\times \\infty", reponse: "Forme indéterminée", explication: "C'est une forme indéterminée : un facteur qui tend vers 0 et un autre vers l'infini peuvent donner n'importe quelle limite selon les fonctions en jeu." },
+    { description: "\\infty + 5", reponse: "Pas de forme indéterminée", explication: "Ce n'est pas une forme indéterminée : ajouter un nombre fini à une quantité qui tend vers l'infini ne change pas le résultat, la limite reste +∞." },
   ]);
   return {
     type: "qcm",
@@ -93,7 +96,7 @@ function genRevisionFormeIndetermineeQCM() {
     prompt: `La forme \\(${cas.description}\\) est-elle une forme indéterminée ?`,
     answer: cas.reponse,
     options: ["Forme indéterminée", "Pas de forme indéterminée"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -107,7 +110,7 @@ function genRevisionTVIQCM() {
     prompt: `f est continue sur \\([1;2]\\), \\(f(1) = ${f1}\\) et \\(f(2) = ${f2}\\). L'équation f(x)=0 admet-elle une solution sur \\([1;2]\\) ?`,
     answer: "Oui",
     options: ["Oui", "Non"],
-    steps: [`f(1) \\times f(2) = ${f1 * f2} < 0 : une solution est garantie.`],
+    steps: [{ type: "regle", text: `f(1) \\times f(2) = ${f1 * f2} < 0 : une solution est garantie.` }],
   };
 }
 
@@ -120,7 +123,10 @@ function genRevisionDeriveeExpNumeric() {
     chapter: "Exercices transversaux — Dérivation",
     prompt: `On considère \\(f(x) = \\mathrm{e}^{${texAffine(a, b)}}\\). Donne le coefficient devant \\(\\mathrm{e}^{${texAffine(a, b)}}\\) dans \\(f'(x)\\).`,
     answer: a,
-    steps: [`f'(x) = ${a}\\mathrm{e}^{${texAffine(a, b)}}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : (e^(ax+b))' = a·e^(ax+b)." },
+      { type: "resultat", text: `f'(x) = ${a}\\mathrm{e}^{${texAffine(a, b)}}` },
+    ],
   };
 }
 
@@ -137,7 +143,10 @@ function genRevisionLnProduitQCM() {
     prompt: `Quelle est l'expression de \\(\\ln(${m} \\times ${n})\\) en fonction de \\(\\ln(${m})\\) et \\(\\ln(${n})\\) ?`,
     answer: correct,
     options,
-    steps: [`\\ln(${m} \\times ${n}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : ln(m×n) = ln(m) + ln(n)." },
+      { type: "resultat", text: `\\ln(${m} \\times ${n}) = ${correct}` },
+    ],
   };
 }
 
@@ -161,7 +170,10 @@ function genRevisionTrigonometrieQCM() {
     prompt: `Quelle est la valeur de \\(\\${fonction}\\left(${angle.tex}\\right)\\) ?`,
     answer: correct,
     options: shuffle([correct, ...distracteurs]),
-    steps: [`\\${fonction}\\left(${angle.tex}\\right) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Valeur remarquable à connaître sur le cercle trigonométrique." },
+      { type: "resultat", text: `\\${fonction}\\left(${angle.tex}\\right) = ${correct}` },
+    ],
   };
 }
 
@@ -174,7 +186,10 @@ function genRevisionEquationDiffNumeric() {
     chapter: "Exercices transversaux — Primitives, équations différentielles",
     prompt: `Les solutions de \\(y' = ${a}y\\) sont les fonctions \\(x \\mapsto C\\mathrm{e}^{${a}x}\\). Sachant que \\(F(0) = ${v0}\\), détermine C.`,
     answer: v0,
-    steps: [`C = F(0) = ${v0}`],
+    steps: [
+      { type: "regle", text: "e^0 = 1, donc F(0) = C." },
+      { type: "resultat", text: `C = F(0) = ${v0}` },
+    ],
   };
 }
 
@@ -189,7 +204,10 @@ function genRevisionIntegraleConstanteNumeric() {
     chapter: "Exercices transversaux — Calcul intégral",
     prompt: `Calcule \\(\\displaystyle\\int_{${a}}^{${b}} ${k}\\,\\mathrm{d}x\\).`,
     answer,
-    steps: [`${k} \\times (${b} - ${a}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "L'intégrale d'une fonction constante k sur [a;b] vaut k×(b-a)." },
+      { type: "resultat", text: `${k} \\times (${b} - ${a}) = ${answer}` },
+    ],
   };
 }
 
@@ -205,7 +223,10 @@ function genRevisionLoiBinomialeNumeric() {
     prompt: `\\(X \\sim \\mathcal{B}(${n};${fr(p)})\\). Calcule \\(${varianceOuEsperance ? "E(X)" : "V(X)"}\\), arrondi au centième si nécessaire.`,
     answer,
     tolerance: 0.01,
-    steps: [varianceOuEsperance ? `E(X) = np = ${n} \\times ${fr(p)} = ${fr(answer)}` : `V(X) = np(1-p) = ${n} \\times ${fr(p)} \\times ${fr(roundTo(1 - p, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: varianceOuEsperance ? "Formule de référence à connaître : E(X) = np." : "Formule de référence à connaître : V(X) = np(1-p)." },
+      { type: "resultat", text: varianceOuEsperance ? `E(X) = np = ${n} \\times ${fr(p)} = ${fr(answer)}` : `V(X) = np(1-p) = ${n} \\times ${fr(p)} \\times ${fr(roundTo(1 - p, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -221,7 +242,10 @@ function genRevisionEsperanceLineaireNumeric() {
     chapter: "Exercices transversaux — Sommes de variables aléatoires",
     prompt: `\\(E(X) = ${EX}\\), \\(E(Y) = ${EY}\\). Calcule \\(E(${p}X ${q >= 0 ? "+" : "-"} ${Math.abs(q)}Y)\\).`,
     answer,
-    steps: [`${p} \\times ${EX} + ${q} \\times ${EY} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Linéarité de l'espérance : E(pX+qY) = pE(X) + qE(Y)." },
+      { type: "resultat", text: `${p} \\times ${EX} + ${q} \\times ${EY} = ${answer}` },
+    ],
   };
 }
 
@@ -236,19 +260,22 @@ function genRevisionBienaymeTchebychevNumeric() {
     prompt: `\\(V(X) = ${VX}\\). D'après l'inégalité de Bienaymé-Tchebychev, majore \\(P(|X-E(X)| \\geqslant ${a})\\), arrondi au millième.`,
     answer,
     tolerance: 0.001,
-    steps: [`\\dfrac{${VX}}{${a}^2} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : P(|X-E(X)|≥a) ≤ V(X)/a²." },
+      { type: "resultat", text: `\\dfrac{${VX}}{${a}^2} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 14. Vrai/faux transversal (QCM) ----------
 function genRevisionVraiFauxQCM() {
   const cas = pick([
-    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(E(X) = np\\).", reponse: "Vrai" },
-    { description: "\\(\\ln(1) = 0\\).", reponse: "Vrai" },
-    { description: "La fonction sinus est paire.", reponse: "Faux" },
-    { description: "Deux primitives d'une même fonction diffèrent d'une constante.", reponse: "Vrai" },
-    { description: "Si f est convexe sur I, sa courbe est en-dessous de ses tangentes.", reponse: "Faux" },
-    { description: "\\(\\dbinom{n}{k} = \\dbinom{n}{n-k}\\).", reponse: "Vrai" },
+    { description: "Pour \\(X \\sim \\mathcal{B}(n;p)\\), \\(E(X) = np\\).", reponse: "Vrai", explication: "C'est vrai : c'est la formule de référence de l'espérance d'une loi binomiale." },
+    { description: "\\(\\ln(1) = 0\\).", reponse: "Vrai", explication: "C'est vrai : ln(1)=0 est une valeur remarquable à connaître (car e⁰=1)." },
+    { description: "La fonction sinus est paire.", reponse: "Faux", explication: "C'est faux : sinus est une fonction impaire, sin(-x)=-sin(x)." },
+    { description: "Deux primitives d'une même fonction diffèrent d'une constante.", reponse: "Vrai", explication: "C'est vrai : si F et G sont deux primitives de f, (F-G)'=f-f=0, donc F-G est constante." },
+    { description: "Si f est convexe sur I, sa courbe est en-dessous de ses tangentes.", reponse: "Faux", explication: "C'est faux : au contraire, une fonction convexe a sa courbe au-dessus de ses tangentes." },
+    { description: "\\(\\dbinom{n}{k} = \\dbinom{n}{n-k}\\).", reponse: "Vrai", explication: "C'est vrai : c'est la propriété de symétrie des coefficients binomiaux." },
   ]);
   return {
     type: "qcm",
@@ -256,7 +283,7 @@ function genRevisionVraiFauxQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -273,7 +300,10 @@ function genRevisionTangenteNumeric() {
     chapter: "Exercices transversaux — Dérivation",
     prompt: `On a \\(f(${a}) = ${p}\\) et \\(f'(${a}) = ${m}\\). La tangente en \\(x=${a}\\) a pour équation \\(y = ${m}(x - (${a})) + ${p}\\). Quelle est l'ordonnée du point de cette tangente d'abscisse ${x1} ?`,
     answer,
-    steps: [`y = ${m} \\times (${x1} - (${a})) + ${p} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Équation de la tangente en a : y = f'(a)(x-a) + f(a)." },
+      { type: "resultat", text: `y = ${m} \\times (${x1} - (${a})) + ${p} = ${answer}` },
+    ],
   };
 }
 

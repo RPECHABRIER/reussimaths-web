@@ -50,7 +50,10 @@ function genCoordonneesVecteurEspaceNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `On considère les points \\(A(${A.x} ; ${A.y} ; ${A.z})\\) et \\(B(${B.x} ; ${B.y} ; ${B.z})\\) de l'espace. Donne la coordonnée en ${composante} du vecteur \\(\\overrightarrow{AB}\\).`,
     answer,
-    steps: [`${composante}_B - ${composante}_A = ${B[composante]} - (${A[composante]}) = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Coordonnées de } \\overrightarrow{AB} \\text{ : on soustrait, composante par composante, les coordonnées de A à celles de B.}` },
+      { type: "resultat", text: `${composante}_B - ${composante}_A = ${B[composante]} - (${A[composante]}) = ${answer}` },
+    ],
   };
 }
 
@@ -72,7 +75,10 @@ function genNormeVecteurEspaceNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `Calcule la norme du vecteur \\(\\vec{u}(${a} ; ${b} ; ${c})\\).`,
     answer: norme,
-    steps: [`\\|\\vec{u}\\| = \\sqrt{${a}^2 + ${b}^2 + ${c}^2} = \\sqrt{${a * a + b * b + c * c}} = ${norme}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence (Pythagore généralisé à l'espace) : } \\|\\vec{u}(x;y;z)\\| = \\sqrt{x^2+y^2+z^2}.` },
+      { type: "resultat", text: `\\|\\vec{u}\\| = \\sqrt{${a}^2 + ${b}^2 + ${c}^2} = \\sqrt{${a * a + b * b + c * c}} = ${norme}` },
+    ],
   };
 }
 
@@ -89,7 +95,10 @@ function genMilieuSegmentEspaceNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `On considère les points \\(A(${A.x} ; ${A.y} ; ${A.z})\\) et \\(B(${B.x} ; ${B.y} ; ${B.z})\\). Donne la coordonnée en ${composante} du milieu I de \\([AB]\\).`,
     answer,
-    steps: [`${composante}_I = \\dfrac{${composante}_A + ${composante}_B}{2} = \\dfrac{${A[composante]} + ${B[composante]}}{2} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Coordonnées du milieu d'un segment : on fait la moyenne des coordonnées des deux extrémités.}` },
+      { type: "resultat", text: `${composante}_I = \\dfrac{${composante}_A + ${composante}_B}{2} = \\dfrac{${A[composante]} + ${B[composante]}}{2} = ${answer}` },
+    ],
   };
 }
 
@@ -105,7 +114,10 @@ function genPointRepresentationParametriqueNumeric() {
     chapter: "Vecteurs de l'espace — Droites",
     prompt: `Une droite a pour représentation paramétrique \\(\\begin{cases} x = ${A.x} + ${dir.x}t \\\\ y = ${A.y} + ${dir.y}t \\\\ z = ${A.z} + ${dir.z}t \\end{cases}\\) avec \\(t \\in \\mathbb{R}\\). Calcule la coordonnée en ${composante} du point de cette droite obtenu pour \\(t = ${t}\\).`,
     answer,
-    steps: [`${composante} = ${A[composante]} + ${dir[composante]} \\times ${t} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour obtenir un point de la droite, on remplace } t \\text{ par sa valeur dans l'équation de la coordonnée demandée.}` },
+      { type: "resultat", text: `${composante} = ${A[composante]} + ${dir[composante]} \\times ${t} = ${answer}` },
+    ],
   };
 }
 
@@ -131,7 +143,12 @@ function genVerifierAlignementQCM() {
     prompt: `On considère les points \\(A(${A.x} ; ${A.y} ; ${A.z})\\), \\(B(${B.x} ; ${B.y} ; ${B.z})\\) et \\(C(${C.x} ; ${C.y} ; ${C.z})\\). Ces trois points sont-ils alignés ?`,
     answer: aligne ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\overrightarrow{AB}(${B.x - A.x} ; ${B.y - A.y} ; ${B.z - A.z})`, `\\overrightarrow{AC}(${C.x - A.x} ; ${C.y - A.y} ; ${C.z - A.z})`, aligne ? "Les deux vecteurs sont colinéaires : les points sont alignés." : "Les deux vecteurs ne sont pas colinéaires : les points ne sont pas alignés."],
+    steps: [
+      { type: "regle", text: `\\text{A, B, C sont alignés si et seulement si } \\overrightarrow{AB} \\text{ et } \\overrightarrow{AC} \\text{ sont colinéaires (l'un est un multiple de l'autre).}` },
+      { type: "donnee", text: `\\overrightarrow{AB}(${B.x - A.x} ; ${B.y - A.y} ; ${B.z - A.z})` },
+      { type: "donnee", text: `\\overrightarrow{AC}(${C.x - A.x} ; ${C.y - A.y} ; ${C.z - A.z})` },
+      { type: "resultat", text: aligne ? "Les deux vecteurs sont colinéaires : les points sont alignés." : "Les deux vecteurs ne sont pas colinéaires : les points ne sont pas alignés." },
+    ],
   };
 }
 
@@ -148,7 +165,10 @@ function genDecompositionVecteurNumeric() {
     chapter: "Vecteurs de l'espace — Combinaisons linéaires",
     prompt: `On considère \\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\), \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\) et \\(\\vec{w}(${w.x} ; ${w.y} ; ${w.z})\\), sachant que \\(\\vec{w} = k\\vec{u} + k'\\vec{v}\\). Donne la valeur de ${demandeK ? "k" : "k'"}.`,
     answer: demandeK ? k : kPrime,
-    steps: [`\\vec{w} = ${k}\\vec{u} + ${kPrime}\\vec{v}`],
+    steps: [
+      { type: "regle", text: `\\text{On détermine k et k' en résolvant le système formé par les coordonnées de } \\vec{w} = k\\vec{u} + k'\\vec{v} \\text{ (deux équations suffisent, la troisième vérifie la cohérence).}` },
+      { type: "resultat", text: `\\vec{w} = ${k}\\vec{u} + ${kPrime}\\vec{v} \\text{, donc } ${demandeK ? "k" : "k'"} = ${demandeK ? k : kPrime}` },
+    ],
   };
 }
 
@@ -165,7 +185,10 @@ function genCalculerCombinaisonLineaireNumeric() {
     chapter: "Vecteurs de l'espace — Combinaisons linéaires",
     prompt: `On considère \\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\) et \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\). On pose \\(\\vec{w} = ${k}\\vec{u} + ${kPrime}\\vec{v}\\). Donne la coordonnée en ${composante} de \\(\\vec{w}\\).`,
     answer,
-    steps: [`${k} \\times ${u[composante]} + ${kPrime} \\times ${v[composante]} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une coordonnée de } \\vec{w} = k\\vec{u} + k'\\vec{v}, \\text{ on applique la même combinaison linéaire à cette coordonnée de } \\vec{u} \\text{ et } \\vec{v}.` },
+      { type: "resultat", text: `${k} \\times ${u[composante]} + ${kPrime} \\times ${v[composante]} = ${answer}` },
+    ],
   };
 }
 
@@ -188,7 +211,11 @@ function genPointAppartientDroiteQCM() {
     prompt: `Une droite passe par \\(A(${A.x} ; ${A.y} ; ${A.z})\\) et a pour vecteur directeur \\(\\vec{u}(${dir.x} ; ${dir.y} ; ${dir.z})\\). Le point \\(M(${M.x} ; ${M.y} ; ${M.z})\\) appartient-il à cette droite ?`,
     answer: appartient ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\overrightarrow{AM}(${M.x - A.x} ; ${M.y - A.y} ; ${M.z - A.z})`, appartient ? "Ce vecteur est colinéaire à u : M appartient à la droite." : "Ce vecteur n'est pas colinéaire à u : M n'appartient pas à la droite."],
+    steps: [
+      { type: "regle", text: `\\text{M appartient à la droite si et seulement si } \\overrightarrow{AM} \\text{ est colinéaire au vecteur directeur } \\vec{u} \\text{ (l'un est un multiple de l'autre).}` },
+      { type: "donnee", text: `\\overrightarrow{AM}(${M.x - A.x} ; ${M.y - A.y} ; ${M.z - A.z})` },
+      { type: "resultat", text: appartient ? "Ce vecteur est colinéaire à u : M appartient à la droite." : "Ce vecteur n'est pas colinéaire à u : M n'appartient pas à la droite." },
+    ],
   };
 }
 
@@ -203,18 +230,18 @@ function genVecteurDirecteurDeuxPointsNumeric() {
     chapter: "Vecteurs de l'espace — Droites",
     prompt: `Une droite passe par les points \\(A(${A.x} ; ${A.y} ; ${A.z})\\) et \\(B(${B.x} ; ${B.y} ; ${B.z})\\). Donne la coordonnée en ${composante} d'un vecteur directeur de cette droite.`,
     answer,
-    steps: [`\\overrightarrow{AB} \\text{ est un vecteur directeur : sa coordonnée en ${composante} vaut } ${B[composante]} - (${A[composante]}) = ${answer}`],
+    steps: [{ type: "resultat", text: `\\overrightarrow{AB} \\text{ est un vecteur directeur : sa coordonnée en ${composante} vaut } ${B[composante]} - (${A[composante]}) = ${answer}` }],
   };
 }
 
 // ---------- 10. Vrai ou faux sur les positions relatives de droites et de plans ----------
 function genVraiFauxPositionsRelativesQCM() {
   const cas = pick([
-    { description: "Deux droites parallèles de l'espace sont toujours coplanaires.", reponse: "Vrai" },
-    { description: "Deux droites non parallèles de l'espace sont nécessairement sécantes.", reponse: "Faux" },
-    { description: "Si deux plans sont sécants, leur intersection est une droite.", reponse: "Vrai" },
-    { description: "Deux droites non coplanaires n'ont aucun point commun.", reponse: "Vrai" },
-    { description: "Trois vecteurs de l'espace sont toujours coplanaires.", reponse: "Faux" },
+    { description: "Deux droites parallèles de l'espace sont toujours coplanaires.", reponse: "Vrai", explication: "C'est vrai : deux droites parallèles ont la même direction, on peut donc toujours construire un plan qui les contient toutes les deux (elles ne sont jamais gauches)." },
+    { description: "Deux droites non parallèles de l'espace sont nécessairement sécantes.", reponse: "Faux", explication: "C'est faux : deux droites non parallèles peuvent être sécantes (un point commun) ou non coplanaires, c'est-à-dire gauches, sans aucun point commun. Par exemple, deux arêtes opposées d'un cube ne sont ni parallèles ni sécantes." },
+    { description: "Si deux plans sont sécants, leur intersection est une droite.", reponse: "Vrai", explication: "C'est vrai : dans l'espace, si deux plans distincts se coupent, leur intersection est toujours une droite (jamais un seul point)." },
+    { description: "Deux droites non coplanaires n'ont aucun point commun.", reponse: "Vrai", explication: "C'est vrai : si deux droites avaient un point commun, on pourrait toujours construire un plan les contenant toutes les deux, donc elles seraient coplanaires. Par contraposée, deux droites non coplanaires n'ont aucun point commun." },
+    { description: "Trois vecteurs de l'espace sont toujours coplanaires.", reponse: "Faux", explication: "C'est faux : trois vecteurs ne sont coplanaires que si l'un peut s'écrire comme combinaison linéaire des deux autres. Par exemple, les vecteurs (1;0;0), (0;1;0) et (0;0;1) ne sont pas coplanaires : ils forment une base de l'espace." },
   ]);
   return {
     type: "qcm",
@@ -222,7 +249,7 @@ function genVraiFauxPositionsRelativesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -238,7 +265,10 @@ function genSymetriquePointNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `Le point \\(I(${I.x} ; ${I.y} ; ${I.z})\\) est le milieu du segment \\([AB]\\), avec \\(A(${A.x} ; ${A.y} ; ${A.z})\\). Donne la coordonnée en ${composante} de B.`,
     answer,
-    steps: [`${composante}_B = 2 \\times ${I[composante]} - ${A[composante]} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{I milieu de [AB] signifie que A et B sont symétriques par rapport à I : donc } B = 2I - A \\text{ (composante par composante).}` },
+      { type: "resultat", text: `${composante}_B = 2 \\times ${I[composante]} - ${A[composante]} = ${answer}` },
+    ],
   };
 }
 
@@ -261,7 +291,15 @@ function genCoplanariteVecteursQCM() {
     prompt: `On considère \\(\\vec{u}(1 ; 0 ; 0)\\), \\(\\vec{v}(0 ; 1 ; 0)\\) et \\(\\vec{w}(${w.x} ; ${w.y} ; ${w.z})\\). Les trois vecteurs sont-ils coplanaires ?`,
     answer: coplanaire ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [coplanaire ? `\\vec{w} \\text{ a une coordonnée en z nulle : il s'écrit comme combinaison de } \\vec{u} \\text{ et } \\vec{v}, \\text{ les trois vecteurs sont coplanaires.}` : `\\vec{w} \\text{ a une coordonnée en z non nulle alors que } \\vec{u} \\text{ et } \\vec{v} \\text{ sont dans le plan } z=0 : \\text{les trois vecteurs ne sont pas coplanaires.}`],
+    steps: [
+      { type: "regle", text: `\\text{Trois vecteurs sont coplanaires si l'un s'écrit comme combinaison linéaire des deux autres.}` },
+      {
+        type: "resultat",
+        text: coplanaire
+          ? `\\vec{w} \\text{ a une coordonnée en z nulle : il s'écrit comme combinaison de } \\vec{u} \\text{ et } \\vec{v}, \\text{ les trois vecteurs sont coplanaires.}`
+          : `\\vec{w} \\text{ a une coordonnée en z non nulle alors que } \\vec{u} \\text{ et } \\vec{v} \\text{ sont dans le plan } z=0 : \\text{les trois vecteurs ne sont pas coplanaires.}`,
+      },
+    ],
   };
 }
 
@@ -275,7 +313,10 @@ function genNormeCarreVecteurNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `On considère \\(\\vec{u}(${a} ; ${b} ; ${c})\\). Calcule \\(\\|\\vec{u}\\|^2\\) (le carré de la norme).`,
     answer: a * a + b * b + c * c,
-    steps: [`${a}^2 + ${b}^2 + ${c}^2 = ${a * a + b * b + c * c}`],
+    steps: [
+      { type: "regle", text: `\\|\\vec{u}(x;y;z)\\|^2 = x^2+y^2+z^2 \\text{ (on omet simplement la racine carrée).}` },
+      { type: "resultat", text: `${a}^2 + ${b}^2 + ${c}^2 = ${a * a + b * b + c * c}` },
+    ],
   };
 }
 
@@ -289,7 +330,10 @@ function genSommeVecteursEspaceNumeric() {
     chapter: "Vecteurs de l'espace — Coordonnées",
     prompt: `On considère \\(\\vec{u}(${u.x} ; ${u.y} ; ${u.z})\\) et \\(\\vec{v}(${v.x} ; ${v.y} ; ${v.z})\\). Donne la coordonnée en ${composante} du vecteur \\(\\vec{u} + \\vec{v}\\).`,
     answer: u[composante] + v[composante],
-    steps: [`${u[composante]} + ${v[composante]} = ${u[composante] + v[composante]}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour additionner deux vecteurs, on additionne leurs coordonnées composante par composante.}` },
+      { type: "resultat", text: `${u[composante]} + ${v[composante]} = ${u[composante] + v[composante]}` },
+    ],
   };
 }
 
@@ -308,7 +352,10 @@ function genRelationChaslesEspaceNumeric() {
     chapter: "Vecteurs de l'espace — Relation de Chasles",
     prompt: `On sait que la coordonnée en ${composante} de \\(\\overrightarrow{AB}\\) est ${ab} et que celle de \\(\\overrightarrow{BC}\\) est ${bc}. En utilisant la relation de Chasles, donne la coordonnée en ${composante} de \\(\\overrightarrow{AC}\\).`,
     answer,
-    steps: [`\\overrightarrow{AC} = \\overrightarrow{AB} + \\overrightarrow{BC}`, `${ab} + ${bc} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\overrightarrow{AC} = \\overrightarrow{AB} + \\overrightarrow{BC} \\text{ (relation de Chasles).}` },
+      { type: "resultat", text: `${ab} + ${bc} = ${answer}` },
+    ],
   };
 }
 

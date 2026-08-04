@@ -1618,3 +1618,66 @@ dans ce sandbox).
 
 **Première technologique intégralement auditée pour la tâche #236.** Reste :
 Terminale STMG.
+
+## 2026-08-04 — Terminale technologique (STMG) : repères pédagogiques + codage sémantique (tâche #236 / #233)
+
+Audit complet des 7 chapitres de Terminale technologique (STMG), dernier
+niveau du lycée, avec la même méthode que pour tous les niveaux
+précédents : conversion des `steps` en objets typés `{ type, text }`
+(donnee/regle/calcul/resultat), ajout d'un repère pédagogique (`regle`)
+partout où un générateur faisait un saut numérique ou conceptuel sans
+justification, et réécriture complète des générateurs à lacune sévère
+(QCM qui se contentaient de répéter la réponse sans aucune explication).
+
+- fonctions-exponentielles-terminale-techno.js : repères pédagogiques
+  ajoutés (sens de variation, allure de courbe, comparaison de bases,
+  taux d'évolution moyen) ; aucune lacune sévère.
+- logarithme-decimal-terminale-techno.js : repère ajouté sur la
+  résolution de 10^x = b (définition de log) et le sens de variation ;
+  aucune lacune sévère.
+- probabilites-conditionnelles-terminale-techno.js : lacune sévère sur le
+  QCM d'interprétation des pondérations d'arbre (2 cas justifiés :
+  pondération sur une branche partant d'un nœud intermédiaire =
+  probabilité conditionnelle, vs racine = probabilité simple) ; repères
+  ajoutés sur la partition à 3+ évènements, la formule des probabilités
+  totales, les pondérations complémentaires, les chemins de l'arbre.
+- reviser-les-bases-terminale-techno.js (chapitre gratuit) : lacune
+  sévère sur le coefficient multiplicateur (steps ne faisait que répéter
+  la réponse) ; repères ajoutés sur les suites (formules de référence),
+  la lecture de tableau croisé, l'espérance.
+- statistiques-deux-variables-terminale-techno.js : lacune sévère sur 2
+  QCM (choisir le bon changement de variable selon la forme du nuage ;
+  reconnaître pourquoi un ajustement affine direct ne convient pas) —
+  chacun avec justification mathématique du critère de choix.
+- suites-terminale-techno.js : lacune sévère sur le QCM de reconnaissance
+  d'une situation de versements réguliers (suite arithmétique vs
+  géométrique selon la présence d'intérêts composés) ; repères de
+  référence ajoutés pour les formules de terme général, moyennes,
+  sommes ; preuves de suites consécutives enrichies d'un critère
+  explicite.
+- variables-aleatoires-terminale-techno.js : lacune sévère sur le QCM de
+  reconnaissance d'une loi binomiale (3 cas justifiés : remise/indépendance
+  vs tirage sans remise) ; repères ajoutés sur les cas particuliers
+  P(X=0)/P(X=n) (un seul chemin de l'arbre), l'union d'évènements
+  incompatibles, l'espérance d'une variable discrète quelconque.
+
+automatismes-terminale-techno.js exclu de cet audit (précédent établi :
+les fichiers automatismes-* ne rentrent pas dans le périmètre de la
+tâche #236 à aucun niveau).
+
+Chaque fichier : node --check, smoke test 8000 itérations (4 paliers ou
+générique selon le fichier), 0 erreur, sync vers les deux copies
+Application TOP (diff vide vérifié), 7 commits séparés dans le dépôt
+`APPLI GITHUB/Sans titre`.
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`) — un premier essai a échoué avec une erreur de
+résolution de module transitoire (`@supabase/auth-js`), résolue par un
+simple nouvel essai (le fichier existait bien sur disque).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox).
+
+**Terminale technologique (STMG) intégralement auditée pour la tâche
+#236. Le lycée est désormais entièrement audité : 2nde, Première non
+spé, Première Spé, Terminale Spé, Première techno, Terminale STMG.**

@@ -53,7 +53,7 @@ function genFonctionAffineReviewNumeric() {
     chapter: "Exercices de fin d'année — Fonctions affines",
     prompt: `On considère la fonction affine ${nom} définie par \\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(${nom}(${x})\\).`,
     answer: a * x + b,
-    steps: [`${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a * x + b}`],
+    steps: [{ type: "resultat", text: `${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a * x + b}` }],
   };
 }
 
@@ -68,7 +68,10 @@ function genResoudreEquationAffineReviewNumeric() {
     chapter: "Exercices de fin d'année — Fonctions affines",
     prompt: `Résous l'équation \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${k}\\).`,
     answer: xSol,
-    steps: [`${a}x = ${k - b}`, `x = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${k - b}` },
+      { type: "resultat", text: `x = \\dfrac{${k - b}}{${a}} = ${xSol}` },
+    ],
   };
 }
 
@@ -87,7 +90,14 @@ function genComparerCarresReviewQCM() {
     prompt: `On a \\(${xmin} < ${xmax}\\), ${memeSignePositif ? "tous deux positifs" : "tous deux négatifs"}. Que peut-on en déduire pour leurs carrés ?`,
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
-    steps: [`La fonction carré est ${memeSignePositif ? "croissante sur les positifs" : "décroissante sur les négatifs"}.`],
+    steps: [
+      {
+        type: "regle",
+        text: memeSignePositif
+          ? `\\text{La fonction carré est } \\textbf{croissante} \\text{ sur les nombres positifs : deux nombres positifs se comparent dans le même ordre que leurs carrés.}`
+          : `\\text{La fonction carré est } \\textbf{décroissante} \\text{ sur les nombres négatifs : deux nombres négatifs se comparent dans l'ordre } \\textbf{inverse} \\text{ de celui de leurs carrés.}`,
+      },
+    ],
   };
 }
 
@@ -109,7 +119,10 @@ function genDistanceReviewNumeric() {
     chapter: "Exercices de fin d'année — Repérage",
     prompt: `Repère orthonormé. ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}). Calcule ${nomA}${nomB}.`,
     answer: dist,
-    steps: [`${nomA}${nomB} = \\sqrt{${dx}^2 + ${dy}^2} = ${dist}`],
+    steps: [
+      { type: "regle", text: `\\text{La distance entre deux points s'obtient à partir des différences de coordonnées, grâce au théorème de Pythagore : } ${nomA}${nomB} = \\sqrt{(x_${nomB} - x_${nomA})^2 + (y_${nomB} - y_${nomA})^2}.` },
+      { type: "resultat", text: `${nomA}${nomB} = \\sqrt{${dx}^2 + ${dy}^2} = ${dist}` },
+    ],
   };
 }
 
@@ -126,7 +139,10 @@ function genCoordonneesVecteurReviewNumeric() {
     chapter: "Exercices de fin d'année — Vecteurs",
     prompt: `${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du vecteur \\(\\overrightarrow{${nomA}${nomB}}\\) ?`,
     answer: demanderAbscisse ? xB - xA : yB - yA,
-    steps: [demanderAbscisse ? `${xB} - ${xA} = ${xB - xA}` : `${yB} - ${yA} = ${yB - yA}`],
+    steps: [
+      { type: "regle", text: `\\text{Les coordonnées du vecteur } \\overrightarrow{${nomA}${nomB}} \\text{ s'obtiennent en soustrayant les coordonnées du point de départ à celles du point d'arrivée.}` },
+      { type: "resultat", text: demanderAbscisse ? `${xB} - ${xA} = ${xB - xA}` : `${yB} - ${yA} = ${yB - yA}` },
+    ],
   };
 }
 
@@ -145,7 +161,11 @@ function genColineariteReviewQCM() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${c} ; ${d})\\). Ces vecteurs sont-ils colinéaires ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\det(\\vec{u},\\vec{v}) = ${det}`],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs } \\vec{u}(a;b) \\text{ et } \\vec{v}(c;d) \\text{ sont colinéaires si et seulement si leur déterminant } ad - bc \\text{ est nul.}` },
+      { type: "calcul", text: `\\det(\\vec{u},\\vec{v}) = ${a} \\times ${d} - ${b} \\times ${c} = ${det}` },
+      { type: "resultat", text: det === 0 ? `\\text{Le déterminant est nul : les vecteurs sont colinéaires.}` : `\\text{Le déterminant n'est pas nul : les vecteurs ne sont pas colinéaires.}` },
+    ],
   };
 }
 
@@ -166,7 +186,11 @@ function genPointSurDroiteReviewQCM() {
     prompt: `(d) : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}y ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = 0\\). Le point (${xTest} ; ${yTest}) appartient-il à (d) ?`,
     answer: valeur === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${a} \\times ${xTest} + ${b} \\times ${yTest} + ${c} = ${valeur}`],
+    steps: [
+      { type: "regle", text: `\\text{Un point appartient à une droite d'équation } ax+by+c=0 \\text{ si et seulement si en remplaçant } x \\text{ et } y \\text{ par ses coordonnées, l'expression s'annule.}` },
+      { type: "calcul", text: `${a} \\times ${xTest} + ${b} \\times ${yTest} + ${c} = ${valeur}` },
+      { type: "resultat", text: valeur === 0 ? `\\text{L'expression vaut 0 : le point appartient à (d).}` : `\\text{L'expression ne vaut pas 0 : le point n'appartient pas à (d).}` },
+    ],
   };
 }
 
@@ -182,7 +206,10 @@ function genTauxEvolutionReviewNumeric() {
     chapter: "Exercices de fin d'année — Informations chiffrées",
     prompt: `Une quantité passe de ${V0} à ${V1}. Calcule le taux d'évolution (en %, positif pour une hausse, négatif pour une baisse).`,
     answer: hausse ? t : -t,
-    steps: [`\\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}`],
+    steps: [
+      { type: "regle", text: `\\text{Le taux d'évolution est } t = \\dfrac{\\text{valeur finale} - \\text{valeur initiale}}{\\text{valeur initiale}} \\times 100.` },
+      { type: "resultat", text: `\\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}` },
+    ],
   };
 }
 
@@ -195,7 +222,10 @@ function genMedianeReviewNumeric() {
     chapter: "Exercices de fin d'année — Statistiques",
     prompt: `Série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine la médiane.`,
     answer: valeurs[(n - 1) / 2],
-    steps: [`\\text{Valeur centrale (rang } \\frac{${n}+1}{2}\\text{)} = ${valeurs[(n - 1) / 2]}`],
+    steps: [
+      { type: "regle", text: `\\text{L'effectif } ${n} \\text{ est impair : la médiane est la valeur de rang } \\dfrac{${n}+1}{2}.` },
+      { type: "resultat", text: `\\text{Valeur de rang } \\dfrac{${n}+1}{2} = ${valeurs[(n - 1) / 2]}` },
+    ],
   };
 }
 
@@ -209,7 +239,10 @@ function genProbabiliteReviewNumeric() {
     prompt: `Une urne contient ${total} boules dont ${favorables} rouges. On tire une boule au hasard. Donne la probabilité d'obtenir une boule rouge (décimale, arrondie au centième).`,
     answer: roundTo(favorables / total, 2),
     tolerance: 0.01,
-    steps: [`P = \\dfrac{${favorables}}{${total}} \\approx ${roundTo(favorables / total, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un modèle équiprobable, } P = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}.` },
+      { type: "resultat", text: `P = \\dfrac{${favorables}}{${total}} \\approx ${roundTo(favorables / total, 2)}` },
+    ],
   };
 }
 
@@ -225,7 +258,10 @@ function genSensVariationReviewQCM() {
     prompt: `\\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Quel est le sens de variation de ${nom} ?`,
     answer: sens,
     options: ["croissante", "décroissante"],
-    steps: [`Le coefficient directeur ${a} est ${a > 0 ? "positif" : "négatif"}.`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction affine } x \\mapsto ax+b \\text{ est croissante si } a>0, \\text{ décroissante si } a<0.` },
+      { type: "resultat", text: `\\text{Le coefficient directeur } ${a} \\text{ est } ${a > 0 ? "\\textbf{positif}" : "\\textbf{négatif}"} : \\text{ la fonction est } ${sens}.` },
+    ],
   };
 }
 
@@ -240,7 +276,17 @@ function genAntecedentsCarreReviewQCM() {
     prompt: `Combien le nombre ${k} a-t-il d'antécédents par la fonction carré ?`,
     answer: String(nb),
     options: ["0", "1", "2"],
-    steps: [`${nb} antécédent(s).`],
+    steps: [
+      {
+        type: "regle",
+        text:
+          cas === "positif"
+            ? `\\text{Un nombre strictement positif a toujours } \\textbf{deux} \\text{ antécédents par la fonction carré (un opposé de l'autre) : } (\\pm\\sqrt{${k}})^2 = ${k}.`
+            : cas === "nul"
+              ? `\\text{Le nombre } 0 \\text{ a un seul antécédent par la fonction carré : } 0^2 = 0.`
+              : `\\text{Un carré n'est jamais négatif : un nombre strictement négatif n'a } \\textbf{aucun} \\text{ antécédent par la fonction carré.}`,
+      },
+    ],
   };
 }
 
@@ -257,7 +303,10 @@ function genMilieuReviewNumeric() {
     chapter: "Exercices de fin d'année — Repérage",
     prompt: `${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du milieu de [${nomA}${nomB}] ?`,
     answer: demanderAbscisse ? (xA + xB) / 2 : (yA + yB) / 2,
-    steps: [demanderAbscisse ? `(${xA} + ${xB}) / 2 = ${(xA + xB) / 2}` : `(${yA} + ${yB}) / 2 = ${(yA + yB) / 2}`],
+    steps: [
+      { type: "regle", text: `\\text{Les coordonnées du milieu d'un segment sont la moyenne des coordonnées de ses extrémités.}` },
+      { type: "resultat", text: demanderAbscisse ? `\\dfrac{${xA} + ${xB}}{2} = ${(xA + xB) / 2}` : `\\dfrac{${yA} + ${yB}}{2} = ${(yA + yB) / 2}` },
+    ],
   };
 }
 
@@ -276,7 +325,11 @@ function genEvolutionsSuccessivesReviewNumeric() {
     prompt: `Une quantité subit une ${hausse1 ? "hausse" : "baisse"} de ${t1} %, puis une ${hausse2 ? "hausse" : "baisse"} de ${t2} %. Quel est le taux d'évolution global (en %) ?`,
     answer: tauxGlobal,
     tolerance: 0.01,
-    steps: [`\\text{CM global} \\approx ${roundTo(cm1 * cm2, 4)}`, `\\text{Taux global} \\approx ${tauxGlobal}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Pour des évolutions successives, on ne les additionne pas : le coefficient multiplicateur global est le } \\textbf{produit} \\text{ des coefficients multiplicateurs de chaque évolution.}` },
+      { type: "calcul", text: `\\text{CM}_1 = ${roundTo(cm1, 4)}, \\quad \\text{CM}_2 = ${roundTo(cm2, 4)}, \\quad \\text{CM global} = ${roundTo(cm1, 4)} \\times ${roundTo(cm2, 4)} \\approx ${roundTo(cm1 * cm2, 4)}` },
+      { type: "resultat", text: `\\text{Taux global} = (${roundTo(cm1 * cm2, 4)} - 1) \\times 100 \\approx ${tauxGlobal}\\%` },
+    ],
   };
 }
 
@@ -291,7 +344,11 @@ function genEcartInterquartileReviewNumeric() {
     chapter: "Exercices de fin d'année — Statistiques",
     prompt: `Série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Calcule l'écart interquartile \\(Q_3 - Q_1\\).`,
     answer: q3 - q1,
-    steps: [`Q_1 = ${q1}, \\quad Q_3 = ${q3}`, `Q_3 - Q_1 = ${q3 - q1}`],
+    steps: [
+      { type: "regle", text: `\\text{L'écart interquartile mesure la dispersion de la moitié centrale de la série : } Q_3 - Q_1.` },
+      { type: "calcul", text: `Q_1 = ${q1}, \\quad Q_3 = ${q3}` },
+      { type: "resultat", text: `Q_3 - Q_1 = ${q3} - ${q1} = ${q3 - q1}` },
+    ],
   };
 }
 

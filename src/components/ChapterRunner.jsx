@@ -125,16 +125,20 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
 
-  // Mode Découverte : la méthode reste visible en permanence, mais le
-  // résultat final (dernière étape taguée "resultat", cf. codage sémantique
-  // des steps) est masqué par défaut — l'élève choisit de répondre par
-  // lui-même via le pavé/QCM habituel, ou d'afficher le résultat s'il le
-  // souhaite. Les chapitres pas encore retaggés (dernière étape non taguée
-  // "resultat") gardent l'ancien comportement : toutes les étapes visibles,
-  // pas de bouton (on ne peut pas distinguer la méthode du résultat dedans).
-  const lastStep = exercise.steps && exercise.steps.length > 0 ? exercise.steps[exercise.steps.length - 1] : null;
-  const lastIsResult = !!lastStep && typeof lastStep === "object" && lastStep.type === "resultat";
-  const decouverteSteps = lastIsResult && !revealResult ? exercise.steps.slice(0, -1) : exercise.steps;
+  // Mode Découverte : la méthode reste visible en permanence, mais la
+  // DERNIÈRE étape (celle qui porte la réponse finale) est masquée par
+  // défaut — l'élève choisit de répondre par lui-même via le pavé/QCM
+  // habituel, ou d'afficher le résultat s'il le souhaite.
+  //
+  // On masque systématiquement la dernière étape, quel que soit son type
+  // ("resultat" idéalement, mais aussi "calcul" ou "regle" pour les
+  // ~150 chapitres pas encore entièrement retaggés par le codage
+  // sémantique — beaucoup de générateurs concluent leur dernier "calcul"
+  // par la valeur finale, ou résument tout dans une seule étape "regle"
+  // pour un QCM). Se fier au type plutôt qu'à la position laissait
+  // échapper la réponse dans tous ces cas non retaggés.
+  const hasSteps = !!(exercise.steps && exercise.steps.length > 0);
+  const decouverteSteps = hasSteps && !revealResult ? exercise.steps.slice(0, -1) : exercise.steps;
 
   // On réinitialise l'affichage du résultat à chaque nouvel exercice ou
   // changement de mode, pour repartir masqué.
@@ -488,7 +492,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 >
                   <Lightbulb size={13} /> Méthode
                 </p>
-                {lastIsResult && (
+                {hasSteps && (
                   <button
                     onClick={() => setRevealResult((v) => !v)}
                     className="text-xs font-semibold py-1 px-3 rounded-full shrink-0"
@@ -499,7 +503,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 )}
               </div>
               <StepsList steps={decouverteSteps} dark={false} />
-              {lastIsResult && !revealResult && decouverteSteps.length === 0 && (
+              {!revealResult && decouverteSteps.length === 0 && (
                 <p className="text-xs italic" style={{ color: slate }}>
                   Essaie de répondre toi-même ci-dessous, ou affiche le résultat.
                 </p>

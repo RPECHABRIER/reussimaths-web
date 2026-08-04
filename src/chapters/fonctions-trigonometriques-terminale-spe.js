@@ -40,7 +40,10 @@ function genValeurRemarquableQCM() {
     prompt: `Quelle est la valeur de \\(\\${fonction}\\left(${angle.tex}\\right)\\) ?`,
     answer: correct,
     options,
-    steps: [`\\${fonction}\\left(${angle.tex}\\right) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Valeur remarquable à connaître sur le cercle trigonométrique." },
+      { type: "resultat", text: `\\${fonction}\\left(${angle.tex}\\right) = ${correct}` },
+    ],
   };
 }
 
@@ -61,7 +64,7 @@ function genSigneCosSinQCM() {
     prompt: `Quel est le signe de \\(\\${fonction}\\left(${q.angle}\\right)\\) ?`,
     answer,
     options: ["Positif", "Négatif"],
-    steps: [`Sur le cercle trigonométrique, \\(\\${fonction}\\left(${q.angle}\\right)\\) est ${answer.toLowerCase()}.`],
+    steps: [{ type: "regle", text: `Sur le cercle trigonométrique, \\(\\${fonction}\\left(${q.angle}\\right)\\) est ${answer.toLowerCase()}.` }],
   };
 }
 
@@ -78,7 +81,10 @@ function genDeriveeSinAffineFormuleQCM() {
     prompt: `On considère \\(f(x) = \\sin(${expo})\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = ${a} \\times \\cos(${expo}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : (sin(ax+b))' = a·cos(ax+b)." },
+      { type: "resultat", text: `f'(x) = ${a} \\times \\cos(${expo}) = ${correct}` },
+    ],
   };
 }
 
@@ -95,21 +101,24 @@ function genDeriveeCosAffineFormuleQCM() {
     prompt: `On considère \\(f(x) = \\cos(${expo})\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = -${a} \\times \\sin(${expo}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : (cos(ax+b))' = -a·sin(ax+b)." },
+      { type: "resultat", text: `f'(x) = -${a} \\times \\sin(${expo}) = ${correct}` },
+    ],
   };
 }
 
 // ---------- 5. Parité d'une fonction trigonométrique (QCM) ----------
 function genPariteQCM() {
   const cas = pick([
-    { description: "f(x) = \\cos(x)", reponse: "Paire" },
-    { description: "f(x) = \\sin(x)", reponse: "Impaire" },
-    { description: "f(x) = x^2\\cos(x)", reponse: "Paire" },
-    { description: "f(x) = x\\sin(x)", reponse: "Paire" },
-    { description: "f(x) = x\\cos(x)", reponse: "Impaire" },
-    { description: "f(x) = \\sin(x)\\cos(x)", reponse: "Impaire" },
-    { description: "f(x) = \\cos(x) + 1", reponse: "Paire" },
-    { description: "f(x) = \\cos(x) + x", reponse: "Ni paire ni impaire" },
+    { description: "f(x) = \\cos(x)", reponse: "Paire", explication: "cos(-x) = cos(x) pour tout x, donc f est paire." },
+    { description: "f(x) = \\sin(x)", reponse: "Impaire", explication: "sin(-x) = -sin(x) pour tout x, donc f est impaire." },
+    { description: "f(x) = x^2\\cos(x)", reponse: "Paire", explication: "x² est une fonction paire et cos(x) est une fonction paire ; le produit de deux fonctions paires est paire." },
+    { description: "f(x) = x\\sin(x)", reponse: "Paire", explication: "x est une fonction impaire et sin(x) est une fonction impaire ; le produit de deux fonctions impaires est paire." },
+    { description: "f(x) = x\\cos(x)", reponse: "Impaire", explication: "x est impaire et cos(x) est paire ; le produit d'une fonction impaire et d'une fonction paire est impaire." },
+    { description: "f(x) = \\sin(x)\\cos(x)", reponse: "Impaire", explication: "sin(x) est impaire et cos(x) est paire ; le produit d'une fonction impaire et d'une fonction paire est impaire." },
+    { description: "f(x) = \\cos(x) + 1", reponse: "Paire", explication: "cos(x) est paire et la constante 1 est aussi paire ; la somme de deux fonctions paires est paire." },
+    { description: "f(x) = \\cos(x) + x", reponse: "Ni paire ni impaire", explication: "cos(x) est paire et x est impaire : leur somme n'est en général ni paire ni impaire, car f(-x) = cos(x) - x n'est égal ni à f(x) ni à -f(x)." },
   ]);
   return {
     type: "qcm",
@@ -117,7 +126,7 @@ function genPariteQCM() {
     prompt: `La fonction \\(${cas.description}\\) est-elle paire, impaire, ou ni paire ni impaire ?`,
     answer: cas.reponse,
     options: ["Paire", "Impaire", "Ni paire ni impaire"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -133,18 +142,21 @@ function genPeriodeFormuleQCM() {
     prompt: `Quelle est la période de la fonction \\(f(x) = \\${fonction}(${k}x)\\) ?`,
     answer: correct,
     options,
-    steps: [`\\text{La période de } \\${fonction}(${k}x) \\text{ est } ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : la fonction cos(kx) (ou sin(kx)) a pour période 2π/k." },
+      { type: "resultat", text: `\\text{La période de } \\${fonction}(${k}x) \\text{ est } ${correct}` },
+    ],
   };
 }
 
 // ---------- 7. Formules de réduction (QCM Vrai/Faux) ----------
 function genFormuleReductionQCM() {
   const cas = pick([
-    { description: "\\cos(-x) = \\cos(x)", reponse: "Vrai" },
-    { description: "\\sin(-x) = \\sin(x)", reponse: "Faux" },
-    { description: "\\sin(x) = \\cos\\left(\\dfrac{\\pi}{2} - x\\right)", reponse: "Vrai" },
-    { description: "\\cos(\\pi - x) = \\cos(x)", reponse: "Faux" },
-    { description: "\\sin(\\pi - x) = \\sin(x)", reponse: "Vrai" },
+    { description: "\\cos(-x) = \\cos(x)", reponse: "Vrai", explication: "C'est vrai : cos est une fonction paire, c'est la formule de réduction pour l'angle opposé." },
+    { description: "\\sin(-x) = \\sin(x)", reponse: "Faux", explication: "C'est faux : sin est une fonction impaire, la formule correcte est sin(-x) = -sin(x)." },
+    { description: "\\sin(x) = \\cos\\left(\\dfrac{\\pi}{2} - x\\right)", reponse: "Vrai", explication: "C'est vrai : c'est la formule de réduction des angles complémentaires." },
+    { description: "\\cos(\\pi - x) = \\cos(x)", reponse: "Faux", explication: "C'est faux : la formule correcte est cos(π-x) = -cos(x) (angles supplémentaires)." },
+    { description: "\\sin(\\pi - x) = \\sin(x)", reponse: "Vrai", explication: "C'est vrai : c'est la formule de réduction pour les angles supplémentaires." },
   ]);
   return {
     type: "qcm",
@@ -152,7 +164,7 @@ function genFormuleReductionQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -171,18 +183,18 @@ function genComparerCosCroissanceQCM() {
     prompt: `Compare \\(\\cos(${a})\\) et \\(\\cos(${b})\\) (la fonction cosinus est strictement décroissante sur \\([0;\\pi]\\)).`,
     answer,
     options,
-    steps: [`${a} < ${b} \\text{ et cos est décroissante donc } \\cos(${a}) > \\cos(${b})`],
+    steps: [{ type: "regle", text: `${a} < ${b} \\text{ et cos est décroissante donc } \\cos(${a}) > \\cos(${b})` }],
   };
 }
 
 // ---------- 9. Vrai ou faux sur les propriétés générales (QCM) ----------
 function genVraiFauxTrigGeneralQCM() {
   const cas = pick([
-    { description: "Les fonctions sinus et cosinus sont périodiques de période \\(2\\pi\\).", reponse: "Vrai" },
-    { description: "La fonction cosinus est strictement croissante sur \\([0;\\pi]\\).", reponse: "Faux" },
-    { description: "Pour tout réel x, \\(\\cos^2(x) + \\sin^2(x) = 1\\).", reponse: "Vrai" },
-    { description: "La fonction sinus est paire.", reponse: "Faux" },
-    { description: "Pour tout réel x, \\(-1 \\leqslant \\cos(x) \\leqslant 1\\).", reponse: "Vrai" },
+    { description: "Les fonctions sinus et cosinus sont périodiques de période \\(2\\pi\\).", reponse: "Vrai", explication: "C'est vrai : sur le cercle trigonométrique, ajouter 2π à un angle revient au même point, donc sin et cos reprennent les mêmes valeurs." },
+    { description: "La fonction cosinus est strictement croissante sur \\([0;\\pi]\\).", reponse: "Faux", explication: "C'est faux : au contraire, cos est strictement décroissante sur [0;π] (elle passe de 1 à -1)." },
+    { description: "Pour tout réel x, \\(\\cos^2(x) + \\sin^2(x) = 1\\).", reponse: "Vrai", explication: "C'est vrai : c'est l'identité fondamentale, conséquence du théorème de Pythagore appliqué au cercle trigonométrique de rayon 1." },
+    { description: "La fonction sinus est paire.", reponse: "Faux", explication: "C'est faux : sinus est une fonction impaire, sin(-x) = -sin(x)." },
+    { description: "Pour tout réel x, \\(-1 \\leqslant \\cos(x) \\leqslant 1\\).", reponse: "Vrai", explication: "C'est vrai : le cercle trigonométrique a pour rayon 1, donc cos(x) et sin(x) restent toujours compris entre -1 et 1." },
   ]);
   return {
     type: "qcm",
@@ -190,7 +202,7 @@ function genVraiFauxTrigGeneralQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -207,15 +219,18 @@ function genDeriveeProduitTrigQCM() {
     prompt: `On considère \\(f(x) = (${expo})\\cos(x)\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = ${a}\\cos(x) + (${expo}) \\times (-\\sin(x)) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : (uv)' = u'v + uv'." },
+      { type: "resultat", text: `f'(x) = ${a}\\cos(x) + (${expo}) \\times (-\\sin(x)) = ${correct}` },
+    ],
   };
 }
 
 // ---------- 11. Limites remarquables en 0 (QCM) ----------
 function genLimiteRemarquableTrigQCM() {
   const cas = pick([
-    { description: "\\lim\\limits_{x \\to 0} \\dfrac{\\sin(x)}{x}", reponse: "1" },
-    { description: "\\lim\\limits_{x \\to 0} \\dfrac{\\cos(x)-1}{x}", reponse: "0" },
+    { description: "\\lim\\limits_{x \\to 0} \\dfrac{\\sin(x)}{x}", reponse: "1", explication: "C'est une limite de référence à connaître : elle traduit le fait que sin(x) se comporte comme x lorsque x est proche de 0 (c'est aussi le nombre dérivé de sin en 0)." },
+    { description: "\\lim\\limits_{x \\to 0} \\dfrac{\\cos(x)-1}{x}", reponse: "0", explication: "C'est une limite de référence à connaître : elle traduit le fait que cos(x)-1 tend vers 0 plus vite que x lorsque x est proche de 0 (c'est aussi le nombre dérivé de cos en 0)." },
   ]);
   return {
     type: "qcm",
@@ -223,7 +238,7 @@ function genLimiteRemarquableTrigQCM() {
     prompt: `Quelle est la limite \\(${cas.description}\\) ?`,
     answer: cas.reponse,
     options: ["1", "0", "+\\infty"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -235,7 +250,10 @@ function genNombreDeriveeEnZeroNumeric() {
     chapter: "Fonctions trigonométriques — Nombre dérivé",
     prompt: `Quel est le nombre dérivé de la fonction ${estSinus ? "sinus" : "cosinus"} en 0 ?`,
     answer: estSinus ? 1 : 0,
-    steps: [estSinus ? "\\sin'(0) = \\cos(0) = 1" : "\\cos'(0) = -\\sin(0) = 0"],
+    steps: [
+      { type: "regle", text: "Formules de référence à connaître : sin'(x) = cos(x) et cos'(x) = -sin(x)." },
+      { type: "resultat", text: estSinus ? "\\sin'(0) = \\cos(0) = 1" : "\\cos'(0) = -\\sin(0) = 0" },
+    ],
   };
 }
 
@@ -250,7 +268,11 @@ function genValeurFonctionPeriodiqueNumeric() {
     chapter: "Fonctions trigonométriques — Parité et périodicité",
     prompt: `Une fonction f est périodique de période ${p}. On sait que \\(f(${a}) = ${v}\\). Calcule \\(f(${a} + ${k * p})\\) en utilisant la périodicité.`,
     answer: v,
-    steps: [`${a} + ${k * p} = ${a} + ${k} \\times ${p}`, `f(${a} + ${k} \\times ${p}) = f(${a}) = ${v}`],
+    steps: [
+      { type: "regle", text: "Si f est périodique de période p, alors f(x + p) = f(x) pour tout réel x." },
+      { type: "calcul", text: `${a} + ${k * p} = ${a} + ${k} \\times ${p}` },
+      { type: "resultat", text: `f(${a} + ${k} \\times ${p}) = f(${a}) = ${v}` },
+    ],
   };
 }
 
@@ -282,7 +304,10 @@ function genFormuleAdditionQCM() {
     prompt: `Quelle est l'expression développée de \\(${prompts[type]}\\) ?`,
     answer: correct,
     options,
-    steps: [`${prompts[type]} = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule d'addition à connaître." },
+      { type: "resultat", text: `${prompts[type]} = ${correct}` },
+    ],
   };
 }
 
@@ -299,7 +324,10 @@ function genValeurCarreSinCosNumeric() {
     prompt: `On sait que \\(\\sin(x) = ${cas.sTex}\\). En utilisant \\(\\cos^2(x) + \\sin^2(x) = 1\\), calcule \\(\\cos^2(x)\\).`,
     answer: cas.cosSquare,
     tolerance: 0.001,
-    steps: [`\\cos^2(x) = 1 - \\left(${cas.sTex}\\right)^2 = 1 - ${fr(cas.sinSquare)} = ${cas.cosSquareTex} = ${fr(cas.cosSquare)}`],
+    steps: [
+      { type: "regle", text: "cos²(x) + sin²(x) = 1 pour tout réel x, donc cos²(x) = 1 - sin²(x)." },
+      { type: "resultat", text: `\\cos^2(x) = 1 - \\left(${cas.sTex}\\right)^2 = 1 - ${fr(cas.sinSquare)} = ${cas.cosSquareTex} = ${fr(cas.cosSquare)}` },
+    ],
   };
 }
 

@@ -47,7 +47,10 @@ function genImageTranslationCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la translation qui envoie l'origine O sur le point de coordonnées (${a} ; ${b}). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? x + a : y + b,
-    steps: [{ type: "calcul", text: `M'(x + ${a}\\, ;\\ y + ${b}) = (${x + a}\\, ;\\ ${y + b})` }],
+    steps: [
+      { type: "regle", text: `\\text{Par une translation, on ajoute les mêmes nombres à toutes les abscisses et à toutes les ordonnées : ici on ajoute } ${a} \\text{ à l'abscisse et } ${b} \\text{ à l'ordonnée.}` },
+      { type: "calcul", text: `M'(x + ${a}\\, ;\\ y + ${b}) = (${x + a}\\, ;\\ ${y + b})` },
+    ],
   };
 }
 
@@ -63,7 +66,10 @@ function genImageSymetrieCentraleCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la symétrie centrale de centre O(${x0} ; ${y0}). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? 2 * x0 - x : 2 * y0 - y,
-    steps: [{ type: "calcul", text: `M'(2 \\times ${x0} - (${x})\\, ;\\ 2 \\times ${y0} - (${y})) = (${2 * x0 - x}\\, ;\\ ${2 * y0 - y})` }],
+    steps: [
+      { type: "regle", text: `\\text{Dans une symétrie centrale de centre O, O est le milieu du segment } [MM']. \\text{ Les coordonnées de O sont donc la moyenne de celles de M et M', d'où } M' = 2 \\times O - M.` },
+      { type: "calcul", text: `M'(2 \\times ${x0} - (${x})\\, ;\\ 2 \\times ${y0} - (${y})) = (${2 * x0 - x}\\, ;\\ ${2 * y0 - y})` },
+    ],
   };
 }
 
@@ -79,7 +85,13 @@ function genImageSymetrieAxialeCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la symétrie d'axe ${axeVertical ? `la droite verticale d'équation x = ${a}` : `la droite horizontale d'équation y = ${a}`}. Donne ${axeVertical ? "l'abscisse" : "l'ordonnée"} du point M', image de M (l'autre coordonnée ne change pas).`,
     answer,
-    steps: axeVertical ? [{ type: "calcul", text: `x' = 2 \\times ${a} - (${x}) = ${answer}` }] : [{ type: "calcul", text: `y' = 2 \\times ${a} - (${y}) = ${answer}` }],
+    steps: [
+      {
+        type: "regle",
+        text: `\\text{Par symétrie d'axe la droite } ${axeVertical ? `x = ${a}` : `y = ${a}`}, \\text{ le point et son image sont équidistants de l'axe, de part et d'autre : l'axe passe donc par le milieu du segment reliant le point à son image.}`,
+      },
+      axeVertical ? { type: "calcul", text: `x' = 2 \\times ${a} - (${x}) = ${answer}` } : { type: "calcul", text: `y' = 2 \\times ${a} - (${y}) = ${answer}` },
+    ],
   };
 }
 
@@ -105,7 +117,18 @@ function genImageRotationCoordNumeric() {
     chapter: "Transformations — Coordonnées d'images",
     prompt: `Le point M a pour coordonnées (${x} ; ${y}). On applique à M la rotation de centre O (l'origine du repère) et d'angle ${angle}° dans le sens direct (sens contraire des aiguilles d'une montre). Donne ${askX ? "l'abscisse" : "l'ordonnée"} du point M', image de M.`,
     answer: askX ? xp : yp,
-    steps: [{ type: "calcul", text: `M'(${xp}\\, ;\\ ${yp})` }],
+    steps: [
+      {
+        type: "regle",
+        text:
+          angle === 90
+            ? `\\text{Pour une rotation de centre O et d'angle } 90° \\text{ dans le sens direct, les coordonnées se transforment ainsi : } (x\\, ;\\ y) \\rightarrow (-y\\, ;\\ x).`
+            : angle === 180
+              ? `\\text{Pour une rotation de centre O et d'angle } 180°, \\text{ M' est le symétrique de M par rapport à O : les coordonnées se transforment ainsi : } (x\\, ;\\ y) \\rightarrow (-x\\, ;\\ -y).`
+              : `\\text{Pour une rotation de centre O et d'angle } 270° \\text{ dans le sens direct (ou } 90° \\text{ dans le sens indirect), les coordonnées se transforment ainsi : } (x\\, ;\\ y) \\rightarrow (y\\, ;\\ -x).`,
+      },
+      { type: "calcul", text: `M'(${xp}\\, ;\\ ${yp})` },
+    ],
   };
 }
 

@@ -34,7 +34,10 @@ function genImageFormeFactoriseeNumeric() {
     chapter: "Fonctions second degré (Première techno) — Image",
     prompt: `On considère \\(f(x) = ${a === 1 ? "" : a}(x ${signedL(-r1)})(x ${signedL(-r2)})\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times (${x} ${signedL(-r1)}) \\times (${x} ${signedL(-r2)}) = ${a} \\times ${x - r1} \\times ${x - r2} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `f(${x}) = ${a} \\times (${x} ${signedL(-r1)}) \\times (${x} ${signedL(-r2)}) = ${a} \\times ${x - r1} \\times ${x - r2}` },
+      { type: "resultat", text: `f(${x}) = ${answer}` },
+    ],
   };
 }
 
@@ -52,7 +55,7 @@ function genRacinesFormeFactoriseeQCM() {
     prompt: `On considère \\(f(x) = ${a === 1 ? "" : a}(x ${signedL(-r1)})(x ${signedL(-r2)})\\). Quelles sont les racines de \\(f\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{Une racine annule un facteur : } x ${signedL(-r1)} = 0 \\Rightarrow x = ${r1}\\text{, et } x ${signedL(-r2)} = 0 \\Rightarrow x = ${r2}.`],
+    steps: [{ type: "regle", text: `\\text{Une racine annule un facteur : } x ${signedL(-r1)} = 0 \\Rightarrow x = ${r1}\\text{, et } x ${signedL(-r2)} = 0 \\Rightarrow x = ${r2}.` }],
   };
 }
 
@@ -67,7 +70,10 @@ function genFactoriserConnaissantRacineNumeric() {
     chapter: "Fonctions second degré (Première techno) — Factorisation",
     prompt: `On sait que \\(f(x) = ${a === 1 ? "" : a}(x ${signedL(-r1)})(x - k)\\) et que \\(${r1}\\) et \\(${r2}\\) sont les deux racines de \\(f\\). Détermine la valeur de \\(k\\).`,
     answer: r2,
-    steps: [`\\text{L'autre racine est } k = ${r2}.`],
+    steps: [
+      { type: "regle", text: `\\text{La forme } ${a === 1 ? "" : a}(x ${signedL(-r1)})(x - k) \\text{ admet } ${r1} \\text{ et } k \\text{ pour racines. Comme les deux racines de } f \\text{ sont } ${r1} \\text{ et } ${r2}\\text{, on identifie } k.` },
+      { type: "resultat", text: `k = ${r2}` },
+    ],
   };
 }
 
@@ -81,7 +87,7 @@ function genAllureParaboleQCM() {
     prompt: `On considère une fonction polynôme du second degré de coefficient dominant \\(a = ${a}\\). Quelle est l'allure de sa parabole ?`,
     answer,
     options: ["vers le haut (∪), sommet en son point le plus bas", "vers le bas (∩), sommet en son point le plus haut"],
-    steps: [a > 0 ? `\\text{Comme } a > 0, \\text{ la parabole est tournée vers le haut.}` : `\\text{Comme } a < 0, \\text{ la parabole est tournée vers le bas.}`],
+    steps: [{ type: "regle", text: a > 0 ? `\\text{Comme } a > 0, \\text{ la parabole est tournée vers le haut.}` : `\\text{Comme } a < 0, \\text{ la parabole est tournée vers le bas.}` }],
   };
 }
 
@@ -97,7 +103,11 @@ function genAssocierAxCarreQCM() {
     prompt: `La parabole représentant \\(x \\mapsto ax^2\\) passe par le point \\((${xTest} ; ${fr(yTest)})\\). Quelle est la valeur de \\(a\\) ?`,
     answer: fr(a),
     options,
-    steps: [`a = \\dfrac{${fr(yTest)}}{${xTest}^2} = \\dfrac{${fr(yTest)}}{${xTest * xTest}} = ${fr(a)}`],
+    steps: [
+      { type: "regle", text: "Puisque \\(f(x) = ax^2\\), on a \\(a = \\dfrac{f(x)}{x^2}\\) pour tout \\(x \\neq 0\\)." },
+      { type: "calcul", text: `a = \\dfrac{${fr(yTest)}}{${xTest}^2} = \\dfrac{${fr(yTest)}}{${xTest * xTest}}` },
+      { type: "resultat", text: `a = ${fr(a)}` },
+    ],
     graph: { xMin: -6, xMax: 6, yMin: Math.min(-4, ...[-6, -3, 0, 3, 6].map((x) => a * x * x)) - 1, yMax: Math.max(4, ...[-6, -3, 0, 3, 6].map((x) => a * x * x)) + 1, curves: [{ fn: (x) => a * x * x, label: "f" }], points: [{ x: xTest, y: yTest, label: `(${xTest} ; ${fr(yTest)})` }] },
   };
 }
@@ -133,7 +143,10 @@ function genResoudreGraphiquementEgaliteQCM() {
     prompt: `On donne ci-dessous la représentation graphique d'une fonction polynôme du second degré \\(f\\). Résous graphiquement l'équation \\(f(x) = ${useRoots ? 0 : fr(roundTo(yLevel, 2))}\\).`,
     answer: correctRaw,
     options,
-    steps: [`\\text{On lit les abscisses des points de la courbe dont l'ordonnée vaut } ${useRoots ? 0 : fr(roundTo(yLevel, 2))}.`, correctRaw],
+    steps: [
+      { type: "regle", text: `\\text{On lit les abscisses des points de la courbe dont l'ordonnée vaut } ${useRoots ? 0 : fr(roundTo(yLevel, 2))}.` },
+      { type: "resultat", text: correctRaw },
+    ],
     graph: {
       xMin: Math.min(r1, r2) - 3,
       xMax: Math.max(r1, r2) + 3,
@@ -163,7 +176,10 @@ function genSigneFormeFactoriseeQCM() {
     prompt: `On donne \\(f(x) = ${a === 1 ? "" : a}(x - ${lo})(x - ${hi})\\). Sur quel ensemble \\(f(x) > 0\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{Un polynôme du second degré est du signe de son coefficient dominant } (${a}) \\text{ à l'extérieur des racines, et de signe opposé entre elles.}`, `\\text{Solution : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Un polynôme du second degré est du signe de son coefficient dominant } (${a}) \\text{ à l'extérieur des racines, et de signe opposé entre elles.}` },
+      { type: "resultat", text: `\\text{Solution : } ${correctRaw}` },
+    ],
   };
 }
 
@@ -178,7 +194,10 @@ function genLireSommetGraphiqueNumeric() {
     chapter: "Fonctions second degré (Première techno) — Sommet et axe de symétrie",
     prompt: `On donne ci-dessous la représentation graphique d'une fonction polynôme du second degré \\(f\\). Donne l'abscisse du sommet de la parabole (lecture graphique).`,
     answer: alpha,
-    steps: [`\\text{Le sommet est le point le plus ${a > 0 ? "bas" : "haut"} de la courbe : son abscisse est } ${alpha}.`],
+    steps: [
+      { type: "regle", text: `\\text{Le sommet d'une parabole est son point le plus ${a > 0 ? "bas (car } a > 0\\text{)" : "haut (car } a < 0\\text{)"}}.` },
+      { type: "resultat", text: `\\text{Abscisse du sommet : } ${alpha}` },
+    ],
     graph: { xMin: alpha - 5, xMax: alpha + 5, yMin: Math.min(beta, fn(alpha - 5), fn(alpha + 5)) - 1, yMax: Math.max(beta, fn(alpha - 5), fn(alpha + 5)) + 1, curves: [{ fn, label: "f" }], points: [{ x: alpha, y: beta, label: "S" }] },
   };
 }
@@ -199,7 +218,11 @@ function genAssocierAxCarrePlusCQCM() {
     prompt: `Une parabole d'équation \\(y = ax^2 + c\\) a pour sommet \\((0 ; ${c})\\) et passe par \\((${xTest} ; ${fr(yTest)})\\). Quelle est l'expression de cette fonction ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{Le sommet } (0 ; c) \\text{ donne } c = ${c}.`, `a = \\dfrac{${fr(yTest)} - ${c}}{${xTest}^2} = ${fr(a)}`, correctRaw],
+    steps: [
+      { type: "donnee", text: `\\text{Le sommet } (0 ; c) \\text{ donne } c = ${c}.` },
+      { type: "calcul", text: `a = \\dfrac{${fr(yTest)} - ${c}}{${xTest}^2} = ${fr(a)}` },
+      { type: "resultat", text: correctRaw },
+    ],
   };
 }
 
@@ -217,7 +240,10 @@ function genDeterminerAConnaissantPointNumeric() {
     chapter: "Fonctions second degré (Première techno) — Détermination de f",
     prompt: `\\(f\\) est une fonction polynôme du second degré qui s'annule en \\(x = ${r1}\\) et \\(x = ${r2}\\). Sa parabole passe par le point \\((${x0} ; ${y0})\\). Sachant que \\(f(x) = a(x - ${r1})(x - ${r2})\\), détermine \\(a\\).`,
     answer: aTrue,
-    steps: [`f(${x0}) = a \\times (${x0} - ${r1}) \\times (${x0} - ${r2}) = ${y0}`, `a = \\dfrac{${y0}}{${(x0 - r1) * (x0 - r2)}} = ${aTrue}`],
+    steps: [
+      { type: "calcul", text: `f(${x0}) = a \\times (${x0} - ${r1}) \\times (${x0} - ${r2}) = ${y0}` },
+      { type: "resultat", text: `a = \\dfrac{${y0}}{${(x0 - r1) * (x0 - r2)}} = ${aTrue}` },
+    ],
   };
 }
 

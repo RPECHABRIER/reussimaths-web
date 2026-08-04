@@ -99,7 +99,10 @@ function genResoudreProportionThalesNumeric() {
     prompt: `Sachant que \\(\\dfrac{${a}}{${b}} = \\dfrac{${c}}{x}\\), calcule x (arrondi au centième si nécessaire).`,
     answer: x,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `x = \\dfrac{${b} \\times ${c}}{${a}} \\approx ${fr(x)}` }],
+    steps: [
+      { type: "regle", text: `On utilise le produit en croix : \\(\\dfrac{${a}}{${b}} = \\dfrac{${c}}{x}\\) donne \\(x = \\dfrac{${b} \\times ${c}}{${a}}\\).` },
+      { type: "calcul", text: `x = \\dfrac{${b} \\times ${c}}{${a}} \\approx ${fr(x)}` },
+    ],
   };
 }
 

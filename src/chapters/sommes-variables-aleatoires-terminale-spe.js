@@ -27,7 +27,10 @@ function genEsperanceLineaireNumeric() {
     chapter: "Sommes de variables aléatoires — Espérance",
     prompt: `On sait que \\(E(X) = ${EX}\\) et \\(E(Y) = ${EY}\\). Calcule \\(E(${p}X ${q >= 0 ? "+" : "-"} ${Math.abs(q)}Y)\\).`,
     answer,
-    steps: [`${p}E(X) + ${q}E(Y) = ${p} \\times ${EX} + ${q} \\times ${EY} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Linéarité de l'espérance : E(pX+qY) = pE(X) + qE(Y)." },
+      { type: "resultat", text: `${p}E(X) + ${q}E(Y) = ${p} \\times ${EX} + ${q} \\times ${EY} = ${answer}` },
+    ],
   };
 }
 
@@ -43,7 +46,10 @@ function genVarianceSommeIndependanteNumeric() {
     chapter: "Sommes de variables aléatoires — Variance",
     prompt: `X et Y sont deux variables aléatoires indépendantes avec \\(V(X) = ${VX}\\) et \\(V(Y) = ${VY}\\). Calcule \\(V(${p}X + ${q}Y)\\).`,
     answer,
-    steps: [`V(${p}X+${q}Y) = ${p}^2V(X) + ${q}^2V(Y) = ${p * p} \\times ${VX} + ${q * q} \\times ${VY} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Pour X et Y indépendantes : V(pX+qY) = p²V(X) + q²V(Y)." },
+      { type: "resultat", text: `V(${p}X+${q}Y) = ${p}^2V(X) + ${q}^2V(Y) = ${p * p} \\times ${VX} + ${q * q} \\times ${VY} = ${answer}` },
+    ],
   };
 }
 
@@ -59,7 +65,10 @@ function genVarianceDifferenceIndependanteNumeric() {
     chapter: "Sommes de variables aléatoires — Variance",
     prompt: `X et Y sont deux variables aléatoires indépendantes avec \\(V(X) = ${VX}\\) et \\(V(Y) = ${VY}\\). Calcule \\(V(${p}X - ${q}Y)\\).`,
     answer,
-    steps: [`V(${p}X-${q}Y) = V(${p}X) + V(-${q}Y) = ${p}^2V(X) + ${q}^2V(Y) = ${p * p} \\times ${VX} + ${q * q} \\times ${VY} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Attention : même pour une différence, la variance s'ajoute (car V(-qY) = q²V(Y) ≥ 0) : V(pX-qY) = p²V(X) + q²V(Y)." },
+      { type: "resultat", text: `V(${p}X-${q}Y) = V(${p}X) + V(-${q}Y) = ${p}^2V(X) + ${q}^2V(Y) = ${p * p} \\times ${VX} + ${q * q} \\times ${VY} = ${answer}` },
+    ],
   };
 }
 
@@ -72,7 +81,10 @@ function genEsperanceSommeNIidNumeric() {
     chapter: "Sommes de variables aléatoires — Somme de n variables",
     prompt: `\\(X_1, X_2, \\ldots, X_${n}\\) suivent toutes la même loi de probabilité, avec \\(E(X_1) = ${EX1}\\). Calcule \\(E(X_1+X_2+\\cdots+X_${n})\\).`,
     answer: n * EX1,
-    steps: [`E(X_1+\\cdots+X_${n}) = ${n} \\times E(X_1) = ${n} \\times ${EX1} = ${n * EX1}`],
+    steps: [
+      { type: "regle", text: "Pour n variables suivant la même loi : E(X₁+⋯+Xₙ) = nE(X₁)." },
+      { type: "resultat", text: `E(X_1+\\cdots+X_${n}) = ${n} \\times E(X_1) = ${n} \\times ${EX1} = ${n * EX1}` },
+    ],
   };
 }
 
@@ -85,7 +97,10 @@ function genVarianceSommeNIidNumeric() {
     chapter: "Sommes de variables aléatoires — Somme de n variables",
     prompt: `\\(X_1, X_2, \\ldots, X_${n}\\) sont indépendantes et suivent toutes la même loi de probabilité, avec \\(V(X_1) = ${VX1}\\). Calcule \\(V(X_1+X_2+\\cdots+X_${n})\\).`,
     answer: n * VX1,
-    steps: [`V(X_1+\\cdots+X_${n}) = ${n} \\times V(X_1) = ${n} \\times ${VX1} = ${n * VX1}`],
+    steps: [
+      { type: "regle", text: "Pour n variables indépendantes suivant la même loi : V(X₁+⋯+Xₙ) = nV(X₁)." },
+      { type: "resultat", text: `V(X_1+\\cdots+X_${n}) = ${n} \\times V(X_1) = ${n} \\times ${VX1} = ${n * VX1}` },
+    ],
   };
 }
 
@@ -101,7 +116,10 @@ function genFormuleVarianceIndependanceQCM() {
     prompt: `X et Y sont deux variables aléatoires indépendantes. Quelle est l'expression de \\(V(${a}X+${b}Y)\\) ?`,
     answer: correct,
     options,
-    steps: [`V(${a}X+${b}Y) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Pour X et Y indépendantes : V(aX+bY) = a²V(X) + b²V(Y)." },
+      { type: "resultat", text: `V(${a}X+${b}Y) = ${correct}` },
+    ],
   };
 }
 
@@ -117,18 +135,21 @@ function genFormuleEsperanceQCM() {
     prompt: `Quelle est l'expression de \\(E(${a}X+${b}Y)\\) (linéarité de l'espérance) ?`,
     answer: correct,
     options,
-    steps: [`E(${a}X+${b}Y) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Linéarité de l'espérance : E(aX+bY) = aE(X) + bE(Y)." },
+      { type: "resultat", text: `E(${a}X+${b}Y) = ${correct}` },
+    ],
   };
 }
 
 // ---------- 8. Vrai ou faux sur les sommes de variables aléatoires (QCM) ----------
 function genVraiFauxSommesVariablesQCM() {
   const cas = pick([
-    { description: "Si X et Y sont indépendantes, \\(V(X-Y) = V(X) - V(Y)\\).", reponse: "Faux" },
-    { description: "\\(V(-Y) = V(Y)\\).", reponse: "Vrai" },
-    { description: "Si \\(X_1, \\ldots, X_n\\) suivent la même loi, alors \\(E(X_1+\\cdots+X_n) = nE(X_1)\\).", reponse: "Vrai" },
-    { description: "Deux variables aléatoires suivant la même loi prennent nécessairement les mêmes valeurs à chaque tirage.", reponse: "Faux" },
-    { description: "Sans hypothèse d'indépendance, on ne peut pas affirmer que \\(V(X+Y) = V(X)+V(Y)\\).", reponse: "Vrai" },
+    { description: "Si X et Y sont indépendantes, \\(V(X-Y) = V(X) - V(Y)\\).", reponse: "Faux", explication: "C'est faux : même pour une différence, les variances s'additionnent : V(X-Y) = V(X) + V(Y) (car V(-Y) = V(Y))." },
+    { description: "\\(V(-Y) = V(Y)\\).", reponse: "Vrai", explication: "C'est vrai : V(-Y) = (-1)²V(Y) = V(Y), le signe disparaît car il est élevé au carré." },
+    { description: "Si \\(X_1, \\ldots, X_n\\) suivent la même loi, alors \\(E(X_1+\\cdots+X_n) = nE(X_1)\\).", reponse: "Vrai", explication: "C'est vrai : la linéarité de l'espérance s'applique sans avoir besoin d'indépendance." },
+    { description: "Deux variables aléatoires suivant la même loi prennent nécessairement les mêmes valeurs à chaque tirage.", reponse: "Faux", explication: "C'est faux : suivre la même loi signifie avoir les mêmes probabilités associées aux mêmes valeurs, pas obtenir le même résultat à chaque tirage." },
+    { description: "Sans hypothèse d'indépendance, on ne peut pas affirmer que \\(V(X+Y) = V(X)+V(Y)\\).", reponse: "Vrai", explication: "C'est vrai : contrairement à l'espérance, la formule additive de la variance nécessite l'indépendance des variables." },
   ]);
   return {
     type: "qcm",
@@ -136,7 +157,7 @@ function genVraiFauxSommesVariablesQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -156,7 +177,11 @@ function genComparerEsperanceBinomialesQCM() {
     prompt: `X suit une loi \\(\\mathcal{B}(${n};${fr(p)})\\) et Y suit une loi \\(\\mathcal{B}(${m};${fr(q)})\\). Compare \\(E(X)\\) et \\(E(Y)\\).`,
     answer,
     options: ["E(X) < E(Y)", "E(X) > E(Y)", "E(X) = E(Y)"],
-    steps: [`E(X) = ${n} \\times ${fr(p)} = ${fr(EX)}`, `E(Y) = ${m} \\times ${fr(q)} = ${fr(EY)}`],
+    steps: [
+      { type: "regle", text: "Pour une loi binomiale B(n;p), E(X) = np." },
+      { type: "calcul", text: `E(X) = ${n} \\times ${fr(p)} = ${fr(EX)}` },
+      { type: "resultat", text: `E(Y) = ${m} \\times ${fr(q)} = ${fr(EY)}` },
+    ],
   };
 }
 
@@ -176,7 +201,11 @@ function genComparerEcartTypeBinomialesQCM() {
     prompt: `X suit une loi \\(\\mathcal{B}(${n};${fr(p)})\\) et Y suit une loi \\(\\mathcal{B}(${m};${fr(q)})\\). Compare \\(\\sigma(X)\\) et \\(\\sigma(Y)\\).`,
     answer,
     options: ["\\sigma(X) < \\sigma(Y)", "\\sigma(X) > \\sigma(Y)", "\\sigma(X) = \\sigma(Y)"],
-    steps: [`\\sigma(X) = \\sqrt{np(1-p)} \\approx ${fr(sigmaX)}`, `\\sigma(Y) = \\sqrt{mq(1-q)} \\approx ${fr(sigmaY)}`],
+    steps: [
+      { type: "regle", text: "Pour une loi binomiale B(n;p), σ(X) = √(np(1-p))." },
+      { type: "calcul", text: `\\sigma(X) = \\sqrt{np(1-p)} \\approx ${fr(sigmaX)}` },
+      { type: "resultat", text: `\\sigma(Y) = \\sqrt{mq(1-q)} \\approx ${fr(sigmaY)}` },
+    ],
   };
 }
 
@@ -194,9 +223,10 @@ function genResoudreEquationEsperanceNumeric() {
     prompt: `On donne \\(E(X) = ${V1}\\) et \\(E(Y) = ${m}a ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\) (où a est un réel inconnu). Sachant que \\(E(X ${k >= 0 ? "+" : "-"} ${Math.abs(k)}Y) = ${target}\\), détermine a.`,
     answer: a,
     steps: [
-      `${V1} + ${k} \\times (${m}a ${c >= 0 ? "+" : "-"} ${Math.abs(c)}) = ${target}`,
-      `${m * k}a = ${target - V1 - k * c}`,
-      `a = ${a}`,
+      { type: "regle", text: "On applique la linéarité de l'espérance E(X+kY) = E(X)+kE(Y), puis on résout l'équation en a." },
+      { type: "calcul", text: `${V1} + ${k} \\times (${m}a ${c >= 0 ? "+" : "-"} ${Math.abs(c)}) = ${target}` },
+      { type: "calcul", text: `${m * k}a = ${target - V1 - k * c}` },
+      { type: "resultat", text: `a = ${a}` },
     ],
   };
 }
@@ -204,9 +234,9 @@ function genResoudreEquationEsperanceNumeric() {
 // ---------- 12. Variance et transformation affine (QCM Vrai/Faux) ----------
 function genVarianceAffineQCM() {
   const cas = pick([
-    { description: "Pour tout réel b, \\(V(aX+b) = a^2V(X)\\) (b n'a pas d'effet sur la variance).", reponse: "Vrai" },
-    { description: "\\(V(aX+b) = a^2V(X) + b^2\\).", reponse: "Faux" },
-    { description: "Ajouter une constante à une variable aléatoire ne change pas sa variance.", reponse: "Vrai" },
+    { description: "Pour tout réel b, \\(V(aX+b) = a^2V(X)\\) (b n'a pas d'effet sur la variance).", reponse: "Vrai", explication: "C'est vrai : la variance mesure la dispersion, or ajouter une constante translate toutes les valeurs sans changer leur écart entre elles." },
+    { description: "\\(V(aX+b) = a^2V(X) + b^2\\).", reponse: "Faux", explication: "C'est faux : la constante b n'intervient pas du tout dans la variance, la formule correcte est V(aX+b) = a²V(X)." },
+    { description: "Ajouter une constante à une variable aléatoire ne change pas sa variance.", reponse: "Vrai", explication: "C'est vrai : une translation (ajout d'une constante) décale toutes les valeurs de la même quantité, la dispersion autour de la moyenne reste identique." },
   ]);
   return {
     type: "qcm",
@@ -214,7 +244,7 @@ function genVarianceAffineQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -230,7 +260,10 @@ function genFormuleEsperanceAffineQCM() {
     prompt: `Quelle est l'expression de \\(E(${a}X+${b})\\) ?`,
     answer: correct,
     options,
-    steps: [`E(${a}X+${b}) = ${correct}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : E(aX+b) = aE(X) + b." },
+      { type: "resultat", text: `E(${a}X+${b}) = ${correct}` },
+    ],
   };
 }
 
@@ -245,7 +278,10 @@ function genVarianceUniqueVariableAffineNumeric() {
     chapter: "Sommes de variables aléatoires — Variance",
     prompt: `On sait que \\(V(X) = ${VX}\\). Calcule \\(V(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)})\\).`,
     answer,
-    steps: [`V(${a}X${b >= 0 ? "+" : ""}${b}) = ${a}^2 \\times V(X) = ${a * a} \\times ${VX} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : V(aX+b) = a²V(X) (b n'intervient pas)." },
+      { type: "resultat", text: `V(${a}X${b >= 0 ? "+" : ""}${b}) = ${a}^2 \\times V(X) = ${a * a} \\times ${VX} = ${answer}` },
+    ],
   };
 }
 
@@ -260,7 +296,10 @@ function genEsperanceUniqueVariableAffineNumeric() {
     chapter: "Sommes de variables aléatoires — Espérance",
     prompt: `On sait que \\(E(X) = ${EX}\\). Calcule \\(E(${a}X ${b >= 0 ? "+" : "-"} ${Math.abs(b)})\\).`,
     answer,
-    steps: [`E(${a}X${b >= 0 ? "+" : ""}${b}) = ${a} \\times ${EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : E(aX+b) = aE(X) + b." },
+      { type: "resultat", text: `E(${a}X${b >= 0 ? "+" : ""}${b}) = ${a} \\times ${EX} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` },
+    ],
   };
 }
 

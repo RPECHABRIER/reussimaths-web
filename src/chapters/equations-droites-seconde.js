@@ -64,7 +64,7 @@ function genVecteurDirecteurDepuisCartesienneNumeric() {
     chapter: "Équations de droites — Vecteur directeur",
     prompt: `La droite (d) a pour équation cartésienne \\(${texEquationCartesienne(a, b, c)}\\). Un vecteur directeur de (d) a pour coordonnées \\((-b ; a)\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ce vecteur directeur ?`,
     answer: demanderAbscisse ? -b : a,
-    steps: [demanderAbscisse ? `-b = -(${b}) = ${-b}` : `a = ${a}`],
+    steps: [{ type: "calcul", text: demanderAbscisse ? `-b = -(${b}) = ${-b}` : `a = ${a}` }],
   };
 }
 
@@ -84,7 +84,11 @@ function genEquationCartesienneDepuisPointVecteurNumeric() {
     chapter: "Équations de droites — Équation cartésienne",
     prompt: `La droite (d) passe par ${nomA}(${xA} ; ${yA}) et admet \\(\\vec{u}(${dx} ; ${dy})\\) comme vecteur directeur. Son équation cartésienne s'écrit \\(${texCoeff(a, "x")}${texTerme(b, "y")} + c = 0\\). Détermine c.`,
     answer: c,
-    steps: [`\\text{On utilise la colinéarité de } \\overrightarrow{${nomA}M}(x - ${xA} ; y - ${yA}) \\text{ et } \\vec{u}(${dx} ; ${dy}) :`, `${dy}(x - ${xA}) - ${dx}(y - ${yA}) = 0`, `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}y + c = 0 \\text{, avec } c = ${c}`],
+    steps: [
+      { type: "regle", text: `\\text{Un point M(x;y) appartient à (d) si et seulement si } \\overrightarrow{${nomA}M}(x - ${xA} ; y - ${yA}) \\text{ est colinéaire à } \\vec{u}(${dx} ; ${dy}) \\text{, c'est-à-dire si leur déterminant est nul.}` },
+      { type: "calcul", text: `${dy}(x - ${xA}) - ${dx}(y - ${yA}) = 0` },
+      { type: "resultat", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}y + c = 0 \\text{, avec } c = ${c}` },
+    ],
   };
 }
 
@@ -108,9 +112,10 @@ function genEquationCartesienneDepuisDeuxPointsNumeric() {
     prompt: `La droite (${nomA}${nomB}) passe par ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Son équation cartésienne s'écrit \\(ax + by + c = 0\\). Détermine ${demander}.`,
     answer,
     steps: [
-      `\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})`,
-      `\\text{Équation : } ${dy}(x - ${xA}) - ${dx}(y - ${yA}) = 0`,
-      `\\text{Soit } ${texEquationCartesienne(a, b, c)}`,
+      { type: "regle", text: `\\text{Un point M(x;y) appartient à (${nomA}${nomB}) si et seulement si } \\overrightarrow{${nomA}M} \\text{ est colinéaire à } \\overrightarrow{${nomA}${nomB}} \\text{ (déterminant nul).}` },
+      { type: "donnee", text: `\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})` },
+      { type: "calcul", text: `${dy}(x - ${xA}) - ${dx}(y - ${yA}) = 0` },
+      { type: "resultat", text: `\\text{Soit } ${texEquationCartesienne(a, b, c)}` },
     ],
   };
 }
@@ -138,7 +143,11 @@ function genPointAppartientDroiteCartesienneQCM() {
     prompt: `La droite (d) a pour équation \\(${texEquationCartesienne(a, b, c)}\\). Le point (${xTest} ; ${yTest}) appartient-il à (d) ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [`${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${yTest} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${valeur}`, reponse === "Oui" ? "Le résultat est nul : le point appartient à la droite." : "Le résultat n'est pas nul : le point n'appartient pas à la droite."],
+    steps: [
+      { type: "regle", text: `\\text{Un point appartient à la droite d'équation } ax+by+c=0 \\text{ si et seulement si ses coordonnées substituées dans l'équation donnent 0.}` },
+      { type: "calcul", text: `${a} \\times ${xTest} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\times ${yTest} ${c >= 0 ? "+" : "-"} ${Math.abs(c)} = ${valeur}` },
+      { type: "resultat", text: reponse === "Oui" ? `\\text{Le résultat est nul : le point appartient à la droite.}` : `\\text{Le résultat n'est pas nul : le point n'appartient pas à la droite.}` },
+    ],
   };
 }
 
@@ -165,11 +174,16 @@ function genDroiteVerticaleHorizontaleQCM() {
     answer: type === "quelconque" ? "ni l'une ni l'autre" : type,
     options: ["verticale", "horizontale", "ni l'une ni l'autre"],
     steps: [
-      type === "verticale"
-        ? "Le coefficient de y est nul : la droite est parallèle à l'axe des ordonnées, elle est verticale."
-        : type === "horizontale"
-          ? "Le coefficient de x est nul : la droite est parallèle à l'axe des abscisses, elle est horizontale."
-          : "Les coefficients de x et de y sont tous les deux non nuls : la droite n'est ni verticale ni horizontale.",
+      { type: "regle", text: `\\text{Dans } ax+by+c=0, \\text{ si b = 0 la droite est verticale (parallèle à l'axe des ordonnées) ; si a = 0 elle est horizontale ; si a et b sont tous deux non nuls, elle n'est ni l'une ni l'autre.}` },
+      {
+        type: "resultat",
+        text:
+          type === "verticale"
+            ? `\\text{Le coefficient de y est nul : la droite est verticale.}`
+            : type === "horizontale"
+              ? `\\text{Le coefficient de x est nul : la droite est horizontale.}`
+              : `\\text{Les coefficients de x et de y sont tous deux non nuls : la droite n'est ni verticale ni horizontale.}`,
+      },
     ],
   };
 }
@@ -185,7 +199,7 @@ function genEquationDroiteVerticaleHorizontaleNumeric() {
     chapter: "Équations de droites — Droites particulières",
     prompt: `Détermine ${verticale ? "l'abscisse commune des points" : "l'ordonnée commune des points"} de la droite ${verticale ? "verticale" : "horizontale"} passant par ${nomA}(${xA} ; ${yA}).`,
     answer: verticale ? xA : yA,
-    steps: [verticale ? `\\text{La droite verticale passant par } ${nomA} \\text{ a pour équation } x = ${xA}.` : `\\text{La droite horizontale passant par } ${nomA} \\text{ a pour équation } y = ${yA}.`],
+    steps: [{ type: "regle", text: verticale ? `\\text{La droite verticale passant par } ${nomA} \\text{ a pour équation } x = ${xA}.` : `\\text{La droite horizontale passant par } ${nomA} \\text{ a pour équation } y = ${yA}.` }],
   };
 }
 
@@ -205,7 +219,11 @@ function genVecteurDirecteurValideQCM() {
     prompt: `La droite (d) a pour équation \\(${texEquationCartesienne(a, b, c)}\\). Le vecteur \\(\\vec{w}(${dx} ; ${dy})\\) est-il un vecteur directeur de (d) ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\text{Un vecteur directeur de (d) est } (-b ; a) = (${-b} ; ${a})`, `\\det = ${a} \\times ${dy} - ${b} \\times ${dx} = ${det}`, det === 0 ? "Le déterminant est nul : c'est un vecteur directeur." : "Le déterminant n'est pas nul : ce n'est pas un vecteur directeur."],
+    steps: [
+      { type: "regle", text: `\\text{Un vecteur directeur de (d) est } (-b ; a) = (${-b} ; ${a}). \\text{ Tout vecteur colinéaire à ce vecteur (déterminant nul) est aussi un vecteur directeur.}` },
+      { type: "calcul", text: `\\det = ${a} \\times ${dy} - ${b} \\times ${dx} = ${det}` },
+      { type: "resultat", text: det === 0 ? `\\text{Le déterminant est nul : c'est un vecteur directeur.}` : `\\text{Le déterminant n'est pas nul : ce n'est pas un vecteur directeur.}` },
+    ],
   };
 }
 
@@ -238,7 +256,19 @@ function genPositionRelativeDroitesQCM() {
     prompt: `(d) : \\(${texEquationCartesienne(a1, b1, c1)}\\). (d') : \\(${texEquationCartesienne(a2, b2, c2)}\\). Quelle est la position relative de (d) et (d') ?`,
     answer: reponseFinale,
     options: ["sécantes", "parallèles", "confondues"],
-    steps: [`\\det = ${a1} \\times ${b2} - ${a2} \\times ${b1} = ${det}`, reponseFinale === "sécantes" ? "Le déterminant n'est pas nul : les droites sont sécantes." : reponseFinale === "confondues" ? "Le déterminant est nul et les deux équations sont proportionnelles : les droites sont confondues." : "Le déterminant est nul mais les équations ne sont pas proportionnelles : les droites sont strictement parallèles."],
+    steps: [
+      { type: "regle", text: `\\text{Si le déterminant des coefficients directeurs est non nul, les droites sont sécantes. S'il est nul, elles sont parallèles ou confondues : elles sont confondues si les deux équations sont proportionnelles, sinon strictement parallèles.}` },
+      { type: "calcul", text: `\\det = ${a1} \\times ${b2} - ${a2} \\times ${b1} = ${det}` },
+      {
+        type: "resultat",
+        text:
+          reponseFinale === "sécantes"
+            ? `\\text{Le déterminant n'est pas nul : les droites sont sécantes.}`
+            : reponseFinale === "confondues"
+              ? `\\text{Le déterminant est nul et les deux équations sont proportionnelles : les droites sont confondues.}`
+              : `\\text{Le déterminant est nul mais les équations ne sont pas proportionnelles : les droites sont strictement parallèles.}`,
+      },
+    ],
   };
 }
 
@@ -249,8 +279,12 @@ function genResoudreSystemeSubstitutionNumeric() {
   const a1 = 1;
   const b1 = nonZero(-6, 6);
   const c1 = a1 * xSol + b1 * ySol;
-  const a2 = nonZero(-6, 6);
-  const b2 = nonZero(-6, 6);
+  let a2 = nonZero(-6, 6);
+  let b2 = nonZero(-6, 6);
+  while (b2 - a2 * b1 === 0) {
+    a2 = nonZero(-6, 6);
+    b2 = nonZero(-6, 6);
+  }
   const c2 = a2 * xSol + b2 * ySol;
   const demanderX = Math.random() < 0.5;
   return {
@@ -258,7 +292,13 @@ function genResoudreSystemeSubstitutionNumeric() {
     chapter: "Équations de droites — Systèmes d'équations",
     prompt: `Résous le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) et donne la valeur de ${demanderX ? "x" : "y"}.`,
     answer: demanderX ? xSol : ySol,
-    steps: [`\\text{De la première équation : } x = ${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)}y`, `\\text{En substituant dans la deuxième équation, on trouve } y = ${ySol} \\text{ puis } x = ${xSol}.`],
+    steps: [
+      { type: "regle", text: `\\text{Méthode par substitution : on exprime x en fonction de y grâce à la première équation, puis on remplace dans la deuxième.}` },
+      { type: "calcul", text: `\\text{De la première équation : } x = ${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)}y` },
+      { type: "calcul", text: `\\text{En remplaçant dans la deuxième : } ${a2}(${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)}y) ${b2 >= 0 ? "+" : "-"} ${Math.abs(b2)}y = ${c2}` },
+      { type: "calcul", text: `(${b2} - ${a2} \\times ${b1})y = ${c2} - ${a2} \\times ${c1} \\text{, soit } ${b2 - a2 * b1}y = ${c2 - a2 * c1}` },
+      { type: "resultat", text: `y = ${ySol} \\text{, puis } x = ${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)} \\times ${ySol} = ${xSol}` },
+    ],
   };
 }
 
@@ -269,8 +309,12 @@ function genResoudreSystemeCombinaisonNumeric() {
   const a1 = nonZero(-6, 6);
   const b1 = nonZero(-6, 6);
   const c1 = a1 * xSol + b1 * ySol;
-  const a2 = nonZero(-6, 6);
-  const b2 = nonZero(-6, 6);
+  let a2 = nonZero(-6, 6);
+  let b2 = nonZero(-6, 6);
+  while (a2 * b1 - a1 * b2 === 0) {
+    a2 = nonZero(-6, 6);
+    b2 = nonZero(-6, 6);
+  }
   const c2 = a2 * xSol + b2 * ySol;
   const demanderX = Math.random() < 0.5;
   return {
@@ -278,7 +322,12 @@ function genResoudreSystemeCombinaisonNumeric() {
     chapter: "Équations de droites — Systèmes d'équations",
     prompt: `Résous le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) et donne la valeur de ${demanderX ? "x" : "y"}.`,
     answer: demanderX ? xSol : ySol,
-    steps: [`\\text{En combinant les deux équations pour éliminer une inconnue, on trouve } x = ${xSol} \\text{ et } y = ${ySol}.`],
+    steps: [
+      { type: "regle", text: `\\text{Méthode par combinaison linéaire : pour éliminer x, on multiplie la première équation par } a_2 = ${a2} \\text{ et la seconde par } a_1 = ${a1}, \\text{ puis on soustrait.}` },
+      { type: "calcul", text: `${a2} \\times (${texCoeff(a1, "x")}${texTerme(b1, "y")}) - ${a1} \\times (${texCoeff(a2, "x")}${texTerme(b2, "y")}) = ${a2} \\times ${c1} - ${a1} \\times ${c2}` },
+      { type: "calcul", text: `(${a2 * b1} - ${a1 * b2})y = ${a2 * c1} - ${a1 * c2} \\text{, soit } ${a2 * b1 - a1 * b2}y = ${a2 * c1 - a1 * c2}` },
+      { type: "resultat", text: `y = ${ySol} \\text{, puis, en revenant à la première équation : } x = ${xSol}` },
+    ],
   };
 }
 
@@ -302,7 +351,11 @@ function genIntersectionDeuxDroitesNumeric() {
     chapter: "Équations de droites — Intersection de deux droites",
     prompt: `(d) : \\(${texEquationCartesienne(a1, b1, c1)}\\). (d') : \\(${texEquationCartesienne(a2, b2, c2)}\\). Détermine ${demanderX ? "l'abscisse" : "l'ordonnée"} du point d'intersection de (d) et (d').`,
     answer: demanderX ? xSol : ySol,
-    steps: [`\\text{En résolvant le système formé par les deux équations, on trouve } x = ${xSol} \\text{ et } y = ${ySol}.`],
+    steps: [
+      { type: "regle", text: `\\text{Le point d'intersection vérifie les deux équations à la fois : c'est la solution du système formé par (d) et (d'), sous la forme } a_1x+b_1y=-c_1 \\text{ et } a_2x+b_2y=-c_2. \\text{ On élimine x en multipliant la première équation par } a_2 \\text{ et la seconde par } a_1, \\text{ puis on soustrait.}` },
+      { type: "calcul", text: `(${a2 * b1} - ${a1 * b2})y = ${a2} \\times (${-c1}) - ${a1} \\times (${-c2}) = ${a2 * b1 - a1 * b2}y = ${a1 * c2 - a2 * c1}` },
+      { type: "resultat", text: `y = ${ySol} \\text{, puis, en revenant à la première équation : } x = ${xSol}` },
+    ],
   };
 }
 
@@ -326,7 +379,10 @@ function genConvertirCartesienneVersReduiteQCM() {
     prompt: `La droite (d) a pour équation cartésienne \\(${texEquationCartesienne(a, b, c)}\\). Quelle est son équation réduite (de la forme \\(y = mx + p\\)) ?`,
     answer: bonneReponse,
     options: shuffle([...optionsSet]),
-    steps: [`${texCoeff(a, "x")} - y + ${c} = 0 \\iff y = ${a}x + ${c}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour passer de la forme cartésienne à la forme réduite } y=mx+p, \\text{ on isole y.}` },
+      { type: "resultat", text: `${texCoeff(a, "x")} - y + ${c} = 0 \\iff y = ${a}x + ${c}` },
+    ],
   };
 }
 
@@ -345,7 +401,10 @@ function genConvertirReduiteVersCartesienneNumeric() {
     chapter: "Équations de droites — Équation réduite",
     prompt: `La droite (d) a pour équation réduite \\(y = ${texCoeff(pente, "x")}${texTerme(ordonneeOrigine, "")}\\). Son équation cartésienne s'écrit \\(ax + by + c = 0\\). Détermine ${demander} (avec \\(b = -1\\)).`,
     answer,
-    steps: [`y = ${pente}x ${ordonneeOrigine >= 0 ? "+" : "-"} ${Math.abs(ordonneeOrigine)} \\iff ${pente}x - y ${ordonneeOrigine >= 0 ? "+" : "-"} ${Math.abs(ordonneeOrigine)} = 0`],
+    steps: [
+      { type: "regle", text: `\\text{Pour passer de la forme réduite } y=mx+p \\text{ à la forme cartésienne } ax+by+c=0, \\text{ on fait passer tous les termes du même côté.}` },
+      { type: "resultat", text: `y = ${pente}x ${ordonneeOrigine >= 0 ? "+" : "-"} ${Math.abs(ordonneeOrigine)} \\iff ${pente}x - y ${ordonneeOrigine >= 0 ? "+" : "-"} ${Math.abs(ordonneeOrigine)} = 0` },
+    ],
   };
 }
 
@@ -378,7 +437,18 @@ function genNombreSolutionsSystemeQCM() {
     prompt: `Le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) admet-il une seule solution, aucune solution, ou une infinité de solutions ?`,
     answer: reponseFinale,
     options: ["une seule solution", "aucune solution", "une infinité de solutions"],
-    steps: [reponseFinale === "une seule solution" ? "Les deux droites associées sont sécantes : une seule solution." : reponseFinale === "aucune solution" ? "Les deux droites associées sont strictement parallèles : aucune solution." : "Les deux équations sont proportionnelles (droites confondues) : une infinité de solutions."],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre de solutions du système correspond à la position relative des deux droites associées : sécantes} \\to \\text{une seule solution ; strictement parallèles} \\to \\text{aucune solution ; confondues} \\to \\text{une infinité de solutions.}` },
+      {
+        type: "resultat",
+        text:
+          reponseFinale === "une seule solution"
+            ? `\\text{Les deux droites associées sont sécantes : une seule solution.}`
+            : reponseFinale === "aucune solution"
+              ? `\\text{Les deux droites associées sont strictement parallèles : aucune solution.}`
+              : `\\text{Les deux équations sont proportionnelles (droites confondues) : une infinité de solutions.}`,
+      },
+    ],
   };
 }
 
@@ -402,7 +472,12 @@ function genVecteurDirecteurDepuisDeuxPointsQCM() {
     prompt: `La droite (${nomA}${nomB}) passe par ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Le vecteur \\(\\vec{w}(${wx} ; ${wy})\\) est-il un vecteur directeur de (${nomA}${nomB}) ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})`, `\\det(\\overrightarrow{${nomA}${nomB}}, \\vec{w}) = ${dx} \\times ${wy} - ${dy} \\times ${wx} = ${det}`, det === 0 ? "Le déterminant est nul : c'est un vecteur directeur." : "Le déterminant n'est pas nul : ce n'est pas un vecteur directeur."],
+    steps: [
+      { type: "regle", text: `\\text{Un vecteur } \\vec{w} \\text{ est directeur de } (${nomA}${nomB}) \\text{ si et seulement s'il est colinéaire à } \\overrightarrow{${nomA}${nomB}} \\text{ (déterminant nul).}` },
+      { type: "donnee", text: `\\overrightarrow{${nomA}${nomB}}(${dx} ; ${dy})` },
+      { type: "calcul", text: `\\det(\\overrightarrow{${nomA}${nomB}}, \\vec{w}) = ${dx} \\times ${wy} - ${dy} \\times ${wx} = ${det}` },
+      { type: "resultat", text: det === 0 ? `\\text{Le déterminant est nul : c'est un vecteur directeur.}` : `\\text{Le déterminant n'est pas nul : ce n'est pas un vecteur directeur.}` },
+    ],
   };
 }
 

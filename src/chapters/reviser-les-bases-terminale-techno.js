@@ -32,7 +32,10 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur associé ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      { type: "regle", text: direction === "augmente" ? "Une hausse de p % correspond au coefficient multiplicateur 1 + p/100." : "Une baisse de p % correspond au coefficient multiplicateur 1 - p/100." },
+      { type: "resultat", text: `${fr(answer)}` },
+    ],
   };
 }
 
@@ -47,7 +50,10 @@ function genTermeArithmetiqueNumeric() {
     chapter: "Réviser les bases (Terminale techno) — Suites",
     prompt: `\\((u_n)\\) est une suite arithmétique de premier terme \\(u_0 = ${u0}\\) et de raison \\(r = ${r}\\). Calcule \\(u_{${n}}\\).`,
     answer,
-    steps: [`u_{${n}} = ${u0} + ${n} \\times (${r}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : u_n = u_0 + n × r." },
+      { type: "resultat", text: `u_{${n}} = ${u0} + ${n} \\times (${r}) = ${answer}` },
+    ],
   };
 }
 
@@ -63,7 +69,10 @@ function genTermeGeometriqueNumeric() {
     prompt: `\\((u_n)\\) est une suite géométrique à termes positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Calcule \\(u_{${n}}\\).`,
     answer,
     tolerance: 0.005,
-    steps: [`u_{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : u_n = u_0 × q^n." },
+      { type: "resultat", text: `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -78,7 +87,7 @@ function genPuissanceNumeric() {
     prompt: `Calcule \\(${fr(base)}^{${exp}}\\) (arrondi à 0,0001 près).`,
     answer,
     tolerance: 0.0005,
-    steps: [`${fr(base)}^{${exp}} \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `${fr(base)}^{${exp}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -93,7 +102,10 @@ function genImageFonctionAffineNumeric() {
     chapter: "Réviser les bases (Terminale techno) — Fonctions",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `f(${x}) = ${answer}` },
+    ],
   };
 }
 
@@ -114,7 +126,7 @@ function genSigneSecondDegreQCM() {
     prompt: `On donne \\(f(x) = ${a === 1 ? "" : a}(x - ${lo})(x - ${hi})\\). Sur quel ensemble \\(f(x) > 0\\) ?`,
     answer: correctRaw,
     options: shuffle([correctRaw, wrongRaw]),
-    steps: [`\\text{Un polynôme du second degré est du signe de son coefficient dominant à l'extérieur des racines, et de signe opposé entre elles.}`],
+    steps: [{ type: "regle", text: `\\text{Un polynôme du second degré est du signe de son coefficient dominant à l'extérieur des racines, et de signe opposé entre elles.}` }],
   };
 }
 
@@ -129,7 +141,10 @@ function genLectureTableauCroiseNumeric() {
     prompt: `Un tableau croisé de ${total} personnes donne ${partA} personnes dans une catégorie. Calcule la proportion (fréquence) que cela représente.`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\dfrac{${partA}}{${total}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "La fréquence (proportion) s'obtient en divisant l'effectif de la catégorie par l'effectif total." },
+      { type: "resultat", text: `\\dfrac{${partA}}{${total}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -145,7 +160,11 @@ function genEsperanceSimpleNumeric() {
     prompt: `Une variable aléatoire X suit : \\(P(X=${valeurs[0]}) = ${fr(p1)}\\), \\(P(X=${valeurs[1]}) = ${fr(p2)}\\). Calcule \\(E(X)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : E(X) = Σ x_i × P(X=x_i)." },
+      { type: "calcul", text: `E(X) = ${valeurs[0]} \\times ${fr(p1)} + ${valeurs[1]} \\times ${fr(p2)}` },
+      { type: "resultat", text: `E(X) = ${fr(answer)}` },
+    ],
   };
 }
 

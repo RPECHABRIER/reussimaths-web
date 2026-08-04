@@ -50,7 +50,7 @@ function genImageFormuleAffineNumeric() {
     chapter: "Généralités sur les fonctions — Image et antécédent",
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(${nom}(${x})\\).`,
     answer,
-    steps: [`${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -66,7 +66,7 @@ function genImageFormuleQuadratiqueNumeric() {
     chapter: "Généralités sur les fonctions — Image et antécédent",
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}x^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(${nom}(${x})\\).`,
     answer,
-    steps: [`${nom}(${x}) = ${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a} \\times ${x * x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${nom}(${x}) = ${a} \\times ${x}^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${a} \\times ${x * x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -82,7 +82,11 @@ function genAntecedentFormuleAffineNumeric() {
     chapter: "Généralités sur les fonctions — Image et antécédent",
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Détermine l'antécédent de ${k} par ${nom} (c'est-à-dire résous \\(${nom}(x) = ${k}\\)).`,
     answer: xSol,
-    steps: [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${k}`, `${a}x = ${k - b}`, `x = ${xSol}`],
+    steps: [
+      { type: "donnee", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${k}` },
+      { type: "calcul", text: `${a}x = ${k - b}` },
+      { type: "resultat", text: `x = \\dfrac{${k - b}}{${a}} = ${xSol}` },
+    ],
   };
 }
 
@@ -101,7 +105,7 @@ function genVocabulaireImageQCM() {
     prompt: `On sait que \\(${nom}(${a}) = ${b}\\). Laquelle de ces phrases traduit correctement cette égalité ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`\\(${nom}(${a}) = ${b}\\) signifie que « ${bonneReponse} ».`],
+    steps: [{ type: "regle", text: `${nom}(${a}) = ${b} \\text{ signifie que « } ${bonneReponse} \\text{ ».}` }],
   };
 }
 
@@ -120,7 +124,7 @@ function genVocabulaireAntecedentQCM() {
     prompt: `Le point de coordonnées (${a} ; ${b}) appartient à la courbe représentative de la fonction ${nom}. Laquelle de ces phrases est équivalente à cette information ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`Le point (${a} ; ${b}) sur la courbe signifie que \\(${nom}(${a}) = ${b}\\), donc « ${bonneReponse} ».`],
+    steps: [{ type: "regle", text: `\\text{Le point (}${a}\\text{ ; }${b}\\text{) sur la courbe signifie que } ${nom}(${a}) = ${b}\\text{, donc « } ${bonneReponse} \\text{ ».}` }],
   };
 }
 
@@ -137,7 +141,7 @@ function genLectureTableauImageNumeric() {
     chapter: "Généralités sur les fonctions — Lecture d'un tableau",
     prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${xs.map((x, i) => `${nom}(${x}) = ${ys[i]}`).join(", ")}. Quelle est l'image de ${xs[idx]} par ${nom} ?`,
     answer: ys[idx],
-    steps: [`${nom}(${xs[idx]}) = ${ys[idx]}`],
+    steps: [{ type: "donnee", text: `${nom}(${xs[idx]}) = ${ys[idx]}` }],
   };
 }
 
@@ -160,7 +164,10 @@ function genNombreAntecedentsTableauQCM() {
     prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${xs.map((x, i) => `${nom}(${x}) = ${ys[i]}`).join(", ")}. Combien le nombre ${valeurRepetee} a-t-il d'antécédents par ${nom} (parmi les valeurs du tableau) ?`,
     answer: String(nombreAntecedents),
     options: ["0", "1", "2", "3"],
-    steps: [`On cherche combien de fois ${valeurRepetee} apparaît comme image dans le tableau : ${nombreAntecedents} fois.`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre d'antécédents de } ${valeurRepetee}, \\text{ c'est le nombre de fois où } ${valeurRepetee} \\text{ apparaît comme image dans le tableau.}` },
+      { type: "resultat", text: `${nombreAntecedents} \\text{ occurrence(s).}` },
+    ],
   };
 }
 
@@ -182,8 +189,13 @@ function genEnsembleDefinitionFractionQCM() {
     answer: definie ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : un dénominateur ne peut pas être nul, donc \\(x \\neq ${valeurExclue}\\).`,
-      definie ? `${xTest} \\neq ${valeurExclue} : ${xTest} appartient bien à l'ensemble de définition.` : `${xTest} = ${valeurExclue} : le dénominateur serait nul, donc ${xTest} n'appartient pas à l'ensemble de définition.`,
+      { type: "regle", text: `\\text{Rappel : un dénominateur ne peut pas être nul, donc } x \\neq ${valeurExclue}.` },
+      {
+        type: "resultat",
+        text: definie
+          ? `${xTest} \\neq ${valeurExclue} : ${xTest} \\text{ appartient bien à l'ensemble de définition.}`
+          : `${xTest} = ${valeurExclue} : \\text{ le dénominateur serait nul, donc } ${xTest} \\text{ n'appartient pas à l'ensemble de définition.}`,
+      },
     ],
   };
 }
@@ -202,8 +214,11 @@ function genEnsembleDefinitionRacineQCM() {
     answer: definie ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `Rappel : on ne peut pas calculer la racine carrée d'un nombre négatif, donc il faut \\(x - ${seuil} \\geqslant 0\\), c'est-à-dire \\(x \\geqslant ${seuil}\\).`,
-      definie ? `${xTest} \\geqslant ${seuil} : ${xTest} appartient bien à l'ensemble de définition.` : `${xTest} < ${seuil} : ${xTest} n'appartient pas à l'ensemble de définition.`,
+      { type: "regle", text: `\\text{Rappel : on ne peut pas calculer la racine carrée d'un nombre négatif, donc il faut } x - ${seuil} \\geqslant 0, \\text{ c'est-à-dire } x \\geqslant ${seuil}.` },
+      {
+        type: "resultat",
+        text: definie ? `${xTest} \\geqslant ${seuil} : ${xTest} \\text{ appartient bien à l'ensemble de définition.}` : `${xTest} < ${seuil} : ${xTest} \\text{ n'appartient pas à l'ensemble de définition.}`,
+      },
     ],
   };
 }
@@ -220,7 +235,10 @@ function genFonctionPaireQCM() {
     chapter: "Généralités sur les fonctions — Fonctions paires et impaires",
     prompt: `La fonction ${nom} est paire sur son ensemble de définition, et \\(${nom}(${a}) = ${imageA}\\). Que vaut \\(${nom}(${-a})\\) ?`,
     answer: imageA,
-    steps: [`\\text{Une fonction paire vérifie } ${nom}(-x) = ${nom}(x) \\text{ pour tout } x.`, `${nom}(${-a}) = ${nom}(${a}) = ${imageA}`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction paire vérifie } ${nom}(-x) = ${nom}(x) \\text{ pour tout } x.` },
+      { type: "resultat", text: `${nom}(${-a}) = ${nom}(${a}) = ${imageA}` },
+    ],
   };
 }
 
@@ -234,7 +252,10 @@ function genFonctionImpaireQCM() {
     chapter: "Généralités sur les fonctions — Fonctions paires et impaires",
     prompt: `La fonction ${nom} est impaire sur son ensemble de définition, et \\(${nom}(${a}) = ${imageA}\\). Que vaut \\(${nom}(${-a})\\) ?`,
     answer: -imageA,
-    steps: [`\\text{Une fonction impaire vérifie } ${nom}(-x) = -${nom}(x) \\text{ pour tout } x.`, `${nom}(${-a}) = -${nom}(${a}) = ${-imageA}`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction impaire vérifie } ${nom}(-x) = -${nom}(x) \\text{ pour tout } x.` },
+      { type: "resultat", text: `${nom}(${-a}) = -${nom}(${a}) = ${-imageA}` },
+    ],
   };
 }
 
@@ -255,7 +276,10 @@ function genPointAppartientCourbeQCM() {
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Le point de coordonnées (${x} ; ${yPropose}) appartient-il à la courbe représentative de ${nom} ?`,
     answer: appartient ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${vraiY}`, appartient ? `${vraiY} = ${yPropose} : le point appartient bien à la courbe.` : `${vraiY} \\neq ${yPropose} : le point n'appartient pas à la courbe.`],
+    steps: [
+      { type: "calcul", text: `${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${vraiY}` },
+      { type: "resultat", text: appartient ? `${vraiY} = ${yPropose} : \\text{ le point appartient bien à la courbe.}` : `${vraiY} \\neq ${yPropose} : \\text{ le point n'appartient pas à la courbe.}` },
+    ],
   };
 }
 
@@ -274,7 +298,7 @@ function genModeRepresentationQCM() {
     prompt: `Quel mode de représentation d'une fonction correspond à la description suivante : « ${cas.description} » ?`,
     answer: cas.reponse,
     options,
-    steps: [`Il s'agit d'un(e) ${cas.reponse.toLowerCase()}.`],
+    steps: [{ type: "resultat", text: `Il s'agit d'un(e) ${cas.reponse.toLowerCase()}.` }],
   };
 }
 
@@ -289,7 +313,12 @@ function genResoudreFactorisationCubiqueQCM() {
     prompt: `On veut résoudre l'équation \\(x^3 - ${a}x = 0\\). En factorisant par x, on obtient \\(x(x^2 - ${a}) = 0\\). Combien cette équation a-t-elle de solutions ?`,
     answer: String(nbSolutions),
     options: ["1", "2", "3"],
-    steps: [`x(x^2 - ${a}) = 0 \\iff x = 0 \\text{ ou } x^2 = ${a}`, `x^2 = ${a} \\iff x = \\sqrt{${a}} \\text{ ou } x = -\\sqrt{${a}}`, `\\text{Il y a donc } ${nbSolutions} \\text{ solutions : } 0, \\sqrt{${a}} \\text{ et } -\\sqrt{${a}}.`],
+    steps: [
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si (et seulement si) l'un au moins des facteurs est nul.}` },
+      { type: "calcul", text: `x(x^2 - ${a}) = 0 \\iff x = 0 \\text{ ou } x^2 = ${a}` },
+      { type: "calcul", text: `x^2 = ${a} \\iff x = \\sqrt{${a}} \\text{ ou } x = -\\sqrt{${a}}` },
+      { type: "resultat", text: `\\text{Il y a donc } ${nbSolutions} \\text{ solutions : } 0, \\sqrt{${a}} \\text{ et } -\\sqrt{${a}}.` },
+    ],
   };
 }
 
@@ -311,7 +340,10 @@ function genResoudreFEgalGTableauNumeric() {
     chapter: "Généralités sur les fonctions — Résolution d'équations",
     prompt: `Voici deux tableaux de valeurs : ${nomF} : ${xs.map((x, i) => `${nomF}(${x}) = ${ysF[i]}`).join(", ")}. ${nomG} : ${xs.map((x, i) => `${nomG}(${x}) = ${ysG[i]}`).join(", ")}. Détermine la solution de l'équation \\(${nomF}(x) = ${nomG}(x)\\) (parmi les valeurs du tableau).`,
     answer: xs[idxEgal],
-    steps: [`On cherche x tel que ${nomF}(x) = ${nomG}(x)$ : c'est x = ${xs[idxEgal]}, où les deux fonctions valent ${valeurCommune}.`],
+    steps: [
+      { type: "regle", text: `\\text{On cherche la valeur de x pour laquelle les deux tableaux donnent la même image.}` },
+      { type: "resultat", text: `x = ${xs[idxEgal]}, \\text{ où les deux fonctions valent } ${valeurCommune}.` },
+    ],
   };
 }
 

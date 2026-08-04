@@ -1214,3 +1214,83 @@ dans ce sandbox).
 Prochaine étape : même audit pour la 3e (déjà taguée sémantiquement côté
 steps via la tâche #233, mais pas encore auditée pour les repères
 pédagogiques de la tâche #236). Le lycée reste reporté à plus tard.
+
+## 2026-08-04 (suite 3) — Repères pédagogiques : 3e complet — COLLÈGE COMPLET (tâche #236)
+
+Suite et fin de la tâche #236 sur le niveau 3e (15 fichiers audités : les 14
+chapitres du sommaire + Dossier Brevet ; automatismes-troisieme.js
+volontairement exclu, même raison qu'aux niveaux précédents — fluence
+rapide, pas des leçons expliquées). Avec ce fichier, les quatre niveaux du
+collège (6e, 5e, 4e, 3e) ont maintenant été intégralement audités pour la
+tâche #236.
+
+Fichiers modifiés (avec exemples de règles ajoutées) :
+- reviser-les-bases-troisieme.js : méthode d'isolement de x, Pythagore,
+  pourcentage, moyenne.
+- nombres-entiers-troisieme.js : PGCD via algorithme d'Euclide avec les
+  étapes détaillées (au lieu d'afficher juste le résultat), même lacune que
+  celle déjà corrigée en 4e.
+- calcul-numerique-troisieme.js : normalisation de l'écriture scientifique
+  (ramener la mantisse entre 1 et 10).
+- calcul-litteral-troisieme.js : factoriser = mettre un facteur commun en
+  évidence.
+- equations-troisieme.js : méthode d'isolement de x — un générateur
+  n'affichait qu'une seule ligne, zéro méthode, la lacune la plus sévère du
+  fichier.
+- statistiques-troisieme.js : angle d'un diagramme circulaire, fréquence.
+- probabilites-troisieme.js : effectif attendu = probabilité × nombre
+  d'expériences ; dérivation du nombre d'issues favorables (« un nombre sur
+  trois est multiple de 3 »), qui n'était auparavant qu'un résultat affirmé
+  sans justification.
+- notion-fonction-troisieme.js : fonction puissance de 10 (écriture avec des
+  zéros selon le signe de l'exposant), règle du produit nul dans une égalité
+  de fonctions (jusqu'ici l'équation x(x+a)=0 sautait directement à « x=0 ou
+  x=... » sans jamais énoncer pourquoi).
+- fonctions-affines-troisieme.js : regroupement des termes en x pour
+  comparer deux tarifs (équation à x des deux côtés).
+- proportionnalite-troisieme.js : correction la plus significative du
+  fichier — la notion de « coefficient multiplicateur » (cœur du chapitre
+  sur les évolutions en pourcentage) était utilisée dans presque tous les
+  générateurs sans jamais être dérivée du pourcentage annoncé dans l'énoncé ;
+  ajout systématique de la dérivation (1 ± p/100) avant chaque usage.
+- thales-triangles-semblables-troisieme.js : produit en croix, somme des
+  angles d'un triangle = 180°.
+- trigonometrie-triangle-rectangle-troisieme.js : fonctions réciproques
+  (arccos, arcsin, arctan) explicitées avant de donner l'angle — jusqu'ici
+  le résultat apparaissait sans jamais mentionner qu'on utilise la fonction
+  réciproque à la calculatrice.
+- transformations-plan-troisieme.js : formules de coordonnées (translation,
+  symétrie centrale, symétrie axiale, rotation) — la rotation en particulier
+  n'avait aucune explication, juste les coordonnées de l'image.
+- geometrie-espace-troisieme.js : méridien = demi grand cercle, rayon d'un
+  parallèle via le cosinus de la latitude (triangle rectangle centre
+  Terre/centre parallèle/point), réduction de section de pyramide.
+- mesures-grandeurs-troisieme.js : conversions km/h ↔ m/s (1000 m, 3600 s),
+  distance réelle depuis une échelle, consommation proportionnelle (produit
+  en croix).
+- dossier-brevet-troisieme.js : regroupement de termes, division explicite
+  dans l'isolement de x, coefficient multiplicateur, moyenne pondérée.
+
+Chaque fichier : node --check, smoke test (8000 itérations, 0 erreur), sync
+vers les deux copies (avec diff vide vérifié), commit séparé.
+
+⚠️ Anomalie corrigée en cours de route : AUTOMATION_LOG.md n'était à jour
+qu'à travers le dépôt Git (APPLI GITHUB/Sans titre) — les entrées "5e
+complet" et "4e complet" de la session précédente n'avaient jamais été
+synchronisées vers la copie canonique d'Application TOP ni vers le
+répertoire de travail (`outputs`). Corrigé ici : les trois copies sont de
+nouveau alignées avant l'ajout de cette entrée.
+
+Build final vérifié avec succès (`npm run build` depuis la copie de travail
+`outputs/reussimaths-web`, après un contournement d'une erreur EMFILE
+persistante du montage réseau d'Application TOP — problème d'environnement
+sandbox, sans lien avec le code ; le code source des deux copies
+Application TOP est identique au caractère près à celui testé, vérifié par
+diff à chaque commit).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**Collège (6e/5e/4e/3e) intégralement audité pour la tâche #236.** Reste :
+le lycée (2nde, Première non spé, Première Spé, Terminale Spé, Première
+techno, Terminale STMG), explicitement reporté à plus tard par Romain.

@@ -86,7 +86,10 @@ function genDiagrammeCirculaireAngleNumeric() {
     prompt: `Lors d'un sondage, ${count} personnes sur ${T} interrogées ont répondu « oui » à une question. Sur un diagramme circulaire, quelle est la mesure de l'angle correspondant à cette réponse, en degrés (arrondie au dixième si nécessaire) ?`,
     answer: angle,
     tolerance: 0.5,
-    steps: [{ type: "calcul", text: `\\dfrac{${count}}{${T}} \\times 360 \\approx ${fr(angle)}°` }],
+    steps: [
+      { type: "regle", text: `Angle du secteur = (effectif de la réponse ÷ effectif total) × 360°.` },
+      { type: "calcul", text: `\\dfrac{${count}}{${T}} \\times 360 \\approx ${fr(angle)}°` },
+    ],
   };
 }
 
@@ -103,6 +106,7 @@ function genTrianglesEgauxHypotenuseNumeric() {
     prompt: `ABC et DEF sont deux triangles égaux (superposables), avec ABC rectangle en B tel que AB = ${leg1} cm et AC = ${hyp} cm (hypoténuse). Le côté [EF] du triangle DEF correspond au côté [BC] du triangle ABC. Calcule la longueur EF, en cm.`,
     answer: leg2,
     steps: [
+      { type: "regle", text: `AC^2 = AB^2 + BC^2\\text{, donc } BC^2 = AC^2 - AB^2` },
       { type: "calcul", text: `BC^2 = AC^2 - AB^2 = ${hyp}^2 - ${leg1}^2 = ${hyp * hyp} - ${leg1 * leg1} = ${leg2 * leg2}` },
       { type: "calcul", text: `BC = \\sqrt{${leg2 * leg2}} = ${leg2}` },
       { type: "resultat", text: `\\text{Les triangles étant égaux, EF} = BC = ${leg2}\\ cm` },
@@ -144,6 +148,7 @@ function genComparerCalculsIdentiteQCM() {
     answer: isSame ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
+      { type: "regle", text: `Distributivité : \\(a \\times (b + c) = a \\times b + a \\times c\\). On calcule les deux expressions pour vérifier si elles correspondent.` },
       { type: "calcul", text: `\\text{Calcul 1} = ${a} \\times ${b + c} = ${expr1Val}` },
       { type: "calcul", text: `\\text{Calcul 2} = ${a * b2} + ${a * c} = ${expr2Val}` },
     ],
@@ -261,6 +266,7 @@ function genVolumePyramideAireDonneeNumeric() {
     answer: volume,
     tolerance: 0.05,
     steps: [
+      { type: "regle", text: `V = \\dfrac{\\text{aire de la base} \\times \\text{hauteur}}{3}` },
       { type: "calcul", text: `\\text{Aire de la base} = ${fr(cote)}^2 = ${fr(aire)}\\ cm^2` },
       { type: "resultat", text: `V = \\dfrac{${fr(aire)} \\times ${hauteur}}{3} \\approx ${fr(volume)}\\ cm^3` },
     ],

@@ -32,7 +32,7 @@ function genCoefficientBinomialNumeric() {
     chapter: "Variables aléatoires (Terminale techno) — Triangle de Pascal",
     prompt: `Calcule le coefficient binomial \\(\\dbinom{${n}}{${k}}\\) (à l'aide du triangle de Pascal).`,
     answer,
-    steps: [`\\dbinom{${n}}{${k}} = ${answer}`],
+    steps: [{ type: "resultat", text: `\\dbinom{${n}}{${k}} = ${answer}` }],
   };
 }
 
@@ -47,7 +47,10 @@ function genReconnaitreEtIdentifierBinomialeNumeric() {
     prompt: `On répète ${n} fois, de façon indépendante, un même tirage avec remise dans une urne où la probabilité de succès est ${fr(p)}. X est le nombre de succès : X suit une loi binomiale \\(\\mathcal{B}(n\\,;\\,p)\\). Donne la valeur de ${demandeN ? "n" : "p"}.`,
     answer: demandeN ? n : p,
     tolerance: demandeN ? undefined : 0.0005,
-    steps: [`X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)})`, `${demandeN ? "n" : "p"} = ${demandeN ? n : fr(p)}`],
+    steps: [
+      { type: "regle", text: `X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)}) \\text{ où } n \\text{ est le nombre de répétitions et } p \\text{ est la probabilité de succès à chaque répétition.}` },
+      { type: "resultat", text: `${demandeN ? "n" : "p"} = ${demandeN ? n : fr(p)}` },
+    ],
   };
 }
 
@@ -65,8 +68,9 @@ function genCalculerPXEgalKNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `\\dbinom{${n}}{${k}} = ${nbChemins}`,
-      `P(X=${k}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} \\approx ${fr(answer)}`,
+      { type: "calcul", text: `\\dbinom{${n}}{${k}} = ${nbChemins}` },
+      { type: "calcul", text: `P(X=${k}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}}` },
+      { type: "resultat", text: `P(X=${k}) \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -84,7 +88,15 @@ function genCasParticuliersNumeric() {
     prompt: `\\(X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)})\\). Calcule \\(P(X=${k})\\) (cas particulier, arrondi à 0,00001 près).`,
     answer,
     tolerance: 0.00005,
-    steps: cas === "0" ? [`P(X=0) = (1-p)^n = ${fr(roundTo(1 - p, 4))}^{${n}} \\approx ${fr(answer)}`] : [`P(X=n) = p^n = ${fr(p)}^{${n}} \\approx ${fr(answer)}`],
+    steps: cas === "0"
+      ? [
+          { type: "regle", text: "Il n'existe qu'un seul chemin de l'arbre menant à 0 succès (que des échecs), donc P(X=0) = (1-p)^n." },
+          { type: "resultat", text: `P(X=0) = ${fr(roundTo(1 - p, 4))}^{${n}} \\approx ${fr(answer)}` },
+        ]
+      : [
+          { type: "regle", text: "Il n'existe qu'un seul chemin de l'arbre menant à n succès (que des succès), donc P(X=n) = p^n." },
+          { type: "resultat", text: `P(X=n) = ${fr(p)}^{${n}} \\approx ${fr(answer)}` },
+        ],
   };
 }
 
@@ -100,7 +112,11 @@ function genPXEgalNMoins1Numeric() {
     prompt: `\\(X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)})\\). Calcule \\(P(X=${n - 1})\\) (arrondi à 0,00001 près).`,
     answer,
     tolerance: 0.00005,
-    steps: [`\\dbinom{${n}}{${n - 1}} = ${nbChemins}`, `P(X=${n - 1}) = ${nbChemins} \\times ${fr(p)}^{${n - 1}} \\times ${fr(roundTo(1 - p, 4))} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\dbinom{${n}}{${n - 1}} = ${nbChemins}` },
+      { type: "calcul", text: `P(X=${n - 1}) = ${nbChemins} \\times ${fr(p)}^{${n - 1}} \\times ${fr(roundTo(1 - p, 4))}` },
+      { type: "resultat", text: `P(X=${n - 1}) \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -117,7 +133,11 @@ function genUnionPXInferieurNumeric() {
     prompt: `\\(X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)})\\). Calcule \\(P(X \\leqslant 1) = P(X=0) + P(X=1)\\) (arrondi à 0,00001 près).`,
     answer,
     tolerance: 0.0001,
-    steps: [`P(X=0) \\approx ${fr(p0)}`, `P(X=1) \\approx ${fr(p1)}`, `P(X\\leqslant 1) \\approx ${fr(p0)} + ${fr(p1)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Les évènements {X=0} et {X=1} sont incompatibles, donc P(X⩽1) est la somme de leurs probabilités." },
+      { type: "calcul", text: `P(X=0) \\approx ${fr(p0)} \\quad ; \\quad P(X=1) \\approx ${fr(p1)}` },
+      { type: "resultat", text: `P(X\\leqslant 1) \\approx ${fr(p0)} + ${fr(p1)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -132,7 +152,10 @@ function genEsperanceBinomialeNumeric() {
     prompt: `\\(X \\sim \\mathcal{B}(${n}\\,;\\,${fr(p)})\\). Calcule l'espérance \\(E(X)\\) (formule \\(E(X) = np\\)).`,
     answer,
     tolerance: 0.005,
-    steps: [`E(X) = n\\times p = ${n} \\times ${fr(p)} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `E(X) = n\\times p = ${n} \\times ${fr(p)}` },
+      { type: "resultat", text: `E(X) = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -150,7 +173,11 @@ function genEsperanceDiscreteNumeric() {
     prompt: `Une variable aléatoire X prend les valeurs 0, 1, 2, 3 avec \\(P(X=0)=${fr(p0)}\\), \\(P(X=1)=${fr(p1)}\\), \\(P(X=2)=${fr(p2)}\\), \\(P(X=3)=${fr(p3)}\\). Calcule \\(E(X)\\) (arrondi au centième).`,
     answer: roundTo(answer, 2),
     tolerance: 0.01,
-    steps: [`E(X) = 0\\times${fr(p0)} + 1\\times${fr(p1)} + 2\\times${fr(p2)} + 3\\times${fr(p3)} = ${fr(roundTo(answer, 2))}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : E(X) = Σ x_i × P(X=x_i)." },
+      { type: "calcul", text: `E(X) = 0\\times${fr(p0)} + 1\\times${fr(p1)} + 2\\times${fr(p2)} + 3\\times${fr(p3)}` },
+      { type: "resultat", text: `E(X) = ${fr(roundTo(answer, 2))}` },
+    ],
   };
 }
 
@@ -164,16 +191,28 @@ function genInterpreterXEgalKQCM() {
     prompt: `Dans l'arbre représentant la répétition de ${n} épreuves de Bernoulli, que représente l'évènement \\(\\{X=${k}\\}\\) ?`,
     answer: `L'ensemble des chemins de l'arbre comportant exactement ${k} succès`,
     options: [`L'ensemble des chemins de l'arbre comportant exactement ${k} succès`, `Un seul chemin précis de l'arbre`, `L'ensemble des chemins comportant au moins ${k} succès`],
-    steps: [`\\{X=${k}\\} \\text{ regroupe TOUS les chemins de l'arbre où l'on obtient exactement } ${k} \\text{ succès (il peut y en avoir plusieurs).}`],
+    steps: [{ type: "regle", text: `\\{X=${k}\\} \\text{ regroupe TOUS les chemins de l'arbre où l'on obtient exactement } ${k} \\text{ succès (il peut y en avoir plusieurs).}` }],
   };
 }
 
 // ---------- 10. Reconnaître (ou non) une situation de loi binomiale ----------
 function genReconnaitreBinomialeQCM() {
   const cas = pick([
-    { description: "On tire une carte, on note sa couleur, puis on la remet dans le jeu ; on répète cela 8 fois de façon indépendante.", reponse: "Loi binomiale" },
-    { description: "On tire successivement 5 cartes d'un jeu de 32, sans remise.", reponse: "Pas une loi binomiale" },
-    { description: "On interroge 15 personnes sur un sondage oui/non, chaque réponse étant indépendante des autres.", reponse: "Loi binomiale" },
+    {
+      description: "On tire une carte, on note sa couleur, puis on la remet dans le jeu ; on répète cela 8 fois de façon indépendante.",
+      reponse: "Loi binomiale",
+      explication: "Loi binomiale : la remise après chaque tirage garantit que les 8 répétitions sont indépendantes et ont toutes la même probabilité de succès — les deux conditions d'une loi binomiale sont réunies.",
+    },
+    {
+      description: "On tire successivement 5 cartes d'un jeu de 32, sans remise.",
+      reponse: "Pas une loi binomiale",
+      explication: "Pas une loi binomiale : sans remise, la composition du jeu change à chaque tirage, donc la probabilité de succès varie d'un tirage à l'autre — les tirages ne sont pas indépendants.",
+    },
+    {
+      description: "On interroge 15 personnes sur un sondage oui/non, chaque réponse étant indépendante des autres.",
+      reponse: "Loi binomiale",
+      explication: "Loi binomiale : 15 répétitions indépendantes d'une même question à deux issues (oui/non) avec la même probabilité de succès à chaque fois — c'est exactement le schéma d'une loi binomiale.",
+    },
   ]);
   return {
     type: "qcm",
@@ -181,7 +220,7 @@ function genReconnaitreBinomialeQCM() {
     prompt: `« ${cas.description} » S'agit-il d'une situation de loi binomiale ?`,
     answer: cas.reponse,
     options: ["Loi binomiale", "Pas une loi binomiale"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 

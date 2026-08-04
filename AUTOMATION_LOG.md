@@ -1294,3 +1294,71 @@ dans ce sandbox).
 **Collège (6e/5e/4e/3e) intégralement audité pour la tâche #236.** Reste :
 le lycée (2nde, Première non spé, Première Spé, Terminale Spé, Première
 techno, Terminale STMG), explicitement reporté à plus tard par Romain.
+
+## Lycée — 2nde intégralement auditée pour la tâche #236 (repères pédagogiques + codage sémantique)
+
+Reprise du chantier lycée là où le collège l'avait laissé. Les 12 fichiers
+de chapitres de 2nde ont été relus un par un et corrigés selon la même
+méthode qu'au collège : conversion des steps en format sémantique
+`{type, text}` (donnee/regle/calcul/résultat — tâche #233, jamais faite au
+lycée jusqu'ici) et ajout d'un repère pédagogique (`regle`) partout où un
+générateur sautait directement au résultat sans expliquer le raisonnement
+intermédiaire (tâche #236).
+
+- reviser-les-bases-seconde.js, nombres-calculs-seconde.js,
+  generalites-fonctions-seconde.js, variations-fonctions-seconde.js :
+  audités et corrigés (steps typés, règles ajoutées où nécessaire).
+- fonctions-affines-seconde.js : calculs de tarifs et résolutions
+  d'équations affines inverses complétés.
+- fonctions-reference-seconde.js : QCM de reconnaissance de propriété
+  (carré/cube/racine/inverse) totalement muet auparavant — réécrit avec une
+  vraie règle citant les propriétés de chaque fonction de référence ;
+  équations x²=a, x³=a, 1/x=a et parité également enrichies.
+- reperage-configurations-seconde.js : produit en croix pour tester
+  l'alignement désormais montré (calculé mais jamais affiché avant),
+  réciproque de Pythagore nommée, centre de gravité, symétrique par
+  rapport à l'origine, comparaison de distances via le carré.
+- vecteurs-seconde.js : QCM vrai/faux sur les propriétés des vecteurs
+  (6 cas, zéro explication) entièrement réécrit avec justification par cas.
+- colinearite-vecteurs-seconde.js : même traitement pour le QCM vrai/faux
+  sur la colinéarité (vecteur nul, droites parallèles vs confondues, etc.).
+- equations-droites-seconde.js : les résolutions de systèmes par
+  substitution et par combinaison linéaire affichent désormais le calcul
+  intermédiaire complet au lieu d'asserter directement la solution. Cela a
+  révélé un **bug latent réel** : ~3,2 % des systèmes générés avaient un
+  déterminant nul (pas de solution unique), masqué jusqu'ici par un texte
+  vague ("on trouve y=..., x=..."). Corrigé par des gardes de régénération
+  (`while` loop) sur les deux générateurs concernés, vérifié par deux
+  scripts Node.js indépendants (200k puis 500k tirages).
+- informations-chiffrees-seconde.js : règle explicite sur la raison pour
+  laquelle les évolutions successives se multiplient (coefficients
+  multiplicateurs) et ne s'additionnent pas (taux).
+- statistiques-descriptives-seconde.js : moyenne, moyenne pondérée,
+  médiane (pair/impair), quartiles, écart interquartile, effectifs
+  cumulés, comparaison de séries. Le QCM vrai/faux sur la signification de
+  la médiane (5 cas, zéro explication) entièrement réécrit avec
+  justification par cas (contre-exemple médiane ≠ moyenne, etc.).
+- probabilites-echantillonnage-seconde.js : principe multiplicatif pour
+  l'univers à deux épreuves, dénombrement pour les dés (36 issues),
+  fréquence vs probabilité théorique, nombre de succès attendu. Le QCM
+  "type d'événement" et le QCM vrai/faux sur les propriétés des
+  probabilités (tous deux réduits à "C'est correct/incorrect") entièrement
+  réécrits avec justification par cas.
+- exercices-fin-annee-seconde.js : synthèse transversale reprenant tous
+  les thèmes de l'année — mêmes corrections appliquées (division explicite
+  dans la résolution d'équation affine, règle du signe pour le sens de
+  variation, nombre d'antécédents par la fonction carré selon le signe,
+  multiplication des coefficients pour les évolutions successives, etc.).
+
+Chaque fichier : node --check, smoke test (8000 itérations, 0 erreur), sync
+vers les deux copies Application TOP (avec diff vide vérifié), commit
+séparé (12 commits au total).
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**2nde intégralement auditée pour la tâche #236.** Reste : Première non
+spé, Première Spé, Terminale Spé, Première techno, Terminale STMG.

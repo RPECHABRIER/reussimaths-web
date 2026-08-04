@@ -30,7 +30,11 @@ function genTermeRecurrenceArithmetiqueNumeric() {
     chapter: "Suites numériques (Première techno) — Récurrence arithmétique",
     prompt: `Une suite \\((u_n)\\) est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = u_n ${r >= 0 ? "+" : "-"} ${Math.abs(r)}\\). Calcule \\(u_{${n}}\\).`,
     answer,
-    steps: [`\\text{On ajoute } ${r} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}`, `u_{${n}} = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${n} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{On ajoute } ${r} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}` },
+      { type: "calcul", text: `u_{${n}} = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${n}` },
+      { type: "resultat", text: `u_{${n}} = ${answer}` },
+    ],
   };
 }
 
@@ -46,7 +50,11 @@ function genTermeRecurrenceGeometriqueNumeric() {
     prompt: `Une suite \\((u_n)\\), à termes positifs, est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = ${fr(q)} \\times u_n\\). Calcule \\(u_{${n}}\\).`,
     answer,
     tolerance: 0.005,
-    steps: [`\\text{On multiplie par } ${fr(q)} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}`, `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{On multiplie par } ${fr(q)} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}` },
+      { type: "calcul", text: `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}}` },
+      { type: "resultat", text: `u_{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -61,7 +69,10 @@ function genTermeGeneralArithmetiqueNumeric() {
     chapter: "Suites numériques (Première techno) — Terme général (arithmétique)",
     prompt: `\\((u_n)\\) est une suite arithmétique de premier terme \\(u_0 = ${u0}\\) et de raison \\(r = ${r}\\). Calcule \\(u_{${n}}\\) en utilisant la formule \\(u_n = u_0 + nr\\).`,
     answer,
-    steps: [`u_{${n}} = u_0 + ${n} \\times r = ${u0} + ${n} \\times (${r}) = ${answer}`],
+    steps: [
+      { type: "calcul", text: `u_{${n}} = u_0 + ${n} \\times r = ${u0} + ${n} \\times (${r})` },
+      { type: "resultat", text: `u_{${n}} = ${answer}` },
+    ],
   };
 }
 
@@ -77,7 +88,10 @@ function genTermeGeneralGeometriqueNumeric() {
     prompt: `\\((u_n)\\) est une suite géométrique à termes positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Calcule \\(u_{${n}}\\) en utilisant la formule \\(u_n = u_0 \\times q^n\\).`,
     answer,
     tolerance: 0.005,
-    steps: [`u_{${n}} = u_0 \\times q^{${n}} = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `u_{${n}} = u_0 \\times q^{${n}} = ${u0} \\times ${fr(q)}^{${n}}` },
+      { type: "resultat", text: `u_{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -91,7 +105,10 @@ function genRaisonArithmetiqueNumeric() {
     chapter: "Suites numériques (Première techno) — Raison arithmétique",
     prompt: `\\((u_n)\\) est une suite arithmétique telle que \\(u_5 = ${uA}\\) et \\(u_6 = ${uB}\\). Détermine la raison \\(r\\) de cette suite.`,
     answer: r,
-    steps: [`r = u_6 - u_5 = ${uB} - (${uA}) = ${r}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : r = u_{n+1} − u_n." },
+      { type: "resultat", text: `r = u_6 - u_5 = ${uB} - (${uA}) = ${r}` },
+    ],
   };
 }
 
@@ -106,7 +123,10 @@ function genRaisonGeometriqueNumeric() {
     prompt: `\\((u_n)\\) est une suite géométrique à termes positifs telle que \\(u_3 = ${uA}\\) et \\(u_4 = ${fr(uB)}\\). Détermine la raison \\(q\\) de cette suite.`,
     answer: q,
     tolerance: 0.005,
-    steps: [`q = \\dfrac{u_4}{u_3} = \\dfrac{${fr(uB)}}{${uA}} = ${fr(q)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : q = u_{n+1} / u_n." },
+      { type: "resultat", text: `q = \\dfrac{u_4}{u_3} = \\dfrac{${fr(uB)}}{${uA}} = ${fr(q)}` },
+    ],
   };
 }
 
@@ -120,7 +140,7 @@ function genSensVariationArithmetiqueQCM() {
     prompt: `\\((u_n)\\) est une suite arithmétique de raison \\(r = ${r}\\). Quel est son sens de variation ?`,
     answer,
     options: ["croissante", "décroissante"],
-    steps: [r > 0 ? `\\text{Comme } r > 0, \\text{ chaque terme s'obtient en ajoutant un nombre positif : la suite est croissante.}` : `\\text{Comme } r < 0, \\text{ chaque terme s'obtient en ajoutant un nombre négatif : la suite est décroissante.}`],
+    steps: [{ type: "regle", text: r > 0 ? `\\text{Comme } r > 0, \\text{ chaque terme s'obtient en ajoutant un nombre positif : la suite est croissante.}` : `\\text{Comme } r < 0, \\text{ chaque terme s'obtient en ajoutant un nombre négatif : la suite est décroissante.}` }],
   };
 }
 
@@ -135,7 +155,7 @@ function genSensVariationGeometriqueQCM() {
     prompt: `\\((u_n)\\) est une suite géométrique à termes strictement positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Quel est son sens de variation ?`,
     answer,
     options: ["croissante", "décroissante"],
-    steps: [q > 1 ? `\\text{Comme } q > 1 \\text{ et les termes sont positifs, la suite est croissante.}` : `\\text{Comme } 0 < q < 1 \\text{ et les termes sont positifs, la suite est décroissante.}`],
+    steps: [{ type: "regle", text: q > 1 ? `\\text{Comme } q > 1 \\text{ et les termes sont positifs, la suite est croissante.}` : `\\text{Comme } 0 < q < 1 \\text{ et les termes sont positifs, la suite est décroissante.}` }],
   };
 }
 
@@ -155,7 +175,7 @@ function genModeliserPhenomeneQCM() {
     prompt: `On modélise l'évolution suivante par une suite : « ${cas.description} » Quel type de croissance convient ?`,
     answer: cas.reponse,
     options: ["Croissance linéaire (suite arithmétique)", "Croissance exponentielle (suite géométrique)"],
-    steps: [cas.reponse.includes("linéaire") ? `\\text{Accroissement constant} \\Rightarrow \\text{croissance linéaire.}` : `\\text{Taux d'évolution constant} \\Rightarrow \\text{croissance exponentielle.}`],
+    steps: [{ type: "regle", text: cas.reponse.includes("linéaire") ? `\\text{Accroissement constant} \\Rightarrow \\text{croissance linéaire.}` : `\\text{Taux d'évolution constant} \\Rightarrow \\text{croissance exponentielle.}` }],
   };
 }
 
@@ -179,9 +199,12 @@ function genLectureNuagePointsQCM() {
     answer,
     options: ["Suite arithmétique", "Suite géométrique"],
     steps: [
-      arithmetique
-        ? `\\text{Les points semblent alignés : les termes progressent d'une valeur constante, c'est une suite arithmétique.}`
-        : `\\text{Les points suivent une courbe qui s'accentue : la suite croît de plus en plus vite, c'est une suite géométrique.}`,
+      {
+        type: "regle",
+        text: arithmetique
+          ? `\\text{Les points semblent alignés : les termes progressent d'une valeur constante, c'est une suite arithmétique.}`
+          : `\\text{Les points suivent une courbe qui s'accentue : la suite croît de plus en plus vite, c'est une suite géométrique.}`,
+      },
     ],
     graph: { xMin: -0.5, xMax: 6.5, yMin: 0, yMax: Math.max(...points.map((p) => p.y)) + 2, points: points.map((p, i) => ({ x: p.x, y: p.y, label: i === 0 ? "u₀" : "" })) },
   };
@@ -201,7 +224,7 @@ function genReconnaitreModeGenerationQCM() {
     prompt: `On définit une suite par : ${cas.description}. Quel est son mode de génération ?`,
     answer: cas.reponse,
     options: ["Formule explicite", "Relation de récurrence"],
-    steps: [cas.reponse === "Formule explicite" ? `\\text{On peut calculer } u_n \\text{ directement en fonction de } n.` : `\\text{Chaque terme se calcule à partir du précédent.}`],
+    steps: [{ type: "regle", text: cas.reponse === "Formule explicite" ? `\\text{On peut calculer } u_n \\text{ directement en fonction de } n.` : `\\text{Chaque terme se calcule à partir du précédent.}` }],
   };
 }
 
@@ -216,7 +239,10 @@ function genTermeExpliciteNumeric() {
     chapter: "Suites numériques (Première techno) — Formule explicite",
     prompt: `Une suite \\((u_n)\\) est définie pour tout entier naturel \\(n\\) par \\(u_n = ${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(u_{${n}}\\).`,
     answer,
-    steps: [`u_{${n}} = ${a} \\times ${n} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `u_{${n}} = ${a} \\times ${n} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `u_{${n}} = ${answer}` },
+    ],
   };
 }
 

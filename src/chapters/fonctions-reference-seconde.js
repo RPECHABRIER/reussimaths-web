@@ -39,7 +39,7 @@ function genImageFonctionReferenceNumeric() {
       chapter: "Fonctions de référence — Images",
       prompt: `Calcule l'image de ${x} par la fonction carré.`,
       answer: x * x,
-      steps: [`${x}^2 = ${x * x}`],
+      steps: [{ type: "calcul", text: `${x}^2 = ${x * x}` }],
     };
   }
   if (type === "cube") {
@@ -49,7 +49,7 @@ function genImageFonctionReferenceNumeric() {
       chapter: "Fonctions de référence — Images",
       prompt: `Calcule l'image de ${x} par la fonction cube.`,
       answer: x ** 3,
-      steps: [`${x}^3 = ${x ** 3}`],
+      steps: [{ type: "calcul", text: `${x}^3 = ${x ** 3}` }],
     };
   }
   if (type === "racine carrée") {
@@ -60,7 +60,7 @@ function genImageFonctionReferenceNumeric() {
       chapter: "Fonctions de référence — Images",
       prompt: `Calcule l'image de ${x} par la fonction racine carrée.`,
       answer: racine,
-      steps: [`\\sqrt{${x}} = ${racine}`],
+      steps: [{ type: "calcul", text: `\\sqrt{${x}} = ${racine}` }],
     };
   }
   // inverse
@@ -71,7 +71,7 @@ function genImageFonctionReferenceNumeric() {
     prompt: `Calcule l'image de ${x} par la fonction inverse (sous forme décimale si besoin, avec deux décimales).`,
     answer: roundTo(1 / x, 2),
     tolerance: 0.01,
-    steps: [`\\dfrac{1}{${x}} \\approx ${roundTo(1 / x, 2)}`],
+    steps: [{ type: "calcul", text: `\\dfrac{1}{${x}} \\approx ${roundTo(1 / x, 2)}` }],
   };
 }
 
@@ -87,11 +87,16 @@ function genAntecedentsCarreQCM() {
     answer: String(nb),
     options: ["0", "1", "2"],
     steps: [
-      cas === "négatif"
-        ? `Un carré n'est jamais négatif : ${k} n'a aucun antécédent par la fonction carré.`
-        : cas === "nul"
-          ? `0 a un unique antécédent par la fonction carré : 0 lui-même.`
-          : `${k} est strictement positif : il a deux antécédents opposés par la fonction carré.`,
+      { type: "regle", text: `\\text{Un carré n'est jamais négatif. Un réel strictement positif a deux antécédents opposés par la fonction carré, 0 en a un seul (lui-même), et un réel négatif n'en a aucun.}` },
+      {
+        type: "resultat",
+        text:
+          cas === "négatif"
+            ? `${k} \\text{ est négatif : il n'a aucun antécédent par la fonction carré.}`
+            : cas === "nul"
+              ? `0 \\text{ a un unique antécédent par la fonction carré : 0 lui-même.}`
+              : `${k} \\text{ est strictement positif : il a deux antécédents opposés par la fonction carré.}`,
+      },
     ],
   };
 }
@@ -121,7 +126,10 @@ function genAntecedentsAutresFonctionsQCM() {
     prompt: `Combien le nombre ${k} a-t-il d'antécédents par la fonction ${fonction} ?`,
     answer: String(nb),
     options: ["0", "1", "2"],
-    steps: [explication],
+    steps: [
+      { type: "regle", text: `\\text{La fonction cube est bijective sur } \\mathbb{R} \\text{ (un antécédent) ; l'inverse n'est jamais nulle et 0 n'a pas d'antécédent ; la racine carrée n'est définie que pour des valeurs positives ou nulles.}` },
+      { type: "resultat", text: explication },
+    ],
   };
 }
 
@@ -134,7 +142,10 @@ function genSensVariationCarreQCM() {
     prompt: `Quel est le sens de variation de la fonction carré sur \\(${surPositifs ? "[0 ; +\\infty[" : "]-\\infty ; 0]"}\\) ?`,
     answer: surPositifs ? "croissante" : "décroissante",
     options: ["croissante", "décroissante"],
-    steps: [`La fonction carré est strictement décroissante sur \\(]-\\infty ; 0]\\) puis strictement croissante sur \\([0 ; +\\infty[\\).`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction carré est strictement décroissante sur } ]-\\infty ; 0] \\text{ puis strictement croissante sur } [0 ; +\\infty[.` },
+      { type: "resultat", text: `\\text{Sur } ${surPositifs ? "[0 ; +\\infty[" : "]-\\infty ; 0]"}, \\text{ elle est } ${surPositifs ? "croissante" : "décroissante"}.` },
+    ],
   };
 }
 
@@ -147,7 +158,10 @@ function genSensVariationInverseQCM() {
     prompt: `Quel est le sens de variation de la fonction inverse sur \\(${surPositifs ? "]0 ; +\\infty[" : "]-\\infty ; 0["}\\) ?`,
     answer: "décroissante",
     options: ["croissante", "décroissante"],
-    steps: [`La fonction inverse est strictement décroissante sur chacun des deux intervalles \\(]-\\infty ; 0[\\) et \\(]0 ; +\\infty[\\) (attention : elle n'est pas décroissante sur \\(\\mathbb{R}^*\\) tout entier).`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction inverse est strictement décroissante sur chacun des deux intervalles } ]-\\infty ; 0[ \\text{ et } ]0 ; +\\infty[ \\text{ (attention : elle n'est pas décroissante sur } \\mathbb{R}^* \\text{ tout entier).}` },
+      { type: "resultat", text: `\\text{Sur } ${surPositifs ? "]0 ; +\\infty[" : "]-\\infty ; 0["}, \\text{ elle est décroissante.}` },
+    ],
   };
 }
 
@@ -166,7 +180,10 @@ function genComparerCarresQCM() {
     prompt: `On a \\(${xmin} < ${xmax}\\), ${memeSignePositif ? "tous deux positifs" : "tous deux négatifs"}. Que peut-on dire de \\(${xmin}^2\\) et \\(${xmax}^2\\) ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise]),
-    steps: [`La fonction carré est ${memeSignePositif ? "strictement croissante sur [0 ; +∞[" : "strictement décroissante sur ]-∞ ; 0]"}, donc ${bonneReponse.replace(/\^2/g, "²")}.`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction carré est } ${memeSignePositif ? "\\text{strictement croissante sur } [0 ; +\\infty[" : "\\text{strictement décroissante sur } ]-\\infty ; 0]"}.` },
+      { type: "resultat", text: `${bonneReponse.replace(/\^2/g, "²")}` },
+    ],
   };
 }
 
@@ -184,7 +201,10 @@ function genComparerRacinesQCM() {
     prompt: `On a \\(${xmin} < ${xmax}\\). Que peut-on dire de \\(\\sqrt{${xmin}}\\) et \\(\\sqrt{${xmax}}\\) ?`,
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
-    steps: [`La fonction racine carrée est strictement croissante sur \\([0 ; +\\infty[\\), donc \\(\\sqrt{${xmin}} < \\sqrt{${xmax}}\\).`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction racine carrée est strictement croissante sur } [0 ; +\\infty[.` },
+      { type: "resultat", text: `\\sqrt{${xmin}} < \\sqrt{${xmax}}` },
+    ],
   };
 }
 
@@ -203,7 +223,10 @@ function genComparerInversesQCM() {
     prompt: `On a \\(${xmin} < ${xmax}\\), ${memeSignePositif ? "tous deux strictement positifs" : "tous deux strictement négatifs"}. Que peut-on dire de \\(\\dfrac{1}{${xmin}}\\) et \\(\\dfrac{1}{${xmax}}\\) ?`,
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
-    steps: [`La fonction inverse est strictement décroissante sur cet intervalle, donc \\(\\dfrac{1}{${xmin}} > \\dfrac{1}{${xmax}}\\).`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction inverse est strictement décroissante sur cet intervalle.}` },
+      { type: "resultat", text: `\\dfrac{1}{${xmin}} > \\dfrac{1}{${xmax}}` },
+    ],
   };
 }
 
@@ -221,7 +244,10 @@ function genComparerCubesQCM() {
     prompt: `On a \\(${xmin} < ${xmax}\\). Que peut-on dire de \\(${xmin}^3\\) et \\(${xmax}^3\\) ?`,
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
-    steps: [`La fonction cube est strictement croissante sur \\(\\mathbb{R}\\), donc ${bonneReponse.replace(/\^3/g, "³")}.`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction cube est strictement croissante sur } \\mathbb{R}.` },
+      { type: "resultat", text: `${bonneReponse.replace(/\^3/g, "³")}` },
+    ],
   };
 }
 
@@ -250,11 +276,16 @@ function genResoudreEquationCarreQCM() {
     answer: bonneReponse,
     options: shuffle(options),
     steps: [
-      cas === "deux"
-        ? `${a} > 0 : l'équation a deux solutions opposées, \\(x = \\pm\\sqrt{${a}}\\), soit ${bonneReponse}.`
-        : cas === "une"
-          ? `x² = 0 a une unique solution : x = 0.`
-          : `${a} < 0 : un carré n'est jamais négatif, l'équation n'a aucune solution.`,
+      { type: "regle", text: `\\text{Un carré n'est jamais négatif. Si } a > 0, \\text{ l'équation } x^2 = a \\text{ a deux solutions opposées } x = \\pm\\sqrt{a} \\text{ ; si } a = 0, \\text{ une seule solution } x=0 \\text{ ; si } a < 0, \\text{ aucune solution.}` },
+      {
+        type: "resultat",
+        text:
+          cas === "deux"
+            ? `${a} > 0 : \\text{ l'équation a deux solutions opposées, } x = \\pm\\sqrt{${a}}, \\text{ soit } ${bonneReponse}.`
+            : cas === "une"
+              ? `x^2 = 0 \\text{ a une unique solution : } x = 0.`
+              : `${a} < 0 : \\text{ l'équation n'a aucune solution.}`,
+      },
     ],
   };
 }
@@ -273,9 +304,16 @@ function genResoudreInequationCarreQCM() {
     answer: bonneReponse,
     options: [bonneReponse, mauvaise],
     steps: [
-      sensInf
-        ? `x^2 < ${a} \\iff -\\sqrt{${a}} < x < \\sqrt{${a}} \\iff -${r} < x < ${r}`
-        : `x^2 > ${a} \\iff x < -\\sqrt{${a}} \\text{ ou } x > \\sqrt{${a}} \\iff x < -${r} \\text{ ou } x > ${r}`,
+      {
+        type: "regle",
+        text: sensInf
+          ? `\\text{Pour } a > 0, \\ x^2 < a \\iff -\\sqrt{a} < x < \\sqrt{a} \\text{ (les solutions sont comprises entre les deux racines opposées).}`
+          : `\\text{Pour } a > 0, \\ x^2 > a \\iff x < -\\sqrt{a} \\text{ ou } x > \\sqrt{a} \\text{ (les solutions sont à l'extérieur des deux racines opposées).}`,
+      },
+      {
+        type: "resultat",
+        text: sensInf ? `-\\sqrt{${a}} < x < \\sqrt{${a}} \\iff -${r} < x < ${r}` : `x < -\\sqrt{${a}} \\text{ ou } x > \\sqrt{${a}} \\iff x < -${r} \\text{ ou } x > ${r}`,
+      },
     ],
   };
 }
@@ -289,7 +327,10 @@ function genResoudreEquationCubeNumeric() {
     chapter: "Fonctions de référence — Équations et inéquations",
     prompt: `Résous l'équation \\(x^3 = ${a}\\).`,
     answer: xSol,
-    steps: [`\\text{L'équation } x^3 = ${a} \\text{ a une unique solution : } x = \\sqrt[3]{${a}} = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction cube est strictement croissante sur } \\mathbb{R} : \\text{ l'équation } x^3 = a \\text{ a toujours une unique solution, } x = \\sqrt[3]{a}.` },
+      { type: "resultat", text: `x = \\sqrt[3]{${a}} = ${xSol}` },
+    ],
   };
 }
 
@@ -304,7 +345,10 @@ function genResoudreEquationInverseNumeric() {
     chapter: "Fonctions de référence — Équations et inéquations",
     prompt: `Résous l'équation \\(\\dfrac{1}{x} = \\dfrac{1}{${xSol}}\\) (avec \\(x \\neq 0\\)).`,
     answer: xSol,
-    steps: [`\\dfrac{1}{x} = \\dfrac{1}{${xSol}} \\iff x = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{La fonction inverse est bijective sur } \\mathbb{R}^*, \\text{ donc deux fractions de numérateur 1 sont égales si et seulement si leurs dénominateurs le sont.}` },
+      { type: "resultat", text: `\\dfrac{1}{x} = \\dfrac{1}{${xSol}} \\iff x = ${xSol}` },
+    ],
   };
 }
 
@@ -323,7 +367,13 @@ function genIdentifierFonctionProprieteQCM() {
     prompt: `Parmi les fonctions de référence (carré, cube, racine carrée, inverse), laquelle vérifie la propriété suivante : « ${cas.description} » ?`,
     answer: cas.reponse,
     options,
-    steps: [`C'est ${cas.reponse}.`],
+    steps: [
+      {
+        type: "regle",
+        text: `\\text{Carré : courbe symétrique par rapport à l'axe des ordonnées. Cube : strictement croissante sur } \\mathbb{R}. \\text{ Racine carrée : définie seulement pour } x \\geq 0. \\text{ Inverse : jamais définie ni nulle en 0.}`,
+      },
+      { type: "resultat", text: `\\text{La propriété « ${cas.description} » correspond à } ${cas.reponse}.` },
+    ],
   };
 }
 
@@ -342,13 +392,18 @@ function genPariteFonctionReferenceQCM() {
     answer: cas.parite,
     options: ["paire", "impaire", "ni paire ni impaire"],
     steps: [
-      cas.nom === "carré"
-        ? `Pour tout x, (-x)² = x² : la fonction carré est paire.`
-        : cas.nom === "cube"
-          ? `Pour tout x, (-x)³ = -x³ : la fonction cube est impaire.`
-          : cas.nom === "inverse"
-            ? `Pour tout x ≠ 0, 1/(-x) = -1/x : la fonction inverse est impaire.`
-            : `La fonction racine carrée n'est même pas définie sur des nombres négatifs : elle n'est ni paire ni impaire.`,
+      { type: "regle", text: `\\text{Une fonction f est paire si } f(-x) = f(x) \\text{ pour tout x du domaine ; elle est impaire si } f(-x) = -f(x). \\text{ Si ces égalités ne sont pas vérifiées (ou si le domaine n'est pas symétrique par rapport à 0), elle n'est ni paire ni impaire.}` },
+      {
+        type: "resultat",
+        text:
+          cas.nom === "carré"
+            ? `\\text{Pour tout x, } (-x)^2 = x^2 : \\text{ la fonction carré est paire.}`
+            : cas.nom === "cube"
+              ? `\\text{Pour tout x, } (-x)^3 = -x^3 : \\text{ la fonction cube est impaire.}`
+              : cas.nom === "inverse"
+                ? `\\text{Pour tout } x \\neq 0, \\ \\dfrac{1}{-x} = -\\dfrac{1}{x} : \\text{ la fonction inverse est impaire.}`
+                : `\\text{La fonction racine carrée n'est même pas définie sur les nombres négatifs (domaine non symétrique par rapport à 0) : elle n'est ni paire ni impaire.}`,
+      },
     ],
   };
 }

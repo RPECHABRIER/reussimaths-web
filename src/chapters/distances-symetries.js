@@ -351,7 +351,10 @@ function genConvertirContenances() {
     chapter: "Distances et symétries — Convertir des contenances",
     prompt: `Convertis ${fr(value)} ${UNITES_CONTENANCE[i]} en ${UNITES_CONTENANCE[j]}.`,
     answer: result,
-    steps: [{ type: "regle", text: `1 ${UNITES_CONTENANCE[i]} = ${facteur} ${UNITES_CONTENANCE[j]}` }],
+    steps: [
+      { type: "regle", text: `1 ${UNITES_CONTENANCE[i]} = ${facteur} ${UNITES_CONTENANCE[j]}` },
+      { type: "resultat", text: `${fr(value)} \\times ${facteur} = ${fr(result)}` },
+    ],
   };
 }
 

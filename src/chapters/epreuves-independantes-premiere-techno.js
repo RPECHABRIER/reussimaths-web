@@ -20,11 +20,11 @@ const combinaison = (n, k) => {
 // ---------- 1. Reconnaître une épreuve de Bernoulli ----------
 function genReconnaitreBernoulliQCM() {
   const cas = pick([
-    { description: "Lancer une pièce et regarder si on obtient Pile.", reponse: "C'est une épreuve de Bernoulli" },
-    { description: "Lancer un dé à 6 faces et noter le numéro obtenu.", reponse: "Ce n'est pas une épreuve de Bernoulli" },
-    { description: "Tester une pièce produite en usine : conforme ou défectueuse.", reponse: "C'est une épreuve de Bernoulli" },
-    { description: "Tirer une carte parmi 32 et noter sa couleur (il y a 4 couleurs).", reponse: "Ce n'est pas une épreuve de Bernoulli" },
-    { description: "Interroger un client au hasard : a-t-il acheté le produit A, oui ou non ?", reponse: "C'est une épreuve de Bernoulli" },
+    { description: "Lancer une pièce et regarder si on obtient Pile.", reponse: "C'est une épreuve de Bernoulli", explication: "C'est une épreuve de Bernoulli : il n'y a que deux issues possibles, Pile (succès) ou Face (échec)." },
+    { description: "Lancer un dé à 6 faces et noter le numéro obtenu.", reponse: "Ce n'est pas une épreuve de Bernoulli", explication: "Ce n'est pas une épreuve de Bernoulli : il y a 6 issues possibles (1, 2, 3, 4, 5 ou 6), pas seulement deux." },
+    { description: "Tester une pièce produite en usine : conforme ou défectueuse.", reponse: "C'est une épreuve de Bernoulli", explication: "C'est une épreuve de Bernoulli : il n'y a que deux issues possibles, conforme (succès) ou défectueuse (échec)." },
+    { description: "Tirer une carte parmi 32 et noter sa couleur (il y a 4 couleurs).", reponse: "Ce n'est pas une épreuve de Bernoulli", explication: "Ce n'est pas une épreuve de Bernoulli : il y a 4 issues possibles (les 4 couleurs), pas seulement deux." },
+    { description: "Interroger un client au hasard : a-t-il acheté le produit A, oui ou non ?", reponse: "C'est une épreuve de Bernoulli", explication: "C'est une épreuve de Bernoulli : il n'y a que deux issues possibles, oui (succès) ou non (échec)." },
   ]);
   return {
     type: "qcm",
@@ -32,7 +32,7 @@ function genReconnaitreBernoulliQCM() {
     prompt: `« ${cas.description} » S'agit-il d'une épreuve de Bernoulli (deux issues possibles : succès / échec) ?`,
     answer: cas.reponse,
     options: ["C'est une épreuve de Bernoulli", "Ce n'est pas une épreuve de Bernoulli"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -47,7 +47,11 @@ function genTousSuccesNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir ${n} succès consécutifs.`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(${n} \\text{ succès}) = p^{${n}} = ${fr(p)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Les épreuves étant indépendantes, la probabilité d'un chemin de l'arbre est le produit des probabilités rencontrées le long de ce chemin." },
+      { type: "calcul", text: `P(${n} \\text{ succès}) = p^{${n}} = ${fr(p)}^{${n}}` },
+      { type: "resultat", text: `P(${n} \\text{ succès}) = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -63,7 +67,11 @@ function genCheminPrecisNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir, dans cet ordre précis, ${k} succès suivis de ${n - k} échecs.`,
     answer,
     tolerance: 0.00005,
-    steps: [`P(\\text{ce chemin}) = p^{${k}} \\times (1-p)^{${n - k}} = ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Les épreuves étant indépendantes, la probabilité d'un chemin précis de l'arbre est le produit des probabilités rencontrées le long de ce chemin." },
+      { type: "calcul", text: `P(\\text{ce chemin}) = p^{${k}} \\times (1-p)^{${n - k}} = ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}}` },
+      { type: "resultat", text: `P(\\text{ce chemin}) = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -77,7 +85,10 @@ function genNombreCheminsNumeric() {
     chapter: "Épreuves indépendantes (Première techno) — Arbre pondéré",
     prompt: `Dans l'arbre représentant la répétition de \\(${n}\\) épreuves de Bernoulli indépendantes, combien de chemins réalisent exactement ${k} succès ?`,
     answer,
-    steps: [`\\text{On compte les façons de placer } ${k} \\text{ succès parmi } ${n} \\text{ épreuves : } ${answer} \\text{ chemin(s).}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : le nombre de chemins de l'arbre réalisant k succès parmi n épreuves est le coefficient binomial \\binom{n}{k}." },
+      { type: "resultat", text: `\\text{On compte les façons de placer } ${k} \\text{ succès parmi } ${n} \\text{ épreuves : } \\binom{${n}}{${k}} = ${answer} \\text{ chemin(s).}` },
+    ],
   };
 }
 
@@ -95,8 +106,10 @@ function genExactementKSuccesNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `\\text{Nombre de chemins avec ${k} succès : } ${nbChemins}`,
-      `P(${k} \\text{ succès}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}`,
+      { type: "regle", text: "Formule de référence à connaître : P(k succès) = (nombre de chemins avec k succès) × p^k × (1-p)^(n-k), où le nombre de chemins est le coefficient binomial \\binom{n}{k}." },
+      { type: "calcul", text: `\\text{Nombre de chemins avec ${k} succès : } \\binom{${n}}{${k}} = ${nbChemins}` },
+      { type: "calcul", text: `P(${k} \\text{ succès}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}}` },
+      { type: "resultat", text: `P(${k} \\text{ succès}) = ${fr(answer)}` },
     ],
   };
 }
@@ -113,7 +126,11 @@ function genAuMoinsUnSuccesNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir au moins un succès.`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(\\text{aucun succès}) = (1-${fr(p)})^{${n}} = ${fr(q)}^{${n}} = ${fr(roundTo(q ** n, 4))}`, `P(\\text{au moins un succès}) = 1 - ${fr(roundTo(q ** n, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "L'événement contraire de « au moins un succès » est « aucun succès ». On calcule d'abord P(aucun succès), puis P(au moins un succès) = 1 - P(aucun succès)." },
+      { type: "calcul", text: `P(\\text{aucun succès}) = (1-${fr(p)})^{${n}} = ${fr(q)}^{${n}} = ${fr(roundTo(q ** n, 4))}` },
+      { type: "resultat", text: `P(\\text{au moins un succès}) = 1 - ${fr(roundTo(q ** n, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -130,9 +147,10 @@ function genArbreDeuxNiveauxNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(\\text{S puis E}) = ${fr(p)} \\times ${fr(q)} = ${fr(roundTo(p * q, 4))}`,
-      `P(\\text{E puis S}) = ${fr(q)} \\times ${fr(p)} = ${fr(roundTo(p * q, 4))}`,
-      `P(\\text{exactement un succès}) = ${fr(roundTo(p * q, 4))} + ${fr(roundTo(p * q, 4))} = ${fr(answer)}`,
+      { type: "regle", text: "Pour lire un arbre, on additionne les probabilités de tous les chemins qui réalisent l'événement recherché : ces chemins sont disjoints." },
+      { type: "calcul", text: `P(\\text{S puis E}) = ${fr(p)} \\times ${fr(q)} = ${fr(roundTo(p * q, 4))}` },
+      { type: "calcul", text: `P(\\text{E puis S}) = ${fr(q)} \\times ${fr(p)} = ${fr(roundTo(p * q, 4))}` },
+      { type: "resultat", text: `P(\\text{exactement un succès}) = ${fr(roundTo(p * q, 4))} + ${fr(roundTo(p * q, 4))} = ${fr(answer)}` },
     ],
   };
 }

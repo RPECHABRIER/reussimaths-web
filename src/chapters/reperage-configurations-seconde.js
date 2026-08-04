@@ -66,7 +66,10 @@ function genCoordonneesMilieuNumeric() {
     chapter: "Repérage — Coordonnées du milieu",
     prompt: `On considère les points ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). ${nomM} est le milieu du segment [${nomA}${nomB}]. Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomM} ?`,
     answer: demanderAbscisse ? xM : yM,
-    steps: [demanderAbscisse ? `x_${nomM} = \\dfrac{${xA} + ${xB}}{2} = ${xM}` : `y_${nomM} = \\dfrac{${yA} + ${yB}}{2} = ${yM}`],
+    steps: [
+      { type: "regle", text: `\\text{Les coordonnées du milieu M de } [AB] \\text{ sont la moyenne des coordonnées de A et de B : } x_M = \\dfrac{x_A + x_B}{2}, \\ y_M = \\dfrac{y_A + y_B}{2}.` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomM} = \\dfrac{${xA} + ${xB}}{2} = ${xM}` : `y_${nomM} = \\dfrac{${yA} + ${yB}}{2} = ${yM}` },
+    ],
   };
 }
 
@@ -85,7 +88,10 @@ function genCalculDistanceNumeric() {
     chapter: "Repérage — Distance entre deux points",
     prompt: `Le repère est orthonormé. On considère les points ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Calcule la distance ${nomA}${nomB}.`,
     answer: dist,
-    steps: [`${nomA}${nomB} = \\sqrt{(${xB} - ${xA})^2 + (${yB} - ${yA})^2} = \\sqrt{${signeX * dx}^2 + ${signeY * dy}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${dist}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un repère orthonormé, la distance } AB \\text{ se calcule (grâce au théorème de Pythagore) par } AB = \\sqrt{(x_B - x_A)^2 + (y_B - y_A)^2}.` },
+      { type: "resultat", text: `${nomA}${nomB} = \\sqrt{(${xB} - ${xA})^2 + (${yB} - ${yA})^2} = \\sqrt{${signeX * dx}^2 + ${signeY * dy}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${dist}` },
+    ],
   };
 }
 
@@ -119,7 +125,11 @@ function genReconnaitreAlignementQCM() {
     prompt: `On considère les points ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}) et ${nomC}(${xC} ; ${yC}). Ces trois points sont-ils alignés ?`,
     answer: reponse,
     options: ["Oui", "Non"],
-    steps: [reponse === "Oui" ? `Le vecteur ${nomA}${nomC} est colinéaire au vecteur ${nomA}${nomB} : les points sont alignés.` : `Le vecteur ${nomA}${nomC} n'est pas colinéaire au vecteur ${nomA}${nomB} : les points ne sont pas alignés.`],
+    steps: [
+      { type: "regle", text: `\\text{Trois points A, B, C sont alignés si et seulement si les vecteurs } \\overrightarrow{AB} \\text{ et } \\overrightarrow{AC} \\text{ sont colinéaires, c'est-à-dire si leur « produit en croix » } (x_B - x_A)(y_C - y_A) - (y_B - y_A)(x_C - x_A) \\text{ est nul.}` },
+      { type: "calcul", text: `(${xB} - ${xA})(${yC} - ${yA}) - (${yB} - ${yA})(${xC} - ${xA}) = ${produitCroise}` },
+      { type: "resultat", text: reponse === "Oui" ? `\\text{Le produit est nul : } \\overrightarrow{${nomA}${nomC}} \\text{ est colinéaire à } \\overrightarrow{${nomA}${nomB}}, \\text{ les points sont alignés.}` : `\\text{Le produit n'est pas nul : } \\overrightarrow{${nomA}${nomC}} \\text{ n'est pas colinéaire à } \\overrightarrow{${nomA}${nomB}}, \\text{ les points ne sont pas alignés.}` },
+    ],
   };
 }
 
@@ -145,9 +155,10 @@ function genReconnaitreParallelogrammeQCM() {
     answer: estParallelogramme ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `\\text{Milieu de } [${nomA}${nomC}] = \\left(\\dfrac{${xA}+${xC}}{2} ; \\dfrac{${yA}+${yC}}{2}\\right)`,
-      `\\text{Milieu de } [${nomB}${nomD}] = \\left(\\dfrac{${xB}+${xD}}{2} ; \\dfrac{${yB}+${yD}}{2}\\right)`,
-      estParallelogramme ? `Les deux diagonales ont le même milieu : ${nomA}${nomB}${nomC}${nomD} est un parallélogramme.` : `Les deux diagonales n'ont pas le même milieu : ${nomA}${nomB}${nomC}${nomD} n'est pas un parallélogramme.`,
+      { type: "regle", text: `\\text{ABCD est un parallélogramme si et seulement si les diagonales } [AC] \\text{ et } [BD] \\text{ ont le même milieu.}` },
+      { type: "calcul", text: `\\text{Milieu de } [${nomA}${nomC}] = \\left(\\dfrac{${xA}+${xC}}{2} ; \\dfrac{${yA}+${yC}}{2}\\right)` },
+      { type: "calcul", text: `\\text{Milieu de } [${nomB}${nomD}] = \\left(\\dfrac{${xB}+${xD}}{2} ; \\dfrac{${yB}+${yD}}{2}\\right)` },
+      { type: "resultat", text: estParallelogramme ? `\\text{Les deux diagonales ont le même milieu : } ${nomA}${nomB}${nomC}${nomD} \\text{ est un parallélogramme.}` : `\\text{Les deux diagonales n'ont pas le même milieu : } ${nomA}${nomB}${nomC}${nomD} \\text{ n'est pas un parallélogramme.}` },
     ],
   };
 }
@@ -169,11 +180,15 @@ function genTypeRepereDepuisDescriptionQCM() {
     answer: reponse,
     options: ["orthonormé", "orthogonal (mais pas orthonormé)", "ni orthogonal ni orthonormé"],
     steps: [
-      !angleDroit
-        ? `Les axes ne sont pas perpendiculaires : le repère n'est ni orthogonal ni orthonormé.`
-        : uniteX === uniteY
-          ? `Les axes sont perpendiculaires et les unités sont égales (OI = OJ) : le repère est orthonormé.`
-          : `Les axes sont perpendiculaires mais les unités sont différentes (OI ≠ OJ) : le repère est orthogonal mais pas orthonormé.`,
+      { type: "regle", text: `\\text{Un repère est orthogonal si ses axes sont perpendiculaires. Il est orthonormé s'il est orthogonal ET si les unités sur les deux axes sont égales (OI = OJ).}` },
+      {
+        type: "resultat",
+        text: !angleDroit
+          ? `\\text{Les axes ne sont pas perpendiculaires : le repère n'est ni orthogonal ni orthonormé.}`
+          : uniteX === uniteY
+            ? `\\text{Les axes sont perpendiculaires et OI = OJ = ${uniteX} : le repère est orthonormé.}`
+            : `\\text{Les axes sont perpendiculaires mais OI = ${uniteX} \\neq OJ = ${uniteY} : le repère est orthogonal mais pas orthonormé.}`,
+      },
     ],
   };
 }
@@ -200,13 +215,17 @@ function genVraiFauxParalleleAxeQCM() {
     answer: parallele ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
     steps: [
-      axeAbscisses
-        ? parallele
-          ? `${nomA} et ${nomB} ont la même ordonnée (${yA}) : la droite est parallèle à l'axe des abscisses.`
-          : `${nomA} et ${nomB} n'ont pas la même ordonnée (${yA} ≠ ${yB}) : la droite n'est pas parallèle à l'axe des abscisses.`
-        : parallele
-          ? `${nomA} et ${nomB} ont la même abscisse (${xA}) : la droite est parallèle à l'axe des ordonnées.`
-          : `${nomA} et ${nomB} n'ont pas la même abscisse (${xA} ≠ ${xB}) : la droite n'est pas parallèle à l'axe des ordonnées.`,
+      { type: "regle", text: `\\text{Une droite est parallèle à l'axe des abscisses si ses deux points ont la même ordonnée ; elle est parallèle à l'axe des ordonnées si ses deux points ont la même abscisse.}` },
+      {
+        type: "resultat",
+        text: axeAbscisses
+          ? parallele
+            ? `${nomA} \\text{ et } ${nomB} \\text{ ont la même ordonnée (} ${yA} \\text{) : la droite est parallèle à l'axe des abscisses.}`
+            : `${nomA} \\text{ et } ${nomB} \\text{ n'ont pas la même ordonnée (} ${yA} \\neq ${yB} \\text{) : la droite n'est pas parallèle à l'axe des abscisses.}`
+          : parallele
+            ? `${nomA} \\text{ et } ${nomB} \\text{ ont la même abscisse (} ${xA} \\text{) : la droite est parallèle à l'axe des ordonnées.}`
+            : `${nomA} \\text{ et } ${nomB} \\text{ n'ont pas la même abscisse (} ${xA} \\neq ${xB} \\text{) : la droite n'est pas parallèle à l'axe des ordonnées.}`,
+      },
     ],
   };
 }
@@ -228,7 +247,10 @@ function genTroisiemeSommetParallelogrammeNumeric() {
     chapter: "Repérage — Reconnaître un parallélogramme",
     prompt: `${nomA}${nomB}${nomC}${nomD} est un parallélogramme, avec ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}) et ${nomC}(${xC} ; ${yC}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomD} ?`,
     answer: demanderAbscisse ? xD : yD,
-    steps: [`\\text{Les diagonales } [${nomA}${nomC}] \\text{ et } [${nomB}${nomD}] \\text{ ont le même milieu, donc } ${nomD} = ${nomA} + ${nomC} - ${nomB}.`, demanderAbscisse ? `x_${nomD} = ${xA} + ${xC} - ${xB} = ${xD}` : `y_${nomD} = ${yA} + ${yC} - ${yB} = ${yD}`],
+    steps: [
+      { type: "regle", text: `\\text{Les diagonales } [${nomA}${nomC}] \\text{ et } [${nomB}${nomD}] \\text{ d'un parallélogramme ont le même milieu, donc } ${nomD} = ${nomA} + ${nomC} - ${nomB} \\text{ (coordonnée par coordonnée).}` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomD} = ${xA} + ${xC} - ${xB} = ${xD}` : `y_${nomD} = ${yA} + ${yC} - ${yB} = ${yD}` },
+    ],
   };
 }
 
@@ -254,10 +276,14 @@ function genTriangleRectangleReciproquePythagoreQCM() {
     answer: estRectangle ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
-      `${nomA}${nomB}^2 + ${nomA}${nomC}^2 = ${AB2} + ${AC2} = ${AB2 + AC2}`,
-      estRectangle
-        ? `${nomB}${nomC}^2 = ${BC2} = ${nomA}${nomB}^2 + ${nomA}${nomC}^2 : d'après la réciproque du théorème de Pythagore, le triangle est rectangle en ${nomA}.`
-        : `${nomB}${nomC}^2 = ${BC2} \\neq ${AB2 + AC2} : le triangle n'est pas rectangle en ${nomA}.`,
+      { type: "regle", text: `\\text{Réciproque du théorème de Pythagore : si dans un triangle le carré du plus grand côté est égal à la somme des carrés des deux autres, alors le triangle est rectangle (et l'angle droit est opposé au plus grand côté).}` },
+      { type: "calcul", text: `${nomA}${nomB}^2 + ${nomA}${nomC}^2 = ${AB2} + ${AC2} = ${AB2 + AC2}` },
+      {
+        type: "resultat",
+        text: estRectangle
+          ? `${nomB}${nomC}^2 = ${BC2} = ${nomA}${nomB}^2 + ${nomA}${nomC}^2 : \\text{ le triangle est rectangle en } ${nomA}.`
+          : `${nomB}${nomC}^2 = ${BC2} \\neq ${AB2 + AC2} : \\text{ le triangle n'est pas rectangle en } ${nomA}.`,
+      },
     ],
   };
 }
@@ -278,7 +304,13 @@ function genPerimetreTriangleNumeric() {
     chapter: "Repérage — Distance entre deux points",
     prompt: `Le repère est orthonormé. On considère les points ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}) et ${nomC}(${xC} ; ${yC}). Calcule le périmètre du triangle ${nomA}${nomB}${nomC}.`,
     answer: perimetre,
-    steps: [`${nomA}${nomB} = ${a}`, `${nomA}${nomC} = ${b}`, `${nomB}${nomC} = \\sqrt{${a}^2 + ${b}^2} = ${c}`, `\\text{Périmètre} = ${a} + ${b} + ${c} = ${perimetre}`],
+    steps: [
+      { type: "regle", text: `\\text{${nomA} et ${nomB} ont la même ordonnée : } ${nomA}${nomB} \\text{ se lit directement sur l'axe des abscisses. De même } ${nomA}${nomC} \\text{ se lit sur l'axe des ordonnées. Pour } ${nomB}${nomC}, \\text{ on utilise le théorème de Pythagore dans le triangle rectangle en } ${nomA}.` },
+      { type: "calcul", text: `${nomA}${nomB} = ${a}` },
+      { type: "calcul", text: `${nomA}${nomC} = ${b}` },
+      { type: "calcul", text: `${nomB}${nomC} = \\sqrt{${a}^2 + ${b}^2} = ${c}` },
+      { type: "resultat", text: `\\text{Périmètre} = ${a} + ${b} + ${c} = ${perimetre}` },
+    ],
   };
 }
 
@@ -297,7 +329,10 @@ function genPointMilieuVersACoordinateNumeric() {
     chapter: "Repérage — Coordonnées du milieu",
     prompt: `${nomM}(${xM} ; ${yM}) est le milieu du segment [${nomA}${nomB}], avec ${nomA}(${xA} ; ${yA}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomB} ?`,
     answer: demanderAbscisse ? xB : yB,
-    steps: [demanderAbscisse ? `x_${nomB} = 2 \\times ${xM} - ${xA} = ${xB}` : `y_${nomB} = 2 \\times ${yM} - ${yA} = ${yB}`],
+    steps: [
+      { type: "regle", text: `\\text{Puisque } M \\text{ est le milieu de } [${nomA}${nomB}], \\text{ on a } x_M = \\dfrac{x_${nomA} + x_${nomB}}{2}. \\text{ En isolant } x_${nomB}, \\text{ on obtient } x_${nomB} = 2x_M - x_${nomA} \\text{ (et de même pour l'ordonnée).}` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomB} = 2 \\times ${xM} - ${xA} = ${xB}` : `y_${nomB} = 2 \\times ${yM} - ${yA} = ${yB}` },
+    ],
   };
 }
 
@@ -312,7 +347,10 @@ function genDistanceOrigineNumeric() {
     chapter: "Repérage — Distance entre deux points",
     prompt: `Le repère est orthonormé d'origine O. On considère le point ${nomA}(${x} ; ${y}). Calcule la distance O${nomA}.`,
     answer: dist,
-    steps: [`O${nomA} = \\sqrt{${x}^2 + ${y}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${dist}`],
+    steps: [
+      { type: "regle", text: `\\text{La distance d'un point } (x ; y) \\text{ à l'origine O est } OA = \\sqrt{x^2 + y^2} \\text{ (théorème de Pythagore appliqué au triangle formé avec les axes).}` },
+      { type: "resultat", text: `O${nomA} = \\sqrt{${x}^2 + ${y}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${dist}` },
+    ],
   };
 }
 
@@ -339,7 +377,12 @@ function genComparerDistancesQCM() {
     prompt: `Le repère est orthonormé. On considère les points ${nomP}(${xP} ; ${yP}), ${nomQ1}(${xQ1} ; ${yQ1}) et ${nomQ2}(${xQ2} ; ${yQ2}). Quel point est le plus proche de ${nomP} ?`,
     answer: plusProche,
     options: [nomQ1, nomQ2],
-    steps: [`${nomP}${nomQ1}^2 = ${d1carre}`, `${nomP}${nomQ2}^2 = ${d2carre}`, `\\text{Le plus proche est celui dont la distance au carré est la plus petite : } ${plusProche}.`],
+    steps: [
+      { type: "regle", text: `\\text{Comme la fonction carré est croissante sur } [0 ; +\\infty[, \\text{ comparer deux distances (positives) revient à comparer leurs carrés — cela évite de calculer des racines carrées.}` },
+      { type: "calcul", text: `${nomP}${nomQ1}^2 = ${d1carre}` },
+      { type: "calcul", text: `${nomP}${nomQ2}^2 = ${d2carre}` },
+      { type: "resultat", text: `\\text{Le plus proche est celui dont la distance au carré est la plus petite : } ${plusProche}.` },
+    ],
   };
 }
 
@@ -362,7 +405,10 @@ function genCentreGraviteNumeric() {
     chapter: "Repérage — Centre de gravité",
     prompt: `On considère le triangle ${nomA}${nomB}${nomC} avec ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}) et ${nomC}(${xC} ; ${yC}). ${nomG} est le centre de gravité de ce triangle. Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomG} ?`,
     answer: demanderAbscisse ? xG : yG,
-    steps: [demanderAbscisse ? `x_${nomG} = \\dfrac{${xA} + ${xB} + ${xC}}{3} = ${xG}` : `y_${nomG} = \\dfrac{${yA} + ${yB} + ${yC}}{3} = ${yG}`],
+    steps: [
+      { type: "regle", text: `\\text{Les coordonnées du centre de gravité (isobarycentre) d'un triangle sont la moyenne des coordonnées de ses trois sommets : } x_G = \\dfrac{x_A + x_B + x_C}{3}, \\ y_G = \\dfrac{y_A + y_B + y_C}{3}.` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomG} = \\dfrac{${xA} + ${xB} + ${xC}}{3} = ${xG}` : `y_${nomG} = \\dfrac{${yA} + ${yB} + ${yC}}{3} = ${yG}` },
+    ],
   };
 }
 
@@ -377,7 +423,10 @@ function genSymetriqueOrigineNumeric() {
     chapter: "Repérage — Symétrie par rapport à l'origine",
     prompt: `${nomAprime} est le symétrique du point ${nomA}(${x} ; ${y}) par rapport à l'origine O du repère. Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomAprime} ?`,
     answer: demanderAbscisse ? -x : -y,
-    steps: [`\\text{Le symétrique de } (x ; y) \\text{ par rapport à O est } (-x ; -y).`, demanderAbscisse ? `x_{${nomAprime}} = -${x} = ${-x}` : `y_{${nomAprime}} = -${y} = ${-y}`],
+    steps: [
+      { type: "regle", text: `\\text{Le symétrique de } (x ; y) \\text{ par rapport à l'origine O est } (-x ; -y).` },
+      { type: "resultat", text: demanderAbscisse ? `x_{${nomAprime}} = -${x} = ${-x}` : `y_{${nomAprime}} = -${y} = ${-y}` },
+    ],
   };
 }
 
@@ -401,7 +450,10 @@ function genDistanceSegmentAxeAligneNumeric() {
     chapter: "Repérage — Distance entre deux points",
     prompt: `Le repère est orthonormé. On considère les points ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Calcule la distance ${nomA}${nomB}.`,
     answer,
-    steps: [vertical ? `\\text{${nomA} et ${nomB} ont la même abscisse : } ${nomA}${nomB} = |${yB} - ${yA}| = ${answer}` : `\\text{${nomA} et ${nomB} ont la même ordonnée : } ${nomA}${nomB} = |${xB} - ${xA}| = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Si deux points ont la même abscisse, la distance entre eux est la valeur absolue de la différence de leurs ordonnées. Si elles ont la même ordonnée, c'est la valeur absolue de la différence de leurs abscisses.}` },
+      { type: "resultat", text: vertical ? `\\text{${nomA} et ${nomB} ont la même abscisse : } ${nomA}${nomB} = |${yB} - ${yA}| = ${answer}` : `\\text{${nomA} et ${nomB} ont la même ordonnée : } ${nomA}${nomB} = |${xB} - ${xA}| = ${answer}` },
+    ],
   };
 }
 

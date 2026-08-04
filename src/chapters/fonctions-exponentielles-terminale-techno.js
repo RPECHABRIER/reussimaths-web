@@ -31,7 +31,7 @@ function genCalculerPuissanceNumeric() {
     prompt: `Calcule \\(${fr(a)}^{${x}}\\) (arrondi à 0,0001 près).`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(a)}^{${x}} \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `${fr(a)}^{${x}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -46,7 +46,10 @@ function genExposantNegatifNumeric() {
     prompt: `Calcule \\(${a}^{-${x}}\\) (arrondi à 0,00001 près), en utilisant \\(a^{-x} = \\dfrac{1}{a^x}\\).`,
     answer,
     tolerance: 0.0001,
-    steps: [`${a}^{-${x}} = \\dfrac{1}{${a}^{${x}}} = \\dfrac{1}{${a ** x}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${a}^{-${x}} = \\dfrac{1}{${a}^{${x}}} = \\dfrac{1}{${a ** x}}` },
+      { type: "resultat", text: `${a}^{-${x}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -63,8 +66,8 @@ function genSensVariationQCM() {
     answer,
     options: ["croissante", "décroissante"],
     steps: [
-      `\\text{Comme } a = ${fr(a)} ${a > 1 ? ">" : "<"} 1\\text{, } x\\mapsto ${fr(a)}^x \\text{ est ${croissanceExp ? "croissante" : "décroissante"}.}`,
-      k > 0 ? `\\text{Multiplier par } k=${k} > 0 \\text{ ne change pas le sens de variation.}` : `\\text{Multiplier par } k=${k} < 0 \\text{ inverse le sens de variation.}`,
+      { type: "regle", text: `\\text{Comme } a = ${fr(a)} ${a > 1 ? ">" : "<"} 1\\text{, } x\\mapsto ${fr(a)}^x \\text{ est ${croissanceExp ? "croissante" : "décroissante"}.}` },
+      { type: "regle", text: k > 0 ? `\\text{Multiplier par } k=${k} > 0 \\text{ ne change pas le sens de variation.}` : `\\text{Multiplier par } k=${k} < 0 \\text{ inverse le sens de variation.}` },
     ],
   };
 }
@@ -81,7 +84,7 @@ function genAllureCourbeQCM() {
     prompt: `On donne ci-dessous la courbe de \\(x \\mapsto ${fr(a)}^x\\). Quelle affirmation décrit correctement cette courbe ?`,
     answer,
     options: ["Courbe croissante, passant par (0 ; 1)", "Courbe décroissante, passant par (0 ; 1)"],
-    steps: [`\\text{Comme } a=${fr(a)} ${a > 1 ? ">" : "<"} 1\\text{, la courbe est ${croissante ? "croissante" : "décroissante"}, et passe toujours par } (0;1) \\text{ car } a^0=1.`],
+    steps: [{ type: "regle", text: `\\text{Comme } a=${fr(a)} ${a > 1 ? ">" : "<"} 1\\text{, la courbe est ${croissante ? "croissante" : "décroissante"}, et passe toujours par } (0;1) \\text{ car } a^0=1.` }],
     graph: { xMin: -3, xMax: 3, yMin: -0.5, yMax: Math.max(2, fn(3), fn(-3)) + 1, curves: [{ fn, label: "f" }], points: [{ x: 0, y: 1, label: "(0;1)" }] },
   };
 }
@@ -98,7 +101,10 @@ function genProprieteSommeNumeric() {
     prompt: `Sachant que \\(${fr(a)}^{${x}} \\approx ${fr(roundTo(a ** x, 3))}\\) et \\(${fr(a)}^{${y}} \\approx ${fr(roundTo(a ** y, 3))}\\), calcule \\(${fr(a)}^{${x + y}}\\) en utilisant \\(a^{x+y}=a^x \\times a^y\\) (arrondi au millième).`,
     answer,
     tolerance: 0.01,
-    steps: [`${fr(a)}^{${x + y}} = ${fr(a)}^{${x}} \\times ${fr(a)}^{${y}} \\approx ${fr(roundTo(a ** x, 3))} \\times ${fr(roundTo(a ** y, 3))} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${fr(a)}^{${x + y}} = ${fr(a)}^{${x}} \\times ${fr(a)}^{${y}} \\approx ${fr(roundTo(a ** x, 3))} \\times ${fr(roundTo(a ** y, 3))}` },
+      { type: "resultat", text: `${fr(a)}^{${x + y}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -114,7 +120,10 @@ function genProprietePuissanceNumeric() {
     prompt: `Simplifie puis calcule \\((${fr(a)}^{${x}})^{${n}}\\) en utilisant \\((a^x)^n = a^{xn}\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`(${fr(a)}^{${x}})^{${n}} = ${fr(a)}^{${x * n}} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `(${fr(a)}^{${x}})^{${n}} = ${fr(a)}^{${x * n}}` },
+      { type: "resultat", text: `= ${fr(answer)}` },
+    ],
   };
 }
 
@@ -132,9 +141,9 @@ function genTauxEvolutionMoyenNumeric() {
     answer: tauxMoyen,
     tolerance: 0.05,
     steps: [
-      `CM_{global} = 1 + \\dfrac{${fr(p)}}{100} = ${fr(cmGlobal)}`,
-      `CM_{moyen} = ${fr(cmGlobal)}^{1/${n}} \\approx ${fr(cmMoyen)}`,
-      `\\text{Taux moyen} \\approx ${fr(tauxMoyen)} \\%`,
+      { type: "donnee", text: `CM_{global} = 1 + \\dfrac{${fr(p)}}{100} = ${fr(cmGlobal)}` },
+      { type: "calcul", text: `CM_{moyen} = ${fr(cmGlobal)}^{1/${n}} \\approx ${fr(cmMoyen)}` },
+      { type: "resultat", text: `\\text{Taux moyen} \\approx ${fr(tauxMoyen)} \\%` },
     ],
   };
 }
@@ -152,7 +161,10 @@ function genVerifierTauxMoyenNumeric() {
     prompt: `Une grandeur évolue de ${fr(tauxMoyen)} % chaque année pendant ${n} ans. Calcule le taux d'évolution global sur les ${n} ans (en %, arrondi au centième).`,
     answer: tauxGlobal,
     tolerance: 0.1,
-    steps: [`CM_{global} = (1+\\dfrac{${fr(tauxMoyen)}}{100})^{${n}} = ${fr(cmMoyen)}^{${n}} \\approx ${fr(cmGlobal)}`, `\\text{Taux global} \\approx ${fr(tauxGlobal)} \\%`],
+    steps: [
+      { type: "calcul", text: `CM_{global} = (1+\\dfrac{${fr(tauxMoyen)}}{100})^{${n}} = ${fr(cmMoyen)}^{${n}} \\approx ${fr(cmGlobal)}` },
+      { type: "resultat", text: `\\text{Taux global} \\approx ${fr(tauxGlobal)} \\%` },
+    ],
   };
 }
 
@@ -166,7 +178,7 @@ function genComparerBasesQCM() {
     prompt: `On compare \\(f(x) = ${fr(a1)}^x\\) et \\(g(x) = ${fr(a2)}^x\\). Laquelle de ces fonctions est croissante ?`,
     answer: "f (car sa base est supérieure à 1)",
     options: ["f (car sa base est supérieure à 1)", "g (car sa base est supérieure à 1)"],
-    steps: [`f \\text{ a pour base } ${fr(a1)} > 1 \\text{ (croissante) ; } g \\text{ a pour base } ${fr(a2)} < 1 \\text{ (décroissante).}`],
+    steps: [{ type: "regle", text: `f \\text{ a pour base } ${fr(a1)} > 1 \\text{ (croissante) ; } g \\text{ a pour base } ${fr(a2)} < 1 \\text{ (décroissante).}` }],
   };
 }
 

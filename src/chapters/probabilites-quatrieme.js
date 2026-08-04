@@ -195,7 +195,17 @@ function genTypeEvenementQCM() {
     prompt: `${item.desc} Quel est le type de cet événement ?`,
     answer: item.type,
     options: ["Certain", "Impossible", "Élémentaire", "Non élémentaire"],
-    steps: [{ type: "regle", text: `Cet événement est ${item.type.toLowerCase()}.` }],
+    steps: [
+      {
+        type: "regle",
+        text: {
+          Certain: `Cet événement se réalise à coup sûr, quel que soit le résultat obtenu : il est certain.`,
+          Impossible: `Cet événement ne peut jamais se réaliser : il est impossible.`,
+          Élémentaire: `Cet événement correspond à une seule issue possible : il est élémentaire.`,
+          "Non élémentaire": `Cet événement regroupe plusieurs issues possibles : il n'est pas élémentaire.`,
+        }[item.type],
+      },
+    ],
   };
 }
 
@@ -231,7 +241,10 @@ function genEvenementContraireDescriptionQCM() {
     prompt: `Quel est l'événement contraire de « ${item.evt} » ?`,
     answer: item.contraire,
     options,
-    steps: [{ type: "regle", text: `L'événement contraire de « ${item.evt} » est « ${item.contraire} ».` }],
+    steps: [
+      { type: "regle", text: `L'événement contraire se réalise exactement quand l'événement de départ ne se réalise pas.` },
+      { type: "resultat", text: `L'événement contraire de « ${item.evt} » est « ${item.contraire} ».` },
+    ],
   };
 }
 
@@ -317,7 +330,7 @@ function genComparerDeuxGroupesProbabiliteNumeric() {
     prompt: `Dans un collège, il y a ${totalFilles4e} filles scolarisées en classe de 4e. On choisit au hasard un élève ${contexte}. Quelle est la probabilité que ce soit une fille de 4e (arrondie au centième) ?`,
     answer,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `\\dfrac{${totalFilles4e}}{${denom}} \\approx ${fr(answer)}` }],
+    steps: [{ type: "calcul", text: `P = \\dfrac{${totalFilles4e}}{${denom}} \\approx ${fr(answer)}` }],
   };
 }
 

@@ -35,7 +35,10 @@ function genTauxVariationNumeric() {
     chapter: "Dérivation (Première techno) — Taux de variation",
     prompt: `Une courbe passe par \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule le taux de variation entre A et B, \\(\\dfrac{f(${xB}) - f(${xA})}{${xB} - ${xA}}\\).`,
     answer: m,
-    steps: [`\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} = ${m}`],
+    steps: [
+      { type: "regle", text: "Le taux de variation entre A et B est le coefficient directeur de la droite (AB)." },
+      { type: "resultat", text: `\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} = ${m}` },
+    ],
     graph: {
       xMin: Math.min(xA, xB) - 2,
       xMax: Math.max(xA, xB) + 2,
@@ -58,7 +61,10 @@ function genNombreDeriveTangenteNumeric() {
     chapter: "Dérivation (Première techno) — Nombre dérivé",
     prompt: `On donne ci-dessous la courbe représentative d'une fonction \\(f\\) et sa tangente au point A d'abscisse ${a}. Détermine \\(f'(${a})\\), le coefficient directeur de cette tangente.`,
     answer: m,
-    steps: [`\\text{Le nombre dérivé } f'(${a}) \\text{ est le coefficient directeur de la tangente en A.}`, `f'(${a}) = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre dérivé } f'(${a}) \\text{ est le coefficient directeur de la tangente en A.}` },
+      { type: "resultat", text: `f'(${a}) = ${m}` },
+    ],
     graph: {
       xMin: a - 5,
       xMax: a + 5,
@@ -86,7 +92,10 @@ function genEquationTangenteQCM() {
     prompt: `On sait que \\(f(${a}) = ${fa}\\) et \\(f'(${a}) = ${fpa}\\). Quelle est l'équation réduite de la tangente à la courbe de \\(f\\) au point d'abscisse ${a} ? (formule \\(y = f'(a)(x-a) + f(a)\\))`,
     answer: correctRaw,
     options,
-    steps: [`y = f'(${a})(x - ${a}) + f(${a}) = ${fpa}(x ${signedL(-a)}) ${fa >= 0 ? "+" : "-"} ${Math.abs(fa)}`, `\\text{Sous forme développée : } y = ${fpa}x ${signedL(b)}`],
+    steps: [
+      { type: "calcul", text: `y = f'(${a})(x - ${a}) + f(${a}) = ${fpa}(x ${signedL(-a)}) ${fa >= 0 ? "+" : "-"} ${Math.abs(fa)}` },
+      { type: "resultat", text: `\\text{Sous forme développée : } y = ${fpa}x ${signedL(b)}` },
+    ],
   };
 }
 
@@ -104,7 +113,10 @@ function genDeriveeReferenceQCM() {
     prompt: `Quelle est la fonction dérivée de \\(f(x) = ${cas.fn}\\) ?`,
     answer: cas.deriv,
     options,
-    steps: [`f'(x) = ${cas.deriv}`],
+    steps: [
+      { type: "regle", text: "Formules de référence à connaître : (x²)' = 2x et (x³)' = 3x²." },
+      { type: "resultat", text: `f'(x) = ${cas.deriv}` },
+    ],
   };
 }
 
@@ -125,7 +137,11 @@ function genDeriveePolynomeNumeric() {
     chapter: "Dérivation (Première techno) — Dérivée d'un polynôme",
     prompt: `On considère \\(f(x) = ${fLatex}\\). Calcule \\(f'(${x})\\).`,
     answer,
-    steps: [`f'(x) = ${3 * c3}x^2 ${signedL(2 * c2, "x")} ${signedL(c1)}`, `f'(${x}) = ${3 * c3} \\times ${x}^2 ${signedL(2 * c2 * x)} ${signedL(c1)} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : (ax³+bx²+cx+d)' = 3ax²+2bx+c." },
+      { type: "calcul", text: `f'(x) = ${3 * c3}x^2 ${signedL(2 * c2, "x")} ${signedL(c1)}` },
+      { type: "resultat", text: `f'(${x}) = ${3 * c3} \\times ${x}^2 ${signedL(2 * c2 * x)} ${signedL(c1)} = ${answer}` },
+    ],
   };
 }
 
@@ -140,7 +156,7 @@ function genDeriveeMultipleNumeric() {
     chapter: "Dérivation (Première techno) — Dérivée de kf",
     prompt: `On sait que \\(f'(${a}) = ${fpa}\\). On pose \\(g = ${k}f\\). Calcule \\(g'(${a})\\) (formule \\((kf)' = kf'\\)).`,
     answer,
-    steps: [`g'(${a}) = ${k} \\times f'(${a}) = ${k} \\times ${fpa} = ${answer}`],
+    steps: [{ type: "resultat", text: `g'(${a}) = ${k} \\times f'(${a}) = ${k} \\times ${fpa} = ${answer}` }],
   };
 }
 
@@ -154,7 +170,7 @@ function genSigneDeriveeVariationQCM() {
     prompt: `Sur un intervalle, la dérivée d'une fonction \\(f\\) vérifie \\(f'(x) = ${fpa}\\) (signe constant). Quel est le sens de variation de \\(f\\) sur cet intervalle ?`,
     answer,
     options: ["croissante", "décroissante"],
-    steps: [fpa > 0 ? `\\text{Comme } f'(x) > 0, \\text{ } f \\text{ est croissante.}` : `\\text{Comme } f'(x) < 0, \\text{ } f \\text{ est décroissante.}`],
+    steps: [{ type: "regle", text: fpa > 0 ? `\\text{Comme } f'(x) > 0, \\text{ } f \\text{ est croissante.}` : `\\text{Comme } f'(x) < 0, \\text{ } f \\text{ est décroissante.}` }],
   };
 }
 
@@ -174,7 +190,7 @@ function genExtremumTableauVariationsQCM() {
       `${type === "minimum" ? "Maximum" : "Minimum"} égal à ${beta}, atteint en \\(x = ${a}\\)`,
       `${type === "minimum" ? "Minimum" : "Maximum"} égal à ${a}, atteint en \\(x = ${beta}\\)`,
     ]),
-    steps: [`\\text{Le point le plus ${type === "minimum" ? "bas" : "haut"} de la courbe donne l'extremum : } ${beta} \\text{, atteint en } x = ${a}.`],
+    steps: [{ type: "regle", text: `\\text{Le point le plus ${type === "minimum" ? "bas" : "haut"} de la courbe donne l'extremum : } ${beta} \\text{, atteint en } x = ${a}.` }],
     graph: { xMin: a - 5, xMax: a + 5, yMin: Math.min(beta, fn(a - 5), fn(a + 5)) - 2, yMax: Math.max(beta, fn(a - 5), fn(a + 5)) + 2, curves: [{ fn, label: "f" }], points: [{ x: a, y: beta, label: type === "minimum" ? "min" : "max" }] },
   };
 }
@@ -182,10 +198,10 @@ function genExtremumTableauVariationsQCM() {
 // ---------- 9. Reconnaître une sécante d'une tangente ----------
 function genReconnaitreSecanteTangenteQCM() {
   const cas = pick([
-    { description: "Une droite qui coupe la courbe en deux points distincts A et B.", reponse: "Sécante" },
-    { description: "La position limite des sécantes (AM) quand M se rapproche de A le long de la courbe.", reponse: "Tangente" },
-    { description: "Une droite dont le coefficient directeur est le taux de variation entre deux points de la courbe.", reponse: "Sécante" },
-    { description: "Une droite dont le coefficient directeur est le nombre dérivé en un point.", reponse: "Tangente" },
+    { description: "Une droite qui coupe la courbe en deux points distincts A et B.", reponse: "Sécante", explication: "C'est une sécante : elle relie deux points distincts de la courbe." },
+    { description: "La position limite des sécantes (AM) quand M se rapproche de A le long de la courbe.", reponse: "Tangente", explication: "C'est la tangente : elle est définie comme la position limite des sécantes lorsque le deuxième point se rapproche du premier." },
+    { description: "Une droite dont le coefficient directeur est le taux de variation entre deux points de la courbe.", reponse: "Sécante", explication: "C'est une sécante : le taux de variation entre deux points est justement le coefficient directeur de la droite qui les relie." },
+    { description: "Une droite dont le coefficient directeur est le nombre dérivé en un point.", reponse: "Tangente", explication: "C'est la tangente : le nombre dérivé en un point est par définition le coefficient directeur de la tangente en ce point." },
   ]);
   return {
     type: "qcm",
@@ -193,7 +209,7 @@ function genReconnaitreSecanteTangenteQCM() {
     prompt: `« ${cas.description} » De quoi s'agit-il ?`,
     answer: cas.reponse,
     options: ["Sécante", "Tangente"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -211,7 +227,10 @@ function genApproximationTauxVariationNumeric() {
     prompt: `On donne \\(f(${a}) = ${fa}\\) et \\(f(${roundTo(a + h, 3)}) = ${fr(faH)}\\). Calcule le taux de variation \\(\\dfrac{f(${roundTo(a + h, 3)}) - f(${a})}{${fr(h)}}\\), qui approche \\(f'(${a})\\).`,
     answer,
     tolerance: 0.05,
-    steps: [`\\dfrac{${fr(faH)} - ${fa}}{${fr(h)}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Le taux de variation entre a et a+h approche le nombre dérivé f'(a) lorsque h est petit." },
+      { type: "resultat", text: `\\dfrac{${fr(faH)} - ${fa}}{${fr(h)}} = ${fr(answer)}` },
+    ],
   };
 }
 

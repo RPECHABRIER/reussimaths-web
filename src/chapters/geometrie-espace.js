@@ -135,7 +135,10 @@ function genVolumePaveDroitNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un pavé droit a pour dimensions ${L} cm, ${l} cm et ${h} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [{ type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Volume d'un pavé droit = longueur × largeur × hauteur.` },
+      { type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` },
+    ],
   };
 }
 
@@ -148,7 +151,10 @@ function genVolumeCubeNumeric() {
     chapter: "Géométrie dans l'espace — Volumes",
     prompt: `Un cube a une arête de ${c} cm. Quel est son volume, en cm³ ?`,
     answer,
-    steps: [{ type: "calcul", text: `${c} \\times ${c} \\times ${c} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Volume d'un cube = arête × arête × arête.` },
+      { type: "calcul", text: `${c} \\times ${c} \\times ${c} = ${answer}` },
+    ],
   };
 }
 
@@ -182,7 +188,10 @@ function genVolumeCylindreRevolutionNumeric() {
     prompt: `Un cylindre de révolution a un rayon de base de ${r} cm et une hauteur de ${h} cm. Quel est son volume, en cm³, arrondi au centième ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [{ type: "calcul", text: `\\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Volume d'un cylindre de révolution = π × rayon² × hauteur.` },
+      { type: "calcul", text: `\\pi \\times ${r}^2 \\times ${h} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -279,7 +288,10 @@ function genAireDisqueNumeric() {
       : `Un disque a un diamètre de ${2 * r} cm. Quelle est son aire, en cm², arrondie au centième ?`,
     answer,
     tolerance: piTolerance(answer),
-    steps: [{ type: "calcul", text: `\\pi \\times ${r}^2 \\approx ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Aire d'un disque = π × rayon².` },
+      { type: "calcul", text: `\\pi \\times ${r}^2 \\approx ${fr(answer)}` },
+    ],
   };
 }
 

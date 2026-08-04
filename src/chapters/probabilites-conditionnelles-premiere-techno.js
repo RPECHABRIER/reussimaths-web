@@ -32,8 +32,8 @@ function genVerifierIndependancePAQCM() {
     answer: reponse,
     options: ["indépendants", "non indépendants"],
     steps: [
-      `\\text{A et B sont indépendants si et seulement si } P_A(B) = P(B).`,
-      reponse === "indépendants" ? `\\text{Ici } P_A(B) = P(B) = ${fr(pB)} : \\text{les évènements sont indépendants.}` : `\\text{Ici } P_A(B) = ${fr(pAB)} \\neq P(B) = ${fr(pB)} : \\text{les évènements ne sont pas indépendants.}`,
+      { type: "regle", text: `\\text{A et B sont indépendants si et seulement si } P_A(B) = P(B).` },
+      { type: "resultat", text: reponse === "indépendants" ? `\\text{Ici } P_A(B) = P(B) = ${fr(pB)} : \\text{les évènements sont indépendants.}` : `\\text{Ici } P_A(B) = ${fr(pAB)} \\neq P(B) = ${fr(pB)} : \\text{les évènements ne sont pas indépendants.}` },
     ],
   };
 }
@@ -49,7 +49,10 @@ function genCalculerIntersectionIndependantsNumeric() {
     prompt: `Les évènements \\(A\\) et \\(B\\) sont indépendants, avec \\(P(A) = ${fr(pA)}\\) et \\(P(B) = ${fr(pB)}\\). Calcule \\(P(A \\cap B)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(A \\cap B) = P(A) \\times P(B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `P(A \\cap B) = P(A) \\times P(B) = ${fr(pA)} \\times ${fr(pB)}` },
+      { type: "resultat", text: `P(A \\cap B) = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -73,9 +76,10 @@ function genJustifierIndependanceTableauQCM() {
     answer: reponse,
     options: ["indépendants", "non indépendants"],
     steps: [
-      `P(A) \\times P(B) = ${fr(pAcalc)} \\times ${fr(pBcalc)} = ${fr(roundTo(pAcalc * pBcalc, 4))}`,
-      `P(A \\cap B) = \\dfrac{${effAB}}{${total}} = ${fr(pABcalc)}`,
-      reponse === "indépendants" ? `\\text{Les deux valeurs sont (à peu près) égales : A et B sont indépendants.}` : `\\text{Les deux valeurs sont différentes : A et B ne sont pas indépendants.}`,
+      { type: "regle", text: "A et B sont indépendants si et seulement si P(A ∩ B) = P(A) × P(B). On compare donc les deux valeurs." },
+      { type: "calcul", text: `P(A) \\times P(B) = ${fr(pAcalc)} \\times ${fr(pBcalc)} = ${fr(roundTo(pAcalc * pBcalc, 4))}` },
+      { type: "calcul", text: `P(A \\cap B) = \\dfrac{${effAB}}{${total}} = ${fr(pABcalc)}` },
+      { type: "resultat", text: reponse === "indépendants" ? `\\text{Les deux valeurs sont (à peu près) égales : A et B sont indépendants.}` : `\\text{Les deux valeurs sont différentes : A et B ne sont pas indépendants.}` },
     ],
   };
 }
@@ -91,7 +95,10 @@ function genPartitionCompleterNumeric() {
     prompt: `Les évènements \\(A_1\\), \\(A_2\\), \\(A_3\\) forment une partition de l'univers, avec \\(P(A_1) = ${fr(p1)}\\) et \\(P(A_2) = ${fr(p2)}\\). Calcule \\(P(A_3)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{Une partition vérifie } P(A_1) + P(A_2) + P(A_3) = 1.`, `P(A_3) = 1 - ${fr(p1)} - ${fr(p2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une partition vérifie } P(A_1) + P(A_2) + P(A_3) = 1.` },
+      { type: "resultat", text: `P(A_3) = 1 - ${fr(p1)} - ${fr(p2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -109,8 +116,9 @@ function genProbabilitesTotalesNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(B) = P(A_1) \\times P_{A_1}(B) + P(A_2) \\times P_{A_2}(B)`,
-      `P(B) = ${fr(p1)} \\times ${fr(pB1)} + ${fr(p2)} \\times ${fr(pB2)} = ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))} = ${fr(answer)}`,
+      { type: "regle", text: `P(B) = P(A_1) \\times P_{A_1}(B) + P(A_2) \\times P_{A_2}(B)` },
+      { type: "calcul", text: `P(B) = ${fr(p1)} \\times ${fr(pB1)} + ${fr(p2)} \\times ${fr(pB2)} = ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))}` },
+      { type: "resultat", text: `P(B) = ${fr(answer)}` },
     ],
   };
 }
@@ -126,7 +134,10 @@ function genProbabiliteBrancheArbreNumeric() {
     prompt: `Dans un arbre pondéré, une première branche a pour probabilité \\(${fr(p1)}\\), suivie d'une branche de probabilité conditionnelle \\(${fr(p2)}\\). Calcule la probabilité du chemin complet.`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{Le long d'une branche de l'arbre, on multiplie les probabilités.}`, `${fr(p1)} \\times ${fr(p2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le long d'une branche de l'arbre, on multiplie les probabilités.}` },
+      { type: "resultat", text: `${fr(p1)} \\times ${fr(p2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -146,9 +157,10 @@ function genProbabiliteTotaleArbreNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `\\text{Chemin } A_1 \\to B : ${fr(p1)} \\times ${fr(pB1)} = ${fr(chemin1)}`,
-      `\\text{Chemin } A_2 \\to B : ${fr(p2)} \\times ${fr(pB2)} = ${fr(chemin2)}`,
-      `P(B) = ${fr(chemin1)} + ${fr(chemin2)} = ${fr(answer)}`,
+      { type: "regle", text: "P(B) s'obtient en additionnant les probabilités de tous les chemins de l'arbre menant à B (chemins disjoints)." },
+      { type: "calcul", text: `\\text{Chemin } A_1 \\to B : ${fr(p1)} \\times ${fr(pB1)} = ${fr(chemin1)}` },
+      { type: "calcul", text: `\\text{Chemin } A_2 \\to B : ${fr(p2)} \\times ${fr(pB2)} = ${fr(chemin2)}` },
+      { type: "resultat", text: `P(B) = ${fr(chemin1)} + ${fr(chemin2)} = ${fr(answer)}` },
     ],
   };
 }
@@ -164,18 +176,21 @@ function genRetrouverPABNumeric() {
     prompt: `On donne \\(P(A) = ${fr(pA)}\\) et \\(P(A \\cap B) = ${fr(pAB)}\\). Calcule \\(P_A(B)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} = \\dfrac{${fr(pAB)}}{${fr(pA)}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : P_A(B) = P(A ∩ B) / P(A) (probabilité conditionnelle)." },
+      { type: "resultat", text: `P_A(B) = \\dfrac{${fr(pAB)}}{${fr(pA)}} = ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 9. Vrai ou faux sur indépendance et partitions ----------
 function genVraiFauxIndependanceQCM() {
   const cas = pick([
-    { description: "Si A et B sont indépendants, alors P_A(B) = P(B).", reponse: "Vrai" },
-    { description: "Deux évènements incompatibles (disjoints) sont toujours indépendants.", reponse: "Faux" },
-    { description: "Dans une partition de l'univers, la somme des probabilités des évènements vaut 1.", reponse: "Vrai" },
-    { description: "La formule des probabilités totales nécessite que les évènements Ai forment une partition de l'univers.", reponse: "Vrai" },
-    { description: "Si A et B sont indépendants, alors P(A ∩ B) = P(A) + P(B).", reponse: "Faux" },
+    { description: "Si A et B sont indépendants, alors P_A(B) = P(B).", reponse: "Vrai", explication: "Vrai : c'est la définition même de l'indépendance de deux évènements." },
+    { description: "Deux évènements incompatibles (disjoints) sont toujours indépendants.", reponse: "Faux", explication: "Faux : au contraire, si A et B sont incompatibles avec P(A)>0 et P(B)>0, alors P(A∩B)=0 mais P(A)×P(B)>0, donc A et B ne sont pas indépendants." },
+    { description: "Dans une partition de l'univers, la somme des probabilités des évènements vaut 1.", reponse: "Vrai", explication: "Vrai : une partition couvre tout l'univers sans chevauchement, donc les probabilités des évènements qui la composent s'additionnent pour donner 1." },
+    { description: "La formule des probabilités totales nécessite que les évènements Ai forment une partition de l'univers.", reponse: "Vrai", explication: "Vrai : la formule des probabilités totales ne s'applique que si les évènements A_i sont deux à deux incompatibles et que leur union est l'univers tout entier." },
+    { description: "Si A et B sont indépendants, alors P(A ∩ B) = P(A) + P(B).", reponse: "Faux", explication: "Faux : pour des évènements indépendants, P(A∩B) = P(A) × P(B) (un produit, pas une somme)." },
   ]);
   return {
     type: "qcm",
@@ -183,7 +198,7 @@ function genVraiFauxIndependanceQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 

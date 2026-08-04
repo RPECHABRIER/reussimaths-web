@@ -24,7 +24,10 @@ function genPartition3EvenementsNumeric() {
     prompt: `\\(A_1, A_2, A_3, A_4\\) forment une partition de l'univers, avec \\(P(A_1)=${fr(p1)}\\), \\(P(A_2)=${fr(p2)}\\), \\(P(A_3)=${fr(p3)}\\). Calcule \\(P(A_4)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{Une partition vérifie } P(A_1)+P(A_2)+P(A_3)+P(A_4)=1.`, `P(A_4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une partition vérifie } P(A_1)+P(A_2)+P(A_3)+P(A_4)=1.` },
+      { type: "resultat", text: `P(A_4) = 1 - ${fr(p1)} - ${fr(p2)} - ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -44,9 +47,9 @@ function genProbabilitesTotales3EvenementsNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(B) = P(A_1)P_{A_1}(B) + P(A_2)P_{A_2}(B) + P(A_3)P_{A_3}(B)`,
-      `P(B) = ${fr(p1)}\\times${fr(pB1)} + ${fr(p2)}\\times${fr(pB2)} + ${fr(p3)}\\times${fr(pB3)}`,
-      `P(B) \\approx ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))} + ${fr(roundTo(p3 * pB3, 4))} = ${fr(answer)}`,
+      { type: "regle", text: `P(B) = P(A_1)P_{A_1}(B) + P(A_2)P_{A_2}(B) + P(A_3)P_{A_3}(B)` },
+      { type: "calcul", text: `P(B) = ${fr(p1)}\\times${fr(pB1)} + ${fr(p2)}\\times${fr(pB2)} + ${fr(p3)}\\times${fr(pB3)}` },
+      { type: "resultat", text: `P(B) \\approx ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))} + ${fr(roundTo(p3 * pB3, 4))} = ${fr(answer)}` },
     ],
   };
 }
@@ -54,8 +57,16 @@ function genProbabilitesTotales3EvenementsNumeric() {
 // ---------- 3. Interpréter une pondération dans un arbre ----------
 function genInterpreterPonderationQCM() {
   const cas = pick([
-    { description: "Sur la branche partant du nœud A vers le nœud B, on lit la pondération 0,4.", reponse: "P_A(B) = 0,4" },
-    { description: "Sur la première branche de l'arbre, partant de la racine vers A, on lit la pondération 0,6.", reponse: "P(A) = 0,6" },
+    {
+      description: "Sur la branche partant du nœud A vers le nœud B, on lit la pondération 0,4.",
+      reponse: "P_A(B) = 0,4",
+      explication: "P_A(B) = 0,4 : une pondération portée par une branche qui part d'un nœud intermédiaire (ici A) est une probabilité conditionnelle, sachant que l'évènement de départ est déjà réalisé.",
+    },
+    {
+      description: "Sur la première branche de l'arbre, partant de la racine vers A, on lit la pondération 0,6.",
+      reponse: "P(A) = 0,6",
+      explication: "P(A) = 0,6 : une pondération portée par une branche qui part de la racine de l'arbre est une probabilité simple (non conditionnelle).",
+    },
   ]);
   return {
     type: "qcm",
@@ -63,7 +74,7 @@ function genInterpreterPonderationQCM() {
     prompt: `« ${cas.description} » Comment interpréter cette pondération ?`,
     answer: cas.reponse,
     options: ["P_A(B) = 0,4", "P(A) = 0,6"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -77,7 +88,10 @@ function genCompleterPonderationNumeric() {
     prompt: `Sur un nœud de l'arbre, une branche a pour pondération ${fr(p1)}. Quelle est la pondération de l'autre branche issue de ce même nœud (les deux issues sont complémentaires) ?`,
     answer,
     tolerance: 0.0005,
-    steps: [`1 - ${fr(p1)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Les pondérations des branches issues d'un même nœud somment à 1." },
+      { type: "resultat", text: `1 - ${fr(p1)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -93,7 +107,10 @@ function genCheminTroisNiveauxNumeric() {
     prompt: `Un arbre pondéré comporte 3 niveaux successifs, de pondérations ${fr(p1)}, ${fr(p2)} et ${fr(p3)} le long d'un même chemin. Calcule la probabilité de ce chemin.`,
     answer,
     tolerance: 0.00005,
-    steps: [`${fr(p1)} \\times ${fr(p2)} \\times ${fr(p3)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Le long d'un chemin de l'arbre, on multiplie les pondérations rencontrées." },
+      { type: "resultat", text: `${fr(p1)} \\times ${fr(p2)} \\times ${fr(p3)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -111,7 +128,11 @@ function genReconnaitrePartitionQCM() {
     prompt: `On donne trois évènements deux à deux incompatibles A₁, A₂, A₃, avec \\(P(A_1)=${fr(p1)}\\), \\(P(A_2)=${fr(p2)}\\), \\(P(A_3)=${fr(p3)}\\). Forment-ils une partition de l'univers ?`,
     answer,
     options: ["C'est une partition de l'univers", "Ce n'est pas une partition de l'univers"],
-    steps: [`\\text{Somme} = ${fr(p1)}+${fr(p2)}+${fr(p3)} = ${fr(somme)}`, answer],
+    steps: [
+      { type: "regle", text: "Des évènements deux à deux incompatibles forment une partition de l'univers seulement si la somme de leurs probabilités vaut exactement 1." },
+      { type: "calcul", text: `\\text{Somme} = ${fr(p1)}+${fr(p2)}+${fr(p3)} = ${fr(somme)}` },
+      { type: "resultat", text: answer },
+    ],
   };
 }
 
@@ -128,8 +149,9 @@ function genTestMedicalNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(\\text{positif}) = P(\\text{malade})\\times P_{\\text{malade}}(\\text{positif}) + P(\\text{sain})\\times P_{\\text{sain}}(\\text{positif})`,
-      `= ${fr(pMalade)}\\times${fr(pPositifSiMalade)} + ${fr(roundTo(1 - pMalade, 4))}\\times${fr(pPositifSiSain)} \\approx ${fr(answer)}`,
+      { type: "regle", text: `P(\\text{positif}) = P(\\text{malade})\\times P_{\\text{malade}}(\\text{positif}) + P(\\text{sain})\\times P_{\\text{sain}}(\\text{positif})` },
+      { type: "calcul", text: `${fr(pMalade)}\\times${fr(pPositifSiMalade)} + ${fr(roundTo(1 - pMalade, 4))}\\times${fr(pPositifSiSain)}` },
+      { type: "resultat", text: `P(\\text{positif}) \\approx ${fr(answer)}` },
     ],
   };
 }

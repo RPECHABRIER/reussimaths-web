@@ -305,26 +305,37 @@ function genResoudreEquationAdditionSoustraction() {
   const mode = pick(["x+a=b", "a+x=b", "x-a=b", "a-x=b"]);
   const a = nonZero(-40, 40);
   const xSolution = nonZero(-40, 40);
-  let b, prompt;
+  let b, prompt, regle, calcul;
   if (mode === "x+a=b") {
     b = xSolution + a;
     prompt = `Résous : \\(x + ${fr(a)} = ${fr(b)}\\)`;
+    regle = `Pour isoler x, on soustrait ${fr(a)} des deux côtés de l'égalité.`;
+    calcul = `x = ${fr(b)} - ${fr(a)} = ${fr(xSolution)}`;
   } else if (mode === "a+x=b") {
     b = a + xSolution;
     prompt = `Résous : \\(${fr(a)} + x = ${fr(b)}\\)`;
+    regle = `Pour isoler x, on soustrait ${fr(a)} des deux côtés de l'égalité.`;
+    calcul = `x = ${fr(b)} - ${fr(a)} = ${fr(xSolution)}`;
   } else if (mode === "x-a=b") {
     b = xSolution - a;
     prompt = `Résous : \\(x - ${fr(a)} = ${fr(b)}\\)`;
+    regle = `Pour isoler x, on ajoute ${fr(a)} des deux côtés de l'égalité.`;
+    calcul = `x = ${fr(b)} + ${fr(a)} = ${fr(xSolution)}`;
   } else {
     b = a - xSolution;
     prompt = `Résous : \\(${fr(a)} - x = ${fr(b)}\\)`;
+    regle = `On isole x en le faisant passer de l'autre côté, puis on soustrait ${fr(b)}.`;
+    calcul = `x = ${fr(a)} - ${fr(b)} = ${fr(xSolution)}`;
   }
   return {
     type: "numeric",
     chapter: "Calcul littéral — Résoudre une équation",
     prompt,
     answer: xSolution,
-    steps: [{ type: "resultat", text: `La solution de cette équation est x = ${fr(xSolution)}.` }],
+    steps: [
+      { type: "regle", text: regle },
+      { type: "resultat", text: calcul },
+    ],
   };
 }
 
@@ -341,7 +352,10 @@ function genResoudreEquationMultiplicationDivision() {
       prompt: `Résous : \\(${a}x = ${fr(b)}\\)`,
       answer: xSolution,
       tolerance: 0.01,
-      steps: [{ type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSolution)}` }],
+      steps: [
+        { type: "regle", text: `Pour isoler x, on divise les deux côtés de l'égalité par ${a}.` },
+        { type: "calcul", text: `x = ${fr(b)} \\div ${a} = ${fr(xSolution)}` },
+      ],
     };
   }
   const b = nonZero(-15, 15);
@@ -351,7 +365,10 @@ function genResoudreEquationMultiplicationDivision() {
     chapter: "Calcul littéral — Résoudre une équation",
     prompt: `Résous : \\(x \\div ${a} = ${b}\\)`,
     answer: xSolution,
-    steps: [{ type: "calcul", text: `x = ${b} \\times ${a} = ${xSolution}` }],
+    steps: [
+      { type: "regle", text: `Pour isoler x, on multiplie les deux côtés de l'égalité par ${a}.` },
+      { type: "calcul", text: `x = ${b} \\times ${a} = ${xSolution}` },
+    ],
   };
 }
 

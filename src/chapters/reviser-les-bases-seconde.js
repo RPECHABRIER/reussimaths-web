@@ -40,7 +40,7 @@ function genDevelopperIdentiteRemarquableNumeric() {
     chapter: "Réviser les bases (2nde) — Calcul littéral",
     prompt: `On rappelle que \\((a+b)^2 = a^2 + 2ab + b^2\\). Utilise cette identité pour calculer \\(${a}^2 + 2 \\times ${a} \\times ${b} + ${b}^2\\).`,
     answer,
-    steps: [`(${a} + ${b})^2 = ${a + b}^2 = ${answer}`],
+    steps: [{ type: "calcul", text: `(${a} + ${b})^2 = ${a + b}^2 = ${answer}` }],
   };
 }
 
@@ -57,7 +57,10 @@ function genFactoriserQCM() {
     prompt: `Quelle est la forme factorisée de \\(${developpe}\\) ?`,
     answer: bonneFactorisation,
     options: shuffle([bonneFactorisation, mauvaiseFactorisation]),
-    steps: [`${developpe} = ${bonneFactorisation}`],
+    steps: [
+      { type: "regle", text: `\\text{Factoriser, c'est mettre en évidence un facteur commun à tous les termes : ici, } ${k} \\text{ est le facteur commun à } ${k}x \\text{ et à } ${k * a}.` },
+      { type: "resultat", text: `${developpe} = ${bonneFactorisation}` },
+    ],
   };
 }
 
@@ -74,7 +77,11 @@ function genResoudreEquationSimpleNumeric() {
     chapter: "Réviser les bases (2nde) — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour isoler x, on effectue la même opération des deux côtés de l'égalité : ici on soustrait } ${Math.abs(b)}, \\text{ puis on divise par } ${a}.` },
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -89,7 +96,11 @@ function genResoudreEquationParenthesesNumeric() {
     chapter: "Réviser les bases (2nde) — Équations",
     prompt: `Résous l'équation : \\(${a}(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${c}\\)`,
     answer: xSol,
-    steps: [`x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c / a}`, `x = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour isoler x, on annule d'abord ce qui a été fait en dernier : on divise les deux côtés par } ${a}, \\text{ puis on soustrait } ${Math.abs(b)}.` },
+      { type: "calcul", text: `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c / a}` },
+      { type: "resultat", text: `x = ${c / a} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${xSol}` },
+    ],
   };
 }
 
@@ -106,7 +117,7 @@ function genImageFonctionAffineNumeric() {
     chapter: "Réviser les bases (2nde) — Fonctions affines",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -123,7 +134,10 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Calculer } ${p}\\% \\text{ d'un nombre, c'est le multiplier par } \\dfrac{${p}}{100}.` },
+      { type: "resultat", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -138,7 +152,16 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur associé ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      {
+        type: "regle",
+        text:
+          direction === "augmente"
+            ? `\\text{Augmenter de } ${p}\\% \\text{ revient à garder les 100\\% de départ et à en ajouter } ${p}\\%, \\text{ soit } 1 + \\dfrac{${p}}{100} \\text{ de la valeur de départ.}`
+            : `\\text{Diminuer de } ${p}\\% \\text{ revient à ne garder que } (100 - ${p})\\% \\text{ de la valeur de départ, soit } 1 - \\dfrac{${p}}{100}.`,
+      },
+      { type: "resultat", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -160,7 +183,11 @@ function genPythagoreHypotenuseNumeric() {
     chapter: "Réviser les bases (2nde) — Théorème de Pythagore",
     prompt: `Un triangle rectangle a des côtés de l'angle droit mesurant ${a} cm et ${b} cm. Calcule la longueur de l'hypoténuse (en cm).`,
     answer: c,
-    steps: [`${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}`, `\\sqrt{${c * c}} = ${c}`],
+    steps: [
+      { type: "regle", text: `\\text{Théorème de Pythagore : dans un triangle rectangle, le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés.}` },
+      { type: "calcul", text: `${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}` },
+      { type: "resultat", text: `\\sqrt{${c * c}} = ${c}` },
+    ],
   };
 }
 
@@ -175,7 +202,12 @@ function genAngleTrigonometrieNumeric() {
     chapter: "Réviser les bases (2nde) — Trigonométrie",
     prompt: `Dans un triangle rectangle, un angle aigu a un côté adjacent de ${fr(adj)} cm et une hypoténuse de ${hyp} cm. Calcule la mesure de cet angle, arrondie au degré près.`,
     answer,
-    steps: [`\\cos(\\widehat{x}) = \\dfrac{${fr(adj)}}{${hyp}}`, `\\widehat{x} \\approx ${answer}°`],
+    steps: [
+      { type: "regle", text: `\\cos(\\widehat{x}) = \\dfrac{${fr(adj)}}{${hyp}}` },
+      { type: "regle", text: `\\text{Pour retrouver l'angle à partir de son cosinus, on utilise la fonction cosinus réciproque (arccos), disponible sur la calculatrice.}` },
+      { type: "calcul", text: `\\widehat{x} = \\cos^{-1}\\left(\\dfrac{${fr(adj)}}{${hyp}}\\right)` },
+      { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
+    ],
   };
 }
 
@@ -196,7 +228,10 @@ function genMoyennePondereeNumeric() {
     prompt: `Calcule la moyenne pondérée de la série suivante : ${valeurs.map((v, i) => `${v} (effectif ${effectifs[i]})`).join(", ")}. Arrondis au centième.`,
     answer,
     tolerance: 0.02,
-    steps: [`\\dfrac{${detail}}{${total}} = \\dfrac{${sommeProduits}}{${total}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une moyenne pondérée, on multiplie chaque valeur par son effectif, on additionne ces produits, puis on divise par l'effectif total.}` },
+      { type: "resultat", text: `\\dfrac{${detail}}{${total}} = \\dfrac{${sommeProduits}}{${total}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -212,7 +247,10 @@ function genEtendueNumeric() {
     chapter: "Réviser les bases (2nde) — Statistiques",
     prompt: `Calcule l'étendue de la série suivante : ${values.join(" ; ")}.`,
     answer,
-    steps: [`${max} - ${min} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{L'étendue d'une série, c'est la différence entre sa plus grande et sa plus petite valeur.}` },
+      { type: "resultat", text: `${max} - ${min} = ${answer}` },
+    ],
   };
 }
 
@@ -227,7 +265,7 @@ function genProbabiliteSimpleNumeric() {
     prompt: `Un sac contient ${total} jetons indiscernables au toucher, dont ${favorables} sont rouges. Quelle est la probabilité de tirer un jeton rouge (valeur décimale, arrondie au millième) ?`,
     answer,
     tolerance: 0.002,
-    steps: [`P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}`],
+    steps: [{ type: "calcul", text: `P = \\dfrac{${favorables}}{${total}} \\approx ${fr(answer)}` }],
   };
 }
 
@@ -241,7 +279,7 @@ function genPuissanceRelatifNumeric() {
     chapter: "Réviser les bases (2nde) — Calcul numérique",
     prompt: `Calcule : \\((${n})^{${exp}}\\)`,
     answer,
-    steps: [`${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}`],
+    steps: [{ type: "calcul", text: `${Array.from({ length: exp }, () => `(${n})`).join(" \\times ")} = ${answer}` }],
   };
 }
 

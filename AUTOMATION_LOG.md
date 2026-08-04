@@ -1498,3 +1498,68 @@ dans ce sandbox).
 
 **Première Spé intégralement auditée pour la tâche #236.** Reste :
 Terminale Spé, Première techno, Terminale STMG.
+
+## 2026-08-04 — Terminale Spé : repères pédagogiques + codage sémantique (tâche #236 / #233)
+
+Audit complet des 16 chapitres de Terminale Spécialité, en appliquant la
+même méthode que pour les niveaux précédents : conversion des `steps`
+en objets typés `{ type, text }` (donnee/regle/calcul/resultat), ajout
+d'un repère pédagogique (`regle`) partout où un générateur faisait un
+saut numérique ou conceptuel sans justification, et réécriture complète
+des générateurs à lacune sévère (QCM vrai/faux ou d'interprétation qui se
+contentaient de répéter la réponse sans aucune explication).
+
+- combinatoire-denombrement-terminale-spe.js
+- vecteurs-droites-plans-espace-terminale-spe.js
+- orthogonalite-distances-espace-terminale-spe.js
+- suites-terminale-spe.js
+- limites-fonctions-terminale-spe.js : lacune sévère sur le vrai/faux des
+  limites (contre-exemple de sin(x)/x qui croise son asymptote horizontale
+  une infinité de fois) et sur le QCM contre-exemple (∞-∞, inégalité
+  stricte qui devient égalité à la limite).
+- continuite-terminale-spe.js : 3 lacunes sévères (continuité des
+  fonctions usuelles avec restrictions de domaine, opérations sur les
+  fonctions continues avec contre-exemple de discontinuité au
+  dénominateur, fonctions continues non dérivables avec explication
+  tangente verticale / point anguleux).
+- complements-derivation-terminale-spe.js : lacune sévère sur le
+  vrai/faux convexité (corrections des confusions convexe⟹f' croissante
+  et concave⟹f' décroissante).
+- logarithme-neperien-terminale-spe.js : 2 lacunes sévères (valeurs
+  remarquables du ln avec correction ln(e²)=2 et ln(0) non défini ;
+  propriétés algébriques avec correction ln(a²)=2ln(|a|), restriction de
+  domaine).
+- fonctions-trigonometriques-terminale-spe.js : 3 lacunes sévères
+  (parité avec 8 cas justifiés par parité de produit/somme, formules de
+  réduction, propriétés générales avec identité cos²+sin²=1).
+- primitives-equations-differentielles-terminale-spe.js : 2 lacunes
+  sévères (vrai/faux équations différentielles, vrai/faux primitives avec
+  justification F-G constante).
+- calcul-integral-terminale-spe.js : lacune sévère sur le vrai/faux
+  intégrales (contre-exemple V(X-Y)=V(X)+V(Y) même pour une différence,
+  correction produit d'intégrales).
+- loi-binomiale-terminale-spe.js : 2 lacunes sévères (identifier un
+  schéma de succès avec correction tirage sans remise, vrai/faux
+  propriétés avec correction de l'inversion d'exposants dans P(X=k)).
+- sommes-variables-aleatoires-terminale-spe.js : 2 lacunes sévères
+  (vrai/faux sommes de variables avec correction V(X-Y)=V(X)+V(Y), vrai/
+  faux variance affine avec correction de la constante b).
+- loi-grands-nombres-terminale-spe.js : 3 lacunes sévères (vrai/faux loi
+  des grands nombres, condition d'application de Markov, vrai/faux
+  inégalités probabilistes).
+- exercices-transversaux-terminale-spe.js : 3 lacunes sévères (limite de
+  suite géométrique selon la raison, forme indéterminée, vrai/faux
+  transversal avec correction convexité/tangentes).
+
+Chaque fichier : node --check, smoke test 8000 itérations (4 paliers),
+0 erreur, sync vers les deux copies Application TOP (diff vide vérifié),
+16 commits séparés dans le dépôt `APPLI GITHUB/Sans titre`.
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**Terminale Spé intégralement auditée pour la tâche #236.** Reste :
+Première techno, Terminale STMG.

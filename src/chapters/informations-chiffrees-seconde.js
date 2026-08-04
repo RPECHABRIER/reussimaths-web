@@ -55,7 +55,10 @@ function genCalculerProportionNumeric() {
     chapter: "Informations chiffrées — Proportions",
     prompt: `Dans un lycée, ${ctx.total} est de ${total}. ${ctx.partie.charAt(0).toUpperCase() + ctx.partie.slice(1)} est de ${partie}. Quelle est la proportion (en %) que représente ${ctx.partie} par rapport à ${ctx.total} ?`,
     answer: p,
-    steps: [`\\text{Proportion} = \\dfrac{${partie}}{${total}} \\times 100 = ${p}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Une proportion exprime une partie par rapport à un total : } \\text{Proportion} = \\dfrac{\\text{partie}}{\\text{total}} \\times 100.` },
+      { type: "resultat", text: `\\text{Proportion} = \\dfrac{${partie}}{${total}} \\times 100 = ${p}\\%` },
+    ],
   };
 }
 
@@ -71,7 +74,10 @@ function genCalculerPartieDepuisProportionNumeric() {
     chapter: "Informations chiffrées — Proportions",
     prompt: `${ctx.total.charAt(0).toUpperCase() + ctx.total.slice(1)} est de ${total}. ${ctx.partie.charAt(0).toUpperCase() + ctx.partie.slice(1)} représente ${p} % de ce total. Calcule ${ctx.partie}.`,
     answer: partie,
-    steps: [`${p}\\% \\times ${total} = \\dfrac{${p}}{100} \\times ${total} = ${partie}`],
+    steps: [
+      { type: "regle", text: `\\text{Calculer p % d'une quantité revient à multiplier cette quantité par } \\dfrac{p}{100}.` },
+      { type: "resultat", text: `${p}\\% \\times ${total} = \\dfrac{${p}}{100} \\times ${total} = ${partie}` },
+    ],
   };
 }
 
@@ -87,7 +93,10 @@ function genCalculerTotalDepuisProportionEtPartieNumeric() {
     chapter: "Informations chiffrées — Proportions",
     prompt: `${ctx.partie.charAt(0).toUpperCase() + ctx.partie.slice(1)} est de ${partie}, ce qui représente ${p} % de ${ctx.total}. Calcule ${ctx.total}.`,
     answer: total,
-    steps: [`\\text{Total} = \\dfrac{${partie}}{${p}} \\times 100 = ${total}`],
+    steps: [
+      { type: "regle", text: `\\text{Puisque partie} = \\dfrac{p}{100} \\times \\text{total, on isole le total en divisant la partie par p puis en multipliant par 100.}` },
+      { type: "resultat", text: `\\text{Total} = \\dfrac{${partie}}{${p}} \\times 100 = ${total}` },
+    ],
   };
 }
 
@@ -102,7 +111,11 @@ function genProportionDeProportionNumeric() {
     prompt: `Dans une entreprise, ${p1} % des salariés sont cadres. Parmi les cadres, ${p2} % optent pour le télétravail. Quel pourcentage des salariés de l'entreprise sont des cadres qui optent pour le télétravail ?`,
     answer: combinee,
     tolerance: 0.01,
-    steps: [`${p1}\\% \\times ${p2}\\% = \\dfrac{${p1}}{100} \\times \\dfrac{${p2}}{100} = \\dfrac{${combinee}}{100}`, `\\text{Soit } ${combinee}\\% \\text{ des salariés.}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour combiner deux pourcentages successifs, on multiplie leurs écritures décimales } \\left(\\dfrac{p}{100}\\right).` },
+      { type: "calcul", text: `${p1}\\% \\times ${p2}\\% = \\dfrac{${p1}}{100} \\times \\dfrac{${p2}}{100} = \\dfrac{${combinee}}{100}` },
+      { type: "resultat", text: `\\text{Soit } ${combinee}\\% \\text{ des salariés.}` },
+    ],
   };
 }
 
@@ -116,7 +129,10 @@ function genCoefficientMultiplicateurDepuisTauxNumeric() {
     chapter: "Informations chiffrées — Coefficient multiplicateur",
     prompt: `Quel est le coefficient multiplicateur associé à une ${hausse ? "hausse" : "baisse"} de ${t} % ?`,
     answer: cm,
-    steps: [hausse ? `\\text{CM} = 1 + \\dfrac{${t}}{100} = ${cm}` : `\\text{CM} = 1 - \\dfrac{${t}}{100} = ${cm}`],
+    steps: [
+      { type: "regle", text: `\\text{Augmenter de t \\% revient à multiplier par } 1+\\dfrac{t}{100} \\text{ ; diminuer de t \\% revient à multiplier par } 1-\\dfrac{t}{100}.` },
+      { type: "resultat", text: hausse ? `\\text{CM} = 1 + \\dfrac{${t}}{100} = ${cm}` : `\\text{CM} = 1 - \\dfrac{${t}}{100} = ${cm}` },
+    ],
   };
 }
 
@@ -130,7 +146,10 @@ function genTauxDepuisCoefficientMultiplicateurNumeric() {
     chapter: "Informations chiffrées — Coefficient multiplicateur",
     prompt: `Une quantité a été multipliée par ${fr(cm)}. Quel est le taux d'évolution associé (en %, positif pour une hausse, négatif pour une baisse) ?`,
     answer: hausse ? t : -t,
-    steps: [`\\text{Taux} = (${cm} - 1) \\times 100 = ${hausse ? t : -t}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Puisque CM} = 1 + \\dfrac{t}{100}, \\text{ on retrouve le taux en isolant t : } t = (\\text{CM} - 1) \\times 100.` },
+      { type: "resultat", text: `\\text{Taux} = (${cm} - 1) \\times 100 = ${hausse ? t : -t}\\%` },
+    ],
   };
 }
 
@@ -146,7 +165,10 @@ function genValeurFinaleApresEvolutionNumeric() {
     chapter: "Informations chiffrées — Évolutions",
     prompt: `Une quantité valant initialement ${V0} subit une ${hausse ? "hausse" : "baisse"} de ${t} %. Quelle est sa valeur finale ?`,
     answer: V1,
-    steps: [hausse ? `${V0} \\times \\left(1 + \\dfrac{${t}}{100}\\right) = ${V0} \\times ${(100 + t) / 100} = ${V1}` : `${V0} \\times \\left(1 - \\dfrac{${t}}{100}\\right) = ${V0} \\times ${(100 - t) / 100} = ${V1}`],
+    steps: [
+      { type: "regle", text: `\\text{Valeur finale = valeur initiale} \\times \\text{coefficient multiplicateur, avec CM} = 1 \\pm \\dfrac{t}{100} \\text{ selon hausse ou baisse.}` },
+      { type: "resultat", text: hausse ? `${V0} \\times \\left(1 + \\dfrac{${t}}{100}\\right) = ${V0} \\times ${(100 + t) / 100} = ${V1}` : `${V0} \\times \\left(1 - \\dfrac{${t}}{100}\\right) = ${V0} \\times ${(100 - t) / 100} = ${V1}` },
+    ],
   };
 }
 
@@ -162,7 +184,10 @@ function genValeurInitialeDepuisValeurFinaleNumeric() {
     chapter: "Informations chiffrées — Évolutions",
     prompt: `Après une ${hausse ? "hausse" : "baisse"} de ${t} %, une quantité vaut ${V1}. Quelle était sa valeur initiale ?`,
     answer: V0,
-    steps: [hausse ? `\\text{Valeur initiale} = \\dfrac{${V1}}{1 + ${t}/100} = \\dfrac{${V1}}{${(100 + t) / 100}} = ${V0}` : `\\text{Valeur initiale} = \\dfrac{${V1}}{1 - ${t}/100} = \\dfrac{${V1}}{${(100 - t) / 100}} = ${V0}`],
+    steps: [
+      { type: "regle", text: `\\text{Puisque valeur finale = valeur initiale} \\times \\text{CM, on retrouve la valeur initiale en divisant la valeur finale par le coefficient multiplicateur.}` },
+      { type: "resultat", text: hausse ? `\\text{Valeur initiale} = \\dfrac{${V1}}{1 + ${t}/100} = \\dfrac{${V1}}{${(100 + t) / 100}} = ${V0}` : `\\text{Valeur initiale} = \\dfrac{${V1}}{1 - ${t}/100} = \\dfrac{${V1}}{${(100 - t) / 100}} = ${V0}` },
+    ],
   };
 }
 
@@ -175,7 +200,7 @@ function genVariationAbsolueNumeric() {
     chapter: "Informations chiffrées — Variation absolue et relative",
     prompt: `Une quantité passe de ${V0} à ${V1}. Calcule sa variation absolue (\\(V_1 - V_0\\)).`,
     answer: V1 - V0,
-    steps: [`${V1} - ${V0} = ${V1 - V0}`],
+    steps: [{ type: "calcul", text: `${V1} - ${V0} = ${V1 - V0}` }],
   };
 }
 
@@ -191,7 +216,10 @@ function genVariationRelativeNumeric() {
     chapter: "Informations chiffrées — Variation absolue et relative",
     prompt: `Une quantité passe de ${V0} à ${V1}. Calcule le taux d'évolution (en %, positif pour une hausse, négatif pour une baisse).`,
     answer: hausse ? t : -t,
-    steps: [`\\text{Taux} = \\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Le taux d'évolution (variation relative) se calcule par } \\dfrac{V_1 - V_0}{V_0} \\times 100.` },
+      { type: "resultat", text: `\\text{Taux} = \\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}\\%` },
+    ],
   };
 }
 
@@ -210,7 +238,11 @@ function genCoefficientGlobalEvolutionsSuccessivesNumeric() {
     prompt: `Une quantité subit d'abord une ${hausse1 ? "hausse" : "baisse"} de ${t1} %, puis une ${hausse2 ? "hausse" : "baisse"} de ${t2} %. Quel est le coefficient multiplicateur global de cette évolution ?`,
     answer: cmGlobal,
     tolerance: 0.001,
-    steps: [`\\text{CM}_1 = ${cm1}`, `\\text{CM}_2 = ${cm2}`, `\\text{CM global} = ${cm1} \\times ${cm2} \\approx ${cmGlobal}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour des évolutions successives, on ne les additionne pas : le coefficient multiplicateur global est le produit des coefficients multiplicateurs de chaque évolution, car chaque évolution s'applique à la valeur déjà transformée par la précédente.}` },
+      { type: "calcul", text: `\\text{CM}_1 = ${cm1}, \\ \\text{CM}_2 = ${cm2}` },
+      { type: "resultat", text: `\\text{CM global} = ${cm1} \\times ${cm2} \\approx ${cmGlobal}` },
+    ],
   };
 }
 
@@ -229,7 +261,11 @@ function genTauxGlobalEvolutionsSuccessivesNumeric() {
     prompt: `Une quantité subit d'abord une ${hausse1 ? "hausse" : "baisse"} de ${t1} %, puis une ${hausse2 ? "hausse" : "baisse"} de ${t2} %. Quel est le taux d'évolution global (en %, positif pour une hausse, négatif pour une baisse) ?`,
     answer: tauxGlobal,
     tolerance: 0.01,
-    steps: [`\\text{CM global} = ${cm1} \\times ${cm2} \\approx ${roundTo(cm1 * cm2, 4)}`, `\\text{Taux global} \\approx ${tauxGlobal}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient multiplicateur global est le produit des coefficients de chaque évolution. On en déduit le taux global par } (\\text{CM global} - 1) \\times 100.` },
+      { type: "calcul", text: `\\text{CM global} = ${cm1} \\times ${cm2} \\approx ${roundTo(cm1 * cm2, 4)}` },
+      { type: "resultat", text: `\\text{Taux global} \\approx ${tauxGlobal}\\%` },
+    ],
   };
 }
 
@@ -246,7 +282,11 @@ function genEvolutionReciproqueNumeric() {
     prompt: `Une quantité a subi une ${hausse ? "hausse" : "baisse"} de ${t} %. Quel est le taux d'évolution réciproque (en %, celui qui permettrait de revenir à la valeur de départ) ?`,
     answer: tauxReciproque,
     tolerance: 0.01,
-    steps: [`\\text{CM} = ${cm}`, `\\text{CM réciproque} = \\dfrac{1}{${cm}} \\approx ${roundTo(cmReciproque, 4)}`, `\\text{Taux réciproque} \\approx ${tauxReciproque}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Revenir à la valeur de départ revient à annuler l'effet du coefficient multiplicateur : on multiplie donc par son inverse } \\dfrac{1}{\\text{CM}}.` },
+      { type: "calcul", text: `\\text{CM} = ${cm}, \\ \\text{CM réciproque} = \\dfrac{1}{${cm}} \\approx ${roundTo(cmReciproque, 4)}` },
+      { type: "resultat", text: `\\text{Taux réciproque} \\approx ${tauxReciproque}\\%` },
+    ],
   };
 }
 
@@ -266,7 +306,10 @@ function genIdentifierProportionOuEvolutionQCM() {
     prompt: `« ${cas.texte} » Ce pourcentage exprime-t-il une proportion ou une évolution ?`,
     answer: cas.reponse,
     options: ["proportion", "évolution"],
-    steps: [cas.reponse === "évolution" ? "Ce pourcentage compare une valeur avant/après : c'est une évolution." : "Ce pourcentage compare une partie à un tout : c'est une proportion."],
+    steps: [
+      { type: "regle", text: `\\text{Une proportion compare une partie à un tout au même instant. Une évolution compare une valeur avant/après un changement dans le temps.}` },
+      { type: "resultat", text: cas.reponse === "évolution" ? `\\text{Ce pourcentage compare une valeur avant/après : c'est une évolution.}` : `\\text{Ce pourcentage compare une partie à un tout : c'est une proportion.}` },
+    ],
   };
 }
 
@@ -290,7 +333,11 @@ function genComparerCoefficientsMultiplicateursQCM() {
     prompt: `Laquelle de ces deux évolutions a le plus grand coefficient multiplicateur : une ${hausse1 ? "hausse" : "baisse"} de ${t1} %, ou une ${hausse2 ? "hausse" : "baisse"} de ${t2} % ?`,
     answer: plusGrand,
     options: [`une ${hausse1 ? "hausse" : "baisse"} de ${t1} %`, `une ${hausse2 ? "hausse" : "baisse"} de ${t2} %`],
-    steps: [`\\text{CM}_1 = ${cm1}`, `\\text{CM}_2 = ${cm2}`, `\\text{Le plus grand coefficient correspond à : } ${plusGrand}.`],
+    steps: [
+      { type: "regle", text: `\\text{Plus le coefficient multiplicateur est grand, plus l'évolution est favorable (forte hausse ou faible baisse).}` },
+      { type: "calcul", text: `\\text{CM}_1 = ${cm1}, \\ \\text{CM}_2 = ${cm2}` },
+      { type: "resultat", text: `\\text{Le plus grand coefficient correspond à : } ${plusGrand}.` },
+    ],
   };
 }
 

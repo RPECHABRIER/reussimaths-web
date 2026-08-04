@@ -94,6 +94,7 @@ function genThalesEquationNumeric() {
     prompt: `Une configuration de Thalès donne l'égalité \\(\\dfrac{x + ${xSol}}{${den1}} = \\dfrac{${m}x}{${den2}}\\). Résous cette équation pour trouver x.`,
     answer: xSol,
     steps: [
+      { type: "regle", text: `\\text{Dans une égalité de fractions } \\dfrac{a}{b} = \\dfrac{c}{d}, \\text{ on peut effectuer un produit en croix : } a \\times d = b \\times c.` },
       { type: "calcul", text: `${den2} \\times (x + ${xSol}) = ${m} \\times ${den1} \\times x` },
       { type: "calcul", text: `${den2}x + ${den2 * xSol} = ${m * den1}x` },
       { type: "calcul", text: `${den2 * xSol} = ${m * den1 - den2}x` },
@@ -255,7 +256,10 @@ function genTroisiemeAngleTriangleNumeric() {
     chapter: "Thalès et triangles semblables — Agrandissement, réduction",
     prompt: `Dans un triangle, deux angles mesurent ${a1}° et ${a2}°. Calcule la mesure du troisième angle.`,
     answer: a3,
-    steps: [{ type: "calcul", text: `180 - ${a1} - ${a2} = ${a3}` }],
+    steps: [
+      { type: "regle", text: `\\text{La somme des angles d'un triangle vaut toujours } 180°.` },
+      { type: "calcul", text: `180 - ${a1} - ${a2} = ${a3}` },
+    ],
   };
 }
 

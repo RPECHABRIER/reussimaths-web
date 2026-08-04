@@ -36,7 +36,10 @@ function genTermeSuiteArithmetiqueNumeric() {
     chapter: "Réviser les bases (Terminale) — Suites",
     prompt: `Une suite arithmétique u a pour premier terme \\(u(0) = ${u0}\\) et pour raison \\(r = ${r}\\). Calcule \\(u(${n})\\).`,
     answer: r * n + u0,
-    steps: [`${r} \\times ${n} + ${u0} = ${r * n + u0}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule d'une suite arithmétique : } u(n) = u(0) + r \\times n.` },
+      { type: "resultat", text: `u(${n}) = ${u0} + ${r} \\times ${n} = ${r * n + u0}` },
+    ],
   };
 }
 
@@ -52,7 +55,10 @@ function genTermeSuiteGeometriqueNumeric() {
     prompt: `Une suite géométrique u a pour premier terme \\(u(0) = ${u0}\\) et pour raison \\(q = ${fr(q)}\\). Calcule \\(u(${n})\\).`,
     answer,
     tolerance: 0.001,
-    steps: [`${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule d'une suite géométrique : } u(n) = u(0) \\times q^n.` },
+      { type: "resultat", text: `u(${n}) = ${u0} \\times ${fr(q)}^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -72,7 +78,10 @@ function genNombreDeriveNumeric() {
     chapter: "Réviser les bases (Terminale) — Dérivation",
     prompt: `La tangente à la courbe de ${nomFonction} au point d'abscisse ${a} passe par \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Calcule \\(${nomFonction}'(${a})\\).`,
     answer: m,
-    steps: [`\\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre dérivé en } a \\text{ est le coefficient directeur de la tangente, calculé comme le taux d'accroissement entre deux points de cette tangente.}` },
+      { type: "resultat", text: `${nomFonction}'(${a}) = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = ${m}` },
+    ],
   };
 }
 
@@ -88,7 +97,11 @@ function genDeriveeTrinomeNumeric() {
     chapter: "Réviser les bases (Terminale) — Dérivation",
     prompt: `On considère \\(${nomFonction}(x) = ${a}x^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x\\). Calcule \\(${nomFonction}'(${x})\\).`,
     answer,
-    steps: [`${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}`, `${nomFonction}'(${x}) = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{La dérivée de } ax^2 + bx \\text{ est } 2ax + b.` },
+      { type: "calcul", text: `${nomFonction}'(x) = ${2 * a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `${nomFonction}'(${x}) = ${answer}` },
+    ],
   };
 }
 
@@ -102,7 +115,10 @@ function genResoudreCarreEgalKNumeric() {
     chapter: "Réviser les bases (Terminale) — Équations",
     prompt: `Résous l'équation \\(x^2 = ${k}\\) et donne ${demandeNegative ? "la solution négative" : "la solution positive"}.`,
     answer: demandeNegative ? -r : r,
-    steps: [`x = ${r} \\text{ ou } x = ${-r}`],
+    steps: [
+      { type: "regle", text: `\\text{Une équation } x^2 = k \\text{ (avec } k > 0\\text{) a deux solutions opposées : } x = \\sqrt{k} \\text{ ou } x = -\\sqrt{k}.` },
+      { type: "resultat", text: `x = ${r} \\text{ ou } x = ${-r}` },
+    ],
   };
 }
 
@@ -117,7 +133,10 @@ function genProbabiliteConditionnelleNumeric() {
     prompt: `On sait que \\(P(A) = ${fr(pA)}\\) et \\(P_A(B) = ${fr(pB_A)}\\). Calcule \\(P(A \\cap B)\\).`,
     answer: pAB,
     tolerance: 0.001,
-    steps: [`${fr(pA)} \\times ${fr(pB_A)} = ${fr(pAB)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } P(A \\cap B) = P(A) \\times P_A(B).` },
+      { type: "resultat", text: `P(A \\cap B) = ${fr(pA)} \\times ${fr(pB_A)} = ${fr(pAB)}` },
+    ],
   };
 }
 
@@ -133,7 +152,7 @@ function genCoordonneesVecteurPlanNumeric() {
     chapter: "Réviser les bases (Terminale) — Vecteurs",
     prompt: `On considère les points \\(A(${xA} ; ${yA})\\) et \\(B(${xB} ; ${yB})\\). Donne ${demandeX ? "la coordonnée en x" : "la coordonnée en y"} du vecteur \\(\\vec{AB}\\).`,
     answer: demandeX ? xB - xA : yB - yA,
-    steps: [demandeX ? `x_B - x_A = ${xB} - (${xA}) = ${xB - xA}` : `y_B - y_A = ${yB} - (${yA}) = ${yB - yA}`],
+    steps: [{ type: "regle", text: demandeX ? `x_B - x_A = ${xB} - (${xA}) = ${xB - xA}` : `y_B - y_A = ${yB} - (${yA}) = ${yB - yA}` }],
   };
 }
 
@@ -147,7 +166,7 @@ function genSensVariationExponentielleQCM() {
     prompt: `La fonction \\(f(x) = ${fr(base)}^x\\) est-elle croissante ou décroissante sur \\(\\mathbb{R}\\) ?`,
     answer: reponse,
     options: ["croissante", "décroissante"],
-    steps: [base > 1 ? "base > 1 : croissante" : "0 < base < 1 : décroissante"],
+    steps: [{ type: "regle", text: base > 1 ? `\\text{Une fonction exponentielle } x \\mapsto a^x \\text{ avec } a > 1 \\text{ est croissante sur } \\mathbb{R}.` : `\\text{Une fonction exponentielle } x \\mapsto a^x \\text{ avec } 0 < a < 1 \\text{ est décroissante sur } \\mathbb{R}.` }],
   };
 }
 
@@ -162,7 +181,10 @@ function genCoefficientMultiplicateurGlobalNumeric() {
     prompt: `Une grandeur subit deux évolutions successives de coefficients multiplicateurs \\(${fr(cm1)}\\) puis \\(${fr(cm2)}\\). Calcule le coefficient multiplicateur global (arrondi au millième).`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(cm1)} \\times ${fr(cm2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour des évolutions successives, on multiplie les coefficients multiplicateurs (on ne les additionne pas).}` },
+      { type: "resultat", text: `${fr(cm1)} \\times ${fr(cm2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -177,7 +199,10 @@ function genEquationProduitNulNumeric() {
     chapter: "Réviser les bases (Terminale) — Équations",
     prompt: `On considère l'équation \\((x ${r1 >= 0 ? "-" : "+"} ${Math.abs(r1)})(x ${r2 >= 0 ? "-" : "+"} ${Math.abs(r2)}) = 0\\). Donne la solution la plus ${demandeGrande ? "grande" : "petite"}.`,
     answer,
-    steps: [`S = \\{${r1} ; ${r2}\\}`],
+    steps: [
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si et seulement si l'un au moins des facteurs est nul (} A \\times B = 0 \\Leftrightarrow A = 0 \\text{ ou } B = 0\\text{).}` },
+      { type: "resultat", text: `S = \\{${r1} ; ${r2}\\}` },
+    ],
   };
 }
 

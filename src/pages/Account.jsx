@@ -18,6 +18,7 @@ import { getAdminPreview } from "../lib/adminPreview";
 import PackExamenChoice from "../components/PackExamenChoice";
 import ReferralBonusChoice from "../components/ReferralBonusChoice";
 import ReviserCard from "../components/ReviserCard";
+import Mascot from "../components/Mascot";
 import { getChapter } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -91,6 +92,7 @@ export default function Account() {
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full max-w-xs text-center rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+          <Mascot size={64} className="mx-auto" />
           <p style={{ fontFamily: fonts.display, fontWeight: 700, color: colors.ink, fontSize: "1.1rem" }}>
             {profile?.pseudo ?? "Connecté"}
           </p>

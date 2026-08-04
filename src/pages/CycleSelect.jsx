@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { GraduationCap, School, Sparkles, Brain } from "lucide-react";
 import { CYCLES } from "../levels";
 import ReviserCard from "../components/ReviserCard";
+import Mascot from "../components/Mascot";
 import { colors, fonts, shadow } from "../theme";
 
 // Nouvelle page d'accueil (/) : premier choix, avant même les niveaux —
@@ -16,6 +17,7 @@ export default function CycleSelect() {
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
         <div className="text-center mb-10 pt-4">
+          <Mascot size={76} className="mx-auto mb-3" style={{ boxShadow: shadow.soft }} />
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             Reussimaths
           </h1>

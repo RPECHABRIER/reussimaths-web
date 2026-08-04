@@ -1752,3 +1752,45 @@ le dépôt Git `APPLI GITHUB/Sans titre`). Tous les fichiers synchronisés
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain (pas
 d'identifiants dans ce sandbox).
+
+
+## 2026-08-04 (suite 5) — Mascotte dynamique (4 logos dessinés par Romain)
+
+Romain a retravaillé le logo de l'app en 4 versions et voulait qu'elles
+soient utilisées selon la situation de l'utilisateur : triste après plus
+d'une semaine sans pratique, une version pour le contenu gratuit, une
+pour le Pack Examen, une avec des étoiles pour l'abonnement complet.
+
+Aucun logo n'était jusqu'ici affiché DANS l'app (seulement l'icône PWA
+statique utilisée pour l'écran d'accueil du téléphone une fois l'app
+installée — techniquement impossible à faire varier par utilisateur,
+puisque fixée à l'installation). La mascotte dynamique est donc affichée
+à deux endroits bien visibles à l'intérieur de l'app : en haut de la
+page d'accueil (`CycleSelect.jsx`) et sur la carte de profil de
+`Account.jsx`.
+
+Nouveau composant `Mascot.jsx` + hook `useLastActivity.js` : ce dernier
+lit la date de la dernière ligne de `daily_activity` (alimentée à chaque
+tentative d'exercice, voir tâche #298) plutôt que
+`user_login_stats.last_login_at`, qui ne se met à jour qu'à une vraie
+reconnexion Supabase et resterait figé pendant des mois pour un
+utilisateur avec une session déjà persistée — donc peu fiable pour
+détecter une inactivité réelle.
+
+Logique de priorité dans `Mascot.jsx` : plus de 7 jours sans pratique →
+version triste (même pour un abonné complet, pour l'inciter à revenir) ;
+sinon abonnement complet actif → version étoilée ; sinon Pack Examen actif
+→ version Pack Examen ; sinon (pas connecté ou sans abonnement) → version
+gratuite par défaut.
+
+Les 4 images fournies par Romain ont été redimensionnées (max 400px,
+optimisées) : ~2 Mo au total à l'origine, ~430 Ko après optimisation —
+seule l'image réellement affichée est chargée par le navigateur (URL
+séparée par image via Vite, pas d'inlining).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis
+le dépôt Git `APPLI GITHUB/Sans titre`). Fichiers synchronisés (diff vide
+vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox).

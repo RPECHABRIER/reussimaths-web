@@ -92,7 +92,10 @@ function genConversionKmhVersMsNumeric() {
     prompt: `Convertis une vitesse de ${vKmh} km/h en m/s.`,
     answer,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `${vKmh} \\text{ km/h} = \\dfrac{${vKmh} \\times 1000}{3600} \\text{ m/s} \\approx ${fr(answer)} \\text{ m/s}` }],
+    steps: [
+      { type: "regle", text: `\\text{1 km} = 1000\\text{ m et 1 h} = 3600\\text{ s, donc pour convertir des km/h en m/s, on multiplie par } \\dfrac{1000}{3600}.` },
+      { type: "calcul", text: `${vKmh} \\text{ km/h} = \\dfrac{${vKmh} \\times 1000}{3600} \\text{ m/s} \\approx ${fr(answer)} \\text{ m/s}` },
+    ],
   };
 }
 
@@ -106,7 +109,10 @@ function genConversionMsVersKmhNumeric() {
     prompt: `Convertis une vitesse de ${vMs} m/s en km/h.`,
     answer,
     tolerance: 0.1,
-    steps: [{ type: "calcul", text: `${vMs} \\text{ m/s} = ${vMs} \\times 3,6 \\text{ km/h} = ${fr(answer)} \\text{ km/h}` }],
+    steps: [
+      { type: "regle", text: `\\text{Pour convertir des m/s en km/h, on multiplie par } \\dfrac{3600}{1000} = 3,6 \\text{ (l'inverse de la conversion km/h} \\rightarrow \\text{m/s).}` },
+      { type: "calcul", text: `${vMs} \\text{ m/s} = ${vMs} \\times 3,6 \\text{ km/h} = ${fr(answer)} \\text{ km/h}` },
+    ],
   };
 }
 
@@ -162,7 +168,10 @@ function genEchelleDistanceReelleNumeric() {
     prompt: `Sur un plan à l'échelle 1/${echelle}, une distance mesure ${distancePlanCm} cm. Quelle est la distance réelle correspondante (en m) ?`,
     answer: distanceReelleM,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `${distancePlanCm} \\times ${echelle} = ${distanceReelleCm}\\text{ cm} = ${fr(distanceReelleM)}\\text{ m}` }],
+    steps: [
+      { type: "regle", text: `\\text{Sur un plan à l'échelle } 1/${echelle}, \\text{ 1 cm sur le plan représente } ${echelle}\\text{ cm dans la réalité : on multiplie donc la distance sur le plan par } ${echelle}.` },
+      { type: "calcul", text: `${distancePlanCm} \\times ${echelle} = ${distanceReelleCm}\\text{ cm} = ${fr(distanceReelleM)}\\text{ m}` },
+    ],
   };
 }
 
@@ -178,6 +187,7 @@ function genEchelleDistancePlanNumeric() {
     answer: distancePlanCm,
     tolerance: 0.05,
     steps: [
+      { type: "regle", text: `\\text{Sur un plan à l'échelle } 1/${echelle}, \\text{ la distance réelle est } ${echelle} \\text{ fois la distance sur le plan : on divise donc la distance réelle par } ${echelle}.` },
       { type: "calcul", text: `${distanceReelleM}\\text{ m} = ${distanceReelleM * 100}\\text{ cm}` },
       { type: "resultat", text: `${distanceReelleM * 100} \\div ${echelle} = ${fr(distancePlanCm)}` },
     ],
@@ -239,7 +249,10 @@ function genAutonomieVehiculeNumeric() {
     prompt: `Une voiture consomme ${fr(consommation)} L pour 100 km. Son réservoir contient ${reservoir} L d'essence. Quelle distance (en km, arrondie à l'unité) peut-elle parcourir avec un plein ?`,
     answer,
     tolerance: 3,
-    steps: [{ type: "calcul", text: `d = \\dfrac{${reservoir} \\times 100}{${fr(consommation)}} \\approx ${answer}\\text{ km}` }],
+    steps: [
+      { type: "regle", text: `\\text{La consommation est proportionnelle à la distance parcourue : si la voiture consomme } ${fr(consommation)} \\text{ L pour 100 km, on cherche la distance parcourue avec } ${reservoir} \\text{ L par un produit en croix.}` },
+      { type: "calcul", text: `d = \\dfrac{${reservoir} \\times 100}{${fr(consommation)}} \\approx ${answer}\\text{ km}` },
+    ],
   };
 }
 

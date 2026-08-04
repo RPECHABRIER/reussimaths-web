@@ -104,7 +104,13 @@ export default function CycleSelect() {
           </Link>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 mt-8 pt-5 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>
+        <div className="text-center mt-6">
+          <Link to="/enseignant" className="text-xs font-medium" style={{ color: colors.slate }}>
+            Espace enseignant
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4 mt-4 pt-5 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>
           <Link to="/mentions-legales">Mentions légales</Link>
           <Link to="/cgu">CGU</Link>
           <Link to="/confidentialite">Confidentialité</Link>

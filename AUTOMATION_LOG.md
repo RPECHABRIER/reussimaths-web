@@ -1681,3 +1681,74 @@ d'identifiants dans ce sandbox).
 **Terminale technologique (STMG) intégralement auditée pour la tâche
 #236. Le lycée est désormais entièrement audité : 2nde, Première non
 spé, Première Spé, Terminale Spé, Première techno, Terminale STMG.**
+
+
+## 2026-08-04 (suite 4) — 5 fonctionnalités demandées par Romain : mode Réviser visible, Bilan de la semaine, Espace enseignant, Pack Examen expliqué, fuite de réponse en Découverte corrigée
+
+Romain a demandé 5 choses dans un seul message, à traiter dans l'ordre de
+mon choix, avec questions de clarification si besoin. Deux questions
+posées (accès au bilan parent, accès au mode prof) — Romain a choisi à
+chaque fois l'option la plus simple : page in-app uniquement pour le
+bilan (pas d'email), aucune connexion requise pour le mode prof.
+
+**1. Fuite de réponse en mode Découverte (tâche #293).** Le mécanisme de
+masquage de la dernière étape se basait sur le tag `type: "resultat"` du
+dernier step — or un script d'analyse dynamique (génération ~40x par
+chapitre, tous chapitres) a montré que 125 fichiers chapitres sur 132 ont
+au moins un générateur dont le dernier step n'est PAS tagué "resultat"
+(calcul/regle/donnee/chaîne simple selon les cas). Un correctif fichier
+par fichier était irréaliste. Correctif architectural dans
+`ChapterRunner.jsx` : on masque désormais TOUJOURS le dernier step de
+`exercise.steps`, quel que soit son type, révélé par le bouton existant.
+
+**2. Pack Examen enfin expliqué (tâche #294).** Ajout d'un paragraphe
+dans `PackExamenChoice.jsx` (au moment du choix du niveau) et d'un bloc
+avant les boutons d'abonnement dans `Account.jsx` détaillant ce que
+débloque chaque offre (abonnement complet vs Pack Examen). La carte
+"Pack Examen — niveau choisi" (après le choix) liste maintenant
+explicitement : le chapitre de préparation à l'examen, les Automatismes
+illimités, et les 2 chapitres bonus choisis.
+
+**3. Mode Réviser plus visible (tâche #295).** Nouveau composant
+`ReviserCard.jsx` (carte verte, icône dédiée, badge rouge avec le nombre
+de compétences dues si > 0, via le nouveau hook `useDueSkillsCount.js`).
+Remplace l'ancien lien texte discret sur `CycleSelect.jsx`, `CycleLevels.jsx`,
+`LevelSelect.jsx` et `Account.jsx`.
+
+**4. Bilan de la semaine (tâches #296, #297, #298).** Nouvelle page
+`/bilan`, pensée pour être consultée par un parent avec l'enfant (pas de
+compte parent séparé, l'app reste anonyme — voir schema.sql). Contenu :
+temps passé (graphique en barres sur 7 jours), taux de réussite,
+notions travaillées, priorités pour la semaine suivante. Nécessite 2
+nouvelles tables SQL (`practice_time`, `daily_activity`) + un hook de
+"heartbeat" (`usePracticeHeartbeat.js`, 20s d'intervalle, en pause si
+l'onglet est en arrière-plan via la Page Visibility API) branché dans
+les 3 lecteurs d'exercices, et un enregistrement quotidien
+attempts/correct ajouté dans `useSkillTracking.recordAttempt` (les
+compteurs `skill_mastery` existants sont cumulatifs à vie, insuffisants
+seuls pour un taux de réussite hebdomadaire fiable).
+
+⚠️ **Migration SQL à exécuter manuellement par Romain** dans l'éditeur
+SQL Supabase avant que le temps passé et le bilan ne fonctionnent
+réellement (tables `practice_time` et `daily_activity`, voir la fin de
+`supabase/schema.sql`) — aucun accès direct à la base depuis ce sandbox.
+
+**5. Espace enseignant gratuit (tâche #299).** Nouvelle page publique
+`/enseignant` (aucune connexion requise), lien discret "Espace
+enseignant" ajouté en bas de la page d'accueil. Réutilise TEL QUEL les
+chapitres `automatismes-*.js` existants (aucun contenu dupliqué,
+`chapters.filter(c => c.meta.isAutomatismes)`) : l'enseignant choisit un
+niveau, répartit exactement 5 questions entre les thèmes du chapitre
+(+/- par thème, ex. 2 multiplication + 1 géométrie + 2 pourcentages),
+puis un diaporama plein écran (police large pensée pour une projection,
+bouton plein écran) présente les questions une par une SANS réponse
+visible (l'enseignant avance avec "Suivant") ; à la fin, un écran unique
+affiche les 5 corrections complètes (réponse + étapes de méthode).
+Aucune sauvegarde, aucun score, usage éphémère en classe.
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis
+le dépôt Git `APPLI GITHUB/Sans titre`). Tous les fichiers synchronisés
+(diff vide vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox).

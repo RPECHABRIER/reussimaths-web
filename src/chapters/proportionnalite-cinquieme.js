@@ -132,7 +132,10 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [{ type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Calculer ${p} % d'un nombre, c'est le multiplier par \\(\\dfrac{${p}}{100}\\).` },
+      { type: "calcul", text: `${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 

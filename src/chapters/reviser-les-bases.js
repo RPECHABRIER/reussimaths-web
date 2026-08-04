@@ -111,7 +111,10 @@ function genConversionUnites() {
       chapter: "Réviser les bases — Nombres entiers",
       prompt: `Quel nombre correspond à ${count} ${unite.name} ?`,
       answer: n,
-      steps: [{ type: "calcul", text: `${count} \\times ${unite.val} = ${n}` }],
+      steps: [
+        { type: "regle", text: `1 ${unite.name.slice(0, -1)} = ${unite.val}.` },
+        { type: "calcul", text: `${count} \\times ${unite.val} = ${n}` },
+      ],
     };
   }
   return {
@@ -119,7 +122,10 @@ function genConversionUnites() {
     chapter: "Réviser les bases — Nombres entiers",
     prompt: `${n} = combien de ${unite.name} ?`,
     answer: count,
-    steps: [{ type: "calcul", text: `${n} \\div ${unite.val} = ${count}` }],
+    steps: [
+      { type: "regle", text: `1 ${unite.name.slice(0, -1)} = ${unite.val}.` },
+      { type: "calcul", text: `${n} \\div ${unite.val} = ${count}` },
+    ],
   };
 }
 

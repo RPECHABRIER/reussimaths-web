@@ -52,7 +52,10 @@ function genProbabiliteEquiprobableNumeric() {
     prompt: `Une urne contient ${total} boules indiscernables au toucher, dont ${favorables} boules rouges. On tire une boule au hasard. Donne la probabilité d'obtenir une boule rouge sous forme décimale (arrondie au centième si besoin).`,
     answer: roundTo(favorables / total, 2),
     tolerance: 0.01,
-    steps: [`P = \\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}} \\approx ${roundTo(favorables / total, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un modèle équiprobable, } P = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}.` },
+      { type: "resultat", text: `P = \\dfrac{${favorables}}{${total}} = \\dfrac{${num}}{${den}} \\approx ${roundTo(favorables / total, 2)}` },
+    ],
   };
 }
 
@@ -66,7 +69,10 @@ function genProbabiliteContraireNumeric() {
     chapter: "Probabilités — Événement contraire",
     prompt: `On a \\(P(A) = \\dfrac{${num}}{${den}}\\). Calcule \\(P(\\bar{A})\\) (probabilité de l'événement contraire), sous forme décimale.`,
     answer: roundTo(1 - pA, 4),
-    steps: [`P(\\bar{A}) = 1 - P(A) = 1 - \\dfrac{${num}}{${den}} = \\dfrac{${den - num}}{${den}} = ${roundTo(1 - pA, 4)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'événement contraire } \\bar{A} \\text{ regroupe toutes les issues qui ne réalisent pas } A, \\text{ donc } P(\\bar{A}) = 1 - P(A).` },
+      { type: "resultat", text: `P(\\bar{A}) = 1 - \\dfrac{${num}}{${den}} = \\dfrac{${den - num}}{${den}} = ${roundTo(1 - pA, 4)}` },
+    ],
   };
 }
 
@@ -82,7 +88,10 @@ function genProbabiliteReunionNumeric() {
     chapter: "Probabilités — Réunion d'événements",
     prompt: `Dans un univers de ${total} issues équiprobables, un événement A regroupe ${nA} issues, un événement B regroupe ${nB} issues, et A ∩ B (les deux à la fois) regroupe ${nAetB} issues. Combien d'issues regroupe A ∪ B (A ou B) ?`,
     answer: nAouB,
-    steps: [`\\text{card}(A \\cup B) = \\text{card}(A) + \\text{card}(B) - \\text{card}(A \\cap B) = ${nA} + ${nB} - ${nAetB} = ${nAouB}`],
+    steps: [
+      { type: "regle", text: `\\text{card}(A \\cup B) = \\text{card}(A) + \\text{card}(B) - \\text{card}(A \\cap B) : \\text{ on soustrait l'intersection car ses issues auraient sinon été comptées deux fois.}` },
+      { type: "resultat", text: `\\text{card}(A \\cup B) = ${nA} + ${nB} - ${nAetB} = ${nAouB}` },
+    ],
   };
 }
 
@@ -101,7 +110,10 @@ function genUniversDeuxEpreuvesQCM() {
     prompt: `${cas.description} Combien cette expérience a-t-elle d'issues possibles ?`,
     answer: String(cas.reponse),
     options: shuffle([cas.reponse, ...cas.distracteurs]).map(String),
-    steps: [`\\text{Nombre d'issues} = ${cas.reponse}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour une expérience à deux épreuves successives, le nombre total d'issues est le } \\textbf{produit} \\text{ du nombre d'issues de chaque épreuve (principe multiplicatif).}` },
+      { type: "resultat", text: `\\text{Nombre d'issues} = ${cas.reponse}` },
+    ],
   };
 }
 
@@ -121,7 +133,11 @@ function genProbabiliteSommeDeuxDesNumeric() {
     prompt: `On lance deux dés équilibrés à 6 faces (dés distinguables) et on note la somme des deux résultats. Quelle est la probabilité d'obtenir une somme égale à ${sommeCible}, sous forme décimale (arrondie au centième) ?`,
     answer: roundTo(favorables / 36, 2),
     tolerance: 0.01,
-    steps: [`\\text{Nombre d'issues favorables} = ${favorables}`, `P = \\dfrac{${favorables}}{36} \\approx ${roundTo(favorables / 36, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Avec deux dés distinguables, l'univers compte } 6 \\times 6 = 36 \\text{ issues équiprobables. On dénombre celles dont la somme vaut } ${sommeCible}.` },
+      { type: "calcul", text: `\\text{Nombre d'issues favorables} = ${favorables}` },
+      { type: "resultat", text: `P = \\dfrac{${favorables}}{36} \\approx ${roundTo(favorables / 36, 2)}` },
+    ],
   };
 }
 
@@ -144,19 +160,47 @@ function genProbabiliteProduitDeuxDesNumeric() {
     prompt: `On lance deux dés équilibrés à 6 faces (dés distinguables) et on note le produit des deux résultats. Quelle est la probabilité d'obtenir un produit égal à ${produitCible}, sous forme décimale (arrondie au centième) ?`,
     answer: roundTo(favorables / 36, 2),
     tolerance: 0.01,
-    steps: [`\\text{Nombre d'issues favorables} = ${favorables}`, `P = \\dfrac{${favorables}}{36} \\approx ${roundTo(favorables / 36, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Avec deux dés distinguables, l'univers compte } 6 \\times 6 = 36 \\text{ issues équiprobables. On dénombre celles dont le produit vaut } ${produitCible}.` },
+      { type: "calcul", text: `\\text{Nombre d'issues favorables} = ${favorables}` },
+      { type: "resultat", text: `P = \\dfrac{${favorables}}{36} \\approx ${roundTo(favorables / 36, 2)}` },
+    ],
   };
 }
 
 // ---------- 7. Type d'événement (certain, impossible, élémentaire, non élémentaire) ----------
 function genTypeEvenementQCM() {
   const cas = pick([
-    { description: "On lance un dé à 6 faces. Événement : « obtenir un nombre entre 1 et 6 ».", reponse: "certain" },
-    { description: "On lance un dé à 6 faces. Événement : « obtenir 7 ».", reponse: "impossible" },
-    { description: "On lance un dé à 6 faces. Événement : « obtenir 4 ».", reponse: "élémentaire" },
-    { description: "On lance un dé à 6 faces. Événement : « obtenir un nombre pair ».", reponse: "non élémentaire" },
-    { description: "On tire une carte dans un jeu de 32 cartes. Événement : « tirer une carte rouge ou noire ».", reponse: "certain" },
-    { description: "On tire une carte dans un jeu de 32 cartes. Événement : « tirer un 2 ».", reponse: "impossible" },
+    {
+      description: "On lance un dé à 6 faces. Événement : « obtenir un nombre entre 1 et 6 ».",
+      reponse: "certain",
+      explication: `\\text{Toutes les issues possibles (1, 2, 3, 4, 5, 6) réalisent cet événement : il se produit forcément, c'est un événement } \\textbf{certain}.`,
+    },
+    {
+      description: "On lance un dé à 6 faces. Événement : « obtenir 7 ».",
+      reponse: "impossible",
+      explication: `\\text{Aucune face du dé ne porte le nombre 7 : cet événement ne peut jamais se produire, c'est un événement } \\textbf{impossible}.`,
+    },
+    {
+      description: "On lance un dé à 6 faces. Événement : « obtenir 4 ».",
+      reponse: "élémentaire",
+      explication: `\\text{Cet événement ne correspond qu'à une seule issue possible (le 4) : c'est un événement } \\textbf{élémentaire}.`,
+    },
+    {
+      description: "On lance un dé à 6 faces. Événement : « obtenir un nombre pair ».",
+      reponse: "non élémentaire",
+      explication: `\\text{Cet événement regroupe plusieurs issues (2, 4, 6) : c'est un événement } \\textbf{non élémentaire}.`,
+    },
+    {
+      description: "On tire une carte dans un jeu de 32 cartes. Événement : « tirer une carte rouge ou noire ».",
+      reponse: "certain",
+      explication: `\\text{Toute carte est soit rouge, soit noire : cet événement regroupe toutes les issues possibles, c'est un événement } \\textbf{certain}.`,
+    },
+    {
+      description: "On tire une carte dans un jeu de 32 cartes. Événement : « tirer un 2 ».",
+      reponse: "impossible",
+      explication: `\\text{Un jeu de 32 cartes ne contient aucun 2 (les cartes vont de 7 à l'as) : cet événement ne peut jamais se produire, c'est un événement } \\textbf{impossible}.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -164,7 +208,7 @@ function genTypeEvenementQCM() {
     prompt: `${cas.description} Quel type d'événement est-ce ?`,
     answer: cas.reponse,
     options: ["certain", "impossible", "élémentaire", "non élémentaire"],
-    steps: [`Cet événement est ${cas.reponse}.`],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -198,7 +242,10 @@ function genProbabiliteTirageCartesQCM() {
     prompt: `On tire une carte au hasard dans un jeu de ${total} cartes. Quelle est la probabilité de ${cas.description} ?`,
     answer: bonneReponse,
     options: shuffle([...optionsSet]),
-    steps: [`P = \\dfrac{${cas.favorables}}{${total}} = \\dfrac{${cas.favorables / g}}{${total / g}}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un jeu de cartes bien mélangé, chaque carte a la même chance d'être tirée : } P = \\dfrac{\\text{nombre de cartes favorables}}{\\text{nombre total de cartes}}.` },
+      { type: "resultat", text: `P = \\dfrac{${cas.favorables}}{${total}} = \\dfrac{${cas.favorables / g}}{${total / g}}` },
+    ],
   };
 }
 
@@ -214,7 +261,10 @@ function genProbabiliteTableauEffectifsNumeric() {
     prompt: `Une urne contient ${effectifs.map((e, i) => `${e} boules ${couleurs[i]}`).join(", ")}, indiscernables au toucher. On tire une boule au hasard. Quelle est la probabilité de tirer une boule ${couleurs[idx]}, sous forme décimale (arrondie au centième) ?`,
     answer: roundTo(effectifs[idx] / total, 2),
     tolerance: 0.01,
-    steps: [`\\text{Total} = ${effectifs.join(" + ")} = ${total}`, `P = \\dfrac{${effectifs[idx]}}{${total}} \\approx ${roundTo(effectifs[idx] / total, 2)}`],
+    steps: [
+      { type: "calcul", text: `\\text{Total} = ${effectifs.join(" + ")} = ${total}` },
+      { type: "resultat", text: `P = \\dfrac{${effectifs[idx]}}{${total}} \\approx ${roundTo(effectifs[idx] / total, 2)}` },
+    ],
   };
 }
 
@@ -234,7 +284,15 @@ function genModeliserExperienceQCM() {
     prompt: `« ${cas.description} » Faut-il se baser sur un modèle équiprobable ou sur une étude statistique pour modéliser cette situation ?`,
     answer: cas.reponse,
     options: ["modèle équiprobable", "étude statistique"],
-    steps: [cas.reponse === "modèle équiprobable" ? "Toutes les issues ont la même chance de se produire et sont dénombrables : on peut utiliser un modèle équiprobable." : "La situation dépend de facteurs non contrôlés : il faut se baser sur une étude statistique (observations répétées)."],
+    steps: [
+      {
+        type: "regle",
+        text:
+          cas.reponse === "modèle équiprobable"
+            ? `\\text{Toutes les issues ont la même chance de se produire et sont dénombrables : on peut utiliser un modèle équiprobable.}`
+            : `\\text{La situation dépend de facteurs non contrôlés (hasard réel, non symétrique) : il faut se baser sur une étude statistique (observations répétées).}`,
+      },
+    ],
   };
 }
 
@@ -248,7 +306,10 @@ function genFrequenceEchantillonNumeric() {
     chapter: "Probabilités — Échantillonnage",
     prompt: `Dans un échantillon de ${taille} pièces produites par une usine, ${succes} sont défectueuses. Quelle est la fréquence de pièces défectueuses dans cet échantillon (sous forme décimale) ?`,
     answer: roundTo(succes / taille, 4),
-    steps: [`f = \\dfrac{${succes}}{${taille}} = \\dfrac{${succes / g}}{${taille / g}} = ${roundTo(succes / taille, 4)}`],
+    steps: [
+      { type: "regle", text: `\\text{La fréquence observée dans un échantillon est } f = \\dfrac{\\text{effectif du caractère étudié}}{\\text{taille de l'échantillon}}.` },
+      { type: "resultat", text: `f = \\dfrac{${succes}}{${taille}} = \\dfrac{${succes / g}}{${taille / g}} = ${roundTo(succes / taille, 4)}` },
+    ],
   };
 }
 
@@ -272,7 +333,10 @@ function genNombreAttenduEchantillonNumeric() {
     chapter: "Probabilités — Échantillonnage",
     prompt: `Une expérience aléatoire a une probabilité de succès théorique de ${fr(p)}. Sur un échantillon de ${tailleFinale} répétitions, combien de succès peut-on espérer en moyenne ?`,
     answer: attendu,
-    steps: [`${tailleFinale} \\times ${fr(p)} = ${attendu}`],
+    steps: [
+      { type: "regle", text: `\\text{Le nombre de succès attendu en moyenne s'obtient en multipliant la taille de l'échantillon par la probabilité théorique de succès.}` },
+      { type: "resultat", text: `${tailleFinale} \\times ${fr(p)} = ${attendu}` },
+    ],
   };
 }
 
@@ -284,19 +348,43 @@ function genLoiGrandsNombresQCM() {
     prompt: `Lorsque la taille d'un échantillon augmente, que peut-on généralement observer concernant la fréquence observée d'un événement par rapport à sa probabilité théorique ?`,
     answer: "La fréquence observée se rapproche de la probabilité théorique",
     options: ["La fréquence observée se rapproche de la probabilité théorique", "La fréquence observée s'éloigne de la probabilité théorique", "La fréquence observée reste constante quelle que soit la taille"],
-    steps: ["C'est la loi des grands nombres : plus l'échantillon est grand, plus la fréquence observée tend à se rapprocher de la probabilité théorique."],
+    steps: [{ type: "regle", text: `\\text{C'est la loi des grands nombres : plus l'échantillon est grand, plus la fréquence observée tend à se rapprocher de la probabilité théorique.}` }],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les probabilités ----------
 function genVraiFauxProbabiliteQCM() {
   const cas = pick([
-    { affirmation: "Une probabilité est toujours comprise entre 0 et 1.", reponse: "Vrai" },
-    { affirmation: "La somme des probabilités de toutes les issues d'un univers vaut toujours 1.", reponse: "Vrai" },
-    { affirmation: "Une probabilité peut être négative.", reponse: "Faux" },
-    { affirmation: "Si un événement est impossible, sa probabilité vaut 1.", reponse: "Faux" },
-    { affirmation: "Si un événement est certain, sa probabilité vaut 1.", reponse: "Vrai" },
-    { affirmation: "P(A) + P(non A) = 1 pour tout événement A.", reponse: "Vrai" },
+    {
+      affirmation: "Une probabilité est toujours comprise entre 0 et 1.",
+      reponse: "Vrai",
+      explication: `\\text{Par définition, une probabilité vaut } 0 \\text{ (jamais) au minimum et } 1 \\text{ (toujours) au maximum : elle est donc toujours dans l'intervalle } [0 ; 1].`,
+    },
+    {
+      affirmation: "La somme des probabilités de toutes les issues d'un univers vaut toujours 1.",
+      reponse: "Vrai",
+      explication: `\\text{L'univers regroupe toutes les issues possibles : l'une d'elles se réalise nécessairement, donc la somme de leurs probabilités vaut } 1.`,
+    },
+    {
+      affirmation: "Une probabilité peut être négative.",
+      reponse: "Faux",
+      explication: `\\text{Une probabilité est toujours comprise entre 0 et 1 : elle ne peut jamais être négative.}`,
+    },
+    {
+      affirmation: "Si un événement est impossible, sa probabilité vaut 1.",
+      reponse: "Faux",
+      explication: `\\text{Un événement impossible ne se réalise jamais : sa probabilité vaut } 0, \\text{ pas } 1.`,
+    },
+    {
+      affirmation: "Si un événement est certain, sa probabilité vaut 1.",
+      reponse: "Vrai",
+      explication: `\\text{Un événement certain se réalise à chaque fois : sa probabilité vaut bien } 1.`,
+    },
+    {
+      affirmation: "P(A) + P(non A) = 1 pour tout événement A.",
+      reponse: "Vrai",
+      explication: `\\text{A et son événement contraire (non A) recouvrent à eux deux tout l'univers sans se chevaucher, donc } P(A) + P(\\bar{A}) = 1.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -304,7 +392,7 @@ function genVraiFauxProbabiliteQCM() {
     prompt: `Affirmation : « ${cas.affirmation} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -319,7 +407,11 @@ function genProbabiliteComplementaireContexteNumeric() {
     prompt: `Dans un jeu de dominos, il y a ${total} dominos au total, dont ${favorables} sont des « doubles ». On choisit un domino au hasard. Quelle est la probabilité de ne PAS obtenir un double, sous forme décimale (arrondie au centième) ?`,
     answer: roundTo((total - favorables) / total, 2),
     tolerance: 0.01,
-    steps: [`P(\\text{double}) = \\dfrac{${favorables}}{${total}}`, `P(\\text{pas de double}) = 1 - \\dfrac{${favorables}}{${total}} = \\dfrac{${total - favorables}}{${total}} \\approx ${roundTo((total - favorables) / total, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{« Ne pas obtenir un double » est l'événement contraire de « obtenir un double » : } P(\\text{pas de double}) = 1 - P(\\text{double}).` },
+      { type: "calcul", text: `P(\\text{double}) = \\dfrac{${favorables}}{${total}}` },
+      { type: "resultat", text: `P(\\text{pas de double}) = 1 - \\dfrac{${favorables}}{${total}} = \\dfrac{${total - favorables}}{${total}} \\approx ${roundTo((total - favorables) / total, 2)}` },
+    ],
   };
 }
 

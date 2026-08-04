@@ -41,7 +41,7 @@ function genTauxVariationImagesNumeric() {
     chapter: "Dérivation — Taux de variation",
     prompt: `Une fonction \\(f\\) vérifie \\(f(${xA}) = ${yA}\\) et \\(f(${xB}) = ${yB}\\). Calcule le taux de variation de \\(f\\) entre ${xA} et ${xB} (pente de la sécante).`,
     answer: a,
-    steps: [`\\dfrac{f(${xB}) - f(${xA})}{${xB} - (${xA})} = \\dfrac{${yB} - (${yA})}{${xB - xA}} = \\dfrac{${yB - yA}}{${xB - xA}} = ${a}`],
+    steps: [{ type: "resultat", text: `\\dfrac{f(${xB}) - f(${xA})}{${xB} - (${xA})} = \\dfrac{${yB} - (${yA})}{${xB - xA}} = \\dfrac{${yB - yA}}{${xB - xA}} = ${a}` }],
   };
 }
 
@@ -58,8 +58,8 @@ function genTauxVariationCarreNumeric() {
     prompt: `On considère la fonction carré \\(f(x) = x^2\\). Calcule le taux de variation de \\(f\\) entre \\(${a}\\) et \\(${a + h}\\) (c'est-à-dire \\(\\dfrac{f(${a}+${h}) - f(${a})}{${h}}\\)).`,
     answer,
     steps: [
-      `f(${a}) = ${fA}, \\quad f(${a + h}) = ${fAh}`,
-      `\\dfrac{${fAh} - ${fA}}{${h}} = \\dfrac{${fAh - fA}}{${h}} = ${answer}`,
+      { type: "calcul", text: `f(${a}) = ${fA}, \\quad f(${a + h}) = ${fAh}` },
+      { type: "resultat", text: `\\dfrac{${fAh} - ${fA}}{${h}} = \\dfrac{${fAh - fA}}{${h}} = ${answer}` },
     ],
   };
 }
@@ -75,7 +75,7 @@ function genNombreDeriveNumeric() {
     chapter: "Dérivation — Nombre dérivé",
     prompt: `Une fonction \\(f\\) a pour fonction dérivée \\(f'(x) = ${2 * a2}x ${signedL(a1)}\\). Calcule le nombre dérivé \\(f'(${x0})\\).`,
     answer,
-    steps: [`f'(${x0}) = ${2 * a2} \\times ${x0} ${signedL(a1)} = ${answer}`],
+    steps: [{ type: "resultat", text: `f'(${x0}) = ${2 * a2} \\times ${x0} ${signedL(a1)} = ${answer}` }],
   };
 }
 
@@ -92,7 +92,7 @@ function genEquationTangenteNumeric() {
     chapter: "Dérivation — Équation de la tangente",
     prompt: `On donne \\(f(${a}) = ${fa}\\) et \\(f'(${a}) = ${fpa}\\). La tangente à la courbe de \\(f\\) au point d'abscisse ${a} a pour équation \\(y = f(${a}) + f'(${a})(x - ${a})\\). Calcule l'ordonnée du point de cette tangente d'abscisse \\(x = ${x}\\).`,
     answer,
-    steps: [`y = ${fa} + ${fpa} \\times (${x} - ${a}) = ${fa} + ${fpa} \\times (${x - a}) = ${answer}`],
+    steps: [{ type: "resultat", text: `y = ${fa} + ${fpa} \\times (${x} - ${a}) = ${fa} + ${fpa} \\times (${x - a}) = ${answer}` }],
   };
 }
 
@@ -108,7 +108,7 @@ function genApproximationLineaireNumeric() {
     prompt: `On donne \\(f(a) = ${fa}\\) et \\(f'(a) = ${fpa}\\). En utilisant l'approximation linéaire \\(f(a + h) \\approx f(a) + f'(a) \\times h\\), donne une valeur approchée de \\(f(a + h)\\) pour \\(h = ${fr(h)}\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`f(a+h) \\approx ${fa} + ${fpa} \\times ${fr(h)} = ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `f(a+h) \\approx ${fa} + ${fpa} \\times ${fr(h)} = ${fr(answer)}` }],
   };
 }
 
@@ -126,7 +126,10 @@ function genDeriveePuissanceFormuleQCM() {
     prompt: `Quelle est la fonction dérivée de \\(f(x) = x^{${n}}\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{Pour } f(x) = x^n, \\text{ on a } f'(x) = nx^{n-1}.`, `f'(x) = ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour } f(x) = x^n, \\text{ on a } f'(x) = nx^{n-1}.` },
+      { type: "resultat", text: `f'(x) = ${correctRaw}` },
+    ],
   };
 }
 
@@ -140,7 +143,7 @@ function genDeriveeInverseQCM() {
     prompt: `Quelle est la fonction dérivée de la fonction inverse \\(f(x) = \\dfrac{1}{x}\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`f'(x) = -\\dfrac{1}{x^2}`],
+    steps: [{ type: "regle", text: `\\text{C'est une formule de référence à connaître : } f'(x) = -\\dfrac{1}{x^2}.` }],
   };
 }
 
@@ -154,7 +157,7 @@ function genDeriveeRacineCarreeQCM() {
     prompt: `Quelle est la fonction dérivée de la fonction racine carrée \\(f(x) = \\sqrt{x}\\), pour \\(x > 0\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`f'(x) = \\dfrac{1}{2\\sqrt{x}}`],
+    steps: [{ type: "regle", text: `\\text{C'est une formule de référence à connaître : } f'(x) = \\dfrac{1}{2\\sqrt{x}}.` }],
   };
 }
 
@@ -169,7 +172,11 @@ function genDeriveeSommeNumeric() {
     chapter: "Dérivation — Opérations (somme)",
     prompt: `On considère \\(f(x) = ${a2}x^2 ${signedL(a1, "x")} + 7\\), somme de plusieurs fonctions dérivables. Calcule \\(f'(${x0})\\).`,
     answer,
-    steps: [`f'(x) = ${2 * a2}x ${signedL(a1)}`, `f'(${x0}) = ${2 * a2} \\times ${x0} ${signedL(a1)} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{On dérive terme à terme.}` },
+      { type: "calcul", text: `f'(x) = ${2 * a2}x ${signedL(a1)}` },
+      { type: "resultat", text: `f'(${x0}) = ${2 * a2} \\times ${x0} ${signedL(a1)} = ${answer}` },
+    ],
   };
 }
 
@@ -183,7 +190,7 @@ function genDeriveeProduitFormuleQCM() {
     prompt: `\\(u\\) et \\(v\\) sont deux fonctions dérivables. Quelle est la formule de la dérivée du produit \\(uv\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`(uv)' = u'v + uv'`],
+    steps: [{ type: "regle", text: `\\text{C'est une formule de référence à connaître : } (uv)' = u'v + uv'.` }],
   };
 }
 
@@ -197,7 +204,7 @@ function genDeriveeQuotientFormuleQCM() {
     prompt: `\\(u\\) et \\(v\\) sont deux fonctions dérivables, avec \\(v\\) qui ne s'annule pas. Quelle est la formule de la dérivée du quotient \\(\\dfrac{u}{v}\\) ?`,
     answer: correctRaw,
     options,
-    steps: [`\\left(\\dfrac{u}{v}\\right)' = \\dfrac{u'v - uv'}{v^2}`],
+    steps: [{ type: "regle", text: `\\text{C'est une formule de référence à connaître : } \\left(\\dfrac{u}{v}\\right)' = \\dfrac{u'v - uv'}{v^2}.` }],
   };
 }
 
@@ -211,7 +218,7 @@ function genSensVariationDeriveeQCM() {
     prompt: `Sur un intervalle \\(I\\), la fonction dérivée de ${nomFonction} vérifie \\(${nomFonction}'(x) ${positive ? ">" : "<"} 0\\). Quel est le sens de variation de ${nomFonction} sur \\(I\\) ?`,
     answer: positive ? "croissante" : "décroissante",
     options: ["croissante", "décroissante"],
-    steps: [positive ? `\\text{f' positive} \\Rightarrow \\text{f croissante.}` : `\\text{f' négative} \\Rightarrow \\text{f décroissante.}`],
+    steps: [{ type: "regle", text: positive ? `\\text{f' positive} \\Rightarrow \\text{f croissante.}` : `\\text{f' négative} \\Rightarrow \\text{f décroissante.}` }],
   };
 }
 
@@ -224,17 +231,33 @@ function genExtremumTangenteHorizontaleQCM() {
     prompt: `${nomFonction} admet un extremum local en \\(x = a\\) et est dérivable en ce point. Que peut-on dire de \\(${nomFonction}'(a)\\) ?`,
     answer: `${nomFonction}'(a) = 0`,
     options: [`${nomFonction}'(a) = 0`, `${nomFonction}'(a) > 0`, `${nomFonction}'(a) < 0`],
-    steps: [`\\text{En un extremum local, la tangente est horizontale : } ${nomFonction}'(a) = 0.`],
+    steps: [{ type: "regle", text: `\\text{En un extremum local, la tangente est horizontale : } ${nomFonction}'(a) = 0.` }],
   };
 }
 
 // ---------- 14. Non-dérivabilité de la valeur absolue en 0 ----------
 function genVraiFauxDerivationQCM() {
   const cas = pick([
-    { description: "La fonction valeur absolue n'est pas dérivable en 0.", reponse: "Vrai" },
-    { description: "La fonction racine carrée est dérivable en 0.", reponse: "Faux" },
-    { description: "Si f'(a) existe, la courbe de f admet une tangente au point d'abscisse a.", reponse: "Vrai" },
-    { description: "La dérivée d'une fonction constante est cette constante elle-même.", reponse: "Faux" },
+    {
+      description: "La fonction valeur absolue n'est pas dérivable en 0.",
+      reponse: "Vrai",
+      explication: "\\text{En 0, la courbe de la valeur absolue forme un \\textit{angle} (un point anguleux) : elle n'admet pas de tangente unique, donc pas de nombre dérivé en ce point.}",
+    },
+    {
+      description: "La fonction racine carrée est dérivable en 0.",
+      reponse: "Faux",
+      explication: "\\text{En 0, la tangente à la courbe de la racine carrée est verticale : le taux de variation tend vers } +\\infty, \\text{ il n'y a donc pas de nombre dérivé fini en 0.}",
+    },
+    {
+      description: "Si f'(a) existe, la courbe de f admet une tangente au point d'abscisse a.",
+      reponse: "Vrai",
+      explication: "\\text{C'est la définition même du nombre dérivé : } f'(a) \\text{ est précisément le coefficient directeur de cette tangente.}",
+    },
+    {
+      description: "La dérivée d'une fonction constante est cette constante elle-même.",
+      reponse: "Faux",
+      explication: "\\text{La dérivée d'une fonction constante est toujours } \\textbf{nulle}, \\text{ pas égale à la constante : si } f(x) = 7, \\text{ alors } f'(x) = 0 \\text{ (et non } 7\\text{).}",
+    },
   ]);
   return {
     type: "qcm",
@@ -242,7 +265,7 @@ function genVraiFauxDerivationQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -260,7 +283,7 @@ function genPenteSecanteNumeric() {
     prompt: `On donne ci-dessous deux points \\(A\\) et \\(B\\) d'une courbe représentative d'une fonction \\(f\\). Calcule la pente (coefficient directeur) de la sécante \\((AB)\\) (valeur arrondie au millième si besoin).`,
     answer,
     tolerance: 0.002,
-    steps: [`\\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `\\dfrac{y_B - y_A}{x_B - x_A} = \\dfrac{${yB} - (${yA})}{${xB} - (${xA})} = \\dfrac{${yB - yA}}{${xB - xA}} \\approx ${fr(answer)}` }],
     graph: {
       xMin: Math.min(xA, xB) - 2,
       xMax: Math.max(xA, xB) + 2,

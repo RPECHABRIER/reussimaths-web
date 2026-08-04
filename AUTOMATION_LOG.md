@@ -1362,3 +1362,76 @@ dans ce sandbox).
 
 **2nde intégralement auditée pour la tâche #236.** Reste : Première non
 spé, Première Spé, Terminale Spé, Première techno, Terminale STMG.
+
+## Lycée — Première non spé intégralement auditée pour la tâche #236 (repères pédagogiques + codage sémantique)
+
+Suite de l'audit lycée entamé sur la 2nde. Les 9 fichiers de chapitres de
+Première (enseignement mathématique, non spécialité) ont été audités et
+corrigés selon la même méthode (conversion des steps legacy vers le format
+sémantique {type, text} + ajout d'un repère pédagogique — étape "règle" —
+partout où un raccourci silencieux existait) :
+
+- reviser-les-bases-premiere-non-spe.js : lacune sévère sur le coefficient
+  multiplicateur (steps affichait uniquement le résultat, sans la formule
+  1 ± t/100) corrigée.
+- analyse-information-chiffree-premiere-non-spe.js et
+  statistique-probabilites-premiere-non-spe.js : lacune sévère récurrente
+  sur la case manquante d'un tableau croisé d'effectifs (le résultat était
+  affiché sans dérivation) corrigée dans les deux fichiers avec la même
+  règle (somme des trois cases connues + case manquante = total général) ;
+  distinction explicite proportion globale / proportion conditionnelle ;
+  écart en points de pourcentage vs taux d'évolution (à ne pas confondre) ;
+  QCM "qualifier une corrélation" et "pourcentage ou point de pourcentage"
+  entièrement réécrits avec justification par cas.
+- croissance-lineaire-premiere-non-spe.js : **bug mathématique réel
+  découvert et corrigé** dans la résolution d'inéquation-seuil — le sens de
+  l'inégalité n'était pas inversé lors de la division par une raison
+  négative (suite décroissante), ce qui aurait affiché une algèbre fausse
+  une fois les étapes détaillées ajoutées. Vérifié par un script Node.js
+  (200 000 tirages, 0 écart) avant correction. Documenté dans le message de
+  commit dédié. QCM vrai/faux sur les suites réécrit avec justification par
+  cas.
+- croissance-exponentielle-premiere-non-spe.js : lacune sévère sur le
+  calcul de la raison d'une suite géométrique modélisant une évolution
+  (steps affichait juste `q = résultat`) corrigée ; distinction
+  raison = quotient (et non différence) systématiquement rappelée ; QCM
+  vrai/faux sur les suites géométriques réécrit avec justification par cas.
+- variations-instantanees-premiere-non-spe.js : QCM vrai/faux sur le nombre
+  dérivé (5 cas, zéro explication) entièrement réécrit, notamment la
+  confusion classique f(a) vs f'(a) ; règles ajoutées pour la comparaison
+  de nombres dérivés et la dérivation de l'ordonnée à l'origine d'une
+  tangente.
+- variations-globales-premiere-non-spe.js : QCM vrai/faux sur la fonction
+  dérivée et les variations réécrit (5 cas), notamment le contre-exemple
+  x³ pour "f'(a)=0 n'implique pas toujours un extremum" ; règle sur la
+  dérivation terme à terme d'un trinôme ; piège des deux solutions opposées
+  d'une équation x²=k pour les tangentes horizontales.
+- exercices-rituels-premiere-non-spe.js : lacune sévère sur le coefficient
+  multiplicateur (même correction que reviser-les-bases) ; règles ajoutées
+  pour les 6 rappels de compétences clés de l'année (tableaux croisés,
+  probabilités composées, suites arithmétiques et géométriques, nombre
+  dérivé, fonction dérivée).
+- preparation-eam-premiere-non-spe.js : fichier particulier (sujets
+  officiels de la session 2026 de l'EAM, déjà bien détaillés dans leurs
+  corrigés) — audit ciblé plutôt que conversion systématique : ajout de
+  règles uniquement là où un raccourci silencieux existait (évolutions
+  successives, équation produit nul, isoler une variable dans une formule
+  physique, dénominateur d'une probabilité conditionnelle = effectif du
+  sous-groupe et non du total, évènements complémentaires sachant A, seuil
+  sur une suite arithmétique avec arrondi à l'entier supérieur, dérivée
+  d'un trinôme du troisième degré, identités remarquables) ; correction
+  d'une lacune sur les générateurs originaux de suites (arithmétique et
+  géométrique) qui affichaient la réponse sans la substitution numérique.
+
+Chaque fichier : node --check, smoke test (8000 à 12000 itérations selon le
+fichier, 0 erreur), sync vers les deux copies Application TOP (avec diff
+vide vérifié), commit séparé (9 commits au total).
+
+Build final vérifié avec succès (`npm run build` depuis le dépôt Git
+`APPLI GITHUB/Sans titre`).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+**Première non spé intégralement auditée pour la tâche #236.** Reste :
+Première Spé, Terminale Spé, Première techno, Terminale STMG.

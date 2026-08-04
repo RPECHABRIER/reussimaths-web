@@ -101,13 +101,17 @@ function genFractionDecimaleVersDecimal() {
   const n = randInt(1, k === 10 ? 999 : k === 100 ? 9999 : 30000);
   const value = roundTo(n / k, decimals);
   const askDecimal = Math.random() < 0.5;
+  const rang = k === 10 ? "1 rang" : k === 100 ? "2 rangs" : "3 rangs";
   if (askDecimal) {
     return {
       type: "numeric",
       chapter: "Nombres décimaux — Fractions décimales",
       prompt: `\\(\\dfrac{${n}}{${k}} = ?\\) (écriture décimale)`,
       answer: value,
-      steps: [{ type: "calcul", text: `\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)` }],
+      steps: [
+        { type: "regle", text: `Diviser par ${k}, c'est décaler la virgule de ${rang} vers la gauche.` },
+        { type: "resultat", text: `\\(\\dfrac{${n}}{${k}} = ${frTex(value)}\\)` },
+      ],
     };
   }
   return {
@@ -115,7 +119,10 @@ function genFractionDecimaleVersDecimal() {
     chapter: "Nombres décimaux — Fractions décimales",
     prompt: `Quel numérateur complète \\(\\dfrac{?}{${k}} = ${frTex(value)}\\) ?`,
     answer: n,
-    steps: [{ type: "calcul", text: `${fr(value)} \\times ${k} = ${n}` }],
+    steps: [
+      { type: "regle", text: `Pour retrouver le numérateur, on fait l'opération inverse : on multiplie par ${k}.` },
+      { type: "resultat", text: `${fr(value)} \\times ${k} = ${n}` },
+    ],
   };
 }
 
@@ -124,12 +131,17 @@ function genDecompositionSommeDecimale() {
   const k = pick([10, 100]);
   const num = randInt(1, k - 1);
   const value = roundTo(whole + num / k, k === 10 ? 1 : 2);
+  const fracStr = k === 10 ? `0,${num}` : `0,${String(num).padStart(2, "0")}`;
   return {
     type: "numeric",
     chapter: "Nombres décimaux — Décomposition",
     prompt: `\\(${whole} + \\dfrac{${num}}{${k}} = ?\\)`,
     answer: value,
-    steps: [{ type: "calcul", text: `${whole} + ${num}/${k} = ${fr(value)}` }],
+    steps: [
+      { type: "regle", text: `${num}/${k} est ${k} fois plus petit que ${num}, donc ${num}/${k} = ${fracStr}.` },
+      { type: "calcul", text: `${whole} + ${num}/${k} = ${whole} + ${fracStr}` },
+      { type: "resultat", text: `${whole} + ${fracStr} = ${fr(value)}` },
+    ],
   };
 }
 
@@ -212,7 +224,10 @@ function genPlacerPointQCM() {
     figure,
     answer: targetLetter,
     options: shuffle(letters),
-    steps: [{ type: "resultat", text: `${targetLetter} correspond à ${fr(targetValue)}.` }],
+    steps: [
+      { type: "donnee", text: `Chaque graduation vaut ${fr(step)}.` },
+      { type: "resultat", text: `${targetLetter} correspond à ${fr(targetValue)}.` },
+    ],
   };
 }
 
@@ -298,12 +313,16 @@ function genEcritureLettresDecimal() {
   const centPart = randInt(1, 99);
   const value = roundTo(unitPart + centPart / 100, 2);
   const words = `${numberToFrenchWords(unitPart)} unité${unitPart > 1 ? "s" : ""} et ${numberToFrenchWords(centPart)} centième${centPart > 1 ? "s" : ""}`;
+  const fracStr = `0,${String(centPart).padStart(2, "0")}`;
   return {
     type: "numeric",
     chapter: "Nombres décimaux — Écrire en chiffres",
     prompt: `Écris en chiffres : « ${words} ».`,
     answer: value,
-    steps: [{ type: "calcul", text: `${unitPart} + ${centPart}/100 = ${fr(value)}` }],
+    steps: [
+      { type: "regle", text: `${centPart}/100 est 100 fois plus petit que ${centPart}, donc ${centPart} centième${centPart > 1 ? "s" : ""} = ${fracStr}.` },
+      { type: "resultat", text: `${unitPart} + ${fracStr} = ${fr(value)}` },
+    ],
   };
 }
 

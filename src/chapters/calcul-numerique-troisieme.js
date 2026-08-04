@@ -397,8 +397,8 @@ function genEcritureScientifiqueExposantNumeric() {
     prompt: `On écrit un nombre sous la forme \\(${fr(mDisplay)} \\times 10^{${eDisplay}}\\). Écris ce nombre en notation scientifique, avec une mantisse comprise entre 1 et 10 (en valeur absolue). Quel est l'exposant de cette écriture ?`,
     answer: e,
     steps: [
+      { type: "regle", text: `On déplace la virgule de la mantisse pour qu'elle soit comprise entre 1 et 10, en ajustant l'exposant de la même quantité en sens inverse.` },
       { type: "resultat", text: `${fr(mDisplay)} \\times 10^{${eDisplay}} = ${fr(m)} \\times 10^{${e}}` },
-      { type: "regle", text: `La mantisse ${fr(m)} est bien comprise entre 1 et 10.` },
     ],
   };
 }

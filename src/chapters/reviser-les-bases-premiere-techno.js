@@ -46,7 +46,10 @@ function genIdentiteRemarquableCarreQCM() {
     prompt: `Développer : \\((${a}x ${signe} ${b})^2\\)`,
     answer: correctRaw,
     options,
-    steps: [`\\((A ${signe} B)^2 = A^2 ${signe} 2AB + B^2\\)`, `\\text{Résultat : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\((A ${signe} B)^2 = A^2 ${signe} 2AB + B^2\\)` },
+      { type: "resultat", text: `\\text{Résultat : } ${correctRaw}` },
+    ],
   };
 }
 
@@ -62,7 +65,10 @@ function genFactoriserFacteurCommunNumeric() {
     chapter: "Réviser les bases (Première techno) — Calcul littéral",
     prompt: `On sait que \\(${k * a}x^2 ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)}x = ${k}x(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)})\\). Calcule la valeur de cette expression pour \\(x = ${x}\\).`,
     answer,
-    steps: [`${k} \\times ${x} \\times (${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${k * x} \\times ${a * x + b} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `${k} \\times ${x} \\times (${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}) = ${k * x} \\times ${a * x + b}` },
+      { type: "resultat", text: `${answer}` },
+    ],
   };
 }
 
@@ -79,7 +85,10 @@ function genResoudreEquationSimpleNumeric() {
     chapter: "Réviser les bases (Première techno) — Équations",
     prompt: `Résous l'équation : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
     answer: xSol,
-    steps: [`${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`, `x = ${c - b} \\div ${a} = ${xSol}`],
+    steps: [
+      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "resultat", text: `x = ${c - b} \\div ${a} = ${xSol}` },
+    ],
   };
 }
 
@@ -97,9 +106,9 @@ function genEquationProduitNulNumeric() {
     prompt: `Résous : \\((x ${s1} ${Math.abs(r1)})(x ${s2} ${Math.abs(r2)}) = 0\\). Donne la plus petite des deux solutions.`,
     answer: smaller,
     steps: [
-      `\\text{Un produit de facteurs est nul si l'un au moins des facteurs est nul.}`,
-      `x = ${r1} \\text{ ou } x = ${r2}`,
-      `\\text{La plus petite solution est } ${smaller}.`,
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si l'un au moins des facteurs est nul.}` },
+      { type: "calcul", text: `x = ${r1} \\text{ ou } x = ${r2}` },
+      { type: "resultat", text: `\\text{La plus petite solution est } ${smaller}.` },
     ],
   };
 }
@@ -127,9 +136,9 @@ function genResoudreInequationSimpleQCM() {
     answer: correctRaw,
     options,
     steps: [
-      `${a}x ${op} ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}`,
-      flip ? `\\text{On divise par un nombre négatif : le sens de l'inégalité change.}` : `\\text{On divise par un nombre positif : le sens de l'inégalité ne change pas.}`,
-      `\\text{Solution : } ${correctRaw}`,
+      { type: "calcul", text: `${a}x ${op} ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
+      { type: "regle", text: flip ? `\\text{On divise par un nombre négatif : le sens de l'inégalité change.}` : `\\text{On divise par un nombre positif : le sens de l'inégalité ne change pas.}` },
+      { type: "resultat", text: `\\text{Solution : } ${correctRaw}` },
     ],
   };
 }
@@ -147,7 +156,10 @@ function genImageFonctionAffineNumeric() {
     chapter: "Réviser les bases (Première techno) — Fonctions de référence",
     prompt: `On considère la fonction affine f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(f(${x})\\).`,
     answer,
-    steps: [`f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `f(${x}) = ${answer}` },
+    ],
     graph: {
       xMin: -8,
       xMax: 8,
@@ -173,7 +185,11 @@ function genLectureEquationDroiteQCM() {
     prompt: `On donne ci-dessous la droite représentant une fonction affine. Quelle est son équation réduite ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{L'ordonnée à l'origine se lit sur l'axe des ordonnées : } b = ${b}.`, `\\text{Le coefficient directeur se lit avec deux points de la droite : } a = ${fr(a)}.`, correctRaw],
+    steps: [
+      { type: "regle", text: `\\text{L'ordonnée à l'origine se lit sur l'axe des ordonnées : } b = ${b}.` },
+      { type: "regle", text: `\\text{Le coefficient directeur se lit avec deux points de la droite : } a = ${fr(a)}.` },
+      { type: "resultat", text: correctRaw },
+    ],
     graph: { xMin: -5, xMax: 5, yMin: Math.min(-6, a * -5 + b - 1), yMax: Math.max(6, a * 5 + b + 1), lines: [{ a, b }] },
   };
 }
@@ -190,7 +206,7 @@ function genSensVariationCarreQCM() {
     prompt: `Quel est le sens de variation de la fonction carré ${cas.intervalle} ?`,
     answer: cas.reponse,
     options: ["croissante", "décroissante"],
-    steps: [`\\text{La fonction carré est ${cas.reponse} ${cas.intervalle}.}`],
+    steps: [{ type: "regle", text: "Propriété de référence à connaître : la fonction carré x↦x² est décroissante sur ]−∞ ; 0] puis croissante sur [0 ; +∞[ (parabole tournée vers le haut, sommet en 0)." }],
   };
 }
 
@@ -207,7 +223,10 @@ function genPourcentageDuneQuantiteNumeric() {
     prompt: `Calcule ${p} % de ${total}.`,
     answer,
     tolerance: 0.02,
-    steps: [`${total} \\times \\dfrac{${p}}{100} = ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `${total} \\times \\dfrac{${p}}{100}` },
+      { type: "resultat", text: `${fr(answer)}` },
+    ],
   };
 }
 
@@ -222,7 +241,10 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction} de ${p} %. Quel est le coefficient multiplicateur associé ?`,
     answer,
     tolerance: 0.001,
-    steps: [`${fr(answer)}`],
+    steps: [
+      { type: "regle", text: direction === "augmente" ? `\\text{Une hausse de } ${p}\\% \\text{ correspond au coefficient multiplicateur } 1 + \\dfrac{${p}}{100}.` : `\\text{Une baisse de } ${p}\\% \\text{ correspond au coefficient multiplicateur } 1 - \\dfrac{${p}}{100}.` },
+      { type: "resultat", text: `${fr(answer)}` },
+    ],
   };
 }
 
@@ -239,7 +261,10 @@ function genEvolutionValeurNumeric() {
     prompt: `Une quantité initiale de ${v0} ${direction} de ${p} %. Calcule la valeur finale (arrondie au centième).`,
     answer,
     tolerance: 0.02,
-    steps: [`${v0} \\times ${fr(roundTo(coeff, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "La valeur finale s'obtient en multipliant la valeur initiale par le coefficient multiplicateur associé à l'évolution." },
+      { type: "resultat", text: `${v0} \\times ${fr(roundTo(coeff, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -258,7 +283,11 @@ function genMoyennePondereeNumeric() {
     prompt: `Un groupe de ${n1} élèves a une moyenne de ${note1}/20 et un autre groupe de ${n2} élèves a une moyenne de ${note2}/20. Calcule la moyenne générale des deux groupes réunis (arrondie au centième).`,
     answer,
     tolerance: 0.02,
-    steps: [`\\dfrac{${n1} \\times ${note1} + ${n2} \\times ${note2}}{${n1} + ${n2}} = \\dfrac{${n1 * note1 + n2 * note2}}{${n1 + n2}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : moyenne pondérée = (effectif₁×moyenne₁ + effectif₂×moyenne₂) / (effectif₁+effectif₂)." },
+      { type: "calcul", text: `\\dfrac{${n1} \\times ${note1} + ${n2} \\times ${note2}}{${n1} + ${n2}} = \\dfrac{${n1 * note1 + n2 * note2}}{${n1 + n2}}` },
+      { type: "resultat", text: `${fr(answer)}` },
+    ],
   };
 }
 
@@ -274,7 +303,10 @@ function genLectureTableauCroiseNumeric() {
     chapter: "Réviser les bases (Première techno) — Lecture de données",
     prompt: `Un tableau croisé donne, pour une catégorie, deux sous-effectifs de ${a} et ${b}. Calcule le total de cette catégorie.`,
     answer: totalLigne1,
-    steps: [`${a} + ${b} = ${totalLigne1}`],
+    steps: [
+      { type: "regle", text: "Le total d'une catégorie s'obtient en additionnant ses sous-effectifs." },
+      { type: "resultat", text: `${a} + ${b} = ${totalLigne1}` },
+    ],
   };
 }
 

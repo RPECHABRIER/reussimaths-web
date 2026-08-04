@@ -50,9 +50,9 @@ function genVerifierIndependanceQCM() {
     answer: reponse,
     options: ["indépendants", "non indépendants"],
     steps: [
-      `\\text{A et B sont indépendants si et seulement si } P(A \\cap B) = P(A) \\times P(B).`,
-      `P(A) \\times P(B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(roundTo(pA * pB, 4))}`,
-      reponse === "indépendants" ? `\\text{Cette valeur est bien égale à } P(A \\cap B) : \\text{les évènements sont indépendants.}` : `\\text{Cette valeur est différente de } P(A \\cap B) : \\text{les évènements ne sont pas indépendants.}`,
+      { type: "regle", text: `\\text{A et B sont indépendants si et seulement si } P(A \\cap B) = P(A) \\times P(B).` },
+      { type: "calcul", text: `P(A) \\times P(B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(roundTo(pA * pB, 4))}` },
+      { type: "resultat", text: reponse === "indépendants" ? `\\text{Cette valeur est bien égale à } P(A \\cap B) : \\text{les évènements sont indépendants.}` : `\\text{Cette valeur est différente de } P(A \\cap B) : \\text{les évènements ne sont pas indépendants.}` },
     ],
   };
 }
@@ -68,7 +68,10 @@ function genCalculerIntersectionIndependantsNumeric() {
     prompt: `Les évènements \\(A\\) et \\(B\\) sont indépendants, avec \\(P(A) = ${fr(pA)}\\) et \\(P(B) = ${fr(pB)}\\). Calcule \\(P(A \\cap B)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(A \\cap B) = P(A) \\times P(B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{A et B étant indépendants : } P(A \\cap B) = P(A) \\times P(B).` },
+      { type: "resultat", text: `P(A \\cap B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -83,7 +86,10 @@ function genRetrouverPANumeric() {
     prompt: `Les évènements \\(A\\) et \\(B\\) sont indépendants, avec \\(P(B) = ${fr(pB)}\\) et \\(P(A \\cap B) = ${fr(pAB)}\\). Calcule \\(P(A)\\).`,
     answer: pA,
     tolerance: 0.0005,
-    steps: [`P(A) = \\dfrac{P(A \\cap B)}{P(B)} = \\dfrac{${fr(pAB)}}{${fr(pB)}} = ${fr(pA)}`],
+    steps: [
+      { type: "regle", text: `\\text{On isole } P(A) \\text{ dans } P(A \\cap B) = P(A) \\times P(B).` },
+      { type: "resultat", text: `P(A) = \\dfrac{P(A \\cap B)}{P(B)} = \\dfrac{${fr(pAB)}}{${fr(pB)}} = ${fr(pA)}` },
+    ],
   };
 }
 
@@ -99,8 +105,8 @@ function genUnionIndependantsNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(A \\cap B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(roundTo(pA * pB, 4))}`,
-      `P(A \\cup B) = ${fr(pA)} + ${fr(pB)} - ${fr(roundTo(pA * pB, 4))} = ${fr(answer)}`,
+      { type: "calcul", text: `P(A \\cap B) = ${fr(pA)} \\times ${fr(pB)} = ${fr(roundTo(pA * pB, 4))}` },
+      { type: "resultat", text: `P(A \\cup B) = ${fr(pA)} + ${fr(pB)} - ${fr(roundTo(pA * pB, 4))} = ${fr(answer)}` },
     ],
   };
 }
@@ -116,7 +122,10 @@ function genPartitionCompleterNumeric() {
     prompt: `Les évènements \\(A_1\\), \\(A_2\\), \\(A_3\\) forment une partition de l'univers, avec \\(P(A_1) = ${fr(p1)}\\) et \\(P(A_2) = ${fr(p2)}\\). Calcule \\(P(A_3)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{Une partition vérifie } P(A_1) + P(A_2) + P(A_3) = 1.`, `P(A_3) = 1 - ${fr(p1)} - ${fr(p2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une partition vérifie } P(A_1) + P(A_2) + P(A_3) = 1.` },
+      { type: "resultat", text: `P(A_3) = 1 - ${fr(p1)} - ${fr(p2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -134,8 +143,8 @@ function genProbabilitesTotalesNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(B) = P(A_1) \\times P_{A_1}(B) + P(A_2) \\times P_{A_2}(B)`,
-      `P(B) = ${fr(p1)} \\times ${fr(pB1)} + ${fr(p2)} \\times ${fr(pB2)} = ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Formule des probabilités totales : } P(B) = P(A_1) \\times P_{A_1}(B) + P(A_2) \\times P_{A_2}(B).` },
+      { type: "resultat", text: `P(B) = ${fr(p1)} \\times ${fr(pB1)} + ${fr(p2)} \\times ${fr(pB2)} = ${fr(roundTo(p1 * pB1, 4))} + ${fr(roundTo(p2 * pB2, 4))} = ${fr(answer)}` },
     ],
   };
 }
@@ -151,7 +160,10 @@ function genProbabiliteBrancheArbreNumeric() {
     prompt: `Deux épreuves indépendantes se succèdent. La première a pour probabilité de succès \\(${fr(p1)}\\), la seconde \\(${fr(p2)}\\). Calcule la probabilité d'obtenir un succès aux deux épreuves.`,
     answer,
     tolerance: 0.0005,
-    steps: [`\\text{Le long d'une branche de l'arbre, on multiplie les probabilités.}`, `${fr(p1)} \\times ${fr(p2)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le long d'une branche de l'arbre, on multiplie les probabilités.}` },
+      { type: "resultat", text: `${fr(p1)} \\times ${fr(p2)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -169,9 +181,9 @@ function genProbabiliteTotaleArbreNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(\\text{deux succès}) = ${fr(p1)} \\times ${fr(p2)} = ${fr(chemin1)}`,
-      `P(\\text{deux échecs}) = (1-${fr(p1)}) \\times (1-${fr(p2)}) = ${fr(roundTo(1 - p1, 4))} \\times ${fr(roundTo(1 - p2, 4))} = ${fr(chemin2)}`,
-      `P(\\text{même résultat}) = ${fr(chemin1)} + ${fr(chemin2)} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{On additionne les probabilités des deux chemins qui donnent le même résultat aux deux épreuves.}` },
+      { type: "calcul", text: `P(\\text{deux succès}) = ${fr(p1)} \\times ${fr(p2)} = ${fr(chemin1)}, \\quad P(\\text{deux échecs}) = ${fr(roundTo(1 - p1, 4))} \\times ${fr(roundTo(1 - p2, 4))} = ${fr(chemin2)}` },
+      { type: "resultat", text: `P(\\text{même résultat}) = ${fr(chemin1)} + ${fr(chemin2)} = ${fr(answer)}` },
     ],
   };
 }
@@ -187,7 +199,10 @@ function genBernoulliTousSuccesNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir \\(${n}\\) succès consécutifs.`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(${n} \\text{ succès}) = p^{${n}} = ${fr(p)}^{${n}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Les épreuves étant indépendantes, on multiplie les probabilités } n \\text{ fois : } P(n \\text{ succès}) = p^n.` },
+      { type: "resultat", text: `P(${n} \\text{ succès}) = ${fr(p)}^{${n}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -203,7 +218,10 @@ function genBernoulliAuMoinsUnSuccesNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir au moins un succès (formule \\(1 - (1-p)^n\\)).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(\\text{au moins un succès}) = 1 - (1-${fr(p)})^{${n}} = 1 - ${fr(q)}^{${n}} = 1 - ${fr(roundTo(q ** n, 4))} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{L'évènement contraire de 'au moins un succès' est 'aucun succès' : } P(\\text{au moins un}) = 1 - P(\\text{aucun}).` },
+      { type: "resultat", text: `P(\\text{au moins un succès}) = 1 - (1-${fr(p)})^{${n}} = 1 - ${fr(q)}^{${n}} = 1 - ${fr(roundTo(q ** n, 4))} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -219,7 +237,10 @@ function genBernoulliCheminParticulierNumeric() {
     prompt: `On répète \\(${n}\\) fois, de façon indépendante, une épreuve de Bernoulli de probabilité de succès \\(p = ${fr(p)}\\). Calcule la probabilité d'obtenir, dans cet ordre précis, ${k} succès suivis de ${n - k} échecs.`,
     answer,
     tolerance: 0.00005,
-    steps: [`P(\\text{ce chemin}) = p^{${k}} \\times (1-p)^{${n - k}} = ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le long d'un chemin précis de l'arbre, on multiplie les probabilités rencontrées.}` },
+      { type: "resultat", text: `P(\\text{ce chemin}) = ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -233,7 +254,7 @@ function genNombreCheminsNumeric() {
     chapter: "Probabilités conditionnelles — Répétition d'épreuves de Bernoulli",
     prompt: `Dans l'arbre représentant la répétition de \\(${n}\\) épreuves de Bernoulli indépendantes, combien de chemins réalisent exactement ${k} succès ?`,
     answer,
-    steps: [`\\text{On compte le nombre de façons de placer } ${k} \\text{ succès parmi } ${n} \\text{ épreuves : } \\dbinom{${n}}{${k}} = ${answer}`],
+    steps: [{ type: "regle", text: `\\text{On compte le nombre de façons de placer } ${k} \\text{ succès parmi } ${n} \\text{ épreuves : } \\dbinom{${n}}{${k}} = ${answer}.` }],
   };
 }
 
@@ -251,8 +272,9 @@ function genProbabiliteExactementKSuccesNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `\\text{Nombre de chemins avec ${k} succès : } \\dbinom{${n}}{${k}} = ${nbChemins}`,
-      `P(${k} \\text{ succès}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Formule de la loi binomiale : } P(k \\text{ succès}) = \\dbinom{n}{k} \\times p^k \\times (1-p)^{n-k}.` },
+      { type: "calcul", text: `\\text{Nombre de chemins avec ${k} succès : } \\dbinom{${n}}{${k}} = ${nbChemins}` },
+      { type: "resultat", text: `P(${k} \\text{ succès}) = ${nbChemins} \\times ${fr(p)}^{${k}} \\times ${fr(roundTo(1 - p, 4))}^{${n - k}} = ${fr(answer)}` },
     ],
   };
 }
@@ -260,10 +282,26 @@ function genProbabiliteExactementKSuccesNumeric() {
 // ---------- 14. Vrai ou faux sur indépendance et partitions ----------
 function genVraiFauxIndependanceQCM() {
   const cas = pick([
-    { description: "Si A et B sont indépendants, alors P(A ∩ B) = P(A) × P(B).", reponse: "Vrai" },
-    { description: "Deux évènements incompatibles (disjoints) sont toujours indépendants.", reponse: "Faux" },
-    { description: "Dans une partition de l'univers, la somme des probabilités des évènements vaut 1.", reponse: "Vrai" },
-    { description: "La formule des probabilités totales nécessite que les évènements Ai forment une partition de l'univers.", reponse: "Vrai" },
+    {
+      description: "Si A et B sont indépendants, alors P(A ∩ B) = P(A) × P(B).",
+      reponse: "Vrai",
+      explication: `\\text{C'est la définition même de l'indépendance de deux évènements.}`,
+    },
+    {
+      description: "Deux évènements incompatibles (disjoints) sont toujours indépendants.",
+      reponse: "Faux",
+      explication: `\\text{Au contraire : si A et B sont incompatibles (} A \\cap B = \\emptyset\\text{) avec } P(A) > 0 \\text{ et } P(B) > 0, \\text{ alors } P(A \\cap B) = 0 \\neq P(A) \\times P(B). \\text{ Ils ne sont donc pas indépendants (savoir que A se réalise interdit B).}`,
+    },
+    {
+      description: "Dans une partition de l'univers, la somme des probabilités des évènements vaut 1.",
+      reponse: "Vrai",
+      explication: `\\text{Une partition recouvre tout l'univers sans chevauchement, donc la somme des probabilités des parts vaut } P(\\Omega) = 1.`,
+    },
+    {
+      description: "La formule des probabilités totales nécessite que les évènements Ai forment une partition de l'univers.",
+      reponse: "Vrai",
+      explication: `\\text{C'est une condition d'application de la formule : les } A_i \\text{ doivent être deux à deux incompatibles et recouvrir tout l'univers.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -271,7 +309,7 @@ function genVraiFauxIndependanceQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -289,7 +327,11 @@ function genReconnaitrePartitionQCM() {
     prompt: `On donne trois évènements deux à deux incompatibles \\(A_1\\), \\(A_2\\), \\(A_3\\), avec \\(P(A_1) = ${fr(p1)}\\), \\(P(A_2) = ${fr(p2)}\\), \\(P(A_3) = ${fr(p3)}\\). Forment-ils une partition de l'univers ?`,
     answer,
     options: ["C'est une partition de l'univers", "Ce n'est pas une partition de l'univers"],
-    steps: [`\\text{Somme des probabilités} = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(somme)}`, answer === "C'est une partition de l'univers" ? `\\text{La somme vaut 1 : c'est bien une partition.}` : `\\text{La somme ne vaut pas 1 : ce n'est pas une partition.}`],
+    steps: [
+      { type: "regle", text: `\\text{Trois évènements deux à deux incompatibles forment une partition si et seulement si la somme de leurs probabilités vaut 1.}` },
+      { type: "calcul", text: `\\text{Somme des probabilités} = ${fr(p1)} + ${fr(p2)} + ${fr(p3)} = ${fr(somme)}` },
+      { type: "resultat", text: answer === "C'est une partition de l'univers" ? `\\text{La somme vaut 1 : c'est bien une partition.}` : `\\text{La somme ne vaut pas 1 : ce n'est pas une partition.}` },
+    ],
   };
 }
 

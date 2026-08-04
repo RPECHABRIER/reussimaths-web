@@ -170,7 +170,10 @@ function genFactoriserFacteurCommunXNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(${a}x^{2} ${sgn(b)} ${abs(b)}x = x\\left(?x ${askA ? "+ \\ldots" : `${sgn(a)} ${abs(a)}`}\\right)\\). Quel est ${askA ? "le coefficient de x" : "le terme constant"} du facteur entre parenthèses ?`,
     answer: askA ? a : b,
-    steps: [{ type: "calcul", text: `${a}x^{2} ${sgn(b)} ${abs(b)}x = x \\times ${a}x + x \\times ${b} = x\\left(${a}x ${sgn(b)} ${abs(b)}\\right)` }],
+    steps: [
+      { type: "regle", text: `x est un facteur commun aux deux termes : on le met en évidence.` },
+      { type: "calcul", text: `${a}x^{2} ${sgn(b)} ${abs(b)}x = x \\times ${a}x + x \\times ${b} = x\\left(${a}x ${sgn(b)} ${abs(b)}\\right)` },
+    ],
   };
 }
 

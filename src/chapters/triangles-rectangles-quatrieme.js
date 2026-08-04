@@ -89,6 +89,7 @@ function genCalculerHypotenuseExacteNumeric() {
     figure: buildRightTriangleFigure({ right: "R", horiz: "S", vert: "T" }),
     answer: c,
     steps: [
+      { type: "regle", text: `ST^2 = RS^2 + RT^2` },
       { type: "calcul", text: `ST^2 = RS^2 + RT^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${c * c}` },
       { type: "resultat", text: `ST = \\sqrt{${c * c}} = ${c}` },
     ],
@@ -133,6 +134,7 @@ function genCalculerCoteAngleDroitApprocheNumeric() {
     answer: b,
     tolerance: 0.01,
     steps: [
+      { type: "regle", text: `HI^2 = GH^2 + GI^2\\ \\text{, donc } GI^2 = HI^2 - GH^2` },
       { type: "calcul", text: `GI^2 = HI^2 - GH^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${bSq}` },
       { type: "resultat", text: `GI = \\sqrt{${bSq}} \\approx ${fr(b)}` },
     ],

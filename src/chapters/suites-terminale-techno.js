@@ -32,7 +32,10 @@ function genTermeGeneralArithmetiqueNumeric() {
     chapter: "Suites (Terminale techno) — Terme général (arithmétique)",
     prompt: `\\((u_n)\\) est une suite arithmétique de premier terme \\(u_0 = ${u0}\\) et de raison \\(r = ${r}\\). Calcule \\(u_{${n}}\\).`,
     answer,
-    steps: [`u_{${n}} = u_0 + ${n} \\times r = ${u0} + ${n} \\times (${r}) = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : u_n = u_0 + n × r." },
+      { type: "resultat", text: `u_{${n}} = ${u0} + ${n} \\times (${r}) = ${answer}` },
+    ],
   };
 }
 
@@ -48,7 +51,10 @@ function genTermeGeneralGeometriqueNumeric() {
     prompt: `\\((u_n)\\) est une suite géométrique à termes positifs, de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Calcule \\(u_{${n}}\\) (arrondi au millième).`,
     answer,
     tolerance: 0.01,
-    steps: [`u_{${n}} = u_0 \\times q^{${n}} = ${u0} \\times ${fr(q)}^{${n}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : u_n = u_0 × q^n." },
+      { type: "resultat", text: `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}} \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -72,7 +78,11 @@ function genProuverArithmetiqueQCM() {
     prompt: `Les nombres ${a}, ${b}, ${c} peuvent-ils être 3 termes consécutifs d'une suite arithmétique ?`,
     answer,
     options: ["Oui, ce sont bien 3 termes consécutifs", "Non, ce ne sont pas 3 termes consécutifs"],
-    steps: [`\\text{On compare } b-a = ${b - a} \\text{ et } c-b = ${c - b}.`, consecutifs ? `\\text{Les deux différences sont égales : c'est une suite arithmétique.}` : `\\text{Les deux différences sont différentes : ce n'est pas une suite arithmétique.}`],
+    steps: [
+      { type: "regle", text: "Trois nombres sont des termes consécutifs d'une suite arithmétique si et seulement si les deux différences successives sont égales." },
+      { type: "calcul", text: `\\text{On compare } b-a = ${b - a} \\text{ et } c-b = ${c - b}.` },
+      { type: "resultat", text: consecutifs ? `\\text{Les deux différences sont égales : c'est une suite arithmétique.}` : `\\text{Les deux différences sont différentes : ce n'est pas une suite arithmétique.}` },
+    ],
   };
 }
 
@@ -91,7 +101,11 @@ function genProuverGeometriqueQCM() {
     prompt: `Les nombres ${fr(a)}, ${fr(b)}, ${fr(c)} peuvent-ils être 3 termes consécutifs d'une suite géométrique ?`,
     answer,
     options: ["Oui, ce sont bien 3 termes consécutifs", "Non, ce ne sont pas 3 termes consécutifs"],
-    steps: [`\\text{On compare } \\dfrac{b}{a} = ${fr(roundTo(b / a, 3))} \\text{ et } \\dfrac{c}{b} = ${fr(roundTo(c / b, 3))}.`, consecutifs ? `\\text{Les deux quotients sont égaux : c'est une suite géométrique.}` : `\\text{Les deux quotients sont différents : ce n'est pas une suite géométrique.}`],
+    steps: [
+      { type: "regle", text: "Trois nombres non nuls sont des termes consécutifs d'une suite géométrique si et seulement si les deux quotients successifs sont égaux." },
+      { type: "calcul", text: `\\text{On compare } \\dfrac{b}{a} = ${fr(roundTo(b / a, 3))} \\text{ et } \\dfrac{c}{b} = ${fr(roundTo(c / b, 3))}.` },
+      { type: "resultat", text: consecutifs ? `\\text{Les deux quotients sont égaux : c'est une suite géométrique.}` : `\\text{Les deux quotients sont différents : ce n'est pas une suite géométrique.}` },
+    ],
   };
 }
 
@@ -105,7 +119,10 @@ function genMoyenneArithmetiqueNumeric() {
     chapter: "Suites (Terminale techno) — Moyenne arithmétique",
     prompt: `Dans une suite arithmétique, \\(u_5 = ${a}\\) et \\(u_7 = ${c}\\). Calcule \\(u_6\\), moyenne arithmétique de \\(u_5\\) et \\(u_7\\).`,
     answer,
-    steps: [`u_6 = \\dfrac{u_5+u_7}{2} = \\dfrac{${a} + ${c}}{2} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Formule de référence à connaître : dans une suite arithmétique, un terme est la moyenne arithmétique de ses voisins immédiats : u_n = (u_(n-1) + u_(n+1)) / 2." },
+      { type: "resultat", text: `u_6 = \\dfrac{${a} + ${c}}{2} = ${answer}` },
+    ],
   };
 }
 
@@ -120,7 +137,10 @@ function genMoyenneGeometriqueNumeric() {
     chapter: "Suites (Terminale techno) — Moyenne géométrique",
     prompt: `Dans une suite géométrique à termes positifs, \\(u_5 = ${a}\\) et \\(u_7 = ${c}\\). Calcule \\(u_6\\), moyenne géométrique de \\(u_5\\) et \\(u_7\\) (formule \\(u_6 = \\sqrt{u_5 \\times u_7}\\)).`,
     answer,
-    steps: [`u_6 = \\sqrt{${a} \\times ${c}} = \\sqrt{${a * c}} = ${answer}`],
+    steps: [
+      { type: "calcul", text: `u_6 = \\sqrt{${a} \\times ${c}} = \\sqrt{${a * c}}` },
+      { type: "resultat", text: `u_6 = ${answer}` },
+    ],
   };
 }
 
@@ -136,7 +156,11 @@ function genSommeArithmetiqueNumeric() {
     chapter: "Suites (Terminale techno) — Somme (arithmétique)",
     prompt: `\\((u_n)\\) est une suite arithmétique de premier terme \\(u_0 = ${u0}\\) et de raison \\(r = ${r}\\). Sachant que \\(u_{${n}} = ${uN}\\), calcule \\(\\displaystyle\\sum_{k=0}^{${n}} u_k = u_0+u_1+\\dots+u_{${n}}\\).`,
     answer,
-    steps: [`\\text{Somme = (nombre de termes)} \\times \\dfrac{\\text{premier + dernier}}{2}`, `S = ${n + 1} \\times \\dfrac{${u0} + ${uN}}{2} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : Somme = (nombre de termes)} \\times \\dfrac{\\text{premier + dernier}}{2}` },
+      { type: "calcul", text: `S = ${n + 1} \\times \\dfrac{${u0} + ${uN}}{2}` },
+      { type: "resultat", text: `S = ${answer}` },
+    ],
   };
 }
 
@@ -152,15 +176,26 @@ function genSommeGeometriqueNumeric() {
     prompt: `\\((u_n)\\) est une suite géométrique de premier terme \\(u_0 = ${u0}\\) et de raison \\(q = ${fr(q)}\\). Calcule \\(\\displaystyle\\sum_{k=0}^{${n}} u_k\\) (arrondi au millième) à l'aide de la formule \\(u_0 \\times \\dfrac{q^{n+1}-1}{q-1}\\).`,
     answer,
     tolerance: 0.01,
-    steps: [`S = ${u0} \\times \\dfrac{${fr(q)}^{${n + 1}} - 1}{${fr(q)} - 1} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `S = ${u0} \\times \\dfrac{${fr(q)}^{${n + 1}} - 1}{${fr(q)} - 1}` },
+      { type: "resultat", text: `S \\approx ${fr(answer)}` },
+    ],
   };
 }
 
 // ---------- 9. Reconnaître une situation de somme de versements réguliers ----------
 function genReconnaitreSommeVersementsQCM() {
   const cas = pick([
-    { description: "Un épargnant verse le même montant chaque année sur un compte rémunéré à intérêts composés : on cherche le capital total après plusieurs années.", reponse: "Somme de termes d'une suite géométrique" },
-    { description: "Un épargnant verse le même montant chaque année sur un compte NON rémunéré : on cherche le capital total après plusieurs années.", reponse: "Somme de termes d'une suite arithmétique" },
+    {
+      description: "Un épargnant verse le même montant chaque année sur un compte rémunéré à intérêts composés : on cherche le capital total après plusieurs années.",
+      reponse: "Somme de termes d'une suite géométrique",
+      explication: "Somme de termes d'une suite géométrique : chaque versement capitalise avec un taux d'intérêt constant, donc sa valeur future est multipliée chaque année par le même coefficient (1+taux) — c'est la marque d'une suite géométrique.",
+    },
+    {
+      description: "Un épargnant verse le même montant chaque année sur un compte NON rémunéré : on cherche le capital total après plusieurs années.",
+      reponse: "Somme de termes d'une suite arithmétique",
+      explication: "Somme de termes d'une suite arithmétique : sans intérêts, chaque versement ajoute simplement le même montant fixe au capital, donc le capital total évolue en additionnant toujours la même quantité — c'est la marque d'une suite arithmétique.",
+    },
   ]);
   return {
     type: "qcm",
@@ -168,7 +203,7 @@ function genReconnaitreSommeVersementsQCM() {
     prompt: `« ${cas.description} » Quelle notion mathématique permet de calculer ce capital total ?`,
     answer: cas.reponse,
     options: ["Somme de termes d'une suite géométrique", "Somme de termes d'une suite arithmétique"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -187,7 +222,11 @@ function genPlacementVersementsNumeric() {
     prompt: `Un épargnant verse ${versement} € au début de chaque année sur un compte rémunéré à ${fr(taux * 100)} % par an (intérêts composés), pendant ${n} ans. Calcule le capital total juste après le ${n}-ième versement (arrondi au centime), sachant que ce capital est la somme \\(\\displaystyle\\sum_{k=0}^{${n - 1}} ${versement} \\times ${fr(1 + taux)}^k\\).`,
     answer,
     tolerance: 1,
-    steps: [`\\text{Capital} = ${versement} \\times \\dfrac{${fr(1 + taux)}^{${n}} - 1}{${fr(1 + taux)} - 1} \\approx ${fr(answer)} \\text{ €}`],
+    steps: [
+      { type: "regle", text: "Cette somme de versements suit la formule de la somme des n premiers termes d'une suite géométrique." },
+      { type: "calcul", text: `\\text{Capital} = ${versement} \\times \\dfrac{${fr(1 + taux)}^{${n}} - 1}{${fr(1 + taux)} - 1}` },
+      { type: "resultat", text: `\\text{Capital} \\approx ${fr(answer)} \\text{ €}` },
+    ],
   };
 }
 

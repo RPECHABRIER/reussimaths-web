@@ -29,7 +29,10 @@ function genPointMoyenNumeric() {
     prompt: `Une série statistique à deux variables a pour valeurs de \\(x\\) : ${xs.join(", ")}. Calcule la moyenne \\(\\bar{x}\\) (abscisse du point moyen), arrondie au centième.`,
     answer: xMoy,
     tolerance: 0.02,
-    steps: [`\\bar{x} = \\dfrac{${xs.join(" + ")}}{${xs.length}} = ${fr(xMoy)}`],
+    steps: [
+      { type: "calcul", text: `\\bar{x} = \\dfrac{${xs.join(" + ")}}{${xs.length}}` },
+      { type: "resultat", text: `\\bar{x} = ${fr(xMoy)}` },
+    ],
   };
 }
 
@@ -51,7 +54,7 @@ function genLectureNuagePointsNumeric() {
     prompt: `On donne ci-dessous un nuage de points représentant une série statistique à deux variables. Donne l'ordonnée du point d'abscisse ${chosen.x} (lecture graphique).`,
     answer: chosen.y,
     tolerance: 0.15,
-    steps: [`\\text{Lecture graphique : le point d'abscisse ${chosen.x} a pour ordonnée ${fr(chosen.y)}.}`],
+    steps: [{ type: "resultat", text: `\\text{Lecture graphique : le point d'abscisse ${chosen.x} a pour ordonnée ${fr(chosen.y)}.}` }],
     graph: { xMin: 0, xMax: 16, yMin: Math.min(0, ...points.map((p) => p.y)) - 2, yMax: Math.max(...points.map((p) => p.y)) + 2, points: points.map((p) => (p === chosen ? { ...p, label: "?" } : p)) },
   };
 }
@@ -68,7 +71,11 @@ function genAjustementAffineInterpolerNumeric() {
     prompt: `Un ajustement affine d'un nuage de points est donné par \\(y = ${fr(a)}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Utilise cet ajustement pour estimer la valeur de \\(y\\) lorsque \\(x = ${x}\\).`,
     answer,
     tolerance: 0.05,
-    steps: [`y = ${fr(a)} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: "Interpoler consiste à remplacer x par la valeur donnée dans l'équation de l'ajustement affine." },
+      { type: "calcul", text: `y = ${fr(a)} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `y = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -85,7 +92,11 @@ function genAjustementAffineExtrapolerNumeric() {
     chapter: "Statistiques à deux variables (Première techno) — Ajustement affine",
     prompt: `On modélise l'évolution d'une grandeur par l'ajustement affine \\(y = ${a}x + ${b}\\), où \\(x\\) est le nombre d'années après 2026. En extrapolant ce modèle, estime la valeur de \\(y\\) en ${annee}.`,
     answer,
-    steps: [`x = ${annee} - ${anneeRef} = ${x}`, `y = ${a} \\times ${x} + ${b} = ${answer}`],
+    steps: [
+      { type: "regle", text: "Extrapoler consiste à utiliser le modèle en dehors des valeurs observées : le résultat est une estimation, pas une certitude." },
+      { type: "calcul", text: `x = ${annee} - ${anneeRef} = ${x}` },
+      { type: "resultat", text: `y = ${a} \\times ${x} + ${b} = ${answer}` },
+    ],
   };
 }
 
@@ -101,7 +112,10 @@ function genDeterminerAjustementNumeric() {
     chapter: "Statistiques à deux variables (Première techno) — Ajustement affine",
     prompt: `Un ajustement affine passe par les points \\((${x1} ; ${y1})\\) et \\((${x2} ; ${y2})\\). Détermine le coefficient directeur \\(a\\) de cet ajustement.`,
     answer: a,
-    steps: [`a = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${a}`],
+    steps: [
+      { type: "calcul", text: `a = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = \\dfrac{${y2 - y1}}{${x2 - x1}}` },
+      { type: "resultat", text: `a = ${a}` },
+    ],
     graph: {
       xMin: Math.min(x1, x2) - 2,
       xMax: Math.max(x1, x2) + 2,
@@ -116,8 +130,8 @@ function genDeterminerAjustementNumeric() {
 // ---------- 6. Reconnaître un nuage bien ajusté par une droite ----------
 function genReconnaitreAjustementPertinentQCM() {
   const cas = pick([
-    { description: "Les points du nuage semblent alignés autour d'une droite.", reponse: "Un ajustement affine est pertinent" },
-    { description: "Les points du nuage forment une courbe qui s'incurve nettement (ni une droite, ni un alignement).", reponse: "Un ajustement affine n'est pas pertinent" },
+    { description: "Les points du nuage semblent alignés autour d'une droite.", reponse: "Un ajustement affine est pertinent", explication: "Un ajustement affine est pertinent : quand les points suivent une tendance linéaire, une droite les représente bien." },
+    { description: "Les points du nuage forment une courbe qui s'incurve nettement (ni une droite, ni un alignement).", reponse: "Un ajustement affine n'est pas pertinent", explication: "Un ajustement affine n'est pas pertinent : une droite ne peut pas bien représenter une tendance qui s'incurve nettement." },
   ]);
   return {
     type: "qcm",
@@ -125,7 +139,7 @@ function genReconnaitreAjustementPertinentQCM() {
     prompt: `« ${cas.description} » Que peut-on dire de la pertinence d'un ajustement affine ?`,
     answer: cas.reponse,
     options: ["Un ajustement affine est pertinent", "Un ajustement affine n'est pas pertinent"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -140,7 +154,10 @@ function genPointMoyenSurDroiteNumeric() {
     chapter: "Statistiques à deux variables (Première techno) — Point moyen",
     prompt: `Le point moyen d'un nuage est \\(G(${xMoy} ; ${yMoy})\\). La droite d'ajustement affine, qui passe par \\(G\\), a pour coefficient directeur \\(a = ${a}\\). Détermine son ordonnée à l'origine \\(b\\).`,
     answer: b,
-    steps: [`y = ax + b \\text{ avec } G \\text{ sur la droite : } ${yMoy} = ${a} \\times ${xMoy} + b`, `b = ${yMoy} - ${a * xMoy} = ${fr(b)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le point moyen appartient toujours à la droite d'ajustement : } y = ax + b \\text{ avec } G \\text{ sur la droite : } ${yMoy} = ${a} \\times ${xMoy} + b` },
+      { type: "resultat", text: `b = ${yMoy} - ${a * xMoy} = ${fr(b)}` },
+    ],
   };
 }
 

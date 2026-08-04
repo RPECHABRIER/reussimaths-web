@@ -1158,3 +1158,59 @@ dans ce sandbox).
 Prochaine étape : même audit pour la 4e, puis la 3e (déjà taguée sémantiquement
 côté steps via la tâche #233, mais pas encore auditée pour les repères
 pédagogiques de la tâche #236). Le lycée reste reporté à plus tard.
+
+## 2026-08-04 (suite 2) — Repères pédagogiques : 4e complet
+
+Suite de la tâche #236 sur le niveau 4e (16 fichiers audités : les 15
+chapitres du sommaire + Exercices de fin d'année ; automatismes-quatrieme.js
+volontairement exclu, même raison qu'en 6e/5e — fluence rapide, pas des
+leçons expliquées).
+
+Fichiers modifiés (avec exemples de règles ajoutées) :
+- reviser-les-bases-quatrieme.js : aires rectangle/triangle, pourcentage,
+  moyenne.
+- addition-soustraction-rationnels.js : décomposition en facteurs premiers
+  avec divisions détaillées (au lieu d'afficher juste le résultat), PGCD via
+  algorithme d'Euclide avec les étapes, comparaison de fractions par produits
+  en croix.
+- multiplication-division-rationnels.js : règle de multiplication des
+  fractions, fraction d'un nombre, pourcentages, aire rectangle.
+- puissances-quatrieme.js : règles produit/quotient/puissance de puissances
+  (a^m×a^n=a^(m+n), etc. — jusqu'ici le calcul apparaissait sans jamais
+  énoncer la règle), notation scientifique, racine carrée d'une aire.
+- calcul-litteral-quatrieme.js : réduire (regrouper les termes), distributivité
+  simple et double, factoriser.
+- resolution-equations.js : méthode d'isolement de x pour les 4 types
+  d'équations (simple, deux étapes, deux côtés, avec parenthèses) — même
+  lacune que celle identifiée en 5e (calcul-litteral.js).
+- statistiques-quatrieme.js : formule de moyenne, formule de l'angle d'un
+  secteur circulaire, conversion angle→pourcentage (le "÷3,6" était un nombre
+  magique non expliqué).
+- probabilites-quatrieme.js : définitions des types d'événement (certain,
+  impossible, élémentaire), principe de l'événement contraire.
+- notion-fonctions.js : formule aire/périmètre nommée dans le problème
+  contextualisé.
+- proportionnalite-quatrieme.js : produit en croix, effet du rapport k sur
+  longueur (×k) / aire (×k²) / volume (×k³) — jusqu'ici k² et k³ étaient
+  appliqués sans jamais expliquer pourquoi l'exposant change.
+- theoreme-thales.js : produit en croix pour résoudre une proportion.
+- triangles-rectangles-quatrieme.js : formule de Pythagore nommée avant
+  application (deux générateurs qui calculaient directement sans l'énoncer).
+- exercices-fin-annee-quatrieme.js : angle diagramme circulaire, Pythagore,
+  distributivité, volume pyramide.
+
+Fichiers relus intégralement, aucune modification nécessaire (déjà bien
+expliqués) : nombres-relatifs-quatrieme.js, geometrie-plane.js,
+geometrie-espace-quatrieme.js.
+
+Chaque fichier : node --check, smoke test (8000 itérations, 0 erreur), sync
+vers les deux copies, commit séparé. Build final vérifié (`npm run build`,
+succès après un premier essai en échec sur une erreur transitoire EMFILE du
+sandbox — sans lien avec le code).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+Prochaine étape : même audit pour la 3e (déjà taguée sémantiquement côté
+steps via la tâche #233, mais pas encore auditée pour les repères
+pédagogiques de la tâche #236). Le lycée reste reporté à plus tard.

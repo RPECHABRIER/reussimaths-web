@@ -108,6 +108,7 @@ function genComparerMoyennesQCM() {
     answer: winner,
     options: ["Entreprise A", "Entreprise B"],
     steps: [
+      { type: "regle", text: `Moyenne = (somme des valeurs) ÷ (nombre de valeurs).` },
       { type: "calcul", text: `Moyenne A = ${fr(roundTo(A.mean, 2))} €` },
       { type: "calcul", text: `Moyenne B = ${fr(roundTo(B.mean, 2))} €` },
     ],
@@ -187,7 +188,10 @@ function genAngleSecteurCirculaireNumeric() {
     prompt: `Dans un diagramme circulaire représentant ${total} personnes, une catégorie regroupe ${effectif} personnes. Quelle est la mesure de l'angle du secteur correspondant, en degrés (arrondie au dixième) ?`,
     answer: angle,
     tolerance: 0.1,
-    steps: [{ type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 360 \\approx ${fr(angle)}°` }],
+    steps: [
+      { type: "regle", text: `Angle du secteur = (effectif de la catégorie ÷ effectif total) × 360°.` },
+      { type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 360 \\approx ${fr(angle)}°` },
+    ],
   };
 }
 
@@ -202,7 +206,10 @@ function genEffectifDepuisAngleNumeric() {
     prompt: `Dans un diagramme circulaire représentant ${total} personnes, un secteur a un angle de ${fr(angle)}°. Combien de personnes ce secteur représente-t-il (arrondi à l'unité) ?`,
     answer: effectif,
     tolerance: 1,
-    steps: [{ type: "calcul", text: `\\dfrac{${fr(angle)}}{360} \\times ${total} \\approx ${effectif}` }],
+    steps: [
+      { type: "regle", text: `On inverse la formule de l'angle : effectif = (angle du secteur ÷ 360) × effectif total.` },
+      { type: "calcul", text: `\\dfrac{${fr(angle)}}{360} \\times ${total} \\approx ${effectif}` },
+    ],
   };
 }
 
@@ -216,7 +223,10 @@ function genPourcentageDepuisAngleNumeric() {
     prompt: `Un secteur d'un diagramme circulaire a un angle de ${fr(angle)}°. Quel pourcentage cela représente-t-il ?`,
     answer: pourcentage,
     tolerance: 0.5,
-    steps: [{ type: "calcul", text: `${fr(angle)} \\div 3,6 = ${pourcentage}\\%` }],
+    steps: [
+      { type: "regle", text: `Un pourcentage correspond à (angle ÷ 360) × 100, soit diviser par \\(360 \\div 100 = 3,6\\).` },
+      { type: "calcul", text: `${fr(angle)} \\div 3,6 = ${pourcentage}\\%` },
+    ],
   };
 }
 

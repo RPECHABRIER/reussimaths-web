@@ -514,3 +514,27 @@ create policy "daily_streak: self read/write" on public.daily_streak
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 grant execute on function public.record_login() to authenticated;
+
+-- Temps de pratique cumulé par jour (pour le bilan hebdomadaire destiné aux
+-- parents, voir src/pages/Bilan.jsx et src/hooks/usePracticeTime.js). Un seul
+-- enregistrement par jour, incrémenté par petites tranches ("heartbeat"
+-- régulier pendant qu'un exercice est ouvert, voir ChapterRunner /
+-- AutomatismesRunner / MiniDuel) plutôt qu'une ligne par session, pour
+-- simplifier l'agrégation hebdomadaire (SUM sur practice_date). Même
+-- convention de lecture-puis-écriture côté client que skill_mastery /
+-- daily_streak (pas de RPC dédiée) : le pire cas d'abus (un élève gonfle son
+-- propre compteur de temps) n'affecte que son propre bilan, sans enjeu de
+-- sécurité ou d'accès contrairement aux quotas/abonnements.
+create table if not exists public.practice_time (
+  user_id uuid references auth.users (id) on delete cascade,
+  practice_date date not null,
+  seconds integer not null default 0,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, practice_date)
+);
+alter table public.practice_time enable row level security;
+
+create policy "practice_time: self read/write" on public.practice_time
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create index if not exists practice_time_user_date_idx on public.practice_time (user_id, practice_date);

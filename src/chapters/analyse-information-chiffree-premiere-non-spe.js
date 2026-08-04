@@ -68,12 +68,17 @@ function genCompleterCaseTableauCroiseNumeric() {
   ]);
   const t = tableauCroise2x2();
   const caseChoisie = pick(["a", "b", "c", "d"]);
+  const autresCases = ["a", "b", "c", "d"].filter((k) => k !== caseChoisie);
   return {
     type: "numeric",
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
     prompt: `On étudie ${contexte.sujet} à l'aide d'un tableau croisé. On sait que : ${contexte.ligne} et ${contexte.colonne} : ${caseChoisie === "a" ? "?" : t.a} ; ${contexte.ligne} et ${contexte.colonne2} : ${caseChoisie === "b" ? "?" : t.b} ; ${contexte.ligne2} et ${contexte.colonne} : ${caseChoisie === "c" ? "?" : t.c} ; ${contexte.ligne2} et ${contexte.colonne2} : ${caseChoisie === "d" ? "?" : t.d}. Le total de la ligne « ${contexte.ligne} » est ${t.totalL1} et le total général est ${t.total}. Détermine la case manquante (« ? »).`,
     answer: t[caseChoisie],
-    steps: [`\\text{Case manquante} = ${t[caseChoisie]}`],
+    steps: [
+      { type: "regle", text: `\\text{La somme des trois cases connues et de la case manquante doit être égale au total général : la case manquante s'obtient donc par soustraction.}` },
+      { type: "calcul", text: `${t.total} - (${autresCases.map((k) => t[k]).join(" + ")}) = ${t.total} - ${autresCases.reduce((s, k) => s + t[k], 0)}` },
+      { type: "resultat", text: `\\text{Case manquante} = ${t[caseChoisie]}` },
+    ],
   };
 }
 
@@ -86,7 +91,10 @@ function genTotalMarginalTableauCroiseNumeric() {
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
     prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${t.a}, ${t.b}, ${t.c}, ${t.d} (dans cet ordre : ligne 1/colonne 1, ligne 1/colonne 2, ligne 2/colonne 1, ligne 2/colonne 2). Calcule le total de ${demanderLigne ? "la première ligne" : "la première colonne"}.`,
     answer: demanderLigne ? t.totalL1 : t.totalC1,
-    steps: [demanderLigne ? `${t.a} + ${t.b} = ${t.totalL1}` : `${t.a} + ${t.c} = ${t.totalC1}`],
+    steps: [
+      { type: "regle", text: `\\text{Le total d'une ligne (ou d'une colonne) est la somme des cases qui la composent.}` },
+      { type: "resultat", text: demanderLigne ? `${t.a} + ${t.b} = ${t.totalL1}` : `${t.a} + ${t.c} = ${t.totalC1}` },
+    ],
   };
 }
 
@@ -99,7 +107,10 @@ function genProportionTableauCroiseNumeric() {
     prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${t.a}, ${t.b}, ${t.c}, ${t.d}. Le total général est de ${t.total}. Quelle proportion (arrondie au centième) représente la case ${t.a} par rapport au total général ?`,
     answer: roundTo(t.a / t.total, 2),
     tolerance: 0.01,
-    steps: [`\\dfrac{${t.a}}{${t.total}} \\approx ${roundTo(t.a / t.total, 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une proportion sur le total général se calcule en divisant l'effectif de la case par l'effectif total.}` },
+      { type: "resultat", text: `\\dfrac{${t.a}}{${t.total}} \\approx ${roundTo(t.a / t.total, 2)}` },
+    ],
   };
 }
 
@@ -112,7 +123,11 @@ function genProportionConditionnelleNumeric() {
     prompt: `Un tableau croisé d'effectifs donne, pour la première ligne : ${t.a} dans la première colonne et ${t.b} dans la seconde colonne. Parmi les individus de cette première ligne, quelle proportion (arrondie au centième) appartient à la première colonne ?`,
     answer: roundTo(t.a / (t.a + t.b), 2),
     tolerance: 0.01,
-    steps: [`\\text{Total de la ligne} = ${t.a} + ${t.b} = ${t.a + t.b}`, `\\dfrac{${t.a}}{${t.a + t.b}} \\approx ${roundTo(t.a / (t.a + t.b), 2)}`],
+    steps: [
+      { type: "regle", text: `\\text{Une proportion } \\textbf{conditionnelle} \\text{ se calcule par rapport au total de la sous-catégorie concernée (ici la ligne), et non par rapport au total général.}` },
+      { type: "calcul", text: `\\text{Total de la ligne} = ${t.a} + ${t.b} = ${t.a + t.b}` },
+      { type: "resultat", text: `\\dfrac{${t.a}}{${t.a + t.b}} \\approx ${roundTo(t.a / (t.a + t.b), 2)}` },
+    ],
   };
 }
 
@@ -126,7 +141,10 @@ function genTauxReussiteNumeric() {
     chapter: "Analyse de l'information chiffrée — Proportions et taux",
     prompt: `Lors d'un examen, ${candidats} candidats se sont présentés et ${admis} ont été admis. Calcule le taux de réussite (en %, arrondi à l'unité).`,
     answer: Math.round((admis / candidats) * 100),
-    steps: [`\\dfrac{${admis}}{${candidats}} \\times 100 \\approx ${Math.round((admis / candidats) * 100)}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Le taux de réussite (en \\%) s'obtient en divisant l'effectif des admis par l'effectif total, puis en multipliant par 100.}` },
+      { type: "resultat", text: `\\dfrac{${admis}}{${candidats}} \\times 100 \\approx ${Math.round((admis / candidats) * 100)}\\%` },
+    ],
   };
 }
 
@@ -139,7 +157,10 @@ function genAngleSecteurCirculaireNumeric() {
     chapter: "Analyse de l'information chiffrée — Diagrammes circulaires",
     prompt: `Dans un diagramme circulaire, un secteur représente ${p} % d'un total. Quelle est la mesure de l'angle de ce secteur (en degrés) ?`,
     answer: angle,
-    steps: [`${p}\\% \\times 360° = \\dfrac{${p}}{100} \\times 360 = ${angle}°`],
+    steps: [
+      { type: "regle", text: `\\text{Un cercle complet mesure } 360°, \\text{ répartis proportionnellement aux pourcentages : angle du secteur} = \\text{pourcentage} \\times 360°.` },
+      { type: "resultat", text: `${p}\\% \\times 360° = \\dfrac{${p}}{100} \\times 360 = ${angle}°` },
+    ],
   };
 }
 
@@ -155,7 +176,10 @@ function genVerifierDiagrammeCirculaireQCM() {
     prompt: `Dans un diagramme circulaire, un secteur est annoncé comme représentant ${p} % du total, mais son angle mesure ${angleAffiche}°. Ce diagramme est-il cohérent ?`,
     answer: coherent ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\text{Angle attendu} = ${p}\\% \\times 360° = ${angleCorrect}°`, coherent ? `${angleAffiche}° = ${angleCorrect}° : le diagramme est cohérent.` : `${angleAffiche}° \\neq ${angleCorrect}° : le diagramme n'est pas cohérent (l'échelle est faussée).`],
+    steps: [
+      { type: "calcul", text: `\\text{Angle attendu} = ${p}\\% \\times 360° = ${angleCorrect}°` },
+      { type: "resultat", text: coherent ? `${angleAffiche}° = ${angleCorrect}° : le diagramme est cohérent.` : `${angleAffiche}° \\neq ${angleCorrect}° : le diagramme n'est pas cohérent (l'échelle est faussée).` },
+    ],
   };
 }
 
@@ -173,18 +197,42 @@ function genVerifierDiagrammeBatonsQCM() {
     prompt: `Un diagramme en bâtons représente deux valeurs : ${valeur1} et ${valeur2}. Le bâton de la première valeur mesure ${hauteur1} cm et celui de la seconde mesure ${hauteur2} cm. L'échelle de ce diagramme est-elle respectée ?`,
     answer: coherent ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`\\text{Rapport réel des valeurs} = \\dfrac{${valeur2}}{${valeur1}} = ${rapportReel}`, `\\text{Rapport des hauteurs} = \\dfrac{${hauteur2}}{${hauteur1}} = ${hauteur2 / hauteur1}`, coherent ? "Les deux rapports sont égaux : l'échelle est respectée." : "Les deux rapports sont différents : l'échelle est faussée, ce qui peut induire en erreur."],
+    steps: [
+      { type: "regle", text: `\\text{Un diagramme en bâtons respecte l'échelle si le rapport des hauteurs des bâtons est égal au rapport des valeurs qu'ils représentent.}` },
+      { type: "calcul", text: `\\text{Rapport réel des valeurs} = \\dfrac{${valeur2}}{${valeur1}} = ${rapportReel}, \\quad \\text{Rapport des hauteurs} = \\dfrac{${hauteur2}}{${hauteur1}} = ${hauteur2 / hauteur1}` },
+      { type: "resultat", text: coherent ? "Les deux rapports sont égaux : l'échelle est respectée." : "Les deux rapports sont différents : l'échelle est faussée, ce qui peut induire en erreur." },
+    ],
   };
 }
 
 // ---------- 9. Qualifier une corrélation depuis un nuage de points ----------
 function genQualifierCorrelationQCM() {
   const cas = pick([
-    { description: "Plus la surface d'un appartement est grande, plus son prix de vente est élevé.", reponse: "corrélation positive" },
-    { description: "Plus l'ancienneté d'une voiture augmente, plus son prix de revente diminue.", reponse: "corrélation négative" },
-    { description: "Le nuage de points formé par la pointure de chaussure et la note en mathématiques des élèves d'une classe ne présente aucune tendance visible.", reponse: "aucune corrélation visible" },
-    { description: "Plus la durée d'entraînement d'un sportif augmente, plus son temps au 100 m diminue.", reponse: "corrélation négative" },
-    { description: "Plus la température extérieure augmente, plus les ventes de glaces augmentent.", reponse: "corrélation positive" },
+    {
+      description: "Plus la surface d'un appartement est grande, plus son prix de vente est élevé.",
+      reponse: "corrélation positive",
+      explication: `\\text{Les deux grandeurs augmentent ensemble : quand l'une augmente, l'autre augmente aussi. C'est une } \\textbf{corrélation positive}.`,
+    },
+    {
+      description: "Plus l'ancienneté d'une voiture augmente, plus son prix de revente diminue.",
+      reponse: "corrélation négative",
+      explication: `\\text{Les deux grandeurs varient en sens opposé : quand l'une augmente, l'autre diminue. C'est une } \\textbf{corrélation négative}.`,
+    },
+    {
+      description: "Le nuage de points formé par la pointure de chaussure et la note en mathématiques des élèves d'une classe ne présente aucune tendance visible.",
+      reponse: "aucune corrélation visible",
+      explication: `\\text{Les points du nuage ne dessinent aucune tendance croissante ou décroissante : les deux grandeurs ne semblent pas liées.}`,
+    },
+    {
+      description: "Plus la durée d'entraînement d'un sportif augmente, plus son temps au 100 m diminue.",
+      reponse: "corrélation négative",
+      explication: `\\text{Les deux grandeurs varient en sens opposé : quand l'une augmente, l'autre diminue. C'est une } \\textbf{corrélation négative}.`,
+    },
+    {
+      description: "Plus la température extérieure augmente, plus les ventes de glaces augmentent.",
+      reponse: "corrélation positive",
+      explication: `\\text{Les deux grandeurs augmentent ensemble : quand l'une augmente, l'autre augmente aussi. C'est une } \\textbf{corrélation positive}.`,
+    },
   ]);
   return {
     type: "qcm",
@@ -192,7 +240,7 @@ function genQualifierCorrelationQCM() {
     prompt: `« ${cas.description} » Quel type de corrélation cette situation suggère-t-elle ?`,
     answer: cas.reponse,
     options: ["corrélation positive", "corrélation négative", "aucune corrélation visible"],
-    steps: [`Il s'agit d'une ${cas.reponse}.`],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -208,7 +256,10 @@ function genTauxEvolutionContexteNumeric() {
     chapter: "Analyse de l'information chiffrée — Proportions et taux",
     prompt: `Une grandeur passe de ${V0} à ${V1}. Calcule le taux d'évolution (en %, positif pour une hausse, négatif pour une baisse).`,
     answer: hausse ? t : -t,
-    steps: [`\\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}\\%`],
+    steps: [
+      { type: "regle", text: `\\text{Le taux d'évolution est } t = \\dfrac{\\text{valeur finale} - \\text{valeur initiale}}{\\text{valeur initiale}} \\times 100.` },
+      { type: "resultat", text: `\\dfrac{${V1} - ${V0}}{${V0}} \\times 100 = ${hausse ? t : -t}\\%` },
+    ],
   };
 }
 
@@ -223,17 +274,36 @@ function genEcartPointsDePourcentageNumeric() {
     chapter: "Analyse de l'information chiffrée — Points de pourcentage",
     prompt: `Dans une école, ${pMin} % des élèves maîtrisent une compétence en REP+, contre ${pMax} % dans le privé. Quel est l'écart, en points de pourcentage, entre ces deux proportions ?`,
     answer: pMax - pMin,
-    steps: [`\\text{Écart en points de pourcentage} = ${pMax} - ${pMin} = ${pMax - pMin}`],
+    steps: [
+      { type: "regle", text: `\\text{L'écart en points de pourcentage est une simple soustraction des deux pourcentages : il ne faut pas le confondre avec un taux d'évolution (qui rapporte la différence à la valeur de départ).}` },
+      { type: "resultat", text: `\\text{Écart en points de pourcentage} = ${pMax} - ${pMin} = ${pMax - pMin}` },
+    ],
   };
 }
 
 // ---------- 12. Pourcentage d'évolution ou point de pourcentage ? ----------
 function genPourcentageOuPointDePourcentageQCM() {
   const cas = pick([
-    { description: "Une proportion passe de 20 % à 25 %. On dit que l'écart est de 5 points de pourcentage.", reponse: "Vrai" },
-    { description: "Une proportion passe de 20 % à 25 %. On dit que le taux d'évolution est de 5 %.", reponse: "Faux" },
-    { description: "Un prix passe de 80 € à 100 €. On dit que le taux d'évolution est de 25 %.", reponse: "Vrai" },
-    { description: "Le taux d'évolution entre deux pourcentages se calcule toujours par simple différence des deux pourcentages.", reponse: "Faux" },
+    {
+      description: "Une proportion passe de 20 % à 25 %. On dit que l'écart est de 5 points de pourcentage.",
+      reponse: "Vrai",
+      explication: `\\text{L'écart en points de pourcentage est une simple soustraction : } 25 - 20 = 5 \\text{ points de pourcentage.}`,
+    },
+    {
+      description: "Une proportion passe de 20 % à 25 %. On dit que le taux d'évolution est de 5 %.",
+      reponse: "Faux",
+      explication: `\\text{Le taux d'évolution se calcule par rapport à la valeur de départ : } \\dfrac{25 - 20}{20} \\times 100 = 25\\%, \\text{ pas } 5\\%. \\text{ On confond ici l'écart en points avec le taux d'évolution.}`,
+    },
+    {
+      description: "Un prix passe de 80 € à 100 €. On dit que le taux d'évolution est de 25 %.",
+      reponse: "Vrai",
+      explication: `\\dfrac{100 - 80}{80} \\times 100 = 25\\%. \\text{ Le taux d'évolution est bien correctement calculé par rapport à la valeur de départ.}`,
+    },
+    {
+      description: "Le taux d'évolution entre deux pourcentages se calcule toujours par simple différence des deux pourcentages.",
+      reponse: "Faux",
+      explication: `\\text{Une simple différence donne un écart en points de pourcentage, pas un taux d'évolution. Le taux d'évolution rapporte cette différence à la valeur de départ.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -241,7 +311,7 @@ function genPourcentageOuPointDePourcentageQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte : il ne faut pas confondre un écart en points de pourcentage (simple différence) et un taux d'évolution (rapport de la différence à la valeur de départ)."],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -255,7 +325,10 @@ function genEffectifDepuisPourcentageNumeric() {
     chapter: "Analyse de l'information chiffrée — Proportions et taux",
     prompt: `${total} candidats se sont présentés à un examen, avec un taux de réussite de ${p} %. Combien de candidats ont été admis ?`,
     answer: (total * p) / 100,
-    steps: [`${p}\\% \\times ${total} = ${(total * p) / 100}`],
+    steps: [
+      { type: "regle", text: `\\text{L'effectif correspondant à un pourcentage s'obtient en multipliant le total par ce pourcentage.}` },
+      { type: "resultat", text: `${p}\\% \\times ${total} = \\dfrac{${p}}{100} \\times ${total} = ${(total * p) / 100}` },
+    ],
   };
 }
 
@@ -270,7 +343,10 @@ function genVraiFauxTableauCroiseQCM() {
     prompt: `Un tableau croisé d'effectifs donne les quatre cases : ${t.a}, ${t.b}, ${t.c}, ${t.d}. Affirmation : « Le total général de ce tableau est ${totalAnnonce}. » Vrai ou faux ?`,
     answer: affirmationCorrecte ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
-    steps: [`${t.a} + ${t.b} + ${t.c} + ${t.d} = ${t.total}`, affirmationCorrecte ? "L'affirmation est correcte." : `${totalAnnonce} \\neq ${t.total} : l'affirmation est fausse.`],
+    steps: [
+      { type: "calcul", text: `${t.a} + ${t.b} + ${t.c} + ${t.d} = ${t.total}` },
+      { type: "resultat", text: affirmationCorrecte ? "L'affirmation est correcte." : `${totalAnnonce} \\neq ${t.total} : l'affirmation est fausse.` },
+    ],
   };
 }
 
@@ -294,7 +370,11 @@ function genComparerProportionsQCM() {
     prompt: `${groupe1} : ${favorables1} sur ${total1}. ${groupe2} : ${favorables2} sur ${total2}. Quel groupe a la plus grande proportion ?`,
     answer: plusGrand,
     options: [groupe1, groupe2],
-    steps: [`\\text{Proportion 1} \\approx ${roundTo(p1, 4)}`, `\\text{Proportion 2} \\approx ${roundTo(p2, 4)}`, `\\text{La plus grande proportion est celle de : } ${plusGrand}.`],
+    steps: [
+      { type: "regle", text: `\\text{Pour comparer deux groupes d'effectifs différents, on ne compare pas les effectifs bruts mais leurs proportions (rapport effectif favorable / effectif total).}` },
+      { type: "calcul", text: `\\text{Proportion 1} \\approx ${roundTo(p1, 4)}, \\quad \\text{Proportion 2} \\approx ${roundTo(p2, 4)}` },
+      { type: "resultat", text: `\\text{La plus grande proportion est celle de : } ${plusGrand}.` },
+    ],
   };
 }
 

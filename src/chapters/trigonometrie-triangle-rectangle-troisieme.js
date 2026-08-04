@@ -179,6 +179,8 @@ function genCalculerAngleArccosNumeric() {
     answer,
     steps: [
       { type: "regle", text: `\\cos(\\widehat{x}) = \\dfrac{${fr(adj)}}{${hyp}}` },
+      { type: "regle", text: `\\text{Pour retrouver l'angle à partir de son cosinus, on utilise la fonction cosinus réciproque (arccos), disponible sur la calculatrice.}` },
+      { type: "calcul", text: `\\widehat{x} = \\cos^{-1}\\left(\\dfrac{${fr(adj)}}{${hyp}}\\right)` },
       { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
     ],
   };
@@ -197,6 +199,8 @@ function genCalculerAngleArcsinNumeric() {
     answer,
     steps: [
       { type: "regle", text: `\\sin(\\widehat{x}) = \\dfrac{${fr(opp)}}{${hyp}}` },
+      { type: "regle", text: `\\text{Pour retrouver l'angle à partir de son sinus, on utilise la fonction sinus réciproque (arcsin), disponible sur la calculatrice.}` },
+      { type: "calcul", text: `\\widehat{x} = \\sin^{-1}\\left(\\dfrac{${fr(opp)}}{${hyp}}\\right)` },
       { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
     ],
   };
@@ -215,6 +219,8 @@ function genCalculerAngleArctanNumeric() {
     answer,
     steps: [
       { type: "regle", text: `\\tan(\\widehat{x}) = \\dfrac{${fr(opp)}}{${adj}}` },
+      { type: "regle", text: `\\text{Pour retrouver l'angle à partir de sa tangente, on utilise la fonction tangente réciproque (arctan), disponible sur la calculatrice.}` },
+      { type: "calcul", text: `\\widehat{x} = \\tan^{-1}\\left(\\dfrac{${fr(opp)}}{${adj}}\\right)` },
       { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
     ],
   };
@@ -271,6 +277,7 @@ function genProblemePenteAngleNumeric() {
     answer,
     steps: [
       { type: "regle", text: `\\sin(\\widehat{x}) = \\dfrac{${hauteurColline}}{${distanceParcourue}}` },
+      { type: "calcul", text: `\\widehat{x} = \\sin^{-1}\\left(\\dfrac{${hauteurColline}}{${distanceParcourue}}\\right)` },
       { type: "resultat", text: `\\widehat{x} \\approx ${answer}°` },
     ],
   };
@@ -307,6 +314,7 @@ function genPythagoreEtTrigoNumeric() {
       { type: "calcul", text: `BC^2 = AB^2 + AC^2 = ${cote1}^2 + ${cote2}^2 = ${cote1 * cote1 + cote2 * cote2}` },
       { type: "calcul", text: `BC = \\sqrt{${cote1 * cote1 + cote2 * cote2}} \\approx ${fr(hyp)}\\text{ cm}` },
       { type: "regle", text: `\\tan(\\widehat{ABC}) = \\dfrac{AC}{AB} = \\dfrac{${cote2}}{${cote1}}` },
+      { type: "calcul", text: `\\widehat{ABC} = \\tan^{-1}\\left(\\dfrac{${cote2}}{${cote1}}\\right)` },
       { type: "resultat", text: `\\widehat{ABC} \\approx ${angle}°` },
     ],
   };

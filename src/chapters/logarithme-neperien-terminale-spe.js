@@ -30,7 +30,7 @@ function genLnProduitQCM() {
     prompt: `Quelle est l'expression de \\(\\ln(${m} \\times ${n})\\) en fonction de \\(\\ln(${m})\\) et \\(\\ln(${n})\\) ?`,
     answer: correct,
     options,
-    steps: [`\\ln(${m} \\times ${n}) = ${correct}`],
+    steps: [{ type: "regle", text: `\\text{Formule de référence à connaître : } \\ln(m \\times n) = \\ln(m) + \\ln(n). \\text{ Donc } \\ln(${m} \\times ${n}) = ${correct}` }],
   };
 }
 
@@ -47,7 +47,7 @@ function genLnQuotientQCM() {
     prompt: `Quelle est l'expression de \\(\\ln\\left(\\dfrac{${m}}{${n}}\\right)\\) en fonction de \\(\\ln(${m})\\) et \\(\\ln(${n})\\) ?`,
     answer: correct,
     options,
-    steps: [`\\ln\\left(\\dfrac{${m}}{${n}}\\right) = ${correct}`],
+    steps: [{ type: "regle", text: `\\text{Formule de référence à connaître : } \\ln\\left(\\dfrac{m}{n}\\right) = \\ln(m) - \\ln(n). \\text{ Donc } \\ln\\left(\\dfrac{${m}}{${n}}\\right) = ${correct}` }],
   };
 }
 
@@ -60,7 +60,7 @@ function genLnPuissanceCoefficientNumeric() {
     chapter: "Logarithme népérien — Propriétés algébriques",
     prompt: `On écrit \\(\\ln(${b}^{${n}})\\) sous la forme \\(k \\times \\ln(${b})\\). Donne la valeur de k.`,
     answer: n,
-    steps: [`\\ln(${b}^{${n}}) = ${n}\\ln(${b})`],
+    steps: [{ type: "regle", text: `\\text{Formule de référence à connaître : } \\ln(b^n) = n\\ln(b). \\text{ Donc } \\ln(${b}^{${n}}) = ${n}\\ln(${b})` }],
   };
 }
 
@@ -76,19 +76,22 @@ function genLnRacineFormuleQCM() {
     prompt: `On considère \\(${v} > 0\\). Quelle est l'expression de \\(\\ln\\left(\\sqrt[${k}]{${v}}\\right)\\) en fonction de \\(\\ln(${v})\\) ?`,
     answer: correct,
     options,
-    steps: [`\\sqrt[${k}]{${v}} = ${v}^{\\frac{1}{${k}}} \\Rightarrow \\ln\\left(\\sqrt[${k}]{${v}}\\right) = ${correct}`],
+    steps: [
+      { type: "regle", text: `\\text{Une racine } k\\text{-ième s'écrit comme une puissance } \\frac{1}{k}, \\text{ puis on applique } \\ln(u^n)=n\\ln(u).` },
+      { type: "resultat", text: `\\sqrt[${k}]{${v}} = ${v}^{\\frac{1}{${k}}} \\Rightarrow \\ln\\left(\\sqrt[${k}]{${v}}\\right) = ${correct}` },
+    ],
   };
 }
 
 // ---------- 5. Valeurs remarquables du logarithme (QCM Vrai/Faux) ----------
 function genLnValeurRemarquableQCM() {
   const cas = pick([
-    { description: "\\ln(1) = 0", reponse: "Vrai" },
-    { description: "\\ln(\\mathrm{e}) = 1", reponse: "Vrai" },
-    { description: "\\ln(0) \\text{ est défini et vaut } 0", reponse: "Faux" },
-    { description: "\\text{Pour tout } a>0, \\mathrm{e}^{\\ln(a)} = a", reponse: "Vrai" },
-    { description: "\\text{Pour tout réel } k, \\ln(\\mathrm{e}^k) = k", reponse: "Vrai" },
-    { description: "\\ln(\\mathrm{e}^2) = 4", reponse: "Faux" },
+    { description: "\\ln(1) = 0", reponse: "Vrai", explication: "C'est vrai : ln(1)=0 est une valeur remarquable à connaître, car e^0=1." },
+    { description: "\\ln(\\mathrm{e}) = 1", reponse: "Vrai", explication: "C'est vrai : ln(e)=1 par définition, puisque e^1=e." },
+    { description: "\\ln(0) \\text{ est défini et vaut } 0", reponse: "Faux", explication: "C'est faux : ln(0) n'est pas défini du tout — le logarithme népérien n'est défini que pour les réels strictement positifs. Quand x tend vers 0 par valeurs positives, ln(x) tend vers -∞." },
+    { description: "\\text{Pour tout } a>0, \\mathrm{e}^{\\ln(a)} = a", reponse: "Vrai", explication: "C'est vrai : exp et ln sont des fonctions réciproques l'une de l'autre, donc composer l'une avec l'autre redonne le nombre de départ." },
+    { description: "\\text{Pour tout réel } k, \\ln(\\mathrm{e}^k) = k", reponse: "Vrai", explication: "C'est vrai : c'est la même propriété de réciprocité, appliquée dans l'autre sens." },
+    { description: "\\ln(\\mathrm{e}^2) = 4", reponse: "Faux", explication: "C'est faux : ln(e^2)=2 (et non 4), car ln(e^k)=k pour tout réel k. Ne pas confondre avec e^2=e×e, qui n'a rien à voir avec ce calcul." },
   ]);
   return {
     type: "qcm",
@@ -96,7 +99,7 @@ function genLnValeurRemarquableQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -110,7 +113,10 @@ function genDomaineDefinitionLnNumeric() {
     chapter: "Logarithme népérien — Domaine de définition",
     prompt: `On considère \\(f(x) = \\ln(${texAffine(a, b)})\\). f est définie là où \\(${texAffine(a, b)} > 0\\). Détermine la valeur de x pour laquelle \\(${texAffine(a, b)} = 0\\) (borne du domaine de définition).`,
     answer: x0,
-    steps: [`${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0`, `x = ${x0}`],
+    steps: [
+      { type: "calcul", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0` },
+      { type: "resultat", text: `x = ${x0}` },
+    ],
   };
 }
 
@@ -127,7 +133,11 @@ function genDeriveeLnAffineNumeric() {
     prompt: `On considère \\(f(x) = \\ln(${texAffine(a, b)})\\). Calcule \\(f'(${x0})\\), arrondi au millième si nécessaire.`,
     answer,
     tolerance: 0.001,
-    steps: [`f'(x) = \\dfrac{${a}}{${texAffine(a, b)}}`, `f'(${x0}) = \\dfrac{${a}}{${k}} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } (\\ln(u))' = \\dfrac{u'}{u}.` },
+      { type: "calcul", text: `f'(x) = \\dfrac{${a}}{${texAffine(a, b)}}` },
+      { type: "resultat", text: `f'(${x0}) = \\dfrac{${a}}{${k}} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -145,7 +155,7 @@ function genDeriveeLnFormuleQCM() {
     prompt: `On considère \\(f(x) = \\ln(${expo})\\). Quelle est l'expression de \\(f'(x)\\) ?`,
     answer: correct,
     options,
-    steps: [`f'(x) = \\dfrac{u'(x)}{u(x)} = ${correct}`],
+    steps: [{ type: "regle", text: `f'(x) = \\dfrac{u'(x)}{u(x)} = ${correct}` }],
   };
 }
 
@@ -159,7 +169,11 @@ function genResoudreEquationLnNumeric() {
     prompt: `Résous l'équation \\(\\ln(x) = ${k}\\) (avec x > 0). Donne la valeur de x arrondie au centième.`,
     answer,
     tolerance: 0.01,
-    steps: [`x = \\mathrm{e}^{${k}}`, `x \\approx ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{exp et ln sont réciproques : } \\ln(x) = k \\Leftrightarrow x = \\mathrm{e}^k.` },
+      { type: "calcul", text: `x = \\mathrm{e}^{${k}}` },
+      { type: "resultat", text: `x \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -178,9 +192,10 @@ function genResoudreEquationLnEgaliteNumeric() {
     prompt: `Résous l'équation \\(\\ln(${texAffine(a1, b1)}) = \\ln(${texAffine(a2, b2)})\\).`,
     answer: x0,
     steps: [
-      `${texAffine(a1, b1)} = ${texAffine(a2, b2)}`,
-      `${a1 - a2}x = ${b2 - b1}`,
-      `x = ${x0}`,
+      { type: "regle", text: `\\text{La fonction ln est strictement croissante donc injective : } \\ln(A) = \\ln(B) \\Leftrightarrow A = B \\text{ (sous réserve que A et B soient strictement positifs).}` },
+      { type: "calcul", text: `${texAffine(a1, b1)} = ${texAffine(a2, b2)}` },
+      { type: "calcul", text: `${a1 - a2}x = ${b2 - b1}` },
+      { type: "resultat", text: `x = ${x0}` },
     ],
   };
 }
@@ -207,7 +222,10 @@ function genSigneLnQCM() {
     prompt: `Quel est le signe de \\(\\ln(${texte})\\) ?`,
     answer,
     options: ["Positif", "Négatif", "Nul"],
-    steps: [answer === "Positif" ? "L'argument est strictement supérieur à 1." : answer === "Négatif" ? "L'argument est strictement compris entre 0 et 1." : "L'argument vaut 1."],
+    steps: [
+      { type: "regle", text: `\\text{Le signe de ln(x) dépend de la position de x par rapport à 1 : ln(x)>0 si x>1, ln(x)<0 si } 0<x<1, \\ln(1)=0.` },
+      { type: "resultat", text: answer === "Positif" ? "L'argument est strictement supérieur à 1." : answer === "Négatif" ? "L'argument est strictement compris entre 0 et 1." : "L'argument vaut 1." },
+    ],
   };
 }
 
@@ -224,17 +242,17 @@ function genComparerLnQCM() {
     prompt: `Compare \\(\\ln(${a})\\) et \\(\\ln(${b})\\) (la fonction ln est strictement croissante sur \\(]0;+\\infty[\\)).`,
     answer,
     options,
-    steps: [a < b ? `${a} < ${b} \\text{ donc } \\ln(${a}) < \\ln(${b})` : `${a} > ${b} \\text{ donc } \\ln(${a}) > \\ln(${b})`],
+    steps: [{ type: "resultat", text: a < b ? `${a} < ${b} \\text{ donc } \\ln(${a}) < \\ln(${b})` : `${a} > ${b} \\text{ donc } \\ln(${a}) > \\ln(${b})` }],
   };
 }
 
 // ---------- 13. Limites usuelles du logarithme (QCM) ----------
 function genLimiteLnQCM() {
   const cas = pick([
-    { description: "\\lim\\limits_{x \\to 0^+} \\ln(x)", reponse: "-\\infty" },
-    { description: "\\lim\\limits_{x \\to +\\infty} \\ln(x)", reponse: "+\\infty" },
-    { description: "\\lim\\limits_{x \\to +\\infty} \\dfrac{\\ln(x)}{x}", reponse: "0" },
-    { description: "\\lim\\limits_{x \\to 0^+} x\\ln(x)", reponse: "0" },
+    { description: "\\lim\\limits_{x \\to 0^+} \\ln(x)", reponse: "-\\infty", explication: "C'est -∞ : quand x se rapproche de 0 par valeurs positives, ln(x) devient arbitrairement négatif (asymptote verticale en x=0)." },
+    { description: "\\lim\\limits_{x \\to +\\infty} \\ln(x)", reponse: "+\\infty", explication: "C'est +∞ : ln(x) croît indéfiniment, mais beaucoup plus lentement que x." },
+    { description: "\\lim\\limits_{x \\to +\\infty} \\dfrac{\\ln(x)}{x}", reponse: "0", explication: "C'est 0 : c'est le théorème de croissance comparée — x l'emporte toujours sur ln(x) en +∞." },
+    { description: "\\lim\\limits_{x \\to 0^+} x\\ln(x)", reponse: "0", explication: "C'est 0 : c'est l'autre forme du théorème de croissance comparée — malgré la forme indéterminée de départ (0 × (-∞)), x l'emporte sur ln(x) près de 0." },
   ]);
   return {
     type: "qcm",
@@ -242,18 +260,18 @@ function genLimiteLnQCM() {
     prompt: `Quelle est la limite \\(${cas.description}\\) ?`,
     answer: cas.reponse,
     options: ["-\\infty", "+\\infty", "0"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les propriétés du logarithme (QCM) ----------
 function genVraiFauxProprietesLnQCM() {
   const cas = pick([
-    { description: "\\ln(a+b) = \\ln(a) + \\ln(b)", reponse: "Faux" },
-    { description: "\\text{Pour } a,b>0, \\ln(a \\times b) = \\ln(a) + \\ln(b)", reponse: "Vrai" },
-    { description: "\\text{Pour tout réel } a, \\ln(a^2) = 2\\ln(a)", reponse: "Faux" },
-    { description: "La fonction \\ln \\text{ est strictement croissante sur } \\left]0;+\\infty\\right[", reponse: "Vrai" },
-    { description: "\\ln(x) \\text{ est défini pour tout réel } x", reponse: "Faux" },
+    { description: "\\ln(a+b) = \\ln(a) + \\ln(b)", reponse: "Faux", explication: "C'est faux : la formule ln(a×b)=ln(a)+ln(b) concerne un produit, pas une somme. Par exemple ln(1+1)=ln(2)≈0,69 alors que ln(1)+ln(1)=0." },
+    { description: "\\text{Pour } a,b>0, \\ln(a \\times b) = \\ln(a) + \\ln(b)", reponse: "Vrai", explication: "C'est vrai : c'est la propriété fondamentale du logarithme népérien qui transforme un produit en somme." },
+    { description: "\\text{Pour tout réel } a, \\ln(a^2) = 2\\ln(a)", reponse: "Faux", explication: "C'est faux tel quel : ln(a) n'est défini que pour a>0. La formule correcte, valable pour tout a≠0, est ln(a²)=2ln(|a|)." },
+    { description: "La fonction \\ln \\text{ est strictement croissante sur } \\left]0;+\\infty\\right[", reponse: "Vrai", explication: "C'est vrai : la fonction ln est strictement croissante sur son ensemble de définition ]0;+∞[." },
+    { description: "\\ln(x) \\text{ est défini pour tout réel } x", reponse: "Faux", explication: "C'est faux : ln(x) n'est défini que pour x>0, ln n'existe pas pour x≤0." },
   ]);
   return {
     type: "qcm",
@@ -261,7 +279,7 @@ function genVraiFauxProprietesLnQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -275,7 +293,11 @@ function genLnExponentielleReciproqueNumeric() {
     chapter: "Logarithme népérien — Propriétés algébriques",
     prompt: `Simplifie \\(\\ln\\left(\\mathrm{e}^{${a}} \\times \\mathrm{e}^{${b}}\\right)\\).`,
     answer,
-    steps: [`\\mathrm{e}^{${a}} \\times \\mathrm{e}^{${b}} = \\mathrm{e}^{${a}+${b}}`, `\\ln\\left(\\mathrm{e}^{${a}+${b}}\\right) = ${a} + ${b} = ${answer}`],
+    steps: [
+      { type: "regle", text: "exp et ln sont réciproques : ln(e^k) = k." },
+      { type: "calcul", text: `\\mathrm{e}^{${a}} \\times \\mathrm{e}^{${b}} = \\mathrm{e}^{${a}+${b}}` },
+      { type: "resultat", text: `\\ln\\left(\\mathrm{e}^{${a}+${b}}\\right) = ${a} + ${b} = ${answer}` },
+    ],
   };
 }
 

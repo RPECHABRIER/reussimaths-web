@@ -38,7 +38,10 @@ function genProduitScalaireCoordonneesNumeric() {
     chapter: "Produit scalaire — Calcul avec les coordonnées",
     prompt: `On donne \\(\\vec{u}(${x1} ; ${y1})\\) et \\(\\vec{v}(${x2} ; ${y2})\\). Calcule le produit scalaire \\(\\vec{u} \\cdot \\vec{v}\\) (formule \\(\\vec{u} \\cdot \\vec{v} = xx' + yy'\\)).`,
     answer,
-    steps: [`\\vec{u} \\cdot \\vec{v} = ${x1} \\times ${x2} + ${y1} \\times ${y2} = ${x1 * x2} + ${y1 * y2} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } \\vec{u} \\cdot \\vec{v} = xx' + yy'.` },
+      { type: "resultat", text: `\\vec{u} \\cdot \\vec{v} = ${x1} \\times ${x2} + ${y1} \\times ${y2} = ${x1 * x2} + ${y1 * y2} = ${answer}` },
+    ],
   };
 }
 
@@ -60,7 +63,10 @@ function genNormeVecteurNumeric() {
     chapter: "Produit scalaire — Norme d'un vecteur",
     prompt: `On donne \\(\\vec{u}(${signeX * x} ; ${signeY * y})\\). Calcule la norme \\(\\|\\vec{u}\\|\\) (formule \\(\\|\\vec{u}\\| = \\sqrt{x^2 + y^2}\\)).`,
     answer,
-    steps: [`\\|\\vec{u}\\| = \\sqrt{(${signeX * x})^2 + (${signeY * y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${x * x + y * y}} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } \\|\\vec{u}\\| = \\sqrt{x^2 + y^2}.` },
+      { type: "resultat", text: `\\|\\vec{u}\\| = \\sqrt{(${signeX * x})^2 + (${signeY * y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${x * x + y * y}} = ${answer}` },
+    ],
   };
 }
 
@@ -87,7 +93,10 @@ function genOrthogonaliteCoordonneesQCM() {
     prompt: `On donne \\(\\vec{u}(${x1} ; ${y1})\\) et \\(\\vec{v}(${x2} ; ${y2})\\). Ces deux vecteurs sont-ils orthogonaux ?`,
     answer: reponse,
     options: ["orthogonaux", "non orthogonaux"],
-    steps: [`\\vec{u} \\cdot \\vec{v} = ${x1} \\times ${x2} + ${y1} \\times ${y2} = ${produit}`, produit === 0 ? `\\text{Le produit scalaire est nul : les vecteurs sont orthogonaux.}` : `\\text{Le produit scalaire n'est pas nul : les vecteurs ne sont pas orthogonaux.}`],
+    steps: [
+      { type: "calcul", text: `\\vec{u} \\cdot \\vec{v} = ${x1} \\times ${x2} + ${y1} \\times ${y2} = ${produit}` },
+      { type: "regle", text: produit === 0 ? `\\text{Le produit scalaire est nul : les vecteurs sont orthogonaux.}` : `\\text{Le produit scalaire n'est pas nul : les vecteurs ne sont pas orthogonaux.}` },
+    ],
   };
 }
 
@@ -108,7 +117,10 @@ function genProduitScalaireNormesAngleNumeric() {
     chapter: "Produit scalaire — Formule avec le cosinus",
     prompt: `On donne \\(\\|\\vec{u}\\| = ${normeU}\\), \\(\\|\\vec{v}\\| = ${normeV}\\), et un angle de \\(${cas.angle}\\) entre \\(\\vec{u}\\) et \\(\\vec{v}\\). Calcule \\(\\vec{u} \\cdot \\vec{v} = \\|\\vec{u}\\| \\times \\|\\vec{v}\\| \\times \\cos(${cas.angle})\\).`,
     answer,
-    steps: [`\\vec{u} \\cdot \\vec{v} = ${normeU} \\times ${normeV} \\times ${fr(cas.cos)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence : } \\vec{u} \\cdot \\vec{v} = \\|\\vec{u}\\| \\times \\|\\vec{v}\\| \\times \\cos(\\widehat{(\\vec{u},\\vec{v})}).` },
+      { type: "resultat", text: `\\vec{u} \\cdot \\vec{v} = ${normeU} \\times ${normeV} \\times ${fr(cas.cos)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -123,7 +135,10 @@ function genDeveloppementSommeNumeric() {
     chapter: "Produit scalaire — Développement de normes",
     prompt: `On donne \\(\\|\\vec{u}\\| = ${normeU}\\), \\(\\|\\vec{v}\\| = ${normeV}\\), et \\(\\vec{u} \\cdot \\vec{v} = ${produitScalaire}\\). Calcule \\(\\|\\vec{u} + \\vec{v}\\|^2\\) (formule \\(\\|\\vec{u} + \\vec{v}\\|^2 = \\|\\vec{u}\\|^2 + 2\\vec{u} \\cdot \\vec{v} + \\|\\vec{v}\\|^2\\)).`,
     answer,
-    steps: [`\\|\\vec{u} + \\vec{v}\\|^2 = ${normeU}^2 + 2 \\times ${produitScalaire} + ${normeV}^2 = ${normeU * normeU} + ${2 * produitScalaire} + ${normeV * normeV} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } \\|\\vec{u} + \\vec{v}\\|^2 = \\|\\vec{u}\\|^2 + 2\\vec{u} \\cdot \\vec{v} + \\|\\vec{v}\\|^2.` },
+      { type: "resultat", text: `\\|\\vec{u} + \\vec{v}\\|^2 = ${normeU}^2 + 2 \\times ${produitScalaire} + ${normeV}^2 = ${normeU * normeU} + ${2 * produitScalaire} + ${normeV * normeV} = ${answer}` },
+    ],
   };
 }
 
@@ -138,7 +153,10 @@ function genDeveloppementDifferenceNumeric() {
     chapter: "Produit scalaire — Développement de normes",
     prompt: `On donne \\(\\|\\vec{u}\\| = ${normeU}\\), \\(\\|\\vec{v}\\| = ${normeV}\\), et \\(\\vec{u} \\cdot \\vec{v} = ${produitScalaire}\\). Calcule \\(\\|\\vec{u} - \\vec{v}\\|^2\\) (formule \\(\\|\\vec{u} - \\vec{v}\\|^2 = \\|\\vec{u}\\|^2 - 2\\vec{u} \\cdot \\vec{v} + \\|\\vec{v}\\|^2\\)).`,
     answer,
-    steps: [`\\|\\vec{u} - \\vec{v}\\|^2 = ${normeU}^2 - 2 \\times ${produitScalaire} + ${normeV}^2 = ${normeU * normeU} - ${2 * produitScalaire} + ${normeV * normeV} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } \\|\\vec{u} - \\vec{v}\\|^2 = \\|\\vec{u}\\|^2 - 2\\vec{u} \\cdot \\vec{v} + \\|\\vec{v}\\|^2.` },
+      { type: "resultat", text: `\\|\\vec{u} - \\vec{v}\\|^2 = ${normeU}^2 - 2 \\times ${produitScalaire} + ${normeV}^2 = ${normeU * normeU} - ${2 * produitScalaire} + ${normeV * normeV} = ${answer}` },
+    ],
   };
 }
 
@@ -160,8 +178,9 @@ function genAlKashiNumeric() {
     answer,
     tolerance: 0.01,
     steps: [
-      `BC^2 = ${a}^2 + ${b}^2 - 2 \\times ${a} \\times ${b} \\times ${fr(cas.cos)} = ${a * a} + ${b * b} - ${2 * a * b * cas.cos} = ${fr(roundTo(c2, 2))}`,
-      `BC = \\sqrt{${fr(roundTo(c2, 2))}} \\approx ${fr(answer)}`,
+      { type: "regle", text: `\\text{Formule d'Al-Kashi à connaître : } BC^2 = AB^2 + AC^2 - 2 \\times AB \\times AC \\times \\cos(\\widehat{BAC}).` },
+      { type: "calcul", text: `BC^2 = ${a}^2 + ${b}^2 - 2 \\times ${a} \\times ${b} \\times ${fr(cas.cos)} = ${a * a} + ${b * b} - ${2 * a * b * cas.cos} = ${fr(roundTo(c2, 2))}` },
+      { type: "resultat", text: `BC = \\sqrt{${fr(roundTo(c2, 2))}} \\approx ${fr(answer)}` },
     ],
   };
 }
@@ -176,7 +195,10 @@ function genBilinaeariteNumeric() {
     chapter: "Produit scalaire — Bilinéarité",
     prompt: `On donne \\(\\vec{u} \\cdot \\vec{w} = ${uw}\\) et \\(\\vec{v} \\cdot \\vec{w} = ${vw}\\). En utilisant la bilinéarité du produit scalaire, calcule \\((\\vec{u} + \\vec{v}) \\cdot \\vec{w}\\).`,
     answer,
-    steps: [`(\\vec{u} + \\vec{v}) \\cdot \\vec{w} = \\vec{u} \\cdot \\vec{w} + \\vec{v} \\cdot \\vec{w} = ${uw} + ${vw} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriété de bilinéarité : } (\\vec{u} + \\vec{v}) \\cdot \\vec{w} = \\vec{u} \\cdot \\vec{w} + \\vec{v} \\cdot \\vec{w}.` },
+      { type: "resultat", text: `(\\vec{u} + \\vec{v}) \\cdot \\vec{w} = ${uw} + ${vw} = ${answer}` },
+    ],
   };
 }
 
@@ -188,7 +210,7 @@ function genSymetrieQCM() {
     chapter: "Produit scalaire — Symétrie",
     prompt: `On donne \\(\\vec{v} \\cdot \\vec{u} = ${uv}\\). Que vaut \\(\\vec{u} \\cdot \\vec{v}\\) (le produit scalaire est symétrique) ?`,
     answer: uv,
-    steps: [`\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u} = ${uv}`],
+    steps: [{ type: "regle", text: `\\text{Le produit scalaire est symétrique : } \\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u} = ${uv}.` }],
   };
 }
 
@@ -205,7 +227,10 @@ function genParametreOrthogonaliteNumeric() {
     chapter: "Produit scalaire — Orthogonalité",
     prompt: `On donne \\(\\vec{u}(1 ; ${y1})\\) et \\(\\vec{v}(${x2} ; m)\\). Détermine la valeur de \\(m\\) pour que \\(\\vec{u}\\) et \\(\\vec{v}\\) soient orthogonaux.`,
     answer,
-    steps: [`\\vec{u} \\cdot \\vec{v} = 0 \\Leftrightarrow 1 \\times ${x2} + ${y1} \\times m = 0`, `m = \\dfrac{-${produitAutres}}{${y1}} = ${answer}`],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs sont orthogonaux si et seulement si leur produit scalaire est nul : } \\vec{u} \\cdot \\vec{v} = 0 \\Leftrightarrow 1 \\times ${x2} + ${y1} \\times m = 0.` },
+      { type: "resultat", text: `m = \\dfrac{-${produitAutres}}{${y1}} = ${answer}` },
+    ],
   };
 }
 
@@ -225,7 +250,10 @@ function genAngleViaProduitScalaireQCM() {
     prompt: `On donne \\(\\|\\vec{u}\\| = ${normeU}\\), \\(\\|\\vec{v}\\| = ${normeV}\\), et \\(\\vec{u} \\cdot \\vec{v} = ${fr(cas.produit)}\\). Quelle est la mesure de l'angle entre \\(\\vec{u}\\) et \\(\\vec{v}\\) ?`,
     answer: cas.angle,
     options: ["0°", "60°", "90°", "180°"],
-    steps: [`\\cos(\\widehat{(\\vec{u},\\vec{v})}) = \\dfrac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\times \\|\\vec{v}\\|}`, `\\text{L'angle correspondant est } ${cas.angle}.`],
+    steps: [
+      { type: "regle", text: `\\text{On isole le cosinus dans la formule : } \\cos(\\widehat{(\\vec{u},\\vec{v})}) = \\dfrac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\times \\|\\vec{v}\\|}.` },
+      { type: "resultat", text: `\\text{L'angle correspondant est } ${cas.angle}.` },
+    ],
   };
 }
 
@@ -248,8 +276,8 @@ function genProduitScalairePointsNumeric() {
     prompt: `On donne \\(A(${xA} ; ${yA})\\), \\(B(${xB} ; ${yB})\\), \\(C(${xC} ; ${yC})\\). Calcule le produit scalaire \\(\\overrightarrow{AB} \\cdot \\overrightarrow{AC}\\).`,
     answer,
     steps: [
-      `\\overrightarrow{AB}(${abX} ; ${abY}), \\quad \\overrightarrow{AC}(${acX} ; ${acY})`,
-      `\\overrightarrow{AB} \\cdot \\overrightarrow{AC} = ${abX} \\times ${acX} + ${abY} \\times ${acY} = ${answer}`,
+      { type: "donnee", text: `\\overrightarrow{AB}(${abX} ; ${abY}), \\quad \\overrightarrow{AC}(${acX} ; ${acY})` },
+      { type: "resultat", text: `\\overrightarrow{AB} \\cdot \\overrightarrow{AC} = ${abX} \\times ${acX} + ${abY} \\times ${acY} = ${answer}` },
     ],
   };
 }
@@ -257,10 +285,26 @@ function genProduitScalairePointsNumeric() {
 // ---------- 13. Vrai ou faux sur les propriétés du produit scalaire ----------
 function genVraiFauxProduitScalaireQCM() {
   const cas = pick([
-    { description: "Le produit scalaire de deux vecteurs orthogonaux est nul.", reponse: "Vrai" },
-    { description: "Le produit scalaire \\(\\vec{u} \\cdot \\vec{u}\\) est égal à \\(\\|\\vec{u}\\|^2\\).", reponse: "Vrai" },
-    { description: "Le produit scalaire de deux vecteurs est toujours positif.", reponse: "Faux" },
-    { description: "\\(\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}\\) (symétrie).", reponse: "Vrai" },
+    {
+      description: "Le produit scalaire de deux vecteurs orthogonaux est nul.",
+      reponse: "Vrai",
+      explication: `\\text{C'est le critère d'orthogonalité lui-même : deux vecteurs sont orthogonaux si et seulement si } \\vec{u} \\cdot \\vec{v} = 0.`,
+    },
+    {
+      description: "Le produit scalaire \\(\\vec{u} \\cdot \\vec{u}\\) est égal à \\(\\|\\vec{u}\\|^2\\).",
+      reponse: "Vrai",
+      explication: `\\text{L'angle entre } \\vec{u} \\text{ et lui-même est } 0°, \\text{ donc } \\vec{u} \\cdot \\vec{u} = \\|\\vec{u}\\| \\times \\|\\vec{u}\\| \\times \\cos(0°) = \\|\\vec{u}\\|^2.`,
+    },
+    {
+      description: "Le produit scalaire de deux vecteurs est toujours positif.",
+      reponse: "Faux",
+      explication: `\\text{Contre-exemple : si l'angle entre } \\vec{u} \\text{ et } \\vec{v} \\text{ est obtus (entre 90° et 180°), } \\cos(\\widehat{(\\vec{u},\\vec{v})}) < 0, \\text{ donc } \\vec{u} \\cdot \\vec{v} < 0.`,
+    },
+    {
+      description: "\\(\\vec{u} \\cdot \\vec{v} = \\vec{v} \\cdot \\vec{u}\\) (symétrie).",
+      reponse: "Vrai",
+      explication: `\\text{Avec les coordonnées : } xx' + yy' = x'x + y'y. \\text{ Le produit scalaire est bien symétrique.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -268,7 +312,7 @@ function genVraiFauxProduitScalaireQCM() {
     prompt: `Affirmation : « ${cas.description} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse],
+    steps: [{ type: "regle", text: cas.explication }],
   };
 }
 
@@ -280,7 +324,10 @@ function genProduitScalaireAvecLuiMemeNumeric() {
     chapter: "Produit scalaire — Cas particulier u·u",
     prompt: `On donne \\(\\|\\vec{u}\\| = ${norme}\\). Calcule \\(\\vec{u} \\cdot \\vec{u}\\).`,
     answer: norme * norme,
-    steps: [`\\vec{u} \\cdot \\vec{u} = \\|\\vec{u}\\|^2 = ${norme}^2 = ${norme * norme}`],
+    steps: [
+      { type: "regle", text: `\\text{Cas particulier à connaître : } \\vec{u} \\cdot \\vec{u} = \\|\\vec{u}\\|^2 \\text{ (angle nul avec lui-même, } \\cos(0°) = 1\\text{).}` },
+      { type: "resultat", text: `\\vec{u} \\cdot \\vec{u} = \\|\\vec{u}\\|^2 = ${norme}^2 = ${norme * norme}` },
+    ],
   };
 }
 
@@ -317,9 +364,10 @@ function genTriangleRectangleProduitScalaireQCM() {
     answer: reponse,
     options: ["Oui, il est rectangle en A", "Non, il n'est pas rectangle en A"],
     steps: [
-      `\\overrightarrow{AB}(${abX} ; ${abY}), \\quad \\overrightarrow{AC}(${acX} ; ${acY})`,
-      `\\overrightarrow{AB} \\cdot \\overrightarrow{AC} = ${abX} \\times ${acX} + ${abY} \\times ${acY} = ${produit}`,
-      produit === 0 ? `\\text{Le produit scalaire est nul : le triangle est rectangle en A.}` : `\\text{Le produit scalaire n'est pas nul : le triangle n'est pas rectangle en A.}`,
+      { type: "regle", text: `\\text{Un triangle est rectangle en A si et seulement si } \\overrightarrow{AB} \\cdot \\overrightarrow{AC} = 0.` },
+      { type: "donnee", text: `\\overrightarrow{AB}(${abX} ; ${abY}), \\quad \\overrightarrow{AC}(${acX} ; ${acY})` },
+      { type: "calcul", text: `\\overrightarrow{AB} \\cdot \\overrightarrow{AC} = ${abX} \\times ${acX} + ${abY} \\times ${acY} = ${produit}` },
+      { type: "resultat", text: produit === 0 ? `\\text{Le produit scalaire est nul : le triangle est rectangle en A.}` : `\\text{Le produit scalaire n'est pas nul : le triangle n'est pas rectangle en A.}` },
     ],
   };
 }

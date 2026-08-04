@@ -1111,3 +1111,50 @@ manuellement par Romain (pas d'identifiants dans ce sandbox).
 
 Prochaine étape (non commencée) : même audit pour la 5e, la 4e et la 3e, puis
 le lycée (reporté à plus tard selon l'instruction initiale de Romain).
+
+## 2026-08-04 (suite) — Repères pédagogiques : 5e complet
+
+Suite de la tâche #236 sur le niveau 5e (même méthode que pour la 6e : ajout
+d'un step `regle` avant le calcul chaque fois qu'un générateur sautait
+directement à la réponse numérique sans expliciter la règle/formule sous-jacente).
+
+Fichiers modifiés (avec exemples de règles ajoutées) :
+- calcul-numerique.js : aire d'un rectangle décomposé en somme de longueurs.
+- divisibilite-fractions.js : simplifier une fraction (diviser par un même
+  nombre), somme de fractions via écriture décimale, fraction d'une longueur.
+- nombres-relatifs.js : soustraire un négatif = ajouter son opposé (durée
+  historique, variation de masse).
+- calcul-litteral.js : correction la plus significative du lot — l'équation
+  x+a=b / a+x=b / x-a=b / a-x=b n'affichait **aucune méthode**, juste la
+  solution finale ; ajout de la méthode d'isolement de x (ajouter/soustraire
+  des deux côtés) pour les 4 cas, + équations ax=b / x÷a=b.
+- puissances.js : écriture des puissances de dix (1 suivi de n zéros), aire
+  d'un carré (côté²), volume d'un cube (arête³).
+- fonctions.js : +75% = multiplier par 1,75 ; racine carrée du diamètre
+  d'éolienne (« nombre qui, multiplié par lui-même, donne... »).
+- proportionnalite-cinquieme.js : p% d'un nombre = multiplier par p/100.
+- geometrie-espace.js : formules nommées avant application (volume pavé,
+  volume cube, volume cylindre, aire du disque).
+- reviser-les-bases-cinquieme.js : fraction d'un nombre (diviser puis
+  multiplier), écriture décimale d'une fraction, pourcentage d'un nombre,
+  périmètre/aire d'un rectangle.
+
+Fichiers relus intégralement, aucune modification nécessaire (déjà bien
+expliqués) : statistiques-probabilites.js, symetrie-centrale-parallelogrammes.js,
+triangles.js.
+
+Volontairement exclu, comme pour automatismes-sixieme.js en 6e :
+automatismes-cinquieme.js (exercices de fluence rapide "Série 1", pas des
+leçons expliquées — l'ajout d'explications irait à l'encontre de leur objectif
+de calcul mental rapide).
+
+Chaque fichier : node --check, smoke test (8000 itérations, 0 erreur), sync
+vers les deux copies, commit séparé. Build final vérifié (`npm run build`,
+succès, cache .vite nettoyé au préalable).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox).
+
+Prochaine étape : même audit pour la 4e, puis la 3e (déjà taguée sémantiquement
+côté steps via la tâche #233, mais pas encore auditée pour les repères
+pédagogiques de la tâche #236). Le lycée reste reporté à plus tard.

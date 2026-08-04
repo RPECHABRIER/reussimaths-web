@@ -45,7 +45,7 @@ function genIdentifierCoefficientsNumeric() {
     chapter: "Fonctions affines — Coefficients",
     prompt: `On considère la fonction affine ${nom} définie par \\(${nom}(x) = ${texAffine(a, b)}\\). Quel est ${demanderA ? "le coefficient directeur" : "l'ordonnée à l'origine"} de ${nom} ?`,
     answer: demanderA ? a : b,
-    steps: [demanderA ? `Le coefficient directeur est le nombre devant x : ${a}.` : `L'ordonnée à l'origine est le terme constant : ${b}.`],
+    steps: [{ type: "regle", text: demanderA ? `\\text{Le coefficient directeur est le nombre devant x : } ${a}.` : `\\text{L'ordonnée à l'origine est le terme constant : } ${b}.` }],
   };
 }
 
@@ -61,7 +61,10 @@ function genSensVariationSigneAQCM() {
     prompt: `On considère la fonction affine ${nom} définie par \\(${nom}(x) = ${a === 0 ? `${b}` : texAffine(a, b)}\\). Quel est son sens de variation sur \\(\\mathbb{R}\\) ?`,
     answer: sens,
     options: ["croissante", "décroissante", "constante"],
-    steps: [`Le coefficient directeur vaut ${a} : la fonction est ${sens}.`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction affine } ax+b \\text{ est croissante si } a>0, \\text{ décroissante si } a<0, \\text{ constante si } a=0.` },
+      { type: "resultat", text: `\\text{Le coefficient directeur vaut } ${a} : \\text{ la fonction est } ${sens}.` },
+    ],
   };
 }
 
@@ -80,7 +83,10 @@ function genCalculTauxVariationNumeric() {
     chapter: "Fonctions affines — Taux de variation",
     prompt: `La fonction affine ${nom} vérifie \\(${nom}(${x1}) = ${y1}\\) et \\(${nom}(${x2}) = ${y2}\\). Calcule le coefficient directeur de ${nom}.`,
     answer: a,
-    steps: [`\\text{Coefficient directeur} = \\dfrac{${nom}(${x2}) - ${nom}(${x1})}{${x2} - ${x1}} = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${a}`],
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient directeur (ou taux de variation) entre deux points d'une fonction affine se calcule par } \\dfrac{y_2 - y_1}{x_2 - x_1}.` },
+      { type: "resultat", text: `\\text{Coefficient directeur} = \\dfrac{${nom}(${x2}) - ${nom}(${x1})}{${x2} - ${x1}} = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${a}` },
+    ],
   };
 }
 
@@ -103,9 +109,10 @@ function genDeterminerFonctionDeuxPointsNumeric() {
     prompt: `La fonction affine ${nom} vérifie \\(${nom}(${x1}) = ${y1}\\) et \\(${nom}(${x2}) = ${y2}\\). Calcule \\(${nom}(${x3})\\).`,
     answer,
     steps: [
-      `\\text{Coefficient directeur} = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = ${a}`,
-      `\\text{Ordonnée à l'origine} : ${y1} = ${a} \\times ${x1} + b \\text{, donc } b = ${b}`,
-      `${nom}(${x3}) = ${a} \\times ${x3} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`,
+      { type: "regle", text: `\\text{On détermine d'abord le coefficient directeur a, puis l'ordonnée à l'origine b, avant de calculer l'image demandée.}` },
+      { type: "calcul", text: `\\text{Coefficient directeur} = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = ${a}` },
+      { type: "calcul", text: `\\text{Ordonnée à l'origine} : ${y1} = ${a} \\times ${x1} + b \\text{, donc } b = ${b}` },
+      { type: "resultat", text: `${nom}(${x3}) = ${a} \\times ${x3} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` },
     ],
   };
 }
@@ -122,7 +129,7 @@ function genImageAffineNumeric() {
     chapter: "Fonctions affines — Image et antécédent",
     prompt: `On considère la fonction affine ${nom} définie par \\(${nom}(x) = ${texAffine(a, b)}\\). Calcule \\(${nom}(${x})\\).`,
     answer,
-    steps: [`${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}`],
+    steps: [{ type: "calcul", text: `${nom}(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${answer}` }],
   };
 }
 
@@ -142,7 +149,10 @@ function genVraiFauxAffineQCM() {
       prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}(x ${k >= 0 ? "+" : "-"} ${Math.abs(k)}) ${m >= 0 ? "+" : "-"} ${Math.abs(m)}\\). Après réduction, ${nom} est-elle une fonction affine ?`,
       answer: "Oui",
       options: ["Oui", "Non"],
-      steps: [`${nom}(x) = ${a}x ${a * k >= 0 ? "+" : "-"} ${Math.abs(a * k)} ${m >= 0 ? "+" : "-"} ${Math.abs(m)} = ${texAffine(a, b)}`, `C'est bien de la forme ax + b : ${nom} est affine.`],
+      steps: [
+        { type: "calcul", text: `${nom}(x) = ${a}x ${a * k >= 0 ? "+" : "-"} ${Math.abs(a * k)} ${m >= 0 ? "+" : "-"} ${Math.abs(m)} = ${texAffine(a, b)}` },
+        { type: "resultat", text: `\\text{C'est bien de la forme ax + b : } ${nom} \\text{ est affine.}` },
+      ],
     };
   }
   // On construit une expression avec un terme en x² qui ne se simplifie pas.
@@ -153,7 +163,10 @@ function genVraiFauxAffineQCM() {
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = x(x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}) ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Après réduction, ${nom} est-elle une fonction affine ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [`${nom}(x) = x^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}`, `Il reste un terme en x^2 : ${nom} n'est pas affine.`],
+    steps: [
+      { type: "calcul", text: `${nom}(x) = x^2 ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `\\text{Il reste un terme en } x^2 : ${nom} \\text{ n'est pas affine.}` },
+    ],
   };
 }
 
@@ -183,7 +196,10 @@ function genClasserFonctionQCM() {
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${expression}\\). Comment peut-on classer cette fonction ?`,
     answer: categorie,
     options: ["constante", "linéaire", "affine non linéaire", "non affine"],
-    steps: [`${nom}(x) = ${expression} : c'est une fonction ${categorie}.`],
+    steps: [
+      { type: "regle", text: `\\text{Une fonction } ax + b \\text{ est : constante si } a=0 \\text{ ; linéaire si } b=0 \\text{ (et } a \\neq 0\\text{) ; affine non linéaire si } a \\neq 0 \\text{ et } b \\neq 0. \\text{ Si l'expression contient un terme en } x^2 \\text{ (ou plus), elle n'est pas affine.}` },
+      { type: "resultat", text: `${nom}(x) = ${expression} : \\text{ c'est une fonction } ${categorie}.` },
+    ],
   };
 }
 
@@ -204,7 +220,7 @@ function genComparerImagesSigneAQCM() {
     prompt: `On considère la fonction affine ${nom} définie par \\(${nom}(x) = ${texAffine(a, b)}\\), avec \\(${xmin} < ${xmax}\\). Que peut-on en déduire ?`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise, "On ne peut pas savoir"]),
-    steps: [`Le coefficient directeur ${a} est ${a > 0 ? "positif" : "négatif"}, donc ${nom} est ${a > 0 ? "croissante" : "décroissante"} : ${bonneReponse}.`],
+    steps: [{ type: "resultat", text: `\\text{Le coefficient directeur } ${a} \\text{ est } ${a > 0 ? "positif" : "négatif"}, \\text{ donc } ${nom} \\text{ est } ${a > 0 ? "croissante" : "décroissante"} : ${bonneReponse}.` }],
   };
 }
 
@@ -225,7 +241,7 @@ function genIdentifierDroiteQCM() {
     prompt: `Une droite a pour coefficient directeur ${a} et pour ordonnée à l'origine ${b}. Quelle est son équation ?`,
     answer: bonneReponse,
     options: shuffle([...optionsSet]),
-    steps: [`Une droite de coefficient directeur a et d'ordonnée à l'origine b a pour équation y = ax + b, ici y = ${texAffine(a, b)}.`],
+    steps: [{ type: "regle", text: `\\text{Une droite de coefficient directeur a et d'ordonnée à l'origine b a pour équation } y = ax + b, \\text{ ici } y = ${texAffine(a, b)}.` }],
   };
 }
 
@@ -241,7 +257,11 @@ function genResoudreEquationAffineNumeric() {
     chapter: "Fonctions affines — Équations et inéquations",
     prompt: `Résous l'équation \\(${texAffine(a, b)} = ${k}\\).`,
     answer: xSol,
-    steps: [`${a}x = ${k - b}`, `x = ${xSol}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour isoler x, on soustrait } ${b} \\text{ des deux côtés, puis on divise par } ${a}.` },
+      { type: "calcul", text: `${a}x = ${k - b}` },
+      { type: "resultat", text: `x = \\dfrac{${k - b}}{${a}} = ${xSol}` },
+    ],
   };
 }
 
@@ -261,7 +281,10 @@ function genResoudreInequationAffineQCM() {
     prompt: `Résous l'inéquation \\(${texAffine(a, b)} > ${k}\\).`,
     answer: bonneReponse,
     options: shuffle([bonneReponse, mauvaise1, mauvaise2]),
-    steps: [`${a}x > ${k - b}`, a > 0 ? `x > ${xSol} \\text{ (on ne change pas le sens de l'inégalité car } a > 0\\text{)}` : `x < ${xSol} \\text{ (on change le sens de l'inégalité car } a < 0\\text{)}`],
+    steps: [
+      { type: "calcul", text: `${a}x > ${k - b}` },
+      { type: "resultat", text: a > 0 ? `x > ${xSol} \\text{ (on ne change pas le sens de l'inégalité car } a > 0\\text{)}` : `x < ${xSol} \\text{ (on change le sens de l'inégalité car } a < 0\\text{)}` },
+    ],
   };
 }
 
@@ -280,7 +303,10 @@ function genPointAppartientDroiteQCM() {
     prompt: `La droite représentant la fonction affine ${nom} a pour équation \\(y = ${texAffine(a, b)}\\). Le point de coordonnées (${x} ; ${yPropose}) appartient-il à cette droite ?`,
     answer: appartient ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${nom}(${x}) = ${vraiY}`, appartient ? `${vraiY} = ${yPropose} : le point appartient à la droite.` : `${vraiY} \\neq ${yPropose} : le point n'appartient pas à la droite.`],
+    steps: [
+      { type: "calcul", text: `${nom}(${x}) = ${vraiY}` },
+      { type: "resultat", text: appartient ? `${vraiY} = ${yPropose} : \\text{ le point appartient à la droite.}` : `${vraiY} \\neq ${yPropose} : \\text{ le point n'appartient pas à la droite.}` },
+    ],
   };
 }
 
@@ -300,9 +326,10 @@ function genIntersectionDeuxDroitesNumeric() {
     prompt: `On considère les fonctions affines ${nomF} et ${nomG} définies par \\(${nomF}(x) = ${texAffine(a1, b1)}\\) et \\(${nomG}(x) = ${texAffine(a2, b2)}\\). Détermine l'abscisse du point d'intersection des deux droites qui les représentent (résous \\(${nomF}(x) = ${nomG}(x)\\)).`,
     answer: xSol,
     steps: [
-      `${texAffine(a1, b1)} = ${texAffine(a2, b2)}`,
-      `${a1 - a2}x = ${b2 - b1}`,
-      `x = ${xSol}`,
+      { type: "donnee", text: `${texAffine(a1, b1)} = ${texAffine(a2, b2)}` },
+      { type: "regle", text: `\\text{On regroupe les termes en x d'un côté et les nombres de l'autre.}` },
+      { type: "calcul", text: `${a1 - a2}x = ${b2 - b1}` },
+      { type: "resultat", text: `x = \\dfrac{${b2 - b1}}{${a1 - a2}} = ${xSol}` },
     ],
   };
 }
@@ -323,7 +350,7 @@ function genTarifContexteNumeric() {
     chapter: "Fonctions affines — Problèmes de tarifs",
     prompt: `Pour ${contexte.objet}, le tarif comprend un forfait fixe de ${fr(prixFixe)} € auquel s'ajoutent ${fr(prixUnitaire)} € par ${contexte.unite}. Combien ${contexte.verbe}-t-on pour ${quantite} ${contexte.unite}${quantite > 1 ? "s" : ""} ?`,
     answer,
-    steps: [`\\text{Prix} = ${prixFixe} + ${prixUnitaire} \\times ${quantite} = ${prixFixe} + ${prixUnitaire * quantite} = ${answer}`],
+    steps: [{ type: "calcul", text: `\\text{Prix} = ${prixFixe} + ${prixUnitaire} \\times ${quantite} = ${prixFixe} + ${prixUnitaire * quantite} = ${answer}` }],
   };
 }
 
@@ -343,7 +370,10 @@ function genTarifInverseNumeric() {
     chapter: "Fonctions affines — Problèmes de tarifs",
     prompt: `Pour ${contexte.objet}, le tarif comprend un forfait fixe de ${fr(prixFixe)} € auquel s'ajoutent ${fr(prixUnitaire)} € par ${contexte.unite}. Un client a payé ${fr(total)} €. Combien de ${contexte.unite}s a-t-il consommés ?`,
     answer: quantiteSol,
-    steps: [`${prixFixe} + ${prixUnitaire} \\times n = ${total}`, `n = \\dfrac{${total - prixFixe}}{${prixUnitaire}} = ${quantiteSol}`],
+    steps: [
+      { type: "donnee", text: `${prixFixe} + ${prixUnitaire} \\times n = ${total}` },
+      { type: "resultat", text: `n = \\dfrac{${total - prixFixe}}{${prixUnitaire}} = ${quantiteSol}` },
+    ],
   };
 }
 

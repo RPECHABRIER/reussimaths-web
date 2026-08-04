@@ -58,6 +58,19 @@ function gcd(a, b) {
   return a;
 }
 
+// Étapes détaillées de l'algorithme d'Euclide pour calculer un PGCD.
+function pgcdEuclideSteps(a, b) {
+  let x = a, y = b;
+  const steps = [];
+  while (y !== 0) {
+    const q = Math.floor(x / y);
+    const r = x % y;
+    steps.push(r === 0 ? `${x} = ${q} \\times ${y}` : `${x} = ${q} \\times ${y} + ${r}`);
+    [x, y] = [y, r];
+  }
+  return steps;
+}
+
 function coprimePair(min, max) {
   let a0, b0;
   do {
@@ -332,9 +345,9 @@ function genPGCDNumeric() {
     prompt: `Quel est le PGCD (plus grand commun diviseur) de ${a} et ${b} ?`,
     answer: g,
     steps: [
-      { type: "calcul", text: `${a} = ${g} \\times ${a0}` },
-      { type: "calcul", text: `${b} = ${g} \\times ${b0}` },
-      { type: "resultat", text: `${a0} et ${b0} n'ont aucun diviseur commun (à part 1), donc PGCD(${a} ; ${b}) = ${g}.` },
+      { type: "regle", text: `On applique l'algorithme d'Euclide : on divise le plus grand nombre par le plus petit, puis on recommence avec le diviseur et le reste, jusqu'à obtenir un reste nul. Le PGCD est le dernier diviseur utilisé.` },
+      ...pgcdEuclideSteps(a, b).map((text) => ({ type: "calcul", text })),
+      { type: "resultat", text: `PGCD(${a} ; ${b}) = ${g}.` },
     ],
   };
 }
@@ -373,6 +386,7 @@ function genPGCDProblemeNumeric() {
     prompt,
     answer,
     steps: [
+      { type: "regle", text: `Le nombre maximum de lots identiques est le PGCD des deux effectifs (calculable par divisions successives, algorithme d'Euclide).` },
       { type: "calcul", text: `PGCD(${A} ; ${B}) = ${g} : c'est le nombre maximum de lots.` },
       { type: "calcul", text: `${A} \\div ${g} = ${a0} ${objA} par lot.` },
       { type: "resultat", text: `${B} \\div ${g} = ${b0} ${objB} par lot.` },
@@ -397,6 +411,7 @@ function genPGCDCarrelageNumeric() {
         : `On carrelle un rectangle de ${L} cm sur ${l} cm avec les plus grands carreaux carrés possibles, sans découpe. Combien de carreaux seront nécessaires ?`,
     answer: question === "cote" ? g : nbCarreaux,
     steps: [
+      { type: "regle", text: `Le côté du plus grand carreau possible est le PGCD des deux dimensions (calculable par divisions successives, algorithme d'Euclide).` },
       { type: "calcul", text: `Le côté du carreau le plus grand possible est le PGCD(${L} ; ${l}) = ${g} cm.` },
       { type: "resultat", text: `Nombre de carreaux : (${L} \\div ${g}) \\times (${l} \\div ${g}) = ${a0} \\times ${b0} = ${nbCarreaux}.` },
     ],
@@ -416,6 +431,7 @@ function genSimplifierFractionDecompositionNumeric() {
     prompt: `Écris la fraction \\(\\dfrac{${num}}{${den}}\\) sous forme irréductible. Donne son ${askNum ? "numérateur" : "dénominateur"}.`,
     answer: askNum ? a0 : b0,
     steps: [
+      { type: "regle", text: `On divise le numérateur et le dénominateur par leur PGCD (calculable par divisions successives, algorithme d'Euclide).` },
       { type: "calcul", text: `PGCD(${num} ; ${den}) = ${g}.` },
       { type: "resultat", text: `\\dfrac{${num}}{${den}} = \\dfrac{${a0}}{${b0}}` },
     ],

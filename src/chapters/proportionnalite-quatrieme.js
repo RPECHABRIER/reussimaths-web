@@ -37,7 +37,10 @@ function genQuatriemeProportionnelleNumeric() {
     prompt: `Dans un tableau de proportionnalité, on a \\(\\dfrac{${fr(b)}}{${a}} = \\dfrac{?}{${c}}\\). Quelle est cette quatrième proportionnelle (arrondie au centième si nécessaire) ?`,
     answer: d,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `${fr(b)} \\times ${c} \\div ${a} = ${fr(d)}` }],
+    steps: [
+      { type: "regle", text: `On utilise le produit en croix : \\(\\dfrac{${fr(b)}}{${a}} = \\dfrac{?}{${c}}\\) donne \\(? = ${fr(b)} \\times ${c} \\div ${a}\\).` },
+      { type: "calcul", text: `${fr(b)} \\times ${c} \\div ${a} = ${fr(d)}` },
+    ],
   };
 }
 
@@ -216,7 +219,10 @@ function genAgrandissementReductionRapportNumeric() {
     prompt: `Une figure a une longueur initiale de ${fr(longueurInitiale)} cm. Après agrandissement ou réduction, cette longueur devient ${fr(longueurFinale)} cm. Quel est le rapport k appliqué ?`,
     answer: k,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `${fr(longueurFinale)} \\div ${fr(longueurInitiale)} = ${fr(k)}` }],
+    steps: [
+      { type: "regle", text: `Le rapport k = longueur finale ÷ longueur initiale.` },
+      { type: "calcul", text: `${fr(longueurFinale)} \\div ${fr(longueurInitiale)} = ${fr(k)}` },
+    ],
   };
 }
 
@@ -231,7 +237,10 @@ function genLongueurApresAgrandissementNumeric() {
     prompt: `Une figure de longueur ${longueurInitiale} cm subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quelle est la nouvelle longueur, en cm ?`,
     answer,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `${longueurInitiale} \\times ${fr(k)} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Un agrandissement/réduction de rapport k multiplie toutes les longueurs par k.` },
+      { type: "calcul", text: `${longueurInitiale} \\times ${fr(k)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -246,7 +255,10 @@ function genAireApresAgrandissementNumeric() {
     prompt: `Une figure d'aire ${aireInitiale} cm² subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quelle est la nouvelle aire, en cm² ?`,
     answer,
     tolerance: 0.05,
-    steps: [{ type: "calcul", text: `${aireInitiale} \\times ${fr(k)}^2 = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Un agrandissement/réduction de rapport k multiplie les longueurs par k, donc les aires par \\(k^2\\) (et non par k).` },
+      { type: "calcul", text: `${aireInitiale} \\times ${fr(k)}^2 = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -261,7 +273,10 @@ function genVolumeApresAgrandissementNumeric() {
     prompt: `Un solide de volume ${volumeInitial} cm³ subit un agrandissement (ou une réduction) de rapport ${fr(k)}. Quel est le nouveau volume, en cm³ ?`,
     answer,
     tolerance: 0.1,
-    steps: [{ type: "calcul", text: `${volumeInitial} \\times ${fr(k)}^3 = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Un agrandissement/réduction de rapport k multiplie les longueurs par k, donc les volumes par \\(k^3\\) (et non par k).` },
+      { type: "calcul", text: `${volumeInitial} \\times ${fr(k)}^3 = ${fr(answer)}` },
+    ],
   };
 }
 

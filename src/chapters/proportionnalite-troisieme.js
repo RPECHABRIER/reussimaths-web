@@ -186,7 +186,16 @@ function genCoefficientMultiplicateurNumeric() {
     prompt: `Une grandeur ${direction === "augmente" ? "augmente" : "diminue"} de ${p} %. Quel est le coefficient multiplicateur correspondant ?`,
     answer,
     tolerance: 0.001,
-    steps: [{ type: "calcul", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` }],
+    steps: [
+      {
+        type: "regle",
+        text:
+          direction === "augmente"
+            ? `\\text{Augmenter de } ${p}\\% \\text{ revient à garder les 100\\% de départ et à en ajouter } ${p}\\%, \\text{ soit } (100 + ${p})\\% = 1 + \\dfrac{${p}}{100} \\text{ de la valeur de départ.}`
+            : `\\text{Diminuer de } ${p}\\% \\text{ revient à ne garder que } (100 - ${p})\\% \\text{ de la valeur de départ, soit } 1 - \\dfrac{${p}}{100}.`,
+      },
+      { type: "calcul", text: direction === "augmente" ? `1 + \\dfrac{${p}}{100} = ${fr(answer)}` : `1 - \\dfrac{${p}}{100} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -217,6 +226,7 @@ function genTauxEvolutionDepuisPrixNumeric() {
     prompt: `Le prix d'un article passe de ${P0} € à ${fr(P1)} €. Calcule le pourcentage d'évolution, en valeur absolue (sans préciser s'il s'agit d'une hausse ou d'une baisse).`,
     answer: p,
     steps: [
+      { type: "regle", text: `\\text{Prix initial} \\times \\text{coefficient multiplicateur} = \\text{prix final, donc coefficient multiplicateur} = \\dfrac{\\text{prix final}}{\\text{prix initial}}.` },
       { type: "calcul", text: `\\text{Coefficient multiplicateur} = \\dfrac{${fr(P1)}}{${P0}} = ${fr(cm)}` },
       { type: "resultat", text: direction === "augmente" ? `${fr(cm)} - 1 = ${p}\\%` : `1 - ${fr(cm)} = ${p}\\%` },
     ],
@@ -236,7 +246,16 @@ function genCalculerPrixFinalNumeric() {
     prompt: `Un article coûte ${P0} €. Son prix ${direction === "augmente" ? "augmente" : "diminue"} de ${p} %. Quel est son nouveau prix (en €) ?`,
     answer: P1,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `${P0} \\times ${fr(cm)} = ${fr(P1)}` }],
+    steps: [
+      {
+        type: "calcul",
+        text:
+          direction === "augmente"
+            ? `\\text{Coefficient multiplicateur} = 1 + \\dfrac{${p}}{100} = ${fr(cm)}`
+            : `\\text{Coefficient multiplicateur} = 1 - \\dfrac{${p}}{100} = ${fr(cm)}`,
+      },
+      { type: "resultat", text: `${P0} \\times ${fr(cm)} = ${fr(P1)}` },
+    ],
   };
 }
 
@@ -254,7 +273,14 @@ function genCalculerPrixInitialNumeric() {
     answer: P0,
     tolerance: 0.01,
     steps: [
-      { type: "donnee", text: `\\text{Coefficient multiplicateur} = ${fr(cm)}` },
+      {
+        type: "calcul",
+        text:
+          direction === "augmente"
+            ? `\\text{Coefficient multiplicateur} = 1 + \\dfrac{${p}}{100} = ${fr(cm)}`
+            : `\\text{Coefficient multiplicateur} = 1 - \\dfrac{${p}}{100} = ${fr(cm)}`,
+      },
+      { type: "regle", text: `\\text{Prix initial} \\times \\text{coefficient multiplicateur} = \\text{prix final, donc prix initial} = \\dfrac{\\text{prix final}}{\\text{coefficient multiplicateur}}.` },
       { type: "resultat", text: `\\text{Prix initial} = \\dfrac{${fr(P1)}}{${fr(cm)}} = ${P0}` },
     ],
   };
@@ -278,6 +304,10 @@ function genEnchainementDeuxEvolutionsNumeric() {
     answer: P2,
     tolerance: 0.02,
     steps: [
+      {
+        type: "calcul",
+        text: `\\text{Coefficients multiplicateurs} : ${dir1 === "augmente" ? `1 + \\dfrac{${p1}}{100}` : `1 - \\dfrac{${p1}}{100}`} = ${fr(cm1)} \\text{ puis } ${dir2 === "augmente" ? `1 + \\dfrac{${p2}}{100}` : `1 - \\dfrac{${p2}}{100}`} = ${fr(cm2)}`,
+      },
       { type: "calcul", text: `${P0} \\times ${fr(cm1)} = ${fr(P1)}` },
       { type: "resultat", text: `${fr(P1)} \\times ${fr(cm2)} = ${fr(P2)}` },
     ],
@@ -331,6 +361,10 @@ function genComparerDeuxReductionsQCM() {
     answer,
     options: ["Offre A", "Offre B"],
     steps: [
+      {
+        type: "calcul",
+        text: `\\text{Coefficients multiplicateurs} : \\text{Offre A} : 1 - \\dfrac{${pSimple}}{100} = ${fr(cmSimple)} \\quad ; \\quad \\text{Offre B} : 1 - \\dfrac{${p1}}{100} = ${fr(cm1)} \\text{ puis } 1 - \\dfrac{${p2}}{100} = ${fr(cm2)}`,
+      },
       { type: "calcul", text: `\\text{Offre A} : ${P0} \\times ${fr(cmSimple)} = ${fr(finalSimple)}\\text{ €}` },
       { type: "resultat", text: `\\text{Offre B} : ${P0} \\times ${fr(cm1)} \\times ${fr(cm2)} = ${fr(finalDouble)}\\text{ €}` },
     ],

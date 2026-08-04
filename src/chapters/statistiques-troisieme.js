@@ -220,7 +220,10 @@ function genAngleDiagrammeCirculaireNumeric() {
     prompt: `Dans une classe de ${total} élèves, ${parts[i]} pratiquent un sport donné. Pour représenter cette répartition avec un diagramme circulaire, quel doit être l'angle (en degrés, arrondi au dixième) du secteur correspondant à ce sport ?`,
     answer: angle,
     tolerance: 0.2,
-    steps: [{ type: "calcul", text: `\\dfrac{${parts[i]} \\times 360}{${total}} \\approx ${fr(angle)}\\text{°}` }],
+    steps: [
+      { type: "regle", text: `Angle du secteur = (effectif de la catégorie ÷ effectif total) × 360°.` },
+      { type: "calcul", text: `\\dfrac{${parts[i]} \\times 360}{${total}} \\approx ${fr(angle)}\\text{°}` },
+    ],
   };
 }
 
@@ -350,7 +353,10 @@ function genFrequenceNumeric() {
     prompt: `Dans une série de ${total} valeurs, une valeur donnée apparaît ${effectif} fois. Calcule sa fréquence en pourcentage (arrondie au dixième).`,
     answer: freq,
     tolerance: 0.2,
-    steps: [{ type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 100 \\approx ${fr(freq)}\\ \\%` }],
+    steps: [
+      { type: "regle", text: `Fréquence en % = (effectif ÷ effectif total) × 100.` },
+      { type: "calcul", text: `\\dfrac{${effectif}}{${total}} \\times 100 \\approx ${fr(freq)}\\ \\%` },
+    ],
   };
 }
 

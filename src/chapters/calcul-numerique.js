@@ -154,7 +154,10 @@ function genAireRectangleDecompose() {
     chapter: "Opérations sur les nombres — Distributivité",
     prompt: `Un rectangle de largeur ${largeur} cm est composé de deux parties accolées, de longueurs ${long1} cm et ${long2} cm. Quelle est l'aire totale du rectangle, en cm² ?`,
     answer,
-    steps: [{ type: "calcul", text: `${largeur} \\times (${long1} + ${long2}) = ${largeur} \\times ${long1 + long2} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Aire totale = largeur × (somme des longueurs).` },
+      { type: "calcul", text: `${largeur} \\times (${long1} + ${long2}) = ${largeur} \\times ${long1 + long2} = ${answer}` },
+    ],
   };
 }
 

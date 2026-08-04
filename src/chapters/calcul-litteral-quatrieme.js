@@ -130,6 +130,7 @@ function genReduireExpressionLineaireCoefficientNumeric() {
     prompt: `On réduit l'expression \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} ${c >= 0 ? "+" : "-"} ${Math.abs(c)}x ${d >= 0 ? "+" : "-"} ${Math.abs(d)}\\). Quel est le coefficient de x dans la forme réduite ?`,
     answer: coefX,
     steps: [
+      { type: "regle", text: `Pour réduire, on regroupe entre eux les termes en x, et entre eux les termes constants.` },
       { type: "resultat", text: `${a} + ${c} = ${coefX}\\ \\text{(coefficient de x)}` },
       { type: "calcul", text: `${b} + ${d} = ${constant}\\ \\text{(terme constant)}` },
     ],
@@ -150,7 +151,10 @@ function genReduireExpressionQuadratiqueCoefficientNumeric() {
     chapter: "Calcul littéral — Réduire",
     prompt: `On réduit l'expression \\(${a}x^{2} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)} ${d >= 0 ? "+" : "-"} ${Math.abs(d)}x^{2} ${e >= 0 ? "+" : "-"} ${Math.abs(e)}x ${f >= 0 ? "+" : "-"} ${Math.abs(f)}\\). Quel est le coefficient de \\(x^2\\) dans la forme réduite ?`,
     answer: coefX2,
-    steps: [{ type: "calcul", text: `${a} + ${d} = ${coefX2}\\ \\text{(coefficient de } x^2\\text{)}` }],
+    steps: [
+      { type: "regle", text: `Pour réduire, on regroupe entre eux les termes en \\(x^2\\), entre eux les termes en x, et entre eux les termes constants.` },
+      { type: "calcul", text: `${a} + ${d} = ${coefX2}\\ \\text{(coefficient de } x^2\\text{)}` },
+    ],
   };
 }
 
@@ -166,7 +170,10 @@ function genDevelopperSimpleDistributiviteConstanteNumeric() {
     chapter: "Calcul littéral — Développer",
     prompt: `On développe \\(${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right) = ${k}x + ?\\). Quel est ce terme constant ?`,
     answer,
-    steps: [{ type: "calcul", text: `${k} \\times ${b} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Distributivité : \\(k(x + b) = k \\times x + k \\times b\\).` },
+      { type: "calcul", text: `${k} \\times ${b} = ${answer}` },
+    ],
   };
 }
 
@@ -211,6 +218,7 @@ function genDevelopperDoubleDistributiviteCoefficientNumeric() {
     prompt,
     answer,
     steps: [
+      { type: "regle", text: `Double distributivité : \\((x+a)(x+b) = x^2 + (a+b)x + a \\times b\\).` },
       { type: "calcul", text: `${a} + ${b} = ${a + b}\\ \\text{(coefficient de x)}` },
       { type: "calcul", text: `${a} \\times ${b} = ${a * b}\\ \\text{(terme constant)}` },
     ],
@@ -228,7 +236,10 @@ function genFactoriserFacteurCommunNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ?\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)\\). Quel est ce facteur commun ?`,
     answer: k,
-    steps: [{ type: "calcul", text: `${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)` }],
+    steps: [
+      { type: "regle", text: `Factoriser, c'est l'opération inverse de développer : on met le facteur commun en évidence.` },
+      { type: "calcul", text: `${k}x ${k * b >= 0 ? "+" : "-"} ${Math.abs(k * b)} = ${k}\\left(x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right)` },
+    ],
   };
 }
 
@@ -243,7 +254,10 @@ function genFactoriserParentheseCommuneNumeric() {
     chapter: "Calcul littéral — Factoriser",
     prompt: `On factorise \\(\\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right) \\times ${p} + \\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right) \\times ${q} = \\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right)\\left(?\\right)\\). Que vaut ce facteur (somme entre parenthèses) ?`,
     answer,
-    steps: [{ type: "calcul", text: `${p} + ${q} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Les deux termes partagent le même facteur \\(\\left(x ${a >= 0 ? "+" : "-"} ${Math.abs(a)}\\right)\\) : on le met en évidence, et on additionne les coefficients ${p} et ${q}.` },
+      { type: "calcul", text: `${p} + ${q} = ${answer}` },
+    ],
   };
 }
 

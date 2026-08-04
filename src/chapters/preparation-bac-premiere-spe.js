@@ -47,7 +47,10 @@ function genDeveloppementIdentiteQCM() {
     prompt: `La forme développée et réduite de \\((${a}x ${signedL(b)})^2\\) est :`,
     answer: correctRaw,
     options,
-    steps: [`(A+B)^2 = A^2 + 2AB + B^2`, `\\text{Ici : } ${correctRaw}`],
+    steps: [
+      { type: "regle", text: `\\text{Identité remarquable : } (A+B)^2 = A^2 + 2AB + B^2, \\text{ avec ici } A = ${a}x \\text{ et } B = ${b}.` },
+      { type: "resultat", text: `(${a}x ${signedL(b)})^2 = ${correctRaw}` },
+    ],
   };
 }
 
@@ -65,7 +68,10 @@ function genLectureGraphiqueAffineQCM() {
     prompt: `On donne ci-dessous la représentation graphique d'une fonction affine \\(f\\). Quelle est son expression algébrique ?`,
     answer: correctRaw,
     options,
-    steps: [`\\text{D'après le graphique, l'ordonnée à l'origine est } ${b}, \\text{ le coefficient directeur est } ${a}.`, correctRaw],
+    steps: [
+      { type: "regle", text: `\\text{D'après le graphique, l'ordonnée à l'origine (où la droite coupe l'axe des ordonnées) est } ${b}, \\text{ le coefficient directeur (pente) est } ${a}.` },
+      { type: "resultat", text: correctRaw },
+    ],
     graph: {
       xMin: -5,
       xMax: 5,
@@ -96,7 +102,10 @@ function genProportionComplementaireQCM() {
     prompt: `Dans une promotion d'apprentis, ${pMajoritaire} % étudient la mécanique. Les autres étudient l'électricité : ils sont ${effMin}. Le nombre d'apprentis de cette promotion est égal à :`,
     answer: String(total),
     options,
-    steps: [`\\text{Les } ${pMinoritaire}\\% \\text{ restants représentent } ${effMin} \\text{ apprentis.}`, `\\text{Total} = \\dfrac{${effMin} \\times 100}{${pMinoritaire}} = ${total}`],
+    steps: [
+      { type: "regle", text: `\\text{Les } ${pMinoritaire}\\% \\text{ restants représentent } ${effMin} \\text{ apprentis. Le total correspond donc à } 100\\%.` },
+      { type: "resultat", text: `\\text{Total} = \\dfrac{${effMin} \\times 100}{${pMinoritaire}} = ${total}` },
+    ],
   };
 }
 
@@ -114,7 +123,11 @@ function genCoefficientMultiplicateurQCM() {
     prompt: `Le prix d'un article est multiplié par \\(${fr(coefRaw)}\\). Cela signifie que :`,
     answer: reponse,
     options: [reponse, autre1, autre2],
-    steps: [reponse],
+    steps: [{ type: "regle", text:
+      hausse
+        ? `\\text{Un coefficient multiplicateur} > 1 \\text{ correspond à une hausse. Ici } ${fr(coefRaw)} = 1 + \\dfrac{${p}}{100}, \\text{ donc une augmentation de } ${p}\\%.`
+        : `\\text{Un coefficient multiplicateur} < 1 \\text{ correspond à une baisse. Ici } ${fr(coefRaw)} = 1 - \\dfrac{${p}}{100}, \\text{ donc une diminution de } ${p}\\%.`,
+    }],
   };
 }
 
@@ -133,7 +146,10 @@ function genOrdreGrandeurQCM() {
     prompt: `Parmi les réponses proposées, la valeur la plus proche de \\(\\dfrac{${numerateur}}{${denominateur}}\\) est :`,
     answer: String(correct),
     options: shuffle([correct, ...autres]).map(String),
-    steps: [`\\dfrac{${numerateur}}{${denominateur}} \\approx ${fr(roundTo(valeurExacte, 1))}`, `\\text{La valeur la plus proche parmi les propositions est } ${correct}.`],
+    steps: [
+      { type: "calcul", text: `\\dfrac{${numerateur}}{${denominateur}} \\approx ${fr(roundTo(valeurExacte, 1))}` },
+      { type: "resultat", text: `\\text{La valeur la plus proche parmi les propositions est } ${correct}.` },
+    ],
   };
 }
 
@@ -152,7 +168,10 @@ function genDebitQCM() {
     prompt: `Une animation, d'une durée de ${minutes} minute${minutes > 1 ? "s" : ""}${secondesSupp ? ` et ${secondesSupp} secondes` : ""}, contient ${quantite} images. Le nombre d'images par seconde est égal à :`,
     answer: `${correct} images/seconde`,
     options: shuffle([correct, ...autres]).map((v) => `${v} images/seconde`),
-    steps: [`\\text{Durée totale} = ${dureeSecondes} \\text{ secondes}`, `\\dfrac{${quantite}}{${dureeSecondes}} = ${correct} \\text{ images/seconde}`],
+    steps: [
+      { type: "donnee", text: `\\text{Durée totale} = ${dureeSecondes} \\text{ secondes}` },
+      { type: "resultat", text: `\\dfrac{${quantite}}{${dureeSecondes}} = ${correct} \\text{ images/seconde}` },
+    ],
   };
 }
 
@@ -174,7 +193,11 @@ function genAppartenanceCourbeQCM() {
     prompt: `On considère une fonction \\(f\\) définie sur \\(\\mathbb{R}\\) par : \\(f(x) = ${fr(a)}(x ${signedL(-alpha)})^2 ${signedL(beta)}\\). On note \\(\\mathcal{C}\\) sa courbe représentative. Un seul des points ci-dessous appartient à \\(\\mathcal{C}\\). Lequel ?`,
     answer: pointCorrect,
     options,
-    steps: [`f(${xTest}) = ${fr(a)} \\times (${xTest - alpha})^2 ${signedL(beta)} = ${fr(yCorrect)}`, `\\text{Le point } ${pointCorrect} \\text{ appartient à } \\mathcal{C}.`],
+    steps: [
+      { type: "regle", text: `\\text{Un point } (x_0 ; y_0) \\text{ appartient à } \\mathcal{C} \\text{ si et seulement si } f(x_0) = y_0.` },
+      { type: "calcul", text: `f(${xTest}) = ${fr(a)} \\times (${xTest - alpha})^2 ${signedL(beta)} = ${fr(yCorrect)}` },
+      { type: "resultat", text: `\\text{Le point } ${pointCorrect} \\text{ appartient à } \\mathcal{C}.` },
+    ],
   };
 }
 
@@ -197,7 +220,10 @@ function genPuissancesDix10QCM() {
     prompt: `On considère le nombre \\(A = \\dfrac{10^{${exp1}} \\times 10^{${exp2}}}{(10^{${exp3}})^2}\\). On peut affirmer que :`,
     answer: `A = ${answer}`,
     options: shuffle([`A = ${answer}`, `A = ${wrong1}`, `A = ${wrong2}`, `A = ${wrong3}`]),
-    steps: [`A = 10^{${exp1} - ${Math.abs(exp2)} - ${2 * exp3}} = 10^{${answerExp}}`],
+    steps: [
+      { type: "regle", text: `\\text{Propriétés des puissances : } 10^a \\times 10^b = 10^{a+b}, \\quad \\dfrac{1}{10^a} = 10^{-a}, \\quad (10^a)^n = 10^{an}.` },
+      { type: "resultat", text: `A = 10^{${exp1} - ${Math.abs(exp2)} - ${2 * exp3}} = 10^{${answerExp}}` },
+    ],
   };
 }
 
@@ -216,7 +242,10 @@ function genTableauSignesProduitQCM() {
     prompt: `On considère la fonction \\(A\\) définie sur \\(\\mathbb{R}\\) par \\(A(x) = (x ${signedL(-r1)})(x ${signedL(-r2)})\\). Quel est le signe de \\(A(x)\\) sur \\(\\mathbb{R}\\) ?`,
     answer: correct,
     options: [correct, autre, `\\text{toujours positif}`],
-    steps: [`\\text{Les racines de A sont } ${r1} \\text{ et } ${r2}.`, `\\text{Un produit de deux facteurs du premier degré est du signe du coefficient dominant (ici positif) à l'extérieur des racines.}`],
+    steps: [
+      { type: "donnee", text: `\\text{Les racines de A sont } ${r1} \\text{ et } ${r2}.` },
+      { type: "resultat", text: `\\text{Un produit de deux facteurs du premier degré est du signe du coefficient dominant (ici positif) à l'extérieur des racines, et du signe opposé entre les racines.}` },
+    ],
   };
 }
 
@@ -241,8 +270,9 @@ function genProbabiliteConditionnelleDenombrementNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `\\text{Le mot ${cas.mot} contient } ${nbLettresMot} \\text{ lettres distinctes, dont } ${nbVoyellesDansMot} \\text{ voyelle(s).}`,
-      `P_M(V) = \\dfrac{${nbVoyellesDansMot}}{${nbLettresMot}} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Pour une probabilité conditionnelle sachant M, on divise par l'effectif du sous-groupe M (ici les lettres du mot), pas par 26.}` },
+      { type: "donnee", text: `\\text{Le mot ${cas.mot} contient } ${nbLettresMot} \\text{ lettres distinctes, dont } ${nbVoyellesDansMot} \\text{ voyelle(s).}` },
+      { type: "resultat", text: `P_M(V) = \\dfrac{${nbVoyellesDansMot}}{${nbLettresMot}} = ${fr(answer)}` },
     ],
   };
 }
@@ -258,7 +288,10 @@ function genArbrePondereIntersectionNumeric() {
     prompt: `Dans un club sportif, ${fr(roundTo(pT * 100, 2))} % des adhérents pratiquent le tennis (évènement \\(T\\)), les autres pratiquent le badminton. Parmi les adhérents pratiquant le tennis, \\(${fr(roundTo(pAsachantT * 100, 2))}\\%\\) ont pris une licence compétition (évènement \\(A\\)). Calcule la probabilité que l'adhérent choisi au hasard pratique le tennis et ait pris une licence compétition, c'est-à-dire \\(P(T \\cap A)\\).`,
     answer,
     tolerance: 0.0005,
-    steps: [`P(T \\cap A) = P(T) \\times P_T(A) = ${fr(pT)} \\times ${fr(pAsachantT)} = ${fr(answer)}`],
+    steps: [
+      { type: "regle", text: `\\text{Le long d'une branche de l'arbre, on multiplie les probabilités : } P(T \\cap A) = P(T) \\times P_T(A).` },
+      { type: "resultat", text: `P(T \\cap A) = ${fr(pT)} \\times ${fr(pAsachantT)} = ${fr(answer)}` },
+    ],
   };
 }
 
@@ -277,9 +310,9 @@ function genProbabiliteSachantComplementaireNumeric() {
     answer,
     tolerance: 0.0005,
     steps: [
-      `P(\\overline{T} \\cap A) = P(A) - P(T \\cap A) = ${fr(pA)} - ${fr(pTinterA)} = ${fr(pTBarInterA)}`,
-      `P(\\overline{T}) = 1 - ${fr(pT)} = ${fr(pTBar)}`,
-      `P_{\\overline{T}}(A) = \\dfrac{P(\\overline{T} \\cap A)}{P(\\overline{T})} = \\dfrac{${fr(pTBarInterA)}}{${fr(pTBar)}} = ${fr(answer)}`,
+      { type: "regle", text: `\\text{Pour une probabilité conditionnelle, on divise par la probabilité du sous-groupe connu (ici } \\overline{T}\\text{), pas par le total.}` },
+      { type: "calcul", text: `P(\\overline{T} \\cap A) = P(A) - P(T \\cap A) = ${fr(pA)} - ${fr(pTinterA)} = ${fr(pTBarInterA)}, \\quad P(\\overline{T}) = 1 - ${fr(pT)} = ${fr(pTBar)}` },
+      { type: "resultat", text: `P_{\\overline{T}}(A) = \\dfrac{P(\\overline{T} \\cap A)}{P(\\overline{T})} = \\dfrac{${fr(pTBarInterA)}}{${fr(pTBar)}} = ${fr(answer)}` },
     ],
   };
 }
@@ -300,8 +333,14 @@ function genVraiFauxDiscriminantParametreQCM() {
     options: ["Vrai", "Faux"],
     steps:
       signe === "-"
-        ? [`\\Delta = 1 - 4 \\times 1 \\times (-u^2) = 1 + 4u^2`, `\\text{Comme } 4u^2 \\geq 0, \\text{ on a } \\Delta \\geq 1 > 0 \\text{ pour tout } u : \\text{l'équation a toujours deux solutions distinctes.}`]
-        : [`\\Delta = 1 - 4 \\times 1 \\times u^2 = 1 - 4u^2`, `\\text{Pour } u \\text{ suffisamment grand, } \\Delta < 0 : \\text{l'équation n'a alors aucune solution réelle. L'affirmation est donc fausse.}`],
+        ? [
+            { type: "calcul", text: `\\Delta = 1 - 4 \\times 1 \\times (-u^2) = 1 + 4u^2` },
+            { type: "resultat", text: `\\text{Comme } 4u^2 \\geq 0, \\text{ on a } \\Delta \\geq 1 > 0 \\text{ pour tout } u : \\text{l'équation a toujours deux solutions distinctes.}` },
+          ]
+        : [
+            { type: "calcul", text: `\\Delta = 1 - 4 \\times 1 \\times u^2 = 1 - 4u^2` },
+            { type: "resultat", text: `\\text{Pour } u \\text{ suffisamment grand, } \\Delta < 0 : \\text{l'équation n'a alors aucune solution réelle. L'affirmation est donc fausse.}` },
+          ],
   };
 }
 
@@ -317,7 +356,11 @@ function genVraiFauxSuiteGeometriqueQCM() {
     prompt: `On considère la suite \\((u_n)\\) définie pour tout entier naturel \\(n\\) par \\(u_n = ${k}^{-n}\\). Affirmation : « La suite \\((u_n)\\) est une suite géométrique de raison ${raisonAnnoncee}. » Vrai ou faux ?`,
     answer: reponse,
     options: ["Vrai", "Faux"],
-    steps: [`u_n = ${k}^{-n} = \\left(\\dfrac{1}{${k}}\\right)^n`, `\\text{C'est une suite géométrique de premier terme 1 et de raison } \\dfrac{1}{${k}}.`],
+    steps: [
+      { type: "regle", text: `\\text{On réécrit } ${k}^{-n} \\text{ en utilisant } a^{-n} = \\left(\\dfrac{1}{a}\\right)^n.` },
+      { type: "calcul", text: `u_n = ${k}^{-n} = \\left(\\dfrac{1}{${k}}\\right)^n` },
+      { type: "resultat", text: `\\text{C'est une suite géométrique de premier terme 1 et de raison } \\dfrac{1}{${k}}.` },
+    ],
   };
 }
 
@@ -348,13 +391,13 @@ function genNombreSolutionsEquationAffineQCM() {
     prompt: `L'équation \\(${equation}\\) admet :`,
     answer: reponse,
     options: ["Une seule solution", "Aucune solution", "Une infinité de solutions"],
-    steps: [
+    steps: [{ type: "regle", text:
       reponse === "Une seule solution"
         ? `\\text{Le coefficient de x ne s'annule pas dans la simplification : il existe une unique solution.}`
         : reponse === "Aucune solution"
         ? `\\text{Après simplification, les termes en x s'éliminent et il reste une égalité fausse entre deux constantes : aucune solution.}`
         : `\\text{Après simplification, l'équation devient une égalité toujours vraie : tout réel est solution.}`,
-    ],
+    }],
   };
 }
 

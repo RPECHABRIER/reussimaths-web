@@ -191,7 +191,7 @@ export default function Account() {
             <div className="rounded-2xl p-4 text-left flex flex-col gap-3" style={{ backgroundColor: colors.bg }}>
               <div>
                 <p className="text-xs font-semibold" style={{ color: colors.ink }}>
-                  Parrainage — {referralCount}/5 amis
+                  {fullAccess ? `Parrainage — ${referralCount} ami${referralCount > 1 ? "s" : ""}` : `Parrainage — ${referralCount}/5 amis`}
                 </p>
                 <p className="text-xs mt-1" style={{ color: colors.slate }}>
                   {fullAccess

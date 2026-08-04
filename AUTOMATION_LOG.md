@@ -1821,3 +1821,21 @@ d'identifiants dans ce sandbox). Sur les téléphones où l'app est DÉJÀ
 installée sur l'écran d'accueil, l'icône ne se mettra pas à jour
 automatiquement (comportement standard des PWA) — il faudra retirer puis
 réajouter l'app à l'écran d'accueil pour voir la nouvelle icône.
+
+
+## 2026-08-04 (suite 7) — Parrainage : masquer le /5 pour les abonnés complets
+
+Romain a fait remarquer qu'afficher "0/5 amis" n'a pas de sens pour un
+abonné complet : le palier des 5 filleuls sert à débloquer un chapitre
+bonus, ce qui est déjà inutile puisqu'il a accès à tout. Pour ce palier,
+la récompense est différente (1 mois offert par filleul qui s'abonne, pas
+de seuil de 5). Account.jsx affiche désormais simplement "Parrainage — X
+ami(s)" pour les abonnés complets, et garde "Parrainage — X/5 amis" pour
+les autres (gratuit / Pack Examen), qui progressent bien vers un seuil de
+5.
+
+Build vérifié avec succès. Fichier synchronisé (diff vide vérifié) vers
+les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas
+d'identifiants dans ce sandbox).

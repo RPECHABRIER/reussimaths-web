@@ -59,7 +59,10 @@ function genCoordonneesVecteurNumeric() {
     chapter: "Vecteurs — Coordonnées d'un vecteur",
     prompt: `On considère les points ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du vecteur ${texVecteur(nomA + nomB)} ?`,
     answer: demanderAbscisse ? xB - xA : yB - yA,
-    steps: [demanderAbscisse ? `x_{${texVecteur(nomA + nomB)}} = ${xB} - ${xA} = ${xB - xA}` : `y_{${texVecteur(nomA + nomB)}} = ${yB} - ${yA} = ${yB - yA}`],
+    steps: [
+      { type: "regle", text: `\\text{Les coordonnées du vecteur } \\overrightarrow{AB} \\text{ sont } (x_B - x_A ; y_B - y_A).` },
+      { type: "resultat", text: demanderAbscisse ? `x_{${texVecteur(nomA + nomB)}} = ${xB} - ${xA} = ${xB - xA}` : `y_{${texVecteur(nomA + nomB)}} = ${yB} - ${yA} = ${yB - yA}` },
+    ],
   };
 }
 
@@ -74,7 +77,10 @@ function genNormeVecteurNumeric() {
     chapter: "Vecteurs — Norme d'un vecteur",
     prompt: `Le repère est orthonormé. On considère le vecteur ${texVecteur(nomA + nomB)} de coordonnées \\((${signeX * dx} ; ${signeY * dy})\\). Calcule sa norme \\(\\|${texVecteur(nomA + nomB)}\\|\\).`,
     answer: norme,
-    steps: [`\\|${texVecteur(nomA + nomB)}\\| = \\sqrt{${signeX * dx}^2 + ${signeY * dy}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${norme}`],
+    steps: [
+      { type: "regle", text: `\\text{Dans un repère orthonormé, la norme d'un vecteur } (x ; y) \\text{ vaut } \\sqrt{x^2 + y^2} \\text{ (théorème de Pythagore).}` },
+      { type: "resultat", text: `\\|${texVecteur(nomA + nomB)}\\| = \\sqrt{${signeX * dx}^2 + ${signeY * dy}^2} = \\sqrt{${dx * dx} + ${dy * dy}} = ${norme}` },
+    ],
   };
 }
 
@@ -98,7 +104,12 @@ function genVecteursEgauxQCM() {
     prompt: `On considère ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}), ${nomC}(${xC} ; ${yC}) et ${nomD}(${xD} ; ${yD}). Les vecteurs ${texVecteur(nomA + nomB)} et ${texVecteur(nomC + nomD)} sont-ils égaux ?`,
     answer: egaux ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [`${texVecteur(nomA + nomB)}(${dx} ; ${dy})`, `${texVecteur(nomC + nomD)}(${xD - xC} ; ${yD - yC})`, egaux ? "Mêmes coordonnées : les vecteurs sont égaux." : "Coordonnées différentes : les vecteurs ne sont pas égaux."],
+    steps: [
+      { type: "regle", text: `\\text{Deux vecteurs sont égaux si et seulement si ils ont les mêmes coordonnées.}` },
+      { type: "calcul", text: `${texVecteur(nomA + nomB)}(${dx} ; ${dy})` },
+      { type: "calcul", text: `${texVecteur(nomC + nomD)}(${xD - xC} ; ${yD - yC})` },
+      { type: "resultat", text: egaux ? `\\text{Mêmes coordonnées : les vecteurs sont égaux.}` : `\\text{Coordonnées différentes : les vecteurs ne sont pas égaux.}` },
+    ],
   };
 }
 
@@ -117,7 +128,10 @@ function genImageTranslationNumeric() {
     chapter: "Vecteurs — Translations",
     prompt: `${nomAprime} est l'image du point ${nomA}(${xA} ; ${yA}) par la translation de vecteur \\(\\vec{u}(${dx} ; ${dy})\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomAprime} ?`,
     answer: demanderAbscisse ? xAprime : yAprime,
-    steps: [demanderAbscisse ? `x_{${nomAprime}} = ${xA} + ${dx} = ${xAprime}` : `y_{${nomAprime}} = ${yA} + ${dy} = ${yAprime}`],
+    steps: [
+      { type: "regle", text: `\\text{L'image d'un point } (x ; y) \\text{ par la translation de vecteur } (dx ; dy) \\text{ a pour coordonnées } (x + dx ; y + dy).` },
+      { type: "resultat", text: demanderAbscisse ? `x_{${nomAprime}} = ${xA} + ${dx} = ${xAprime}` : `y_{${nomAprime}} = ${yA} + ${dy} = ${yAprime}` },
+    ],
   };
 }
 
@@ -136,7 +150,10 @@ function genAntecedentTranslationNumeric() {
     chapter: "Vecteurs — Translations",
     prompt: `${nomAprime}(${xAprime} ; ${yAprime}) est l'image du point ${nomA} par la translation de vecteur \\(\\vec{u}(${dx} ; ${dy})\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomA} ?`,
     answer: demanderAbscisse ? xA : yA,
-    steps: [demanderAbscisse ? `x_{${nomA}} = ${xAprime} - ${dx} = ${xA}` : `y_{${nomA}} = ${yAprime} - ${dy} = ${yA}`],
+    steps: [
+      { type: "regle", text: `\\text{Si } (x' ; y') \\text{ est l'image de } (x ; y) \\text{ par la translation de vecteur } (dx ; dy), \\text{ alors } (x ; y) = (x' - dx ; y' - dy) \\text{ (on inverse la translation).}` },
+      { type: "resultat", text: demanderAbscisse ? `x_{${nomA}} = ${xAprime} - ${dx} = ${xA}` : `y_{${nomA}} = ${yAprime} - ${dy} = ${yA}` },
+    ],
   };
 }
 
@@ -153,7 +170,10 @@ function genVecteurTranslationDepuisImageNumeric() {
     chapter: "Vecteurs — Translations",
     prompt: `${nomAprime}(${xAprime} ; ${yAprime}) est l'image du point ${nomA}(${xA} ; ${yA}) par la translation de vecteur \\(\\vec{u}\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de \\(\\vec{u}\\) ?`,
     answer: demanderAbscisse ? xAprime - xA : yAprime - yA,
-    steps: [demanderAbscisse ? `x_{\\vec{u}} = ${xAprime} - ${xA} = ${xAprime - xA}` : `y_{\\vec{u}} = ${yAprime} - ${yA} = ${yAprime - yA}`],
+    steps: [
+      { type: "regle", text: `\\text{Le vecteur de translation qui envoie A sur A' est } \\overrightarrow{AA'}(x_{A'} - x_A ; y_{A'} - y_A).` },
+      { type: "resultat", text: demanderAbscisse ? `x_{\\vec{u}} = ${xAprime} - ${xA} = ${xAprime - xA}` : `y_{\\vec{u}} = ${yAprime} - ${yA} = ${yAprime - yA}` },
+    ],
   };
 }
 
@@ -170,7 +190,7 @@ function genRelationChaslesNumeric() {
     chapter: "Vecteurs — Relation de Chasles",
     prompt: `Le vecteur ${texVecteur(nomA + nomB)} a pour coordonnées \\((${xAB} ; ${yAB})\\) et le vecteur ${texVecteur(nomB + nomC)} a pour coordonnées \\((${xBC} ; ${yBC})\\). D'après la relation de Chasles, ${texVecteur(nomA + nomB)} + ${texVecteur(nomB + nomC)} = ${texVecteur(nomA + nomC)}. Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${texVecteur(nomA + nomC)} ?`,
     answer: demanderAbscisse ? xAB + xBC : yAB + yBC,
-    steps: [demanderAbscisse ? `x_{${texVecteur(nomA + nomC)}} = ${xAB} + ${xBC} = ${xAB + xBC}` : `y_{${texVecteur(nomA + nomC)}} = ${yAB} + ${yBC} = ${yAB + yBC}`],
+    steps: [{ type: "calcul", text: demanderAbscisse ? `x_{${texVecteur(nomA + nomC)}} = ${xAB} + ${xBC} = ${xAB + xBC}` : `y_{${texVecteur(nomA + nomC)}} = ${yAB} + ${yBC} = ${yAB + yBC}` }],
   };
 }
 
@@ -193,9 +213,9 @@ function genSommetParallelogrammeVecteurNumeric() {
     prompt: `${nomA}${nomB}${nomC}${nomD} est un parallélogramme, avec ${nomA}(${xA} ; ${yA}), ${nomB}(${xB} ; ${yB}) et ${nomC}(${xC} ; ${yC}). On utilise la propriété ${texVecteur(nomA + nomB)} = ${texVecteur(nomD + nomC)}. Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomD} ?`,
     answer: demanderAbscisse ? xD : yD,
     steps: [
-      `${texVecteur(nomA + nomB)}(${xB - xA} ; ${yB - yA})`,
-      `${texVecteur(nomD + nomC)} = ${texVecteur(nomA + nomB)} \\text{, donc } (x_${nomC} - x_${nomD} ; y_${nomC} - y_${nomD}) = (${xB - xA} ; ${yB - yA})`,
-      demanderAbscisse ? `x_${nomD} = ${xC} - (${xB - xA}) = ${xD}` : `y_${nomD} = ${yC} - (${yB - yA}) = ${yD}`,
+      { type: "calcul", text: `${texVecteur(nomA + nomB)}(${xB - xA} ; ${yB - yA})` },
+      { type: "calcul", text: `${texVecteur(nomD + nomC)} = ${texVecteur(nomA + nomB)} \\text{, donc } (x_${nomC} - x_${nomD} ; y_${nomC} - y_${nomD}) = (${xB - xA} ; ${yB - yA})` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomD} = ${xC} - (${xB - xA}) = ${xD}` : `y_${nomD} = ${yC} - (${yB - yA}) = ${yD}` },
     ],
   };
 }
@@ -211,7 +231,10 @@ function genVecteurOpposeNumeric() {
     chapter: "Vecteurs — Vecteur opposé",
     prompt: `Le vecteur ${texVecteur(nomA + nomB)} a pour coordonnées \\((${x} ; ${y})\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du vecteur opposé ${texVecteur(nomB + nomA)} ?`,
     answer: demanderAbscisse ? -x : -y,
-    steps: [`\\text{Le vecteur opposé de } (x ; y) \\text{ est } (-x ; -y).`, demanderAbscisse ? `x_{${texVecteur(nomB + nomA)}} = -(${x}) = ${-x}` : `y_{${texVecteur(nomB + nomA)}} = -(${y}) = ${-y}`],
+    steps: [
+      { type: "regle", text: `\\text{Le vecteur opposé de } (x ; y) \\text{ est } (-x ; -y).` },
+      { type: "resultat", text: demanderAbscisse ? `x_{${texVecteur(nomB + nomA)}} = -(${x}) = ${-x}` : `y_{${texVecteur(nomB + nomA)}} = -(${y}) = ${-y}` },
+    ],
   };
 }
 
@@ -227,7 +250,10 @@ function genSommeDeuxVecteursNumeric() {
     chapter: "Vecteurs — Somme de vecteurs",
     prompt: `\\(\\vec{u}(${xU} ; ${yU})\\) et \\(\\vec{v}(${xV} ; ${yV})\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du vecteur \\(\\vec{u} + \\vec{v}\\) ?`,
     answer: demanderAbscisse ? xU + xV : yU + yV,
-    steps: [demanderAbscisse ? `x_{\\vec{u}+\\vec{v}} = ${xU} + ${xV} = ${xU + xV}` : `y_{\\vec{u}+\\vec{v}} = ${yU} + ${yV} = ${yU + yV}`],
+    steps: [
+      { type: "regle", text: `\\text{Pour additionner deux vecteurs, on additionne leurs coordonnées une à une.}` },
+      { type: "resultat", text: demanderAbscisse ? `x_{\\vec{u}+\\vec{v}} = ${xU} + ${xV} = ${xU + xV}` : `y_{\\vec{u}+\\vec{v}} = ${yU} + ${yV} = ${yU + yV}` },
+    ],
   };
 }
 
@@ -251,7 +277,12 @@ function genComparerNormesQCM() {
     prompt: `\\(\\vec{u}(${xU} ; ${yU})\\) et \\(\\vec{v}(${xV} ; ${yV})\\). Quel vecteur a la plus grande norme ?`,
     answer: plusGrand,
     options: ["\\vec{u}", "\\vec{v}"],
-    steps: [`\\|\\vec{u}\\|^2 = ${xU}^2 + ${yU}^2 = ${n2U}`, `\\|\\vec{v}\\|^2 = ${xV}^2 + ${yV}^2 = ${n2V}`, `\\text{Le plus grand carré de norme donne la plus grande norme : } ${plusGrand}.`],
+    steps: [
+      { type: "regle", text: `\\text{Comme la fonction carré est croissante sur } [0 ; +\\infty[, \\text{ comparer deux normes (positives) revient à comparer leurs carrés, ce qui évite de calculer des racines carrées.}` },
+      { type: "calcul", text: `\\|\\vec{u}\\|^2 = ${xU}^2 + ${yU}^2 = ${n2U}` },
+      { type: "calcul", text: `\\|\\vec{v}\\|^2 = ${xV}^2 + ${yV}^2 = ${n2V}` },
+      { type: "resultat", text: `\\text{Le plus grand carré de norme donne la plus grande norme : } ${plusGrand}.` },
+    ],
   };
 }
 
@@ -270,7 +301,10 @@ function genResoudreEquationVectorielleNumeric() {
     chapter: "Vecteurs — Résolution d'une équation vectorielle",
     prompt: `On considère le point ${nomA}(${xA} ; ${yA}) et le vecteur \\(\\vec{u}(${xVecteurCible} ; ${yVecteurCible})\\). Détermine ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du point ${nomB} tel que ${texVecteur(nomA + nomB)} = \\(\\vec{u}\\).`,
     answer: demanderAbscisse ? xB : yB,
-    steps: [demanderAbscisse ? `x_${nomB} - x_${nomA} = ${xVecteurCible} \\text{, donc } x_${nomB} = ${xA} + ${xVecteurCible} = ${xB}` : `y_${nomB} - y_${nomA} = ${yVecteurCible} \\text{, donc } y_${nomB} = ${yA} + ${yVecteurCible} = ${yB}`],
+    steps: [
+      { type: "regle", text: `\\text{L'égalité } \\overrightarrow{AB} = \\vec{u} \\text{ signifie que les coordonnées de } \\overrightarrow{AB} \\text{ sont celles de } \\vec{u} : x_B - x_A = x_{\\vec{u}}, \\ y_B - y_A = y_{\\vec{u}}.` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomB} - x_${nomA} = ${xVecteurCible} \\text{, donc } x_${nomB} = ${xA} + ${xVecteurCible} = ${xB}` : `y_${nomB} - y_${nomA} = ${yVecteurCible} \\text{, donc } y_${nomB} = ${yA} + ${yVecteurCible} = ${yB}` },
+    ],
   };
 }
 
@@ -285,19 +319,46 @@ function genMultiplierVecteurParScalaireNumeric() {
     chapter: "Vecteurs — Multiplication par un nombre",
     prompt: `\\(\\vec{u}(${x} ; ${y})\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} du vecteur \\(${k}\\vec{u}\\) ?`,
     answer: demanderAbscisse ? k * x : k * y,
-    steps: [demanderAbscisse ? `${k} \\times ${x} = ${k * x}` : `${k} \\times ${y} = ${k * y}`],
+    steps: [
+      { type: "regle", text: `\\text{Multiplier un vecteur } (x ; y) \\text{ par un nombre } k \\text{ multiplie chacune de ses coordonnées par } k : (kx ; ky).` },
+      { type: "resultat", text: demanderAbscisse ? `${k} \\times ${x} = ${k * x}` : `${k} \\times ${y} = ${k * y}` },
+    ],
   };
 }
 
 // ---------- 14. Vrai ou faux sur les propriétés des vecteurs ----------
 function genIdentifierProprieteVecteurQCM() {
   const cas = pick([
-    { affirmation: "Deux vecteurs égaux sont nécessairement représentés par le même segment (les mêmes points).", reponse: "Faux" },
-    { affirmation: "Deux vecteurs égaux ont la même norme.", reponse: "Vrai" },
-    { affirmation: "Deux vecteurs opposés ont la même norme.", reponse: "Vrai" },
-    { affirmation: "Deux vecteurs opposés ont le même sens.", reponse: "Faux" },
-    { affirmation: "Si M est le milieu de [AB], alors les vecteurs AM et MB sont égaux.", reponse: "Vrai" },
-    { affirmation: "Le vecteur nul a une norme égale à 1.", reponse: "Faux" },
+    {
+      affirmation: "Deux vecteurs égaux sont nécessairement représentés par le même segment (les mêmes points).",
+      reponse: "Faux",
+      explication: `\\text{Deux vecteurs sont égaux dès qu'ils ont la même direction, le même sens et la même longueur : ils peuvent être portés par des points différents (translation d'un même vecteur).}`,
+    },
+    {
+      affirmation: "Deux vecteurs égaux ont la même norme.",
+      reponse: "Vrai",
+      explication: `\\text{Deux vecteurs égaux ont les mêmes coordonnées, donc la même longueur (norme) : c'est vrai.}`,
+    },
+    {
+      affirmation: "Deux vecteurs opposés ont la même norme.",
+      reponse: "Vrai",
+      explication: `\\text{Le vecteur opposé de } (x ; y) \\text{ est } (-x ; -y) : \\text{ sa norme } \\sqrt{(-x)^2+(-y)^2} = \\sqrt{x^2+y^2} \\text{ est identique.}`,
+    },
+    {
+      affirmation: "Deux vecteurs opposés ont le même sens.",
+      reponse: "Faux",
+      explication: `\\text{Deux vecteurs opposés ont la même direction et la même norme, mais des sens opposés (l'un pointe dans un sens, l'autre dans le sens contraire).}`,
+    },
+    {
+      affirmation: "Si M est le milieu de [AB], alors les vecteurs AM et MB sont égaux.",
+      reponse: "Vrai",
+      explication: `\\text{M étant le milieu, } AM = MB \\text{ (même longueur), et } \\overrightarrow{AM} \\text{ et } \\overrightarrow{MB} \\text{ pointent dans la même direction et le même sens (de A vers B) : ils sont égaux.}`,
+    },
+    {
+      affirmation: "Le vecteur nul a une norme égale à 1.",
+      reponse: "Faux",
+      explication: `\\text{Le vecteur nul a pour coordonnées } (0 ; 0), \\text{ donc sa norme vaut } \\sqrt{0^2+0^2} = 0, \\text{ pas 1.}`,
+    },
   ]);
   return {
     type: "qcm",
@@ -305,7 +366,7 @@ function genIdentifierProprieteVecteurQCM() {
     prompt: `Affirmation : « ${cas.affirmation} » Vrai ou faux ?`,
     answer: cas.reponse,
     options: ["Vrai", "Faux"],
-    steps: [cas.reponse === "Vrai" ? "Cette affirmation est correcte." : "Cette affirmation est incorrecte."],
+    steps: [{ type: "resultat", text: cas.explication }],
   };
 }
 
@@ -321,7 +382,10 @@ function genSensVecteursColineairesQCM() {
     prompt: `\\(\\vec{u}(${x} ; ${y})\\) et \\(\\vec{v}(${k * x} ; ${k * y})\\). On a \\(\\vec{v} = ${k}\\vec{u}\\). Les vecteurs \\(\\vec{u}\\) et \\(\\vec{v}\\) ont-ils le même sens ?`,
     answer: memeSens ? "Oui" : "Non",
     options: ["Oui", "Non"],
-    steps: [memeSens ? `${k} > 0 : les vecteurs ont la même direction et le même sens.` : `${k} < 0 : les vecteurs ont la même direction mais un sens opposé.`],
+    steps: [
+      { type: "regle", text: `\\text{Si } \\vec{v} = k\\vec{u} \\text{ avec } k \\neq 0, \\text{ les vecteurs ont toujours la même direction. Ils ont le même sens si } k > 0, \\text{ et un sens opposé si } k < 0.` },
+      { type: "resultat", text: memeSens ? `${k} > 0 : \\text{ les vecteurs ont le même sens.}` : `${k} < 0 : \\text{ les vecteurs ont un sens opposé.}` },
+    ],
   };
 }
 

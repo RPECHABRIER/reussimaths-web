@@ -36,7 +36,7 @@ function genValeurImmediateNumeric() {
     chapter: "Logarithme décimal (Terminale techno) — Valeurs immédiates",
     prompt: `Calcule \\(\\log(${cas.b})\\) (valeur exacte, sans calculatrice).`,
     answer: cas.log,
-    steps: [`\\log(${cas.b}) = ${cas.log}`],
+    steps: [{ type: "resultat", text: `\\log(${cas.b}) = ${cas.log}` }],
   };
 }
 
@@ -49,7 +49,10 @@ function genResoudre10PuissanceNumeric() {
     chapter: "Logarithme décimal (Terminale techno) — Résolution",
     prompt: `Résous l'équation \\(10^x = ${b < 1 ? fr(b) : b}\\).`,
     answer: exp,
-    steps: [`x = \\log(${b < 1 ? fr(b) : b}) = ${exp}`],
+    steps: [
+      { type: "regle", text: "Par définition, log(b) est l'unique solution de l'équation 10^x = b." },
+      { type: "resultat", text: `x = \\log(${b < 1 ? fr(b) : b}) = ${exp}` },
+    ],
   };
 }
 
@@ -63,7 +66,7 @@ function genApproximationLogNumeric() {
     prompt: `À l'aide de la calculatrice, donne une valeur approchée de \\(\\log(${b})\\) (arrondi au millième).`,
     answer,
     tolerance: 0.002,
-    steps: [`\\log(${b}) \\approx ${fr(answer)}`],
+    steps: [{ type: "resultat", text: `\\log(${b}) \\approx ${fr(answer)}` }],
   };
 }
 
@@ -80,7 +83,10 @@ function genProprieteProduitNumeric() {
     prompt: `Sachant que \\(\\log(${a}) \\approx ${fr(logA)}\\) et \\(\\log(${b}) \\approx ${fr(logB)}\\), calcule \\(\\log(${a * b})\\) en utilisant \\(\\log(ab) = \\log(a) + \\log(b)\\).`,
     answer,
     tolerance: 0.005,
-    steps: [`\\log(${a * b}) = \\log(${a}) + \\log(${b}) \\approx ${fr(logA)} + ${fr(logB)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\log(${a * b}) = \\log(${a}) + \\log(${b}) \\approx ${fr(logA)} + ${fr(logB)}` },
+      { type: "resultat", text: `\\log(${a * b}) \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -96,7 +102,10 @@ function genProprietePuissanceNumeric() {
     prompt: `Sachant que \\(\\log(${a}) \\approx ${fr(logA)}\\), calcule \\(\\log(${a}^{${n}})\\) en utilisant \\(\\log(a^n) = n \\times \\log(a)\\).`,
     answer,
     tolerance: 0.005,
-    steps: [`\\log(${a}^{${n}}) = ${n} \\times \\log(${a}) \\approx ${n} \\times ${fr(logA)} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `\\log(${a}^{${n}}) = ${n} \\times \\log(${a}) \\approx ${n} \\times ${fr(logA)}` },
+      { type: "resultat", text: `\\log(${a}^{${n}}) \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -112,7 +121,10 @@ function genResoudreAPuissanceXNumeric() {
     prompt: `Résous l'équation \\(${fr(a)}^x = ${fr(b)}\\) en utilisant \\(x = \\dfrac{\\log(b)}{\\log(a)}\\) (arrondi au centième).`,
     answer,
     tolerance: 0.05,
-    steps: [`x = \\dfrac{\\log(${fr(b)})}{\\log(${fr(a)})} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `x = \\dfrac{\\log(${fr(b)})}{\\log(${fr(a)})}` },
+      { type: "resultat", text: `x \\approx ${fr(answer)}` },
+    ],
   };
 }
 
@@ -126,7 +138,7 @@ function genSensVariationLogQCM() {
     prompt: `Sachant que ${a} < ${b}, que peut-on dire de \\(\\log(${a})\\) et \\(\\log(${b})\\) ?`,
     answer: `\\(\\log(${a}) < \\log(${b})\\)`,
     options: [`\\(\\log(${a}) < \\log(${b})\\)`, `\\(\\log(${a}) > \\log(${b})\\)`, `\\(\\log(${a}) = \\log(${b})\\)`],
-    steps: [`\\text{La fonction log est croissante sur } ]0;+\\infty[\\text{, donc } ${a} < ${b} \\Rightarrow \\log(${a}) < \\log(${b}).`],
+    steps: [{ type: "regle", text: `\\text{La fonction log est croissante sur } ]0;+\\infty[\\text{, donc } ${a} < ${b} \\Rightarrow \\log(${a}) < \\log(${b}).` }],
   };
 }
 
@@ -140,7 +152,10 @@ function genNombreDeChiffresQCM() {
     chapter: "Logarithme décimal (Terminale techno) — Ordre de grandeur",
     prompt: `On admet que pour un entier naturel n non nul, le nombre de chiffres de son écriture décimale est \\(E(\\log(n)) + 1\\) (partie entière). Sachant que \\(\\log(${n}) \\approx ${fr(roundTo(logN, 3))}\\), combien de chiffres comporte l'écriture décimale de ${n} ?`,
     answer: chiffres,
-    steps: [`E(\\log(${n})) + 1 = E(${fr(roundTo(logN, 3))}) + 1 = ${Math.floor(logN)} + 1 = ${chiffres}`],
+    steps: [
+      { type: "calcul", text: `E(\\log(${n})) + 1 = E(${fr(roundTo(logN, 3))}) + 1 = ${Math.floor(logN)} + 1` },
+      { type: "resultat", text: `${chiffres} \\text{ chiffres}` },
+    ],
   };
 }
 
@@ -156,7 +171,10 @@ function genResoudreXPuissanceANumeric() {
     prompt: `Résous \\(x^{${a}} = ${b}\\) (avec \\(x > 0\\)) en utilisant \\(x = 10^{\\log(b)/${a}}\\) (arrondi au centième).`,
     answer,
     tolerance: 0.05,
-    steps: [`x = 10^{\\log(${b})/${a}} \\approx ${fr(answer)}`],
+    steps: [
+      { type: "calcul", text: `x = 10^{\\log(${b})/${a}}` },
+      { type: "resultat", text: `x \\approx ${fr(answer)}` },
+    ],
   };
 }
 

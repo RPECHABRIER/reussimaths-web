@@ -119,10 +119,28 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [correctCount, setCorrectCount] = useState(0);
   const [sessionDone, setSessionDone] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [revealResult, setRevealResult] = useState(false);
   const defiStartRef = useRef(Date.now());
 
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
+
+  // Mode Découverte : la méthode reste visible en permanence, mais le
+  // résultat final (dernière étape taguée "resultat", cf. codage sémantique
+  // des steps) est masqué par défaut — l'élève choisit de répondre par
+  // lui-même via le pavé/QCM habituel, ou d'afficher le résultat s'il le
+  // souhaite. Les chapitres pas encore retaggés (dernière étape non taguée
+  // "resultat") gardent l'ancien comportement : toutes les étapes visibles,
+  // pas de bouton (on ne peut pas distinguer la méthode du résultat dedans).
+  const lastStep = exercise.steps && exercise.steps.length > 0 ? exercise.steps[exercise.steps.length - 1] : null;
+  const lastIsResult = !!lastStep && typeof lastStep === "object" && lastStep.type === "resultat";
+  const decouverteSteps = lastIsResult && !revealResult ? exercise.steps.slice(0, -1) : exercise.steps;
+
+  // On réinitialise l'affichage du résultat à chaque nouvel exercice ou
+  // changement de mode, pour repartir masqué.
+  useEffect(() => {
+    setRevealResult(false);
+  }, [exercise, mode]);
 
   // Streak quotidien de pratique : dès qu'on ouvre un chapitre pour s'y
   // exercer, ça compte comme la pratique du jour (voir useDailyStreak, no-op
@@ -461,15 +479,31 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           {exercise.figure && <Figure spec={exercise.figure} />}
           {exercise.graph && <Graph spec={exercise.graph} />}
 
-          {isDecouverte && exercise.steps && (
+          {isDecouverte && exercise.steps && exercise.steps.length > 0 && (
             <div className="mb-3">
-              <p
-                className="text-xs uppercase tracking-wide mb-1.5 font-semibold flex items-center gap-1"
-                style={{ color: gold }}
-              >
-                <Lightbulb size={13} /> Méthode
-              </p>
-              <StepsList steps={exercise.steps} dark={false} />
+              <div className="flex items-center justify-between gap-2 mb-1.5">
+                <p
+                  className="text-xs uppercase tracking-wide font-semibold flex items-center gap-1"
+                  style={{ color: gold }}
+                >
+                  <Lightbulb size={13} /> Méthode
+                </p>
+                {lastIsResult && (
+                  <button
+                    onClick={() => setRevealResult((v) => !v)}
+                    className="text-xs font-semibold py-1 px-3 rounded-full shrink-0"
+                    style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ink}` }}
+                  >
+                    {revealResult ? "Masquer le résultat" : "Afficher le résultat"}
+                  </button>
+                )}
+              </div>
+              <StepsList steps={decouverteSteps} dark={false} />
+              {lastIsResult && !revealResult && decouverteSteps.length === 0 && (
+                <p className="text-xs italic" style={{ color: slate }}>
+                  Essaie de répondre toi-même ci-dessous, ou affiche le résultat.
+                </p>
+              )}
             </div>
           )}
 

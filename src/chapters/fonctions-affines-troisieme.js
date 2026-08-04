@@ -267,6 +267,8 @@ function genCompareDeuxTarifsSeuilNumeric() {
     answer: x0,
     steps: [
       { type: "donnee", text: `${a1}x + ${b1} = ${a2}x + ${b2}` },
+      { type: "regle", text: `\\text{On regroupe les termes en x d'un côté et les nombres de l'autre, en soustrayant } ${a2}x \\text{ et } ${b1} \\text{ des deux côtés de l'égalité.}` },
+      { type: "calcul", text: `${a1}x - ${a2}x = ${b2} - ${b1}` },
       { type: "calcul", text: `${a1 - a2}x = ${b2 - b1}` },
       { type: "resultat", text: `x = \\dfrac{${b2 - b1}}{${a1 - a2}} = ${x0}` },
     ],

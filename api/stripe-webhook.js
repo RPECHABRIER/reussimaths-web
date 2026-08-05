@@ -56,10 +56,15 @@ async function grantReferralFreeMonthIfEligible(referredUserId) {
 
     const existing = await stripe.subscriptions.list({
       customer: referrerSub.stripe_customer_id,
-      status: "active",
-      limit: 1,
+      status: "all",
+      limit: 5,
     });
-    const stripeSub = existing.data[0];
+    // "all" + filtre JS (et pas status: "active" directement) : un parrain
+    // encore en période d'essai Stripe ("trialing", déjà autorisé par le
+    // check de statut DB ci-dessus) doit aussi pouvoir être trouvé — un
+    // filtre "active" strict le manquerait et le mois gratuit ne serait
+    // jamais crédité dans ce cas.
+    const stripeSub = existing.data.find((s) => ["active", "trialing"].includes(s.status));
     if (!stripeSub) return;
 
     const oneMonthLater = stripeSub.current_period_end + 30 * 24 * 60 * 60;

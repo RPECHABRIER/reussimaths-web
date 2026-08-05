@@ -2219,3 +2219,42 @@ synchronisés (diff vide vérifié) vers les deux copies Application TOP.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
 SQL : entièrement côté client (localStorage), comme les autres jeux.
+
+## 2026-08-05 (suite 6) — Audit du mois gratuit de parrainage + correction d'un cas limite
+
+Romain a demandé une vérification : le mois gratuit du parrain (abonnement
+complet) se déclenche-t-il bien automatiquement quand un filleul s'abonne ?
+Audit du code (pas juste de la todo-list) :
+
+Confirmé automatique. Le webhook Stripe (api/stripe-webhook.js) appelle
+grantReferralFreeMonthIfEligible(userId) directement dans le traitement de
+checkout.session.completed, dès qu'un filleul paie (mensuel ou Pack Examen).
+La fonction vérifie le parrain via la table `referrals`, s'assure qu'il a
+bien un abonnement complet actif, repousse son trial_end Stripe de 30 jours
+(aucune facture pendant cette période), et marque
+subscription_reward_granted_at pour ne jamais créditer deux fois le même
+filleul. Code bien présent et identique dans le dépôt Git actif (`APPLI
+GITHUB/Sans titre`) — l'incertitude notée le 2026-08-03 sur un possible
+mauvais clone Git de destination ne concerne plus ce dépôt, confirmée à jour.
+
+Un vrai bug (mineur, cas limite) trouvé et corrigé au passage : la recherche
+de l'abonnement Stripe du parrain filtrait sur status: "active" uniquement,
+alors que le code autorise par ailleurs un parrain dont le statut DB est
+"trialing". Un parrain encore en période d'essai Stripe au moment où son
+filleul payait n'aurait donc jamais reçu son mois gratuit (la fonction
+s'arrêtait silencieusement, faute de trouver l'abonnement). Corrigé pour
+reprendre exactement le même motif que api/cancel-subscription.js
+(status: "all" + filtre JS sur ["active", "trialing"]).
+
+⚠️ Deux points restent à vérifier par Romain lui-même, hors de portée de ce
+sandbox : (1) que le webhook Stripe (dashboard Stripe > Webhooks) est bien
+abonné à l'événement checkout.session.completed, en plus de
+customer.subscription.updated/deleted déjà nécessaires pour le reste de
+l'app — sans ça, cette fonction n'est jamais appelée en production, même si
+le code est correct ; (2) que ce fichier corrigé est bien poussé sur GitHub
+puis redéployé sur Vercel (git push manuel, comme toujours dans ce sandbox).
+
+Build vérifié (`npx vite build`, aucune erreur — ce fichier api/ n'est de
+toute façon pas inclus dans le bundle Vite, seul un `node --check` de
+syntaxe était vraiment nécessaire, fait aussi). Fichier synchronisé (diff
+vide vérifié) vers les deux copies Application TOP. Aucune migration SQL.

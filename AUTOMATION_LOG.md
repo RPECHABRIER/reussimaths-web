@@ -2100,3 +2100,24 @@ deux copies Application TOP.
 ⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
 dans ce sandbox). Aucune migration SQL : toujours entièrement côté client.
 
+
+## 2026-08-05 (suite 3) — Course aux tables : ajustement des seuils de temps
+
+Romain a retesté et ajusté les seuils des 3 niveaux (toujours 1er/2e/3e en
+secondes) :
+  Expert       : 14s / 17s / 20s  (était 10s / 12s / 14s)
+  Intermédiaire: 18s / 21s / 24s  (était "Moyen" 15s / 17s / 19s — libellé
+                 renommé "Intermédiaire" au passage)
+  Débutant     : 22s / 25s / 28s  (était 20s / 24s / 28s)
+
+src/pages/CourseTables.jsx : uniquement DIFFICULTIES mis à jour (seuils +
+libellé "Moyen" -> "Intermédiaire", id interne "moyen" conservé donc les
+éventuels records déjà enregistrés sur ce niveau restent valables).
+
+Build vérifié avec succès dès le premier essai (`npx vite build` puis
+`npm run build` depuis le dépôt Git `APPLI GITHUB/Sans titre`). Fichiers
+synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
+SQL.
+

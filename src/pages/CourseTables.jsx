@@ -21,16 +21,14 @@ import { colors, fonts, shadow } from "../theme";
 //     pénalités.
 //   - Trois niveaux de jeu, choisis avant de lancer la course, chacun avec
 //     ses propres seuils de classement (1er / 2e / 3e en secondes) :
-//       Expert   : 10s / 12s / 14s  (seuils d'origine, jugés trop rapides
-//                  une fois testés au clavier texte — restent pertinents
-//                  maintenant que la saisie QCM est beaucoup plus rapide)
-//       Moyen    : 15s / 17s / 19s
-//       Débutant : 20s / 24s / 28s
+//       Expert       : 14s / 17s / 20s
+//       Intermédiaire: 18s / 21s / 24s
+//       Débutant     : 22s / 25s / 28s
 //
 // Animation : les 3 adversaires avancent à VITESSE CONSTANTE en temps réel
-// (ils franchissent la ligne d'arrivée à 10s / 12s / 14s pile, ou aux seuils
-// du niveau choisi) — c'est ce qui donne le sentiment de course et la
-// pression du chrono. Le joueur, lui, avance par palier à chaque question
+// (ils franchissent la ligne d'arrivée pile aux seuils du niveau choisi) —
+// c'est ce qui donne le sentiment de course et la pression du chrono. Le
+// joueur, lui, avance par palier à chaque question
 // répondue (10 paliers de 10% de la piste), avec une transition CSS
 // adoucie pour un mouvement fluide — sa position ne sert qu'à l'ambiance,
 // seul le temps final compte pour le classement.
@@ -48,9 +46,9 @@ const ANIMALS = [
 ];
 
 const DIFFICULTIES = [
-  { id: "expert", label: "Expert", thresholds: { gold: 10000, silver: 12000, bronze: 14000 } },
-  { id: "moyen", label: "Moyen", thresholds: { gold: 15000, silver: 17000, bronze: 19000 } },
-  { id: "debutant", label: "Débutant", thresholds: { gold: 20000, silver: 24000, bronze: 28000 } },
+  { id: "expert", label: "Expert", thresholds: { gold: 14000, silver: 17000, bronze: 20000 } },
+  { id: "moyen", label: "Intermédiaire", thresholds: { gold: 18000, silver: 21000, bronze: 24000 } },
+  { id: "debutant", label: "Débutant", thresholds: { gold: 22000, silver: 25000, bronze: 28000 } },
 ];
 
 const PENALTY_MS = 1500;

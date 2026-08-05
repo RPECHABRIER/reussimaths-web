@@ -639,3 +639,15 @@ grant execute on function public.redeem_class_access_code(text) to authenticated
 insert into public.class_access_codes (code, level, label)
 values ('soleil', 'terminale-techno', 'Terminale technologique — classe de Romain')
 on conflict (code) do nothing;
+
+-- ---------------------------------------------------------------------------
+-- Accès complet offert par l'admin (voir /admin, api/admin-grant-access.js) :
+-- permet à Romain de donner gratuitement l'accès complet (comme l'abonnement
+-- "mensuel") à une personne de son choix, à partir de son email, sans passer
+-- par Stripe. `admin_granted` distingue ces comptes offerts des vrais abonnés
+-- payants (aucun stripe_customer_id/current_period_end n'est renseigné pour
+-- eux, donc la carte de résiliation dans Mon compte reste masquée — rien qui
+-- pourrait tenter un appel Stripe sur un compte qui n'a pas d'abonnement
+-- Stripe réel derrière).
+-- ---------------------------------------------------------------------------
+alter table public.subscriptions add column if not exists admin_granted boolean not null default false;

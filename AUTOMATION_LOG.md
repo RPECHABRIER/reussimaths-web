@@ -2258,3 +2258,64 @@ Build vérifié (`npx vite build`, aucune erreur — ce fichier api/ n'est de
 toute façon pas inclus dans le bundle Vite, seul un `node --check` de
 syntaxe était vraiment nécessaire, fait aussi). Fichier synchronisé (diff
 vide vérifié) vers les deux copies Application TOP. Aucune migration SQL.
+
+## 2026-08-05 (suite 7) — Outil admin : offrir un accès complet gratuit par email
+
+Suite à l'audit du webhook (voir plus haut) : Romain a confirmé être encore
+en Stripe Test (pas encore passé en production) et a demandé la possibilité
+d'offrir un accès complet gratuit à des personnes de son choix une fois en
+production, en plus des codes d'accès classe déjà existants (qui ne
+débloquent qu'un seul niveau).
+
+supabase/schema.sql : nouvelle colonne `subscriptions.admin_granted`
+(boolean, défaut false) — distingue un accès offert par l'admin d'un vrai
+abonnement Stripe payant. Volontairement aucun `stripe_customer_id` ni
+`current_period_end` renseigné sur ces lignes : la carte de résiliation
+(Account.jsx) ne s'affiche que si `current_period_end` est renseigné, donc
+ces comptes offerts ne déclenchent jamais d'appel Stripe accidentel.
+
+api/admin-grant-access.js (nouveau) : endpoint POST { adminUserId,
+targetEmail, action: "grant" | "revoke" }. Revérifie l'identité admin
+CÔTÉ SERVEUR via supabaseAdmin.auth.admin.getUserById (jamais de confiance
+au seul contrôle client, cet endpoint a le pouvoir d'offrir un accès complet
+à n'importe qui). Cherche le compte cible par email (pas de recherche directe
+par email dans l'API admin Supabase : parcourt les pages de listUsers).
+"grant" : upsert subscriptions avec plan="mensuel", status="active",
+admin_granted=true. "revoke" : ne fonctionne QUE si admin_granted est déjà
+vrai sur la ligne existante (sécurité : ne touche jamais un vrai abonnement
+payant par erreur), repasse status="canceled", admin_granted=false.
+
+src/pages/AdminPreview.jsx : nouveau bloc "Offrir un accès complet gratuit"
+sur /admin (champ email + boutons Offrir/Révoquer). Le tableau de bord des
+utilisateurs affiche désormais "Abonnement complet (offert)" au lieu de
+"Abonnement complet" pour ces comptes-là, pour bien les distinguer des vrais
+abonnés en un coup d'œil.
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git `APPLI GITHUB/Sans titre` — une erreur transitoire EMFILE liée au
+sandbox à la première tentative, résolue au second essai, sans lien avec le
+contenu). Fichiers synchronisés (diff vide vérifié) vers les deux copies
+Application TOP.
+
+⚠️ Migration SQL à coller dans l'éditeur SQL Supabase avant que l'outil ne
+fonctionne :
+
+```sql
+alter table public.subscriptions add column if not exists admin_granted boolean not null default false;
+```
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+Par ailleurs, Romain a demandé si les comptes de test créés maintenant
+resteraient fonctionnels après le passage en mode Live, et si les mises à
+jour de l'app en production risquaient de faire perdre les comptes des vrais
+abonnés. Réponses données en chat (pas de code à ce sujet) : les lignes
+`subscriptions` créées en Stripe Test resteront lisibles par l'app après
+bascule en Live (l'accès est piloté par la table Supabase, pas par une
+requête Stripe en direct), mais toute action qui reparle à Stripe pour ces
+lignes (résiliation, futur renouvellement) échouera puisque l'identifiant
+client Stripe stocké est un identifiant Test introuvable avec une clé Live —
+recommandé de nettoyer ces lignes de test avant la bascule. Les redéploiements
+de l'app (git push -> Vercel) ne touchent jamais aux données Supabase : les
+comptes/abonnements des vrais utilisateurs ne sont affectés que par une
+migration SQL explicitement collée par Romain (jamais automatique).

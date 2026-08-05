@@ -65,8 +65,91 @@ export default function AdminPreview() {
         </div>
 
         <PreviewSwitcher />
+        <GrantAccessTool />
         <SubscribersDashboard />
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Offrir un accès complet gratuit
+// ---------------------------------------------------------------------------
+function GrantAccessTool() {
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [messageIsError, setMessageIsError] = useState(false);
+
+  const call = async (action) => {
+    if (!email.trim() || loading) return;
+    setLoading(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin-grant-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminUserId: user.id, targetEmail: email.trim(), action }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessageIsError(true);
+        setMessage(data.error ?? "Erreur.");
+      } else {
+        setMessageIsError(false);
+        setMessage(action === "grant" ? `Accès complet offert à ${email.trim()}.` : `Accès offert révoqué pour ${email.trim()}.`);
+        setEmail("");
+      }
+    } catch (err) {
+      console.error("[GrantAccessTool]", err);
+      setMessageIsError(true);
+      setMessage("Erreur réseau, réessaie.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+      <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
+        Offrir un accès complet gratuit
+      </p>
+      <p className="text-xs" style={{ color: colors.slate }}>
+        Donne gratuitement l'accès complet (tous niveaux, comme l'abonnement) à un compte de ton choix, à partir de
+        son email. La personne doit déjà avoir créé son compte sur l'app.
+      </p>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email@exemple.fr"
+        className="text-xs rounded-lg px-2.5 py-2"
+        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}
+      />
+      <div className="flex gap-2">
+        <button
+          onClick={() => call("grant")}
+          disabled={loading || !email.trim()}
+          className="flex-1 py-2 rounded-full font-semibold text-xs"
+          style={{ backgroundColor: colors.gold, color: colors.ink, opacity: loading ? 0.6 : 1 }}
+        >
+          Offrir l'accès
+        </button>
+        <button
+          onClick={() => call("revoke")}
+          disabled={loading || !email.trim()}
+          className="flex-1 py-2 rounded-full font-semibold text-xs"
+          style={{ backgroundColor: `${colors.red}18`, color: colors.red, opacity: loading ? 0.6 : 1 }}
+        >
+          Révoquer
+        </button>
+      </div>
+      {message && (
+        <p className="text-xs font-medium" style={{ color: messageIsError ? colors.red : colors.green }}>
+          {message}
+        </p>
+      )}
     </div>
   );
 }
@@ -213,7 +296,7 @@ function paletteForSub(sub) {
   }
   const isActive = sub?.status === "active" || sub?.status === "trialing";
   if (!isActive) return "Gratuit";
-  if (sub?.plan === "mensuel") return "Abonnement complet";
+  if (sub?.plan === "mensuel") return sub?.admin_granted ? "Abonnement complet (offert)" : "Abonnement complet";
   if (sub?.plan === "special_examen") return "Pack Examen";
   return "Gratuit";
 }
@@ -226,7 +309,7 @@ function SubscribersDashboard() {
     let cancelled = false;
     Promise.all([
       supabase.from("profiles").select("user_id, pseudo, created_at"),
-      supabase.from("subscriptions").select("user_id, plan, status, current_period_end, class_access_level"),
+      supabase.from("subscriptions").select("user_id, plan, status, current_period_end, class_access_level, admin_granted"),
       supabase.from("user_login_stats").select("user_id, login_count, last_login_at"),
     ]).then(([profilesRes, subsRes, statsRes]) => {
       if (cancelled) return;

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Zap, Calculator, LayoutGrid } from "lucide-react";
+import { Zap, Calculator, LayoutGrid, Baby } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
@@ -33,6 +33,13 @@ const GAMES = [
     description: "Retrouve les paires : figures géométriques, expressions réduites et fractions irréductibles.",
     icon: LayoutGrid,
     level: "6e à Terminale",
+  },
+  {
+    id: "memory-cp-ce1",
+    title: "Memory CP/CE1",
+    description: "Retrouve les paires : amis de 10, doubles, triples, additions et soustractions (nombres de 1 à 40).",
+    icon: Baby,
+    level: "CP / CE1",
   },
 ];
 

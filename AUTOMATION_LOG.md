@@ -2185,3 +2185,37 @@ synchronisés (diff vide vérifié) vers les deux copies Application TOP.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
 SQL : les 2 nouveaux jeux sont entièrement côté client (localStorage).
+
+## 2026-08-05 (suite 5) — Nouveau jeu : Memory CP/CE1 (additions/soustractions 1-40)
+
+Romain a demandé un memory dédié aux CP/CE1 (donc bien plus jeunes que la
+cible 10-18 ans initiale de l'onglet Jeux), en dehors de Memory maths :
+30 cartes fixes (pas de choix de difficulté cette fois), uniquement des
+additions et soustractions avec des entiers de 1 à 40, sur 4 familles
+précises : compléments à 10, doubles, triples, calculs de base. Demande déjà
+suffisamment précise pour construire directement, sans nouvelles questions.
+
+src/pages/MemoryCpCe1.jsx (/jeux/memory-cp-ce1) : même mécanique de memory
+que Memory maths (retourner deux cartes, retrouver les paires, chrono +
+nombre de coups, meilleur score en localStorage), mais contenu et modèle de
+paire différents. Deux formats de paire : soit deux nombres qui se
+complètent à 10 façon "amis de 10" (ex. "3" / "7"), soit un calcul et son
+résultat (ex. "6 + 6" / "12", "9 + 9 + 9" / "27"). Banque de 20 paires
+construite à la main : 4 compléments à 10, 6 doubles, 3 triples, 7 calculs
+d'addition/soustraction de base — vérifiée par un script Node avant
+intégration pour garantir qu'aucun nombre affiché (isolé ou résultat) ne se
+répète ailleurs dans la banque, ce qui casserait le jeu (deux cartes
+identiques qui ne sont pourtant pas censées se répondre). 15 des 20 paires
+sont tirées au hasard à chaque partie (30 cartes), pour varier la grille
+d'une partie à l'autre tout en gardant le stock entièrement maîtrisé.
+
+Le niveau "CP / CE1" est affiché à deux endroits, comme demandé : en badge
+sur la carte du jeu dans le hub /jeux (src/pages/Jeux.jsx), et en bandeau
+explicite en haut de l'écran d'accueil du jeu lui-même.
+
+Build vérifié avec succès dès le premier essai (`npx vite build` puis
+`npm run build` depuis le dépôt Git `APPLI GITHUB/Sans titre`). Fichiers
+synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
+SQL : entièrement côté client (localStorage), comme les autres jeux.

@@ -19,6 +19,7 @@ import Jeux from "./pages/Jeux";
 import CourseTables from "./pages/CourseTables";
 import EstimationExpress from "./pages/EstimationExpress";
 import MemoryMaths from "./pages/MemoryMaths";
+import MemoryCpCe1 from "./pages/MemoryCpCe1";
 import Idees from "./pages/Idees";
 import AdminPreview from "./pages/AdminPreview";
 import MentionsLegales from "./pages/legal/MentionsLegales";
@@ -162,6 +163,7 @@ export default function App() {
         <Route path="/jeux/course-tables" element={<CourseTables />} />
         <Route path="/jeux/estimation-express" element={<EstimationExpress />} />
         <Route path="/jeux/memory-maths" element={<MemoryMaths />} />
+        <Route path="/jeux/memory-cp-ce1" element={<MemoryCpCe1 />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />

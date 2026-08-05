@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
-import { Zap } from "lucide-react";
+import { Zap, Calculator, LayoutGrid } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
 // Onglet "Jeux" (/jeux), au même niveau que Collège/Lycée sur l'accueil (voir
 // CycleSelect.jsx) : des jeux courts pour travailler les maths autrement,
-// gratuits et sans connexion. Pour l'instant un seul jeu (Course aux tables),
-// mais cette page hub est prévue pour en accueillir d'autres facilement — il
-// suffira d'ajouter une entrée à GAMES ci-dessous.
+// gratuits et sans connexion. Cette page hub est prévue pour en accueillir
+// facilement d'autres — il suffit d'ajouter une entrée à GAMES ci-dessous.
+//
+// `level` est un simple repère indicatif affiché sur la carte (demandé par
+// Romain) — il ne filtre pas le contenu du jeu, c'est juste une indication
+// pour aider à choisir (âges 10-18 visés par l'onglet).
 // ---------------------------------------------------------------------------
 const GAMES = [
   {
@@ -15,6 +18,21 @@ const GAMES = [
     title: "Course aux tables",
     description: "Réponds à 10 tables de multiplication (1 à 10) le plus vite possible et gagne la course.",
     icon: Zap,
+    level: "Primaire à 3e",
+  },
+  {
+    id: "estimation-express",
+    title: "Estimation express",
+    description: "Trouve le bon ordre de grandeur d'un calcul (+ − × ÷) avec de grands nombres, sans le poser.",
+    icon: Calculator,
+    level: "6e à Terminale",
+  },
+  {
+    id: "memory-maths",
+    title: "Memory maths",
+    description: "Retrouve les paires : figures géométriques, expressions réduites et fractions irréductibles.",
+    icon: LayoutGrid,
+    level: "6e à Terminale",
   },
 ];
 
@@ -50,10 +68,18 @@ export default function Jeux() {
                   >
                     <Icon size={24} color={colors.gold} />
                   </div>
-                  <div>
-                    <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>
-                      {game.title}
-                    </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>
+                        {game.title}
+                      </p>
+                      <span
+                        className="text-[0.62rem] font-semibold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: `${colors.ink}0d`, color: colors.slate }}
+                      >
+                        {game.level}
+                      </span>
+                    </div>
                     <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
                       {game.description}
                     </p>

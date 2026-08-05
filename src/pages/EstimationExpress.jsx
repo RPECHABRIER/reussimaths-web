@@ -2,42 +2,30 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { colors, fonts, shadow } from "../theme";
 import RaceTrack from "../components/RaceTrack";
-import { shuffle, formatSeconds, rankFromTime } from "../lib/gameUtils";
+import { shuffle, formatSeconds, formatNumber, rankFromTime } from "../lib/gameUtils";
 
 // ---------------------------------------------------------------------------
-// Jeu "Course aux tables" (/jeux/course-tables) : course entre 4 animaux
-// (l'utilisateur + 3 adversaires), sur les tables de multiplication de 1 à
-// 10. Gratuit, sans connexion (voir Jeux.jsx).
+// Jeu "Estimation express" (/jeux/estimation-express) : même moteur de course
+// que Course aux tables (voir CourseTables.jsx + RaceTrack.jsx / gameUtils.js
+// partagés), mais sur une compétence différente : trouver rapidement l'ordre
+// de grandeur d'un calcul (+ − × ÷) avec de grands nombres, sans le poser.
 //
-// Mécanique (validée avec Romain, v2 après retour terrain) :
-//   - 10 questions, tirées sans remise parmi les 100 combinaisons a×b
-//     (a, b ∈ [1, 10]).
-//   - Réponse au clavier numérique remplacée par un QCM à 4 choix (1 seule
-//     bonne réponse) : trop lent d'écrire/valider au clavier pour tenir les
-//     temps visés, un tap sur la bonne carte est beaucoup plus rapide.
-//   - Bonne réponse : petite animation "boost", question suivante.
-//   - Mauvaise réponse : animation "chute" + pénalité fixe (PENALTY_MS)
-//     ajoutée au temps total, question suivante quand même (jamais bloqué
-//     sur une question). La bonne réponse est révélée en vert.
-//   - Temps final = temps réel écoulé jusqu'à la 10e réponse + somme des
-//     pénalités.
-//   - Trois niveaux de jeu, choisis avant de lancer la course, chacun avec
-//     ses propres seuils de classement (1er / 2e / 3e en secondes) :
-//       Expert       : 14s / 17s / 20s
-//       Intermédiaire: 18s / 21s / 24s
-//       Débutant     : 22s / 25s / 28s
+// Technique enseignée = celle du programme : arrondir chaque nombre à son
+// chiffre le plus significatif (ex. 427 -> 400, 68 -> 70) puis calculer sur
+// ces valeurs arrondies (400 × 70 = 28 000). C'est cette valeur "propre" qui
+// sert de bonne réponse dans le QCM.
 //
-// Animation : les 3 adversaires avancent à VITESSE CONSTANTE en temps réel
-// (ils franchissent la ligne d'arrivée pile aux seuils du niveau choisi) —
-// c'est ce qui donne le sentiment de course et la pression du chrono. Le
-// joueur, lui, avance par palier à chaque question
-// répondue (10 paliers de 10% de la piste), avec une transition CSS
-// adoucie pour un mouvement fluide — sa position ne sert qu'à l'ambiance,
-// seul le temps final compte pour le classement.
+// QCM à 4 choix : la bonne estimation + 3 pièges — un ordre de grandeur trop
+// grand (×10), un trop petit (÷10), et un du bon ordre mais avec le mauvais
+// chiffre significatif (ex. 21 000 au lieu de 28 000) — pour éviter que les
+// élèves gagnent juste en comptant les zéros sans vraiment estimer.
 //
-// Aucune sauvegarde compte (jeu ouvert à tous, sans connexion) : seul le
-// meilleur temps est gardé en localStorage sur cet appareil, par niveau de
-// difficulté (un bon temps en Débutant n'écrase pas le record Expert).
+// Mêmes 3 niveaux de jeu que Course aux tables (temps un peu plus généreux :
+// lire de grands nombres et estimer prend plus de temps que rappeler une
+// table de multiplication) :
+//   Expert       : 18s / 22s / 26s
+//   Intermédiaire: 24s / 28s / 32s
+//   Débutant     : 30s / 35s / 40s
 // ---------------------------------------------------------------------------
 
 const ANIMALS = [
@@ -48,60 +36,108 @@ const ANIMALS = [
 ];
 
 const DIFFICULTIES = [
-  { id: "expert", label: "Expert", thresholds: { gold: 14000, silver: 17000, bronze: 20000 } },
-  { id: "moyen", label: "Intermédiaire", thresholds: { gold: 18000, silver: 21000, bronze: 24000 } },
-  { id: "debutant", label: "Débutant", thresholds: { gold: 22000, silver: 25000, bronze: 28000 } },
+  { id: "expert", label: "Expert", thresholds: { gold: 18000, silver: 22000, bronze: 26000 } },
+  { id: "moyen", label: "Intermédiaire", thresholds: { gold: 24000, silver: 28000, bronze: 32000 } },
+  { id: "debutant", label: "Débutant", thresholds: { gold: 30000, silver: 35000, bronze: 40000 } },
 ];
 
 const PENALTY_MS = 1500;
 const QUESTIONS_COUNT = 10;
-const BEST_KEY_PREFIX = "reussimaths_course_tables_best_ms_";
+const BEST_KEY_PREFIX = "reussimaths_estimation_express_best_ms_";
 
-// Génère 3 réponses plausibles mais fausses (erreurs de table classiques :
-// se tromper d'un cran sur un des deux facteurs) pour accompagner la bonne
-// réponse dans le QCM.
-function generateChoices(q) {
-  const correct = q.product;
-  const pool = shuffle(
-    [
-      correct + q.a,
-      correct - q.a,
-      correct + q.b,
-      correct - q.b,
-      correct + 10,
-      correct - 10,
-      (q.a + 1) * q.b,
-      q.a * (q.b + 1),
-      (q.a - 1) * q.b,
-      q.a * (q.b - 1),
-    ].filter((n) => n > 0 && n !== correct)
-  );
-  const distractors = [];
-  for (const n of pool) {
-    if (distractors.length >= 3) break;
-    if (!distractors.includes(n)) distractors.push(n);
-  }
-  while (distractors.length < 3) {
-    const n = correct + Math.floor(Math.random() * 20) - 10;
-    if (n > 0 && n !== correct && !distractors.includes(n)) distractors.push(n);
-  }
-  return shuffle([correct, ...distractors]);
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Arrondit n à son chiffre le plus significatif (ex. 427 -> 400, 68 -> 70,
+// 5 -> 5). Suppose n >= 1.
+function round1sig(n) {
+  const power = Math.pow(10, Math.floor(Math.log10(n) + 1e-9));
+  let digit = Math.round(n / power);
+  if (digit >= 10) return 10 * power;
+  return digit * power;
+}
+
+// Génère un piège "du bon ordre de grandeur, mauvais chiffre" (ex. 28 000 ->
+// 21 000) : force à vraiment estimer plutôt qu'à juste compter les zéros.
+function sameOrderDistractor(E) {
+  const power = Math.pow(10, Math.floor(Math.log10(E) + 1e-9));
+  const digit = Math.max(1, Math.round(E / power));
+  let newDigit = digit + (Math.random() < 0.5 ? -1 : 1) * (Math.random() < 0.5 ? 1 : 2);
+  if (newDigit <= 0 || newDigit === digit) newDigit = digit + 2;
+  if (newDigit > 9) newDigit = Math.max(1, digit - 2);
+  return newDigit * power;
+}
+
+function buildChoices(E) {
+  const used = new Set([E]);
+  const options = [E];
+  const tryAdd = (v) => {
+    const rounded = Math.max(1, Math.round(v));
+    if (!used.has(rounded)) {
+      used.add(rounded);
+      options.push(rounded);
+    }
+  };
+  tryAdd(E * 10);
+  tryAdd(E / 10);
+  tryAdd(sameOrderDistractor(E));
+  let guard = 0;
+  while (options.length < 4 && guard < 20) {
+    tryAdd(E * (0.4 + Math.random() * 4));
+    guard++;
+  }
+  return shuffle(options);
+}
+
+function generateQuestion(op) {
+  let a, b, result, E, exprStr;
+  if (op === "+") {
+    a = randInt(1000, 89999);
+    b = randInt(500, 78999);
+    result = a + b;
+    E = round1sig(a) + round1sig(b);
+    exprStr = `${formatNumber(a)} + ${formatNumber(b)}`;
+  } else if (op === "-") {
+    a = randInt(5000, 98000);
+    b = randInt(200, a - 300);
+    result = a - b;
+    E = round1sig(a) - round1sig(b);
+    if (E <= 0) E = round1sig(result);
+    exprStr = `${formatNumber(a)} − ${formatNumber(b)}`;
+  } else if (op === "×") {
+    a = randInt(23, 986);
+    b = randInt(12, 97);
+    result = a * b;
+    E = round1sig(a) * round1sig(b);
+    exprStr = `${formatNumber(a)} × ${formatNumber(b)}`;
+  } else {
+    a = randInt(1000, 97000);
+    b = randInt(12, 96);
+    result = a / b;
+    E = round1sig(round1sig(a) / round1sig(b));
+    exprStr = `${formatNumber(a)} ÷ ${formatNumber(b)}`;
+  }
+  return { op, exprStr, product: Math.round(E), choices: buildChoices(Math.round(E)) };
+}
+
+// Bag équilibré (3 + / 3 − / 2 × / 2 ÷) mélangé, pour garantir de la variété
+// sur les 10 questions plutôt qu'un tirage aléatoire pur (qui pourrait, par
+// malchance, enchaîner plusieurs fois la même opération).
 function generateQuestions() {
-  const all = [];
-  for (let a = 1; a <= 10; a++) {
-    for (let b = 1; b <= 10; b++) all.push({ a, b, product: a * b });
-  }
-  return shuffle(all)
-    .slice(0, QUESTIONS_COUNT)
-    .map((q) => ({ ...q, choices: generateChoices(q) }));
+  const ops = shuffle([
+    ...Array(3).fill("+"),
+    ...Array(3).fill("-"),
+    ...Array(2).fill("×"),
+    ...Array(2).fill("÷"),
+  ]);
+  return ops.slice(0, QUESTIONS_COUNT).map(generateQuestion);
 }
 
-export default function CourseTables() {
+export default function EstimationExpress() {
   const [phase, setPhase] = useState("intro"); // intro | racing | result
   const [selectedAnimal, setSelectedAnimal] = useState(ANIMALS[0].id);
-  const [selectedDifficulty, setSelectedDifficulty] = useState(DIFFICULTIES[1].id); // "moyen" par défaut
+  const [selectedDifficulty, setSelectedDifficulty] = useState(DIFFICULTIES[1].id);
   const [questions, setQuestions] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState(null);
@@ -119,8 +155,6 @@ export default function CourseTables() {
     const stored = Number(localStorage.getItem(bestKey));
     return stored > 0 ? stored : null;
   });
-  // Le record affiché dépend du niveau choisi (chaque niveau a son propre
-  // classement) : on relit localStorage à chaque changement de niveau.
   useEffect(() => {
     const stored = Number(localStorage.getItem(bestKey));
     setBestTimeMs(stored > 0 ? stored : null);
@@ -129,8 +163,6 @@ export default function CourseTables() {
   const opponents = useMemo(() => ANIMALS.filter((a) => a.id !== selectedAnimal), [selectedAnimal]);
   const player = ANIMALS.find((a) => a.id === selectedAnimal);
 
-  // Chrono temps réel, utilisé pour l'affichage et pour faire avancer les 3
-  // adversaires à vitesse constante — indépendant des réponses du joueur.
   useEffect(() => {
     if (phase !== "racing") return;
     const interval = setInterval(() => setNowMs(Date.now() - raceStartAt), 100);
@@ -154,9 +186,6 @@ export default function CourseTables() {
     const q = questions[questionIndex];
     const isCorrect = value === q.product;
     const addedPenalty = isCorrect ? 0 : PENALTY_MS;
-    // Capturé immédiatement (pas après le délai d'animation ci-dessous) :
-    // le temps final doit correspondre au moment réel de la réponse, pas au
-    // moment où l'animation de feedback se termine 500ms plus tard.
     const answeredAtElapsed = Date.now() - raceStartAt;
     setSelectedChoice(value);
     setFeedback(isCorrect ? "correct" : "wrong");
@@ -200,11 +229,15 @@ export default function CourseTables() {
 
           <div className="text-center my-7">
             <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-              Course aux tables
+              Estimation express
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              10 questions sur les tables de multiplication (1 à 10), en QCM. Une bonne réponse te fait avancer, une
-              erreur te fait chuter et ajoute {formatSeconds(PENALTY_MS)}s à ton temps.
+              10 calculs (+ − × ÷) avec de grands nombres, en QCM : trouve le bon ordre de grandeur sans poser
+              l'opération. Astuce : arrondis chaque nombre à son chiffre le plus significatif, puis calcule.
+            </p>
+            <p className="text-sm mt-2" style={{ color: slate }}>
+              Une bonne réponse te fait avancer, une erreur te fait chuter et ajoute {formatSeconds(PENALTY_MS)}s à ton
+              temps.
             </p>
             <p className="text-sm mt-2" style={{ color: slate }}>
               Termine en moins de {formatSeconds(thresholds.gold)}s pour la 1ère place, {formatSeconds(thresholds.silver)}
@@ -304,11 +337,14 @@ export default function CourseTables() {
               style={{
                 fontFamily: fonts.display,
                 color: feedback === "wrong" ? colors.red : feedback === "correct" ? colors.green : ink,
-                fontSize: "3rem",
+                fontSize: "2.3rem",
                 fontWeight: 800,
               }}
             >
-              {question.a} × {question.b}
+              {question.exprStr}
+            </p>
+            <p className="text-xs mt-1" style={{ color: slate }}>
+              ≈ ?
             </p>
 
             <div className="w-full max-w-[320px] mt-6 grid grid-cols-2 gap-3">
@@ -335,7 +371,7 @@ export default function CourseTables() {
                     key={value}
                     onClick={() => handleChoice(value)}
                     disabled={!!feedback}
-                    className="text-2xl font-bold rounded-2xl py-4"
+                    className="text-xl font-bold rounded-2xl py-4"
                     style={{
                       fontFamily: fonts.mono,
                       backgroundColor: bg,
@@ -344,7 +380,7 @@ export default function CourseTables() {
                       opacity: feedback && !isCorrectChoice && value !== selectedChoice ? 0.5 : 1,
                     }}
                   >
-                    {value}
+                    {formatNumber(value)}
                   </button>
                 );
               })}

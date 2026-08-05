@@ -17,6 +17,8 @@ import Bilan from "./pages/Bilan";
 import Enseignant from "./pages/Enseignant";
 import Jeux from "./pages/Jeux";
 import CourseTables from "./pages/CourseTables";
+import EstimationExpress from "./pages/EstimationExpress";
+import MemoryMaths from "./pages/MemoryMaths";
 import Idees from "./pages/Idees";
 import AdminPreview from "./pages/AdminPreview";
 import MentionsLegales from "./pages/legal/MentionsLegales";
@@ -158,6 +160,8 @@ export default function App() {
         <Route path="/enseignant" element={<Enseignant />} />
         <Route path="/jeux" element={<Jeux />} />
         <Route path="/jeux/course-tables" element={<CourseTables />} />
+        <Route path="/jeux/estimation-express" element={<EstimationExpress />} />
+        <Route path="/jeux/memory-maths" element={<MemoryMaths />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />

@@ -2121,3 +2121,67 @@ synchronisés (diff vide vérifié) vers les deux copies Application TOP.
 ⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
 SQL.
 
+
+## 2026-08-05 (suite 4) — Deux nouveaux jeux : Estimation express + Memory maths, badges de niveau
+
+Suite à la demande de Romain de proposer d'autres jeux "dans le même esprit"
+que Course aux tables (10-18 ans, faciles à mettre en place). Après une liste
+de pistes classées par faisabilité, Romain a retenu 2 jeux à construire tout
+de suite, plus une demande transverse (repère de niveau sur les jeux).
+Questions posées avant construction, toutes tranchées :
+  - Memory : le passage Facile -> Difficile change uniquement le NOMBRE de
+    paires (30 -> 54 cartes), pas la difficulté du contenu (même stock pour
+    les deux tailles).
+  - Repère de niveau : un simple badge indicatif sur chaque jeu dans le hub
+    /jeux (pas un vrai sélecteur de classe qui filtrerait le contenu).
+  - Estimation express : ordre de grandeur sur les 4 opérations (+ − × ÷),
+    avec de grands nombres.
+
+Refactor préalable : RaceTrack (piste animée) et les utilitaires communs
+(shuffle, formatSeconds, rankFromTime, + nouveau formatNumber) sortis de
+CourseTables.jsx vers src/components/RaceTrack.jsx et src/lib/gameUtils.js,
+pour que le futur jeu de course les réutilise sans dupliquer le code
+(CourseTables.jsx retesté et fonctionnellement inchangé après coup).
+
+**Estimation express** (src/pages/EstimationExpress.jsx, /jeux/estimation-
+express) : même moteur de course que Course aux tables (QCM, animaux,
+classement par seuils de temps), sur une autre compétence — trouver l'ordre
+de grandeur d'un calcul avec de grands nombres, sans le poser. Technique du
+programme reproduite fidèlement : arrondir chaque nombre à son chiffre le
+plus significatif puis calculer sur ces valeurs arrondies (ex. 427 × 68 ->
+400 × 70 = 28 000), qui sert de bonne réponse. QCM à 4 choix : la bonne
+estimation + un ordre trop grand (×10), un trop petit (÷10), et un du bon
+ordre mais avec le mauvais chiffre significatif (ex. 21 000), pour empêcher
+de gagner juste en comptant les zéros. Testé isolément (20 000 tirages × 4
+opérations, script Node) : toujours 4 choix distincts, toujours positifs,
+bonne réponse toujours présente — y compris le cas limite d'une soustraction
+où les deux nombres arrondissent à la même valeur (repli automatique sur
+l'ordre de grandeur du résultat exact). 3 niveaux (mêmes seuils que Course
+aux tables mais plus généreux, lire de grands nombres prend plus de temps) :
+Expert 18/22/26s, Intermédiaire 24/28/32s, Débutant 30/35/40s.
+
+**Memory maths** (src/pages/MemoryMaths.jsx, /jeux/memory-maths) : memory
+classique mélangeant 3 familles de paires : 11 figures géométriques (dessinées
+avec le composant Figure déjà utilisé dans les chapitres — triangle
+rectangle/isocèle/équilatéral, carré, rectangle, losange, parallélogramme,
+trapèze, cercle, pentagone et hexagone réguliers) associées à leur nom ; 10
+paires expression algébrique / forme réduite ; 10 paires fraction / forme
+irréductible (ces deux dernières familles rendues en KaTeX via MathText,
+déjà utilisé ailleurs dans l'app). Stock total ~31 paires, mélangé et tiré
+au hasard à chaque partie (jamais deux fois la même grille). Deux tailles :
+Facile 15 paires (30 cartes, grille 5 colonnes), Difficile 27 paires (54
+cartes, grille 6 colonnes) — même contenu pour les deux, comme demandé.
+Meilleur temps ET meilleur nombre de coups gardés séparément en localStorage
+par taille de grille.
+
+**Badges de niveau** (src/pages/Jeux.jsx) : chaque jeu affiche maintenant une
+étiquette indicative sur sa carte dans le hub ("Primaire à 3e" pour Course
+aux tables, "6e à Terminale" pour les deux nouveaux) — purement informatif,
+ne filtre pas le contenu des questions.
+
+Build vérifié avec succès dès le premier essai (`npx vite build` puis
+`npm run build` depuis le dépôt Git `APPLI GITHUB/Sans titre`). Fichiers
+synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain. Aucune migration
+SQL : les 2 nouveaux jeux sont entièrement côté client (localStorage).

@@ -2014,3 +2014,55 @@ insert into public.class_access_codes (code, level, label)
 values ('soleil', 'terminale-techno', 'Terminale technologique — classe de Romain')
 on conflict (code) do nothing;
 ```
+## 2026-08-05 (suite) — Jeu "Course aux tables" + nouvel onglet Jeux
+
+Romain veut intégrer des jeux pour travailler les maths autrement, en
+commençant par une course entre 4 animaux où chaque bonne/mauvaise réponse à
+une table de multiplication (1 à 10) accélère ou fait chuter le personnage.
+Objectif : répondre à 10 questions en 10s pour finir 1er, 12s pour 2e, 14s
+pour 3e, au-delà c'est perdu.
+
+Faisabilité confirmée, 4 questions posées avant construction (toutes
+tranchées en faveur de l'option recommandée) : erreur = pénalité de temps
+fixe (1,5s) puis question suivante (pas de nouvelle tentative sur la même
+question) ; adversaires = repères de rythme fixes arrivant pile à 10s/12s/14s
+(pas d'IA simulée) ; saisie = clavier numérique natif du téléphone (comme le
+reste de l'app), pas de QCM ; accès = gratuit pour tout le monde, sans
+connexion requise (contrairement au reste de l'app).
+
+Nouvel onglet "Jeux" (src/pages/Jeux.jsx) ajouté à l'accueil au même niveau
+que Collège/Lycée (CycleSelect.jsx) — page hub prévue pour accueillir
+d'autres jeux plus tard, un seul pour l'instant.
+
+src/pages/CourseTables.jsx (nouveau) : logique du jeu. Le score (classement)
+est un calcul exact du temps réel écoulé + pénalités cumulées, conforme à la
+règle de Romain. L'animation de course, elle, distingue volontairement deux
+logiques : le joueur avance par paliers discrets (1 par question, lissé par
+une transition CSS) tandis que les 3 adversaires avancent à vitesse
+constante vers leurs temps d'arrivée fixes (10s/12s/14s) — un modèle
+"position du joueur = temps réel moins pénalité" aurait paradoxalement fait
+avancer le personnage en cas d'erreur, donc écarté au profit de ce modèle
+hybride qui donne la sensation de course voulue sans fausser le classement.
+
+Aucun compte ni Supabase requis : seul le meilleur temps personnel est gardé,
+en local (localStorage) sur l'appareil.
+
+Deux bugs auto-détectés et corrigés avant livraison : (1) le temps final
+était mesuré après le délai d'animation de 500ms au lieu du moment réel de
+la dernière réponse (aurait pénalisé injustement les temps limites) ; (2) le
+composant d'affichage de la piste était défini à l'intérieur du composant
+principal, ce qui aurait cassé l'animation CSS (React le remonte entièrement
+à chaque rendu) — extrait au niveau du module pour corriger.
+
+src/App.jsx : routes /jeux et /jeux/course-tables ajoutées.
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git `APPLI GITHUB/Sans titre` — erreurs transitoires EMFILE et
+résolution `@supabase/auth-js` liées au sandbox, résolues après plusieurs
+essais, sans lien avec le contenu). Fichiers synchronisés (diff vide
+vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox). Aucune migration SQL cette fois : la fonctionnalité est
+entièrement côté client (pas de nouvelle table ni colonne Supabase).
+

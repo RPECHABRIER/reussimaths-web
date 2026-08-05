@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, School, Sparkles, Brain } from "lucide-react";
+import { GraduationCap, School, Sparkles, Brain, Gamepad2 } from "lucide-react";
 import { CYCLES } from "../levels";
 import ReviserCard from "../components/ReviserCard";
 import Mascot from "../components/Mascot";
@@ -71,6 +71,28 @@ export default function CycleSelect() {
               </Link>
             );
           })}
+
+          <Link to="/jeux">
+            <div
+              className="rounded-3xl px-6 py-7 flex items-center gap-4 transition-transform active:scale-[0.98]"
+              style={{ backgroundColor: colors.card, boxShadow: shadow.raised }}
+            >
+              <div
+                className="flex items-center justify-center rounded-2xl"
+                style={{ width: 52, height: 52, backgroundColor: `${colors.gold}18`, flexShrink: 0 }}
+              >
+                <Gamepad2 size={26} color={colors.gold} />
+              </div>
+              <div>
+                <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.3rem", fontWeight: 800 }}>
+                  Jeux
+                </p>
+                <p className="text-sm mt-0.5" style={{ color: colors.slate }}>
+                  Travailler les maths autrement, en s'amusant
+                </p>
+              </div>
+            </div>
+          </Link>
         </div>
 
         <ReviserCard className="block mt-6" />

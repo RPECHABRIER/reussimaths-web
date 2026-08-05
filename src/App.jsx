@@ -15,6 +15,8 @@ import Amis from "./pages/Amis";
 import Reviser from "./pages/Reviser";
 import Bilan from "./pages/Bilan";
 import Enseignant from "./pages/Enseignant";
+import Jeux from "./pages/Jeux";
+import CourseTables from "./pages/CourseTables";
 import Idees from "./pages/Idees";
 import AdminPreview from "./pages/AdminPreview";
 import MentionsLegales from "./pages/legal/MentionsLegales";
@@ -154,6 +156,8 @@ export default function App() {
         <Route path="/reviser" element={<Reviser />} />
         <Route path="/bilan" element={<Bilan />} />
         <Route path="/enseignant" element={<Enseignant />} />
+        <Route path="/jeux" element={<Jeux />} />
+        <Route path="/jeux/course-tables" element={<CourseTables />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />

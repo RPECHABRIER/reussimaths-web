@@ -2066,3 +2066,37 @@ vérifié) vers les deux copies Application TOP.
 dans ce sandbox). Aucune migration SQL cette fois : la fonctionnalité est
 entièrement côté client (pas de nouvelle table ni colonne Supabase).
 
+
+## 2026-08-05 (suite 2) — Course aux tables : QCM + 3 niveaux de difficulté
+
+Retour de Romain après test : le clavier numérique (écrire + valider) est
+trop lent pour tenir des temps de 10/12/14s, ce qui rendait le jeu quasi
+imbattable. Passage à un QCM à 4 réponses (1 seule bonne, 3 distracteurs
+plausibles générés à partir d'erreurs de table classiques : ±a, ±b, facteur
+voisin) — un tap est bien plus rapide qu'une saisie clavier.
+
+Ajout de 3 niveaux de jeu, choisis avant de lancer la course (comme le choix
+d'animal) : Expert 10s/12s/14s (seuils d'origine, redevenus pertinents avec
+la saisie QCM), Moyen 15s/17s/19s, Débutant 20s/24s/28s. Le meilleur temps
+est désormais gardé en localStorage séparément par niveau (un record en
+Débutant n'écrase pas le record Expert).
+
+Au passage, correction d'un bug qui serait passé inaperçu tant qu'aucune
+partie n'était allée jusqu'au bout avec le clavier : l'écran de résultat
+appelait `<Track />` (composant inexistant, l'ancien nom avant l'extraction
+au niveau module en RaceTrack) au lieu de `<RaceTrack ... />` avec ses
+props — ça aurait fait planter l'écran de résultat en pratique.
+
+src/pages/CourseTables.jsx : DIFFICULTIES (3 niveaux + seuils), QCM
+(generateChoices, boutons de réponse colorés vert/rouge après validation),
+sélecteur de niveau sur l'écran d'intro, RaceTrack et rankFromTime
+paramétrés par les seuils du niveau choisi, clé localStorage par niveau.
+
+Build vérifié avec succès dès le premier essai (`npx vite build` puis
+`npm run build` depuis le dépôt Git `APPLI GITHUB/Sans titre`, sans erreur
+transitoire cette fois). Fichiers synchronisés (diff vide vérifié) vers les
+deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox). Aucune migration SQL : toujours entièrement côté client.
+

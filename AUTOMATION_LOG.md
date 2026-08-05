@@ -1919,3 +1919,98 @@ les deux copies Application TOP.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain (pas
 d'identifiants dans ce sandbox).
+
+
+## 2026-08-05 — Accès classe gratuit pour les élèves de Terminale technologique de Romain
+
+Romain veut offrir un accès complet et gratuit à toute la partie Terminale
+technologique à ses propres élèves, pour faire connaître l'app et avoir des
+retours. Deux questions posées : où saisir le code (réponse : depuis Mon
+compte, une fois connecté normalement) et suivi admin (réponse : oui, code
+stocké en base + visible dans /admin). Romain a aussi confirmé explicitement
+que cet accès doit être entièrement gratuit — pas de ligne Stripe derrière.
+
+Chaque élève garde un compte individuel classique (connexion Google/Apple,
+pseudo, progression propre — inchangé) ; le code ne sert qu'à débloquer un
+niveau entier gratuitement dessus, ce n'est pas un mot de passe de connexion.
+
+Nouvelle table `class_access_codes` (code, level, label) — RLS activé SANS
+aucune policy select : les codes ne sont donc jamais lisibles depuis le
+navigateur, seule la fonction SECURITY DEFINER redeem_class_access_code peut
+les consulter. Nouvelle colonne subscriptions.class_access_level,
+INDÉPENDANTE de plan/status (pas de date d'expiration, pas de conflit avec un
+abonnement payant existant). Code seedé : 'soleil' -> niveau
+'terminale-techno'. D'autres codes pourront être ajoutés plus tard (autres
+classes/niveaux) par simple INSERT SQL, sans toucher au code de l'app.
+
+src/lib/access.js : nouvelle fonction isClassAccessSubscription() +
+intégration dans canAccessChapter() (accès à tous les chapitres du niveau
+débloqué) et hasUnlimitedQuota() (Automatismes illimités pour ce niveau,
+comme le Pack Examen mais sans limite de temps).
+
+src/pages/Account.jsx : lien discret "Code d'accès professeur" (visible tant
+que l'élève n'a pas encore de class_access_level), formulaire de saisie avec
+message d'erreur si code invalide, et une fois validé une ligne de statut
+"Accès classe — Terminale technologique (offert par ton professeur)".
+
+src/pages/AdminPreview.jsx : le tableau de bord /admin affiche maintenant
+"Accès classe (Terminale technologique)" comme palier à part entière pour
+les élèves qui ont redeem le code, avec un comptage automatique dans le
+résumé en haut (généralisé pour compter n'importe quel palier, pas seulement
+les 3 historiques).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git `APPLI GITHUB/Sans titre` — une erreur transitoire EMFILE liée au
+sandbox, résolue par un nouvel essai, sans lien avec le contenu). Fichiers
+synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain (pas d'identifiants
+dans ce sandbox), ET la migration SQL ci-dessous doit être collée dans
+l'éditeur SQL Supabase avant que le code d'accès ne fonctionne réellement :
+
+```sql
+create table if not exists public.class_access_codes (
+  code text primary key,
+  level text not null,
+  label text,
+  created_at timestamptz not null default now()
+);
+alter table public.class_access_codes enable row level security;
+
+alter table public.subscriptions add column if not exists class_access_level text;
+
+create or replace function public.redeem_class_access_code(p_code text)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_level text;
+begin
+  if v_user_id is null then
+    raise exception 'Non authentifié';
+  end if;
+
+  select level into v_level from public.class_access_codes where code = p_code;
+  if v_level is null then
+    raise exception 'Code invalide';
+  end if;
+
+  insert into public.subscriptions (user_id, class_access_level, updated_at)
+  values (v_user_id, v_level, now())
+  on conflict (user_id) do update
+    set class_access_level = v_level,
+        updated_at = now();
+
+  return v_level;
+end;
+$$;
+
+grant execute on function public.redeem_class_access_code(text) to authenticated;
+
+insert into public.class_access_codes (code, level, label)
+values ('soleil', 'terminale-techno', 'Terminale technologique — classe de Romain')
+on conflict (code) do nothing;
+```

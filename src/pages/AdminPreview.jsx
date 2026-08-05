@@ -203,11 +203,18 @@ function PreviewSwitcher() {
 // ---------------------------------------------------------------------------
 // Tableau de bord abonnés
 // ---------------------------------------------------------------------------
-function paletteForPlan(plan, status) {
-  const isActive = status === "active" || status === "trialing";
+function paletteForSub(sub) {
+  // Accès classe (voir supabase/schema.sql, redeem_class_access_code) :
+  // indépendant de plan/status, affiché en priorité même si l'élève n'a par
+  // ailleurs aucun abonnement Stripe.
+  if (sub?.class_access_level) {
+    const levelLabel = LEVELS.find((l) => l.id === sub.class_access_level)?.label ?? sub.class_access_level;
+    return `Accès classe (${levelLabel})`;
+  }
+  const isActive = sub?.status === "active" || sub?.status === "trialing";
   if (!isActive) return "Gratuit";
-  if (plan === "mensuel") return "Abonnement complet";
-  if (plan === "special_examen") return "Pack Examen";
+  if (sub?.plan === "mensuel") return "Abonnement complet";
+  if (sub?.plan === "special_examen") return "Pack Examen";
   return "Gratuit";
 }
 
@@ -219,7 +226,7 @@ function SubscribersDashboard() {
     let cancelled = false;
     Promise.all([
       supabase.from("profiles").select("user_id, pseudo, created_at"),
-      supabase.from("subscriptions").select("user_id, plan, status, current_period_end"),
+      supabase.from("subscriptions").select("user_id, plan, status, current_period_end, class_access_level"),
       supabase.from("user_login_stats").select("user_id, login_count, last_login_at"),
     ]).then(([profilesRes, subsRes, statsRes]) => {
       if (cancelled) return;
@@ -238,10 +245,11 @@ function SubscribersDashboard() {
           user_id: p.user_id,
           pseudo: p.pseudo,
           created_at: p.created_at,
-          palier: paletteForPlan(sub?.plan, sub?.status),
+          palier: paletteForSub(sub),
           plan: sub?.plan ?? null,
           status: sub?.status ?? "none",
           current_period_end: sub?.current_period_end ?? null,
+          class_access_level: sub?.class_access_level ?? null,
           login_count: stats?.login_count ?? 0,
           last_login_at: stats?.last_login_at ?? null,
         };
@@ -286,8 +294,12 @@ function SubscribersDashboard() {
 
       {counts && (
         <p className="text-xs" style={{ color: colors.slate }}>
-          {counts.total} compte(s) — {counts["Abonnement complet"] ?? 0} abonnement complet,{" "}
-          {counts["Pack Examen"] ?? 0} Pack Examen, {counts["Gratuit"] ?? 0} gratuit.
+          {counts.total} compte(s) —{" "}
+          {Object.entries(counts)
+            .filter(([key]) => key !== "total")
+            .map(([key, n]) => `${n} ${key.toLowerCase()}`)
+            .join(", ")}
+          .
         </p>
       )}
 

@@ -573,3 +573,69 @@ create index if not exists daily_activity_user_date_idx on public.daily_activity
 -- autrement, ex. directement dans le dashboard Stripe).
 -- ---------------------------------------------------------------------------
 alter table public.subscriptions add column if not exists cancel_at_period_end boolean not null default false;
+
+-- ---------------------------------------------------------------------------
+-- Accès classe (2026-08-04) : accès gratuit et complet à UN niveau donné,
+-- offert via un code distribué en classe par Romain à ses propres élèves
+-- (voir src/pages/Account.jsx, lien "Code d'accès professeur" + fonction
+-- redeem_class_access_code ci-dessous). Objectif : faire connaître l'app et
+-- avoir des retours, sans passer par un abonnement payant.
+--
+-- Un code peut être redeem par autant d'élèves que nécessaire (pas un code à
+-- usage unique). Table volontairement SANS policy de lecture client (RLS
+-- activé, aucune policy select) : seule la fonction SECURITY DEFINER
+-- ci-dessous peut la consulter, les codes ne sont donc jamais visibles
+-- depuis le navigateur/réseau.
+-- ---------------------------------------------------------------------------
+create table if not exists public.class_access_codes (
+  code text primary key,
+  level text not null,
+  label text,
+  created_at timestamptz not null default now()
+);
+alter table public.class_access_codes enable row level security;
+
+-- Niveau débloqué gratuitement pour l'élève qui a saisi un code valide.
+-- Colonne INDÉPENDANTE de plan/status (qui restent liés à Stripe) : un élève
+-- qui redeem ce code n'a pas de ligne Stripe derrière, et un abonné payant
+-- qui redeem aussi ce code (improbable mais inoffensif) garde tout son accès
+-- sans rien perdre — voir isClassAccessSubscription() dans src/lib/access.js.
+alter table public.subscriptions add column if not exists class_access_level text;
+
+create or replace function public.redeem_class_access_code(p_code text)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_level text;
+begin
+  if v_user_id is null then
+    raise exception 'Non authentifié';
+  end if;
+
+  select level into v_level from public.class_access_codes where code = p_code;
+  if v_level is null then
+    raise exception 'Code invalide';
+  end if;
+
+  insert into public.subscriptions (user_id, class_access_level, updated_at)
+  values (v_user_id, v_level, now())
+  on conflict (user_id) do update
+    set class_access_level = v_level,
+        updated_at = now();
+
+  return v_level;
+end;
+$$;
+
+grant execute on function public.redeem_class_access_code(text) to authenticated;
+
+-- Code distribué aux élèves de Terminale technologique de Romain. D'autres
+-- lignes peuvent être ajoutées plus tard (autre classe/niveau/année) sans
+-- toucher au code de l'app.
+insert into public.class_access_codes (code, level, label)
+values ('soleil', 'terminale-techno', 'Terminale technologique — classe de Romain')
+on conflict (code) do nothing;

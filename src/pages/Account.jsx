@@ -11,10 +11,12 @@ import {
   isRealAdmin,
   isFullAccessSubscription,
   isPackExamenSubscription,
+  isClassAccessSubscription,
   getEffectiveSubscription,
   EXAM_CHAPTER_BY_LEVEL,
 } from "../lib/access";
 import { getAdminPreview } from "../lib/adminPreview";
+import { supabase } from "../lib/supabaseClient";
 import PackExamenChoice from "../components/PackExamenChoice";
 import ReferralBonusChoice from "../components/ReferralBonusChoice";
 import ReviserCard from "../components/ReviserCard";
@@ -37,10 +39,18 @@ export default function Account() {
   const [confirmingCancel, setConfirmingCancel] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState(null);
+  const [showClassCodeForm, setShowClassCodeForm] = useState(false);
+  const [classCode, setClassCode] = useState("");
+  const [classCodeLoading, setClassCodeLoading] = useState(false);
+  const [classCodeError, setClassCodeError] = useState(null);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
   const packExamen = isPackExamenSubscription(subscription);
+  const classAccess = isClassAccessSubscription(subscription);
+  const classAccessLevelLabel = classAccess
+    ? LEVELS.find((l) => l.id === subscription.class_access_level)?.label ?? subscription.class_access_level
+    : null;
   const packExamenNeedsChoice = packExamen && !subscription?.pack_examen_level;
   // isActive recalculé sur la subscription EFFECTIVE (donc cohérent avec une
   // préviz admin en cours) plutôt que de reprendre isActive du hook, qui
@@ -91,6 +101,26 @@ export default function Account() {
     }
   };
 
+  // Code d'accès classe (voir supabase/schema.sql, redeem_class_access_code)
+  // : accès gratuit et complet à un niveau, distribué par un professeur à
+  // ses élèves. Fonction RPC SECURITY DEFINER, pas de ligne Stripe derrière.
+  const handleRedeemClassCode = async (e) => {
+    e.preventDefault();
+    setClassCodeLoading(true);
+    setClassCodeError(null);
+    try {
+      const { error } = await supabase.rpc("redeem_class_access_code", { p_code: classCode.trim() });
+      if (error) throw error;
+      setClassCode("");
+      setShowClassCodeForm(false);
+      reloadSubscription();
+    } catch (err) {
+      setClassCodeError(err.message?.includes("Code invalide") ? "Code invalide." : "Une erreur est survenue.");
+    } finally {
+      setClassCodeLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
@@ -126,6 +156,12 @@ export default function Account() {
           <p className="text-sm" style={{ color: colors.slate }}>
             Abonnement : {admin ? "accès complet (admin)" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
+
+          {classAccess && (
+            <p className="text-xs" style={{ color: colors.gold }}>
+              Accès classe — {classAccessLevelLabel} (offert par ton professeur)
+            </p>
+          )}
 
           {isRealAdmin(user) && (
             <Link
@@ -241,6 +277,49 @@ export default function Account() {
               </div>
             );
           })()}
+
+          {!classAccess && (
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
+              {!showClassCodeForm ? (
+                <button
+                  onClick={() => setShowClassCodeForm(true)}
+                  className="text-xs font-medium"
+                  style={{ color: colors.slate }}
+                >
+                  Code d'accès professeur
+                </button>
+              ) : (
+                <form onSubmit={handleRedeemClassCode} className="flex flex-col gap-2">
+                  <p className="text-xs" style={{ color: colors.slate }}>
+                    Ton professeur t'a donné un code ? Il débloque gratuitement tout un niveau.
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={classCode}
+                      onChange={(e) => setClassCode(e.target.value)}
+                      placeholder="Code d'accès"
+                      className="flex-1 text-sm rounded-lg px-3 py-2"
+                      style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={classCodeLoading || !classCode.trim()}
+                      className="text-xs font-semibold py-2 px-3 rounded-full"
+                      style={{ backgroundColor: colors.gold, color: colors.ink }}
+                    >
+                      {classCodeLoading ? "…" : "Valider"}
+                    </button>
+                  </div>
+                  {classCodeError && (
+                    <p className="text-xs" style={{ color: colors.red }}>
+                      {classCodeError}
+                    </p>
+                  )}
+                </form>
+              )}
+            </div>
+          )}
 
           {fullAccess && (
             <Link to="/idees" className="text-xs font-medium" style={{ color: colors.gold }}>

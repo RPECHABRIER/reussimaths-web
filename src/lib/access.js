@@ -22,6 +22,11 @@
 //   - Abonnement      : plan "mensuel". Accès complet à tous les niveaux,
 //     complet            sans restriction (voir schema anti-partage :
 //                       1 seule session active, src/hooks/useSingleSession.js).
+//   - Accès classe    : accès gratuit et complet à UN niveau
+//                       (subscription.class_access_level), offert via un
+//                       code distribué en classe (voir redeem_class_access_code
+//                       dans schema.sql, saisi depuis src/pages/Account.jsx).
+//                       Aucun abonnement Stripe derrière.
 //   - Admin           : le compte de Romain (ADMIN_EMAIL) bypass tout, sans
 //                       abonnement.
 //
@@ -136,6 +141,15 @@ export function isPackExamenSubscription(subscription) {
   return subscription?.plan === "special_examen" && planIsCurrentlyValid(subscription);
 }
 
+// Accès classe (voir supabase/schema.sql, redeem_class_access_code) : accès
+// gratuit et complet à UN niveau (subscription.class_access_level), offert
+// via un code distribué en classe par Romain — indépendant de plan/status
+// (pas d'abonnement Stripe derrière), donc pas de date d'expiration à
+// vérifier ici.
+export function isClassAccessSubscription(subscription) {
+  return !!subscription?.class_access_level;
+}
+
 // Un chapitre est-il accessible pour cet utilisateur ? ctx = { user,
 // subscription, referralBonusChapterId }. Tous les points d'accès (Niveau,
 // ChapterPage, ParcoursOverview, ParcoursStep, Amis) doivent passer par cette
@@ -154,6 +168,7 @@ export function canAccessChapter(chapter, ctx = {}) {
   if (chapter.meta.freemiumDaily) return true; // ouvert à tous, quota séparé (useDailyQuota) — pas un verrou d'accès
   if (isAdminUser(user)) return true;
   if (isFullAccessSubscription(subscription)) return true;
+  if (isClassAccessSubscription(subscription) && chapter.meta.level === subscription.class_access_level) return true;
   if (referralBonusChapterId && chapter.meta.id === referralBonusChapterId) return true;
 
   if (isPackExamenSubscription(subscription)) {
@@ -174,5 +189,6 @@ export function hasUnlimitedQuota(chapter, ctx = {}) {
   if (isAdminUser(user)) return true;
   if (isFullAccessSubscription(subscription)) return true;
   if (isPackExamenSubscription(subscription) && subscription?.pack_examen_level === chapter?.meta?.level) return true;
+  if (isClassAccessSubscription(subscription) && subscription.class_access_level === chapter?.meta?.level) return true;
   return false;
 }

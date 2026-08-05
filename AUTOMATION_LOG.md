@@ -2319,3 +2319,77 @@ recommandé de nettoyer ces lignes de test avant la bascule. Les redéploiements
 de l'app (git push -> Vercel) ne touchent jamais aux données Supabase : les
 comptes/abonnements des vrais utilisateurs ne sont affectés que par une
 migration SQL explicitement collée par Romain (jamais automatique).
+
+## 2026-08-05 — Son (musiques + bruitage), refonte Memory CP/CE1 "amis de 10", jeu "Course des additions" CP/CE1
+
+Demande de Romain : intégrer les 6 fichiers audio fournis dans `Application
+TOP/Music/` (musiques d'ambiance par mode + bruitage de clic), utiliser la
+musique "révisions" pour les jeux de memory (concentration), remplacer les
+paires "amis de 10" du Memory CP/CE1 (nombres seuls, ex. "6" avec "4") par
+des paires de calculs (ex. "6 + 4" avec "3 + 7"), et créer un nouveau jeu de
+course pour les CP/CE1 sur les additions de nombres entiers entre 1 et 20.
+
+**Son.** Fichiers copiés dans `public/audio/` (renommés `college.mp3`,
+`lycee.mp3`, `jeux.mp3`, `revisions.mp3`, `courses.mp3`, `click.wav`).
+Nouveau `src/lib/sound.js` : détermine la "zone sonore" active à partir du
+chemin de l'URL (`getZoneForPath`) — collège/lycée pour `/college`, `/lycee`
+et pour toute page de contenu (`/niveau/:id`, `/parcours/...`, `/chapitre/:id`)
+en retrouvant le cycle du niveau concerné via `src/levels.js` ; "jeux" pour le
+hall des jeux ; "révisions" pour `/reviser` **et pour les deux jeux de
+memory** (Memory maths et Memory CP/CE1 : jeux qui demandent de la
+concentration, comme demandé) ; "courses" (piste énergique dédiée) pour les 3
+jeux de course chronométrés (Course aux tables, Estimation express, et le
+nouveau Course des additions) ; silence sur les pages utilitaires (accueil,
+compte, amis, bilan, admin, pages légales...).
+
+Nouveau composant `src/components/SoundManager.jsx`, monté une seule fois
+dans `App.jsx` (en dehors de `<Routes>` pour ne jamais être démonté lors des
+navigations) : bascule en fondu enchaîné (500 ms) vers la musique de la zone
+à chaque changement de page, en boucle ; bouton flottant en bas à droite pour
+couper/activer le son (état persisté en localStorage) ; gère la politique
+"autoplay" des navigateurs en retentant la lecture au premier clic si elle a
+été bloquée initialement. Bruitage de clic (`click.wav`) sur tout clic
+détecté sur un lien, un bouton ou un élément `role="button"`, partout dans
+l'app (écouteur global unique) — portée volontairement un peu plus large que
+"les liens" au sens strict pour un rendu cohérent, à resserrer si besoin.
+
+**Memory CP/CE1 — "amis de 10".** Les 4 anciennes paires nombre-seul-avec-
+nombre-seul (3↔7, 6↔4, 9↔1, 8↔2 — pas de lien visible entre les deux cartes
+pour un enfant) remplacées par 2 paires de calculs, chacune montrant deux
+décompositions différentes de 10 : "6 + 4" ↔ "3 + 7" et "8 + 2" ↔ "9 + 1".
+Pour garder le stock à 20 paires (au lieu de tomber à 18), 2 nouvelles paires
+"calculs de base" ajoutées : "9 + 4" ↔ "13" et "27 − 5" ↔ "22". Unicité
+globale de tous les textes affichés et exactitude de chaque paire (les deux
+côtés valent la même chose) revérifiées par script Node (comme pour les
+créations précédentes de ce jeu) : 20 paires, 40 cartes, aucune valeur
+dupliquée, aucun écart de calcul — tout est correct.
+
+**Nouveau jeu "Course des additions" (CP/CE1).** `/jeux/course-additions-cp-
+ce1` (`src/pages/CourseAdditionsCpCe1.jsx`) : même moteur que les autres jeux
+de course (`RaceTrack.jsx` + `gameUtils.js` partagés), 10 questions
+d'addition entre deux entiers naturels de 1 à 20, en QCM à 4 choix
+(distractors = erreurs classiques d'un enfant qui compte sur ses doigts :
+±1, ±2, ±10 du résultat, ou confusion avec l'un des deux termes). Seuils de
+temps plus généreux que les autres jeux de course (public plus jeune) :
+Expert 20s/24s/28s, Intermédiaire 26s/30s/34s, Débutant 32s/36s/40s. Badge
+"Jeu pour les CP / CE1" sur l'écran d'accueil du jeu, comme pour Memory
+CP/CE1. Ajouté au hub `/jeux` (`Jeux.jsx`) et routé dans `App.jsx`.
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git `APPLI GITHUB/Sans titre` — une erreur transitoire EMFILE liée au
+sandbox à la première tentative, résolue au second essai, sans lien avec le
+contenu). Fichiers (code + les 6 fichiers audio dans `public/audio/`)
+synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire pour cette mise à jour (uniquement du contenu
+client + des assets statiques).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+Point resté ouvert, à trancher si besoin : les 6 fichiers audio fournis sont
+plus longs (3'36" à 8'00" pour la piste "révisions") que les "~2 minutes"
+évoqués au départ pour la génération Suno — comme ils tournent en boucle,
+cela ne pose pas de problème de fonctionnement, juste des fichiers un peu
+plus lourds à charger la première fois (jusqu'à 11,5 Mo pour la piste
+révisions). À signaler si Romain souhaite les raccourcir/compresser
+davantage.

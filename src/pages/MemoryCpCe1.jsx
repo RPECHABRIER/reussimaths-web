@@ -13,26 +13,31 @@ import { shuffle, formatSeconds } from "../lib/gameUtils";
 //     familles demandées explicitement par Romain : compléments à 10 ("amis
 //     de 10"), doubles, triples, calculs de base.
 //
-// Modèle des paires : soit deux nombres qui se complètent à 10 (ex. "3" et
-// "7"), soit un calcul et son résultat (ex. "6 + 6" et "12"). Le stock
-// (CP_CE1_PAIRS, 20 paires) a été construit à la main pour qu'AUCUN nombre
-// affiché (qu'il s'agisse d'un nombre seul ou du résultat d'un calcul) ne se
-// répète ailleurs dans le stock — indispensable dans un memory : si deux
-// paires différentes affichaient la même valeur (ex. deux cartes "12" qui ne
-// sont pas censées se répondre), un enfant les associerait à tort en pensant
-// avoir trouvé une paire. 15 paires sont tirées au hasard dans ce stock de 20
-// à chaque partie, donc la grille change d'une partie à l'autre.
+// Modèle des paires : deux calculs (ou un calcul et son résultat) qui valent
+// la même chose — jamais deux nombres seuls mis côte à côte sans lien visible
+// (ex. la carte "6" avec la carte "4" a été volontairement écartée : rien
+// n'indique à l'enfant pourquoi ces deux-là vont ensemble plutôt que "6" et
+// "5"). Pour les amis de 10, on associe donc soit deux décompositions
+// différentes de 10 (ex. "6 + 4" et "3 + 7"), soit un calcul et son résultat
+// (ex. "6 + 6" et "12") comme pour les doubles/triples/calculs. Le stock
+// (CP_CE1_PAIRS, 20 paires) a été construit à la main pour qu'AUCUN texte
+// affiché (nombre seul ou calcul) ne se répète ailleurs dans le stock —
+// indispensable dans un memory : si deux paires différentes affichaient la
+// même valeur (ex. deux cartes "12" qui ne sont pas censées se répondre), un
+// enfant les associerait à tort en pensant avoir trouvé une paire. 15 paires
+// sont tirées au hasard dans ce stock de 20 à chaque partie, donc la grille
+// change d'une partie à l'autre.
 //
 // Gratuit, sans connexion (comme les autres jeux) : meilleur temps et
 // meilleur nombre de coups gardés en localStorage sur cet appareil.
 // ---------------------------------------------------------------------------
 
 const CP_CE1_PAIRS = [
-  // Compléments à 10 ("amis de 10") : deux nombres qui s'additionnent à 10.
-  { id: "c10-3-7", a: { text: "3" }, b: { text: "7" } },
-  { id: "c10-6-4", a: { text: "6" }, b: { text: "4" } },
-  { id: "c10-9-1", a: { text: "9" }, b: { text: "1" } },
-  { id: "c10-8-2", a: { text: "8" }, b: { text: "2" } },
+  // Compléments à 10 ("amis de 10") : deux décompositions différentes qui
+  // valent toutes les deux 10 (plutôt que deux nombres seuls sans lien
+  // visible entre eux).
+  { id: "c10-64-37", a: { text: "6 + 4" }, b: { text: "3 + 7" } },
+  { id: "c10-82-91", a: { text: "8 + 2" }, b: { text: "9 + 1" } },
   // Doubles.
   { id: "double-5", a: { text: "5 + 5" }, b: { text: "10" } },
   { id: "double-6", a: { text: "6 + 6" }, b: { text: "12" } },
@@ -52,6 +57,8 @@ const CP_CE1_PAIRS = [
   { id: "calc-5", a: { text: "19 + 6" }, b: { text: "25" } },
   { id: "calc-6", a: { text: "40 − 14" }, b: { text: "26" } },
   { id: "calc-7", a: { text: "28 − 9" }, b: { text: "19" } },
+  { id: "calc-8", a: { text: "9 + 4" }, b: { text: "13" } },
+  { id: "calc-9", a: { text: "27 − 5" }, b: { text: "22" } },
 ];
 
 const BOARD_PAIRS = 15; // 30 cartes, fixe (pas de choix de difficulté)

@@ -41,6 +41,13 @@ const GAMES = [
     icon: Baby,
     level: "CP / CE1",
   },
+  {
+    id: "course-additions-cp-ce1",
+    title: "Course des additions",
+    description: "Réponds à 10 additions de nombres entre 1 et 20 le plus vite possible et gagne la course.",
+    icon: Zap,
+    level: "CP / CE1",
+  },
 ];
 
 export default function Jeux() {

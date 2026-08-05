@@ -20,8 +20,10 @@ import CourseTables from "./pages/CourseTables";
 import EstimationExpress from "./pages/EstimationExpress";
 import MemoryMaths from "./pages/MemoryMaths";
 import MemoryCpCe1 from "./pages/MemoryCpCe1";
+import CourseAdditionsCpCe1 from "./pages/CourseAdditionsCpCe1";
 import Idees from "./pages/Idees";
 import AdminPreview from "./pages/AdminPreview";
+import SoundManager from "./components/SoundManager";
 import MentionsLegales from "./pages/legal/MentionsLegales";
 import CGU from "./pages/legal/CGU";
 import Confidentialite from "./pages/legal/Confidentialite";
@@ -118,6 +120,7 @@ export default function App() {
 
   return (
     <>
+      <SoundManager />
       {previewing && (
         <div
           className="w-full flex items-center justify-center gap-3 py-2 px-4 text-xs font-semibold text-center"
@@ -164,6 +167,7 @@ export default function App() {
         <Route path="/jeux/estimation-express" element={<EstimationExpress />} />
         <Route path="/jeux/memory-maths" element={<MemoryMaths />} />
         <Route path="/jeux/memory-cp-ce1" element={<MemoryCpCe1 />} />
+        <Route path="/jeux/course-additions-cp-ce1" element={<CourseAdditionsCpCe1 />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />

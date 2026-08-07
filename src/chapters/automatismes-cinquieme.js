@@ -1323,6 +1323,59 @@ const CH_FONCTIONS = [
   genAutoAireCarreFonctionCote,
 ];
 
+// =========================== Chapitre 13 : Algorithmique ===========================
+// NOTE (audit programme 2026) : Série 1 "Automatismes" du nouveau chapitre
+// algorithmique-cinquieme.js — domaine "Pensée informatique", nouveau au
+// programme officiel de 5e (BO n°10 du 5 mars 2026, applicable dès la
+// rentrée 2026). Version rapide/mentale des mêmes objectifs (séquencer,
+// entrées/sorties, boucle inconditionnelle) — voir algorithmique-cinquieme.js
+// pour la Série 2 complète.
+
+// ---------- 1. Boucle inconditionnelle : compter les répétitions (mental) ----------
+function genAutoBoucleComptageMental() {
+  const nRep = randInt(3, 9);
+  const mot = pick(["Bravo", "Bonjour", "Chapeau"]);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Boucle inconditionnelle",
+    prompt: `Un programme contient l'instruction « Répéter ${nRep} fois : afficher ${mot} ». Combien de fois ${mot} s'affiche-t-il ?`,
+    answer: nRep,
+    steps: [{ type: "regle", text: `Une boucle « Répéter ${nRep} fois » exécute exactement ${nRep} fois l'instruction qu'elle contient.` }],
+  };
+}
+
+// ---------- 2. Prévoir le résultat d'un programme court (mental) ----------
+function genAutoPrevoirResultatMental() {
+  const a = randInt(2, 9);
+  const b = randInt(1, 12);
+  const n = randInt(1, 10);
+  const answer = a * n + b;
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Prévoir un résultat",
+    prompt: `Programme : lire n, calculer r = ${a}n + ${b}, afficher r. On lit n = ${n}. Que vaut r ?`,
+    answer,
+    steps: [{ type: "calcul", text: `${a} \\times ${n} + ${b} = ${answer}` }],
+  };
+}
+
+// ---------- 3. Identifier entrée ou sortie (mental, QCM) ----------
+function genAutoIdentifierEntreeSortieQCM() {
+  const askEntree = Math.random() < 0.5;
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Entrées et sorties",
+    prompt: askEntree
+      ? `Dans un programme, l'instruction « Lire n » est-elle une entrée ou une sortie ?`
+      : `Dans un programme, l'instruction « Afficher r » est-elle une entrée ou une sortie ?`,
+    answer: askEntree ? "Une entrée" : "Une sortie",
+    options: ["Une entrée", "Une sortie"],
+    steps: [{ type: "regle", text: `« Lire » correspond à une entrée (donnée saisie) ; « Afficher » correspond à une sortie (résultat affiché).` }],
+  };
+}
+
+const CH_ALGORITHMIQUE = [genAutoBoucleComptageMental, genAutoPrevoirResultatMental, genAutoIdentifierEntreeSortieQCM];
+
 const THEMES = [
   { id: "operations-sur-les-nombres", title: "Opérations sur les nombres", generators: CH_OPERATIONS },
   { id: "divisibilite-fractions", title: "Divisibilité, fractions", generators: CH_DIVISIBILITE_FRACTIONS },
@@ -1335,6 +1388,7 @@ const THEMES = [
   { id: "statistiques-probabilites", title: "Statistiques, probabilités", generators: CH_STATISTIQUES_PROBABILITES },
   { id: "proportionnalite-cinquieme", title: "Proportionnalité", generators: CH_PROPORTIONNALITE },
   { id: "fonctions", title: "Fonctions", generators: CH_FONCTIONS },
+  { id: "algorithmique-cinquieme", title: "Algorithmique", generators: CH_ALGORITHMIQUE },
 ];
 
 const GENERATORS = THEMES.flatMap((t) => t.generators);

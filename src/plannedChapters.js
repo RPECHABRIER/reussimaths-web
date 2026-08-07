@@ -21,15 +21,20 @@ export const PLANNED_CHAPTERS = {
     { id: "organisation-gestion-donnees", title: "Organisation et gestion de données", order: 8 },
     { id: "proportionnalite", title: "Proportionnalité", order: 9 },
   ],
-  // Sommaire officiel du manuel de 5e (chapitres 1 à 11, hors "Algorithmique
-  // et tableur" et "C'est logique !" qui ne font pas partie du programme
-  // évalué au même titre, ainsi que les corrigés). Les ids "-cinquieme"
-  // évitent une collision avec les chapitres 6e de même thème (ex:
-  // proportionnalite existe déjà pour la 6e) — voir Niveau.jsx pour la
-  // logique de remplacement planned -> réel. order = ordre d'affichage
-  // interne (décalé de +1 par rapport au numéro du sommaire pour laisser la
-  // place à "Automatismes" en position 1) — voir chaque fichier de chapitre
-  // pour son meta.order réel.
+  // Sommaire officiel du manuel de 5e (chapitres 1 à 11, hors "C'est
+  // logique !" qui ne fait pas partie du programme évalué au même titre,
+  // ainsi que les corrigés). Les ids "-cinquieme" évitent une collision avec
+  // les chapitres 6e de même thème (ex: proportionnalite existe déjà pour la
+  // 6e) — voir Niveau.jsx pour la logique de remplacement planned -> réel.
+  // order = ordre d'affichage interne (décalé de +1 par rapport au numéro du
+  // sommaire pour laisser la place à "Automatismes" en position 1) — voir
+  // chaque fichier de chapitre pour son meta.order réel.
+  // NOTE (audit programme 2026) : contrairement à ce que ce commentaire
+  // indiquait auparavant, "Algorithmique et tableur" fait bien partie du
+  // nouveau programme officiel de cycle 4 (BO n°10 du 5 mars 2026, applicable
+  // dès la rentrée 2026) — domaine "Pensée informatique", à part entière au
+  // même titre que "Nombres et calculs" ou "Espace et géométrie". D'où
+  // l'ajout du chapitre "algorithmique-cinquieme" ci-dessous.
   cinquieme: [
     { id: "operations-sur-les-nombres", title: "Opérations sur les nombres", order: 2 },
     { id: "divisibilite-fractions", title: "Divisibilité, fractions", order: 3 },
@@ -42,6 +47,7 @@ export const PLANNED_CHAPTERS = {
     { id: "statistiques-probabilites", title: "Statistiques, probabilités", order: 10 },
     { id: "proportionnalite-cinquieme", title: "Proportionnalité", order: 11 },
     { id: "fonctions", title: "Fonctions", order: 12 },
+    { id: "algorithmique-cinquieme", title: "Algorithmique", order: 13 },
   ],
   // Sommaire officiel du manuel de 4e (chapitres 1 à 14, hors corrigés).
   // Les ids "-quatrieme" évitent toute collision avec des chapitres 5e/6e de

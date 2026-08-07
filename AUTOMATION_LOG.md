@@ -2864,3 +2864,75 @@ Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TO
 Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+## 2026-08-07 — Phase 0 : nouveau chapitre 5e « Algorithmique » (pensée informatique)
+
+Dernier point de l'audit officiel de la classe de 5e : le domaine « Pensée
+informatique » du nouveau programme (BO n°10 du 5 mars 2026, applicable dès
+la rentrée 2026) était totalement absent de l'application — aucun des 13
+fichiers 5e ne couvrait le séquençage d'instructions, les entrées/sorties,
+la traduction de formules en programme par blocs, ni la boucle
+inconditionnelle. C'est un domaine à part entière du programme, au même
+titre que « Nombres et calculs » ou « Espace et géométrie », pas une
+sous-partie optionnelle.
+
+**Nouveau fichier `src/chapters/algorithmique-cinquieme.js`** (14e chapitre
+5e, sous abonnement) : 10 générateurs couvrant les 7 objectifs officiels du
+domaine :
+- séquencer des instructions (ordre correct d'un programme) ;
+- identifier l'entrée / la sortie d'un programme ;
+- traduire une formule en suite d'instructions « Lire / Calculer / Afficher »
+  et calculer sa valeur (formule directe, puis enchaînement à 2 étapes) ;
+- analyser un programme donné et modifier un de ses paramètres ;
+- boucle inconditionnelle simple (répéter un nombre précis de fois) sur 3
+  contextes différents (déplacement, affichage répété, score cumulé) ;
+- vocabulaire de base (entrée/sortie/boucle inconditionnelle/variable).
+
+Restrictions strictes de 5e respectées : la variable n'est utilisée que pour
+lire une donnée saisie (jamais de réaffectation du type « n ← n + 1 », qui
+relève de la Quatrième) ; seule la boucle inconditionnelle est testée (la
+boucle conditionnelle relève de la Troisième).
+
+Les programmes sont représentés sous forme de « blocs » au moyen de
+`texTable()` (créée plus tôt dans la session pour corriger le bug
+d'affichage de tableau en proportionnalité) : une colonne pour le mot-clé de
+l'instruction, une colonne pour l'expression — cela garantit qu'aucun
+programme affiché ne déborde du cadre de l'exercice.
+
+**`src/chapters/automatismes-cinquieme.js`** : ajout du thème « Algorithmique »
+(3 générateurs rapides/mentaux : compter les répétitions d'une boucle,
+prévoir le résultat d'un programme court, identifier entrée/sortie),
+miroir léger du nouveau chapitre, conforme à la convention « un thème
+d'automatismes par chapitre du sommaire ».
+
+**`src/plannedChapters.js`** : ajout de l'entrée `algorithmique-cinquieme`
+au sommaire 5e (order: 13). Correction d'un commentaire obsolète qui
+indiquait à tort que l'algorithmique ne faisait pas partie du programme
+évalué — c'est désormais inexact depuis la réforme 2026.
+
+**Vérifications effectuées :**
+- 2000 exercices générés par script Node pour le nouveau chapitre : aucun
+  crash, aucune réponse `NaN`.
+- Tous les blocs LaTeX (`\[ \]`, `\( \)`) extraits des prompts/steps/options
+  générés et revérifiés un par un avec KaTeX en mode strict — un problème
+  trouvé et corrigé (guillemets français « » non supportés en mode texte
+  KaTeX, retirés d'une cellule de tableau) avant validation finale à 0 erreur.
+- Filtre de difficulté (`facile`/`standard`/`expert`) testé, fonctionne.
+- Le thème « Algorithmique » d'Automatismes 5e testé spécifiquement (300
+  exercices), ainsi que le mélange complet des thèmes (600 exercices).
+- Forme du module vérifiée (`meta.id`, `level`, `order`, `generate()`) —
+  compatible avec l'auto-découverte de `src/chapters/registry.js`
+  (`import.meta.glob`), aucune autre modification de registre nécessaire.
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+---
+
+Ceci clôt la correction du niveau 5e pour le programme 2026 (tâches #340 à
+#347). Prochaine étape de la Phase 0 : 2nde, puis les 3 filières de
+Première, selon leurs audits respectifs déjà réalisés.

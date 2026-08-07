@@ -508,12 +508,17 @@ export default {
             ],
           },
           {
-            title: "Le produit en croix",
+            // Volontairement PAS "le produit en croix" (technique explicitement
+            // exclue du programme officiel de 6e, BO du 17 avril 2025 — "la
+            // technique du produit en croix n'est pas enseignée") : on reste sur
+            // le raisonnement par coefficient, tel qu'utilisé par les exercices
+            // de ce chapitre (voir genCompleterTableauProportionnaliteManquant).
+            title: "Trouver une valeur manquante",
             items: [
-              "Pour trouver une valeur manquante dans un tableau de proportionnalité.",
-              "On multiplie en diagonale, puis on divise par le nombre restant.",
+              "Une fois le coefficient trouvé, on multiplie la valeur de départ par ce coefficient pour obtenir la valeur d'arrivée correspondante.",
+              "On peut aussi raisonner directement, sans calculer le coefficient : si le nombre de départ est multiplié par 2, le nombre d'arrivée l'est aussi (linéarité), ou passer par la valeur d'une seule unité (retour à l'unité).",
             ],
-            formula: "\\(x = \\dfrac{b \\times c}{a}\\)",
+            formula: "\\(\\text{valeur d'arrivée} = \\text{valeur de départ} \\times \\text{coefficient}\\)",
           },
           {
             title: "Pourcentages",

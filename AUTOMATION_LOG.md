@@ -2536,3 +2536,80 @@ généraliser la carte mentale aux autres chapitres (je peux les rédiger au
 même rythme que demandé), et brancher les vidéos dès que Romain en aura
 tourné (juste ajouter `videos: [{ title, youtubeId }]` dans `meta.cours` du
 chapitre concerné — aucun changement de code nécessaire).
+
+## 2026-08-05 — Corrections carte mentale + audit programme officiel 6e + liens "Revoir le cours"
+
+Suite au retour de Romain sur le pilote de l'onglet Cours : la branche
+"Droite graduée" ne convenait pas, il fallait relier les explications de
+méthode/correction au cours, et surtout vérifier que le contenu des cartes
+mentales correspond bien au programme officiel de 6e (le cas précis soulevé :
+la multiplication de fractions).
+
+**Droite graduée corrigée.** L'ancienne explication était trop vague
+(encadrement) et ne correspondait pas à la méthode réellement enseignée dans
+le chapitre. Réécrite pour coller exactement à ce que testent les exercices
+du chapitre (voir `genLireAbscisseDecimale`/`genPlacerPointQCM` dans
+nombres-decimaux.js) : repérer le pas de graduation, compter le nombre de
+graduations depuis un repère connu, multiplier par le pas et ajouter au
+repère — avec un exemple chiffré concret.
+
+**Liens "Revoir le cours".** Ajoutés dans `ChapterRunner.jsx` : un lien
+"Revoir le cours" apparaît sous la Méthode en mode Découverte, et sous l'aide
+("Voir la méthode") en mode Entraînement — uniquement si le chapitre a un
+onglet Cours. Cliquer dessus bascule directement sur l'onglet Cours. Fait le
+lien entre théorie et pratique comme demandé.
+
+**Audit programme officiel — vérification demandée par Romain.** Recherche
+effectuée sur le programme 2025 de mathématiques du cycle 3 (BO du 17 avril
+2025, applicable depuis la rentrée 2025 — texte officiel actuel), pas sur ma
+mémoire. Deux non-conformités trouvées et corrigées :
+
+1. **Multiplication de deux fractions entre elles (ex. 2/3 × 4/5) N'EST PAS
+   au programme de 6e** — seule la multiplication d'une fraction PAR UN
+   NOMBRE ENTIER l'est ("Multiplier une fraction par un nombre entier",
+   objectif d'apprentissage officiel). Ce n'était pas qu'un problème de carte
+   mentale : le générateur d'exercices `fractions.js` contenait bien un
+   générateur `genMultiplierDeuxFractions` (fraction × fraction) tiré au
+   hasard parmi les exercices du chapitre — **retiré** (fonction supprimée,
+   désenregistrée du pool de génération et du tag de difficulté), avec un
+   commentaire expliquant pourquoi, pour éviter qu'il ne soit réintroduit par
+   erreur. La description du chapitre a été corrigée en conséquence. La
+   carte mentale reflète maintenant uniquement "multiplier une fraction par
+   un entier" (avec l'exemple \\(4 \\times \\dfrac{2}{3}\\)).
+
+2. **Trouvaille supplémentaire (pas demandée, mais découverte en sourçant le
+   contenu) : la technique du "produit en croix" est explicitement EXCLUE du
+   programme de 6e** par le texte officiel ("la technique du « produit en
+   croix » n'est pas enseignée"). Ma carte mentale de Proportionnalité
+   utilisait justement cette technique — corrigée : remplacée par le
+   raisonnement par coefficient (celui que testent réellement les exercices
+   du chapitre, voir `genCompleterTableauProportionnaliteManquant`), avec
+   mention de la linéarité et du retour à l'unité comme alternatives, en
+   cohérence avec le texte officiel.
+
+⚠️ Point à trancher avec Romain, pas résolu unilatéralement dans cette
+session : le programme 2025 met l'accent sur "linéarité multiplicative ou
+additive, retour à l'unité" plutôt que sur un "coefficient de
+proportionnalité" formalisé comme objectif nommé explicitement en 6e — or
+plusieurs générateurs du chapitre Proportionnalité (6e) sont construits
+autour de ce coefficient. Ce n'est pas mathématiquement faux et reste une
+méthode standard, mais un audit plus large de ce chapitre (et potentiellement
+d'autres, vu que le programme 2025 est très récent et que la majeure partie
+du contenu de l'appli a été construite avant sa parution) pourrait être utile
+si Romain veut une conformité stricte au tout dernier texte officiel — à
+prévoir comme un chantier à part si souhaité, pas fait ici sans son accord
+(ampleur potentiellement importante).
+
+Formules LaTeX revérifiées via `katex.renderToString` avant intégration
+(y compris `\text{}` avec accents français, confirmé sans risque — seul `%`
+non échappé est réellement dangereux, déjà identifié et corrigé
+précédemment).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git — une erreur transitoire EMFILE au premier essai, résolue au
+second, sans lien avec le contenu). Fichiers synchronisés (diff vide
+vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

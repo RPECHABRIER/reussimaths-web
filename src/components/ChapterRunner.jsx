@@ -531,6 +531,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   Essaie de répondre toi-même ci-dessous, ou affiche le résultat.
                 </p>
               )}
+              {hasCours && (
+                <button
+                  onClick={() => setMode("cours")}
+                  className="text-xs font-semibold underline mt-2"
+                  style={{ color: gold }}
+                >
+                  Revoir le cours
+                </button>
+              )}
             </div>
           )}
 
@@ -760,6 +769,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
               {!feedback.correct && showHelp && !isDefi && !isDecouverte && (
                 <div className="mt-2">
                   <StepsList steps={exercise.steps} dark={false} />
+                  {hasCours && (
+                    <button
+                      onClick={() => setMode("cours")}
+                      className="text-xs font-semibold underline mt-2"
+                      style={{ color: gold }}
+                    >
+                      Revoir le cours
+                    </button>
+                  )}
                 </div>
               )}
             </div>

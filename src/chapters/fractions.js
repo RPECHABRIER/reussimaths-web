@@ -339,22 +339,14 @@ function genMultiplierEntierParFraction() {
   };
 }
 
-// ---------- 14. Multiplier deux fractions (valeur décimale) ----------
-function genMultiplierDeuxFractions() {
-  const a = randInt(1, 9);
-  const b = randInt(2, 9);
-  const c = randInt(1, 9);
-  const d = randInt(2, 9);
-  const answer = roundTo((a * c) / (b * d), 2);
-  return {
-    type: "numeric",
-    chapter: "Fractions — Multiplier",
-    prompt: `Calcule \\(\\dfrac{${a}}{${b}} \\times \\dfrac{${c}}{${d}}\\) (arrondis au centième si besoin).`,
-    answer,
-    tolerance: 0.01,
-    steps: [{ type: "calcul", text: `\\(\\dfrac{${a} \\times ${c}}{${b} \\times ${d}} = \\dfrac{${a * c}}{${b * d}} \\approx ${fr(answer)}\\)` }],
-  };
-}
+// NOTE (audit programme, voir AUTOMATION_LOG.md) : un générateur
+// "genMultiplierDeuxFractions" (fraction × fraction, ex. 2/3 × 4/5) a été
+// retiré d'ici — la multiplication de deux fractions entre elles n'est PAS
+// au programme officiel de 6e (BO du 17 avril 2025, cycle 3) : seule la
+// multiplication d'UNE fraction PAR UN NOMBRE ENTIER y figure (voir
+// genMultiplierEntierParFraction ci-dessus). La multiplication de deux
+// fractions est introduite plus tard dans la scolarité (voir par ex.
+// multiplication-division-rationnels.js, niveau "quatrieme").
 
 // =========================== Pourcentages ===========================
 
@@ -612,7 +604,6 @@ const GENERATORS = [
   genSoustractionMemeDenominateur,
   genAdditionDenominateursMultiples,
   genMultiplierEntierParFraction,
-  genMultiplierDeuxFractions,
   genAppliquerPourcentageNombre,
   genPourcentageReductionBidirectionnel,
   genChaineMoitieReserve,
@@ -642,7 +633,6 @@ const DIFFICULTY = {
   genSoustractionMemeDenominateur: "facile",
   genAdditionDenominateursMultiples: "standard",
   genMultiplierEntierParFraction: "standard",
-  genMultiplierDeuxFractions: "standard",
   genAppliquerPourcentageNombre: "standard",
   genPourcentageReductionBidirectionnel: "standard",
   genChaineMoitieReserve: "expert",
@@ -668,7 +658,7 @@ export default {
   meta: {
     id: "fractions",
     title: "Fractions",
-    description: "Fraction d'un nombre, fractions égales, comparer, additionner, multiplier des fractions.",
+    description: "Fraction d'un nombre, fractions égales, comparer, additionner, multiplier une fraction par un entier.",
     pourquoi: "Les fractions permettent de partager, comparer et mesurer avec précision — indispensables en cuisine, en bricolage comme en sciences.",
     level: "sixieme",
     free: false,
@@ -712,12 +702,12 @@ export default {
             formula: "\\(\\dfrac{2}{5} + \\dfrac{1}{5} = \\dfrac{3}{5}\\)",
           },
           {
-            title: "Multiplier des fractions",
+            title: "Multiplier par un nombre entier",
             items: [
-              "On multiplie les numérateurs entre eux, puis les dénominateurs entre eux.",
-              "Pas besoin du même dénominateur pour multiplier.",
+              "Pour multiplier une fraction par un nombre entier, on multiplie seulement le numérateur : le dénominateur ne change pas.",
+              "C'est aussi ce qu'on utilise pour calculer une fraction d'une quantité (ex. les 2/3 de 12 œufs).",
             ],
-            formula: "\\(\\dfrac{2}{3} \\times \\dfrac{4}{5} = \\dfrac{8}{15}\\)",
+            formula: "\\(4 \\times \\dfrac{2}{3} = \\dfrac{4 \\times 2}{3} = \\dfrac{8}{3}\\)",
           },
         ],
       },

@@ -708,10 +708,11 @@ export default {
           {
             title: "Droite graduée",
             items: [
-              "Placer un décimal, c'est repérer entre quels deux nombres il se trouve.",
-              "Un encadrement donne deux bornes qui entourent le nombre.",
+              "L'abscisse d'un point, c'est le nombre qu'il représente sur la droite.",
+              "Entre deux repères connus, la droite est souvent partagée en 10 graduations égales : repère d'abord le pas, la valeur d'UNE graduation (souvent 0,1 ou 0,01).",
+              "Pour lire un point : compte son nombre de graduations depuis le repère de gauche, multiplie par le pas, puis ajoute au repère.",
             ],
-            formula: "\\(4 < 4,6 < 5\\)",
+            formula: "\\(3 + 4 \\times 0,1 = 3,4\\)",
           },
         ],
       },

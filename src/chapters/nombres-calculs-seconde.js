@@ -7,7 +7,17 @@
 // |x|=a ou |x-a|⩽b), calcul numérique (simplifier une racine carrée,
 // factoriser un facteur carré parfait, additionner des racines carrées de
 // même "partie irrationnelle", puissances négatives, règles de calcul sur
-// les puissances, écriture scientifique) et opérations sur les fractions.
+// les puissances, écriture scientifique), opérations sur les fractions,
+// identités remarquables utilisées « dans les deux sens » (factoriser pour
+// résoudre, développer pour calculer mentalement), et comparaison additive
+// (différence) / multiplicative (rapport) de deux quantités.
+//
+// NOTE (audit programme 2026, BO n°14 du 2 avril 2026) : les identités
+// remarquables restent un contenu à utiliser en 2nde pour factoriser et
+// résoudre (elles sont désormais introduites dès la 3e au collège, mais
+// « (a+b)² et (a-b)² sont à travailler en classe de seconde dans les deux
+// sens » — commentaire IA-IPR). La comparaison additive/multiplicative entre
+// deux quantités est un ajout explicite du programme cible.
 // Reprend la tâche intellectuelle des exercices du manuel (la correction du
 // livre du professeur a servi à déterminer la méthode et à rédiger les
 // steps), avec des nombres et contextes différents à chaque génération pour
@@ -392,6 +402,142 @@ function genComparerValeurAbsolueQCM() {
   };
 }
 
+// =========================== Identités remarquables (niveau 2nde) ===========================
+// NOTE (audit programme 2026, 3.10) : usage niveau 2nde des identités
+// remarquables — développer pour calculer mentalement, factoriser pour
+// résoudre (« dans les deux sens »), à distinguer des exercices de simple
+// calcul mental sur les identités remarquables déjà présents dans le
+// chapitre de révision de 3e (reviser-les-bases-seconde.js).
+
+// ---------- 16. Factoriser une différence de carrés ----------
+function genFactoriserDifferenceCarresNumeric() {
+  const k = randInt(2, 15);
+  const a2 = k * k;
+  return {
+    type: "numeric",
+    chapter: "Nombres et calculs — Identités remarquables",
+    prompt: `On factorise \\(x^2 - ${a2}\\) sous la forme \\((x - k)(x + k)\\), grâce à l'identité remarquable \\(a^2 - b^2 = (a-b)(a+b)\\). Quelle est la valeur de k ?`,
+    answer: k,
+    steps: [
+      { type: "regle", text: `${a2} = ${k}^2, \\text{ donc } x^2 - ${a2} = x^2 - ${k}^2 = (x - ${k})(x + ${k}).` },
+      { type: "resultat", text: `k = ${k}` },
+    ],
+  };
+}
+
+// ---------- 17. Calcul mental d'un carré via une identité remarquable ----------
+function genCalculMentalCarreViaIdentiteNumeric() {
+  const base = pick([20, 30, 40, 50, 60, 70, 80, 90]);
+  const ecart = randInt(1, 9);
+  const plus = Math.random() < 0.5;
+  const n = plus ? base + ecart : base - ecart;
+  const answer = n * n;
+  const identite = plus
+    ? `(${base} + ${ecart})^2 = ${base}^2 + 2 \\times ${base} \\times ${ecart} + ${ecart}^2`
+    : `(${base} - ${ecart})^2 = ${base}^2 - 2 \\times ${base} \\times ${ecart} + ${ecart}^2`;
+  const detail = plus ? `${base ** 2} + ${2 * base * ecart} + ${ecart ** 2} = ${answer}` : `${base ** 2} - ${2 * base * ecart} + ${ecart ** 2} = ${answer}`;
+  return {
+    type: "numeric",
+    chapter: "Nombres et calculs — Identités remarquables",
+    prompt: `En utilisant une identité remarquable (on écrira ${n} = ${base} ${plus ? "+" : "-"} ${ecart}), calcule \\(${n}^2\\) sans calculatrice.`,
+    answer,
+    steps: [
+      { type: "regle", text: `n = ${base} ${plus ? "+" : "-"} ${ecart} : ${identite}` },
+      { type: "resultat", text: detail },
+    ],
+  };
+}
+
+// ---------- 18. Résoudre une équation par différence de carrés ----------
+function genResoudreEquationDifferenceCarresIdentiteNumeric() {
+  const k = randInt(2, 12);
+  const a2 = k * k;
+  return {
+    type: "numeric",
+    chapter: "Nombres et calculs — Identités remarquables",
+    prompt: `On veut résoudre l'équation \\(x^2 - ${a2} = 0\\). En factorisant grâce à l'identité remarquable \\(a^2-b^2=(a-b)(a+b)\\), donne la solution positive.`,
+    answer: k,
+    steps: [
+      { type: "calcul", text: `x^2 - ${a2} = (x - ${k})(x + ${k}) = 0` },
+      { type: "regle", text: `\\text{Un produit de facteurs est nul si l'un des facteurs est nul.}` },
+      { type: "resultat", text: `x = ${k} \\text{ ou } x = ${-k} \\text{ ; la solution positive est } ${k}.` },
+    ],
+  };
+}
+
+// =========================== Comparer deux quantités ===========================
+// NOTE (audit programme 2026, 3.9) : ajout du programme cible — comparaison
+// additive (différence) et multiplicative (rapport), et interprétation du
+// contexte le plus adapté.
+
+// ---------- 19. Différence ou rapport de deux quantités ----------
+function genCompareDifferenceRapportNumeric() {
+  const contextes = [
+    { unite: "habitants", nomA: "le village A", nomB: "la ville B" },
+    { unite: "€", nomA: "le prix du modèle standard", nomB: "le prix du modèle premium" },
+    { unite: "vues", nomA: "la vidéo 1", nomB: "la vidéo 2" },
+  ];
+  const ctx = pick(contextes);
+  const A = randInt(20, 500);
+  const B = A + randInt(10, 500);
+  const askDiff = Math.random() < 0.5;
+  if (askDiff) {
+    const answer = B - A;
+    return {
+      type: "numeric",
+      chapter: "Nombres et calculs — Comparer deux quantités",
+      prompt: `${ctx.nomA} compte ${A} ${ctx.unite} et ${ctx.nomB} compte ${B} ${ctx.unite}. Quelle est leur différence (comparaison additive), en ${ctx.unite} ?`,
+      answer,
+      steps: [{ type: "calcul", text: `${B} - ${A} = ${answer}` }],
+    };
+  }
+  const answer = roundTo(B / A, 2);
+  return {
+    type: "numeric",
+    chapter: "Nombres et calculs — Comparer deux quantités",
+    prompt: `${ctx.nomA} compte ${A} ${ctx.unite} et ${ctx.nomB} compte ${B} ${ctx.unite}. Quel est leur rapport \\(\\dfrac{${B}}{${A}}\\) (comparaison multiplicative), arrondi au centième ?`,
+    answer,
+    tolerance: 0.01,
+    steps: [{ type: "calcul", text: `\\dfrac{${B}}{${A}} \\approx ${fr(answer)}` }],
+  };
+}
+
+// ---------- 20. Choisir la comparaison adaptée au contexte ----------
+function genChoisirComparaisonAdapteeQCM() {
+  const cases = [
+    {
+      desc: "Un village de 300 habitants et une métropole de 2 000 000 d'habitants : comment décrire au mieux cet écart ?",
+      correct: "Par un rapport (la métropole a environ 6 700 fois plus d'habitants)",
+      distractor: "Par une différence (la métropole a 1 999 700 habitants de plus)",
+    },
+    {
+      desc: "Deux notes de contrôle, 12/20 et 14/20 : comment décrire au mieux cet écart ?",
+      correct: "Par une différence (2 points d'écart)",
+      distractor: "Par un rapport (la deuxième note est environ 1,17 fois la première)",
+    },
+    {
+      desc: "Le capital d'une petite entreprise (10 000 €) et celui d'une multinationale (50 milliards €) : comment décrire au mieux cet écart ?",
+      correct: "Par un rapport (la multinationale pèse des millions de fois plus)",
+      distractor: "Par une différence (l'écart en euros, un nombre gigantesque et peu parlant)",
+    },
+  ];
+  const c = pick(cases);
+  const options = shuffle([c.correct, c.distractor]);
+  return {
+    type: "qcm",
+    chapter: "Nombres et calculs — Comparer deux quantités",
+    prompt: c.desc,
+    answer: c.correct,
+    options,
+    steps: [
+      {
+        type: "regle",
+        text: `Quand deux quantités sont d'ordres de grandeur très différents, un rapport (comparaison multiplicative) est plus parlant qu'une différence brute. Quand elles sont proches, une différence (comparaison additive) suffit à décrire l'écart.`,
+      },
+    ],
+  };
+}
+
 const GENERATORS = [
   genConvertirInegaliteIntervalleQCM,
   genAppartientIntervalleQCM,
@@ -408,6 +554,11 @@ const GENERATORS = [
   genEcritureScientifiqueNumeric,
   genAdditionFractionsNumeric,
   genComparerValeurAbsolueQCM,
+  genFactoriserDifferenceCarresNumeric,
+  genCalculMentalCarreViaIdentiteNumeric,
+  genResoudreEquationDifferenceCarresIdentiteNumeric,
+  genCompareDifferenceRapportNumeric,
+  genChoisirComparaisonAdapteeQCM,
 ];
 
 const DIFFICULTY = {
@@ -425,7 +576,12 @@ const DIFFICULTY = {
   genSommeRacinesCarreesNumeric: "standard",
   genEcritureScientifiqueNumeric: "standard",
   genComparerValeurAbsolueQCM: "standard",
+  genFactoriserDifferenceCarresNumeric: "standard",
+  genCalculMentalCarreViaIdentiteNumeric: "standard",
+  genCompareDifferenceRapportNumeric: "facile",
+  genChoisirComparaisonAdapteeQCM: "facile",
   genResoudreInequationValeurAbsolueQCM: "expert",
+  genResoudreEquationDifferenceCarresIdentiteNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -440,7 +596,7 @@ export default {
   meta: {
     id: "nombres-calculs-seconde",
     title: "Nombres et calculs",
-    description: "Intervalles (conversion, appartenance, encadrement), valeur absolue et distance entre deux réels, racines carrées, puissances, écriture scientifique et fractions.",
+    description: "Intervalles (conversion, appartenance, encadrement), valeur absolue et distance entre deux réels, racines carrées, puissances, écriture scientifique, fractions, identités remarquables et comparaison de deux quantités.",
     pourquoi: "Les intervalles et la valeur absolue permettent d'exprimer précisément une marge d'erreur ou une plage de valeurs acceptables — utilisé en sciences et en génie industriel.",
     level: "seconde",
     free: false,

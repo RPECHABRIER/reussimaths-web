@@ -4,9 +4,19 @@
 // Correspond au chapitre 10 du manuel de 2nde : moyenne (simple et pondérée),
 // médiane d'une série (effectif pair ou impair), quartiles Q1 et Q3 (rang
 // ⌈N/4⌉ et ⌈3N/4⌉ dans la série ordonnée, convention du programme français),
-// écart interquartile, lecture d'effectifs cumulés croissants, comparaison
-// de deux séries via médiane et écart interquartile, linéarité de la
-// moyenne, diagrammes à échelle tronquée.
+// écart interquartile, écart type, lecture d'effectifs cumulés croissants,
+// regroupement par classes (moyenne pondérée à partir du milieu de chaque
+// classe, classe médiane), comparaison de deux séries via médiane/écart
+// interquartile ou moyenne/écart type, linéarité de la moyenne, diagrammes
+// à échelle tronquée.
+//
+// NOTE (audit programme 2026, BO n°14 du 2 avril 2026) : deux ajouts majeurs
+// du programme cible traités ici — le regroupement par classes (3.2 :
+// histogramme, moyenne pondérée par classes, classe médiane) et l'écart
+// type comme indicateur de dispersion (3.3), en complément du couple
+// médiane/écart interquartile déjà présent. Le programme demande de savoir
+// mobiliser les deux couples d'indicateurs (moyenne-écart type /
+// médiane-écart interquartile).
 // La correction du livre du professeur (exercices 15-35 : médiane, quartiles,
 // écart interquartile, effectifs cumulés, comparaison de séries) a servi à
 // identifier la méthode et la convention de calcul des quartiles ; les
@@ -382,6 +392,141 @@ function genDiagrammeTronqueQCM() {
   };
 }
 
+// =========================== Regroupement par classes ===========================
+// NOTE (audit programme 2026, 3.2) : nouveauté du programme cible.
+
+// ---------- 16. Moyenne pondérée à partir de classes ----------
+function genMoyennePondereeParClassesNumeric() {
+  const debut = pick([0, 10, 20]);
+  const classes = [0, 1, 2, 3].map((i) => [debut + i * 10, debut + (i + 1) * 10]);
+  const effectifs = classes.map(() => randInt(2, 10));
+  const milieux = classes.map(([a, b]) => (a + b) / 2);
+  const effectifTotal = effectifs.reduce((a, b) => a + b, 0);
+  const somme = milieux.reduce((s, m, i) => s + m * effectifs[i], 0);
+  const moy = roundTo(somme / effectifTotal, 2);
+  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  return {
+    type: "numeric",
+    chapter: "Statistiques descriptives — Regroupement par classes",
+    prompt: `Une série est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. En utilisant le milieu de chaque classe, calcule la moyenne de cette série (arrondie au centième).`,
+    answer: moy,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{Quand la répartition est supposée uniforme dans chaque classe, on approche chaque valeur par le milieu de sa classe, puis on calcule la moyenne pondérée par les effectifs.}` },
+      { type: "calcul", text: `\\text{Milieux : } ${milieux.join(", ")}` },
+      { type: "resultat", text: `\\text{Moyenne} \\approx \\dfrac{${milieux.map((m, i) => `${m} \\times ${effectifs[i]}`).join(" + ")}}{${effectifTotal}} = \\dfrac{${somme}}{${effectifTotal}} \\approx ${moy}` },
+    ],
+  };
+}
+
+// ---------- 17. Déterminer la classe médiane ----------
+function genClasseMedianeQCM() {
+  const debut = pick([0, 10, 20]);
+  const classes = [0, 1, 2, 3].map((i) => [debut + i * 10, debut + (i + 1) * 10]);
+  const effectifs = classes.map(() => randInt(2, 10));
+  const effectifTotal = effectifs.reduce((a, b) => a + b, 0);
+  const seuil = effectifTotal / 2;
+  let cumul = 0;
+  let idxMediane = classes.length - 1;
+  for (let i = 0; i < classes.length; i++) {
+    cumul += effectifs[i];
+    if (cumul >= seuil) {
+      idxMediane = i;
+      break;
+    }
+  }
+  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  const bonneReponse = `[${classes[idxMediane][0]} ; ${classes[idxMediane][1]}[`;
+  const options = shuffle(classes.map(([a, b]) => `[${a} ; ${b}[`));
+  return {
+    type: "qcm",
+    chapter: "Statistiques descriptives — Regroupement par classes",
+    prompt: `Une série de ${effectifTotal} valeurs est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. Quelle est la classe médiane ?`,
+    answer: bonneReponse,
+    options,
+    steps: [
+      { type: "regle", text: `\\text{La classe médiane est la première classe pour laquelle l'effectif cumulé atteint au moins la moitié de l'effectif total (ici } ${seuil}\\text{).}` },
+      { type: "resultat", text: `\\text{La classe médiane est } ${bonneReponse}.` },
+    ],
+  };
+}
+
+// ---------- 18. Lecture d'un tableau d'effectifs par classes ----------
+function genLectureEffectifsClassesNumeric() {
+  const debut = pick([0, 10, 20]);
+  const classes = [0, 1, 2, 3, 4].map((i) => [debut + i * 10, debut + (i + 1) * 10]);
+  const effectifs = classes.map(() => randInt(2, 12));
+  const idx = randInt(0, classes.length - 1);
+  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  return {
+    type: "numeric",
+    chapter: "Statistiques descriptives — Regroupement par classes",
+    prompt: `Une série est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. Quel est l'effectif de la classe \\([${classes[idx][0]} ; ${classes[idx][1]}[\\) ?`,
+    answer: effectifs[idx],
+    steps: [{ type: "donnee", text: `\\text{Effectif de } [${classes[idx][0]} ; ${classes[idx][1]}[ = ${effectifs[idx]}` }],
+  };
+}
+
+// =========================== Écart type ===========================
+// NOTE (audit programme 2026, 3.3) : nouveauté du programme cible — le
+// couple moyenne/écart type doit pouvoir être mobilisé au même titre que le
+// couple médiane/écart interquartile déjà couvert plus haut.
+
+// ---------- 19. Calculer l'écart type d'une petite série ----------
+function genEcartTypeNumeric() {
+  const n = randInt(4, 6);
+  const valeurs = Array.from({ length: n }, () => randInt(0, 20));
+  const moy = valeurs.reduce((a, b) => a + b, 0) / n;
+  const variance = valeurs.reduce((s, v) => s + (v - moy) ** 2, 0) / n;
+  const ecartType = roundTo(Math.sqrt(variance), 2);
+  return {
+    type: "numeric",
+    chapter: "Statistiques descriptives — Écart type",
+    prompt: `Calcule l'écart type de la série suivante (arrondi au centième) : ${valeurs.join(" ; ")}.`,
+    answer: ecartType,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{L'écart type est la racine carrée de la moyenne des carrés des écarts à la moyenne.}` },
+      { type: "calcul", text: `\\text{Moyenne} = ${roundTo(moy, 2)}` },
+      { type: "resultat", text: `\\text{Écart type} \\approx ${fr(ecartType)}` },
+    ],
+  };
+}
+
+// ---------- 20. Comparer deux séries via moyenne et écart type ----------
+function genComparerMoyenneEcartTypeQCM() {
+  const nomA = "l'équipe A";
+  const nomB = "l'équipe B";
+  function stats(vals) {
+    const n = vals.length;
+    const moy = vals.reduce((a, b) => a + b, 0) / n;
+    const variance = vals.reduce((s, v) => s + (v - moy) ** 2, 0) / n;
+    return { moy: roundTo(moy, 2), ecartType: roundTo(Math.sqrt(variance), 2) };
+  }
+  const nA = randInt(5, 7);
+  const nB = randInt(5, 7);
+  const valeursA = Array.from({ length: nA }, () => randInt(0, 20));
+  const valeursB = Array.from({ length: nB }, () => randInt(0, 20));
+  let statsA = stats(valeursA);
+  let statsB = stats(valeursB);
+  let tries = 0;
+  while (statsA.ecartType === statsB.ecartType && tries < 10) {
+    const v = Array.from({ length: nB }, () => randInt(0, 20));
+    valeursB.splice(0, valeursB.length, ...v);
+    statsB = stats(valeursB);
+    tries++;
+  }
+  const plusReguliere = statsA.ecartType < statsB.ecartType ? nomA : nomB;
+  return {
+    type: "qcm",
+    chapter: "Statistiques descriptives — Écart type",
+    prompt: `${nomA} a une moyenne de ${fr(statsA.moy)} et un écart type de ${fr(statsA.ecartType)}. ${nomB} a une moyenne de ${fr(statsB.moy)} et un écart type de ${fr(statsB.ecartType)}. Quelle équipe a les résultats les plus réguliers (les moins dispersés) ?`,
+    answer: plusReguliere,
+    options: [nomA, nomB],
+    steps: [{ type: "regle", text: `\\text{Un écart type plus petit signifie des valeurs plus resserrées autour de la moyenne, donc des résultats plus réguliers.}` }],
+  };
+}
+
 const GENERATORS = [
   genMoyenneSimpleNumeric,
   genMoyennePondereeNumeric,
@@ -398,6 +543,11 @@ const GENERATORS = [
   genSignificationMedianeQCM,
   genLineariteMoyenneNumeric,
   genDiagrammeTronqueQCM,
+  genMoyennePondereeParClassesNumeric,
+  genClasseMedianeQCM,
+  genLectureEffectifsClassesNumeric,
+  genEcartTypeNumeric,
+  genComparerMoyenneEcartTypeQCM,
 ];
 
 const DIFFICULTY = {
@@ -416,6 +566,11 @@ const DIFFICULTY = {
   genComparerDispersionQCM: "expert",
   genLineariteMoyenneNumeric: "expert",
   genDiagrammeTronqueQCM: "expert",
+  genLectureEffectifsClassesNumeric: "facile",
+  genMoyennePondereeParClassesNumeric: "standard",
+  genClasseMedianeQCM: "standard",
+  genEcartTypeNumeric: "standard",
+  genComparerMoyenneEcartTypeQCM: "standard",
 };
 
 function generate(difficulty) {
@@ -430,7 +585,7 @@ export default {
   meta: {
     id: "statistiques-descriptives-seconde",
     title: "Statistiques descriptives",
-    description: "Moyenne simple et pondérée, médiane, quartiles Q1 et Q3, écart interquartile, effectifs cumulés, comparaison de séries, linéarité de la moyenne, lecture critique de graphiques.",
+    description: "Moyenne simple et pondérée, médiane, quartiles Q1 et Q3, écart interquartile, écart type, effectifs cumulés, regroupement par classes, comparaison de séries, linéarité de la moyenne, lecture critique de graphiques.",
     pourquoi: "Moyenne, médiane et quartiles permettent de résumer un grand nombre de données pour en tirer une information claire — utilisé dans tous les métiers qui manipulent des chiffres.",
     level: "seconde",
     free: false,

@@ -178,23 +178,12 @@ function genAutoEnsembleDefinitionMental() {
   };
 }
 
-// ---------- 5. Fonction paire ou impaire (mental) ----------
-function genAutoPariteMental() {
-  const nom = pick(["f", "g", "h"]);
-  const paire = Math.random() < 0.5;
-  const a = nonZero(2, 9);
-  const imageA = nonZero(-9, 9);
-  const answer = paire ? imageA : -imageA;
-  return {
-    type: "numeric",
-    chapter: "Automatismes — Généralités sur les fonctions",
-    prompt: `${nom} est ${paire ? "paire" : "impaire"} et \\(${nom}(${a}) = ${imageA}\\). Que vaut \\(${nom}(${-a})\\) ?`,
-    answer,
-    steps: [paire ? `${nom}(-x) = ${nom}(x)` : `${nom}(-x) = -${nom}(x)`, `${nom}(${-a}) = ${answer}`],
-  };
-}
+// NOTE (audit programme 2026, 4.2) : genAutoPariteMental (parité d'une
+// fonction) a été retiré — la notion de fonction paire/impaire ne fait plus
+// partie du programme 2026 de 2nde (miroir de la suppression dans
+// generalites-fonctions-seconde.js).
 
-const CH_GENERALITES_FONCTIONS_S = [genAutoImageMental, genAutoVocabulaireMental, genAutoNombreAntecedentsMental, genAutoEnsembleDefinitionMental, genAutoPariteMental];
+const CH_GENERALITES_FONCTIONS_S = [genAutoImageMental, genAutoVocabulaireMental, genAutoNombreAntecedentsMental, genAutoEnsembleDefinitionMental];
 
 // =========================== Chapitre 2 : Variations de fonctions ===========================
 
@@ -380,10 +369,16 @@ function genAutoReconnaitreAffineMental() {
 const CH_FONCTIONS_AFFINES_S = [genAutoCoefficientsMental, genAutoSensAffineMental, genAutoImageAffineMental, genAutoResoudreAffineMental, genAutoReconnaitreAffineMental];
 
 // =========================== Chapitre 4 : Fonctions de référence ===========================
+//
+// NOTE (audit programme 2026, 4.1) : la fonction cube et la fonction racine
+// carrée ne sont plus des fonctions de référence au programme 2026 de 2nde
+// (miroir de fonctions-reference-seconde.js). genAutoImageReferenceMental a
+// été recentré sur les 3 fonctions de référence conservées : carré, valeur
+// absolue (ajoutée), inverse.
 
-// ---------- 1. Image par carré, cube ou racine carrée (mental) ----------
+// ---------- 1. Image par carré, valeur absolue ou inverse (mental) ----------
 function genAutoImageReferenceMental() {
-  const type = pick(["carré", "cube", "racine carrée"]);
+  const type = pick(["carré", "valeur absolue", "inverse"]);
   if (type === "carré") {
     const x = randInt(-12, 12);
     return {
@@ -394,24 +389,25 @@ function genAutoImageReferenceMental() {
       steps: [`${x}^2 = ${x * x}`],
     };
   }
-  if (type === "cube") {
-    const x = randInt(-5, 5);
+  if (type === "valeur absolue") {
+    const x = randInt(-15, 15);
     return {
       type: "numeric",
       chapter: "Automatismes — Fonctions de référence",
-      prompt: `Calcule l'image de ${x} par la fonction cube.`,
-      answer: x ** 3,
-      steps: [`${x}^3 = ${x ** 3}`],
+      prompt: `Calcule l'image de ${x} par la fonction valeur absolue.`,
+      answer: Math.abs(x),
+      steps: [`|${x}| = ${Math.abs(x)}`],
     };
   }
-  const racine = randInt(0, 12);
-  const x = racine * racine;
+  const x = nonZero(-10, 10);
+  const val = roundTo(1 / x, 2);
   return {
     type: "numeric",
     chapter: "Automatismes — Fonctions de référence",
-    prompt: `Calcule l'image de ${x} par la fonction racine carrée.`,
-    answer: racine,
-    steps: [`\\sqrt{${x}} = ${racine}`],
+    prompt: `Calcule l'image de ${x} par la fonction inverse, sous forme décimale (arrondie au centième).`,
+    answer: val,
+    tolerance: 0.01,
+    steps: [`\\dfrac{1}{${x}} \\approx ${val}`],
   };
 }
 
@@ -999,7 +995,15 @@ function genAutoLineariteMoyenneMental() {
 
 const CH_STATISTIQUES_DESCRIPTIVES_S = [genAutoMoyenneMental, genAutoMedianeMental, genAutoRangQ1Mental, genAutoEcartInterquartileMental, genAutoLineariteMoyenneMental];
 
-// =========================== Chapitre 11 : Probabilités et échantillonnage ===========================
+// =========================== Chapitre 11 : Probabilités ===========================
+//
+// NOTE (audit programme 2026, 4.4 / 3.5 / 5.4) : genAutoFrequenceMental
+// (fréquence dans un échantillon) a été retiré — le volet formel
+// échantillonnage n'est plus au programme 2026 de 2nde (miroir de
+// probabilites-echantillonnage-seconde.js). Remplacé par
+// genAutoConditionnelleMental (probabilité conditionnelle P_A(B) depuis de
+// petits effectifs), un ajout du programme 2026. Le chapitre est renommé
+// « Probabilités ».
 
 // ---------- 1. Probabilité équiprobable (mental) ----------
 function genAutoProbabiliteEquiprobableMental() {
@@ -1061,20 +1065,21 @@ function genAutoUniversMental() {
   };
 }
 
-// ---------- 5. Fréquence dans un échantillon (mental) ----------
-function genAutoFrequenceMental() {
-  const taille = pick([20, 25, 50, 100]);
-  const succes = randInt(1, taille - 1);
+// ---------- 5. Probabilité conditionnelle depuis de petits effectifs (mental) ----------
+function genAutoConditionnelleMental() {
+  const nA = randInt(5, 20);
+  const nAetB = randInt(1, nA - 1);
   return {
     type: "numeric",
     chapter: "Automatismes — Probabilités",
-    prompt: `${succes} succès sur ${taille} essais. Fréquence (décimale) ?`,
-    answer: roundTo(succes / taille, 4),
-    steps: [`${succes}/${taille} = ${roundTo(succes / taille, 4)}`],
+    prompt: `Parmi ${nA} éléments qui vérifient A, ${nAetB} vérifient aussi B. Donne \\(P_A(B)\\) (décimal, arrondi au centième).`,
+    answer: roundTo(nAetB / nA, 2),
+    tolerance: 0.01,
+    steps: [`${nAetB}/${nA} \\approx ${roundTo(nAetB / nA, 2)}`],
   };
 }
 
-const CH_PROBABILITES_ECHANTILLONNAGE_S = [genAutoProbabiliteEquiprobableMental, genAutoEvenementContraireMental, genAutoTypeEvenementMental, genAutoUniversMental, genAutoFrequenceMental];
+const CH_PROBABILITES_S = [genAutoProbabiliteEquiprobableMental, genAutoEvenementContraireMental, genAutoTypeEvenementMental, genAutoUniversMental, genAutoConditionnelleMental];
 
 const THEMES = [
   { id: "nombres-calculs-seconde", title: "Nombres et calculs", generators: CH_NOMBRES_CALCULS_S },
@@ -1088,7 +1093,7 @@ const THEMES = [
   { id: "equations-droites-seconde", title: "Équations de droites", generators: CH_EQUATIONS_DROITES_S },
   { id: "informations-chiffrees-seconde", title: "Informations chiffrées", generators: CH_INFORMATIONS_CHIFFREES_S },
   { id: "statistiques-descriptives-seconde", title: "Statistiques descriptives", generators: CH_STATISTIQUES_DESCRIPTIVES_S },
-  { id: "probabilites-echantillonnage-seconde", title: "Probabilités et échantillonnage", generators: CH_PROBABILITES_ECHANTILLONNAGE_S },
+  { id: "probabilites-echantillonnage-seconde", title: "Probabilités", generators: CH_PROBABILITES_S },
 ];
 
 const GENERATORS = THEMES.flatMap((t) => t.generators);

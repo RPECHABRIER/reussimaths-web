@@ -1,15 +1,21 @@
 // ---------------------------------------------------------------------------
 // Chapitre : Fonctions de référence (2nde) — sous abonnement.
 //
-// Correspond au chapitre 4 du manuel de 2nde : les quatre fonctions de
-// référence — carré (x ↦ x²), cube (x ↦ x³), racine carrée (x ↦ √x) et
+// NOTE (audit programme 2026, BO n°14 du 2 avril 2026, applicable dès la
+// rentrée 2026) : le changement-phare du nouveau programme de 2nde est ici.
+// Les fonctions de référence sont désormais carré, valeur absolue, inverse
+// (« ajout : valeur absolue ; suppression : racine carrée, cube »). Cube et
+// racine carrée disparaissent de la liste des fonctions de référence à
+// connaître par cœur (image, antécédents, monotonie globale, équations) —
+// seule une vision ponctuelle de √x en approfondissement reste autorisée,
+// non retenue ici pour rester strictement dans le cadre du programme cible.
+// La parité des fonctions de référence est également retirée du programme.
+//
+// Trois fonctions de référence — carré (x ↦ x²), valeur absolue (x ↦ |x|) et
 // inverse (x ↦ 1/x) — leurs ensembles de définition, leur sens de variation,
-// leur parité, le nombre d'antécédents d'un nombre par chacune, comparaison
-// d'images par monotonie, et résolution d'équations/inéquations simples du
-// type x² = a, x³ = a, 1/x = a.
-// La correction du livre du professeur (exercices 15-33 : équations,
-// comparaisons par monotonie, antécédents) a servi à identifier la méthode ;
-// les nombres et fonctions sont générés aléatoirement à chaque tirage.
+// le nombre d'antécédents d'un nombre par chacune, comparaison d'images par
+// monotonie, et résolution d'équations/inéquations simples du type x² = a,
+// |x| = a, 1/x = a.
 // Voir automatismes-seconde.js (thème "fonctions-reference-seconde") pour
 // les mini-exercices "Calcul mental" associés.
 //
@@ -31,7 +37,7 @@ const fr = (n) => String(n).replace(".", ",");
 
 // ---------- 1. Calculer une image par une fonction de référence ----------
 function genImageFonctionReferenceNumeric() {
-  const type = pick(["carré", "cube", "racine carrée", "inverse"]);
+  const type = pick(["carré", "valeur absolue", "inverse"]);
   if (type === "carré") {
     const x = randInt(-12, 12);
     return {
@@ -42,25 +48,14 @@ function genImageFonctionReferenceNumeric() {
       steps: [{ type: "calcul", text: `${x}^2 = ${x * x}` }],
     };
   }
-  if (type === "cube") {
-    const x = randInt(-6, 6);
+  if (type === "valeur absolue") {
+    const x = nonZero(-15, 15);
     return {
       type: "numeric",
       chapter: "Fonctions de référence — Images",
-      prompt: `Calcule l'image de ${x} par la fonction cube.`,
-      answer: x ** 3,
-      steps: [{ type: "calcul", text: `${x}^3 = ${x ** 3}` }],
-    };
-  }
-  if (type === "racine carrée") {
-    const racine = randInt(0, 12);
-    const x = racine * racine;
-    return {
-      type: "numeric",
-      chapter: "Fonctions de référence — Images",
-      prompt: `Calcule l'image de ${x} par la fonction racine carrée.`,
-      answer: racine,
-      steps: [{ type: "calcul", text: `\\sqrt{${x}} = ${racine}` }],
+      prompt: `Calcule l'image de ${x} par la fonction valeur absolue.`,
+      answer: Math.abs(x),
+      steps: [{ type: "calcul", text: `\\left|${x}\\right| = ${Math.abs(x)}` }],
     };
   }
   // inverse
@@ -101,24 +96,25 @@ function genAntecedentsCarreQCM() {
   };
 }
 
-// ---------- 3. Nombre d'antécédents par cube, inverse ou racine carrée ----------
-function genAntecedentsAutresFonctionsQCM() {
-  const fonction = pick(["cube", "inverse", "racine carrée"]);
+// ---------- 3. Nombre d'antécédents par valeur absolue ou inverse ----------
+function genAntecedentsValeurAbsolueInverseQCM() {
+  const fonction = pick(["valeur absolue", "inverse"]);
   let k, nb, explication;
-  if (fonction === "cube") {
-    k = randInt(-50, 50);
-    nb = 1;
-    explication = `La fonction cube est strictement croissante sur \\(\\mathbb{R}\\) : tout nombre réel a exactement un antécédent par la fonction cube.`;
-  } else if (fonction === "inverse") {
+  if (fonction === "valeur absolue") {
+    const cas = pick(["positif", "négatif", "nul"]);
+    k = cas === "nul" ? 0 : cas === "positif" ? nonZero(1, 50) : nonZero(-50, -1);
+    nb = cas === "négatif" ? 0 : cas === "nul" ? 1 : 2;
+    explication =
+      cas === "négatif"
+        ? `Une valeur absolue n'est jamais négative : ${k} n'a aucun antécédent par la fonction valeur absolue.`
+        : cas === "nul"
+          ? `0 a un unique antécédent par la fonction valeur absolue : 0 lui-même.`
+          : `${k} est strictement positif : il a deux antécédents opposés par la fonction valeur absolue, -${k} et ${k}.`;
+  } else {
     const estNul = Math.random() < 0.3;
     k = estNul ? 0 : nonZero(-50, 50);
     nb = estNul ? 0 : 1;
     explication = estNul ? `0 n'a aucun antécédent par la fonction inverse (elle n'est jamais nulle).` : `La fonction inverse est bijective sur \\(\\mathbb{R}^*\\) : ${k} a exactement un antécédent.`;
-  } else {
-    const estNegatif = Math.random() < 0.4;
-    k = estNegatif ? nonZero(-50, -1) : randInt(0, 50);
-    nb = estNegatif ? 0 : 1;
-    explication = estNegatif ? `La fonction racine carrée ne prend que des valeurs positives ou nulles : ${k} n'a aucun antécédent.` : `${k} est positif ou nul : il a exactement un antécédent par la fonction racine carrée.`;
   }
   return {
     type: "qcm",
@@ -127,7 +123,7 @@ function genAntecedentsAutresFonctionsQCM() {
     answer: String(nb),
     options: ["0", "1", "2"],
     steps: [
-      { type: "regle", text: `\\text{La fonction cube est bijective sur } \\mathbb{R} \\text{ (un antécédent) ; l'inverse n'est jamais nulle et 0 n'a pas d'antécédent ; la racine carrée n'est définie que pour des valeurs positives ou nulles.}` },
+      { type: "regle", text: `\\text{Une valeur absolue n'est jamais négative (0, 1 ou 2 antécédents selon le signe) ; l'inverse n'est jamais nulle et 0 n'a pas d'antécédent.}` },
       { type: "resultat", text: explication },
     ],
   };
@@ -149,7 +145,23 @@ function genSensVariationCarreQCM() {
   };
 }
 
-// ---------- 5. Sens de variation de la fonction inverse ----------
+// ---------- 5. Sens de variation de la fonction valeur absolue ----------
+function genSensVariationValeurAbsolueQCM() {
+  const surPositifs = Math.random() < 0.5;
+  return {
+    type: "qcm",
+    chapter: "Fonctions de référence — Sens de variation",
+    prompt: `Quel est le sens de variation de la fonction valeur absolue sur \\(${surPositifs ? "[0 ; +\\infty[" : "]-\\infty ; 0]"}\\) ?`,
+    answer: surPositifs ? "croissante" : "décroissante",
+    options: ["croissante", "décroissante"],
+    steps: [
+      { type: "regle", text: `\\text{La fonction valeur absolue est strictement décroissante sur } ]-\\infty ; 0] \\text{ puis strictement croissante sur } [0 ; +\\infty[ \\text{ (sa courbe forme un V).}` },
+      { type: "resultat", text: `\\text{Sur } ${surPositifs ? "[0 ; +\\infty[" : "]-\\infty ; 0]"}, \\text{ elle est } ${surPositifs ? "croissante" : "décroissante"}.` },
+    ],
+  };
+}
+
+// ---------- 6. Sens de variation de la fonction inverse ----------
 function genSensVariationInverseQCM() {
   const surPositifs = Math.random() < 0.5;
   return {
@@ -165,7 +177,7 @@ function genSensVariationInverseQCM() {
   };
 }
 
-// ---------- 6. Comparer deux carrés par monotonie ----------
+// ---------- 7. Comparer deux carrés par monotonie ----------
 function genComparerCarresQCM() {
   const memeSignePositif = Math.random() < 0.5;
   const a = memeSignePositif ? randInt(1, 10) : randInt(-10, -1);
@@ -187,28 +199,29 @@ function genComparerCarresQCM() {
   };
 }
 
-// ---------- 7. Comparer deux racines carrées par monotonie ----------
-function genComparerRacinesQCM() {
-  let a = randInt(0, 40);
-  let b = randInt(0, 40);
-  while (b === a) b = randInt(0, 40);
+// ---------- 8. Comparer deux valeurs absolues par monotonie ----------
+function genComparerValeurAbsolueQCM() {
+  const memeSignePositif = Math.random() < 0.5;
+  const a = memeSignePositif ? randInt(1, 15) : randInt(-15, -1);
+  let b = memeSignePositif ? randInt(1, 15) : randInt(-15, -1);
+  while (b === a) b = memeSignePositif ? randInt(1, 15) : randInt(-15, -1);
   const [xmin, xmax] = a < b ? [a, b] : [b, a];
-  const bonneReponse = `\\sqrt{${xmin}} < \\sqrt{${xmax}}`;
-  const mauvaise = `\\sqrt{${xmin}} > \\sqrt{${xmax}}`;
+  const bonneReponse = memeSignePositif ? `\\left|${xmin}\\right| < \\left|${xmax}\\right|` : `\\left|${xmin}\\right| > \\left|${xmax}\\right|`;
+  const mauvaise = memeSignePositif ? `\\left|${xmin}\\right| > \\left|${xmax}\\right|` : `\\left|${xmin}\\right| < \\left|${xmax}\\right|`;
   return {
     type: "qcm",
     chapter: "Fonctions de référence — Comparaison d'images",
-    prompt: `On a \\(${xmin} < ${xmax}\\). Que peut-on dire de \\(\\sqrt{${xmin}}\\) et \\(\\sqrt{${xmax}}\\) ?`,
+    prompt: `On a \\(${xmin} < ${xmax}\\), ${memeSignePositif ? "tous deux positifs" : "tous deux négatifs"}. Que peut-on dire de \\(\\left|${xmin}\\right|\\) et \\(\\left|${xmax}\\right|\\) ?`,
     answer: bonneReponse,
-    options: [bonneReponse, mauvaise],
+    options: shuffle([bonneReponse, mauvaise]),
     steps: [
-      { type: "regle", text: `\\text{La fonction racine carrée est strictement croissante sur } [0 ; +\\infty[.` },
-      { type: "resultat", text: `\\sqrt{${xmin}} < \\sqrt{${xmax}}` },
+      { type: "regle", text: `\\text{La fonction valeur absolue est } ${memeSignePositif ? "\\text{strictement croissante sur } [0 ; +\\infty[" : "\\text{strictement décroissante sur } ]-\\infty ; 0]"}.` },
+      { type: "resultat", text: bonneReponse },
     ],
   };
 }
 
-// ---------- 8. Comparer deux inverses par monotonie ----------
+// ---------- 9. Comparer deux inverses par monotonie ----------
 function genComparerInversesQCM() {
   const memeSignePositif = Math.random() < 0.5;
   const a = memeSignePositif ? randInt(1, 10) : randInt(-10, -1);
@@ -226,27 +239,6 @@ function genComparerInversesQCM() {
     steps: [
       { type: "regle", text: `\\text{La fonction inverse est strictement décroissante sur cet intervalle.}` },
       { type: "resultat", text: `\\dfrac{1}{${xmin}} > \\dfrac{1}{${xmax}}` },
-    ],
-  };
-}
-
-// ---------- 9. Comparer deux cubes par monotonie ----------
-function genComparerCubesQCM() {
-  let a = randInt(-10, 10);
-  let b = randInt(-10, 10);
-  while (b === a) b = randInt(-10, 10);
-  const [xmin, xmax] = a < b ? [a, b] : [b, a];
-  const bonneReponse = `${xmin}^3 < ${xmax}^3`;
-  const mauvaise = `${xmin}^3 > ${xmax}^3`;
-  return {
-    type: "qcm",
-    chapter: "Fonctions de référence — Comparaison d'images",
-    prompt: `On a \\(${xmin} < ${xmax}\\). Que peut-on dire de \\(${xmin}^3\\) et \\(${xmax}^3\\) ?`,
-    answer: bonneReponse,
-    options: [bonneReponse, mauvaise],
-    steps: [
-      { type: "regle", text: `\\text{La fonction cube est strictement croissante sur } \\mathbb{R}.` },
-      { type: "resultat", text: `${bonneReponse.replace(/\^3/g, "³")}` },
     ],
   };
 }
@@ -290,7 +282,46 @@ function genResoudreEquationCarreQCM() {
   };
 }
 
-// ---------- 11. Résoudre une inéquation x² < a ou x² > a ----------
+// ---------- 11. Résoudre une équation |x| = a ----------
+function genResoudreEquationValeurAbsolueQCM() {
+  const cas = pick(["deux", "une", "aucune"]);
+  const r = nonZero(1, 12);
+  let a, bonneReponse, options;
+  if (cas === "deux") {
+    a = r;
+    bonneReponse = `{-${r} ; ${r}}`;
+    options = [bonneReponse, `{${r}}`, `\\emptyset`];
+  } else if (cas === "une") {
+    a = 0;
+    bonneReponse = `{0}`;
+    options = [bonneReponse, `\\emptyset`, `{-${r} ; ${r}}`];
+  } else {
+    a = -r;
+    bonneReponse = `\\emptyset`;
+    options = [bonneReponse, `{-${r} ; ${r}}`, `{0}`];
+  }
+  return {
+    type: "qcm",
+    chapter: "Fonctions de référence — Équations et inéquations",
+    prompt: `Résous l'équation \\(|x| = ${a}\\) (donne l'ensemble des solutions).`,
+    answer: bonneReponse,
+    options: shuffle(options),
+    steps: [
+      { type: "regle", text: `\\text{Une valeur absolue n'est jamais négative. Si } a > 0, \\text{ l'équation } |x| = a \\text{ a deux solutions opposées } x = \\pm a \\text{ ; si } a = 0, \\text{ une seule solution } x=0 \\text{ ; si } a < 0, \\text{ aucune solution.}` },
+      {
+        type: "resultat",
+        text:
+          cas === "deux"
+            ? `${a} > 0 : \\text{ l'équation a deux solutions opposées, } x = \\pm ${a}, \\text{ soit } ${bonneReponse}.`
+            : cas === "une"
+              ? `|x| = 0 \\text{ a une unique solution : } x = 0.`
+              : `${a} < 0 : \\text{ l'équation n'a aucune solution.}`,
+      },
+    ],
+  };
+}
+
+// ---------- 12. Résoudre une inéquation x² < a ou x² > a ----------
 function genResoudreInequationCarreQCM() {
   const a = nonZero(1, 12) ** 2;
   const r = Math.sqrt(a);
@@ -318,28 +349,36 @@ function genResoudreInequationCarreQCM() {
   };
 }
 
-// ---------- 12. Résoudre une équation x³ = a ----------
-function genResoudreEquationCubeNumeric() {
-  const xSol = randInt(-6, 6);
-  const a = xSol ** 3;
+// ---------- 13. Résoudre une inéquation |x| < a ou |x| > a ----------
+function genResoudreInequationValeurAbsolueQCM() {
+  const a = nonZero(1, 12);
+  const sensInf = Math.random() < 0.5;
+  const bonneReponse = sensInf ? `]-${a} ; ${a}[` : `]-\\infty ; -${a}[ \\cup ]${a} ; +\\infty[`;
+  const mauvaise = sensInf ? `]-\\infty ; -${a}[ \\cup ]${a} ; +\\infty[` : `]-${a} ; ${a}[`;
   return {
-    type: "numeric",
+    type: "qcm",
     chapter: "Fonctions de référence — Équations et inéquations",
-    prompt: `Résous l'équation \\(x^3 = ${a}\\).`,
-    answer: xSol,
+    prompt: `Résous l'inéquation \\(|x| ${sensInf ? "<" : ">"} ${a}\\).`,
+    answer: bonneReponse,
+    options: [bonneReponse, mauvaise],
     steps: [
-      { type: "regle", text: `\\text{La fonction cube est strictement croissante sur } \\mathbb{R} : \\text{ l'équation } x^3 = a \\text{ a toujours une unique solution, } x = \\sqrt[3]{a}.` },
-      { type: "resultat", text: `x = \\sqrt[3]{${a}} = ${xSol}` },
+      {
+        type: "regle",
+        text: sensInf
+          ? `\\text{Pour } a > 0, \\ |x| < a \\iff -a < x < a.`
+          : `\\text{Pour } a > 0, \\ |x| > a \\iff x < -a \\text{ ou } x > a.`,
+      },
+      {
+        type: "resultat",
+        text: sensInf ? `|x| < ${a} \\iff -${a} < x < ${a}` : `|x| > ${a} \\iff x < -${a} \\text{ ou } x > ${a}`,
+      },
     ],
   };
 }
 
-// ---------- 13. Résoudre une équation 1/x = a ----------
+// ---------- 14. Résoudre une équation 1/x = a ----------
 function genResoudreEquationInverseNumeric() {
   const xSol = nonZero(-12, 12);
-  // On choisit a de sorte que 1/xSol reste simple : a = 1/xSol seulement si xSol vaut ±1 ; sinon on
-  // pose l'équation sous la forme a·x = 1 avec a = diviseur de 1 pour garder une solution entière propre,
-  // c'est-à-dire qu'on fixe directement a = 1/xSol via une écriture en fraction unitaire de dénominateur xSol.
   return {
     type: "numeric",
     chapter: "Fonctions de référence — Équations et inéquations",
@@ -352,58 +391,26 @@ function genResoudreEquationInverseNumeric() {
   };
 }
 
-// ---------- 14. Identifier la fonction de référence depuis une propriété ----------
+// ---------- 15. Identifier la fonction de référence depuis une propriété ----------
 function genIdentifierFonctionProprieteQCM() {
   const cas = pick([
-    { description: "sa courbe est symétrique par rapport à l'axe des ordonnées", reponse: "la fonction carré" },
-    { description: "elle est strictement croissante sur \\(\\mathbb{R}\\) tout entier", reponse: "la fonction cube" },
-    { description: "elle n'est définie que pour des nombres positifs ou nuls", reponse: "la fonction racine carrée" },
-    { description: "elle n'est jamais définie en 0 et n'est jamais nulle", reponse: "la fonction inverse" },
+    { description: "sa courbe est une parabole", reponse: "la fonction carré" },
+    { description: "sa courbe est formée de deux demi-droites symétriques par rapport à l'axe des ordonnées", reponse: "la fonction valeur absolue" },
+    { description: "elle n'est jamais définie ni nulle en 0", reponse: "la fonction inverse" },
   ]);
-  const options = ["la fonction carré", "la fonction cube", "la fonction racine carrée", "la fonction inverse"];
+  const options = ["la fonction carré", "la fonction valeur absolue", "la fonction inverse"];
   return {
     type: "qcm",
     chapter: "Fonctions de référence — Propriétés",
-    prompt: `Parmi les fonctions de référence (carré, cube, racine carrée, inverse), laquelle vérifie la propriété suivante : « ${cas.description} » ?`,
+    prompt: `Parmi les fonctions de référence (carré, valeur absolue, inverse), laquelle vérifie la propriété suivante : « ${cas.description} » ?`,
     answer: cas.reponse,
     options,
     steps: [
       {
         type: "regle",
-        text: `\\text{Carré : courbe symétrique par rapport à l'axe des ordonnées. Cube : strictement croissante sur } \\mathbb{R}. \\text{ Racine carrée : définie seulement pour } x \\geq 0. \\text{ Inverse : jamais définie ni nulle en 0.}`,
+        text: `\\text{Carré : courbe en forme de parabole. Valeur absolue : courbe en forme de V (deux demi-droites). Inverse : jamais définie ni nulle en 0.}`,
       },
       { type: "resultat", text: `\\text{La propriété « ${cas.description} » correspond à } ${cas.reponse}.` },
-    ],
-  };
-}
-
-// ---------- 15. Parité des fonctions de référence ----------
-function genPariteFonctionReferenceQCM() {
-  const cas = pick([
-    { nom: "carré", parite: "paire" },
-    { nom: "cube", parite: "impaire" },
-    { nom: "inverse", parite: "impaire" },
-    { nom: "racine carrée", parite: "ni paire ni impaire" },
-  ]);
-  return {
-    type: "qcm",
-    chapter: "Fonctions de référence — Propriétés",
-    prompt: `La fonction ${cas.nom} est-elle paire, impaire, ou ni l'une ni l'autre ?`,
-    answer: cas.parite,
-    options: ["paire", "impaire", "ni paire ni impaire"],
-    steps: [
-      { type: "regle", text: `\\text{Une fonction f est paire si } f(-x) = f(x) \\text{ pour tout x du domaine ; elle est impaire si } f(-x) = -f(x). \\text{ Si ces égalités ne sont pas vérifiées (ou si le domaine n'est pas symétrique par rapport à 0), elle n'est ni paire ni impaire.}` },
-      {
-        type: "resultat",
-        text:
-          cas.nom === "carré"
-            ? `\\text{Pour tout x, } (-x)^2 = x^2 : \\text{ la fonction carré est paire.}`
-            : cas.nom === "cube"
-              ? `\\text{Pour tout x, } (-x)^3 = -x^3 : \\text{ la fonction cube est impaire.}`
-              : cas.nom === "inverse"
-                ? `\\text{Pour tout } x \\neq 0, \\ \\dfrac{1}{-x} = -\\dfrac{1}{x} : \\text{ la fonction inverse est impaire.}`
-                : `\\text{La fonction racine carrée n'est même pas définie sur les nombres négatifs (domaine non symétrique par rapport à 0) : elle n'est ni paire ni impaire.}`,
-      },
     ],
   };
 }
@@ -411,37 +418,37 @@ function genPariteFonctionReferenceQCM() {
 const GENERATORS = [
   genImageFonctionReferenceNumeric,
   genAntecedentsCarreQCM,
-  genAntecedentsAutresFonctionsQCM,
+  genAntecedentsValeurAbsolueInverseQCM,
   genSensVariationCarreQCM,
+  genSensVariationValeurAbsolueQCM,
   genSensVariationInverseQCM,
   genComparerCarresQCM,
-  genComparerRacinesQCM,
+  genComparerValeurAbsolueQCM,
   genComparerInversesQCM,
-  genComparerCubesQCM,
   genResoudreEquationCarreQCM,
+  genResoudreEquationValeurAbsolueQCM,
   genResoudreInequationCarreQCM,
-  genResoudreEquationCubeNumeric,
+  genResoudreInequationValeurAbsolueQCM,
   genResoudreEquationInverseNumeric,
   genIdentifierFonctionProprieteQCM,
-  genPariteFonctionReferenceQCM,
 ];
 
 const DIFFICULTY = {
   genImageFonctionReferenceNumeric: "facile",
   genSensVariationCarreQCM: "facile",
+  genSensVariationValeurAbsolueQCM: "facile",
   genSensVariationInverseQCM: "facile",
   genIdentifierFonctionProprieteQCM: "facile",
   genAntecedentsCarreQCM: "standard",
-  genAntecedentsAutresFonctionsQCM: "standard",
+  genAntecedentsValeurAbsolueInverseQCM: "standard",
   genComparerCarresQCM: "standard",
-  genComparerRacinesQCM: "standard",
+  genComparerValeurAbsolueQCM: "standard",
   genComparerInversesQCM: "standard",
-  genComparerCubesQCM: "standard",
   genResoudreEquationCarreQCM: "standard",
-  genResoudreEquationCubeNumeric: "standard",
+  genResoudreEquationValeurAbsolueQCM: "standard",
   genResoudreEquationInverseNumeric: "standard",
   genResoudreInequationCarreQCM: "expert",
-  genPariteFonctionReferenceQCM: "expert",
+  genResoudreInequationValeurAbsolueQCM: "expert",
 };
 
 function generate(difficulty) {
@@ -456,8 +463,8 @@ export default {
   meta: {
     id: "fonctions-reference-seconde",
     title: "Fonctions de référence",
-    description: "Fonctions carré, cube, racine carrée et inverse : images, antécédents, sens de variation, parité, comparaison d'images par monotonie, équations et inéquations simples.",
-    pourquoi: "Connaître l'allure des fonctions carré, cube, racine et inverse, c'est reconnaître immédiatement le comportement d'un phénomène physique ou économique courant.",
+    description: "Fonctions carré, valeur absolue et inverse : images, antécédents, sens de variation, comparaison d'images par monotonie, équations et inéquations simples.",
+    pourquoi: "Connaître l'allure des fonctions carré, valeur absolue et inverse, c'est reconnaître immédiatement le comportement d'un phénomène physique ou économique courant.",
     level: "seconde",
     free: false,
     order: 6,

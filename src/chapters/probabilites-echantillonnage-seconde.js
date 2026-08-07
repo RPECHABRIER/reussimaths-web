@@ -1,14 +1,27 @@
 // ---------------------------------------------------------------------------
-// Chapitre : Probabilités et échantillonnage (2nde) — sous abonnement.
+// Chapitre : Probabilités (2nde) — sous abonnement.
+//
+// NOTE (audit programme 2026, 4.4 / 5.4) : le programme 2026 supprime le volet
+// formel « échantillonnage » (fréquence observée dans un échantillon, nombre
+// de succès attendu, simulation) de la classe de 2nde. Les générateurs
+// genFrequenceEchantillonNumeric et genNombreAttenduEchantillonNumeric ont
+// donc été retirés. Seul l'énoncé qualitatif de la loi des grands nombres
+// (la fréquence observée se rapproche de la probabilité théorique quand la
+// taille de l'échantillon augmente) reste explicitement au programme ; il est
+// conservé via genLoiGrandsNombresQCM. Le chapitre a été renommé
+// « Probabilités » (au lieu de « Probabilités et échantillonnage »).
+//
+// NOTE (audit programme 2026, 3.5) : ajout des probabilités conditionnelles
+// P_A(B) à partir d'un tableau croisé d'effectifs ou d'un arbre pondéré, avec
+// la distinction entre P_A(B) et P_B(A) (contexte test de dépistage / faux
+// positif), qui est un ajout du programme 2026 en 2nde.
 //
 // Correspond au chapitre 11 du manuel de 2nde : modèle équiprobable, calcul
 // d'une probabilité (issues favorables / issues possibles), événement
 // contraire, réunion de deux événements, univers d'une expérience à deux
 // épreuves (somme et produit de deux dés), types d'événements (certain,
 // impossible, élémentaire), tirage dans un jeu de cartes, distinction entre
-// modèle équiprobable et étude statistique, fréquence observée dans un
-// échantillon et rapprochement avec la probabilité théorique (loi des
-// grands nombres, esprit du programme d'échantillonnage).
+// modèle équiprobable et étude statistique, probabilités conditionnelles.
 // La correction du livre du professeur (exercices 18-42 : probabilités
 // équiprobables, dés, cartes, types d'événements, modèles) a servi à
 // identifier la méthode ; les nombres et contextes sont générés
@@ -20,6 +33,8 @@
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
+
+import { texTable } from "../utils/texTable.js";
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
@@ -296,55 +311,118 @@ function genModeliserExperienceQCM() {
   };
 }
 
-// ---------- 11. Fréquence observée dans un échantillon ----------
-function genFrequenceEchantillonNumeric() {
-  const taille = pick([20, 25, 40, 50, 80, 100, 200]);
-  const succes = randInt(1, taille - 1);
-  const g = gcd(succes, taille);
-  return {
-    type: "numeric",
-    chapter: "Probabilités — Échantillonnage",
-    prompt: `Dans un échantillon de ${taille} pièces produites par une usine, ${succes} sont défectueuses. Quelle est la fréquence de pièces défectueuses dans cet échantillon (sous forme décimale) ?`,
-    answer: roundTo(succes / taille, 4),
-    steps: [
-      { type: "regle", text: `\\text{La fréquence observée dans un échantillon est } f = \\dfrac{\\text{effectif du caractère étudié}}{\\text{taille de l'échantillon}}.` },
-      { type: "resultat", text: `f = \\dfrac{${succes}}{${taille}} = \\dfrac{${succes / g}}{${taille / g}} = ${roundTo(succes / taille, 4)}` },
-    ],
-  };
-}
+// ---------- 11. Probabilité conditionnelle depuis un tableau croisé ----------
+const contextesConditionnelle = [
+  { nomA: "malades", nomNonA: "non malades", nomB: "testés positifs", nomNonB: "testés négatifs", sujet: "patients", contexte: "un test de dépistage" },
+  { nomA: "spams", nomNonA: "non spams", nomB: "contenant le mot gratuit", nomNonB: "ne contenant pas ce mot", sujet: "emails", contexte: "un filtre anti-spam" },
+  { nomA: "défectueuses", nomNonA: "conformes", nomB: "détectées par le contrôle", nomNonB: "non détectées", sujet: "pièces", contexte: "un contrôle qualité en usine" },
+];
 
-// ---------- 12. Nombre de succès attendu dans un échantillon (à partir d'une probabilité théorique) ----------
-function genNombreAttenduEchantillonNumeric() {
-  const [num, den, p] = pick([
-    [1, 10, 0.1],
-    [1, 5, 0.2],
-    [1, 4, 0.25],
-    [2, 5, 0.4],
-    [1, 2, 0.5],
-    [3, 5, 0.6],
-    [3, 4, 0.75],
-    [4, 5, 0.8],
+function genProbabiliteConditionnelleTableauNumeric() {
+  const ctx = pick(contextesConditionnelle);
+  const nA = randInt(20, 40);
+  const nNonA = randInt(60, 150);
+  const total = nA + nNonA;
+  const nAetB = randInt(1, nA - 1);
+  const nAetNonB = nA - nAetB;
+  const nNonAetB = randInt(1, nNonA - 1);
+  const nNonAetNonB = nNonA - nNonAetB;
+  const nB = nAetB + nNonAetB;
+  const nNonB = nAetNonB + nNonAetNonB;
+
+  const tableTex = texTable([
+    ["", `\\text{${ctx.nomB}}`, `\\text{${ctx.nomNonB}}`, "\\text{Total}"],
+    [`${ctx.nomA[0].toUpperCase()}${ctx.nomA.slice(1)}`, String(nAetB), String(nAetNonB), String(nA)],
+    [`${ctx.nomNonA[0].toUpperCase()}${ctx.nomNonA.slice(1)}`, String(nNonAetB), String(nNonAetNonB), String(nNonA)],
+    ["Total", String(nB), String(nNonB), String(total)],
   ]);
-  const k = randInt(2, 20);
-  const tailleFinale = den * k;
-  const attendu = num * k;
+
   return {
     type: "numeric",
-    chapter: "Probabilités — Échantillonnage",
-    prompt: `Une expérience aléatoire a une probabilité de succès théorique de ${fr(p)}. Sur un échantillon de ${tailleFinale} répétitions, combien de succès peut-on espérer en moyenne ?`,
-    answer: attendu,
+    chapter: "Probabilités — Probabilités conditionnelles",
+    prompt: `On étudie ${ctx.contexte} sur un groupe de ${total} ${ctx.sujet}, répartis selon le tableau croisé suivant : ${tableTex} On note A l'événement « être ${ctx.nomA} ». Parmi les ${ctx.sujet} ${ctx.nomA}, quelle est la proportion de ceux ${ctx.nomB} ? Donne le résultat sous forme décimale (arrondie au centième). C'est la probabilité conditionnelle notée \\(P_A(B)\\).`,
+    answer: roundTo(nAetB / nA, 2),
+    tolerance: 0.01,
     steps: [
-      { type: "regle", text: `\\text{Le nombre de succès attendu en moyenne s'obtient en multipliant la taille de l'échantillon par la probabilité théorique de succès.}` },
-      { type: "resultat", text: `${tailleFinale} \\times ${fr(p)} = ${attendu}` },
+      { type: "regle", text: `\\text{La probabilité conditionnelle } P_A(B) \\text{ se calcule en se restreignant aux } \\textbf{${nA} ${ctx.sujet} ${ctx.nomA}} \\text{ (ligne A du tableau), puis en regardant la proportion de ceux qui sont } ${ctx.nomB}.` },
+      { type: "resultat", text: `P_A(B) = \\dfrac{${nAetB}}{${nA}} \\approx ${roundTo(nAetB / nA, 2)}` },
     ],
   };
 }
 
-// ---------- 13. Loi des grands nombres (rapprochement fréquence / probabilité) ----------
+// ---------- 12. Probabilité conditionnelle via un arbre pondéré (probabilité d'une intersection) ----------
+function genProbabiliteConditionnelleArbreNumeric() {
+  const ctx = pick(contextesConditionnelle);
+  const denA = pick([4, 5, 10, 20]);
+  const numA = randInt(1, denA - 1);
+  const pA = numA / denA;
+  const denB = pick([4, 5, 10]);
+  const numB = randInt(1, denB - 1);
+  const pAB = numB / denB;
+  const produit = roundTo(pA * pAB, 4);
+  return {
+    type: "numeric",
+    chapter: "Probabilités — Probabilités conditionnelles",
+    prompt: `On étudie ${ctx.contexte}. On sait que \\(P(A) = ${fr(pA)}\\) (proportion de ${ctx.sujet} ${ctx.nomA}) et que \\(P_A(B) = ${fr(pAB)}\\) (parmi les ${ctx.nomA}, proportion de ceux ${ctx.nomB}). En utilisant un arbre pondéré, calcule \\(P(A \\cap B)\\), sous forme décimale.`,
+    answer: produit,
+    steps: [
+      { type: "regle", text: `\\text{Sur un arbre pondéré, la probabilité d'un chemin s'obtient en } \\textbf{multipliant} \\text{ les probabilités rencontrées : } P(A \\cap B) = P(A) \\times P_A(B).` },
+      { type: "resultat", text: `P(A \\cap B) = ${fr(pA)} \\times ${fr(pAB)} = ${fr(produit)}` },
+    ],
+  };
+}
+
+// ---------- 13. Distinguer P_A(B) et P_B(A) (contexte dépistage / faux positif) ----------
+function genDistinguerPAvBQCM() {
+  const cas = pick([
+    {
+      enonce: "un test de dépistage d'une maladie",
+      A: "être malade",
+      B: "être testé positif",
+      question: "la probabilité qu'un patient testé positif soit réellement malade (risque de faux positif)",
+      reponse: "\\(P_B(A)\\)",
+      explication: `\\text{On se restreint aux patients } \\textbf{testés positifs} \\text{ (événement B déjà réalisé) et on regarde la proportion de malades parmi eux : c'est } P_B(A), \\text{ pas } P_A(B).`,
+    },
+    {
+      enonce: "un test de dépistage d'une maladie",
+      A: "être malade",
+      B: "être testé positif",
+      question: "la probabilité qu'un patient malade soit détecté par le test (sensibilité du test)",
+      reponse: "\\(P_A(B)\\)",
+      explication: `\\text{On se restreint aux patients } \\textbf{malades} \\text{ (événement A déjà réalisé) et on regarde la proportion de tests positifs parmi eux : c'est } P_A(B), \\text{ pas } P_B(A).`,
+    },
+    {
+      enonce: "un filtre anti-spam",
+      A: "être un spam",
+      B: "contenir le mot « gratuit »",
+      question: "la probabilité qu'un email contenant le mot « gratuit » soit un spam",
+      reponse: "\\(P_B(A)\\)",
+      explication: `\\text{On se restreint aux emails } \\textbf{contenant le mot « gratuit »} \\text{ (événement B déjà réalisé) et on regarde la proportion de spams parmi eux : c'est } P_B(A), \\text{ pas } P_A(B).`,
+    },
+    {
+      enonce: "un filtre anti-spam",
+      A: "être un spam",
+      B: "contenir le mot « gratuit »",
+      question: "la probabilité qu'un spam contienne le mot « gratuit »",
+      reponse: "\\(P_A(B)\\)",
+      explication: `\\text{On se restreint aux emails } \\textbf{qui sont des spams} \\text{ (événement A déjà réalisé) et on regarde la proportion de ceux contenant « gratuit » parmi eux : c'est } P_A(B), \\text{ pas } P_B(A).`,
+    },
+  ]);
+  return {
+    type: "qcm",
+    chapter: "Probabilités — Probabilités conditionnelles",
+    prompt: `On étudie ${cas.enonce}. On note A l'événement « ${cas.A} » et B l'événement « ${cas.B} ». Quelle notation représente ${cas.question} ?`,
+    answer: cas.reponse,
+    options: ["P_A(B)", "P_B(A)"].map((s) => s),
+    steps: [{ type: "regle", text: cas.explication }],
+  };
+}
+
+// ---------- 14. Loi des grands nombres (rapprochement fréquence / probabilité) ----------
 function genLoiGrandsNombresQCM() {
   return {
     type: "qcm",
-    chapter: "Probabilités — Échantillonnage",
+    chapter: "Probabilités — Loi des grands nombres",
     prompt: `Lorsque la taille d'un échantillon augmente, que peut-on généralement observer concernant la fréquence observée d'un événement par rapport à sa probabilité théorique ?`,
     answer: "La fréquence observée se rapproche de la probabilité théorique",
     options: ["La fréquence observée se rapproche de la probabilité théorique", "La fréquence observée s'éloigne de la probabilité théorique", "La fréquence observée reste constante quelle que soit la taille"],
@@ -426,8 +504,9 @@ const GENERATORS = [
   genProbabiliteTirageCartesQCM,
   genProbabiliteTableauEffectifsNumeric,
   genModeliserExperienceQCM,
-  genFrequenceEchantillonNumeric,
-  genNombreAttenduEchantillonNumeric,
+  genProbabiliteConditionnelleTableauNumeric,
+  genProbabiliteConditionnelleArbreNumeric,
+  genDistinguerPAvBQCM,
   genLoiGrandsNombresQCM,
   genVraiFauxProbabiliteQCM,
   genProbabiliteComplementaireContexteNumeric,
@@ -437,18 +516,19 @@ const DIFFICULTY = {
   genProbabiliteEquiprobableNumeric: "facile",
   genProbabiliteContraireNumeric: "facile",
   genTypeEvenementQCM: "facile",
-  genFrequenceEchantillonNumeric: "facile",
   genProbabiliteReunionNumeric: "standard",
   genUniversDeuxEpreuvesQCM: "standard",
   genProbabiliteTirageCartesQCM: "standard",
   genProbabiliteTableauEffectifsNumeric: "standard",
   genModeliserExperienceQCM: "standard",
-  genNombreAttenduEchantillonNumeric: "standard",
   genLoiGrandsNombresQCM: "standard",
   genVraiFauxProbabiliteQCM: "standard",
+  genDistinguerPAvBQCM: "standard",
   genProbabiliteSommeDeuxDesNumeric: "expert",
   genProbabiliteProduitDeuxDesNumeric: "expert",
   genProbabiliteComplementaireContexteNumeric: "expert",
+  genProbabiliteConditionnelleTableauNumeric: "expert",
+  genProbabiliteConditionnelleArbreNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -462,8 +542,8 @@ function generate(difficulty) {
 export default {
   meta: {
     id: "probabilites-echantillonnage-seconde",
-    title: "Probabilités et échantillonnage",
-    description: "Modèle équiprobable, événement contraire, réunion d'événements, univers d'une expérience, lancers de dés, tirages de cartes, types d'événements, fréquence et échantillonnage.",
+    title: "Probabilités",
+    description: "Modèle équiprobable, événement contraire, réunion d'événements, univers d'une expérience, lancers de dés, tirages de cartes, types d'événements, probabilités conditionnelles (tableau croisé, arbre pondéré).",
     pourquoi: "Comprendre le hasard et l'équiprobabilité, c'est la base pour interpréter un sondage, un jeu ou un tirage au sort.",
     level: "seconde",
     free: false,

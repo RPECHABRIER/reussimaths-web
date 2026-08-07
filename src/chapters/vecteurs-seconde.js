@@ -1,12 +1,30 @@
 // ---------------------------------------------------------------------------
 // Chapitre : Notion de vecteur (2nde) — sous abonnement.
 //
+// NOTE (audit programme 2026, 3.6 / 3.7) : ajout de la caractérisation
+// vectorielle du milieu d'un segment (\(\overrightarrow{AM} = \overrightarrow{MB}\),
+// genCaracterisationMilieuVectorielNumeric) et de la représentation d'un
+// vecteur comme combinaison linéaire de deux vecteurs non colinéaires
+// (genCombinaisonLineaireVecteursNumeric), deux ajouts du programme 2026.
+//
+// NOTE (audit programme 2026, 5.1) : le programme 2026 déplace une partie du
+// travail sur les vecteurs et la translation vers le cycle 4 (5e/4e). Les
+// générateurs genImageTranslationNumeric, genAntecedentTranslationNumeric,
+// genVecteurTranslationDepuisImageNumeric et genRelationChaslesNumeric sont
+// conservés ici car les élèves qui entrent en 2nde à la rentrée 2026 n'auront
+// pas bénéficié du nouveau programme de cycle 4 sur les vecteurs (celui-ci
+// n'entre en vigueur qu'à partir de la 5e 2026, donc ces élèves l'atteindront
+// au mieux en 4e/3e sur 2027-2028) : ce n'est qu'à l'horizon 2028-2029, quand
+// une cohorte complète aura suivi le nouveau cycle 4, que ce rappel en 2nde
+// deviendra redondant et pourra être retiré.
+//
 // Correspond au chapitre 6 du manuel de 2nde : coordonnées d'un vecteur à
 // partir de deux points, norme d'un vecteur, égalité de deux vecteurs,
 // translation (image d'un point, antécédent, vecteur de translation),
 // relation de Chasles, propriété du parallélogramme (AB = DC), vecteur
 // opposé, somme de deux vecteurs, multiplication d'un vecteur par un
-// scalaire, résolution d'une équation vectorielle simple.
+// scalaire, résolution d'une équation vectorielle simple, caractérisation
+// vectorielle du milieu, combinaison linéaire de deux vecteurs non colinéaires.
 // La correction du livre du professeur (exercices 15-30 : coordonnées,
 // égalité de vecteurs, translations, Chasles, parallélogramme) a servi à
 // identifier la méthode ; les nombres et noms de points sont générés
@@ -389,6 +407,57 @@ function genSensVecteursColineairesQCM() {
   };
 }
 
+// ---------- 16. Caractérisation vectorielle du milieu d'un segment ----------
+function genCaracterisationMilieuVectorielNumeric() {
+  const [nomA, nomB, nomM] = points4();
+  const xM = randInt(-10, 10);
+  const yM = randInt(-10, 10);
+  const dx = nonZero(-8, 8);
+  const dy = nonZero(-8, 8);
+  const xA = xM - dx;
+  const yA = yM - dy;
+  const xB = xM + dx;
+  const yB = yM + dy;
+  const demanderAbscisse = Math.random() < 0.5;
+  return {
+    type: "numeric",
+    chapter: "Vecteurs — Caractérisation du milieu",
+    prompt: `${nomM} est le point du plan tel que \\(\\overrightarrow{${nomA}${nomM}} = \\overrightarrow{${nomM}${nomB}}\\), avec ${nomA}(${xA} ; ${yA}) et ${nomB}(${xB} ; ${yB}). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ${nomM} ?`,
+    answer: demanderAbscisse ? xM : yM,
+    steps: [
+      { type: "regle", text: `\\text{L'égalité } \\overrightarrow{AM} = \\overrightarrow{MB} \\text{ caractérise le fait que M est le } \\textbf{milieu} \\text{ du segment } [AB] : \\text{ elle équivaut, coordonnée par coordonnée, à } x_M - x_A = x_B - x_M, \\text{ soit } x_M = \\dfrac{x_A + x_B}{2}.` },
+      { type: "resultat", text: demanderAbscisse ? `x_${nomM} = \\dfrac{${xA} + ${xB}}{2} = ${xM}` : `y_${nomM} = \\dfrac{${yA} + ${yB}}{2} = ${yM}` },
+    ],
+  };
+}
+
+// ---------- 17. Combinaison linéaire de deux vecteurs non colinéaires ----------
+function genCombinaisonLineaireVecteursNumeric() {
+  let xu, yu, xv, yv;
+  do {
+    xu = nonZero(-4, 4);
+    yu = nonZero(-4, 4);
+    xv = nonZero(-4, 4);
+    yv = nonZero(-4, 4);
+  } while (xu * yv - xv * yu === 0);
+  const a = nonZero(-3, 3);
+  const b = nonZero(-3, 3);
+  const xw = a * xu + b * xv;
+  const yw = a * yu + b * yv;
+  const demanderA = Math.random() < 0.5;
+  return {
+    type: "numeric",
+    chapter: "Vecteurs — Combinaison linéaire",
+    prompt: `\\(\\vec{u}(${xu} ; ${yu})\\) et \\(\\vec{v}(${xv} ; ${yv})\\) sont deux vecteurs non colinéaires. Le vecteur \\(\\vec{w}(${xw} ; ${yw})\\) s'écrit de façon unique \\(\\vec{w} = a\\vec{u} + b\\vec{v}\\). Quelle est la valeur de ${demanderA ? "a" : "b"} ?`,
+    answer: demanderA ? a : b,
+    steps: [
+      { type: "regle", text: `\\text{Comme } \\vec{u} \\text{ et } \\vec{v} \\text{ ne sont pas colinéaires, tout vecteur du plan s'écrit de façon unique comme combinaison linéaire } a\\vec{u} + b\\vec{v}. \\text{ On identifie les coordonnées pour former un système.}` },
+      { type: "calcul", text: `\\begin{cases} ${xu}a + ${xv}b = ${xw} \\\\ ${yu}a + ${yv}b = ${yw} \\end{cases}` },
+      { type: "resultat", text: demanderA ? `a = ${a}` : `b = ${b}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genCoordonneesVecteurNumeric,
   genNormeVecteurNumeric,
@@ -405,6 +474,8 @@ const GENERATORS = [
   genMultiplierVecteurParScalaireNumeric,
   genIdentifierProprieteVecteurQCM,
   genSensVecteursColineairesQCM,
+  genCaracterisationMilieuVectorielNumeric,
+  genCombinaisonLineaireVecteursNumeric,
 ];
 
 const DIFFICULTY = {
@@ -421,8 +492,10 @@ const DIFFICULTY = {
   genSommetParallelogrammeVecteurNumeric: "standard",
   genComparerNormesQCM: "standard",
   genIdentifierProprieteVecteurQCM: "standard",
+  genCaracterisationMilieuVectorielNumeric: "standard",
   genResoudreEquationVectorielleNumeric: "expert",
   genSensVecteursColineairesQCM: "expert",
+  genCombinaisonLineaireVecteursNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -437,7 +510,7 @@ export default {
   meta: {
     id: "vecteurs-seconde",
     title: "Notion de vecteur",
-    description: "Coordonnées et norme d'un vecteur, égalité de vecteurs, translations, relation de Chasles, propriété du parallélogramme, vecteur opposé, somme et produit par un nombre.",
+    description: "Coordonnées et norme d'un vecteur, égalité de vecteurs, translations, relation de Chasles, propriété du parallélogramme, vecteur opposé, somme et produit par un nombre, caractérisation vectorielle du milieu, combinaison linéaire de deux vecteurs.",
     pourquoi: "Les vecteurs décrivent un déplacement (direction, sens, longueur) — le langage de base de la physique (forces, vitesses) et de l'informatique graphique.",
     level: "seconde",
     free: false,

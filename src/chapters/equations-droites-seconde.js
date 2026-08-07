@@ -1,13 +1,25 @@
 // ---------------------------------------------------------------------------
 // Chapitre : Équations de droites (2nde) — sous abonnement.
 //
+// NOTE (audit programme 2026, 4.3) : le programme 2026 supprime la résolution
+// générique de systèmes de deux équations à deux inconnues (substitution,
+// combinaison linéaire) en tant qu'objectif autonome de 2nde. Les générateurs
+// genResoudreSystemeSubstitutionNumeric et genResoudreSystemeCombinaisonNumeric
+// ont donc été retirés.
+//
+// NOTE (audit programme 2026, 5.2) : genIntersectionDeuxDroitesNumeric et
+// genNombreSolutionsSystemeQCM ont été reformulés pour partir de deux
+// équations réduites \(y = mx + p\) (comme dans fonctions-affines-seconde.js,
+// déjà conforme) plutôt que d'équations cartésiennes générales avec
+// élimination, conformément au recentrage du programme sur les fonctions
+// affines et leur comparaison plutôt que sur l'algèbre linéaire générale.
+//
 // Correspond au chapitre 8 du manuel de 2nde : équation cartésienne d'une
 // droite (ax + by + c = 0), vecteur directeur associé (-b ; a), détermination
 // d'une équation cartésienne à partir d'un point et d'un vecteur directeur ou
 // de deux points, appartenance d'un point à une droite, droites verticales et
 // horizontales, position relative de deux droites (sécantes, parallèles,
-// confondues) via le déterminant, résolution de systèmes de deux équations à
-// deux inconnues (substitution, combinaison linéaire), intersection de deux
+// confondues) à partir de leurs équations réduites, intersection de deux
 // droites.
 // La correction du livre du professeur (exercices 16-36 : vecteur directeur,
 // équations cartésiennes, systèmes, intersections) a servi à identifier la
@@ -272,89 +284,24 @@ function genPositionRelativeDroitesQCM() {
   };
 }
 
-// ---------- 9. Résoudre un système par substitution ----------
-function genResoudreSystemeSubstitutionNumeric() {
-  const xSol = randInt(-8, 8);
-  const ySol = randInt(-8, 8);
-  const a1 = 1;
-  const b1 = nonZero(-6, 6);
-  const c1 = a1 * xSol + b1 * ySol;
-  let a2 = nonZero(-6, 6);
-  let b2 = nonZero(-6, 6);
-  while (b2 - a2 * b1 === 0) {
-    a2 = nonZero(-6, 6);
-    b2 = nonZero(-6, 6);
-  }
-  const c2 = a2 * xSol + b2 * ySol;
-  const demanderX = Math.random() < 0.5;
-  return {
-    type: "numeric",
-    chapter: "Équations de droites — Systèmes d'équations",
-    prompt: `Résous le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) et donne la valeur de ${demanderX ? "x" : "y"}.`,
-    answer: demanderX ? xSol : ySol,
-    steps: [
-      { type: "regle", text: `\\text{Méthode par substitution : on exprime x en fonction de y grâce à la première équation, puis on remplace dans la deuxième.}` },
-      { type: "calcul", text: `\\text{De la première équation : } x = ${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)}y` },
-      { type: "calcul", text: `\\text{En remplaçant dans la deuxième : } ${a2}(${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)}y) ${b2 >= 0 ? "+" : "-"} ${Math.abs(b2)}y = ${c2}` },
-      { type: "calcul", text: `(${b2} - ${a2} \\times ${b1})y = ${c2} - ${a2} \\times ${c1} \\text{, soit } ${b2 - a2 * b1}y = ${c2 - a2 * c1}` },
-      { type: "resultat", text: `y = ${ySol} \\text{, puis } x = ${c1} ${b1 >= 0 ? "-" : "+"} ${Math.abs(b1)} \\times ${ySol} = ${xSol}` },
-    ],
-  };
-}
-
-// ---------- 10. Résoudre un système par combinaison linéaire ----------
-function genResoudreSystemeCombinaisonNumeric() {
-  const xSol = randInt(-8, 8);
-  const ySol = randInt(-8, 8);
-  const a1 = nonZero(-6, 6);
-  const b1 = nonZero(-6, 6);
-  const c1 = a1 * xSol + b1 * ySol;
-  let a2 = nonZero(-6, 6);
-  let b2 = nonZero(-6, 6);
-  while (a2 * b1 - a1 * b2 === 0) {
-    a2 = nonZero(-6, 6);
-    b2 = nonZero(-6, 6);
-  }
-  const c2 = a2 * xSol + b2 * ySol;
-  const demanderX = Math.random() < 0.5;
-  return {
-    type: "numeric",
-    chapter: "Équations de droites — Systèmes d'équations",
-    prompt: `Résous le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) et donne la valeur de ${demanderX ? "x" : "y"}.`,
-    answer: demanderX ? xSol : ySol,
-    steps: [
-      { type: "regle", text: `\\text{Méthode par combinaison linéaire : pour éliminer x, on multiplie la première équation par } a_2 = ${a2} \\text{ et la seconde par } a_1 = ${a1}, \\text{ puis on soustrait.}` },
-      { type: "calcul", text: `${a2} \\times (${texCoeff(a1, "x")}${texTerme(b1, "y")}) - ${a1} \\times (${texCoeff(a2, "x")}${texTerme(b2, "y")}) = ${a2} \\times ${c1} - ${a1} \\times ${c2}` },
-      { type: "calcul", text: `(${a2 * b1} - ${a1 * b2})y = ${a2 * c1} - ${a1 * c2} \\text{, soit } ${a2 * b1 - a1 * b2}y = ${a2 * c1 - a1 * c2}` },
-      { type: "resultat", text: `y = ${ySol} \\text{, puis, en revenant à la première équation : } x = ${xSol}` },
-    ],
-  };
-}
-
-// ---------- 11. Point d'intersection de deux droites cartésiennes ----------
+// ---------- 9. Point d'intersection de deux droites (équations réduites) ----------
 function genIntersectionDeuxDroitesNumeric() {
+  let m1 = nonZero(-6, 6);
+  let m2 = nonZero(-6, 6);
+  while (m2 === m1) m2 = nonZero(-6, 6);
   const xSol = randInt(-8, 8);
-  const ySol = randInt(-8, 8);
-  const a1 = nonZero(-6, 6);
-  const b1 = nonZero(-6, 6);
-  const c1 = -(a1 * xSol + b1 * ySol);
-  let a2 = nonZero(-6, 6);
-  let b2 = nonZero(-6, 6);
-  while (a1 * b2 - a2 * b1 === 0) {
-    a2 = nonZero(-6, 6);
-    b2 = nonZero(-6, 6);
-  }
-  const c2 = -(a2 * xSol + b2 * ySol);
-  const demanderX = Math.random() < 0.5;
+  const p1 = randInt(-8, 8);
+  const p2 = (m1 - m2) * xSol + p1;
   return {
     type: "numeric",
     chapter: "Équations de droites — Intersection de deux droites",
-    prompt: `(d) : \\(${texEquationCartesienne(a1, b1, c1)}\\). (d') : \\(${texEquationCartesienne(a2, b2, c2)}\\). Détermine ${demanderX ? "l'abscisse" : "l'ordonnée"} du point d'intersection de (d) et (d').`,
-    answer: demanderX ? xSol : ySol,
+    prompt: `(d) a pour équation \\(y = ${texCoeff(m1, "x")}${texTerme(p1, "")}\\) et (d') a pour équation \\(y = ${texCoeff(m2, "x")}${texTerme(p2, "")}\\). Détermine l'abscisse du point d'intersection de (d) et (d') (résous \\(${texCoeff(m1, "x")}${texTerme(p1, "")} = ${texCoeff(m2, "x")}${texTerme(p2, "")}\\)).`,
+    answer: xSol,
     steps: [
-      { type: "regle", text: `\\text{Le point d'intersection vérifie les deux équations à la fois : c'est la solution du système formé par (d) et (d'), sous la forme } a_1x+b_1y=-c_1 \\text{ et } a_2x+b_2y=-c_2. \\text{ On élimine x en multipliant la première équation par } a_2 \\text{ et la seconde par } a_1, \\text{ puis on soustrait.}` },
-      { type: "calcul", text: `(${a2 * b1} - ${a1 * b2})y = ${a2} \\times (${-c1}) - ${a1} \\times (${-c2}) = ${a2 * b1 - a1 * b2}y = ${a1 * c2 - a2 * c1}` },
-      { type: "resultat", text: `y = ${ySol} \\text{, puis, en revenant à la première équation : } x = ${xSol}` },
+      { type: "donnee", text: `${texCoeff(m1, "x")}${texTerme(p1, "")} = ${texCoeff(m2, "x")}${texTerme(p2, "")}` },
+      { type: "regle", text: `\\text{On regroupe les termes en x d'un côté et les nombres de l'autre.}` },
+      { type: "calcul", text: `${m1 - m2}x = ${p2 - p1}` },
+      { type: "resultat", text: `x = \\dfrac{${p2 - p1}}{${m1 - m2}} = ${xSol}` },
     ],
   };
 }
@@ -408,45 +355,40 @@ function genConvertirReduiteVersCartesienneNumeric() {
   };
 }
 
-// ---------- 14. Nombre de solutions d'un système (position relative) ----------
+// ---------- 10. Nombre de solutions d'un système (position relative, équations réduites) ----------
 function genNombreSolutionsSystemeQCM() {
-  const a1 = nonZero(-7, 7);
-  const b1 = nonZero(-7, 7);
-  const c1 = randInt(-7, 7);
+  const m1 = nonZero(-7, 7);
+  const p1 = randInt(-8, 8);
   const cas = pick(["une seule solution", "aucune solution", "une infinité de solutions"]);
-  const k = nonZero(-3, 3);
-  let a2, b2, c2;
+  let m2, p2;
   if (cas === "une infinité de solutions") {
-    a2 = k * a1;
-    b2 = k * b1;
-    c2 = k * c1;
+    m2 = m1;
+    p2 = p1;
   } else if (cas === "aucune solution") {
-    a2 = k * a1;
-    b2 = k * b1;
-    c2 = k * c1 + nonZero(1, 4);
+    m2 = m1;
+    p2 = p1 + nonZero(1, 5);
   } else {
-    a2 = nonZero(-7, 7);
-    b2 = nonZero(-7, 7);
-    c2 = randInt(-7, 7);
+    m2 = nonZero(-7, 7);
+    while (m2 === m1) m2 = nonZero(-7, 7);
+    p2 = randInt(-8, 8);
   }
-  const det = a1 * b2 - a2 * b1;
-  const reponseFinale = det !== 0 ? "une seule solution" : a2 * c1 === a1 * c2 && b2 * c1 === b1 * c2 ? "une infinité de solutions" : "aucune solution";
+  const reponseFinale = m1 !== m2 ? "une seule solution" : p1 === p2 ? "une infinité de solutions" : "aucune solution";
   return {
     type: "qcm",
     chapter: "Équations de droites — Systèmes d'équations",
-    prompt: `Le système \\(\\begin{cases} ${texCoeff(a1, "x")}${texTerme(b1, "y")} = ${c1} \\\\ ${texCoeff(a2, "x")}${texTerme(b2, "y")} = ${c2} \\end{cases}\\) admet-il une seule solution, aucune solution, ou une infinité de solutions ?`,
+    prompt: `Le système \\(\\begin{cases} y = ${texCoeff(m1, "x")}${texTerme(p1, "")} \\\\ y = ${texCoeff(m2, "x")}${texTerme(p2, "")} \\end{cases}\\) admet-il une seule solution, aucune solution, ou une infinité de solutions ?`,
     answer: reponseFinale,
     options: ["une seule solution", "aucune solution", "une infinité de solutions"],
     steps: [
-      { type: "regle", text: `\\text{Le nombre de solutions du système correspond à la position relative des deux droites associées : sécantes} \\to \\text{une seule solution ; strictement parallèles} \\to \\text{aucune solution ; confondues} \\to \\text{une infinité de solutions.}` },
+      { type: "regle", text: `\\text{Avec deux équations réduites } y=mx+p, \\text{ le nombre de solutions se lit directement sur les coefficients directeurs et les ordonnées à l'origine : coefficients différents} \\to \\text{une seule solution (droites sécantes) ; mêmes coefficients directeurs mais ordonnées différentes} \\to \\text{aucune solution (droites strictement parallèles) ; équations identiques} \\to \\text{une infinité de solutions (droites confondues).}` },
       {
         type: "resultat",
         text:
           reponseFinale === "une seule solution"
-            ? `\\text{Les deux droites associées sont sécantes : une seule solution.}`
+            ? `${m1} \\neq ${m2} : \\text{ les droites sont sécantes, une seule solution.}`
             : reponseFinale === "aucune solution"
-              ? `\\text{Les deux droites associées sont strictement parallèles : aucune solution.}`
-              : `\\text{Les deux équations sont proportionnelles (droites confondues) : une infinité de solutions.}`,
+              ? `\\text{Mêmes coefficients directeurs (} ${m1} = ${m2} \\text{) mais ordonnées à l'origine différentes : droites strictement parallèles, aucune solution.}`
+              : `\\text{Les deux équations réduites sont identiques : droites confondues, une infinité de solutions.}`,
       },
     ],
   };
@@ -490,8 +432,6 @@ const GENERATORS = [
   genEquationDroiteVerticaleHorizontaleNumeric,
   genVecteurDirecteurValideQCM,
   genPositionRelativeDroitesQCM,
-  genResoudreSystemeSubstitutionNumeric,
-  genResoudreSystemeCombinaisonNumeric,
   genIntersectionDeuxDroitesNumeric,
   genConvertirCartesienneVersReduiteQCM,
   genConvertirReduiteVersCartesienneNumeric,
@@ -509,8 +449,6 @@ const DIFFICULTY = {
   genEquationCartesienneDepuisPointVecteurNumeric: "standard",
   genEquationCartesienneDepuisDeuxPointsNumeric: "standard",
   genPositionRelativeDroitesQCM: "standard",
-  genResoudreSystemeSubstitutionNumeric: "standard",
-  genResoudreSystemeCombinaisonNumeric: "standard",
   genConvertirCartesienneVersReduiteQCM: "standard",
   genConvertirReduiteVersCartesienneNumeric: "standard",
   genIntersectionDeuxDroitesNumeric: "expert",
@@ -529,7 +467,7 @@ export default {
   meta: {
     id: "equations-droites-seconde",
     title: "Équations de droites",
-    description: "Équation cartésienne d'une droite, vecteur directeur, position relative de deux droites, systèmes de deux équations à deux inconnues, intersection de droites, équation réduite.",
+    description: "Équation cartésienne d'une droite, vecteur directeur, position relative de deux droites (équations réduites), intersection de droites, équation réduite.",
     pourquoi: "Écrire l'équation d'une droite, c'est traduire algébriquement une trajectoire ou une évolution linéaire — utile en physique comme en économie.",
     level: "seconde",
     free: false,

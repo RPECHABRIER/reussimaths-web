@@ -7,7 +7,18 @@
 // coefficient multiplicateur associé à un taux (hausse ou baisse) et sa
 // réciproque, évolutions successives (coefficient multiplicateur global,
 // produit des coefficients), distinction entre un pourcentage de proportion
-// et un pourcentage d'évolution.
+// et un pourcentage d'évolution, croisement de deux variables qualitatives
+// (tableau croisé d'effectifs, fréquence marginale, fréquence conditionnelle,
+// complétion d'un tableau par différence).
+//
+// NOTE (audit programme 2026, BO n°14 du 2 avril 2026) : le croisement de
+// deux variables qualitatives (3.4) est un ajout explicite du programme
+// cible — traité ci-dessous via texTable() pour un affichage propre sans
+// débordement. La comparaison additive/multiplicative entre deux quantités
+// (3.9), également un ajout du programme, est déjà couverte par deux
+// générateurs dédiés dans nombres-calculs-seconde.js
+// (genCompareDifferenceRapportNumeric, genChoisirComparaisonAdapteeQCM) —
+// pas dupliquée ici.
 // La correction du livre du professeur (exercices 17-40 : proportions,
 // coefficients multiplicateurs, évolutions successives et réciproques) a
 // servi à identifier la méthode ; les nombres et contextes sont générés
@@ -23,6 +34,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable.js";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -33,6 +46,24 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const roundTo = (n, d) => Math.round(n * 10 ** d) / 10 ** d;
 const fr = (n) => String(n).replace(".", ",");
+
+// Construit un tableau croisé 2x2 (avec totaux de ligne/colonne/général) en
+// LaTeX propre via texTable() — évite tout débordement du cadre de l'exercice.
+function buildCrossTableTex(rowNames, colNames, matrix, totalsRow, totalsCol, grandTotal) {
+  const header = ["", `\\text{${colNames[0]}}`, `\\text{${colNames[1]}}`, "\\text{Total}"];
+  const rows = [header];
+  rowNames.forEach((rn, i) => {
+    rows.push([rn, String(matrix[i][0]), String(matrix[i][1]), String(totalsRow[i])]);
+  });
+  rows.push(["Total", String(totalsCol[0]), String(totalsCol[1]), String(grandTotal)]);
+  return texTable(rows);
+}
+
+const contextesTableauCroise = [
+  { rowNames: ["Filles", "Garçons"], colNames: ["Sport", "Musique"] },
+  { rowNames: ["Seconde", "Première"], colNames: ["Bus", "Vélo"] },
+  { rowNames: ["Urbain", "Rural"], colNames: ["Fibre", "ADSL"] },
+];
 
 const contextesProportion = [
   { total: "le nombre total d'élèves du lycée", partie: "le nombre d'élèves externes" },
@@ -341,6 +372,132 @@ function genComparerCoefficientsMultiplicateursQCM() {
   };
 }
 
+// =========================== Croisement de deux variables qualitatives ===========================
+// NOTE (audit programme 2026, 3.4) : nouveauté du programme cible.
+
+// ---------- 16. Lire un effectif dans un tableau croisé ----------
+function genLireTableauCroiseNumeric() {
+  const ctx = pick(contextesTableauCroise);
+  const a = randInt(5, 40);
+  const b = randInt(5, 40);
+  const c = randInt(5, 40);
+  const d = randInt(5, 40);
+  const matrix = [
+    [a, b],
+    [c, d],
+  ];
+  const totalsRow = [a + b, c + d];
+  const totalsCol = [a + c, b + d];
+  const grandTotal = a + b + c + d;
+  const table = buildCrossTableTex(ctx.rowNames, ctx.colNames, matrix, totalsRow, totalsCol, grandTotal);
+  const i = randInt(0, 1);
+  const j = randInt(0, 1);
+  return {
+    type: "numeric",
+    chapter: "Informations chiffrées — Tableau croisé",
+    prompt: `Voici un tableau croisé d'effectifs : ${table} Quel est l'effectif de la case « ${ctx.rowNames[i]} / ${ctx.colNames[j]} » ?`,
+    answer: matrix[i][j],
+    steps: [{ type: "donnee", text: `\\text{Effectif} = ${matrix[i][j]}` }],
+  };
+}
+
+// ---------- 17. Fréquence marginale ----------
+function genFrequenceMarginaleNumeric() {
+  const ctx = pick(contextesTableauCroise);
+  const a = randInt(5, 40);
+  const b = randInt(5, 40);
+  const c = randInt(5, 40);
+  const d = randInt(5, 40);
+  const matrix = [
+    [a, b],
+    [c, d],
+  ];
+  const totalsRow = [a + b, c + d];
+  const totalsCol = [a + c, b + d];
+  const grandTotal = a + b + c + d;
+  const table = buildCrossTableTex(ctx.rowNames, ctx.colNames, matrix, totalsRow, totalsCol, grandTotal);
+  const useRow = Math.random() < 0.5;
+  const idx = randInt(0, 1);
+  const label = useRow ? ctx.rowNames[idx] : ctx.colNames[idx];
+  const totalCat = useRow ? totalsRow[idx] : totalsCol[idx];
+  const freq = roundTo((totalCat / grandTotal) * 100, 1);
+  return {
+    type: "numeric",
+    chapter: "Informations chiffrées — Tableau croisé",
+    prompt: `Voici un tableau croisé d'effectifs : ${table} Quelle est la fréquence marginale de la catégorie « ${label} » (en %, arrondie au dixième) ?`,
+    answer: freq,
+    tolerance: 0.1,
+    steps: [
+      { type: "regle", text: `\\text{La fréquence marginale d'une catégorie est son effectif total (en ligne ou en colonne) divisé par l'effectif total du tableau.}` },
+      { type: "calcul", text: `\\dfrac{${totalCat}}{${grandTotal}} \\times 100 \\approx ${freq}` },
+    ],
+  };
+}
+
+// ---------- 18. Fréquence conditionnelle ----------
+function genFrequenceConditionnelleNumeric() {
+  const ctx = pick(contextesTableauCroise);
+  const a = randInt(5, 40);
+  const b = randInt(5, 40);
+  const c = randInt(5, 40);
+  const d = randInt(5, 40);
+  const matrix = [
+    [a, b],
+    [c, d],
+  ];
+  const totalsRow = [a + b, c + d];
+  const totalsCol = [a + c, b + d];
+  const grandTotal = a + b + c + d;
+  const table = buildCrossTableTex(ctx.rowNames, ctx.colNames, matrix, totalsRow, totalsCol, grandTotal);
+  const i = randInt(0, 1);
+  const j = randInt(0, 1);
+  const freq = roundTo((matrix[i][j] / totalsRow[i]) * 100, 1);
+  return {
+    type: "numeric",
+    chapter: "Informations chiffrées — Tableau croisé",
+    prompt: `Voici un tableau croisé d'effectifs : ${table} Parmi les « ${ctx.rowNames[i]} », quelle est la fréquence (en %, arrondie au dixième) de la catégorie « ${ctx.colNames[j]} » ?`,
+    answer: freq,
+    tolerance: 0.1,
+    steps: [
+      { type: "regle", text: `\\text{Une fréquence conditionnelle se calcule en divisant l'effectif de la case par le total de la ligne (ou de la colonne) de référence.}` },
+      { type: "calcul", text: `\\dfrac{${matrix[i][j]}}{${totalsRow[i]}} \\times 100 \\approx ${freq}` },
+    ],
+  };
+}
+
+// ---------- 19. Compléter une case manquante du tableau croisé ----------
+function genCompleterTableauCroiseNumeric() {
+  const ctx = pick(contextesTableauCroise);
+  const a = randInt(5, 40);
+  const b = randInt(5, 40);
+  const c = randInt(5, 40);
+  const d = randInt(5, 40);
+  const matrix = [
+    [a, b],
+    [c, d],
+  ];
+  const totalsRow = [a + b, c + d];
+  const totalsCol = [a + c, b + d];
+  const grandTotal = a + b + c + d;
+  const [hi, hj] = pick([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1],
+  ]);
+  const hiddenValue = matrix[hi][hj];
+  const displayMatrix = matrix.map((row) => [...row]);
+  displayMatrix[hi][hj] = "?";
+  const table = buildCrossTableTex(ctx.rowNames, ctx.colNames, displayMatrix, totalsRow, totalsCol, grandTotal);
+  return {
+    type: "numeric",
+    chapter: "Informations chiffrées — Tableau croisé",
+    prompt: `Voici un tableau croisé d'effectifs partiellement complété (la case « ? » est à déterminer) : ${table} Quelle est la valeur manquante ?`,
+    answer: hiddenValue,
+    steps: [{ type: "regle", text: `\\text{On retrouve une case manquante grâce aux totaux de ligne ou de colonne, par différence entre le total et les effectifs déjà connus.}` }],
+  };
+}
+
 const GENERATORS = [
   genCalculerProportionNumeric,
   genCalculerPartieDepuisProportionNumeric,
@@ -357,6 +514,10 @@ const GENERATORS = [
   genEvolutionReciproqueNumeric,
   genIdentifierProportionOuEvolutionQCM,
   genComparerCoefficientsMultiplicateursQCM,
+  genLireTableauCroiseNumeric,
+  genFrequenceMarginaleNumeric,
+  genFrequenceConditionnelleNumeric,
+  genCompleterTableauCroiseNumeric,
 ];
 
 const DIFFICULTY = {
@@ -375,6 +536,10 @@ const DIFFICULTY = {
   genCoefficientGlobalEvolutionsSuccessivesNumeric: "expert",
   genTauxGlobalEvolutionsSuccessivesNumeric: "expert",
   genEvolutionReciproqueNumeric: "expert",
+  genLireTableauCroiseNumeric: "facile",
+  genFrequenceMarginaleNumeric: "standard",
+  genFrequenceConditionnelleNumeric: "standard",
+  genCompleterTableauCroiseNumeric: "standard",
 };
 
 function generate(difficulty) {
@@ -389,7 +554,7 @@ export default {
   meta: {
     id: "informations-chiffrees-seconde",
     title: "Informations chiffrées",
-    description: "Proportions (partie, total), proportion d'une proportion, coefficient multiplicateur, variation absolue et relative, évolutions successives et réciproques.",
+    description: "Proportions (partie, total), proportion d'une proportion, coefficient multiplicateur, variation absolue et relative, évolutions successives et réciproques, tableau croisé d'effectifs et fréquences conditionnelles/marginales.",
     pourquoi: "Savoir lire un pourcentage d'évolution ou un coefficient multiplicateur, c'est décrypter les soldes, les statistiques et les résultats d'élections.",
     level: "seconde",
     free: false,

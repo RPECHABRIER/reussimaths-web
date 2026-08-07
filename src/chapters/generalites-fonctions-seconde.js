@@ -8,9 +8,18 @@
 // de b »), calcul d'image et d'antécédent à partir d'une formule ou d'un
 // tableau de valeurs, nombre d'antécédents d'un nombre, ensemble de
 // définition (exclusion d'un dénominateur nul ou d'une racine carrée
-// négative), fonctions paires et impaires, appartenance d'un point à une
-// courbe, modes de représentation d'une fonction, et résolution d'une
-// équation par factorisation.
+// négative), tableau de signes d'un produit/quotient, appartenance d'un
+// point à une courbe, modes de représentation d'une fonction, et résolution
+// d'une équation par factorisation.
+//
+// NOTE (audit programme 2026, BO n°14 du 2 avril 2026) : les fonctions
+// paires/impaires disparaissent du programme de 2nde (retirées ci-dessous).
+// Ajout du tableau de signes pour une fonction produit ou quotient, et de la
+// résolution d'équation/inéquation associée — nouveauté explicite du
+// programme cible (« Tableau de signes pour une fonction produit ou
+// quotient » ; « Résoudre une équation ou une inéquation de la forme
+// f(x)=0, f(x)>0 à l'aide d'un tableau de signes, lorsque f est un produit
+// ou un quotient »).
 // Reprend la tâche intellectuelle des exercices du manuel (la correction du
 // livre du professeur a servi à déterminer la méthode et à rédiger les
 // steps), avec des nombres et contextes différents à chaque génération pour
@@ -223,38 +232,77 @@ function genEnsembleDefinitionRacineQCM() {
   };
 }
 
-// =========================== Fonctions paires et impaires ===========================
+// =========================== Tableau de signes (produit / quotient) ===========================
+// NOTE (audit programme 2026) : nouveauté du programme cible — remplace les
+// anciens générateurs sur la parité (fonctions paires/impaires), retirée du
+// programme de 2nde 2026.
 
-// ---------- 10. Fonction paire : déduire une image ----------
-function genFonctionPaireQCM() {
-  const nom = pick(lettresFonctions);
-  const a = nonZero(2, 10);
-  const imageA = randInt(-10, 10);
+// ---------- 10. Signe d'un produit de deux facteurs affines ----------
+function genSigneProduitDeuxFacteursQCM() {
+  let r1 = randInt(-8, 8);
+  let r2 = randInt(-8, 8);
+  while (r2 === r1) r2 = randInt(-8, 8);
+  const [rmin, rmax] = r1 < r2 ? [r1, r2] : [r2, r1];
+  const zone = pick(["gauche", "milieu", "droite"]);
+  const signe = zone === "milieu" ? "négatif" : "positif";
+  const intervalTex = zone === "gauche" ? `]-\\infty ; ${rmin}[` : zone === "milieu" ? `]${rmin} ; ${rmax}[` : `]${rmax} ; +\\infty[`;
   return {
-    type: "numeric",
-    chapter: "Généralités sur les fonctions — Fonctions paires et impaires",
-    prompt: `La fonction ${nom} est paire sur son ensemble de définition, et \\(${nom}(${a}) = ${imageA}\\). Que vaut \\(${nom}(${-a})\\) ?`,
-    answer: imageA,
+    type: "qcm",
+    chapter: "Généralités sur les fonctions — Tableau de signes",
+    prompt: `On considère \\(f(x) = (x - ${rmin})(x - ${rmax})\\). Quel est le signe de \\(f(x)\\) sur \\(${intervalTex}\\) ?`,
+    answer: signe,
+    options: ["positif", "négatif"],
     steps: [
-      { type: "regle", text: `\\text{Une fonction paire vérifie } ${nom}(-x) = ${nom}(x) \\text{ pour tout } x.` },
-      { type: "resultat", text: `${nom}(${-a}) = ${nom}(${a}) = ${imageA}` },
+      { type: "regle", text: `\\text{Un produit de deux facteurs est positif si les deux facteurs sont de même signe, négatif sinon. Les facteurs s'annulent en } ${rmin} \\text{ et } ${rmax}.` },
+      {
+        type: "resultat",
+        text:
+          zone === "milieu"
+            ? `\\text{Entre les deux racines, les facteurs sont de signes opposés : } f(x) < 0.`
+            : `\\text{À l'extérieur des deux racines, les facteurs sont de même signe : } f(x) > 0.`,
+      },
     ],
   };
 }
 
-// ---------- 11. Fonction impaire : déduire une image ----------
-function genFonctionImpaireQCM() {
-  const nom = pick(lettresFonctions);
-  const a = nonZero(2, 10);
-  const imageA = nonZero(-10, 10);
+// ---------- 11. Résoudre une inéquation produit via tableau de signes ----------
+function genResoudreInequationProduitQCM() {
+  let r1 = randInt(-8, 8);
+  let r2 = randInt(-8, 8);
+  while (r2 === r1) r2 = randInt(-8, 8);
+  const [rmin, rmax] = r1 < r2 ? [r1, r2] : [r2, r1];
+  const strictPositif = Math.random() < 0.5;
+  const bonneReponse = strictPositif ? `]-\\infty ; ${rmin}[ \\cup ]${rmax} ; +\\infty[` : `]${rmin} ; ${rmax}[`;
+  const mauvaise = strictPositif ? `]${rmin} ; ${rmax}[` : `]-\\infty ; ${rmin}[ \\cup ]${rmax} ; +\\infty[`;
+  return {
+    type: "qcm",
+    chapter: "Généralités sur les fonctions — Tableau de signes",
+    prompt: `Résous l'inéquation \\((x - ${rmin})(x - ${rmax}) ${strictPositif ? ">" : "<"} 0\\).`,
+    answer: bonneReponse,
+    options: [bonneReponse, mauvaise],
+    steps: [
+      { type: "regle", text: `\\text{Un produit de deux facteurs affines change de signe en chacune de ses racines : entre les racines il est du signe opposé à celui pris à l'extérieur.}` },
+      { type: "resultat", text: `\\text{Les solutions sont : } ${bonneReponse}` },
+    ],
+  };
+}
+
+// ---------- 12. Résoudre une équation quotient (attention au domaine) ----------
+function genResoudreEquationQuotientNumeric() {
+  const e = randInt(-8, 8);
+  let xSol = randInt(-8, 8);
+  while (xSol === e) xSol = randInt(-8, 8);
+  const k = pick([-3, -2, 2, 3]);
+  const r = xSol * (1 - k) + k * e;
   return {
     type: "numeric",
-    chapter: "Généralités sur les fonctions — Fonctions paires et impaires",
-    prompt: `La fonction ${nom} est impaire sur son ensemble de définition, et \\(${nom}(${a}) = ${imageA}\\). Que vaut \\(${nom}(${-a})\\) ?`,
-    answer: -imageA,
+    chapter: "Généralités sur les fonctions — Tableau de signes",
+    prompt: `Résous l'équation \\(\\dfrac{x - ${r >= 0 ? r : `(${r})`}}{x - ${e}} = ${k}\\) (avec \\(x \\neq ${e}\\)).`,
+    answer: xSol,
     steps: [
-      { type: "regle", text: `\\text{Une fonction impaire vérifie } ${nom}(-x) = -${nom}(x) \\text{ pour tout } x.` },
-      { type: "resultat", text: `${nom}(${-a}) = -${nom}(${a}) = ${-imageA}` },
+      { type: "regle", text: `\\text{On multiplie les deux membres par } (x - ${e}) \\text{, qui est non nul puisque } x \\neq ${e}.` },
+      { type: "calcul", text: `x - ${r} = ${k}(x - ${e})` },
+      { type: "resultat", text: `x = ${xSol}` },
     ],
   };
 }
@@ -357,8 +405,9 @@ const GENERATORS = [
   genNombreAntecedentsTableauQCM,
   genEnsembleDefinitionFractionQCM,
   genEnsembleDefinitionRacineQCM,
-  genFonctionPaireQCM,
-  genFonctionImpaireQCM,
+  genSigneProduitDeuxFacteursQCM,
+  genResoudreInequationProduitQCM,
+  genResoudreEquationQuotientNumeric,
   genPointAppartientCourbeQCM,
   genModeRepresentationQCM,
   genResoudreFactorisationCubiqueQCM,
@@ -376,9 +425,10 @@ const DIFFICULTY = {
   genNombreAntecedentsTableauQCM: "standard",
   genEnsembleDefinitionFractionQCM: "standard",
   genEnsembleDefinitionRacineQCM: "standard",
-  genFonctionPaireQCM: "standard",
-  genFonctionImpaireQCM: "standard",
+  genSigneProduitDeuxFacteursQCM: "standard",
+  genResoudreInequationProduitQCM: "standard",
   genPointAppartientCourbeQCM: "standard",
+  genResoudreEquationQuotientNumeric: "expert",
   genResoudreFactorisationCubiqueQCM: "expert",
   genResoudreFEgalGTableauNumeric: "expert",
 };
@@ -395,7 +445,7 @@ export default {
   meta: {
     id: "generalites-fonctions-seconde",
     title: "Généralités sur les fonctions",
-    description: "Vocabulaire (image, antécédent, courbe), calcul d'image et d'antécédent, lecture de tableaux de valeurs, ensemble de définition, fonctions paires/impaires et résolution d'équations par factorisation.",
+    description: "Vocabulaire (image, antécédent, courbe), calcul d'image et d'antécédent, lecture de tableaux de valeurs, ensemble de définition, tableau de signes d'un produit/quotient et résolution d'équations par factorisation.",
     pourquoi: "Lire une courbe ou un tableau de valeurs, c'est la compétence de base pour interpréter n'importe quel graphique scientifique ou économique.",
     level: "seconde",
     free: false,

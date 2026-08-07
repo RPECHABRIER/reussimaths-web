@@ -117,7 +117,7 @@ export const PLANNED_CHAPTERS = {
     { id: "equations-droites-seconde", title: "Équations de droites", order: 10 },
     { id: "informations-chiffrees-seconde", title: "Informations chiffrées", order: 11 },
     { id: "statistiques-descriptives-seconde", title: "Statistiques descriptives", order: 12 },
-    { id: "probabilites-echantillonnage-seconde", title: "Probabilités et échantillonnage", order: 13 },
+    { id: "probabilites-echantillonnage-seconde", title: "Probabilités", order: 13 },
     { id: "exercices-fin-annee-seconde", title: "Exercices de fin d'année", order: 14 },
   ],
   // Sommaire officiel du manuel de Première (enseignement mathématique,

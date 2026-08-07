@@ -2936,3 +2936,89 @@ Aucune migration SQL nécessaire.
 Ceci clôt la correction du niveau 5e pour le programme 2026 (tâches #340 à
 #347). Prochaine étape de la Phase 0 : 2nde, puis les 3 filières de
 Première, selon leurs audits respectifs déjà réalisés.
+
+## 2026-08-07 — Phase 0 : mise en conformité 2nde avec le nouveau programme 2026
+
+Correction des 9 fichiers 2nde identifiés par l'audit officiel (BO n°14 du
+2 avril 2026, applicable dès la rentrée 2026), plus le miroir Automatismes.
+
+**`src/chapters/fonctions-reference-seconde.js`** : réécriture complète.
+Fonctions de référence recentrées sur carré, valeur absolue et inverse
+(cube et racine carrée retirées ; parité retirée). Nouveaux générateurs sur
+la valeur absolue (antécédents, sens de variation, comparaison, équations
+et inéquations). `genIdentifierFonctionProprieteQCM` réécrit avec des
+propriétés réellement distinctives entre les 3 fonctions.
+
+**`src/chapters/generalites-fonctions-seconde.js`** : retrait de la parité
+(`genFonctionPaireQCM`/`genFonctionImpaireQCM`). Ajout du tableau de signes
+d'un produit/quotient et de la résolution d'équations par factorisation.
+
+**`src/chapters/nombres-calculs-seconde.js`** : ajout des identités
+remarquables « dans les deux sens » (factoriser, calcul mental, résoudre
+via une différence de carrés) et de la comparaison additive/multiplicative
+de deux quantités (écart vs rapport), avec des scénarios concrets.
+
+**`src/chapters/statistiques-descriptives-seconde.js`** : ajout du
+regroupement par classes (moyenne pondérée, classe médiane, lecture
+d'effectifs) et de l'écart type (calcul, comparaison avec la moyenne).
+
+**`src/chapters/informations-chiffrees-seconde.js`** : ajout du tableau
+croisé de deux variables qualitatives (lecture, fréquences marginale et
+conditionnelle, complétion via les totaux), via un nouvel outil
+`buildCrossTableTex` bâti sur `texTable()`.
+
+**`src/chapters/probabilites-echantillonnage-seconde.js`** : retrait du
+volet formel échantillonnage (fréquence dans un échantillon, nombre de
+succès attendu — supprimé du programme). Le rappel qualitatif de la loi
+des grands nombres est conservé. Ajout des probabilités conditionnelles
+\(P_A(B)\) via tableau croisé ou arbre pondéré, avec un générateur dédié à
+la distinction \(P_A(B)\) / \(P_B(A)\) (contexte dépistage / faux positif).
+Chapitre renommé « Probabilités » (id technique inchangé).
+
+**`src/chapters/vecteurs-seconde.js`** : ajout de la caractérisation
+vectorielle du milieu d'un segment (\(\overrightarrow{AM}=\overrightarrow{MB}\))
+et de la représentation d'un vecteur comme combinaison linéaire de deux
+vecteurs non colinéaires. Les générateurs sur la translation et la relation
+de Chasles sont conservés avec une note explicite : ils resteront
+pertinents jusqu'à l'horizon 2028-2029, le temps qu'une cohorte complète
+ait suivi le nouveau programme de cycle 4 sur les vecteurs.
+
+**`src/chapters/equations-droites-seconde.js`** : retrait de la résolution
+générique de systèmes de deux équations à deux inconnues (substitution,
+combinaison linéaire — supprimée du programme comme objectif autonome).
+`genIntersectionDeuxDroitesNumeric` et `genNombreSolutionsSystemeQCM`
+reformulés pour partir de deux équations réduites \(y=mx+p\) plutôt que
+d'équations cartésiennes avec élimination, en cohérence avec
+`fonctions-affines-seconde.js`.
+
+**`src/chapters/automatismes-seconde.js`** (miroir) : retrait des items
+« Fonction paire ou impaire », « Image par carré, cube ou racine carrée »
+(remplacé par carré/valeur absolue/inverse) et « Fréquence dans un
+échantillon » (remplacé par une probabilité conditionnelle sur petits
+effectifs). Thème renommé « Probabilités ».
+
+**`src/plannedChapters.js`** : titre du chapitre 13 (2nde) mis à jour en
+« Probabilités » pour cohérence avec le sommaire.
+
+**Vérifications effectuées :**
+- Chacun des 9 fichiers testé individuellement par script Node
+  (3000 à 6000 exercices générés selon les fichiers) : aucun crash, aucune
+  réponse manquante (`bad = 0`).
+- Tous les blocs LaTeX (`\[ \]`, `\( \)`) extraits des prompts/steps/options
+  et revérifiés un par un avec KaTeX en mode strict — un problème trouvé et
+  corrigé (guillemets français « » à l'intérieur d'une cellule de tableau
+  LaTeX, non supportés même dans `\text{}`) avant validation finale à
+  0 erreur sur tous les fichiers.
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+---
+
+Ceci clôt la correction du niveau 2nde pour le programme 2026 (tâches #348
+à #357). Prochaine étape de la Phase 0 : les 3 filières de Première
+(non spé, spé, techno), selon leurs audits respectifs déjà réalisés.

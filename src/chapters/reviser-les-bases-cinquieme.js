@@ -343,21 +343,15 @@ function genAireRectangle() {
   };
 }
 
-// ---------- 16. Symétrie centrale : distance conservée ----------
-function genSymetrieCentraleDistance() {
-  const oa = randDecimal(2, 15, 1);
-  const askOM = Math.random() < 0.5;
-  return {
-    type: "numeric",
-    chapter: "Réviser les bases (5e) — Géométrie",
-    prompt: askOM
-      ? `M est le symétrique de A par rapport au point O. Sachant que OA = ${fr(oa)} cm, quelle est la longueur OM, en cm ?`
-      : `M est le symétrique de A par rapport au point O, avec OM = ${fr(oa)} cm. Quelle est la longueur OA, en cm ?`,
-    answer: oa,
-    tolerance: 0.01,
-    steps: [{ type: "regle", text: `Le symétrique d'un point par rapport à un point O est à la même distance de O.` }],
-  };
-}
+// NOTE (audit programme 2026, 3.6) : genSymetrieCentraleDistance a été
+// retirée de ce chapitre de révision. Ce chapitre se présente comme un
+// rappel des bases de 6e, mais la symétrie centrale (« demi-tour ») est en
+// réalité un objectif NOUVEAU de 5e (« Définir le demi-tour, ou symétrie
+// centrale. Connaitre les propriétés du demi-tour »), pas un prérequis
+// acquis en 6e (où l'on travaille la symétrie axiale). L'exercice de
+// conservation des distances par symétrie centrale est déjà couvert
+// correctement, en tant que notion 5e à part entière, par
+// genSymetriqueConservationLongueur dans symetrie-centrale-parallelogrammes.js.
 
 // ---------- 17. Multiples et diviseurs ----------
 function genMultipleOuDiviseur() {
@@ -426,7 +420,6 @@ const GENERATORS = [
   genMesurerAngle,
   genPerimetreRectangle,
   genAireRectangle,
-  genSymetrieCentraleDistance,
   genMultipleOuDiviseur,
   genVocabulairePerimetreAire,
 ];

@@ -2821,3 +2821,46 @@ Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TO
 Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+## 2026-08-07 — Phase 0 : mise en conformité 5e avec le nouveau programme 2026 (lot 2)
+
+Suite du lot 1 (voir entrée précédente), correction de 2 fichiers
+supplémentaires identifiés par l'audit officiel de la classe de 5e.
+
+**`src/chapters/divisibilite-fractions.js`** :
+- `genMosaiqueCarreauxPgcd` : retrait du sigle « PGCD » de l'étape de
+  correction (n'apparaît nulle part dans le programme officiel du cycle 4,
+  à aucun niveau) — remplacé par une formulation en langage courant
+  (« on cherche le plus grand diviseur commun... »), le calcul reste
+  identique.
+- `genAdditionnerFractionsDenominateursDifferentsLCM` et
+  `genSoustraireFractionsDenominateursDifferentsLCM` : retrait du sigle
+  « PPCM » des étapes de correction, remplacé par « dénominateur commun ».
+- `genProblemeSegmentPointFractionAB` : fractions p/q limitées à des cas
+  simples (unitaires ou proches) plutôt que des p/q quelconques, pour rester
+  strictement dans le cadre de l'automatisme officiel 5e (« prendre une
+  fraction simple d'un nombre »).
+
+**`src/chapters/reviser-les-bases-cinquieme.js`** : retrait de
+`genSymetrieCentraleDistance`. Ce chapitre se présente comme un rappel des
+bases de 6e, mais la symétrie centrale (« demi-tour ») est en réalité un
+objectif nouveau de 5e, pas un prérequis acquis en 6e. La notion est déjà
+couverte correctement, en tant que notion 5e à part entière, par
+`genSymetriqueConservationLongueur` dans
+`symetrie-centrale-parallelogrammes.js` — pas de migration nécessaire,
+seulement un retrait pour éviter la confusion « déjà acquis en 6e ».
+
+**Vérifications effectuées :**
+- Les deux fichiers testés individuellement (500 et 400 exercices générés
+  par script Node) : aucun crash, aucune réponse `NaN`.
+- Recherche exhaustive confirmée : plus aucune occurrence de « PGCD » ou
+  « PPCM » dans le texte affiché à l'écran ; plus aucune référence à
+  `genSymetrieCentraleDistance` dans les fichiers 5e (la fonction homonyme
+  de `reviser-les-bases-quatrieme.js`, propre à la 4e, n'est pas concernée).
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

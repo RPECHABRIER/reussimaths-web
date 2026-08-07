@@ -123,7 +123,11 @@ function genPartageEquitableAvecReste() {
   };
 }
 
-// ---------- 4. Mosaïque de carreaux carrés (PGCD contextualisé) ----------
+// ---------- 4. Mosaïque de carreaux carrés (diviseur commun contextualisé) ----------
+// NOTE (audit programme 2026, 3.1) : le sigle « PGCD » n'apparaît nulle part
+// dans le programme officiel du cycle 4 — retiré de l'étape de correction,
+// remplacé par une formulation en langage courant (« plus grand diviseur
+// commun », sans le nommer comme technique installée).
 function genMosaiqueCarreauxPgcd() {
   const g = pick([2, 3, 4, 5, 6]);
   const longueur = g * randInt(3, 10);
@@ -134,7 +138,7 @@ function genMosaiqueCarreauxPgcd() {
     chapter: "Divisibilité, fractions — Multiples et diviseurs",
     prompt: `Un rectangle de ${longueur} cm sur ${largeur} cm doit être entièrement pavé avec des carreaux carrés identiques, sans découpe. Quelle est la plus grande taille possible pour le côté d'un carreau, en cm ?`,
     answer: côté,
-    steps: [{ type: "regle", text: `Le côté du carreau doit être un diviseur commun à ${longueur} et ${largeur}. Le plus grand est le PGCD(${longueur}, ${largeur}) = ${côté}.` }],
+    steps: [{ type: "regle", text: `On cherche le plus grand diviseur commun à ${longueur} et ${largeur}, en essayant les diviseurs possibles : c'est ${côté}.` }],
   };
 }
 
@@ -379,6 +383,10 @@ function genRangerFractionsCroissantQCM() {
 }
 
 // ---------- 18. Additionner deux fractions (dénominateurs différents) ----------
+// NOTE (audit programme 2026, 3.2) : le sigle « PPCM » n'apparaît nulle part
+// dans le programme officiel du cycle 4 — retiré des étapes de correction
+// (ici et dans genSoustraireFractionsDenominateursDifferentsLCM), remplacé
+// par « dénominateur commun » en langage courant (le calcul reste correct).
 function genAdditionnerFractionsDenominateursDifferentsLCM() {
   let b, d;
   do {
@@ -397,7 +405,7 @@ function genAdditionnerFractionsDenominateursDifferentsLCM() {
     prompt: `\\(\\dfrac{${numA}}{${b}} + \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      { type: "calcul", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `On cherche un dénominateur commun à ${b} et ${d} : ${L}.` },
       { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
       { type: "calcul", text: `${newNumA} + ${newNumD} = ${answer}` },
     ],
@@ -429,7 +437,7 @@ function genSoustraireFractionsDenominateursDifferentsLCM() {
     prompt: `\\(\\dfrac{${numA}}{${b}} - \\dfrac{${numD}}{${d}} = \\dfrac{?}{${L}}\\) — quel est ce numérateur ?`,
     answer,
     steps: [
-      { type: "calcul", text: `Dénominateur commun : PPCM(${b}, ${d}) = ${L}.` },
+      { type: "calcul", text: `On cherche un dénominateur commun à ${b} et ${d} : ${L}.` },
       { type: "calcul", text: `\\dfrac{${numA}}{${b}} = \\dfrac{${newNumA}}{${L}}\\ \\text{et}\\ \\dfrac{${numD}}{${d}} = \\dfrac{${newNumD}}{${L}}` },
       { type: "calcul", text: `${newNumA} - ${newNumD} = ${answer}` },
     ],
@@ -480,9 +488,14 @@ function genProblemeSachetsFractionSomme() {
 }
 
 // ---------- 22. Problème : segment et point à une fraction donnée (figure) ----------
+// NOTE (audit programme 2026, 3.7) : l'automatisme officiel de 5e prévoit de
+// « prendre une fraction simple d'un nombre » (fractions unitaires : le
+// tiers, le quart...). Fractions p/q limitées à des cas simples (unitaires
+// ou proches, p ≤ 2) plutôt que des p/q quelconques, pour rester strictement
+// dans le cadre de l'automatisme.
 function genProblemeSegmentPointFractionAB() {
   const q = pick([3, 4, 5, 6]);
-  const p = randInt(1, q - 1);
+  const p = pick([1, Math.min(2, q - 1)]);
   const m = randInt(4, 12);
   const ab = q * m;
   const ac = p * m;

@@ -1,5 +1,142 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-07 — Phase 1 : audit programme 2026 (cycle 3, arrêté du 10-4-2025) du niveau 6e
+
+Reprise d'une tâche interrompue : une session précédente avait déjà mené cet
+audit mais a atteint sa limite d'usage en cours d'édition, sans qu'aucune de
+ses modifications n'atteigne jamais le dépôt Git (HEAD était resté à
+`cf72b1f`, le dernier commit de la Phase 0, arbre de travail propre). Cette
+session refait l'audit intégralement depuis les fichiers actuels, sans
+supposer qu'un travail partiel existait déjà.
+
+Périmètre : uniquement les 5 fichiers 6e listés par la consigne —
+`nombres-decimaux.js`, `fractions.js`, `grandeurs-mesures.js`,
+`distances-symetries.js`, `angles.js` — audités contre le texte officiel du
+programme de cycle 3 (arrêté du 10-4-2025, BO n°16 du 17-4-2025), sections
+sixième uniquement. `organisation-gestion-donnees.js` et
+`proportionnalite.js` ont été volontairement laissés de côté (texte
+programme non disponible pour ce domaine lors de cet audit) — à traiter
+dans une session future. Les 2 anomalies déjà signalées pour Première non
+spé restent également en attente (décision de Romain de les différer).
+
+**`src/chapters/grandeurs-mesures.js` — hors-programme corrigé (formule de
+volume) :** `genVolumePave` calculait le volume d'un pavé droit via la
+formule longueur × largeur × hauteur appliquée à des dimensions
+quelconques en cm. Le programme officiel de 6e précise explicitement que le
+volume "se travaille en lien avec les problèmes de dénombrement
+d'assemblages de cubes" — la formule générale L×l×h pour un pavé
+quelconque est un contenu de 5e (confirmé par l'existence d'un générateur
+de dénombrement de cubes distinct, `genProblemeVolumeCubesSimple`, dans
+`configurations-geometriques.js`, fichier 6e hors périmètre de cet audit
+mais qui suit déjà la bonne méthode). Générateur réécrit pour rester sur un
+assemblage de petits cubes de 1 cm d'arête (donc de 1 cm³ chacun) à
+dénombrer, avec un lien explicite vers l'unité cm³ et une variante de
+comparaison de deux volumes, sans dupliquer purement l'autre fichier —
+objectifs officiels "connaître l'unité cm³" et "comparer des volumes".
+
+**`src/chapters/angles.js` — hors-programme corrigé (angle extérieur) :**
+`genAngleExterieurTriangle` a été retiré. Même constat que celui déjà fait
+lors d'un audit précédent pour le cycle 4 dans `triangles.js` (5e) : le
+générateur y avait été retiré avec la note "l'expression angle extérieur
+n'apparaît nulle part dans le programme officiel (5e/4e/3e)". Cette notion
+n'a donc pas seulement été introduite trop tôt en 6e : elle n'existe sous
+ce nom dans aucun texte réglementaire du collège.
+
+**`src/chapters/angles.js` — contenu officiel ajouté (angle plein) :** le
+vocabulaire officiel 6e liste "angle plein" (360°) aux côtés de nul, aigu,
+droit, obtus, plat — absent de tous les générateurs. Ajouté dans
+`genClassifierAngleMulti` (affirmations vrai/faux textuelles, sans figure —
+un angle plein serait visuellement indiscernable d'un angle nul avec le
+tracé actuel à deux demi-droites depuis un point, donc volontairement pas
+ajouté à `genNatureAngleQCM` qui affiche une figure).
+
+**`src/chapters/angles.js` — bug corrigé au passage (sans lien avec la
+conformité programme) :** `genClassifierAngleMulti` tirait la véracité de
+chaque affirmation indépendamment au hasard, ce qui pouvait produire 0
+affirmation vraie parmi les 4 choisies (environ 32 % des cas avant même
+l'ajout de l'angle plein) pour un exercice "coche les affirmations vraies"
+— exercice sans réponse possible. Réécrit pour garantir qu'au moins une
+affirmation est vraie par construction (on choisit d'abord combien
+d'affirmations seront vraies puis on en déduit les énoncés, plutôt que
+l'inverse).
+
+**`src/chapters/distances-symetries.js` — contenu officiel ajouté
+(médiatrices concourantes / cercle circonscrit) :** le programme 6e liste
+explicitement, dans le domaine Triangles : "savoir que les médiatrices d'un
+triangle sont concourantes" et "connaître... le cercle circonscrit à un
+triangle" — absent de tous les fichiers 6e existants avant cet ajout.
+Nouveau générateur `genMediatricesConcourantesTriangle` (teste
+l'équidistance du point de concours aux trois sommets), placé dans la
+section Médiatrice de ce fichier — thématiquement le bon emplacement,
+puisque ce fichier couvre déjà tout le Mémo 3 "médiatrices".
+
+**`src/chapters/nombres-decimaux.js` — bugs corrigés au passage (sans lien
+avec la conformité programme, trouvés lors de la vérification KaTeX) :**
+- `genProblemeArgentSuffisant` : un step contenait `\times` (donc
+  auto-enrobé intégralement en LaTeX par `MathText.jsx` faute de
+  délimiteurs `\( \)` explicites — voir ce composant pour la règle
+  d'auto-enrobage) suivi du symbole "€", non reconnu par KaTeX en mode
+  math (erreur stricte `unknownSymbol`). Le calcul est maintenant
+  explicitement délimité par `\( \)`, laissant "€." en texte normal en
+  dehors du bloc mathématique.
+- `genProblemeVraiFauxAffirmations` et `genProblemeRecetteSuffisante` :
+  même famille de bug que celui corrigé dans `angles.js` ci-dessus — les
+  affirmations "coche les vraies" étaient tirées avec des seuils/quantités
+  indépendants pouvant toutes tomber fausses simultanément. Corrigé avec la
+  même logique de régénération déjà utilisée dans ce fichier pour
+  `genProblemeRubanRestant` (on relance le générateur si aucune affirmation
+  n'est vraie), plutôt que de réécrire toute la logique de tirage.
+
+**`src/chapters/nombres-decimaux.js` et `src/chapters/fractions.js` — déjà
+conformes, aucun changement de contenu programme :** audit complet des
+sections "Les nombres entiers et décimaux" et "Les fractions" (dont
+Pourcentages) du programme 6e : rien d'hors-programme trouvé, et rien
+d'officiel manquant qui ne soit déjà couvert ailleurs pour ces deux
+fichiers précisément :
+  - la multiplication de deux décimaux, la division décimale/euclidienne et
+    l'arrondi relèvent du chapitre `operations-decimaux.js`, prévu au
+    sommaire (`plannedChapters.js`, niveau sixième, order 2) mais pas
+    encore écrit — donc hors périmètre de ce fichier ;
+  - le calcul d'un pourcentage à partir d'un rapport partie/tout ("calculer
+    une proportion... et l'exprimer en pourcentage") existe déjà dans
+    `genPourcentageSousGroupeTableau`, `organisation-gestion-donnees.js`,
+    fichier 6e hors périmètre de cet audit.
+
+**Vérification :** les 4 fichiers modifiés (`nombres-decimaux.js`,
+`grandeurs-mesures.js`, `distances-symetries.js`, `angles.js`) et
+`fractions.js` (audité sans modification, testé quand même pour
+confirmation) testés individuellement par script Node ad hoc (8400
+exercices générés par fichier, toutes difficultés confondues) :
+`bad=0 rawDecimal=0` partout. Tout le LaTeX extrait des prompts/steps/
+options (délimité explicitement `\( \)`/`\[ \]`, ou auto-enrobé comme le
+fait réellement `src/components/MathText.jsx` pour toute chaîne contenant
+une commande LaTeX sans délimiteur) revérifié avec KaTeX en mode strict :
+`katexErrors=0` partout — seule la classe d'avertissement non bloquante
+`unicodeTextInMathMode` (déjà omniprésente et acceptée dans tout le dépôt,
+puisque `MathText.jsx` n'impose aucune option `strict` à KaTeX en
+production) a été ignorée dans le test, pas les vraies erreurs comme le bug
+€ ci-dessus. Scripts de test non conservés dans le dépôt, comme en Phase 0
+(aucun `test-*.mjs` dans l'historique Git).
+
+Build (`npx vite build`) validé sans erreur (1799 modules transformés,
+bundle généré avec succès) — vérifié via un `--outDir` alternatif car le
+dossier `dist/` déjà présent sur ce poste de travail a un souci de
+permissions sans rapport avec ce changement (`EPERM` lors du nettoyage du
+dossier de sortie, présent avant toute modification de cette session).
+
+Commit : `9aed59d` — un seul commit pour l'ensemble des 4 fichiers modifiés
+(même granularité "un commit par niveau/lot" que la Phase 0).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+---
+
+Ceci clôt l'audit programme 2026 du niveau 6e pour les 5 fichiers listés.
+Prochaine étape suggérée : `organisation-gestion-donnees.js` et
+`proportionnalite.js` (6e), une fois le texte programme correspondant
+disponible.
+
+
 ## 2026-08-07 — Phase 0 : mise en conformité Première technologique avec le nouveau programme 2026
 
 Suite de l'audit programme 2026 (arrêté du 26-2-2026, BO n°14 du 2 avril

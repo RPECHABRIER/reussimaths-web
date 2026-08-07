@@ -2613,3 +2613,75 @@ vérifié) vers les deux copies Application TOP.
 Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+## 2026-08-07 — Audit du chapitre Proportionnalité (6e) contre le programme 2025
+
+Suite au point en suspens soulevé dans la correction précédente : audit demandé
+par Romain ("oui tu peux t'y atteler") sur la cohérence entre `proportionnalite.js`
+(6e) et le nouveau programme 2025 (BO du 17 avril 2025, cycle 3), en particulier
+sur la place du "coefficient de proportionnalité".
+
+**Recherche complémentaire.** Au-delà du texte officiel déjà consulté, lecture
+d'une ressource académique détaillée (Académie de Bordeaux, "Proportionnalité
+en 6e") qui explicite la progressivité voulue par le programme : 3 définitions
+de plus en plus précises, introduites dans l'ordre — (1) linéarité (« si l'une
+double, l'autre double »), (2) retour à l'unité, (3) coefficient de
+proportionnalité comme raccourci une fois les deux premières notions
+maîtrisées. Le texte précise aussi explicitement qu'un tableau de
+proportionnalité ne doit "jamais" être une liste de nombres seule, mais
+toujours être associé à des grandeurs nommées avec leur unité.
+
+**Deux défauts trouvés dans les générateurs existants, corrigés :**
+
+1. Trois générateurs (`genCoefficientDeProportionnalite`,
+   `genEstTableauProportionnel`, `genCompleterTableauProportionnaliteManquant`)
+   présentaient des tableaux de nombres bruts, sans aucune grandeur nommée ni
+   unité — contraire à l'instruction explicite du programme. Corrigé : ajout
+   d'un ensemble de contextes (`TABLE_CONTEXTS` — masse de pommes/prix, essence/
+   prix, stylos/prix, durée/pièces produites, billets de cinéma/prix), chaque
+   ligne du tableau affichant désormais le nom de la grandeur et son unité.
+
+2. `genCoefficientDeProportionnalite` était tagué "facile", donc proposé dès le
+   début de l'apprentissage — alors que le programme introduit le vocabulaire
+   "coefficient" en dernier, après linéarité et retour à l'unité. Reclassé en
+   "standard". Le générateur `genCompleterTableauProportionnaliteManquant`
+   (resté "facile") a aussi été reformulé pour ne plus employer le mot
+   "coefficient" dans son étape de correction, restant sur un raisonnement de
+   type retour à l'unité/linéarité ("on cherche par quel nombre on multiplie
+   toujours...").
+
+**Carte mentale réorganisée** en conséquence : la branche "Trouver une valeur
+manquante" présente maintenant en premier la linéarité et le retour à l'unité
+(avec un exemple recette : 3 pers. → 150 g ⇒ 1 pers. → 50 g ⇒ 5 pers. → 250 g),
+et une branche séparée "Le coefficient de proportionnalité" vient ensuite,
+explicitement présentée comme une méthode plus rapide une fois les précédentes
+comprises — reflet fidèle de la progression officielle. La branche
+"Reconnaître la proportionnalité" gagne un item rappelant que les tableaux
+doivent toujours nommer leurs grandeurs avec leur unité.
+
+**Formule LaTeX corrigée en cours de vérification** : la première version de
+l'exemple linéarité/retour à l'unité utilisait le symbole « € » à l'intérieur
+d'un bloc `\(\)` — testé avec `katex.renderToString(..., {strict: "error"})`,
+qui a révélé que KaTeX n'a pas de métriques de caractère pour « € » (avertissement
+"No character metrics"). Remplacé par un exemple sans symbole monétaire
+(recette : personnes/grammes), qui passe la vérification stricte sans aucun
+avertissement — cohérent avec la convention déjà en place dans le reste du
+fichier (les montants en € sont toujours affichés en texte brut, hors des
+délimiteurs `\( \)`, jamais à l'intérieur d'un `\text{}`).
+
+**Vérifications effectuées avant intégration :**
+- Les 3 formules LaTeX modifiées/ajoutées passent `katex.renderToString` en
+  mode strict ("error"), sans avertissement.
+- Génération de 400 exercices aléatoires du chapitre : aucune réponse `NaN`,
+  les 17 générateurs s'exécutent tous sans erreur.
+- Inspection manuelle de plusieurs exemples générés pour les 3 générateurs
+  modifiés : grandeurs et unités bien affichées, calculs corrects (ex. tableau
+  "Durée (en min) / Nombre de pièces produites" avec coefficient 3 correctement
+  identifié comme proportionnel).
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichier synchronisé (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

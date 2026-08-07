@@ -47,6 +47,22 @@ function shuffleStatements(items) {
   return { options, answer };
 }
 
+// Contextes utilisés pour les tableaux de proportionnalité (exercices 2, 3, 4
+// ci-dessous). Le programme 2025 précise explicitement qu'un tableau de
+// proportionnalité doit toujours être rattaché à un contexte et à des
+// grandeurs nommées, avec leur unité — jamais une simple liste de nombres
+// sans nom ("il ne s'agira donc jamais de tableaux de listes de nombres
+// proportionnelles sans qu'elles soient rattachées à un contexte et à des
+// grandeurs"). D'où ces libellés systématiquement affichés au-dessus de
+// chaque ligne du tableau.
+const TABLE_CONTEXTS = [
+  { g1: "Masse de pommes (en kg)", g2: "Prix (en €)" },
+  { g1: "Quantité d'essence (en L)", g2: "Prix (en €)" },
+  { g1: "Nombre de stylos", g2: "Prix (en €)" },
+  { g1: "Durée (en min)", g2: "Nombre de pièces produites" },
+  { g1: "Nombre de billets de cinéma", g2: "Prix (en €)" },
+];
+
 // =========================== Mémo 2 : résoudre un problème de proportionnalité ===========================
 
 // ---------- 1. Quatrième proportionnelle (contextes variés) ----------
@@ -78,25 +94,33 @@ function genQuatriemeProportionnelleGenerique() {
 }
 
 // ---------- 2. Calculer un coefficient de proportionnalité ----------
+// Vocabulaire "coefficient" volontairement réservé à un niveau standard (et
+// non facile) : le programme 2025 introduit cette notion progressivement,
+// après la linéarité et le retour à l'unité (voir la carte mentale). Tableau
+// toujours rattaché à un contexte avec grandeurs nommées (voir TABLE_CONTEXTS).
 function genCoefficientDeProportionnalite() {
   const k = pick([0.5, 1.5, 2, 2.5, 3, 4, 5]);
   const a1 = randInt(2, 10);
   const b1 = roundTo(a1 * k, 2);
   const a2 = randInt(2, 10);
   const b2 = roundTo(a2 * k, 2);
+  const ctx = pick(TABLE_CONTEXTS);
   return {
     type: "numeric",
     chapter: "Proportionnalité — Coefficient de proportionnalité",
-    prompt: `Un tableau de proportionnalité donne : \\(${a1} \\to ${fr(b1)}\\) et \\(${a2} \\to ${fr(b2)}\\). Quel est le coefficient de proportionnalité (pour passer de la première ligne à la deuxième) ?`,
+    prompt: `Ce tableau de proportionnalité donne :\\\\ ${ctx.g1} : \\(${a1} \\quad ${a2}\\)\\\\ ${ctx.g2} : \\(${fr(b1)} \\quad ${fr(b2)}\\)\\\\ Quel est le coefficient de proportionnalité (le nombre par lequel on multiplie une valeur de la première ligne pour obtenir celle de la deuxième ligne) ?`,
     answer: k,
     steps: [{ type: "calcul", text: `${fr(b1)} \\div ${a1} = ${fr(k)}` }],
   };
 }
 
 // ---------- 3. Reconnaître un tableau de proportionnalité ----------
+// Tableau toujours rattaché à un contexte avec grandeurs nommées, jamais une
+// liste de nombres seule (voir TABLE_CONTEXTS).
 function genEstTableauProportionnel() {
   const isProportional = Math.random() < 0.5;
   const k = pick([0.5, 1.5, 2, 2.5, 3, 4]);
+  const ctx = pick(TABLE_CONTEXTS);
   const tops = shuffle(Array.from({ length: 8 }, (_, i) => i + 2)).slice(0, 3).sort((a, b) => a - b);
   let bottoms = tops.map((t) => roundTo(t * k, 2));
   if (!isProportional) {
@@ -106,7 +130,7 @@ function genEstTableauProportionnel() {
   return {
     type: "qcm",
     chapter: "Proportionnalité — Reconnaître un tableau",
-    prompt: `Ce tableau est-il un tableau de proportionnalité ?\\\\ \\(${tops.join(" \\quad ")}\\)\\\\ \\(${bottoms.map(fr).join(" \\quad ")}\\)`,
+    prompt: `Ce tableau est-il un tableau de proportionnalité ?\\\\ ${ctx.g1} : \\(${tops.join(" \\quad ")}\\)\\\\ ${ctx.g2} : \\(${bottoms.map(fr).join(" \\quad ")}\\)`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [{ type: "calcul", text: `On calcule les rapports : ${tops.map((t, i) => `${fr(bottoms[i])} \\div ${t} = ${fr(roundTo(bottoms[i] / t, 3))}`).join(" ; ")}.` }],
@@ -114,6 +138,11 @@ function genEstTableauProportionnel() {
 }
 
 // ---------- 4. Compléter une valeur manquante dans un tableau de proportionnalité ----------
+// Tableau toujours rattaché à un contexte avec grandeurs nommées ; étape
+// reformulée sans le mot "coefficient" (réservé à genCoefficientDeProportionnalite,
+// de niveau standard) pour rester sur le raisonnement "on multiplie toujours
+// par le même nombre" (linéarité / retour à l'unité), conforme à la
+// progressivité voulue par le programme 2025.
 function genCompleterTableauProportionnaliteManquant() {
   const k = pick([0.5, 1.5, 2, 2.5, 3, 4, 5]);
   const a1 = randInt(2, 10);
@@ -121,13 +150,14 @@ function genCompleterTableauProportionnaliteManquant() {
   const a2 = randInt(11, 25);
   const b2 = roundTo(a2 * k, 2);
   const a3 = randInt(2, 10);
+  const ctx = pick(TABLE_CONTEXTS);
   return {
     type: "numeric",
     chapter: "Proportionnalité — Compléter un tableau",
-    prompt: `Voici un tableau de proportionnalité :\\\\ \\(${a1} \\quad ${a2} \\quad ${a3}\\)\\\\ \\(${fr(b1)} \\quad ${fr(b2)} \\quad ?\\)\\\\ Quelle est la valeur manquante ?`,
+    prompt: `Voici un tableau de proportionnalité :\\\\ ${ctx.g1} : \\(${a1} \\quad ${a2} \\quad ${a3}\\)\\\\ ${ctx.g2} : \\(${fr(b1)} \\quad ${fr(b2)} \\quad ?\\)\\\\ Quelle est la valeur manquante ?`,
     answer: roundTo(a3 * k, 2),
     steps: [
-      { type: "calcul", text: `Coefficient : ${fr(b1)} \\div ${a1} = ${fr(k)}` },
+      { type: "calcul", text: `On cherche par quel nombre on multiplie toujours pour passer de la première grandeur à la deuxième : ${fr(b1)} \\div ${a1} = ${fr(k)}` },
       { type: "calcul", text: `${a3} \\times ${fr(k)} = ${fr(roundTo(a3 * k, 2))}` },
     ],
   };
@@ -450,7 +480,10 @@ const GENERATORS = [
 ];
 
 const DIFFICULTY = {
-  genCoefficientDeProportionnalite: "facile",
+  // "Coefficient" est un vocabulaire introduit progressivement, après la
+  // linéarité et le retour à l'unité (voir commentaire au-dessus du
+  // générateur) — d'où "standard" et non "facile".
+  genCoefficientDeProportionnalite: "standard",
   genEstTableauProportionnel: "facile",
   genCompleterTableauProportionnaliteManquant: "facile",
   genQuatriemeProportionnelleGenerique: "standard",
@@ -489,6 +522,17 @@ export default {
     order: 10,
     // Onglet "Cours" — voir le commentaire équivalent dans
     // src/chapters/nombres-decimaux.js.
+    // Carte mentale organisée selon la progressivité voulue par le programme
+    // 2025 (BO du 17 avril 2025, cycle 3) : la proportionnalité y est
+    // enseignée en 3 définitions de plus en plus précises — d'abord la
+    // linéarité (doubler/tripler...), puis le retour à l'unité, et enfin,
+    // seulement en dernier lieu, le coefficient de proportionnalité comme
+    // raccourci pratique. Le programme précise aussi qu'un tableau de
+    // proportionnalité doit toujours être associé à des grandeurs nommées
+    // avec leur unité, jamais une liste de nombres seule — d'où l'item dédié
+    // dans la première branche. Le "produit en croix" reste volontairement
+    // absent : il est explicitement exclu du programme de 6e ("la technique
+    // du « produit en croix » n'est pas enseignée").
     cours: {
       mindMap: {
         title: "Proportionnalité",
@@ -496,27 +540,24 @@ export default {
           {
             title: "Reconnaître la proportionnalité",
             items: [
-              "Deux grandeurs sont proportionnelles si on passe de l'une à l'autre en multipliant TOUJOURS par le même nombre.",
-              "Dans un tableau de proportionnalité, chaque colonne se déduit de la précédente par ce même coefficient.",
+              "Deux grandeurs sont proportionnelles si, quand l'une est multipliée par un nombre, l'autre est multipliée par ce même nombre (si l'une double, l'autre double ; si l'une est divisée par 2, l'autre aussi).",
+              "Beaucoup de situations qui semblent proportionnelles ne le sont pas (ex. l'âge et la pointure d'un enfant) : il faut toujours vérifier.",
+              "Dans un tableau, on nomme toujours chaque grandeur avec son unité (ex. « Masse en kg », « Prix en € ») : jamais une liste de nombres seule.",
             ],
           },
           {
-            title: "Coefficient de proportionnalité",
-            items: [
-              "C'est le nombre par lequel on multiplie une grandeur pour obtenir l'autre.",
-              "On le retrouve en divisant une valeur d'arrivée par la valeur de départ correspondante.",
-            ],
-          },
-          {
-            // Volontairement PAS "le produit en croix" (technique explicitement
-            // exclue du programme officiel de 6e, BO du 17 avril 2025 — "la
-            // technique du produit en croix n'est pas enseignée") : on reste sur
-            // le raisonnement par coefficient, tel qu'utilisé par les exercices
-            // de ce chapitre (voir genCompleterTableauProportionnaliteManquant).
             title: "Trouver une valeur manquante",
             items: [
-              "Une fois le coefficient trouvé, on multiplie la valeur de départ par ce coefficient pour obtenir la valeur d'arrivée correspondante.",
-              "On peut aussi raisonner directement, sans calculer le coefficient : si le nombre de départ est multiplié par 2, le nombre d'arrivée l'est aussi (linéarité), ou passer par la valeur d'une seule unité (retour à l'unité).",
+              "Méthode par linéarité : si la quantité de départ est multipliée (ou divisée) par un nombre, la quantité d'arrivée l'est aussi par ce même nombre.",
+              "Méthode du retour à l'unité : on calcule d'abord la valeur pour UNE unité (ex. le prix d'1 kg), puis on multiplie par la quantité voulue.",
+            ],
+            formula: "\\(3\\text{ pers.} \\to 150\\text{ g} \\ \\Rightarrow\\ 1\\text{ pers.} \\to 50\\text{ g} \\ \\Rightarrow\\ 5\\text{ pers.} \\to 250\\text{ g}\\)",
+          },
+          {
+            title: "Le coefficient de proportionnalité",
+            items: [
+              "Une fois les méthodes précédentes bien comprises, on peut aller plus vite avec le coefficient de proportionnalité : le nombre par lequel on multiplie toujours pour passer d'une grandeur à l'autre.",
+              "On le trouve en divisant une valeur d'arrivée par la valeur de départ correspondante ; ensuite, on multiplie n'importe quelle valeur de départ par ce coefficient.",
             ],
             formula: "\\(\\text{valeur d'arrivée} = \\text{valeur de départ} \\times \\text{coefficient}\\)",
           },

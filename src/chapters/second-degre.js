@@ -7,6 +7,20 @@
 // Convention LaTeX : tout passage mathématique est entouré de \( ... \)
 // (rendu ensuite en jolie notation par le composant <MathText />, voir
 // src/components/MathText.jsx). Le reste du texte reste du français normal.
+//
+// NOTE (audit programme 2026) : ajout d'exercices de modélisation
+// contextualisée (aire, trajectoire, bénéfice) — genModelisationAireNumeric,
+// genModelisationTrajectoireNumeric, genModelisationBeneficeNumeric.
+//
+// SIGNALEMENT À ROMAIN (confiance faible, non implémenté) : l'audit a aussi
+// évoqué une possible extension vers les « polynômes de degré 3 » pour ce
+// chapitre, mais cette source n'a pas pu être confirmée avec certitude dans
+// le texte réglementaire officiel (BO n°14 du 2 avril 2026). Le programme de
+// Première Spé porte historiquement sur le second degré uniquement ; les
+// polynômes de degré 3 relèvent plutôt de l'étude de fonctions via la
+// dérivation (déjà couverte dans derivation-premiere-spe.js et
+// variations-courbes-premiere-spe.js), pas d'un chapitre dédié. Vérification
+// humaine du texte officiel nécessaire avant toute implémentation.
 // ---------------------------------------------------------------------------
 
 // ---------- Helpers ----------
@@ -304,6 +318,61 @@ function genConstructionRacines() {
   };
 }
 
+// ---------- Modélisation contextualisée ----------
+
+function genModelisationAireNumeric() {
+  const S = 2 * randInt(10, 30); // somme largeur + longueur (pair pour un sommet entier)
+  return {
+    type: "numeric",
+    chapter: "Second degré — Modélisation (aire)",
+    prompt: `Un rectangle a pour largeur \\(x\\) mètres et pour longueur \\((${S} - x)\\) mètres (la somme largeur + longueur vaut ${S} m, un périmètre fixé). Son aire est modélisée par \\(A(x) = x(${S} - x)\\), pour \\(x \\in ]0 ; ${S}[\\). Pour quelle valeur de \\(x\\) l'aire est-elle maximale ?`,
+    answer: S / 2,
+    steps: [
+      { type: "regle", text: `\\text{En développant, } A(x) = ${quadL(-1, S, 0)}, \\text{ une fonction du second degré avec } a = -1 < 0 : \\text{le maximum est atteint au sommet de la parabole, d'abscisse } \\alpha = \\dfrac{-b}{2a}.` },
+      { type: "calcul", text: `\\alpha = \\dfrac{-${S}}{2 \\times (-1)} = ${S / 2}` },
+      { type: "resultat", text: `\\text{L'aire est maximale pour } x = ${S / 2} \\text{ m (le rectangle est alors un carré).}` },
+    ],
+  };
+}
+
+function genModelisationTrajectoireNumeric() {
+  const a = nonZero(1, 3);
+  const r2 = 2 * randInt(2, 6); // instant où le projectile retombe au sol (pair pour un sommet entier)
+  const b = a * r2;
+  return {
+    type: "numeric",
+    chapter: "Second degré — Modélisation (trajectoire)",
+    prompt: `Un projectile est lancé depuis le sol. Sa hauteur (en mètres), \\(t\\) secondes après le lancer, est modélisée par \\(h(t) = ${quadL(-a, b, 0)}\\), pour \\(t \\geq 0\\). À quel instant \\(t\\) la hauteur du projectile est-elle maximale ?`,
+    answer: r2 / 2,
+    steps: [
+      { type: "donnee", text: `\\text{Le projectile part du sol (} h(0)=0\\text{) et y retombe en } t = ${r2} \\text{ s (deuxième racine de } h\\text{).}` },
+      { type: "regle", text: `\\text{Une parabole est symétrique par rapport à son sommet : l'instant de hauteur maximale est le milieu des deux instants où } h(t) = 0.` },
+      { type: "resultat", text: `t = \\dfrac{0 + ${r2}}{2} = ${r2 / 2} \\text{ s}` },
+    ],
+  };
+}
+
+function genModelisationBeneficeNumeric() {
+  const a = nonZero(1, 3);
+  let r1 = randInt(1, 10);
+  let r2 = randInt(1, 10);
+  while (r2 === r1) r2 = randInt(1, 10);
+  const lo = Math.min(r1, r2);
+  const hi = Math.max(r1, r2);
+  const b = a * (r1 + r2);
+  const c = -a * r1 * r2;
+  return {
+    type: "numeric",
+    chapter: "Second degré — Modélisation (bénéfice)",
+    prompt: `Une entreprise modélise son bénéfice (en milliers d'euros) en fonction du nombre \\(x\\) (en centaines) d'objets vendus par \\(B(x) = ${quadL(-a, b, c)}\\). Les deux seuils de rentabilité (les valeurs de \\(x\\) pour lesquelles \\(B(x) = 0\\)) sont ${lo} et ${hi}. Donne la plus petite valeur de \\(x\\) à partir de laquelle l'entreprise est rentable (bénéfice positif).`,
+    answer: lo,
+    steps: [
+      { type: "regle", text: `\\text{Le coefficient dominant est négatif (} a = -${a} < 0\\text{), donc } B(x) \\text{ est positif entre les deux racines et négatif à l'extérieur.}` },
+      { type: "resultat", text: `\\text{L'entreprise est rentable pour } x \\in ]${lo} ; ${hi}[, \\text{ donc à partir de } x = ${lo}.` },
+    ],
+  };
+}
+
 // ---------- Banque fixe : exercices issus de sujets de bac ----------
 const FIXED_BANK = [
   {
@@ -419,6 +488,9 @@ const GENERATORS = [
   genFactorisationGenerale,
   genInequation,
   genConstructionRacines,
+  genModelisationAireNumeric,
+  genModelisationTrajectoireNumeric,
+  genModelisationBeneficeNumeric,
 ];
 
 function generate() {
@@ -430,7 +502,7 @@ export default {
   meta: {
     id: "second-degre",
     title: "Second degré",
-    description: "Discriminant, formes canonique/factorisée, résolution, inéquations, lecture de courbe.",
+    description: "Discriminant, formes canonique/factorisée, résolution, inéquations, lecture de courbe, modélisation contextualisée (aire, trajectoire, bénéfice).",
     pourquoi: "Étudier le second degré, c'est savoir trouver un maximum de profit, un minimum de coût, ou résoudre un problème d'optimisation.",
     level: "premiere-spe",
     free: true,

@@ -14,8 +14,15 @@
 //
 // Programme : cercle trigonométrique, radian, enroulement de la droite,
 // cosinus/sinus d'un nombre réel, valeurs remarquables, lien avec le triangle
-// rectangle. (Les dérivées de fonctions trigonométriques relèvent du
-// programme de Terminale.)
+// rectangle, formules d'addition et de duplication, résolution d'équations
+// trigonométriques cos(x)=a / sin(x)=a sur un intervalle. (Les dérivées de
+// fonctions trigonométriques relèvent du programme de Terminale.)
+//
+// NOTE (audit programme 2026) : ajout des formules d'addition/duplication
+// (genFormuleAdditionCosQCM, genFormuleAdditionSinQCM,
+// genFormuleDuplicationCosNumeric, genFormuleDuplicationSinNumeric) et de la
+// résolution d'équations trigonométriques (genResoudreEquationCosQCM,
+// genResoudreEquationSinQCM), deux écarts identifiés par l'audit officiel.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -308,6 +315,122 @@ function genLienTriangleRectangleQCM() {
   };
 }
 
+// ---------- 16. Formule d'addition : cos(a+b) ----------
+function genFormuleAdditionCosQCM() {
+  const correct = "\\cos(a)\\cos(b) - \\sin(a)\\sin(b)";
+  const distracteurs = shuffle([
+    "\\cos(a)\\cos(b) + \\sin(a)\\sin(b)",
+    "\\sin(a)\\cos(b) - \\cos(a)\\sin(b)",
+    "\\cos(a) + \\cos(b)",
+  ]).slice(0, 3);
+  return {
+    type: "qcm",
+    chapter: "Trigonométrie — Formules d'addition",
+    prompt: `Quelle est la formule correcte pour \\(\\cos(a+b)\\) ?`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [{ type: "regle", text: `\\text{Formule d'addition à connaître : } \\cos(a+b) = \\cos(a)\\cos(b) - \\sin(a)\\sin(b).` }],
+  };
+}
+
+// ---------- 17. Formule d'addition : sin(a+b) ----------
+function genFormuleAdditionSinQCM() {
+  const correct = "\\sin(a)\\cos(b) + \\cos(a)\\sin(b)";
+  const distracteurs = shuffle([
+    "\\sin(a)\\cos(b) - \\cos(a)\\sin(b)",
+    "\\cos(a)\\cos(b) - \\sin(a)\\sin(b)",
+    "\\sin(a) + \\sin(b)",
+  ]).slice(0, 3);
+  return {
+    type: "qcm",
+    chapter: "Trigonométrie — Formules d'addition",
+    prompt: `Quelle est la formule correcte pour \\(\\sin(a+b)\\) ?`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [{ type: "regle", text: `\\text{Formule d'addition à connaître : } \\sin(a+b) = \\sin(a)\\cos(b) + \\cos(a)\\sin(b).` }],
+  };
+}
+
+// ---------- 18. Formule de duplication : cos(2a) = cos²(a) - sin²(a) ----------
+function genFormuleDuplicationCosNumeric() {
+  const cas = pick(ANGLES_REMARQUABLES.filter((c) => c.degres === 30 || c.degres === 45 || c.degres === 60));
+  const angleRad = (cas.degres * Math.PI) / 180;
+  const answer = roundTo(Math.cos(2 * angleRad), 3);
+  return {
+    type: "numeric",
+    chapter: "Trigonométrie — Formules de duplication",
+    prompt: `On sait que \\(\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}\\) et \\(\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}\\). En utilisant la formule \\(\\cos(2a) = \\cos^2(a) - \\sin^2(a)\\), calcule \\(\\cos\\left(2 \\times ${cas.radLabel}\\right)\\) (valeur arrondie au millième).`,
+    answer,
+    tolerance: 0.001,
+    steps: [
+      { type: "regle", text: `\\text{Formule de duplication à connaître : } \\cos(2a) = \\cos^2(a) - \\sin^2(a).` },
+      { type: "resultat", text: `\\cos\\left(2 \\times ${cas.radLabel}\\right) \\approx ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 19. Formule de duplication : sin(2a) = 2 sin(a) cos(a) ----------
+function genFormuleDuplicationSinNumeric() {
+  const cas = pick(ANGLES_REMARQUABLES.filter((c) => c.degres === 30 || c.degres === 45 || c.degres === 60));
+  const angleRad = (cas.degres * Math.PI) / 180;
+  const answer = roundTo(Math.sin(2 * angleRad), 3);
+  return {
+    type: "numeric",
+    chapter: "Trigonométrie — Formules de duplication",
+    prompt: `On sait que \\(\\cos\\left(${cas.radLabel}\\right) = ${cas.cos}\\) et \\(\\sin\\left(${cas.radLabel}\\right) = ${cas.sin}\\). En utilisant la formule \\(\\sin(2a) = 2\\sin(a)\\cos(a)\\), calcule \\(\\sin\\left(2 \\times ${cas.radLabel}\\right)\\) (valeur arrondie au millième).`,
+    answer,
+    tolerance: 0.001,
+    steps: [
+      { type: "regle", text: `\\text{Formule de duplication à connaître : } \\sin(2a) = 2\\sin(a)\\cos(a).` },
+      { type: "resultat", text: `\\sin\\left(2 \\times ${cas.radLabel}\\right) \\approx ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 20. Résolution d'équation cos(x) = a sur un intervalle ----------
+function genResoudreEquationCosQCM() {
+  const cas = pick(ANGLES_REMARQUABLES.filter((c) => c.degres !== 0 && c.degres !== 180));
+  const correct = `\\{${cas.radLabel} ; -${cas.radLabel}\\}`;
+  const distracteurs = shuffle([
+    `\\{${cas.radLabel}\\}`,
+    `\\{${cas.radLabel} ; \\pi - ${cas.radLabel}\\}`,
+    `\\{-${cas.radLabel} ; \\pi + ${cas.radLabel}\\}`,
+  ]).slice(0, 3);
+  return {
+    type: "qcm",
+    chapter: "Trigonométrie — Équations trigonométriques",
+    prompt: `Résous l'équation \\(\\cos(x) = ${cas.cos}\\) sur l'intervalle \\(]-\\pi ; \\pi]\\). Donne l'ensemble des solutions.`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [
+      { type: "regle", text: `\\text{Règle à connaître : } \\cos(x) = \\cos(\\alpha) \\iff x = \\alpha + 2k\\pi \\text{ ou } x = -\\alpha + 2k\\pi, \\ k \\in \\mathbb{Z}.` },
+      { type: "resultat", text: `\\text{Sur } ]-\\pi ; \\pi], \\text{ les solutions sont } ${correct}.` },
+    ],
+  };
+}
+
+// ---------- 21. Résolution d'équation sin(x) = a sur un intervalle ----------
+function genResoudreEquationSinQCM() {
+  const cas = pick(ANGLES_REMARQUABLES.filter((c) => c.degres !== 0 && c.degres !== 90 && c.degres !== 180));
+  const correct = `\\{${cas.radLabel} ; \\pi - ${cas.radLabel}\\}`;
+  const distracteurs = shuffle([
+    `\\{${cas.radLabel}\\}`,
+    `\\{${cas.radLabel} ; -${cas.radLabel}\\}`,
+    `\\{-${cas.radLabel} ; \\pi + ${cas.radLabel}\\}`,
+  ]).slice(0, 3);
+  return {
+    type: "qcm",
+    chapter: "Trigonométrie — Équations trigonométriques",
+    prompt: `Résous l'équation \\(\\sin(x) = ${cas.sin}\\) sur l'intervalle \\(]-\\pi ; \\pi]\\). Donne l'ensemble des solutions.`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [
+      { type: "regle", text: `\\text{Règle à connaître : } \\sin(x) = \\sin(\\alpha) \\iff x = \\alpha + 2k\\pi \\text{ ou } x = \\pi - \\alpha + 2k\\pi, \\ k \\in \\mathbb{Z}.` },
+      { type: "resultat", text: `\\text{Sur } ]-\\pi ; \\pi], \\text{ les solutions sont } ${correct}.` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genConversionDegresRadiansQCM,
   genConversionRadiansDegresNumeric,
@@ -324,6 +447,12 @@ const GENERATORS = [
   genAngleAssocieSinPiPlusXQCM,
   genSigneQuadrantQCM,
   genLienTriangleRectangleQCM,
+  genFormuleAdditionCosQCM,
+  genFormuleAdditionSinQCM,
+  genFormuleDuplicationCosNumeric,
+  genFormuleDuplicationSinNumeric,
+  genResoudreEquationCosQCM,
+  genResoudreEquationSinQCM,
 ];
 
 const DIFFICULTY = {
@@ -342,6 +471,12 @@ const DIFFICULTY = {
   genAngleAssocieSinPiMoinsXQCM: "expert",
   genAngleAssocieCosPiPlusXQCM: "expert",
   genAngleAssocieSinPiPlusXQCM: "expert",
+  genFormuleAdditionCosQCM: "standard",
+  genFormuleAdditionSinQCM: "standard",
+  genFormuleDuplicationCosNumeric: "expert",
+  genFormuleDuplicationSinNumeric: "expert",
+  genResoudreEquationCosQCM: "expert",
+  genResoudreEquationSinQCM: "expert",
 };
 
 function generate(difficulty) {
@@ -356,7 +491,7 @@ export default {
   meta: {
     id: "trigonometrie-premiere-spe",
     title: "Trigonométrie",
-    description: "Cercle trigonométrique, radian, valeurs remarquables, angles associés, lien avec le triangle rectangle.",
+    description: "Cercle trigonométrique, radian, valeurs remarquables, angles associés, lien avec le triangle rectangle, formules d'addition et de duplication, résolution d'équations trigonométriques.",
     pourquoi: "Le cercle trigonométrique et les angles remarquables sont à la base de toute modélisation des phénomènes périodiques.",
     level: "premiere-spe",
     order: 7,

@@ -14,6 +14,13 @@
 //
 // Programme : plan rapporté à un repère orthonormé — vecteur normal à une
 // droite, projection orthogonale d'un point sur une droite, équation de cercle.
+//
+// NOTE (audit programme 2026) : genDistancePointDroiteAxeNumeric ne couvrait
+// que les droites parallèles aux axes. Ajout de
+// genDistancePointDroiteObliqueNumeric, qui applique la formule générale
+// \(d(A,d) = \dfrac{|ax_A+by_A+c|}{\sqrt{a^2+b^2}}\) à une droite oblique
+// donnée sous forme cartésienne \(ax+by+c=0\), en s'appuyant sur le vecteur
+// normal \((a;b)\) déjà introduit dans ce chapitre.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -389,6 +396,30 @@ function genDistancePointDroiteAxeNumeric() {
   };
 }
 
+// ---------- 16. Distance d'un point à une droite oblique (formule générale) ----------
+function genDistancePointDroiteObliqueNumeric() {
+  const a = nonZero(-9, 9);
+  const b = nonZero(-9, 9);
+  const c = randInt(-10, 10);
+  const x0 = randInt(-9, 9);
+  const y0 = randInt(-9, 9);
+  const numerateur = Math.abs(a * x0 + b * y0 + c);
+  const denominateur = Math.sqrt(a * a + b * b);
+  const answer = roundTo(numerateur / denominateur, 2);
+  return {
+    type: "numeric",
+    chapter: "Géométrie repérée — Distance point-droite",
+    prompt: `On considère la droite \\(d\\) d'équation \\(${a}x ${signedL(b, "y")} ${signedL(c)} = 0\\) et le point \\(M(${x0} ; ${y0})\\). Calcule la distance \\(d(M, d)\\) (valeur arrondie au centième).`,
+    answer,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{Formule générale à connaître : pour une droite } d : ax+by+c=0, \\text{ la distance d'un point } M(x_M ; y_M) \\text{ à } d \\text{ est } d(M,d) = \\dfrac{|ax_M+by_M+c|}{\\sqrt{a^2+b^2}}.` },
+      { type: "calcul", text: `a x_M + b y_M + c = ${a} \\times ${x0} + ${b} \\times ${y0} + (${c}) = ${a * x0 + b * y0 + c}, \\quad \\sqrt{a^2+b^2} = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a + b * b}} \\approx ${fr(roundTo(denominateur, 3))}` },
+      { type: "resultat", text: `d(M,d) = \\dfrac{${numerateur}}{\\sqrt{${a * a + b * b}}} \\approx ${fr(answer)}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genLireVecteurNormalNumeric,
   genEquationDroitePointVecteurNormalNumeric,
@@ -405,6 +436,7 @@ const GENERATORS = [
   genVraiFauxGeometrieRepereeQCM,
   genReconnaitreEquationCercleQCM,
   genDistancePointDroiteAxeNumeric,
+  genDistancePointDroiteObliqueNumeric,
 ];
 
 const DIFFICULTY = {
@@ -423,6 +455,7 @@ const DIFFICULTY = {
   genRayonEquationDeveloppeeNumeric: "expert",
   genReconnaitreEquationCercleQCM: "expert",
   genDistancePointDroiteAxeNumeric: "expert",
+  genDistancePointDroiteObliqueNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -437,7 +470,7 @@ export default {
   meta: {
     id: "geometrie-reperee-premiere-spe",
     title: "Géométrie repérée",
-    description: "Vecteur normal à une droite, équation de cercle, projection orthogonale d'un point sur une droite.",
+    description: "Vecteur normal à une droite, équation de cercle, projection orthogonale d'un point sur une droite, distance d'un point à une droite oblique.",
     pourquoi: "Passer du vecteur à l'équation de droite ou de cercle, c'est le langage utilisé en physique et en informatique graphique pour décrire des positions.",
     level: "premiere-spe",
     order: 9,

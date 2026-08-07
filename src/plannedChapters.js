@@ -184,7 +184,8 @@ export const PLANNED_CHAPTERS = {
     { id: "geometrie-reperee-premiere-spe", title: "Géométrie repérée", order: 9 },
     { id: "probabilites-conditionnelles-premiere-spe", title: "Probabilités conditionnelles et indépendance", order: 10 },
     { id: "variables-aleatoires-premiere-spe", title: "Variables aléatoires réelles", order: 11 },
-    { id: "preparation-bac-premiere-spe", title: "Préparation au Bac (EAM)", order: 12 },
+    { id: "algorithmique-python-premiere-spe", title: "Algorithmique et programmation (Python)", order: 12 },
+    { id: "preparation-bac-premiere-spe", title: "Préparation au Bac (EAM)", order: 13 },
   ],
   // Sommaire du programme 2026 de Première technologique (voie STMG et
   // proches) : Suites numériques, Fonctions polynômes de degré 2 (sans

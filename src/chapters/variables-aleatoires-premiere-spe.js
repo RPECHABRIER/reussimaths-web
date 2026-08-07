@@ -11,6 +11,15 @@
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr() pour utiliser la virgule française — voir fr() ci-dessous.
+//
+// NOTE (audit programme 2026) : ajout de la loi binomiale nommée \(B(n,p)\)
+// (genIdentifierParametresBinomialeQCM, genEsperanceLoiBinomialeNumeric,
+// genVarianceLoiBinomialeNumeric, genEcartTypeLoiBinomialeNumeric,
+// genProbabiliteExtremeBinomialeNumeric). Le calcul explicite de P(X=k) via
+// les coefficients binomiaux \(\binom{n}{k}\) reste hors-programme ici (relève
+// de la combinatoire, introduite en Terminale Spé) ; seuls les cas extrêmes
+// P(X=0) et P(X=n), qui ne nécessitent aucun coefficient binomial, sont
+// traités.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -182,12 +191,12 @@ function genPXInferieurEgalNumeric() {
 function genInterpreterNotationsQCM() {
   const cas = pick([
     {
-      description: "\\(P(X = 3)\\)",
+      description: "P(X = 3)",
       reponse: "La probabilité que X soit exactement égal à 3",
       explication: `\\text{Le symbole '=' dans } P(X=3) \\text{ désigne une égalité stricte : c'est la probabilité que la variable prenne précisément la valeur 3, ni plus ni moins.}`,
     },
     {
-      description: "\\(P(X \\leq 3)\\)",
+      description: "P(X \\leq 3)",
       reponse: "La probabilité que X soit inférieur ou égal à 3",
       explication: `\\text{Le symbole '} \\leq \\text{' désigne un cumul : } P(X \\leq 3) \\text{ additionne les probabilités de toutes les valeurs possibles jusqu'à 3 inclus.}`,
     },
@@ -313,6 +322,111 @@ function genRetrouverEsperanceNumeric() {
   };
 }
 
+// ---------- 16. Identifier les paramètres n et p d'une loi binomiale ----------
+function genIdentifierParametresBinomialeQCM() {
+  const contextes = [
+    { texte: "On lance un dé équilibré à 6 faces $n$ fois de suite et on compte le nombre de fois où l'on obtient un 6", n: pick([10, 15, 20]), p: "\\dfrac{1}{6}" },
+    { texte: "On répète $n$ fois, de manière indépendante, un tirage avec remise dans une urne contenant 30% de boules rouges, et on compte le nombre de boules rouges obtenues", n: pick([8, 12, 25]), p: "0,3" },
+    { texte: "Un examen QCM comporte $n$ questions indépendantes, chacune avec une probabilité de 0,25 de répondre juste au hasard ; on compte le nombre de bonnes réponses", n: pick([10, 20, 30]), p: "0,25" },
+  ];
+  const cas = pick(contextes);
+  const texte = cas.texte.replace("$n$", cas.n);
+  const correct = `\\(B(${cas.n} ; ${cas.p})\\)`;
+  const distracteurs = shuffle([
+    `\\(B(${cas.p} ; ${cas.n})\\)`,
+    `\\(B(${cas.n + 1} ; ${cas.p})\\)`,
+    `\\(\\mathcal{N}(${cas.n} ; ${cas.p})\\)`,
+  ]).slice(0, 3);
+  return {
+    type: "qcm",
+    chapter: "Variables aléatoires — Loi binomiale",
+    prompt: `${texte}. On répète une épreuve de Bernoulli de manière identique et indépendante : quelle est la loi suivie par le nombre de succès \\(X\\) obtenus ?`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [{ type: "regle", text: `\\text{Quand on répète } n \\text{ fois, de façon indépendante, une épreuve de Bernoulli de paramètre } p, \\text{ le nombre de succès suit la loi binomiale } B(n ; p).` }],
+  };
+}
+
+// ---------- 17. Espérance d'une loi binomiale : E(X) = np ----------
+function genEsperanceLoiBinomialeNumeric() {
+  const n = pick([10, 20, 25, 40, 50]);
+  const p = pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.5]);
+  const answer = roundTo(n * p, 3);
+  return {
+    type: "numeric",
+    chapter: "Variables aléatoires — Loi binomiale",
+    prompt: `Une variable aléatoire \\(X\\) suit la loi binomiale \\(B(${n} ; ${fr(p)})\\). Calcule son espérance \\(E(X)\\) (formule \\(E(X) = np\\)).`,
+    answer,
+    tolerance: 0.001,
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : si } X \\sim B(n ; p), \\text{ alors } E(X) = np.` },
+      { type: "resultat", text: `E(X) = ${n} \\times ${fr(p)} = ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 18. Variance d'une loi binomiale : V(X) = np(1-p) ----------
+function genVarianceLoiBinomialeNumeric() {
+  const n = pick([10, 20, 25, 40, 50]);
+  const p = pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.5]);
+  const q = roundTo(1 - p, 3);
+  const answer = roundTo(n * p * q, 3);
+  return {
+    type: "numeric",
+    chapter: "Variables aléatoires — Loi binomiale",
+    prompt: `Une variable aléatoire \\(X\\) suit la loi binomiale \\(B(${n} ; ${fr(p)})\\). Calcule sa variance \\(V(X)\\) (formule \\(V(X) = np(1-p)\\)).`,
+    answer,
+    tolerance: 0.001,
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : si } X \\sim B(n ; p), \\text{ alors } V(X) = np(1-p).` },
+      { type: "resultat", text: `V(X) = ${n} \\times ${fr(p)} \\times (1 - ${fr(p)}) = ${n} \\times ${fr(p)} \\times ${fr(q)} = ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 19. Écart-type d'une loi binomiale ----------
+function genEcartTypeLoiBinomialeNumeric() {
+  const n = pick([16, 25, 36, 49, 64, 100]);
+  const p = pick([0.25, 0.5]);
+  const V = n * p * (1 - p);
+  const answer = roundTo(Math.sqrt(V), 3);
+  return {
+    type: "numeric",
+    chapter: "Variables aléatoires — Loi binomiale",
+    prompt: `Une variable aléatoire \\(X\\) suit la loi binomiale \\(B(${n} ; ${fr(p)})\\). Calcule son écart-type \\(\\sigma(X) = \\sqrt{V(X)}\\) (valeur arrondie au millième).`,
+    answer,
+    tolerance: 0.001,
+    steps: [
+      { type: "regle", text: `\\text{On calcule d'abord la variance } V(X) = np(1-p), \\text{ puis } \\sigma(X) = \\sqrt{V(X)}.` },
+      { type: "resultat", text: `V(X) = ${n} \\times ${fr(p)} \\times ${fr(roundTo(1 - p, 3))} = ${fr(roundTo(V, 3))} \\ \\Rightarrow \\ \\sigma(X) = \\sqrt{${fr(roundTo(V, 3))}} \\approx ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 20. Probabilité d'un cas extrême : P(X=0) ou P(X=n) ----------
+function genProbabiliteExtremeBinomialeNumeric() {
+  const n = pick([3, 4, 5]);
+  const p = pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.5]);
+  const cas = pick(["zero", "n"]);
+  const answer = roundTo(cas === "zero" ? (1 - p) ** n : p ** n, 4);
+  const evenement = cas === "zero" ? "P(X=0)" : `P(X=${n})`;
+  const explication =
+    cas === "zero"
+      ? `\\text{Aucun succès sur les } ${n} \\text{ répétitions signifie un échec à chaque fois : } P(X=0) = (1-p)^{${n}}.`
+      : `\\text{Un succès à chaque répétition (les } ${n} \\text{ fois) : } P(X=${n}) = p^{${n}}.`;
+  return {
+    type: "numeric",
+    chapter: "Variables aléatoires — Loi binomiale",
+    prompt: `Une variable aléatoire \\(X\\) suit la loi binomiale \\(B(${n} ; ${fr(p)})\\). Calcule \\(${evenement}\\) (valeur arrondie au dix-millième).`,
+    answer,
+    tolerance: 0.0001,
+    steps: [
+      { type: "regle", text: explication },
+      { type: "resultat", text: `${evenement} = ${fr(answer)}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genLoiProbabiliteCompleterNumeric,
   genEsperanceNumeric,
@@ -329,6 +443,11 @@ const GENERATORS = [
   genVraiFauxVariablesAleatoiresQCM,
   genVarianceLoiDeuxValeursNumeric,
   genRetrouverEsperanceNumeric,
+  genIdentifierParametresBinomialeQCM,
+  genEsperanceLoiBinomialeNumeric,
+  genVarianceLoiBinomialeNumeric,
+  genEcartTypeLoiBinomialeNumeric,
+  genProbabiliteExtremeBinomialeNumeric,
 ];
 
 const DIFFICULTY = {
@@ -347,6 +466,11 @@ const DIFFICULTY = {
   genLineariteVarianceNumeric: "expert",
   genComparerJeuxQCM: "expert",
   genRetrouverEsperanceNumeric: "expert",
+  genIdentifierParametresBinomialeQCM: "standard",
+  genEsperanceLoiBinomialeNumeric: "facile",
+  genVarianceLoiBinomialeNumeric: "standard",
+  genEcartTypeLoiBinomialeNumeric: "standard",
+  genProbabiliteExtremeBinomialeNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -361,7 +485,7 @@ export default {
   meta: {
     id: "variables-aleatoires-premiere-spe",
     title: "Variables aléatoires réelles",
-    description: "Loi de probabilité, espérance, variance, écart-type, linéarité de l'espérance, jeu équitable.",
+    description: "Loi de probabilité, espérance, variance, écart-type, linéarité de l'espérance, jeu équitable, loi binomiale B(n,p).",
     pourquoi: "Une variable aléatoire et son espérance permettent de prévoir le résultat moyen d'un jeu, d'un pari ou d'une décision incertaine.",
     level: "premiere-spe",
     order: 11,

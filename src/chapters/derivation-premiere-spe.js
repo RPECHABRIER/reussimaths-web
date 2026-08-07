@@ -11,6 +11,11 @@
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr() pour utiliser la virgule française — voir fr() ci-dessous.
+//
+// NOTE (audit programme 2026) : ajout de la règle de dérivée de composée
+// affine \((f(ax+b))' = a \times f'(ax+b)\) (genDeriveeCompoAffineFormuleQCM,
+// genDeriveeCompoAffineNumeric), absente jusqu'ici alors que les formules de
+// dérivée de somme/produit/quotient étaient déjà couvertes.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -298,6 +303,40 @@ function genPenteSecanteNumeric() {
   };
 }
 
+// ---------- 16. Formule de la dérivée d'une composée affine f(ax+b) ----------
+function genDeriveeCompoAffineFormuleQCM() {
+  const correctRaw = `a \\times f'(ax+b)`;
+  const distracteurs = ["f'(ax+b)", "a \\times f'(x)", "f'(a) \\times x + b"];
+  return {
+    type: "qcm",
+    chapter: "Dérivation — Composée affine",
+    prompt: `\\(f\\) est une fonction dérivable, et \\(a\\), \\(b\\) sont deux réels. Quelle est la dérivée de la fonction \\(x \\mapsto f(ax+b)\\) ?`,
+    answer: correctRaw,
+    options: shuffle([correctRaw, ...distracteurs]),
+    steps: [{ type: "regle", text: `\\text{Formule de référence à connaître : la dérivée de } x \\mapsto f(ax+b) \\text{ est } x \\mapsto a \\times f'(ax+b) \\text{ (ne pas oublier le facteur } a \\text{).}` }],
+  };
+}
+
+// ---------- 17. Dérivée d'une composée affine : application numérique ----------
+function genDeriveeCompoAffineNumeric() {
+  const a = nonZero(-4, 4);
+  const b = randInt(-6, 6);
+  const x0 = randInt(-5, 5);
+  const argument = a * x0 + b;
+  const fprimeArgument = randInt(-8, 8);
+  const answer = a * fprimeArgument;
+  return {
+    type: "numeric",
+    chapter: "Dérivation — Composée affine",
+    prompt: `On pose \\(g(x) = f(${a}x ${signedL(b)})\\), où \\(f\\) est une fonction dérivable. On donne \\(f'(${argument}) = ${fprimeArgument}\\). Calcule \\(g'(${x0})\\) (formule \\((f(ax+b))' = a \\times f'(ax+b)\\)).`,
+    answer,
+    steps: [
+      { type: "regle", text: `\\text{On applique la formule } g'(x) = a \\times f'(ax+b), \\text{ ici avec } a = ${a}.` },
+      { type: "resultat", text: `g'(${x0}) = ${a} \\times f'(${a} \\times ${x0} ${signedL(b)}) = ${a} \\times f'(${argument}) = ${a} \\times ${fprimeArgument} = ${answer}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genTauxVariationImagesNumeric,
   genTauxVariationCarreNumeric,
@@ -314,6 +353,8 @@ const GENERATORS = [
   genExtremumTangenteHorizontaleQCM,
   genVraiFauxDerivationQCM,
   genPenteSecanteNumeric,
+  genDeriveeCompoAffineFormuleQCM,
+  genDeriveeCompoAffineNumeric,
 ];
 
 const DIFFICULTY = {
@@ -329,9 +370,11 @@ const DIFFICULTY = {
   genSensVariationDeriveeQCM: "standard",
   genExtremumTangenteHorizontaleQCM: "standard",
   genPenteSecanteNumeric: "standard",
+  genDeriveeCompoAffineFormuleQCM: "standard",
   genApproximationLineaireNumeric: "expert",
   genDeriveeQuotientFormuleQCM: "expert",
   genVraiFauxDerivationQCM: "expert",
+  genDeriveeCompoAffineNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -346,7 +389,7 @@ export default {
   meta: {
     id: "derivation-premiere-spe",
     title: "Dérivation",
-    description: "Taux de variation, nombre dérivé, tangente, approximation linéaire, fonctions dérivées de référence et opérations.",
+    description: "Taux de variation, nombre dérivé, tangente, approximation linéaire, fonctions dérivées de référence et opérations, dérivée d'une composée affine.",
     pourquoi: "Le nombre dérivé mesure la vitesse instantanée d'un phénomène — la notion centrale pour étudier comment une quantité varie, en sciences comme en économie.",
     level: "premiere-spe",
     order: 4,

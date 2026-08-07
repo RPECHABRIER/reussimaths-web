@@ -1,5 +1,85 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-07 — Phase 0 : mise en conformité Première Spé avec le nouveau programme 2026
+
+Suite de l'audit programme 2026 (BO n°14 du 2 avril 2026) pour le niveau
+Première Spécialité mathématiques. Neuf tâches (#364 à #371) traitées puis
+vérifiées, synchronisées et buildées ensemble dans ce batch final (#372).
+
+**Nouveau chapitre créé :**
+- `algorithmique-python-premiere-spe.js` (id `algorithmique-python-premiere-spe`,
+  order 12, inséré avant "Préparation au Bac" qui passe de l'ordre 12 à 13
+  dans `plannedChapters.js` et dans son propre fichier). 8 générateurs :
+  prévoir le résultat d'une boucle `for`, compléter une boucle `for`, calculer
+  un terme de suite via un script, identifier le rôle d'un extrait de code
+  (somme/produit), une étape de dichotomie, simulation aléatoire
+  (`random() < p`), vocabulaire (`range`, `break`, `import random`),
+  compléter un test de parité. Affichage du code Python via un helper
+  `pyBlock()` (tableau `texTable` à une colonne, chaque ligne de code
+  auto-échappée en `\text{}`) plutôt que `\texttt{}` (non testé/risqué en
+  mode maths), sans underscore dans les identifiants Python générés (risque
+  d'indice KaTeX), et indentation par préfixes ASCII `".. "` plutôt que par
+  espaces répétés (collapsés par KaTeX).
+
+**Chapitres existants corrigés :**
+- `trigonometrie-premiere-spe.js` : ajout des formules d'addition
+  (`cos(a+b)`, `sin(a+b)`) et de duplication (`cos(2a)`, `sin(2a)`), et de la
+  résolution d'équations trigonométriques `cos(x)=a` / `sin(x)=a` sur un
+  intervalle — 6 nouveaux générateurs, écart identifié par l'audit officiel.
+- `variables-aleatoires-premiere-spe.js` : ajout de la loi binomiale nommée
+  `B(n,p)` (identification des paramètres, espérance `E(X)=np`, variance
+  `V(X)=np(1-p)`, écart-type, cas extrêmes `P(X=0)`/`P(X=n)`) — 5 nouveaux
+  générateurs. Le calcul explicite de `P(X=k)` via les coefficients binomiaux
+  reste hors-programme ici (relève de la combinatoire, en Terminale Spé). Un
+  bug préexistant sans lien (double enrobage `\(\(...\)\)` dans
+  `genInterpreterNotationsQCM`, causant des erreurs KaTeX) a été corrigé au
+  passage.
+- `probabilites-conditionnelles-premiere-spe.js` : ajout du calcul explicite
+  de `P_A(B) = P(A∩B)/P(A)` (et sa réciproque), de l'interprétation de la
+  notation, et du test d'indépendance via `P_A(B) = P(B)` — 4 nouveaux
+  générateurs. Le chapitre utilisait déjà la notation `P_{A_1}(B)` comme
+  donnée d'entrée mais ne demandait jamais explicitement de la calculer,
+  malgré le nom du chapitre.
+- `geometrie-reperee-premiere-spe.js` : extension de la distance
+  point-droite (jusqu'ici limitée aux droites parallèles aux axes) à la
+  formule générale `d(A,d) = |ax_A+by_A+c|/√(a²+b²)` pour une droite oblique
+  — 1 nouveau générateur.
+- `derivation-premiere-spe.js` : ajout de la règle de dérivée d'une composée
+  affine `(f(ax+b))' = a × f'(ax+b)` (formule + application numérique) — 2
+  nouveaux générateurs.
+- `second-degre.js` : ajout d'exercices de modélisation contextualisée (aire
+  d'un rectangle à périmètre fixé, trajectoire d'un projectile, seuils de
+  rentabilité d'un bénéfice) — 3 nouveaux générateurs.
+- `automatismes-premiere-spe.js` : miroir de toutes les corrections
+  ci-dessus (composée affine, addition/duplication trigo, loi binomiale,
+  `P_A(B)`, distance oblique, modélisation second degré) + nouveau thème
+  "Algorithmique et programmation (Python)" avec 5 automatismes mentaux
+  (range, boucle, dichotomie, simulation aléatoire, vocabulaire).
+
+**Vérification :** chaque fichier modifié/créé a été testé via un script
+node + katex en mode strict (3000 à 6000 exercices générés par fichier,
+`bad=0 katexErrors=0` partout), plus une passe dédiée sur
+`automatismes-premiere-spe.js` couvrant les 11 thèmes avec simulation de
+l'auto-enrobage `\( \)` de `MathText.jsx`. Build (`npm run build`) validé
+sans erreur après synchronisation dans les deux copies
+(`Application TOP/reussimaths-web/` et `.../APPLI GITHUB/Sans titre/`).
+
+**Signalement à Romain — 2 points de confiance faible, non implémentés :**
+1. `second-degre.js` : l'audit évoquait une possible extension vers les
+   « polynômes de degré 3 », mais cette piste n'a pas pu être confirmée avec
+   certitude dans le texte réglementaire officiel (BO n°14). Le programme de
+   Première Spé porte historiquement sur le second degré uniquement ; les
+   polynômes de degré 3 relèveraient plutôt de l'étude de fonctions via la
+   dérivation (déjà couverte ailleurs), pas d'un chapitre dédié. Vérification
+   humaine du texte officiel nécessaire avant toute implémentation.
+2. Item évoqué par l'audit sur « échantillonnage / intervalle de fluctuation
+   à 95% » pour ce niveau : source à confiance faible, et le fichier cible
+   n'était même pas clairement identifié (nouveau fichier ou chapitre
+   existant ?). Non implémenté, nécessite une clarification de Romain avant
+   toute action (le sujet est déjà traité en 2nde dans
+   `probabilites-echantillonnage-seconde.js`, sous une forme différente —
+   confusion possible avec ce chapitre).
+
 ## Règle permanente — plus de "zip final"
 
 Romain confirme (2026-08-03) que le zip final n'est plus nécessaire : le

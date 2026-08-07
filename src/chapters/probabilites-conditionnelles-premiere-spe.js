@@ -15,6 +15,13 @@
 // Programme : indépendance de deux évènements, partition de l'univers,
 // formule des probabilités totales, arbres pour deux épreuves indépendantes,
 // répétition (n ≤ 4) d'épreuves de Bernoulli indépendantes et identiques.
+//
+// NOTE (audit programme 2026) : le chapitre utilisait déjà la notation
+// \(P_{A_1}(B)\) comme donnée d'entrée (probabilités totales, arbre) mais ne
+// demandait jamais explicitement de la calculer via \(P_A(B) = P(A \cap B) /
+// P(A)\), malgré le nom du chapitre. Ajout de
+// genCalculerPABNumeric, genCalculerIntersectionDepuisPABNumeric,
+// genInterpreterNotationPABQCM, genIndependanceViaPABQCM.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -335,6 +342,80 @@ function genReconnaitrePartitionQCM() {
   };
 }
 
+// ---------- 16. Calculer P_A(B) = P(A ∩ B) / P(A) ----------
+function genCalculerPABNumeric() {
+  const pA = pick([0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 0.8]);
+  const facteur = pick([0.2, 0.3, 0.4, 0.5, 0.6, 0.75]);
+  const pAB = roundTo(pA * facteur, 4);
+  const answer = roundTo(pAB / pA, 4);
+  return {
+    type: "numeric",
+    chapter: "Probabilités conditionnelles — Probabilité conditionnelle",
+    prompt: `On donne \\(P(A) = ${fr(pA)}\\) et \\(P(A \\cap B) = ${fr(pAB)}\\). Calcule la probabilité conditionnelle \\(P_A(B)\\).`,
+    answer,
+    tolerance: 0.0005,
+    steps: [
+      { type: "regle", text: `\\text{Formule de référence à connaître : } P_A(B) = \\dfrac{P(A \\cap B)}{P(A)}.` },
+      { type: "resultat", text: `P_A(B) = \\dfrac{${fr(pAB)}}{${fr(pA)}} = ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 17. Calculer P(A ∩ B) connaissant P(A) et P_A(B) ----------
+function genCalculerIntersectionDepuisPABNumeric() {
+  const pA = pick([0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 0.8]);
+  const pAB_cond = pick([0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75]);
+  const answer = roundTo(pA * pAB_cond, 4);
+  return {
+    type: "numeric",
+    chapter: "Probabilités conditionnelles — Probabilité conditionnelle",
+    prompt: `On donne \\(P(A) = ${fr(pA)}\\) et \\(P_A(B) = ${fr(pAB_cond)}\\). Calcule \\(P(A \\cap B)\\).`,
+    answer,
+    tolerance: 0.0005,
+    steps: [
+      { type: "regle", text: `\\text{On isole } P(A \\cap B) \\text{ dans } P_A(B) = \\dfrac{P(A \\cap B)}{P(A)} : \\quad P(A \\cap B) = P(A) \\times P_A(B).` },
+      { type: "resultat", text: `P(A \\cap B) = ${fr(pA)} \\times ${fr(pAB_cond)} = ${fr(answer)}` },
+    ],
+  };
+}
+
+// ---------- 18. Interpréter la notation P_A(B) ----------
+function genInterpreterNotationPABQCM() {
+  const correct = "La probabilité que B se réalise, sachant que A est déjà réalisé";
+  const distracteurs = [
+    "La probabilité que A et B se réalisent tous les deux",
+    "La probabilité que A se réalise, sachant que B est déjà réalisé",
+    "La probabilité que A ou B se réalise",
+  ];
+  return {
+    type: "qcm",
+    chapter: "Probabilités conditionnelles — Notations",
+    prompt: `Comment interprète-t-on la notation \\(P_A(B)\\) ?`,
+    answer: correct,
+    options: shuffle([correct, ...distracteurs]),
+    steps: [{ type: "regle", text: `\\text{La notation } P_A(B) \\text{ se lit 'probabilité de B sachant A' : on suppose que A est déjà réalisé, et on regarde la probabilité que B se réalise dans ce nouveau contexte.}` }],
+  };
+}
+
+// ---------- 19. Indépendance via la probabilité conditionnelle : P_A(B) = P(B) ----------
+function genIndependanceViaPABQCM() {
+  const pB = pick([0.2, 0.3, 0.4, 0.5, 0.6]);
+  const independants = Math.random() < 0.5;
+  const pAB_cond = independants ? pB : roundTo(pB + pick([0.1, -0.1, 0.15, -0.15]), 4);
+  const reponse = roundTo(pAB_cond, 4) === roundTo(pB, 4) ? "indépendants" : "non indépendants";
+  return {
+    type: "qcm",
+    chapter: "Probabilités conditionnelles — Indépendance",
+    prompt: `On donne \\(P(B) = ${fr(pB)}\\) et \\(P_A(B) = ${fr(pAB_cond)}\\). Les évènements \\(A\\) et \\(B\\) sont-ils indépendants ?`,
+    answer: reponse,
+    options: ["indépendants", "non indépendants"],
+    steps: [
+      { type: "regle", text: `\\text{A et B sont indépendants si et seulement si le fait de savoir que A est réalisé ne change rien à la probabilité de B : } P_A(B) = P(B).` },
+      { type: "resultat", text: reponse === "indépendants" ? `\\text{Ici } P_A(B) = P(B) : \\text{les évènements sont indépendants.}` : `\\text{Ici } P_A(B) \\neq P(B) : \\text{les évènements ne sont pas indépendants (savoir que A est réalisé change la probabilité de B).}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genVerifierIndependanceQCM,
   genCalculerIntersectionIndependantsNumeric,
@@ -351,6 +432,10 @@ const GENERATORS = [
   genProbabiliteExactementKSuccesNumeric,
   genVraiFauxIndependanceQCM,
   genReconnaitrePartitionQCM,
+  genCalculerPABNumeric,
+  genCalculerIntersectionDepuisPABNumeric,
+  genInterpreterNotationPABQCM,
+  genIndependanceViaPABQCM,
 ];
 
 const DIFFICULTY = {
@@ -358,6 +443,7 @@ const DIFFICULTY = {
   genPartitionCompleterNumeric: "facile",
   genProbabiliteBrancheArbreNumeric: "facile",
   genBernoulliTousSuccesNumeric: "facile",
+  genInterpreterNotationPABQCM: "facile",
   genRetrouverPANumeric: "standard",
   genUnionIndependantsNumeric: "standard",
   genProbabilitesTotalesNumeric: "standard",
@@ -365,6 +451,9 @@ const DIFFICULTY = {
   genBernoulliCheminParticulierNumeric: "standard",
   genNombreCheminsNumeric: "standard",
   genReconnaitrePartitionQCM: "standard",
+  genCalculerPABNumeric: "standard",
+  genCalculerIntersectionDepuisPABNumeric: "standard",
+  genIndependanceViaPABQCM: "standard",
   genVerifierIndependanceQCM: "expert",
   genBernoulliAuMoinsUnSuccesNumeric: "expert",
   genProbabiliteExactementKSuccesNumeric: "expert",
@@ -383,7 +472,7 @@ export default {
   meta: {
     id: "probabilites-conditionnelles-premiere-spe",
     title: "Probabilités conditionnelles et indépendance",
-    description: "Indépendance de deux évènements, partition et probabilités totales, arbres, répétition d'épreuves de Bernoulli.",
+    description: "Probabilité conditionnelle P_A(B), indépendance de deux évènements, partition et probabilités totales, arbres, répétition d'épreuves de Bernoulli.",
     pourquoi: "Les probabilités conditionnelles permettent d'actualiser un risque quand une information nouvelle arrive — un test médical positif, un email détecté comme spam.",
     level: "premiere-spe",
     order: 10,

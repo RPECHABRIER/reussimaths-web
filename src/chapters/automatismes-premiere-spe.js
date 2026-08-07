@@ -10,6 +10,14 @@
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
 // fr() pour utiliser la virgule française — voir fr() ci-dessous.
+//
+// NOTE (audit programme 2026) : miroir des corrections apportées aux
+// chapitres complets de Première Spé — second degré (modélisation
+// contextualisée), dérivation (composée affine), trigonométrie (addition/
+// duplication), géométrie repérée (distance point-droite oblique),
+// probabilités conditionnelles (P_A(B) explicite), variables aléatoires
+// (loi binomiale B(n,p)), et nouveau thème Algorithmique et programmation
+// (Python).
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -105,12 +113,25 @@ function genAutoVraiFauxSecondDegreMental() {
   };
 }
 
+// ---------- 6. Modélisation contextualisée : sommet d'une aire (mental) ----------
+function genAutoSommetContextualiseMental() {
+  const S = 2 * randInt(4, 20);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Second degré",
+    prompt: `Un rectangle a pour largeur \\(x\\) et pour longueur \\((${S} - x)\\). Son aire est \\(A(x) = x(${S} - x)\\). Pour quelle valeur de \\(x\\) l'aire est-elle maximale ?`,
+    answer: S / 2,
+    steps: [`x = \\dfrac{${S}}{2} = ${S / 2}`],
+  };
+}
+
 const CH_SECOND_DEGRE = [
   genAutoDiscriminantMental,
   genAutoNombreSolutionsMental,
   genAutoSigneTrinomeMental,
   genAutoAbscisseSommetMental,
   genAutoVraiFauxSecondDegreMental,
+  genAutoSommetContextualiseMental,
 ];
 
 // =========================== Chapitre : Suites numériques ===========================
@@ -268,12 +289,25 @@ function genAutoVraiFauxDerivationExpressMental() {
   };
 }
 
+// ---------- 6. Dérivée d'une composée affine (mental) ----------
+function genAutoDeriveeCompoAffineMental() {
+  const a = nonZero(-6, 6);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Dérivation",
+    prompt: `La dérivée de \\(x \\mapsto f(${a}x+1)\\) est de la forme \\(k \\times f'(${a}x+1)\\). Donne la valeur de \\(k\\).`,
+    answer: a,
+    steps: [`k = ${a}`],
+  };
+}
+
 const CH_DERIVATION = [
   genAutoTauxVariationAfineMental,
   genAutoDeriveeCarreMental,
   genAutoSigneDeriveeMental,
   genAutoExtremumMental,
   genAutoVraiFauxDerivationExpressMental,
+  genAutoDeriveeCompoAffineMental,
 ];
 
 // =========================== Chapitre : Variations et courbes représentatives ===========================
@@ -520,12 +554,40 @@ function genAutoSigneQuadrantMental() {
   };
 }
 
+// ---------- 6. Formule d'addition : cos(a+b) (mental) ----------
+function genAutoFormuleAdditionCosMental() {
+  const correct = "\\cos(a)\\cos(b) - \\sin(a)\\sin(b)";
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Trigonométrie",
+    prompt: `Quelle est la formule de \\(\\cos(a+b)\\) ?`,
+    answer: correct,
+    options: [correct, "\\cos(a)\\cos(b) + \\sin(a)\\sin(b)"],
+    steps: [`\\cos(a+b) = ${correct}`],
+  };
+}
+
+// ---------- 7. Formule de duplication : sin(2a) (mental) ----------
+function genAutoFormuleDuplicationSinMental() {
+  const correct = "2\\sin(a)\\cos(a)";
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Trigonométrie",
+    prompt: `Quelle est la formule de \\(\\sin(2a)\\) ?`,
+    answer: correct,
+    options: [correct, "\\sin(a) + \\cos(a)"],
+    steps: [`\\sin(2a) = ${correct}`],
+  };
+}
+
 const CH_TRIGONOMETRIE = [
   genAutoValeurCosinusMental,
   genAutoValeurSinusMental,
   genAutoPariteCosinusMental,
   genAutoImpariteSinusMental,
   genAutoSigneQuadrantMental,
+  genAutoFormuleAdditionCosMental,
+  genAutoFormuleDuplicationSinMental,
 ];
 
 // =========================== Chapitre : Calcul vectoriel et produit scalaire ===========================
@@ -678,12 +740,34 @@ function genAutoVraiFauxGeometrieRepereeMental() {
   };
 }
 
+// ---------- 6. Distance d'un point à une droite oblique (mental) ----------
+function genAutoDistanceDroiteObliqueMental() {
+  const [a, b, den] = pick([
+    [3, 4, 5],
+    [6, 8, 10],
+  ]);
+  const c = randInt(-9, 9);
+  const x0 = randInt(-9, 9);
+  const y0 = randInt(-9, 9);
+  const num = Math.abs(a * x0 + b * y0 + c);
+  const answer = roundTo(num / den, 2);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Géométrie repérée",
+    prompt: `Droite \\(d : ${a}x ${signedL(b, "y")} ${signedL(c)} = 0\\), point \\(M(${x0} ; ${y0})\\). Calcule \\(d(M,d) = \\dfrac{|${a}x_M+${b}y_M+(${c})|}{\\sqrt{${a}^2+${b}^2}}\\) (arrondi au centième).`,
+    answer,
+    tolerance: 0.01,
+    steps: [`d(M,d) = \\dfrac{${num}}{${den}} \\approx ${fr(answer)}`],
+  };
+}
+
 const CH_GEOMETRIE_REPEREE = [
   genAutoVecteurNormalMental,
   genAutoRayonCarreMental,
   genAutoProjectionHorizontaleMental,
   genAutoNormalDepuisDirecteurMental,
   genAutoVraiFauxGeometrieRepereeMental,
+  genAutoDistanceDroiteObliqueMental,
 ];
 
 // =========================== Chapitre : Probabilités conditionnelles et indépendance ===========================
@@ -762,12 +846,28 @@ function genAutoVraiFauxIndependanceMental() {
   };
 }
 
+// ---------- 6. Calcul de P_A(B) (mental) ----------
+function genAutoCalculPABMental() {
+  const pA = pick([0.2, 0.4, 0.5, 0.8]);
+  const facteur = pick([0.2, 0.5, 0.25]);
+  const pAB = roundTo(pA * facteur, 4);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Probabilités conditionnelles",
+    prompt: `\\(P(A) = ${fr(pA)}\\), \\(P(A \\cap B) = ${fr(pAB)}\\). Calcule \\(P_A(B)\\).`,
+    answer: roundTo(pAB / pA, 4),
+    tolerance: 0.0005,
+    steps: [`P_A(B) = \\dfrac{${fr(pAB)}}{${fr(pA)}} = ${fr(roundTo(pAB / pA, 4))}`],
+  };
+}
+
 const CH_PROBABILITES_CONDITIONNELLES = [
   genAutoIntersectionIndependantsMental,
   genAutoPartitionManquanteMental,
   genAutoBrancheArbreMental,
   genAutoBernoulliMental,
   genAutoVraiFauxIndependanceMental,
+  genAutoCalculPABMental,
 ];
 
 // =========================== Chapitre : Variables aléatoires réelles ===========================
@@ -844,12 +944,123 @@ function genAutoVraiFauxVariablesAleatoiresMental() {
   };
 }
 
+// ---------- 6. Espérance d'une loi binomiale (mental) ----------
+function genAutoEsperanceBinomialeMental() {
+  const n = pick([10, 20, 25, 40]);
+  const p = pick([0.2, 0.5, 0.25]);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Variables aléatoires",
+    prompt: `\\(X \\sim B(${n} ; ${fr(p)})\\). Calcule \\(E(X) = np\\).`,
+    answer: roundTo(n * p, 3),
+    tolerance: 0.001,
+    steps: [`E(X) = ${n} \\times ${fr(p)} = ${fr(roundTo(n * p, 3))}`],
+  };
+}
+
+// ---------- 7. Variance d'une loi binomiale (mental) ----------
+function genAutoVarianceBinomialeMental() {
+  const n = pick([10, 20, 25, 40]);
+  const p = pick([0.2, 0.5, 0.25]);
+  const q = roundTo(1 - p, 3);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Variables aléatoires",
+    prompt: `\\(X \\sim B(${n} ; ${fr(p)})\\). Calcule \\(V(X) = np(1-p)\\).`,
+    answer: roundTo(n * p * q, 3),
+    tolerance: 0.001,
+    steps: [`V(X) = ${n} \\times ${fr(p)} \\times ${fr(q)} = ${fr(roundTo(n * p * q, 3))}`],
+  };
+}
+
 const CH_VARIABLES_ALEATOIRES = [
   genAutoEsperanceSimpleMental,
   genAutoVarianceMental,
   genAutoEcartTypeMental,
   genAutoLineariteEsperanceMental,
   genAutoVraiFauxVariablesAleatoiresMental,
+  genAutoEsperanceBinomialeMental,
+  genAutoVarianceBinomialeMental,
+];
+
+// =========================== Chapitre : Algorithmique et programmation (Python) ===========================
+// (Automatismes de calcul mental : range(), boucle, dichotomie, simulation, vocabulaire.)
+
+// ---------- 1. Compréhension de range() (mental) ----------
+function genAutoRangeMental() {
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Algorithmique et programmation",
+    prompt: `En Python, que fait l'instruction range(5) ?`,
+    answer: "Elle génère les entiers de 0 à 4",
+    options: ["Elle génère les entiers de 0 à 4", "Elle génère les entiers de 1 à 5"],
+    steps: [`\\text{range(n) parcourt les entiers de 0 à n-1 (n exclu).}`],
+  };
+}
+
+// ---------- 2. Terme d'une suite calculé par une boucle (mental) ----------
+function genAutoTermeSuiteBoucleMental() {
+  const u0 = randInt(1, 10);
+  const r = nonZero(-5, 5);
+  const n = randInt(2, 4);
+  const answer = u0 + r * n;
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Algorithmique et programmation",
+    prompt: `Une boucle initialise \\(u = ${u0}\\), puis répète \\(${n}\\) fois l'instruction \\(u = u ${signedL(r)}\\). Quelle est la valeur finale de \\(u\\) ?`,
+    answer,
+    steps: [`u = ${u0} ${signedL(r * n)} = ${answer}`],
+  };
+}
+
+// ---------- 3. Milieu testé lors d'une étape de dichotomie (mental) ----------
+function genAutoDichotomieMental() {
+  const bMax = 2 * randInt(2, 8);
+  const m = bMax / 2;
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Algorithmique et programmation",
+    prompt: `Dans une méthode de dichotomie sur l'intervalle \\([0 ; ${bMax}]\\), quel est le milieu \\(m\\) testé à la première étape ?`,
+    answer: m,
+    steps: [`m = \\dfrac{0 + ${bMax}}{2} = ${m}`],
+  };
+}
+
+// ---------- 4. Probabilité simulée par random() (mental) ----------
+function genAutoSimulationAleatoireMental() {
+  const p = pick([0.2, 0.3, 0.5, 0.7]);
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Algorithmique et programmation",
+    prompt: `En Python, le test random() < ${fr(p)} simule un évènement de quelle probabilité de succès ?`,
+    answer: fr(p),
+    options: [fr(p), fr(roundTo(1 - p, 2))],
+    steps: [`\\text{random() renvoie un nombre entre 0 et 1 : le test est vrai avec probabilité ${fr(p)}.}`],
+  };
+}
+
+// ---------- 5. Vocabulaire de l'algorithmique (mental) ----------
+function genAutoVocabulaireAlgoMental() {
+  const cas = pick([
+    { description: "L'instruction qui interrompt immédiatement une boucle", reponse: "break" },
+    { description: "Le module à importer pour utiliser random()", reponse: "import random" },
+  ]);
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Algorithmique et programmation",
+    prompt: `${cas.description} : quelle instruction Python utiliser ?`,
+    answer: cas.reponse,
+    options: ["break", "import random"],
+    steps: [cas.reponse],
+  };
+}
+
+const CH_ALGORITHMIQUE = [
+  genAutoRangeMental,
+  genAutoTermeSuiteBoucleMental,
+  genAutoDichotomieMental,
+  genAutoSimulationAleatoireMental,
+  genAutoVocabulaireAlgoMental,
 ];
 
 const THEMES = [
@@ -863,6 +1074,7 @@ const THEMES = [
   { id: "geometrie-reperee-premiere-spe", title: "Géométrie repérée", generators: CH_GEOMETRIE_REPEREE },
   { id: "probabilites-conditionnelles-premiere-spe", title: "Probabilités conditionnelles et indépendance", generators: CH_PROBABILITES_CONDITIONNELLES },
   { id: "variables-aleatoires-premiere-spe", title: "Variables aléatoires réelles", generators: CH_VARIABLES_ALEATOIRES },
+  { id: "algorithmique-python-premiere-spe", title: "Algorithmique et programmation (Python)", generators: CH_ALGORITHMIQUE },
 ];
 
 const GENERATORS = THEMES.flatMap((t) => t.generators);

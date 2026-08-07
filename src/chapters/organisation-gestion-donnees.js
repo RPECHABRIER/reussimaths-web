@@ -302,6 +302,31 @@ function genProbabiliteUrneCouleur() {
   };
 }
 
+// ---------- 11bis. Probabilité exprimée sous forme de pourcentage ----------
+// Le programme précise explicitement qu'une probabilité "peut s'exprimer
+// comme fraction, nombre décimal, ou pourcentage" et donne lui-même
+// l'exemple d'une urne à boules noires/blanches — voir
+// genProbabiliteUrneCouleur() ci-dessus pour la version en décimal.
+function genProbabilitePourcentageNoirBlanc() {
+  const noires = randInt(2, 20);
+  const blanches = randInt(2, 20);
+  const total = noires + blanches;
+  const target = pick(["noire", "blanche"]);
+  const effectif = target === "noire" ? noires : blanches;
+  const pct = roundTo((effectif / total) * 100, 1);
+  return {
+    type: "numeric",
+    chapter: "Organisation et gestion de données — Probabilité (urne)",
+    prompt: `Une urne contient ${noires} boules noires et ${blanches} boules blanches. On tire une boule au hasard. Quelle est la probabilité, sous forme de pourcentage, d'obtenir une boule ${target} ? (arrondis à 1 décimale)`,
+    answer: pct,
+    tolerance: 0.15,
+    steps: [
+      { type: "regle", text: `La probabilité d'un événement = nombre de cas favorables ÷ nombre de cas possibles ; pour l'exprimer en pourcentage, on multiplie ensuite par 100.` },
+      { type: "calcul", text: `\\(P(${target}) = \\dfrac{${effectif}}{${total}} \\times 100 \\approx ${fr(pct)}\\%\\)` },
+    ],
+  };
+}
+
 // ---------- 12. Probabilité dans un jeu de 32 cartes ----------
 function genProbabiliteCarteJeu32() {
   const cases = [
@@ -470,6 +495,7 @@ const GENERATORS = [
   genNombreIssuesExperience,
   genIssuesRealisantEvenementDe,
   genProbabiliteUrneCouleur,
+  genProbabilitePourcentageNoirBlanc,
   genProbabiliteCarteJeu32,
   genFrequenceExperienceEffectifs,
   genCompleterEffectifPileFaceTotal,
@@ -492,6 +518,7 @@ const DIFFICULTY = {
   genConvertirChanceSurXValeur: "standard",
   genIssuesRealisantEvenementDe: "standard",
   genProbabiliteUrneCouleur: "standard",
+  genProbabilitePourcentageNoirBlanc: "standard",
   genProbabiliteCarteJeu32: "standard",
   genFrequenceExperienceEffectifs: "standard",
   genProbabiliteComplementaire: "standard",

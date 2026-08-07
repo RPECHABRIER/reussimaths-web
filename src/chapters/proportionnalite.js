@@ -376,7 +376,7 @@ function genMeilleurLotAchat() {
     prompt: `Une boulangerie propose 30 croissants à commander, avec ces lots : ${lots.map((l) => `lot de ${l.n} pour ${fr(l.prix)} €`).join(", ")}. Quel lot a le meilleur prix par croissant ?`,
     answer,
     options,
-    steps: lots.map((l) => ({ type: "calcul", text: `Lot de ${l.n} : ${fr(l.prix)} \\div ${l.n} \\approx ${fr(roundTo(l.unitPrice, 3))} € par croissant` })),
+    steps: lots.map((l) => ({ type: "calcul", text: `Lot de ${l.n} : \\(${fr(l.prix)} \\div ${l.n} \\approx ${fr(roundTo(l.unitPrice, 3))}\\) € par croissant` })),
   };
 }
 

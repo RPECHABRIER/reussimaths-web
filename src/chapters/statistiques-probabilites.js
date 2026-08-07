@@ -4,12 +4,17 @@
 // Correspond au chapitre 9 du sommaire officiel : recueillir et organiser des
 // données (effectif, fréquence, tableaux simples et à double entrée),
 // représenter et lire des données (diagramme en bâtons, diagramme
-// circulaire), calculer une moyenne (simple, pondérée, écarts à la moyenne,
-// valeurs extrêmes), et les probabilités (expérience aléatoire, issues,
-// événements, équiprobabilité, événement contraire, fréquence et probabilité,
-// somme de deux dés). Reprend la tâche intellectuelle des exercices fournis
-// (modules C1 "Statistiques" et C2 "Probabilités"), avec des nombres,
-// prénoms et contextes différents à chaque génération.
+// circulaire), calculer une moyenne (simple, écarts à la moyenne, valeurs
+// extrêmes), et les probabilités (expérience aléatoire, issues, événements,
+// équiprobabilité, fréquence et probabilité). Reprend la tâche intellectuelle
+// des exercices fournis (modules C1 "Statistiques" et C2 "Probabilités"),
+// avec des nombres, prénoms et contextes différents à chaque génération.
+//
+// NOTE (audit programme 2026, cycle 4, BO du 5 mars 2026) : moyenne
+// pondérée, événement contraire et expériences à deux épreuves (somme de
+// deux dés) ont été retirés de ce chapitre — ce sont des objectifs
+// explicites de Quatrième, pas de Cinquième (voir commentaires au niveau de
+// chaque générateur retiré, et AUTOMATION_LOG.md).
 // Voir automatismes-cinquieme.js (thème "statistiques-probabilites") pour la
 // Série 1 (Automatismes).
 //
@@ -143,26 +148,12 @@ function genEcartALaMoyenneNumeric() {
   };
 }
 
-// ---------- 7. Moyenne pondérée (à partir d'un tableau effectifs) ----------
-function genMoyennePondereeNumeric() {
-  const valeurs = shuffle([8, 10, 12, 14, 16, 18]).slice(0, 4);
-  const effectifs = valeurs.map(() => randInt(2, 10));
-  const sommeProduits = valeurs.reduce((s, v, i) => s + v * effectifs[i], 0);
-  const totalEffectif = effectifs.reduce((s, e) => s + e, 0);
-  const answer = roundTo(sommeProduits / totalEffectif, 2);
-  const table = valeurs.map((v, i) => `${v} (effectif ${effectifs[i]})`).join(" ; ");
-  return {
-    type: "numeric",
-    chapter: "Statistiques — Moyenne pondérée",
-    prompt: `Voici les notes obtenues par une classe, avec leurs effectifs : ${table}. Quelle est la moyenne pondérée de la classe (arrondie au centième) ?`,
-    answer,
-    tolerance: 0.02,
-    steps: [
-      { type: "calcul", text: `Somme pondérée = ${valeurs.map((v, i) => `${v} \\times ${effectifs[i]}`).join(" + ")} = ${sommeProduits}` },
-      { type: "calcul", text: `Moyenne = ${sommeProduits} \\div ${totalEffectif} \\approx ${fr(answer)}` },
-    ],
-  };
-}
+// NOTE (audit programme 2026, voir AUTOMATION_LOG.md) : un générateur
+// "genMoyennePondereeNumeric" (moyenne pondérée à partir d'un tableau
+// effectifs) a été retiré d'ici — la moyenne pondérée n'est PAS au programme
+// officiel de 5e (BO du 5 mars 2026, cycle 4) : seule la moyenne SIMPLE y
+// figure (« Calculer et interpréter la moyenne simple d'une série de
+// données »). La moyenne pondérée est un objectif explicite de Quatrième.
 
 // ---------- 8. Recalculer la moyenne après avoir exclu les valeurs extrêmes ----------
 function genExclureValeursExtremesMoyenneNumeric() {
@@ -274,19 +265,12 @@ function genProbabiliteUrneTirageNumeric() {
   };
 }
 
-// ---------- 13. Probabilité de l'événement contraire ----------
-function genProbabiliteEvenementContraireNumeric() {
-  const p = roundTo(randDecimal(0.05, 0.95, 2), 2);
-  const answer = roundTo(1 - p, 2);
-  return {
-    type: "numeric",
-    chapter: "Probabilités — Événement contraire",
-    prompt: `Un événement A a une probabilité P(A) = ${fr(p)}. Quelle est la probabilité de l'événement contraire (ne pas réaliser A) ?`,
-    answer,
-    tolerance: 0.01,
-    steps: [{ type: "calcul", text: `P(\\text{contraire de A}) = 1 - P(A) = 1 - ${fr(p)} = ${fr(answer)}` }],
-  };
-}
+// NOTE (audit programme 2026) : un générateur "genProbabiliteEvenementContraireNumeric"
+// a été retiré d'ici — l'événement contraire n'est PAS au programme de 5e.
+// En 5e, on se limite au vocabulaire « expérience aléatoire, issue,
+// évènement » et à l'équiprobabilité. Le complémentaire/événement contraire
+// est un objectif explicite de Quatrième (avec le vocabulaire ensembliste :
+// complémentaire, réunion, intersection).
 
 // ---------- 14. Comparer la probabilité de tirage entre plusieurs sacs ----------
 function genComparerProbabilitesSacsQCM() {
@@ -311,21 +295,12 @@ function genComparerProbabilitesSacsQCM() {
   };
 }
 
-// ---------- 15. Probabilité de la somme de deux dés ----------
-function genSommeDeuxDesProbabiliteNumeric() {
-  const distribution = { 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 5, 9: 4, 10: 3, 11: 2, 12: 1 };
-  const somme = randInt(2, 12);
-  const favorables = distribution[somme];
-  const answer = roundTo(favorables / 36, 4);
-  return {
-    type: "numeric",
-    chapter: "Probabilités — Somme de deux dés",
-    prompt: `On lance deux dés équilibrés à 6 faces et on additionne les résultats obtenus. Quelle est la probabilité d'obtenir une somme égale à ${somme} (sous forme décimale, arrondie au millième) ?`,
-    answer,
-    tolerance: 0.001,
-    steps: [{ type: "calcul", text: `Il y a ${favorables} façon(s) d'obtenir la somme ${somme} parmi les 36 issues possibles : P = ${favorables} \\div 36 \\approx ${fr(answer)}` }],
-  };
-}
+// NOTE (audit programme 2026) : un générateur "genSommeDeuxDesProbabiliteNumeric"
+// (somme de deux dés, expérience à deux épreuves, 36 issues) a été retiré
+// d'ici — les expériences aléatoires à deux épreuves sont un objectif
+// explicite de Quatrième (« Exemples simples d'expériences aléatoires à deux
+// épreuves »). Le programme de 5e ne traite que des expériences aléatoires
+// simples à une épreuve.
 
 // ---------- 16. Fréquence et probabilité (loi des grands nombres) ----------
 function genFrequenceVersProbabiliteQCM() {
@@ -425,15 +400,12 @@ const GENERATORS = [
   genLireTableauEffectifsQCM,
   genCalculerMoyenneSimpleNumeric,
   genEcartALaMoyenneNumeric,
-  genMoyennePondereeNumeric,
   genExclureValeursExtremesMoyenneNumeric,
   genComparerMoyennesQCM,
   genQualifierEvenementQCM,
   genProbabiliteDeNumeric,
   genProbabiliteUrneTirageNumeric,
-  genProbabiliteEvenementContraireNumeric,
   genComparerProbabilitesSacsQCM,
-  genSommeDeuxDesProbabiliteNumeric,
   genFrequenceVersProbabiliteQCM,
   genExperienceAleatoireQCM,
   genProbabiliteRoueSecteursInegauxNumeric,
@@ -451,17 +423,14 @@ const DIFFICULTY = {
   genExperienceAleatoireQCM: "facile",
   genAngleDiagrammeCirculaireNumeric: "standard",
   genEcartALaMoyenneNumeric: "standard",
-  genMoyennePondereeNumeric: "standard",
   genExclureValeursExtremesMoyenneNumeric: "standard",
   genComparerMoyennesQCM: "standard",
   genProbabiliteUrneTirageNumeric: "standard",
-  genProbabiliteEvenementContraireNumeric: "standard",
   genComparerProbabilitesSacsQCM: "standard",
   genFrequenceVersProbabiliteQCM: "standard",
   genProbabiliteRoueSecteursInegauxNumeric: "standard",
   genProbabiliteFractionSimplifieeNumeric: "standard",
   genClassementProbabilitesQCM: "standard",
-  genSommeDeuxDesProbabiliteNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -476,7 +445,7 @@ export default {
   meta: {
     id: "statistiques-probabilites",
     title: "Statistiques, probabilités",
-    description: "Effectif et fréquence, tableaux et diagrammes, moyenne (simple, pondérée, écarts), probabilités (équiprobabilité, événement contraire, somme de deux dés, fréquence et probabilité).",
+    description: "Effectif et fréquence, tableaux et diagrammes, moyenne simple et écarts, probabilités en situation d'équiprobabilité, fréquence et probabilité.",
     pourquoi: "Calculer une moyenne ou une probabilité simple, c'est déjà résumer et interpréter des données réelles.",
     level: "cinquieme",
     free: false,

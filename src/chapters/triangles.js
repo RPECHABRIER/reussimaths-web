@@ -143,19 +143,10 @@ function genDemonstrationSommeAnglesQCM() {
   };
 }
 
-// ---------- 4. Angle extérieur d'un triangle ----------
-function genAngleExterieurTriangle() {
-  const angB = randInt(20, 90);
-  const angC = randInt(20, 90);
-  const answer = angB + angC;
-  return {
-    type: "numeric",
-    chapter: "Triangles — Angles",
-    prompt: `Dans un triangle ABC, les angles en B et C mesurent respectivement ${angB}° et ${angC}°. Quelle est la mesure de l'angle extérieur au sommet A (formé par le prolongement d'un côté) ?`,
-    answer,
-    steps: [{ type: "regle", text: `L'angle extérieur en A est égal à la somme des deux autres angles du triangle : \\(${angB} + ${angC} = ${answer}\\)` }],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : un générateur "genAngleExterieurTriangle"
+// a été retiré d'ici — recherche exhaustive dans le programme officiel :
+// l'expression "angle extérieur" n'apparaît nulle part dans le cycle 4
+// (5e/4e/3e).
 
 // ---------- 5. Triangle isocèle : angles à la base égaux ----------
 function genTriangleIsoceleAnglesEgaux() {
@@ -216,41 +207,13 @@ function genCercleCirconscritRayonDiametre() {
   };
 }
 
-// ---------- 8. Cas particulier du triangle rectangle : hypoténuse = diamètre ----------
-function genTriangleRectangleHypotenuseDiametre() {
-  const hyp = randDecimal(4, 20, 1);
-  return {
-    type: "numeric",
-    chapter: "Triangles — Cercle circonscrit",
-    prompt: `ABC est un triangle rectangle en A, avec BC = ${fr(hyp)} cm (l'hypoténuse). Quel est le rayon du cercle circonscrit à ce triangle, en cm ?`,
-    answer: roundTo(hyp / 2, 2),
-    tolerance: 0.01,
-    steps: [{ type: "regle", text: `Dans un triangle rectangle, le cercle circonscrit a pour diamètre l'hypoténuse : rayon = BC ÷ 2 = ${fr(hyp)} \\div 2 = ${fr(roundTo(hyp / 2, 2))}` }],
-  };
-}
-
-// ---------- 9. Reconnaître un triangle rectangle grâce au cercle circonscrit ----------
-function genReconnaitreTriangleRectangleViaCercleQCM() {
-  const estDiametre = Math.random() < 0.5;
-  return {
-    type: "qcm",
-    chapter: "Triangles — Cercle circonscrit",
-    prompt: estDiametre
-      ? `Un triangle ABC est inscrit dans un cercle de centre O, et [BC] est un diamètre de ce cercle. Ce triangle est-il rectangle en A ?`
-      : `Un triangle ABC est inscrit dans un cercle de centre O, mais aucun côté n'est un diamètre du cercle. Ce triangle est-il nécessairement rectangle ?`,
-    answer: estDiametre ? "Oui" : "Non",
-    options: ["Oui", "Non"],
-    steps: [
-      {
-        type: "regle",
-        text:
-          estDiametre
-            ? `Si un côté d'un triangle inscrit dans un cercle est un diamètre, alors le triangle est rectangle (l'angle opposé à ce côté est droit).`
-            : `Sans côté-diamètre, on ne peut rien affirmer sur l'angle droit.`,
-      },
-    ],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : deux générateurs sur la
+// caractérisation d'un triangle rectangle par son cercle circonscrit
+// ("genTriangleRectangleHypotenuseDiametre", "genReconnaitreTriangleRectangleViaCercleQCM")
+// ont été retirés d'ici — le programme officiel assigne explicitement ce
+// point à la Quatrième (« Caractériser un triangle rectangle à l'aide de son
+// cercle circonscrit... »). En 5e, l'objectif sur le cercle circonscrit
+// reste plus général (voir genCercleCirconscritRayonDiametre ci-dessus).
 
 // =========================== Hauteurs, aires, orthocentre ===========================
 
@@ -294,17 +257,13 @@ function genAireTriangleTrouverBaseOuHauteur() {
   };
 }
 
-// ---------- 12. Vocabulaire : point d'intersection des hauteurs ----------
-function genOrthocentreDefinitionQCM() {
-  return {
-    type: "qcm",
-    chapter: "Triangles — Hauteurs",
-    prompt: `Comment appelle-t-on le point d'intersection des trois hauteurs d'un triangle ?`,
-    answer: "L'orthocentre",
-    options: shuffle(["L'orthocentre", "Le centre de gravité", "Le centre du cercle circonscrit"]),
-    steps: [{ type: "donnee", text: `Le point de concours des trois hauteurs d'un triangle s'appelle l'orthocentre.` }],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : un générateur "genOrthocentreDefinitionQCM"
+// présentait "orthocentre" comme du vocabulaire à connaître isolément — or ce
+// mot n'apparaît nulle part dans le programme officiel (seule la
+// concourance des hauteurs est un objectif, sans nommer le point). Le mot
+// reste introduit, mais uniquement via le contexte culturel de la droite
+// d'Euler (voir genCultureDroiteEulerQCM plus bas), comme le recommande
+// l'audit.
 
 // ---------- 13. Particularité des hauteurs dans un triangle rectangle ----------
 function genHauteurTriangleRectangleParticulariteQCM() {
@@ -333,42 +292,15 @@ function genMedianeMilieuNumeric() {
   };
 }
 
-// ---------- 15. Centre de gravité : partage d'une médiane (ratio 2:1) ----------
-function genCentreDeGraviteRatioNumeric() {
-  const askAG = Math.random() < 0.5;
-  const am = randDecimal(3, 24, 1);
-  const ag = roundTo((2 / 3) * am, 2);
-  return {
-    type: "numeric",
-    chapter: "Triangles — Centre de gravité",
-    prompt: askAG
-      ? `G est le centre de gravité du triangle ABC, situé sur la médiane [AM] (M milieu de [BC]). Sachant que AM = ${fr(am)} cm, quelle est la longueur AG, en cm ?`
-      : `G est le centre de gravité du triangle ABC, situé sur la médiane [AM] (M milieu de [BC]). Sachant que AG = ${fr(ag)} cm, quelle est la longueur AM, en cm ?`,
-    answer: askAG ? ag : am,
-    tolerance: 0.02,
-    steps: [
-      {
-        type: "regle",
-        text:
-          askAG
-            ? `Le centre de gravité se situe aux deux tiers de chaque médiane à partir du sommet : AG = (2/3) \\times AM = (2/3) \\times ${fr(am)} = ${fr(ag)}`
-            : `AM = (3/2) \\times AG = (3/2) \\times ${fr(ag)} = ${fr(am)}`,
-      },
-    ],
-  };
-}
-
-// ---------- 16. Vocabulaire : point d'intersection des médianes ----------
-function genCentreDeGraviteDefinitionQCM() {
-  return {
-    type: "qcm",
-    chapter: "Triangles — Centre de gravité",
-    prompt: `Comment appelle-t-on le point d'intersection des trois médianes d'un triangle ?`,
-    answer: "Le centre de gravité",
-    options: shuffle(["Le centre de gravité", "L'orthocentre", "Le centre du cercle circonscrit"]),
-    steps: [{ type: "donnee", text: `Le point de concours des trois médianes d'un triangle s'appelle le centre de gravité.` }],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : deux générateurs sur le centre de
+// gravité ("genCentreDeGraviteRatioNumeric" avec son ratio 2/3, et
+// "genCentreDeGraviteDefinitionQCM" présentant le nom comme vocabulaire
+// isolé) ont été retirés d'ici — recherche exhaustive dans le programme
+// officiel : ni "centre de gravité" ni son ratio 2/3 n'apparaissent nulle
+// part dans le cycle 4. Seule la concourance des médianes (sans nommer le
+// point ni son ratio) est un objectif de 5e. Le mot "centre de gravité"
+// reste introduit, mais uniquement via le contexte culturel de la droite
+// d'Euler (genCultureDroiteEulerQCM plus bas).
 
 // ---------- 17. Une médiane partage le triangle en deux aires égales ----------
 function genMedianePartageAireMoitieNumeric() {
@@ -401,6 +333,11 @@ function genAireDiagonalesPerpendiculairesNumeric() {
 }
 
 // ---------- 19. Aire d'un trapèze ----------
+// NOTE (audit programme 2026) : le trapèze n'est mentionné en 5e que comme
+// figure à reconnaître (« Reconnaitre en justifiant un quadrilatère... un
+// trapèze »), jamais avec une formule d'aire à connaître — repositionné en
+// "expert" (dépassement) plutôt que "facile", et non retiré (contenu
+// mathématiquement correct, juste pas central en 5e).
 function genAireTrapezeNumeric() {
   const grandeBase = randInt(6, 24);
   const petiteBase = randInt(2, grandeBase - 1);
@@ -467,19 +404,13 @@ const GENERATORS = [
   genAngleManquantTriangleSomme,
   genClassifierTriangleAnglesQCM,
   genDemonstrationSommeAnglesQCM,
-  genAngleExterieurTriangle,
   genTriangleIsoceleAnglesEgaux,
   genMediatriceEquidistanceNumeric,
   genCercleCirconscritRayonDiametre,
-  genTriangleRectangleHypotenuseDiametre,
-  genReconnaitreTriangleRectangleViaCercleQCM,
   genAireTriangleBaseHauteur,
   genAireTriangleTrouverBaseOuHauteur,
-  genOrthocentreDefinitionQCM,
   genHauteurTriangleRectangleParticulariteQCM,
   genMedianeMilieuNumeric,
-  genCentreDeGraviteRatioNumeric,
-  genCentreDeGraviteDefinitionQCM,
   genMedianePartageAireMoitieNumeric,
   genAireDiagonalesPerpendiculairesNumeric,
   genAireTrapezeNumeric,
@@ -493,24 +424,18 @@ const DIFFICULTY = {
   genClassifierTriangleAnglesQCM: "facile",
   genTriangleIsoceleAnglesEgaux: "facile",
   genAireTriangleBaseHauteur: "facile",
-  genOrthocentreDefinitionQCM: "facile",
   genMedianeMilieuNumeric: "facile",
-  genCentreDeGraviteDefinitionQCM: "facile",
-  genAireTrapezeNumeric: "facile",
   genCultureDroiteEulerQCM: "facile",
   genCultureCercleNeufPointsQCM: "facile",
-  genAngleExterieurTriangle: "standard",
   genMediatriceEquidistanceNumeric: "standard",
   genCercleCirconscritRayonDiametre: "standard",
-  genTriangleRectangleHypotenuseDiametre: "standard",
-  genReconnaitreTriangleRectangleViaCercleQCM: "standard",
   genAireTriangleTrouverBaseOuHauteur: "standard",
   genHauteurTriangleRectangleParticulariteQCM: "standard",
-  genCentreDeGraviteRatioNumeric: "standard",
   genMedianePartageAireMoitieNumeric: "standard",
   genAireDiagonalesPerpendiculairesNumeric: "standard",
   genDemonstrationSommeAnglesQCM: "expert",
   genFigureComposeeRectangleTriangleNumeric: "expert",
+  genAireTrapezeNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -525,7 +450,7 @@ export default {
   meta: {
     id: "triangles",
     title: "Triangles",
-    description: "Angles dans un triangle, médiatrices et cercle circonscrit, hauteurs et orthocentre, médianes et centre de gravité, aires de quadrilatères, culture mathématique.",
+    description: "Angles dans un triangle, médiatrices et cercle circonscrit, hauteurs, médianes, aires de quadrilatères, culture mathématique (droite d'Euler).",
     pourquoi: "Médiatrices, hauteurs et médianes permettent de construire des triangles précis et de comprendre leurs points remarquables.",
     level: "cinquieme",
     free: false,

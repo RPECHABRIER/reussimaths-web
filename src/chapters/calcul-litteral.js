@@ -175,21 +175,34 @@ function genTesterEgaliteQCM() {
 }
 
 // ---------- 6. Trouver, parmi plusieurs valeurs, laquelle vérifie l'égalité ----------
+// NOTE (audit programme 2026) : reformulé pour rester dans le cadre officiel
+// de 5e — équations du type ax=c OU x+b=c uniquement (jamais les deux
+// combinées ax+b=c, qui est un objectif de Quatrième).
 function genTrouverValeurXEgaliteVraieQCM() {
-  const a = randInt(2, 8);
-  const b = randInt(-15, 15);
+  const useMultiplication = Math.random() < 0.5;
   const xTrue = randInt(-6, 10);
-  const c = a * xTrue + b;
+  let equation, stepText;
+  if (useMultiplication) {
+    const a = randInt(2, 8);
+    const c = a * xTrue;
+    equation = `${a}x = ${c}`;
+    stepText = `${a} \\times ${xTrue} = ${c}`;
+  } else {
+    const b = nonZero(-15, 15);
+    const c = xTrue + b;
+    equation = `x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}`;
+    stepText = `${xTrue} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}`;
+  }
   const candidats = new Set([xTrue]);
   while (candidats.size < 4) candidats.add(xTrue + nonZero(-4, 4));
   const options = shuffle([...candidats]).map((v) => `${v}`);
   return {
     type: "qcm",
     chapter: "Calcul littéral — Tester une égalité",
-    prompt: `Parmi les valeurs suivantes, laquelle est solution de l'équation \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\) ?`,
+    prompt: `Parmi les valeurs suivantes, laquelle est solution de l'équation \\(${equation}\\) ?`,
     answer: `${xTrue}`,
     options,
-    steps: [{ type: "calcul", text: `${a} \\times ${xTrue} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}` }],
+    steps: [{ type: "calcul", text: stepText }],
   };
 }
 
@@ -372,23 +385,14 @@ function genResoudreEquationMultiplicationDivision() {
   };
 }
 
-// ---------- 14. Résoudre une équation en deux étapes (ax+b=c) ----------
-function genResoudreEquationDeuxEtapes() {
-  const a = randInt(2, 9);
-  const b = nonZero(-20, 20);
-  const xSolution = nonZero(-15, 15);
-  const c = a * xSolution + b;
-  return {
-    type: "numeric",
-    chapter: "Calcul littéral — Résoudre une équation",
-    prompt: `Résous : \\(${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${c}\\)`,
-    answer: xSolution,
-    steps: [
-      { type: "calcul", text: `${a}x = ${c} ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${c - b}` },
-      { type: "calcul", text: `x = ${c - b} \\div ${a} = ${xSolution}` },
-    ],
-  };
-}
+// NOTE (audit programme 2026) : un générateur "genResoudreEquationDeuxEtapes"
+// (équations à deux étapes du type ax+b=c) a été retiré d'ici — le
+// programme officiel de 5e limite explicitement la résolution d'équations
+// aux types ax=c OU x+b=c (« Modéliser des problèmes... par des équations du
+// type ax = c ou x + b = c »). Les équations à deux étapes (ax+b=c) sont un
+// objectif explicite de Quatrième (voir genResoudreEquationAdditionSoustraction
+// et genResoudreEquationMultiplicationDivision ci-dessus pour les deux types
+// autorisés en 5e).
 
 // ---------- 15. Vérifier si une solution proposée est correcte ----------
 function genVerifierSiSolutionEquationQCM() {
@@ -465,7 +469,6 @@ const GENERATORS = [
   genVerifierIdentiteAlgebriqueQCM,
   genResoudreEquationAdditionSoustraction,
   genResoudreEquationMultiplicationDivision,
-  genResoudreEquationDeuxEtapes,
   genVerifierSiSolutionEquationQCM,
   genEquationContexteSchemaBarres,
   genProblemeHeritageAlKhwarizmi,
@@ -485,7 +488,6 @@ const DIFFICULTY = {
   genTesterVraiFauxDeveloppementQCM: "standard",
   genAireRectangleFactoriseDeveloppe: "standard",
   genVerifierIdentiteAlgebriqueQCM: "standard",
-  genResoudreEquationDeuxEtapes: "standard",
   genEquationContexteSchemaBarres: "standard",
   genProblemeAssembleeEffectifEnFonctionDeX: "expert",
   genProblemeHeritageAlKhwarizmi: "expert",

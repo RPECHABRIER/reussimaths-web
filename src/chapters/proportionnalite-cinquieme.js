@@ -313,45 +313,12 @@ function genVitesseMoyenneNumeric() {
   };
 }
 
-// =========================== Proportionnalité et cercle ===========================
-
-// ---------- 16. Longueur d'un arc de cercle (proportionnalité à l'angle) ----------
-function genLongueurArcCercleNumeric() {
-  const r = randInt(2, 20);
-  const angle = pick([30, 45, 60, 90, 120, 180, 270]);
-  const perimetre = roundTo(2 * Math.PI * r, 4);
-  const answer = roundTo((angle / 360) * perimetre, 2);
-  return {
-    type: "numeric",
-    chapter: "Proportionnalité — Longueur d'arc",
-    prompt: `On considère un cercle de rayon ${r} cm. Quelle est la longueur de l'arc correspondant à un angle au centre de ${angle}°, en cm (arrondie au centième) ?`,
-    answer,
-    tolerance: piTolerance(answer),
-    steps: [
-      { type: "calcul", text: `Périmètre du cercle \\approx ${fr(perimetre)} \\text{ cm}` },
-      { type: "calcul", text: `Longueur de l'arc = \\dfrac{${angle}}{360} \\times ${fr(perimetre)} \\approx ${fr(answer)}` },
-    ],
-  };
-}
-
-// ---------- 17. Aire d'un secteur circulaire (proportionnalité à l'angle) ----------
-function genAireSecteurCirculaireNumeric() {
-  const r = randInt(2, 20);
-  const angle = pick([30, 45, 60, 90, 120, 180, 270]);
-  const aireDisque = roundTo(Math.PI * r * r, 4);
-  const answer = roundTo((angle / 360) * aireDisque, 2);
-  return {
-    type: "numeric",
-    chapter: "Proportionnalité — Aire d'un secteur circulaire",
-    prompt: `On considère un disque de rayon ${r} cm. Quelle est l'aire du secteur angulaire correspondant à un angle au centre de ${angle}°, en cm² (arrondie au centième) ?`,
-    answer,
-    tolerance: piTolerance(answer),
-    steps: [
-      { type: "calcul", text: `Aire du disque \\approx ${fr(aireDisque)} \\text{ cm}^2` },
-      { type: "calcul", text: `Aire du secteur = \\dfrac{${angle}}{360} \\times ${fr(aireDisque)} \\approx ${fr(answer)}` },
-    ],
-  };
-}
+// NOTE (audit programme 2026) : deux générateurs sur la longueur d'un arc de
+// cercle et l'aire d'un secteur circulaire ("genLongueurArcCercleNumeric",
+// "genAireSecteurCirculaireNumeric") ont été retirés d'ici — recherche
+// exhaustive dans le programme officiel : ni "arc de cercle" ni "secteur
+// circulaire"/"secteur angulaire" n'apparaissent nulle part dans le cycle 4
+// (5e/4e/3e). Ce contenu ne fait plus partie du programme du collège.
 
 // =========================== Reconnaître graphiquement ===========================
 
@@ -439,8 +406,6 @@ const GENERATORS = [
   genVitesseDistanceNumeric,
   genVitesseTempsNumeric,
   genVitesseMoyenneNumeric,
-  genLongueurArcCercleNumeric,
-  genAireSecteurCirculaireNumeric,
   genGraphiqueProportionnaliteQCM,
   genTarifAvecAbonnementNonProportionnelQCM,
   genAgrandissementReductionFigureNumeric,
@@ -464,8 +429,6 @@ const DIFFICULTY = {
   genVitesseMoyenneNumeric: "standard",
   genGraphiqueProportionnaliteQCM: "standard",
   genAgrandissementReductionFigureNumeric: "standard",
-  genLongueurArcCercleNumeric: "expert",
-  genAireSecteurCirculaireNumeric: "expert",
   genTarifAvecAbonnementNonProportionnelQCM: "expert",
 };
 
@@ -481,7 +444,7 @@ export default {
   meta: {
     id: "proportionnalite-cinquieme",
     title: "Proportionnalité",
-    description: "Identifier une situation, coefficient de proportionnalité, pourcentages, échelles, vitesse, longueur d'arc et aire d'un secteur circulaire, reconnaissance graphique.",
+    description: "Identifier une situation, coefficient de proportionnalité, pourcentages, échelles, vitesse, reconnaissance graphique.",
     pourquoi: "Reconnaître une situation de proportionnalité, c'est l'une des compétences les plus utilisées au quotidien : recettes de cuisine, pourcentages, échelles de carte, conversions de devises.",
     level: "cinquieme",
     free: false,

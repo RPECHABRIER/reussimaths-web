@@ -2747,3 +2747,77 @@ Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TO
 Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+## 2026-08-07 — Phase 0 : mise en conformité 5e avec le nouveau programme 2026 (lot 1)
+
+Suite à l'audit officiel de la classe de 5e (BO n°10 du 5 mars 2026, arrêté du
+18-2-2026, applicable dès la rentrée 2026), correction de 6 fichiers pour
+retirer ou reformuler le contenu hors-programme identifié.
+
+**`src/chapters/statistiques-probabilites.js`** : suppression de
+`genMoyennePondereeNumeric` (moyenne pondérée = objectif 4e),
+`genProbabiliteEvenementContraireNumeric` (événement contraire = objectif 4e)
+et `genSommeDeuxDesProbabiliteNumeric` (probabilités sur deux épreuves =
+objectif 4e). Description du chapitre mise à jour.
+
+**`src/chapters/triangles.js`** : suppression de `genAngleExterieurTriangle`
+(hors programme cycle 4), `genTriangleRectangleHypotenuseDiametre` et
+`genReconnaitreTriangleRectangleViaCercleQCM` (caractérisation cercle
+circonscrit/triangle rectangle = objectif 4e), `genOrthocentreDefinitionQCM`,
+`genCentreDeGraviteRatioNumeric` et `genCentreDeGraviteDefinitionQCM`
+(orthocentre et centre de gravité hors programme, sauf culture générale via
+la droite d'Euler, déjà couverte par `genCultureDroiteEulerQCM`, inchangé).
+`genAireTrapezeNumeric` repositionné en enrichissement (repassé en difficulté
+« expert »). Description du chapitre mise à jour.
+
+**`src/chapters/automatismes-cinquieme.js`** (deux corrections indépendantes) :
+- Section triangles : suppression de `genAutoCentreGraviteRatio` (ratio 2/3
+  hors programme) ; `genAutoVocabulaireTriangleQCM` reformulé en question de
+  culture mathématique sur la droite d'Euler plutôt qu'en vocabulaire à
+  mémoriser.
+- Section fonctions : `genAutoEvaluerFonctionAffine` reformulé — suppression
+  de la notation `f(x)` (réservée à la Troisième), remplacée par un contexte
+  concret nommé (« P, le prix d'une course de taxi, s'exprime en fonction de
+  d... »), en miroir de la correction faite dans `fonctions.js`.
+
+**`src/chapters/calcul-litteral.js`** : suppression de
+`genResoudreEquationDeuxEtapes` (équation `ax+b=c` = objectif 4e ; le
+programme 5e limite à `ax=c` ou `x+b=c` séparément).
+`genTrouverValeurXEgaliteVraieQCM` réécrit pour ne plus tester que ces deux
+formes simples, tirées aléatoirement.
+
+**`src/chapters/puissances.js`** : `genEcriturePuissance` et
+`genPuissanceDeDixEcriture` restreints au carré/cube (exposants 2 et 3) et à
+10¹/10²/10³ — le programme 5e ne cite explicitement que le carré, le cube et
+« le cube de 10 » ; la notion générale de puissance d'exposant entier positif
+relève de la Quatrième.
+
+**`src/chapters/proportionnalite-cinquieme.js`** : suppression de
+`genLongueurArcCercleNumeric` et `genAireSecteurCirculaireNumeric` (arc de
+cercle et secteur circulaire hors programme cycle 4). Description du
+chapitre mise à jour.
+
+**`src/chapters/fonctions.js`** : refonte complète pour rester au niveau 5e
+(« exprimer une grandeur en fonction d'une autre », sans étude générale de la
+notion de fonction — la notation f(x), la notation fléchée et le vocabulaire
+image/antécédent sont des objectifs de Troisième). Introduction d'un tableau
+partagé de contextes concrets nommés (`CONTEXTES_GRANDEUR_FONCTION` : prix
+d'une course de taxi, coût de location d'un vélo, épargne d'un enfant).
+Suppression complète de `genTrouverAntecedentNumeric` et
+`genNotationFlecheeNumeric`. Reformulation de `genVocabulaireEnFonctionDeQCM`,
+`genEvaluerFonctionAffineNumeric`, `genRetrouverDepartFonctionNumeric` et
+`genCompleterTableauValeursNumeric` pour utiliser ces contextes concrets.
+Description du chapitre mise à jour.
+
+**Vérifications effectuées :**
+- Chaque fichier modifié testé individuellement (300 à 600 exercices générés
+  par script Node) : aucun crash, aucune réponse `NaN`.
+- Le thème « fonctions » d'Automatismes 5e testé spécifiquement (200
+  exercices) après la correction du miroir `genAutoEvaluerFonctionAffine`.
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

@@ -59,9 +59,13 @@ function genCalculerCarreCube() {
 }
 
 // ---------- 2. Écriture en puissance (nombre de facteurs ou valeur) ----------
+// NOTE (audit programme 2026) : exposant limité à 2 ou 3 — le programme
+// officiel de 5e restreint explicitement les puissances au carré et au cube
+// (« dans le cas du carré et du cube »). La notion générale de puissance
+// d'exposant entier positif est un objectif de Quatrième.
 function genEcriturePuissance() {
   const base = randInt(2, 9);
-  const exposant = randInt(2, 5);
+  const exposant = pick([2, 3]);
   const mode = pick(["compter", "valeur"]);
   if (mode === "compter") {
     const expr = Array.from({ length: exposant }, () => base).join(" \\times ");
@@ -84,8 +88,11 @@ function genEcriturePuissance() {
 }
 
 // ---------- 3. Puissances de dix ----------
+// NOTE (audit programme 2026) : n limité à 1, 2 ou 3 — le programme officiel
+// de 5e ne cite explicitement que « le cube de 10 » (10³) ; les puissances
+// de dix plus générales relèvent de la Quatrième.
 function genPuissanceDeDixEcriture() {
-  const n = randInt(1, 6);
+  const n = pick([1, 2, 3]);
   const mode = pick(["valeur", "exposant"]);
   if (mode === "valeur") {
     return {

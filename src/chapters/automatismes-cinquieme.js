@@ -962,34 +962,25 @@ function genAutoMedianeMilieu() {
   };
 }
 
-// ---------- 5. Centre de gravité : ratio 2/3 (mental) ----------
-function genAutoCentreGraviteRatio() {
-  const am = randInt(3, 30) * 3;
-  const answer = (2 / 3) * am;
-  return {
-    type: "numeric",
-    chapter: "Automatismes — Centre de gravité",
-    prompt: `G est le centre de gravité d'un triangle, sur la médiane [AM]. Sachant que AM = ${am} cm, quelle est la longueur AG, en cm ?`,
-    answer,
-    steps: [{ type: "calcul", text: `AG = (2/3) \\times AM = (2/3) \\times ${am} = ${answer}` }],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : un automatisme "genAutoCentreGraviteRatio"
+// (ratio 2/3 du centre de gravité) a été retiré — recherche exhaustive dans
+// le programme officiel : ni "gravité" ni "orthocentre" n'apparaissent nulle
+// part dans le cycle 4. Seule la concourance des médianes/hauteurs est un
+// objectif (sans nommer le point), le reste relève du lycée.
 
-// ---------- 6. Vocabulaire : orthocentre / centre de gravité (mental, QCM) ----------
+// ---------- 5. Vocabulaire du triangle — via la culture mathématique (mental, QCM) ----------
+// Reformulé pour ne plus présenter "orthocentre"/"centre de gravité" comme du
+// vocabulaire à connaître au même titre que le reste du programme 5e (ce
+// n'est pas un objectif d'apprentissage du cycle 4) : rattaché explicitement
+// au prolongement culturel "Droite d'Euler" prévu par le programme.
 function genAutoVocabulaireTriangleQCM() {
-  const items = [
-    { q: "point d'intersection des trois hauteurs", r: "L'orthocentre" },
-    { q: "point d'intersection des trois médianes", r: "Le centre de gravité" },
-    { q: "point d'intersection des trois médiatrices (centre du cercle circonscrit)", r: "Le centre du cercle circonscrit" },
-  ];
-  const it = pick(items);
   return {
     type: "qcm",
-    chapter: "Automatismes — Vocabulaire du triangle",
-    prompt: `Comment appelle-t-on le ${it.q} d'un triangle ?`,
-    answer: it.r,
-    options: shuffle(["L'orthocentre", "Le centre de gravité", "Le centre du cercle circonscrit"]),
-    steps: [{ type: "donnee", text: `Il s'agit de : ${it.r.toLowerCase()}.` }],
+    chapter: "Automatismes — Culture : la droite d'Euler",
+    prompt: `Culture mathématique : dans un triangle, l'orthocentre, le centre de gravité et le centre du cercle circonscrit sont-ils, en général, alignés sur une même droite ?`,
+    answer: "Oui (la droite d'Euler)",
+    options: shuffle(["Oui (la droite d'Euler)", "Non, jamais", "Seulement dans un triangle rectangle"]),
+    steps: [{ type: "donnee", text: `C'est un résultat de culture mathématique (prolongement du programme) : cette droite s'appelle la droite d'Euler.` }],
   };
 }
 
@@ -998,7 +989,6 @@ const CH_TRIANGLES = [
   genAutoTriangleIsoceleAngleBase,
   genAutoAireTriangleBaseHauteur,
   genAutoMedianeMilieu,
-  genAutoCentreGraviteRatio,
   genAutoVocabulaireTriangleQCM,
 ];
 
@@ -1261,18 +1251,28 @@ const CH_PROPORTIONNALITE = [
 // (Série 1 "Automatismes" du chapitre — calculs mentaux rapides, sans figure :
 // le contenu complet est traité dans fonctions.js.)
 
-// ---------- 1. Évaluer une fonction affine (mental) ----------
+// ---------- 1. Évaluer une formule en contexte (mental) ----------
+// NOTE (audit programme 2026) : la notation f(x) et le vocabulaire
+// image/antécédent relèvent de la Troisième (« sans étude générale de la
+// notion de fonction » en 5e). Reformulé en contexte concret nommé, comme
+// dans fonctions.js (genEvaluerFonctionAffineNumeric).
+const CONTEXTES_FONCTION_MENTAL = [
+  { grandeur: "P", texte: "le prix (en €) d'une course de taxi", variable: "d", varTexte: "la distance parcourue (en km)" },
+  { grandeur: "C", texte: "le coût (en €) de location d'un vélo", variable: "t", varTexte: "la durée de location (en heures)" },
+  { grandeur: "S", texte: "la somme (en €) épargnée par un enfant", variable: "n", varTexte: "le nombre de semaines écoulées" },
+];
 function genAutoEvaluerFonctionAffine() {
-  const a = nonZero(-6, 6);
-  const b = randInt(-8, 8);
-  const x = randInt(-6, 6);
+  const ctx = pick(CONTEXTES_FONCTION_MENTAL);
+  const a = randInt(2, 8);
+  const b = randInt(1, 15);
+  const x = randInt(1, 12);
   const answer = a * x + b;
   return {
     type: "numeric",
-    chapter: "Automatismes — Évaluer une fonction",
-    prompt: `On considère \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
+    chapter: "Automatismes — Évaluer une formule",
+    prompt: `${ctx.grandeur}, ${ctx.texte}, s'exprime en fonction de ${ctx.varTexte} (notée ${ctx.variable}) par la formule \\(${ctx.grandeur} = ${a}${ctx.variable} + ${b}\\). Calcule ${ctx.grandeur} pour ${ctx.variable} = ${x}.`,
     answer,
-    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} + ${b} = ${answer}` }],
   };
 }
 

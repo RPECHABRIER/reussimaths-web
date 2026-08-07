@@ -2,16 +2,24 @@
 // Chapitre : Fonctions (5e) — sous abonnement.
 //
 // Correspond au chapitre 11 (dernier chapitre) du sommaire officiel :
-// vocabulaire "en fonction de", notations (fléchée, fonctionnelle),
-// évaluer une fonction définie par une formule, traduire un programme de
-// calcul en fonction, décider si une relation de dépendance est
-// proportionnelle ou non (tableaux), et utiliser des fonctions dans des
-// contextes réels (puissance d'une éolienne, température ressentie,
-// distance de freinage, volume d'un cylindre). Reprend la tâche
+// vocabulaire "en fonction de", évaluer une formule dans un contexte
+// concret, traduire un programme de calcul, décider si une relation de
+// dépendance est proportionnelle ou non (tableaux), et utiliser des
+// formules dans des contextes réels (puissance d'une éolienne, température
+// ressentie, distance de freinage, volume d'un cylindre). Reprend la tâche
 // intellectuelle des exercices fournis (module D2 "Fonctions"), avec des
 // nombres, prénoms et contextes différents à chaque génération.
 // Voir automatismes-cinquieme.js (thème "fonctions") pour la Série 1
 // (Automatismes).
+//
+// NOTE (audit programme 2026, cycle 4) : ce chapitre est volontairement
+// resté au niveau du programme de 5e — l'expression « en fonction de »,
+// une formule ou un tableau de valeurs, TOUJOURS rattachés à un contexte
+// concret nommé (le prix, la puissance, la température...). La notation
+// fonctionnelle f(x), la notation fléchée f : x ⟼ ..., et le vocabulaire
+// « image »/« antécédent » sont des objectifs explicites de Troisième
+// (« Des exemples de fonctions sont étudiés en troisième, sans étude
+// générale de la notion de fonction ») — retirés/reformulés d'ici.
 //
 // Convention nombres : les valeurs internes (answer, calculs) restent des
 // nombres JS (point décimal), mais tout ce qui s'affiche à l'écran passe par
@@ -39,6 +47,15 @@ const prenoms = [
 
 const piTolerance = (answer) => Math.max(0.05, roundTo(Math.abs(answer) * 0.005, 2));
 
+// Contextes concrets réutilisés pour évaluer une formule "en fonction de"
+// (voir NOTE en tête de fichier) : toujours une grandeur nommée avec son
+// unité, jamais une fonction abstraite f(x).
+const CONTEXTES_GRANDEUR_FONCTION = [
+  { grandeur: "P", texte: "le prix (en €) d'une course de taxi", variable: "d", varTexte: "la distance parcourue (en km)" },
+  { grandeur: "C", texte: "le coût (en €) de location d'un vélo", variable: "t", varTexte: "la durée de location (en heures)" },
+  { grandeur: "S", texte: "la somme (en €) épargnée par un enfant", variable: "n", varTexte: "le nombre de semaines écoulées" },
+];
+
 // =========================== Vocabulaire et notations ===========================
 
 // ---------- 1. Vocabulaire : "en fonction de" ----------
@@ -55,9 +72,9 @@ function genVocabulaireEnFonctionDeQCM() {
       opts: ["x", "y", "Aucune des deux"],
     },
     {
-      q: "Comment appelle-t-on une notation du type f(x) = 2x + 3 ?",
-      r: "Une notation fonctionnelle",
-      opts: ["Une notation fonctionnelle", "Une notation fléchée", "Un tableau de proportionnalité"],
+      q: "Le prix P d'un article dépend de sa masse m. Comment traduit-on cela avec le vocabulaire du programme ?",
+      r: "P s'exprime en fonction de m",
+      opts: ["P s'exprime en fonction de m", "P est toujours égal à m", "m s'exprime en fonction du temps"],
     },
   ];
   const it = pick(items);
@@ -71,50 +88,31 @@ function genVocabulaireEnFonctionDeQCM() {
   };
 }
 
-// ---------- 2. Évaluer une fonction affine définie par une formule ----------
+// ---------- 2. Évaluer une formule "en fonction de" dans un contexte concret ----------
+// NOTE (audit programme 2026) : reformulé pour rester ancré dans un contexte
+// concret nommé, sans notation f(x) abstraite (voir NOTE en tête de fichier).
 function genEvaluerFonctionAffineNumeric() {
-  const a = nonZero(-9, 9);
-  const b = randInt(-10, 10);
-  const x = randInt(-8, 8);
+  const ctx = pick(CONTEXTES_GRANDEUR_FONCTION);
+  const a = randInt(2, 8);
+  const b = randInt(1, 15);
+  const x = randInt(1, 12);
   const answer = a * x + b;
   return {
     type: "numeric",
-    chapter: "Fonctions — Évaluer une fonction",
-    prompt: `On considère la fonction f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Calcule \\(f(${x})\\).`,
+    chapter: "Fonctions — Évaluer une formule",
+    prompt: `${ctx.grandeur}, ${ctx.texte}, s'exprime en fonction de ${ctx.varTexte} (notée ${ctx.variable}) par la formule \\(${ctx.grandeur} = ${a}${ctx.variable} + ${b}\\). Quelle est la valeur de ${ctx.grandeur} pour ${ctx.variable} = ${x} ?`,
     answer,
-    steps: [{ type: "calcul", text: `f(${x}) = ${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
+    steps: [{ type: "calcul", text: `${ctx.grandeur} = ${a} \\times ${x} + ${b} = ${answer}` }],
   };
 }
 
-// ---------- 3. Trouver l'antécédent d'un nombre par une fonction affine ----------
-function genTrouverAntecedentNumeric() {
-  const a = pick([1, 2, 3, 4, 5, -1, -2, -3]);
-  const b = randInt(-10, 10);
-  const x = randInt(-8, 8);
-  const y = a * x + b;
-  return {
-    type: "numeric",
-    chapter: "Fonctions — Image et antécédent",
-    prompt: `On considère la fonction f définie par \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Quel est l'antécédent de ${y} par la fonction f (c'est-à-dire la valeur de x telle que \\(f(x) = ${y}\\)) ?`,
-    answer: x,
-    steps: [{ type: "calcul", text: `${y} = ${a}x ${b >= 0 ? "+" : ""} ${b} \\Rightarrow x = (${y} - (${b})) \\div ${a} = ${x}` }],
-  };
-}
-
-// ---------- 4. Notation fléchée ----------
-function genNotationFlecheeNumeric() {
-  const a = nonZero(-8, 8);
-  const b = randInt(-10, 10);
-  const x = randInt(-8, 8);
-  const answer = a * x + b;
-  return {
-    type: "numeric",
-    chapter: "Fonctions — Notation fléchée",
-    prompt: `Une fonction f est définie par la notation fléchée \\(f : x \\longmapsto ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Quelle est l'image de ${x} par cette fonction ?`,
-    answer,
-    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
-  };
-}
+// NOTE (audit programme 2026, cycle 4) : deux générateurs ont été retirés
+// d'ici — "genTrouverAntecedentNumeric" (vocabulaire "antécédent") et
+// "genNotationFlecheeNumeric" (notation fléchée f : x ⟼ ...). Le programme
+// officiel assigne explicitement le vocabulaire image/antécédent à la
+// Troisième ; la recherche d'un nombre de départ à partir d'un résultat
+// reste testée en 5e, mais via un programme de calcul concret plutôt qu'une
+// fonction abstraite (voir genRetrouverDepartFonctionNumeric plus bas).
 
 // =========================== Programme de calcul et fonction ===========================
 
@@ -137,7 +135,9 @@ function genProgrammeCalculFonctionNumeric() {
   };
 }
 
-// ---------- 6. Retrouver le nombre de départ (fonction réciproque simple) ----------
+// ---------- 6. Retrouver le nombre de départ d'un programme de calcul ----------
+// NOTE (audit programme 2026) : reformulé sans notation "f(x) = ..." (voir
+// NOTE en tête de fichier) — on reste sur le programme de calcul concret.
 function genRetrouverDepartFonctionNumeric() {
   const mult = randInt(2, 6);
   const sub = randInt(1, 10);
@@ -147,7 +147,7 @@ function genRetrouverDepartFonctionNumeric() {
   return {
     type: "numeric",
     chapter: "Fonctions — Programme de calcul",
-    prompt: `Une fonction f est définie par le programme : choisir un nombre, le multiplier par ${mult}, puis soustraire ${sub}. Sachant que \\(f(x) = ${resultat}\\), quelle est la valeur de x ?`,
+    prompt: `On applique à un nombre le programme de calcul suivant : le multiplier par ${mult}, puis soustraire ${sub}. Sachant que le résultat obtenu est ${resultat}, quel était le nombre de départ ?`,
     answer: x,
     steps: [
       { type: "calcul", text: `${resultat} + ${sub} = ${etape1}` },
@@ -190,17 +190,21 @@ function genRelationDependanceProportionnelleQCM() {
 }
 
 // ---------- 8. Compléter un tableau de valeurs à partir d'une formule ----------
+// NOTE (audit programme 2026) : reformulé dans un contexte concret nommé
+// (voir NOTE en tête de fichier) — "produire un tableau de valeurs" est un
+// objectif explicite de 5e, mais toujours rattaché à une grandeur nommée.
 function genCompleterTableauValeursNumeric() {
-  const a = nonZero(-6, 6);
-  const b = randInt(-8, 8);
-  const x = randInt(-10, 10);
+  const ctx = pick(CONTEXTES_GRANDEUR_FONCTION);
+  const a = randInt(2, 8);
+  const b = randInt(1, 15);
+  const x = randInt(1, 12);
   const answer = a * x + b;
   return {
     type: "numeric",
     chapter: "Fonctions — Tableau de valeurs",
-    prompt: `Une fonction f vérifie \\(f(x) = ${a}x ${b >= 0 ? "+" : ""} ${b}\\). Complète le tableau de valeurs : quelle est la valeur de \\(f(${x})\\) ?`,
+    prompt: `On construit un tableau de valeurs pour ${ctx.grandeur} = ${a}${ctx.variable} + ${b}, où ${ctx.grandeur} (${ctx.texte}) s'exprime en fonction de ${ctx.varTexte} (notée ${ctx.variable}). Quelle valeur inscrire dans le tableau pour ${ctx.variable} = ${x} ?`,
     answer,
-    steps: [{ type: "calcul", text: `${a} \\times ${x} ${b >= 0 ? "+" : ""} ${b} = ${answer}` }],
+    steps: [{ type: "calcul", text: `${a} \\times ${x} + ${b} = ${answer}` }],
   };
 }
 
@@ -319,8 +323,6 @@ function genLireTableauFonctionCroissanceQCM() {
 const GENERATORS = [
   genVocabulaireEnFonctionDeQCM,
   genEvaluerFonctionAffineNumeric,
-  genTrouverAntecedentNumeric,
-  genNotationFlecheeNumeric,
   genProgrammeCalculFonctionNumeric,
   genRetrouverDepartFonctionNumeric,
   genRelationDependanceProportionnelleQCM,
@@ -337,10 +339,8 @@ const GENERATORS = [
 const DIFFICULTY = {
   genVocabulaireEnFonctionDeQCM: "facile",
   genEvaluerFonctionAffineNumeric: "facile",
-  genNotationFlecheeNumeric: "facile",
   genCompleterTableauValeursNumeric: "facile",
   genAireCarreFonctionCoteNumeric: "facile",
-  genTrouverAntecedentNumeric: "standard",
   genProgrammeCalculFonctionNumeric: "standard",
   genRetrouverDepartFonctionNumeric: "standard",
   genRelationDependanceProportionnelleQCM: "standard",
@@ -364,7 +364,7 @@ export default {
   meta: {
     id: "fonctions",
     title: "Fonctions",
-    description: "Vocabulaire (en fonction de, notations fléchée et fonctionnelle), évaluer une fonction, image et antécédent, programme de calcul, relation de dépendance proportionnelle ou non, fonctions en contexte réel.",
+    description: "Vocabulaire « en fonction de », évaluer une formule dans un contexte concret, programme de calcul, relation de dépendance proportionnelle ou non, formules en contexte réel.",
     pourquoi: "Comprendre la notion de fonction, c'est apprendre à décrire comment une quantité dépend d'une autre — la base de toute modélisation scientifique.",
     level: "cinquieme",
     free: false,

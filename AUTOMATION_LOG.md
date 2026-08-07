@@ -2452,3 +2452,21 @@ vérifié) vers les deux copies Application TOP.
 Aucune migration SQL nécessaire (uniquement du contenu client).
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+
+## 2026-08-05 — Memory CP/CE1 : ajout d'un 10e groupe (double de 4) pour revenir à 30 cartes
+
+Romain a demandé pourquoi le plateau n'était plus à 30 cartes (27 avec les 9
+groupes doubles/triples repris tels quels de la version précédente). Ajout
+d'un 10e groupe, comme proposé et validé : le double de 4 ("4 + 4" / "2 × 4"
+/ "8"), sans collision avec le reste du contenu (revérifié par script Node :
+10 groupes, 30 cartes, toutes valeurs correctes et tous textes uniques).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git, bon du premier coup cette fois). Fichier synchronisé (diff vide
+vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+

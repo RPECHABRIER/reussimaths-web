@@ -9,9 +9,9 @@ import { shuffle, formatSeconds } from "../lib/gameUtils";
 // cartes qui représentent la même valeur, uniquement sur les doubles et les
 // triples (les anciennes catégories "amis de 10" et "calculs de base" ont
 // été retirées) :
-//   - Doubles (5 à 10) : "6 + 6", "2 × 6", "12".
+//   - Doubles (4 à 10) : "6 + 6", "2 × 6", "12".
 //   - Triples (5, 7, 9) : "7 + 7 + 7", "3 × 7", "21".
-// 9 groupes de 3 cartes = 27 cartes, plateau fixe (tout le contenu tient sur
+// 10 groupes de 3 cartes = 30 cartes, plateau fixe (tout le contenu tient sur
 // un seul plateau, plus besoin de tirer un sous-ensemble au hasard).
 //
 // Mécanique de retournement : comme un memory classique, on retourne 2
@@ -34,6 +34,7 @@ import { shuffle, formatSeconds } from "../lib/gameUtils";
 
 const CP_CE1_GROUPS = [
   // Doubles.
+  { id: "double-4", cards: ["4 + 4", "2 × 4", "8"] },
   { id: "double-5", cards: ["5 + 5", "2 × 5", "10"] },
   { id: "double-6", cards: ["6 + 6", "2 × 6", "12"] },
   { id: "double-7", cards: ["7 + 7", "2 × 7", "14"] },
@@ -46,8 +47,8 @@ const CP_CE1_GROUPS = [
   { id: "triple-9", cards: ["9 + 9 + 9", "3 × 9", "27"] },
 ];
 
-const GROUPS_COUNT = CP_CE1_GROUPS.length; // 9
-const TOTAL_CARDS = GROUPS_COUNT * 3; // 27
+const GROUPS_COUNT = CP_CE1_GROUPS.length; // 10
+const TOTAL_CARDS = GROUPS_COUNT * 3; // 30
 const BEST_KEY_MS = "reussimaths_memory_cp_ce1_trio_best_ms";
 const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_trio_best_tries";
 

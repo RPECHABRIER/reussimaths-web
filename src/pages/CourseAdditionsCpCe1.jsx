@@ -1,21 +1,34 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { colors, fonts, shadow } from "../theme";
-import RaceTrack from "../components/RaceTrack";
-import { shuffle, formatSeconds, rankFromTime } from "../lib/gameUtils";
+import RaceTrackRank from "../components/RaceTrackRank";
+import NumberPad from "../components/NumberPad";
 
 // ---------------------------------------------------------------------------
-// Jeu "Course des additions" (/jeux/course-additions-cp-ce1) : même moteur de
-// course que Course aux tables / Estimation express (RaceTrack.jsx +
-// gameUtils.js partagés), mais pensé pour les CP / CE1 (voir Memory CP/CE1,
-// MemoryCpCe1.jsx, pour le même repère de niveau) : additions de deux nombres
-// entiers naturels entre 1 et 20, en QCM à 4 choix.
+// Jeu "Course des additions" (/jeux/course-additions-cp-ce1) — pensé pour les
+// CP/CE1, avec un mécanisme différent des autres jeux de course de l'onglet
+// Jeux (Course aux tables, Estimation express) qui reposent sur un chrono
+// comparé à des seuils. Ici (demande explicite de Romain) :
 //
-// Seuils de temps volontairement plus généreux que les autres jeux de course
-// (public plus jeune, lecture et repérage plus lents) :
-//   Expert       : 20s / 24s / 28s
-//   Intermédiaire: 26s / 30s / 34s
-//   Débutant     : 32s / 36s / 40s
+//   - Additions de deux entiers naturels dont AUCUN terme ne dépasse 20.
+//   - Réponse TAPÉE au clavier numérique tactile (NumberPad.jsx), pas de QCM
+//     — pour vraiment travailler le calcul plutôt que reconnaître la bonne
+//     réponse parmi 4.
+//   - On avance seulement en cas de bonne réponse : l'avancement commun
+//     affiché (même vitesse pour tout le monde, voir RaceTrackRank.jsx) suit
+//     le nombre de bonnes réponses, pas un chrono qui défile.
+//   - Fin de partie dès 6 bonnes réponses (peu importe le nombre d'erreurs
+//     commises en chemin, il n'y a pas de limite de questions).
+//   - Classement : le joueur reste en tête tant qu'il répond juste (rang
+//     inchangé) ; une erreur fait doubler un personnage (rang +1, jusqu'à
+//     4e) ; répondre juste en moins de 5s fait au contraire doubler un
+//     personnage dans l'autre sens (rang -1, jusqu'à 1er) — ce bonus compte
+//     aussi dans le classement final (validé avec Romain), donc un enfant
+//     qui fait quelques erreurs mais répond souvent très vite peut quand
+//     même terminer 1er. Volontairement, cette règle n'est PAS expliquée
+//     dans le texte affiché à l'enfant (demande explicite) : seule
+//     l'animation de la course (médaille de position en temps réel) la rend
+//     perceptible.
 // ---------------------------------------------------------------------------
 
 const ANIMALS = [
@@ -25,139 +38,158 @@ const ANIMALS = [
   { id: "grenouille", emoji: "🐸", label: "Grenouille" },
 ];
 
-const DIFFICULTIES = [
-  { id: "expert", label: "Expert", thresholds: { gold: 20000, silver: 24000, bronze: 28000 } },
-  { id: "moyen", label: "Intermédiaire", thresholds: { gold: 26000, silver: 30000, bronze: 34000 } },
-  { id: "debutant", label: "Débutant", thresholds: { gold: 32000, silver: 36000, bronze: 40000 } },
-];
+const TARGET_CORRECT = 6;
+const BONUS_THRESHOLD_MS = 5000;
+const BEST_RANK_KEY = "reussimaths_course_additions_cpce1_best_rank";
+const BEST_MISTAKES_KEY = "reussimaths_course_additions_cpce1_best_mistakes";
 
-const PENALTY_MS = 1500;
-const QUESTIONS_COUNT = 10;
-const BEST_KEY_PREFIX = "reussimaths_course_additions_cpce1_best_ms_";
+const RANK_INFO = {
+  1: { label: "1er — bravo !", color: colors.gold },
+  2: { label: "2e — pas mal !", color: colors.slate },
+  3: { label: "3e — presque !", color: "#a3762a" },
+  4: { label: "4e — retente ta chance !", color: colors.red },
+};
 
-// Génère 3 réponses plausibles mais fausses : erreurs classiques d'un enfant
-// qui compte sur ses doigts (décalage de 1 ou 2 sur le résultat, ou confusion
-// avec l'un des deux termes).
-function generateChoices(q) {
-  const correct = q.sum;
-  const pool = shuffle(
-    [
-      correct + 1,
-      correct - 1,
-      correct + 2,
-      correct - 2,
-      correct + 10,
-      correct - 10,
-      q.a,
-      q.b,
-      q.a * q.b <= 40 ? q.a * q.b : correct + 3,
-    ].filter((n) => n > 0 && n !== correct)
-  );
-  const distractors = [];
-  for (const n of pool) {
-    if (distractors.length >= 3) break;
-    if (!distractors.includes(n)) distractors.push(n);
-  }
-  while (distractors.length < 3) {
-    const n = correct + Math.floor(Math.random() * 8) - 4;
-    if (n > 0 && n !== correct && !distractors.includes(n)) distractors.push(n);
-  }
-  return shuffle([correct, ...distractors]);
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateQuestions() {
-  const all = [];
-  for (let a = 1; a <= 20; a++) {
-    for (let b = 1; b <= 20; b++) all.push({ a, b, sum: a + b });
-  }
-  return shuffle(all)
-    .slice(0, QUESTIONS_COUNT)
-    .map((q) => ({ ...q, choices: generateChoices(q) }));
+// Un nouveau calcul aléatoire (aucun terme > 20), en évitant de retomber
+// pile sur les deux mêmes termes que la question précédente.
+function generateQuestion(prev) {
+  let a, b;
+  do {
+    a = randInt(1, 20);
+    b = randInt(1, 20);
+  } while (prev && a === prev.a && b === prev.b);
+  return { a, b, sum: a + b };
 }
 
 export default function CourseAdditionsCpCe1() {
   const [phase, setPhase] = useState("intro"); // intro | racing | result
   const [selectedAnimal, setSelectedAnimal] = useState(ANIMALS[0].id);
-  const [selectedDifficulty, setSelectedDifficulty] = useState(DIFFICULTIES[1].id); // "moyen" par défaut
-  const [questions, setQuestions] = useState([]);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [selectedChoice, setSelectedChoice] = useState(null);
-  const [feedback, setFeedback] = useState(null); // "correct" | "wrong" | null
-  const [raceStartAt, setRaceStartAt] = useState(null);
-  const [penaltyMs, setPenaltyMs] = useState(0);
-  const [nowMs, setNowMs] = useState(0);
-  const [finalTimeMs, setFinalTimeMs] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [typedValue, setTypedValue] = useState("");
+  const [feedback, setFeedback] = useState(null); // "correct" | "bonus" | "wrong" | null
+  const [locked, setLocked] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
+  const [rank, setRank] = useState(1);
+  const [finalRank, setFinalRank] = useState(null);
+  const [isNewBestRank, setIsNewBestRank] = useState(false);
+  const [isNewBestMistakes, setIsNewBestMistakes] = useState(false);
+  const questionStartAtRef = useRef(null);
 
-  const difficulty = DIFFICULTIES.find((d) => d.id === selectedDifficulty);
-  const thresholds = difficulty.thresholds;
-  const bestKey = BEST_KEY_PREFIX + difficulty.id;
-
-  const [bestTimeMs, setBestTimeMs] = useState(() => {
-    const stored = Number(localStorage.getItem(bestKey));
-    return stored > 0 ? stored : null;
+  const [bestRank, setBestRank] = useState(() => {
+    const stored = Number(localStorage.getItem(BEST_RANK_KEY));
+    return stored >= 1 && stored <= 4 ? stored : null;
   });
-  useEffect(() => {
-    const stored = Number(localStorage.getItem(bestKey));
-    setBestTimeMs(stored > 0 ? stored : null);
-  }, [bestKey]);
+  const [bestMistakes, setBestMistakes] = useState(() => {
+    const stored = localStorage.getItem(BEST_MISTAKES_KEY);
+    return stored !== null ? Number(stored) : null;
+  });
 
   const opponents = useMemo(() => ANIMALS.filter((a) => a.id !== selectedAnimal), [selectedAnimal]);
   const player = ANIMALS.find((a) => a.id === selectedAnimal);
 
-  useEffect(() => {
-    if (phase !== "racing") return;
-    const interval = setInterval(() => setNowMs(Date.now() - raceStartAt), 100);
-    return () => clearInterval(interval);
-  }, [phase, raceStartAt]);
-
   const startRace = () => {
-    setQuestions(generateQuestions());
-    setQuestionIndex(0);
-    setPenaltyMs(0);
-    setFinalTimeMs(null);
+    setQuestion(generateQuestion(null));
+    setTypedValue("");
     setFeedback(null);
-    setSelectedChoice(null);
-    setRaceStartAt(Date.now());
-    setNowMs(0);
+    setLocked(false);
+    setCorrectCount(0);
+    setMistakes(0);
+    setRank(1);
+    setFinalRank(null);
+    setIsNewBestRank(false);
+    setIsNewBestMistakes(false);
+    questionStartAtRef.current = Date.now();
     setPhase("racing");
   };
 
-  const handleChoice = (value) => {
-    if (feedback) return;
-    const q = questions[questionIndex];
-    const isCorrect = value === q.sum;
-    const addedPenalty = isCorrect ? 0 : PENALTY_MS;
-    const answeredAtElapsed = Date.now() - raceStartAt;
-    setSelectedChoice(value);
-    setFeedback(isCorrect ? "correct" : "wrong");
-    if (addedPenalty) setPenaltyMs((p) => p + addedPenalty);
-
-    setTimeout(() => {
-      const isLast = questionIndex + 1 >= questions.length;
-      if (isLast) {
-        const total = answeredAtElapsed + penaltyMs + addedPenalty;
-        setFinalTimeMs(total);
-        setPhase("result");
-        if (!bestTimeMs || total < bestTimeMs) {
-          localStorage.setItem(bestKey, String(Math.round(total)));
-          setBestTimeMs(total);
-        }
-      } else {
-        setQuestionIndex((i) => i + 1);
-        setFeedback(null);
-        setSelectedChoice(null);
-      }
-    }, 500);
+  const handleDigit = (d) => {
+    if (locked) return;
+    setTypedValue((v) => (v.length >= 2 ? v : v + d));
+  };
+  const handleBackspace = () => {
+    if (locked) return;
+    setTypedValue((v) => v.slice(0, -1));
   };
 
-  const question = questions[questionIndex];
-  const playerProgress = phase === "result" ? 1 : questionIndex / QUESTIONS_COUNT;
-  const rank = finalTimeMs !== null ? rankFromTime(finalTimeMs, thresholds) : null;
+  const handleSubmit = () => {
+    if (locked || typedValue === "") return;
+    const value = Number(typedValue);
+    const isCorrect = value === question.sum;
+    const elapsed = Date.now() - questionStartAtRef.current;
+    const isFinishing = isCorrect && correctCount + 1 >= TARGET_CORRECT;
+
+    let newRank = rank;
+    let fb;
+    if (isCorrect) {
+      if (elapsed < BONUS_THRESHOLD_MS) {
+        newRank = Math.max(1, rank - 1);
+        fb = "bonus";
+      } else {
+        fb = "correct";
+      }
+    } else {
+      newRank = Math.min(4, rank + 1);
+      fb = "wrong";
+    }
+
+    setLocked(true);
+    setFeedback(fb);
+    setRank(newRank);
+
+    const delay = fb === "wrong" ? 900 : fb === "bonus" ? 750 : 500;
+    setTimeout(() => {
+      if (isCorrect) setCorrectCount((c) => c + 1);
+      else setMistakes((m) => m + 1);
+
+      if (isFinishing) {
+        setFinalRank(newRank);
+        setPhase("result");
+
+        const storedRank = Number(localStorage.getItem(BEST_RANK_KEY));
+        if (!storedRank || newRank < storedRank) {
+          localStorage.setItem(BEST_RANK_KEY, String(newRank));
+          setBestRank(newRank);
+          setIsNewBestRank(true);
+        }
+        const storedMistakes = localStorage.getItem(BEST_MISTAKES_KEY);
+        if (storedMistakes === null || mistakes < Number(storedMistakes)) {
+          localStorage.setItem(BEST_MISTAKES_KEY, String(mistakes));
+          setBestMistakes(mistakes);
+          setIsNewBestMistakes(true);
+        }
+      } else {
+        setQuestion((prev) => generateQuestion(prev));
+        setTypedValue("");
+        setFeedback(null);
+        setLocked(false);
+        questionStartAtRef.current = Date.now();
+      }
+    }, delay);
+  };
+
+  // Valider avec la touche Entrée si un clavier physique est utilisé.
+  useEffect(() => {
+    if (phase !== "racing") return;
+    const onKeyDown = (e) => {
+      if (e.key === "Enter") handleSubmit();
+      else if (e.key === "Backspace") handleBackspace();
+      else if (/^[0-9]$/.test(e.key)) handleDigit(e.key);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, typedValue, locked, question, rank, correctCount, mistakes]);
 
   const ink = colors.ink;
   const paper = colors.bg;
   const slate = colors.slate;
   const gold = colors.gold;
+  const progress = correctCount / TARGET_CORRECT;
 
   // -------------------------------------------------------------- INTRO ---
   if (phase === "intro") {
@@ -179,45 +211,18 @@ export default function CourseAdditionsCpCe1() {
               Course des additions
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              10 questions d'addition avec des nombres entre 1 et 20, en QCM. Une bonne réponse te fait avancer, une
-              erreur te fait chuter et ajoute {formatSeconds(PENALTY_MS)}s à ton temps.
+              Des additions avec des nombres jusqu'à 20. Tape ta réponse au clavier. Réponds vite et sans erreur pour
+              rester devant jusqu'à la ligne d'arrivée !
             </p>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              Termine en moins de {formatSeconds(thresholds.gold)}s pour la 1ère place, {formatSeconds(thresholds.silver)}
-              s pour la 2e, {formatSeconds(thresholds.bronze)}s pour la 3e.
+              La course s'arrête dès que tu as {TARGET_CORRECT} bonnes réponses.
             </p>
-            {bestTimeMs && (
+            {bestRank && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
-                Ton meilleur temps en {difficulty.label} sur cet appareil : {formatSeconds(bestTimeMs)}s
+                Ton meilleur classement : {RANK_INFO[bestRank].label}
+                {bestMistakes !== null ? ` (${bestMistakes} erreur${bestMistakes > 1 ? "s" : ""})` : ""}
               </p>
             )}
-          </div>
-
-          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-            <p className="text-xs uppercase tracking-wide font-semibold mb-3" style={{ color: slate }}>
-              Choisis ton niveau
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {DIFFICULTIES.map((d) => (
-                <button
-                  key={d.id}
-                  onClick={() => setSelectedDifficulty(d.id)}
-                  className="flex flex-col items-center gap-1 rounded-2xl py-3 px-1"
-                  style={{
-                    backgroundColor: selectedDifficulty === d.id ? `${gold}22` : paper,
-                    border: selectedDifficulty === d.id ? `2px solid ${gold}` : "2px solid transparent",
-                  }}
-                >
-                  <span className="text-sm font-bold" style={{ color: ink }}>
-                    {d.label}
-                  </span>
-                  <span className="text-[0.65rem] text-center leading-tight" style={{ color: slate }}>
-                    {formatSeconds(d.thresholds.gold)}/{formatSeconds(d.thresholds.silver)}/
-                    {formatSeconds(d.thresholds.bronze)}s
-                  </span>
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="rounded-3xl p-5 mb-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
@@ -253,33 +258,23 @@ export default function CourseAdditionsCpCe1() {
   }
 
   // ----------------------------------------------------------- RACING ---
-  if (phase === "racing") {
+  if (phase === "racing" && question) {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8 flex flex-col" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md w-full mx-auto flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: slate }}>
-              Question {questionIndex + 1} / {QUESTIONS_COUNT}
-            </p>
-            <p className="text-sm font-bold" style={{ fontFamily: fonts.mono, color: gold }}>
-              {formatSeconds(nowMs + penaltyMs)}s
+              {correctCount} / {TARGET_CORRECT} bonnes réponses
             </p>
           </div>
 
-          <RaceTrack
-            player={player}
-            opponents={opponents}
-            playerProgress={playerProgress}
-            nowMs={nowMs}
-            feedback={feedback}
-            thresholds={thresholds}
-          />
+          <RaceTrackRank player={player} opponents={opponents} progress={progress} rank={rank} feedback={feedback} />
 
           <div className="flex-1 flex flex-col items-center justify-center text-center">
             <p
               style={{
                 fontFamily: fonts.display,
-                color: feedback === "wrong" ? colors.red : feedback === "correct" ? colors.green : ink,
+                color: feedback === "wrong" ? colors.red : feedback ? colors.green : ink,
                 fontSize: "3rem",
                 fontWeight: 800,
               }}
@@ -287,44 +282,26 @@ export default function CourseAdditionsCpCe1() {
               {question.a} + {question.b}
             </p>
 
-            <div className="w-full max-w-[320px] mt-6 grid grid-cols-2 gap-3">
-              {question.choices.map((value) => {
-                const isCorrectChoice = value === question.sum;
-                let bg = colors.card;
-                let border = colors.hairline;
-                let textColor = ink;
-                if (feedback) {
-                  if (isCorrectChoice) {
-                    bg = `${colors.green}22`;
-                    border = colors.green;
-                    textColor = colors.green;
-                  } else if (value === selectedChoice) {
-                    bg = `${colors.red}22`;
-                    border = colors.red;
-                    textColor = colors.red;
-                  } else {
-                    border = colors.hairline;
-                  }
-                }
-                return (
-                  <button
-                    key={value}
-                    onClick={() => handleChoice(value)}
-                    disabled={!!feedback}
-                    className="text-2xl font-bold rounded-2xl py-4"
-                    style={{
-                      fontFamily: fonts.mono,
-                      backgroundColor: bg,
-                      color: textColor,
-                      boxShadow: `0 0 0 2px ${border}`,
-                      opacity: feedback && !isCorrectChoice && value !== selectedChoice ? 0.5 : 1,
-                    }}
-                  >
-                    {value}
-                  </button>
-                );
-              })}
+            <div
+              className="mt-4 mb-6 rounded-2xl px-8 py-3 text-3xl font-bold"
+              style={{
+                fontFamily: fonts.mono,
+                minWidth: 90,
+                backgroundColor: colors.card,
+                boxShadow: `0 0 0 2px ${feedback === "wrong" ? colors.red : feedback ? colors.green : colors.hairline}`,
+                color:
+                  feedback === "wrong" ? colors.red : feedback ? colors.green : typedValue ? ink : colors.slate,
+              }}
+            >
+              {feedback && feedback !== "wrong" ? question.sum : typedValue || "?"}
+              {feedback === "wrong" && (
+                <span className="block text-sm mt-1" style={{ color: slate }}>
+                  Réponse : {question.sum}
+                </span>
+              )}
             </div>
+
+            <NumberPad value={typedValue} maxLength={2} disabled={locked} onDigit={handleDigit} onBackspace={handleBackspace} onSubmit={handleSubmit} />
           </div>
         </div>
       </div>
@@ -332,26 +309,25 @@ export default function CourseAdditionsCpCe1() {
   }
 
   // ----------------------------------------------------------- RESULT ---
+  const info = RANK_INFO[finalRank] ?? RANK_INFO[4];
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto text-center">
-        <RaceTrack
-          player={player}
-          opponents={opponents}
-          playerProgress={playerProgress}
-          nowMs={nowMs}
-          feedback={feedback}
-          thresholds={thresholds}
-        />
+        <RaceTrackRank player={player} opponents={opponents} progress={1} rank={finalRank} feedback={null} />
 
-        <p style={{ fontFamily: fonts.display, color: rank.color, fontSize: "1.8rem", fontWeight: 800 }}>{rank.label}</p>
+        <p style={{ fontFamily: fonts.display, color: info.color, fontSize: "1.8rem", fontWeight: 800 }}>{info.label}</p>
         <p className="text-sm mt-2" style={{ color: slate }}>
-          Niveau {difficulty.label} — Temps final : <strong style={{ color: ink }}>{formatSeconds(finalTimeMs)}s</strong>
-          {penaltyMs > 0 && ` (dont ${formatSeconds(penaltyMs)}s de pénalités)`}
+          {mistakes === 0 ? "Aucune erreur, bravo !" : `${mistakes} erreur${mistakes > 1 ? "s" : ""} pendant la course.`}
         </p>
-        {bestTimeMs && (
+        {(isNewBestRank || isNewBestMistakes) && (
+          <p className="text-sm mt-2 font-semibold" style={{ color: colors.green }}>
+            Nouveau record !
+          </p>
+        )}
+        {bestRank && (
           <p className="text-xs mt-1" style={{ color: gold }}>
-            Meilleur temps en {difficulty.label} sur cet appareil : {formatSeconds(bestTimeMs)}s
+            Meilleur classement : {RANK_INFO[bestRank].label}
+            {bestMistakes !== null ? ` (${bestMistakes} erreur${bestMistakes > 1 ? "s" : ""})` : ""}
           </p>
         )}
 

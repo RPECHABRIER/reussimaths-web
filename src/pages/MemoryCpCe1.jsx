@@ -1,76 +1,62 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { colors, fonts, shadow } from "../theme";
 import { shuffle, formatSeconds } from "../lib/gameUtils";
 
 // ---------------------------------------------------------------------------
-// Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : variante du memory pensée pour
-// les plus jeunes (CP/CE1, ~6-7 ans), demandée par Romain après le premier
-// Memory maths (destiné 6e-Terminale). Contrairement à celui-ci :
-//   - une seule taille de plateau, fixe : 30 cartes (15 paires), pas de choix
-//     de difficulté ;
-//   - contenu 100% additions/soustractions avec des entiers de 1 à 40, sur 4
-//     familles demandées explicitement par Romain : compléments à 10 ("amis
-//     de 10"), doubles, triples, calculs de base.
+// Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : variante "memory à trios"
+// (demande de Romain) — on ne cherche plus des PAIRES mais des GROUPES DE 3
+// cartes qui représentent la même valeur, uniquement sur les doubles et les
+// triples (les anciennes catégories "amis de 10" et "calculs de base" ont
+// été retirées) :
+//   - Doubles (5 à 10) : "6 + 6", "2 × 6", "12".
+//   - Triples (5, 7, 9) : "7 + 7 + 7", "3 × 7", "21".
+// 9 groupes de 3 cartes = 27 cartes, plateau fixe (tout le contenu tient sur
+// un seul plateau, plus besoin de tirer un sous-ensemble au hasard).
 //
-// Modèle des paires : deux calculs (ou un calcul et son résultat) qui valent
-// la même chose — jamais deux nombres seuls mis côte à côte sans lien visible
-// (ex. la carte "6" avec la carte "4" a été volontairement écartée : rien
-// n'indique à l'enfant pourquoi ces deux-là vont ensemble plutôt que "6" et
-// "5"). Pour les amis de 10, on associe donc soit deux décompositions
-// différentes de 10 (ex. "6 + 4" et "3 + 7"), soit un calcul et son résultat
-// (ex. "6 + 6" et "12") comme pour les doubles/triples/calculs. Le stock
-// (CP_CE1_PAIRS, 20 paires) a été construit à la main pour qu'AUCUN texte
-// affiché (nombre seul ou calcul) ne se répète ailleurs dans le stock —
-// indispensable dans un memory : si deux paires différentes affichaient la
-// même valeur (ex. deux cartes "12" qui ne sont pas censées se répondre), un
-// enfant les associerait à tort en pensant avoir trouvé une paire. 15 paires
-// sont tirées au hasard dans ce stock de 20 à chaque partie, donc la grille
-// change d'une partie à l'autre.
+// Mécanique de retournement : comme un memory classique, on retourne 2
+// cartes par tour. Si elles appartiennent au même groupe, elles restent
+// retournées (2 des 3 membres du groupe trouvés). La 3e et dernière carte
+// d'un groupe déjà trouvé à 2/3 se valide alors TOUTE SEULE dès qu'on la
+// retourne (inutile de lui trouver un partenaire : on sait déjà qu'elle va
+// avec les 2 autres) — sinon elle ne pourrait jamais être confirmée, ses 2
+// partenaires étant déjà immobilisés face visible.
 //
-// Gratuit, sans connexion (comme les autres jeux) : meilleur temps et
-// meilleur nombre de coups gardés en localStorage sur cet appareil.
+// Comme pour la version précédente, AUCUN texte affiché ne se répète ailleurs
+// dans le plateau (vérifié par script Node avant intégration) : indispensable
+// dans un memory, sinon deux cartes de valeur identique mais de groupes
+// différents se confondraient.
+//
+// Gratuit, sans connexion : meilleur temps et meilleur nombre de coups
+// gardés en localStorage sur cet appareil (clés dédiées à cette version, la
+// mécanique ayant changé par rapport à la précédente version "en paires").
 // ---------------------------------------------------------------------------
 
-const CP_CE1_PAIRS = [
-  // Compléments à 10 ("amis de 10") : deux décompositions différentes qui
-  // valent toutes les deux 10 (plutôt que deux nombres seuls sans lien
-  // visible entre eux).
-  { id: "c10-64-37", a: { text: "6 + 4" }, b: { text: "3 + 7" } },
-  { id: "c10-82-91", a: { text: "8 + 2" }, b: { text: "9 + 1" } },
+const CP_CE1_GROUPS = [
   // Doubles.
-  { id: "double-5", a: { text: "5 + 5" }, b: { text: "10" } },
-  { id: "double-6", a: { text: "6 + 6" }, b: { text: "12" } },
-  { id: "double-7", a: { text: "7 + 7" }, b: { text: "14" } },
-  { id: "double-8", a: { text: "8 + 8" }, b: { text: "16" } },
-  { id: "double-9", a: { text: "9 + 9" }, b: { text: "18" } },
-  { id: "double-10", a: { text: "10 + 10" }, b: { text: "20" } },
+  { id: "double-5", cards: ["5 + 5", "2 × 5", "10"] },
+  { id: "double-6", cards: ["6 + 6", "2 × 6", "12"] },
+  { id: "double-7", cards: ["7 + 7", "2 × 7", "14"] },
+  { id: "double-8", cards: ["8 + 8", "2 × 8", "16"] },
+  { id: "double-9", cards: ["9 + 9", "2 × 9", "18"] },
+  { id: "double-10", cards: ["10 + 10", "2 × 10", "20"] },
   // Triples.
-  { id: "triple-5", a: { text: "5 + 5 + 5" }, b: { text: "15" } },
-  { id: "triple-7", a: { text: "7 + 7 + 7" }, b: { text: "21" } },
-  { id: "triple-9", a: { text: "9 + 9 + 9" }, b: { text: "27" } },
-  // Additions et soustractions de base (entiers 1 à 40).
-  { id: "calc-1", a: { text: "12 + 5" }, b: { text: "17" } },
-  { id: "calc-2", a: { text: "20 − 9" }, b: { text: "11" } },
-  { id: "calc-3", a: { text: "15 + 8" }, b: { text: "23" } },
-  { id: "calc-4", a: { text: "30 − 6" }, b: { text: "24" } },
-  { id: "calc-5", a: { text: "19 + 6" }, b: { text: "25" } },
-  { id: "calc-6", a: { text: "40 − 14" }, b: { text: "26" } },
-  { id: "calc-7", a: { text: "28 − 9" }, b: { text: "19" } },
-  { id: "calc-8", a: { text: "9 + 4" }, b: { text: "13" } },
-  { id: "calc-9", a: { text: "27 − 5" }, b: { text: "22" } },
+  { id: "triple-5", cards: ["5 + 5 + 5", "3 × 5", "15"] },
+  { id: "triple-7", cards: ["7 + 7 + 7", "3 × 7", "21"] },
+  { id: "triple-9", cards: ["9 + 9 + 9", "3 × 9", "27"] },
 ];
 
-const BOARD_PAIRS = 15; // 30 cartes, fixe (pas de choix de difficulté)
-const BEST_KEY_MS = "reussimaths_memory_cp_ce1_best_ms";
-const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_best_tries";
+const GROUPS_COUNT = CP_CE1_GROUPS.length; // 9
+const TOTAL_CARDS = GROUPS_COUNT * 3; // 27
+const BEST_KEY_MS = "reussimaths_memory_cp_ce1_trio_best_ms";
+const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_trio_best_tries";
 
 function buildBoard() {
-  const chosen = shuffle(CP_CE1_PAIRS).slice(0, BOARD_PAIRS);
   const cards = [];
-  chosen.forEach((pair) => {
-    cards.push({ uid: `${pair.id}-a`, pairId: pair.id, text: pair.a.text });
-    cards.push({ uid: `${pair.id}-b`, pairId: pair.id, text: pair.b.text });
+  CP_CE1_GROUPS.forEach((group) => {
+    group.cards.forEach((text, idx) => {
+      cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, text });
+    });
   });
   return shuffle(cards);
 }
@@ -79,7 +65,7 @@ export default function MemoryCpCe1() {
   const [phase, setPhase] = useState("intro"); // intro | playing | result
   const [board, setBoard] = useState([]);
   const [flippedUids, setFlippedUids] = useState([]);
-  const [matchedPairIds, setMatchedPairIds] = useState(new Set());
+  const [matchedUids, setMatchedUids] = useState(new Set());
   const [locked, setLocked] = useState(false);
   const [tries, setTries] = useState(0);
   const [startAt, setStartAt] = useState(null);
@@ -97,6 +83,15 @@ export default function MemoryCpCe1() {
     return stored > 0 ? stored : null;
   });
 
+  const matchedGroupsCount = useMemo(() => {
+    let count = 0;
+    for (const group of CP_CE1_GROUPS) {
+      const uids = [0, 1, 2].map((idx) => `${group.id}-${idx}`);
+      if (uids.every((uid) => matchedUids.has(uid))) count++;
+    }
+    return count;
+  }, [matchedUids]);
+
   useEffect(() => {
     if (phase !== "playing") return;
     const interval = setInterval(() => setNowMs(Date.now() - startAt), 100);
@@ -105,7 +100,7 @@ export default function MemoryCpCe1() {
 
   useEffect(() => {
     if (phase !== "playing") return;
-    if (matchedPairIds.size === 0 || matchedPairIds.size < BOARD_PAIRS) return;
+    if (matchedGroupsCount < GROUPS_COUNT) return;
     const total = Date.now() - startAt;
     setFinalTimeMs(total);
     setPhase("result");
@@ -122,12 +117,12 @@ export default function MemoryCpCe1() {
       setIsNewBestTries(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchedPairIds]);
+  }, [matchedGroupsCount]);
 
   const startGame = () => {
     setBoard(buildBoard());
     setFlippedUids([]);
-    setMatchedPairIds(new Set());
+    setMatchedUids(new Set());
     setLocked(false);
     setTries(0);
     setFinalTimeMs(null);
@@ -140,8 +135,17 @@ export default function MemoryCpCe1() {
 
   const handleCardClick = (card) => {
     if (locked) return;
-    if (matchedPairIds.has(card.pairId)) return;
+    if (matchedUids.has(card.uid)) return;
     if (flippedUids.includes(card.uid)) return;
+
+    // La 3e carte d'un groupe déjà trouvé à 2/3 se valide toute seule, sans
+    // avoir besoin d'un partenaire (ses 2 partenaires sont déjà immobilisés
+    // face visible, donc impossibles à re-cliquer pour "faire la paire").
+    const groupMatchedCount = board.filter((c) => c.groupId === card.groupId && matchedUids.has(c.uid)).length;
+    if (groupMatchedCount === 2) {
+      setMatchedUids((prev) => new Set(prev).add(card.uid));
+      return;
+    }
 
     if (flippedUids.length === 0) {
       setFlippedUids([card.uid]);
@@ -150,7 +154,7 @@ export default function MemoryCpCe1() {
 
     const firstUid = flippedUids[0];
     const firstCard = board.find((c) => c.uid === firstUid);
-    const isMatch = firstCard.pairId === card.pairId;
+    const isMatch = firstCard.groupId === card.groupId;
     setFlippedUids([firstUid, card.uid]);
     setTries((t) => t + 1);
     setLocked(true);
@@ -159,7 +163,7 @@ export default function MemoryCpCe1() {
       setFlippedUids([]);
       setLocked(false);
       if (isMatch) {
-        setMatchedPairIds((prev) => new Set(prev).add(card.pairId));
+        setMatchedUids((prev) => new Set(prev).add(firstUid).add(card.uid));
       }
     }, isMatch ? 500 : 900);
   };
@@ -189,8 +193,8 @@ export default function MemoryCpCe1() {
               Memory CP/CE1
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              Retourne deux cartes pour trouver les paires : des nombres amis de 10, des doubles, des triples, et des
-              petits calculs d'addition et de soustraction (nombres de 1 à 40).
+              Ici, pas de paires : il faut retrouver des GROUPES DE 3 cartes qui vont ensemble (par exemple "6 + 6",
+              "2 × 6" et "12"), sur les doubles et les triples.
             </p>
             {bestTimeMs && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
@@ -201,7 +205,7 @@ export default function MemoryCpCe1() {
 
           <div className="rounded-3xl p-5 mb-6 text-center" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <p className="text-sm font-semibold" style={{ color: ink }}>
-              30 cartes (15 paires)
+              {TOTAL_CARDS} cartes ({GROUPS_COUNT} groupes de 3)
             </p>
           </div>
 
@@ -220,7 +224,7 @@ export default function MemoryCpCe1() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: slate }}>
-              {matchedPairIds.size} / {BOARD_PAIRS} paires — {tries} coups
+              {matchedGroupsCount} / {GROUPS_COUNT} groupes — {tries} coups
             </p>
             <p className="text-sm font-bold" style={{ fontFamily: fonts.mono, color: gold }}>
               {formatSeconds(nowMs)}s
@@ -236,7 +240,7 @@ export default function MemoryCpCe1() {
           >
             {board.map((card) => {
               const isFlipped = flippedUids.includes(card.uid);
-              const isMatched = matchedPairIds.has(card.pairId);
+              const isMatched = matchedUids.has(card.uid);
               const faceUp = isFlipped || isMatched;
               return (
                 <button
@@ -254,7 +258,7 @@ export default function MemoryCpCe1() {
                   {faceUp ? (
                     <span
                       className="text-center font-bold"
-                      style={{ fontFamily: fonts.mono, fontSize: "0.85rem", color: ink }}
+                      style={{ fontFamily: fonts.mono, fontSize: "0.8rem", color: ink }}
                     >
                       {card.text}
                     </span>

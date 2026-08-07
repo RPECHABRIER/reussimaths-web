@@ -2393,3 +2393,62 @@ cela ne pose pas de problème de fonctionnement, juste des fichiers un peu
 plus lourds à charger la première fois (jusqu'à 11,5 Mo pour la piste
 révisions). À signaler si Romain souhaite les raccourcir/compresser
 davantage.
+
+## 2026-08-05 — Refonte des deux jeux CP/CE1 : Memory en "trios" + Course des additions (classement par rang, saisie tapée)
+
+Demande de Romain, avec 2 clarifications tranchées via questions posées en
+chat : (1) le bonus "réponse en moins de 5s" compte bien dans le classement
+final, pas seulement pendant la course ; (2) les triples passent eux aussi en
+groupes de 3 cartes (ajout de "3×N"), pas seulement les doubles.
+
+**Memory CP/CE1 — mécanique "trio".** Jusqu'ici un memory classique en
+paires ; devient un memory en GROUPES DE 3 cartes. Contenu recentré sur
+uniquement doubles et triples (retrait complet des catégories "amis de 10"
+et "calculs de base") : 6 doubles (5 à 10) + 3 triples (5, 7, 9) = 9 groupes,
+chacun avec 3 cartes qui valent la même chose (ex. "6 + 6" / "2 × 6" / "12",
+ou "7 + 7 + 7" / "3 × 7" / "21") — 27 cartes au total, plateau fixe (plus de
+tirage aléatoire d'un sous-ensemble, tout le contenu tient sur un plateau).
+On retourne toujours 2 cartes par tour comme avant ; nouveauté : une fois 2
+des 3 cartes d'un groupe déjà trouvées, la 3e et dernière carte se valide
+TOUTE SEULE dès qu'on la retourne (sinon elle ne pourrait jamais être
+confirmée, ses 2 partenaires étant déjà immobilisés face visible). Logique
+vérifiée par une simulation de 500 parties jouées aléatoirement (aucune
+erreur, aucune carte "orpheline", aucun blocage) en plus du script
+d'unicité/exactitude habituel sur les 27 cartes. Nouvelles clés localStorage
+dédiées (la mécanique ayant changé, les anciens records "en paires"
+n'auraient plus de sens à comparer).
+
+**Course des additions CP/CE1 — refonte complète du mécanisme.** Terminée la
+course chronométrée façon "Course aux tables" : nouveau système, propre à ce
+jeu (piste `RaceTrackRank.jsx`, distincte de `RaceTrack.jsx` utilisée par les
+2 autres jeux de course) :
+- Additions dont aucun terme ne dépasse 20 (déjà le cas, reconfirmé).
+- Réponse TAPÉE au clavier numérique tactile (nouveau composant réutilisable
+  `NumberPad.jsx`) plutôt qu'en QCM — pour vraiment travailler le calcul.
+- On n'avance que sur bonne réponse ; fin de partie dès 6 bonnes réponses,
+  sans limite de questions (autant d'erreurs que nécessaire pour y arriver).
+- Classement par RANG (1er à 4e), pas par temps : le joueur reste en tête
+  tant qu'il répond juste (rang inchangé), une erreur fait doubler un
+  personnage (rang +1, jusqu'à 4e), répondre juste en moins de 5s fait au
+  contraire en doubler un dans l'autre sens (rang -1, jusqu'à 1er) — ce
+  bonus compte dans le classement final. Logique testée par simulation
+  (0 faute → 1er, 1 faute → 2e, 2 fautes → 3e, 5 fautes → plafonne à 4e,
+  fautes + bonus rapides → peut quand même finir 1er : tous les cas
+  attendus vérifiés). Volontairement, la règle exacte n'est PAS expliquée
+  dans le texte affiché à l'enfant (demande explicite) — seule l'animation
+  de la course la rend perceptible.
+- Piste rendue "plus visible" comme demandé : gros émojis (2,1rem), médaille
+  de position en temps réel à côté de chaque personnage (🥇🥈🥉), animation
+  de "doublement" avec rebond + halo doré pour le bonus rapidité, tous les
+  personnages avancent à la même vitesse (même position de base commune, qui
+  ne dépend que du nombre de bonnes réponses) et ne se distinguent que par
+  leur décalage avant/arrière selon leur rang actuel.
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git — une erreur transitoire EMFILE au premier essai, résolue au
+second, sans lien avec le contenu). Fichiers synchronisés (diff vide
+vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire (uniquement du contenu client).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

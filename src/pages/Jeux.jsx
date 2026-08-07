@@ -37,14 +37,14 @@ const GAMES = [
   {
     id: "memory-cp-ce1",
     title: "Memory CP/CE1",
-    description: "Retrouve les paires : amis de 10, doubles, triples, additions et soustractions (nombres de 1 à 40).",
+    description: "Retrouve des groupes de 3 cartes qui vont ensemble (ex. 6 + 6 / 2 × 6 / 12), sur les doubles et les triples.",
     icon: Baby,
     level: "CP / CE1",
   },
   {
     id: "course-additions-cp-ce1",
     title: "Course des additions",
-    description: "Réponds à 10 additions de nombres entre 1 et 20 le plus vite possible et gagne la course.",
+    description: "Écris la réponse à des additions de nombres jusqu'à 20 et gagne la course jusqu'à 6 bonnes réponses.",
     icon: Zap,
     level: "CP / CE1",
   },

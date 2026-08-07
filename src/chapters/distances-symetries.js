@@ -193,6 +193,27 @@ function genTriangleIsocelesMediatrice() {
   };
 }
 
+// ---------- 7bis. Médiatrices d'un triangle : point de concours (cercle circonscrit) ----------
+// Contenu officiel 6e (programme cycle 3, BO du 17-4-2025, domaine
+// "Triangles") : "savoir que les médiatrices d'un triangle sont
+// concourantes" et "connaître ... le cercle circonscrit à un triangle" —
+// absent de tous les fichiers 6e existants avant cet ajout.
+function genMediatricesConcourantesTriangle() {
+  const r = randDecimal(1, 12, pick([0, 1]));
+  const sommetInconnu = pick(["A", "B", "C"]);
+  const sommetConnu = ["A", "B", "C"].find((s) => s !== sommetInconnu);
+  return {
+    type: "numeric",
+    chapter: "Distances et symétries — Médiatrice",
+    prompt: `ABC est un triangle. Ses trois médiatrices se coupent en un même point O, le centre du cercle circonscrit au triangle. On sait que O${sommetConnu} = ${fr(r)} cm. Quelle est la longueur O${sommetInconnu} ?`,
+    answer: r,
+    steps: [
+      { type: "regle", text: `Les médiatrices d'un triangle sont concourantes en un point O, centre du cercle circonscrit au triangle : O est donc équidistant des trois sommets.` },
+      { type: "resultat", text: `OA = OB = OC = ${fr(r)} cm, donc O${sommetInconnu} = ${fr(r)} cm.` },
+    ],
+  };
+}
+
 // ---------- 8. Vrai/faux : médiatrice et symétrie ----------
 function genVraiFauxSymetrieMediatrice() {
   const pool = [
@@ -405,6 +426,7 @@ const GENERATORS = [
   genCerclePointsSurCercle,
   genMediatriceEquidistance,
   genTriangleIsocelesMediatrice,
+  genMediatricesConcourantesTriangle,
   genVraiFauxSymetrieMediatrice,
   genProprieteSymetrieLongueur,
   genProprieteSymetrieAngle,
@@ -427,6 +449,7 @@ const DIFFICULTY = {
   genMilieuSegmentAdditivite: "standard",
   genAdditiviteAlignes: "standard",
   genMediatriceEquidistance: "standard",
+  genMediatricesConcourantesTriangle: "standard",
   genTriangleIsocelesMediatrice: "standard",
   genVraiFauxSymetrieMediatrice: "standard",
   genSymetriqueReciproque: "standard",

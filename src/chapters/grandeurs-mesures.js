@@ -209,20 +209,57 @@ function genFigureComposeeRectangles() {
   };
 }
 
-// ---------- 5. Volume d'un pavé droit ----------
+// ---------- 5. Volume : dénombrement d'un assemblage de cubes ----------
+// NOTE (audit programme 2026, cycle 3, BO du 17-4-2025) : ce générateur
+// calculait auparavant un volume via la formule "longueur × largeur ×
+// hauteur" appliquée à un pavé droit quelconque en cm — cette formule
+// générale est un contenu de 5e. Le programme officiel de 6e précise que le
+// volume "se travaille en lien avec les problèmes de dénombrement
+// d'assemblages de cubes" (pas de formule L×l×h à ce niveau). Le générateur
+// a donc été réécrit pour rester sur un assemblage de petits cubes de 1 cm
+// d'arête (donc de 1 cm³ chacun) que l'élève dénombre, avec un lien explicite
+// vers l'unité cm³ et une variante de comparaison de deux volumes.
 function genVolumePave() {
-  const L = randInt(2, 15);
-  const l = randInt(2, 12);
-  const h = randInt(2, 10);
+  const L = randInt(2, 6);
+  const l = randInt(2, 6);
+  const h = randInt(2, 6);
   const answer = L * l * h;
+  const mode = pick(["compter", "comparer"]);
+  if (mode === "compter") {
+    return {
+      type: "numeric",
+      chapter: "Grandeurs et mesures — Volume",
+      prompt: `Un assemblage est formé de petits cubes identiques de 1 cm d'arête : ${L} cubes de front, sur ${l} rangées de profondeur, sur ${h} couches de hauteur. Quel est le volume total de cet assemblage, en cm³ ?`,
+      answer,
+      steps: [
+        { type: "regle", text: `Chaque petit cube a une arête de 1 cm, donc un volume de 1 cm³.` },
+        { type: "calcul", text: `On dénombre les cubes : ${L} \\times ${l} \\times ${h} = ${answer} cubes.` },
+        { type: "resultat", text: `Le volume de l'assemblage est donc ${answer} cm³.` },
+      ],
+    };
+  }
+  let L2 = randInt(2, 6);
+  let l2 = randInt(2, 6);
+  let h2 = randInt(2, 6);
+  let answer2 = L2 * l2 * h2;
+  while (answer2 === answer) {
+    L2 = randInt(2, 6);
+    l2 = randInt(2, 6);
+    h2 = randInt(2, 6);
+    answer2 = L2 * l2 * h2;
+  }
+  const optA = `Assemblage 1 (${L} × ${l} × ${h} cubes)`;
+  const optB = `Assemblage 2 (${L2} × ${l2} × ${h2} cubes)`;
+  const correct = answer > answer2 ? optA : optB;
   return {
-    type: "numeric",
+    type: "qcm",
     chapter: "Grandeurs et mesures — Volume",
-    prompt: `Un pavé droit a pour dimensions ${L} cm × ${l} cm × ${h} cm. Quel est son volume, en cm³ ?`,
-    answer,
+    prompt: `Deux assemblages sont construits avec des petits cubes identiques de 1 cm d'arête (donc de 1 cm³ chacun). L'assemblage 1 mesure ${L} × ${l} × ${h} cubes, l'assemblage 2 mesure ${L2} × ${l2} × ${h2} cubes. Lequel a le plus grand volume ?`,
+    answer: correct,
+    options: [optA, optB],
     steps: [
-      { type: "regle", text: `Volume d'un pavé droit = longueur × largeur × hauteur` },
-      { type: "calcul", text: `${L} \\times ${l} \\times ${h} = ${answer}` },
+      { type: "calcul", text: `Assemblage 1 : ${L} \\times ${l} \\times ${h} = ${answer} cm³` },
+      { type: "calcul", text: `Assemblage 2 : ${L2} \\times ${l2} \\times ${h2} = ${answer2} cm³` },
     ],
   };
 }

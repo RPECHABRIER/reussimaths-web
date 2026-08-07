@@ -398,6 +398,11 @@ function genProblemeVraiFauxAffirmations() {
     { text: `Il a plus de ${fr(t2)} L dans sa ${contenant}.`, correct: total > t2 },
     { text: `Il doit encore verser de l'eau pour arriver à ${fr(t3)} L.`, correct: total < t3 },
   ];
+  // t1/t2/t3 sont tirés indépendamment : il arrive qu'aucune des 3
+  // affirmations ne soit vraie, ce qui ne conviendrait pas pour "coche les
+  // affirmations vraies" (bug trouvé lors de l'audit programme 2026). Même
+  // logique de régénération que genProblemeRubanRestant() plus bas.
+  if (!items.some((it) => it.correct)) return genProblemeVraiFauxAffirmations();
   const { options, answer } = shuffleStatements(items);
   return {
     type: "multi",
@@ -420,6 +425,11 @@ function genProblemeRecetteSuffisante() {
     { text: `Assez de sucre pour faire un gâteau.`, correct: sugarHave >= sugarNeeded },
     { text: `Assez de sucre pour faire deux gâteaux.`, correct: sugarHave >= 2 * sugarNeeded },
   ];
+  // flourHave/sugarHave sont tirés indépendamment de flourNeeded/sugarNeeded :
+  // il arrive qu'aucun des deux ingrédients ne suffise même pour un seul
+  // gâteau, laissant les 4 affirmations fausses (même bug que ci-dessus dans
+  // genProblemeVraiFauxAffirmations, corrigé de la même façon).
+  if (!items.some((it) => it.correct)) return genProblemeRecetteSuffisante();
   const { options, answer } = shuffleStatements(items);
   return {
     type: "multi",
@@ -596,7 +606,7 @@ function genProblemeArgentSuffisant() {
     prompt,
     answer: diff,
     steps: [
-      { type: "calcul", text: `${p2} a ${centimesCount} \\times 0,10 = ${fr(amount2)} €.` },
+      { type: "calcul", text: `${p2} a \\(${centimesCount} \\times 0,10 = ${fr(amount2)}\\) €.` },
       { type: "calcul", text: `Total : ${fr(amount1)} + ${fr(amount2)} = ${fr(total)} €.` },
       { type: "calcul", text: enough ? `${fr(total)} - ${fr(price)} = ${fr(diff)}` : `${fr(price)} - ${fr(total)} = ${fr(diff)}` },
     ],

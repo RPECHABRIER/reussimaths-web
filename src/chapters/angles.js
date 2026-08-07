@@ -180,14 +180,32 @@ function genNatureAngleQCM() {
 
 // ---------- 4. Classer plusieurs angles (vrai/faux) ----------
 function genClassifierAngleMulti() {
-  const angles = shuffle([randInt(1, 89), 90, randInt(91, 179), 180]);
-  const items = angles.map((a) => {
+  // Pas de figure ici (uniquement des affirmations textuelles), donc pas
+  // d'ambiguïté visuelle à intégrer l'angle plein (360°) — contrairement à
+  // genNatureAngleQCM où un angle plein serait visuellement identique à un
+  // angle nul avec le tracé actuel (deux demi-droites confondues).
+  const NATURES = ["aigu", "droit", "obtus", "plat", "plein"];
+  const angles = shuffle([randInt(1, 89), 90, randInt(91, 179), 180, 360]).slice(0, 4);
+  // On garantit qu'au moins une affirmation est vraie (sinon "coche les
+  // affirmations vraies" n'aurait aucune réponse possible) : on choisit
+  // d'abord, pour chaque énoncé, s'il sera vrai ou faux, avec au moins un vrai
+  // parmi les 4 (countTrue entre 1 et 4), plutôt que de tirer chaque
+  // affirmation au hasard indépendamment.
+  const trueIndices = new Set(shuffle([0, 1, 2, 3]).slice(0, randInt(1, 4)));
+  const items = angles.map((a, i) => {
     let nature;
     if (a < 90) nature = "aigu";
     else if (a === 90) nature = "droit";
     else if (a < 180) nature = "obtus";
-    else nature = "plat";
-    const claimedNature = pick(["aigu", "droit", "obtus", "plat"]);
+    else if (a === 180) nature = "plat";
+    else nature = "plein";
+    let claimedNature;
+    if (trueIndices.has(i)) {
+      claimedNature = nature;
+    } else {
+      const wrongOptions = NATURES.filter((n) => n !== nature);
+      claimedNature = pick(wrongOptions);
+    }
     return { text: `Un angle de ${a}° est ${claimedNature}.`, correct: claimedNature === nature };
   });
   const { options, answer } = shuffleStatements(items);
@@ -197,7 +215,7 @@ function genClassifierAngleMulti() {
     prompt: `Coche les affirmations vraies.`,
     options,
     answer,
-    steps: [{ type: "regle", text: `aigu : moins de 90° ; droit : 90° ; obtus : entre 90° et 180° ; plat : 180°.` }],
+    steps: [{ type: "regle", text: `aigu : moins de 90° ; droit : 90° ; obtus : entre 90° et 180° ; plat : 180° ; plein : 360°.` }],
   };
 }
 
@@ -382,29 +400,13 @@ function genAnglesAlignesChaine() {
   };
 }
 
-// ---------- 13. Angle extérieur d'un triangle ----------
-function genAngleExterieurTriangle() {
-  const int1 = randInt(20, 80);
-  const int2 = randInt(20, 80);
-  const ext = int1 + int2;
-  const int3 = 180 - ext;
-  const askExt = Math.random() < 0.5;
-  return {
-    type: "numeric",
-    chapter: "Angles — Angle extérieur d'un triangle",
-    prompt: askExt
-      ? `Dans un triangle, les deux angles intérieurs non adjacents à un angle extérieur mesurent ${int1}° et ${int2}°. Quelle est la mesure de cet angle extérieur ?`
-      : `L'angle extérieur d'un triangle mesure ${ext}°. L'un des deux angles intérieurs non adjacents mesure ${int1}°. Quelle est la mesure de l'autre ?`,
-    figure: buildTriangleFigure(int1, int2, int3, { labels: { A: `${int1}°`, B: `${int2}°` } }),
-    answer: askExt ? ext : int2,
-    steps: [
-      {
-        type: "regle",
-        text: `Un angle extérieur d'un triangle est égal à la somme des deux angles intérieurs non adjacents : ${int1} + ${int2} = ${ext}`,
-      },
-    ],
-  };
-}
+// NOTE (audit programme 2026, cycle 3, BO du 17-4-2025) : un générateur
+// "genAngleExterieurTriangle" a été retiré d'ici. Même constat que celui déjà
+// fait pour le cycle 4 dans triangles.js (5e) : l'expression "angle
+// extérieur" n'apparaît nulle part dans le programme officiel — ni en cycle 3
+// (6e) ni en cycle 4 (5e/4e/3e). Ce n'est donc pas seulement un contenu
+// "trop tôt" pour la 6e, mais une notion absente des textes réglementaires
+// sous ce nom à tout niveau du collège.
 
 // =========================== Problèmes ===========================
 
@@ -520,7 +522,6 @@ const GENERATORS = [
   genTroisiemeAngleTriangleRectangle,
   genTriangleExisteQCM,
   genAnglesAlignesChaine,
-  genAngleExterieurTriangle,
   genProblemeCocheQuestionsAngles,
   genProblemeVraiFauxAngles,
   genProblemeBissectriceAngleEntre,
@@ -540,7 +541,6 @@ const DIFFICULTY = {
   genBissectrice: "standard",
   genTriangleExisteQCM: "standard",
   genAnglesAlignesChaine: "standard",
-  genAngleExterieurTriangle: "standard",
   genProblemeCocheQuestionsAngles: "expert",
   genProblemeVraiFauxAngles: "expert",
   genProblemeBissectriceAngleEntre: "expert",

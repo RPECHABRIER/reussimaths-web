@@ -27,6 +27,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable.js";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -56,11 +58,11 @@ function shuffleStatements(items) {
 // grandeurs"). D'où ces libellés systématiquement affichés au-dessus de
 // chaque ligne du tableau.
 const TABLE_CONTEXTS = [
-  { g1: "Masse de pommes (en kg)", g2: "Prix (en €)" },
-  { g1: "Quantité d'essence (en L)", g2: "Prix (en €)" },
-  { g1: "Nombre de stylos", g2: "Prix (en €)" },
+  { g1: "Masse de pommes (en kg)", g2: "Prix (en euros)" },
+  { g1: "Quantité d'essence (en L)", g2: "Prix (en euros)" },
+  { g1: "Nombre de stylos", g2: "Prix (en euros)" },
   { g1: "Durée (en min)", g2: "Nombre de pièces produites" },
-  { g1: "Nombre de billets de cinéma", g2: "Prix (en €)" },
+  { g1: "Nombre de billets de cinéma", g2: "Prix (en euros)" },
 ];
 
 // =========================== Mémo 2 : résoudre un problème de proportionnalité ===========================
@@ -105,10 +107,14 @@ function genCoefficientDeProportionnalite() {
   const a2 = randInt(2, 10);
   const b2 = roundTo(a2 * k, 2);
   const ctx = pick(TABLE_CONTEXTS);
+  const table = texTable([
+    [ctx.g1, a1, a2],
+    [ctx.g2, fr(b1), fr(b2)],
+  ]);
   return {
     type: "numeric",
     chapter: "Proportionnalité — Coefficient de proportionnalité",
-    prompt: `Ce tableau de proportionnalité donne :\\\\ ${ctx.g1} : \\(${a1} \\quad ${a2}\\)\\\\ ${ctx.g2} : \\(${fr(b1)} \\quad ${fr(b2)}\\)\\\\ Quel est le coefficient de proportionnalité (le nombre par lequel on multiplie une valeur de la première ligne pour obtenir celle de la deuxième ligne) ?`,
+    prompt: `Ce tableau de proportionnalité donne : ${table} Quel est le coefficient de proportionnalité (le nombre par lequel on multiplie une valeur de la première ligne pour obtenir celle de la deuxième ligne) ?`,
     answer: k,
     steps: [{ type: "calcul", text: `${fr(b1)} \\div ${a1} = ${fr(k)}` }],
   };
@@ -127,10 +133,14 @@ function genEstTableauProportionnel() {
     const idx = randInt(0, 2);
     bottoms[idx] = roundTo(bottoms[idx] + (Math.random() < 0.5 ? 1 : -1) * nonZero(1, 3), 2);
   }
+  const table = texTable([
+    [ctx.g1, ...tops],
+    [ctx.g2, ...bottoms.map(fr)],
+  ]);
   return {
     type: "qcm",
     chapter: "Proportionnalité — Reconnaître un tableau",
-    prompt: `Ce tableau est-il un tableau de proportionnalité ?\\\\ ${ctx.g1} : \\(${tops.join(" \\quad ")}\\)\\\\ ${ctx.g2} : \\(${bottoms.map(fr).join(" \\quad ")}\\)`,
+    prompt: `Ce tableau est-il un tableau de proportionnalité ? ${table}`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [{ type: "calcul", text: `On calcule les rapports : ${tops.map((t, i) => `${fr(bottoms[i])} \\div ${t} = ${fr(roundTo(bottoms[i] / t, 3))}`).join(" ; ")}.` }],
@@ -151,10 +161,14 @@ function genCompleterTableauProportionnaliteManquant() {
   const b2 = roundTo(a2 * k, 2);
   const a3 = randInt(2, 10);
   const ctx = pick(TABLE_CONTEXTS);
+  const table = texTable([
+    [ctx.g1, a1, a2, a3],
+    [ctx.g2, fr(b1), fr(b2), "?"],
+  ]);
   return {
     type: "numeric",
     chapter: "Proportionnalité — Compléter un tableau",
-    prompt: `Voici un tableau de proportionnalité :\\\\ ${ctx.g1} : \\(${a1} \\quad ${a2} \\quad ${a3}\\)\\\\ ${ctx.g2} : \\(${fr(b1)} \\quad ${fr(b2)} \\quad ?\\)\\\\ Quelle est la valeur manquante ?`,
+    prompt: `Voici un tableau de proportionnalité : ${table} Quelle est la valeur manquante ?`,
     answer: roundTo(a3 * k, 2),
     steps: [
       { type: "calcul", text: `On cherche par quel nombre on multiplie toujours pour passer de la première grandeur à la deuxième : ${fr(b1)} \\div ${a1} = ${fr(k)}` },

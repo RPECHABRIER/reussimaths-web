@@ -15,3 +15,14 @@ body {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* KaTeX en mode bloc (\[ ... \], notamment les tableaux via texTable()) :
+   si le contenu (ex. un tableau large) ne tient pas dans la largeur de la
+   carte d'exercice sur petit écran, on fait défiler horizontalement plutôt
+   que de laisser le contenu déborder du cadre ou casser la mise en page. */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding-bottom: 2px;
+}

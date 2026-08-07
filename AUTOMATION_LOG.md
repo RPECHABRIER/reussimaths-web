@@ -2685,3 +2685,65 @@ Fichier synchronisé (diff vide vérifié) vers les deux copies Application TOP.
 Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+## 2026-08-07 — Nouvel outil texTable() : vrais tableaux LaTeX (correction d'un bug d'affichage)
+
+Signalé par Romain : l'affichage des tableaux de proportionnalité (6e) posait
+problème. Diagnostic : dans `proportionnalite.js`, 3 générateurs construisaient
+leur tableau en juxtaposant plusieurs blocs `\( ... \)` séparés par un `\\\\`
+flottant dans du texte brut (hors de tout environnement LaTeX). Or `\\` (retour
+à la ligne) n'a de sens QUE à l'intérieur d'un environnement comme
+`\begin{array}` ou `\begin{cases}` — utilisé en texte libre, KaTeX ne le
+reconnaît pas du tout : ça ne produisait aucun vrai retour à la ligne, avec un
+risque de texte qui déborde du cadre de la carte d'exercice sur mobile
+(exactement le problème remonté). Ce n'était pas propre à la 6e : le mécanisme
+sous-jacent (juxtaposition de plusieurs `\(\)` pour simuler un tableau) est un
+besoin qui revient dans beaucoup de chapitres (tableaux de données, de
+proportionnalité, de statistiques...), d'où la décision de construire un
+outil réutilisable plutôt qu'un correctif local.
+
+**Nouveau fichier `src/utils/texTable.js`** : exporte `texTable(rows)`, qui
+construit un vrai tableau LaTeX (`\[\begin{array}{|l|c|c|...|} ... \end{array}\]`)
+avec bordures et colonnes alignées à partir d'un tableau de lignes de
+cellules — la première cellule de chaque ligne est traitée comme un libellé
+de grandeur (rendue en `\text{}`), les suivantes comme des valeurs. KaTeX
+sait nativement rendre cet environnement `array`, donc plus de bricolage :
+c'est un unique bloc LaTeX cohérent, en mode bloc (`\[ \]`), qui s'affiche
+sur ses propres lignes quel que soit le nombre de colonnes.
+
+Règle documentée dans le fichier : ne jamais mettre le symbole « € » dans une
+cellule (KaTeX n'a pas de métriques de caractère pour ce symbole, déjà
+identifié précédemment) — écrire « euros » en toutes lettres à la place. Les
+5 contextes de `TABLE_CONTEXTS` dans `proportionnalite.js` ont été mis à jour
+en conséquence (« Prix (en €) » → « Prix (en euros) »).
+
+**CSS ajoutée dans `src/index.css`** : règle `.katex-display { overflow-x:
+auto; overflow-y: hidden; max-width: 100%; }`, recommandation standard de
+KaTeX pour le mode bloc — si un tableau reste malgré tout trop large pour un
+très petit écran, il défile horizontalement au lieu de déborder du cadre ou
+de casser la mise en page (demande explicite de Romain : « fais bien
+attention à ce que le texte n'sorte pas du cadre »).
+
+**Migration des 3 générateurs concernés** (`genCoefficientDeProportionnalite`,
+`genEstTableauProportionnel`, `genCompleterTableauProportionnaliteManquant`)
+vers `texTable()`. Recherche exhaustive dans tout `src/chapters/` : seuls 2
+autres fichiers utilisaient un `\\\\` (`equations-droites-seconde.js`,
+`vecteurs-droites-plans-espace-terminale-spe.js`) mais correctement, à
+l'intérieur d'un vrai `\begin{cases}...\end{cases}` — donc pas de bug là,
+rien à changer.
+
+**Vérifications effectuées :**
+- `texTable()` testé via `katex.renderToString(..., {strict: "error"})` :
+  aucun avertissement, aucune erreur.
+- 500 exercices générés du chapitre Proportionnalité : aucun crash, aucune
+  réponse `NaN`.
+- Les blocs `\[ ... \]` effectivement produits par les 3 générateurs modifiés
+  ont été extraits des prompts générés et revérifiés un par un avec KaTeX en
+  mode strict : tous corrects.
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.

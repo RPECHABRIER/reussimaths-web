@@ -417,7 +417,7 @@ export default {
     pourquoi: "Le nombre dérivé permet de savoir à quel rythme une quantité évolue à un instant précis — la base de toute optimisation.",
     level: "premiere-non-spe",
     free: false,
-    order: 6,
+    order: 7,
   },
   generate,
 };

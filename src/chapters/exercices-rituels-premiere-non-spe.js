@@ -358,7 +358,7 @@ export default {
     pourquoi: "Ce brassage final mélange volontairement les notions de l'année pour t'entraîner à les reconnaître sans indice, comme le jour de l'épreuve.",
     level: "premiere-non-spe",
     free: false,
-    order: 8,
+    order: 9,
   },
   generate,
 };

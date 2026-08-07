@@ -2,6 +2,15 @@
 // Chapitre : Analyse de l'information chiffrée (Première, enseignement
 // mathématique non spé) — sous abonnement.
 //
+// NOTE (audit programme 2026, M2) : genQualifierCorrelationQCM ne traite la
+// corrélation que de façon qualitative/narrative (à partir d'une description
+// de situation, sans nuage de points chiffré) — c'est volontairement une
+// simple mise en bouche à la notion, pas le traitement complet du thème
+// « statistiques à deux variables ». Le volet quantitatif (point moyen,
+// droite d'ajustement, prédiction par extrapolation) a été ajouté dans
+// statistique-probabilites-premiere-non-spe.js (genCalculerPointMoyenNumeric,
+// genEquationDroiteAjustementNumeric, genPredictionParAjustementNumeric).
+//
 // Correspond au chapitre 1 du programme d'enseignement mathématique de
 // première (non spécialité) : tableaux croisés d'effectifs (calcul d'une
 // case manquante à partir des totaux, calcul de totaux marginaux),
@@ -9,8 +18,9 @@
 // de réussite / taux d'évolution, distinction entre pourcentage d'évolution
 // et écart en points de pourcentage, lecture critique de diagrammes
 // (diagramme en bâtons à échelle faussée, diagramme circulaire dont l'angle
-// ne correspond pas au pourcentage annoncé), qualification d'une corrélation
-// à partir d'un nuage de points.
+// ne correspond pas au pourcentage annoncé), qualification narrative d'une
+// corrélation à partir d'une description de nuage de points (voir aussi le
+// traitement quantitatif dans statistique-probabilites-premiere-non-spe.js).
 // La correction du livre du professeur (source .tex, exercices 4-23 :
 // Automatismes méthodes 1-4, Entraînement parties 1-2 sur les tableaux
 // croisés et les représentations graphiques) a servi à identifier la

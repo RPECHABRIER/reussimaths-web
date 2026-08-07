@@ -133,9 +133,10 @@ export const PLANNED_CHAPTERS = {
     { id: "statistique-probabilites-premiere-non-spe", title: "De la statistique aux probabilités", order: 3 },
     { id: "croissance-lineaire-premiere-non-spe", title: "Croissance linéaire", order: 4 },
     { id: "croissance-exponentielle-premiere-non-spe", title: "Croissance exponentielle", order: 5 },
-    { id: "variations-instantanees-premiere-non-spe", title: "Variations instantanées", order: 6 },
-    { id: "variations-globales-premiere-non-spe", title: "Variations globales", order: 7 },
-    { id: "exercices-rituels-premiere-non-spe", title: "Exercices rituels", order: 8 },
+    { id: "modelisation-quadratique-premiere-non-spe", title: "Modélisation quadratique", order: 6 },
+    { id: "variations-instantanees-premiere-non-spe", title: "Variations instantanées", order: 7 },
+    { id: "variations-globales-premiere-non-spe", title: "Variations globales", order: 8 },
+    { id: "exercices-rituels-premiere-non-spe", title: "Exercices rituels", order: 9 },
   ],
   // Sommaire officiel du manuel de Terminale (enseignement de spécialité
   // mathématiques), source "mathematiques-terminale-2020" (chapitres 1 à 14,

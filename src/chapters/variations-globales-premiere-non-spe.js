@@ -389,7 +389,7 @@ export default {
     pourquoi: "Le nombre dérivé et la fonction dérivée permettent de savoir à quel rythme une quantité évolue à un instant donné : vitesse, croissance, rentabilité.",
     level: "premiere-non-spe",
     free: false,
-    order: 7,
+    order: 8,
   },
   generate,
 };

@@ -2,6 +2,13 @@
 // Chapitre : De la statistique aux probabilités (Première, enseignement
 // mathématique non spé) — sous abonnement.
 //
+// NOTE (audit programme 2026, M2) : ajout du volet quantitatif des
+// statistiques à deux variables, absent jusqu'ici (seule la corrélation
+// qualitative/narrative était traitée, dans
+// analyse-information-chiffree-premiere-non-spe.js) : point moyen
+// G(x̄ ; ȳ) d'un nuage de points, droite d'ajustement (méthode des points
+// extrêmes) et prédiction par extrapolation à partir de cette droite.
+//
 // Correspond au chapitre 2 du programme d'enseignement mathématique de
 // première (non spécialité) : fréquences marginales et conditionnelles
 // depuis un tableau croisé d'effectifs, probabilité conditionnelle P_A(B),
@@ -10,7 +17,8 @@
 // sur une branche, calcul de la probabilité d'un chemin, formule des
 // probabilités totales), répétition d'expériences identiques et
 // indépendantes (tirages avec remise), probabilité de "au moins un" par
-// passage au contraire.
+// passage au contraire, point moyen et droite d'ajustement d'un nuage de
+// points, prédiction par extrapolation.
 // La correction du livre du professeur (source .tex, exercices 7-23 :
 // Automatismes méthodes 1-4 sur les fréquences/probabilités conditionnelles,
 // l'indépendance et les arbres pondérés) a servi à identifier la méthode ;
@@ -394,6 +402,79 @@ function genEffectifDepuisProbabiliteConditionnelleNumeric() {
   };
 }
 
+const CONTEXTES_BIVARIE = [
+  { contexte: "le chiffre d'affaires mensuel (en milliers d'euros) d'une entreprise" },
+  { contexte: "la population (en centaines d'habitants) d'une commune au fil des années" },
+  { contexte: "le nombre d'abonnés (en dizaines) d'une chaîne au fil des mois" },
+  { contexte: "la température moyenne (en °C) relevée chaque jour" },
+];
+
+// ---------- 16. Point moyen d'un nuage de points ----------
+function genCalculerPointMoyenNumeric() {
+  const ctx = pick(CONTEXTES_BIVARIE);
+  const n = pick([4, 5, 6]);
+  const xs = Array.from({ length: n }, (_, i) => i + 1);
+  const ys = xs.map(() => randInt(5, 40));
+  const xbar = roundTo(xs.reduce((a, b) => a + b, 0) / n, 2);
+  const ybar = roundTo(ys.reduce((a, b) => a + b, 0) / n, 2);
+  const demanderX = Math.random() < 0.5;
+  return {
+    type: "numeric",
+    chapter: "De la statistique aux probabilités — Statistiques à deux variables",
+    prompt: `On a relevé les couples \\((x_i ; y_i)\\) suivants pour ${ctx.contexte} : ${xs.map((x, i) => `(${x} ; ${ys[i]})`).join(", ")}. Calcule ${demanderX ? "l'abscisse" : "l'ordonnée"} du point moyen G du nuage de points (arrondie au centième).`,
+    answer: demanderX ? xbar : ybar,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{Le point moyen } G(\\bar{x} ; \\bar{y}) \\text{ a pour coordonnées les moyennes des abscisses et des ordonnées de tous les points du nuage.}` },
+      { type: "resultat", text: demanderX ? `\\bar{x} = \\dfrac{${xs.join(" + ")}}{${n}} = ${fr(xbar)}` : `\\bar{y} = \\dfrac{${ys.join(" + ")}}{${n}} = ${fr(ybar)}` },
+    ],
+  };
+}
+
+// ---------- 17. Équation de la droite d'ajustement (méthode des points extrêmes) ----------
+function genEquationDroiteAjustementNumeric() {
+  const ctx = pick(CONTEXTES_BIVARIE);
+  const x1 = randInt(0, 4);
+  const xn = x1 + randInt(3, 8);
+  const y1 = randInt(5, 30);
+  const yn = randInt(5, 40);
+  const a = roundTo((yn - y1) / (xn - x1), 2);
+  const b = roundTo(y1 - a * x1, 2);
+  const demanderA = Math.random() < 0.5;
+  return {
+    type: "numeric",
+    chapter: "De la statistique aux probabilités — Statistiques à deux variables",
+    prompt: `Pour ${ctx.contexte}, le premier point du nuage est \\((${x1} ; ${y1})\\) et le dernier est \\((${xn} ; ${yn})\\). On ajuste le nuage par la droite passant par ces deux points extrêmes, d'équation \\(y = ax + b\\). Détermine ${demanderA ? "a" : "b"} (arrondi au centième).`,
+    answer: demanderA ? a : b,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{Méthode des points extrêmes : la droite d'ajustement passe par le premier et le dernier point du nuage. Son coefficient directeur est } a = \\dfrac{y_n - y_1}{x_n - x_1}, \\text{ puis } b = y_1 - a x_1.` },
+      { type: "calcul", text: `a = \\dfrac{${yn} - ${y1}}{${xn} - ${x1}} = ${fr(a)}` },
+      { type: "resultat", text: demanderA ? `a \\approx ${fr(a)}` : `b = ${y1} - ${fr(a)} \\times ${x1} \\approx ${fr(b)}` },
+    ],
+  };
+}
+
+// ---------- 18. Prédiction par extrapolation à partir de la droite d'ajustement ----------
+function genPredictionParAjustementNumeric() {
+  const ctx = pick(CONTEXTES_BIVARIE);
+  const a = pick([-3, -2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2, 2.5, 3, 4]);
+  const b = randInt(-10, 30);
+  const xPredict = randInt(8, 25);
+  const answer = roundTo(a * xPredict + b, 2);
+  return {
+    type: "numeric",
+    chapter: "De la statistique aux probabilités — Statistiques à deux variables",
+    prompt: `Pour ${ctx.contexte}, la droite d'ajustement obtenue a pour équation \\(y = ${fr(a)}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). En utilisant ce modèle, quelle valeur peut-on prévoir pour \\(x = ${xPredict}\\) (arrondie au centième) ?`,
+    answer,
+    tolerance: 0.01,
+    steps: [
+      { type: "regle", text: `\\text{Prévoir une valeur par extrapolation consiste à substituer la valeur de x dans l'équation de la droite d'ajustement, même en dehors des valeurs observées.}` },
+      { type: "resultat", text: `y = ${fr(a)} \\times ${xPredict} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\approx ${fr(answer)}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genFrequenceMarginaleNumeric,
   genFrequenceConditionnelleNumeric,
@@ -410,6 +491,9 @@ const GENERATORS = [
   genProbabiliteContraireNumeric,
   genComparerFrequenceMarginaleConditionnelleQCM,
   genEffectifDepuisProbabiliteConditionnelleNumeric,
+  genCalculerPointMoyenNumeric,
+  genEquationDroiteAjustementNumeric,
+  genPredictionParAjustementNumeric,
 ];
 
 const DIFFICULTY = {
@@ -428,6 +512,9 @@ const DIFFICULTY = {
   genRepetitionExperiencesNumeric: "expert",
   genProbabiliteAuMoinsUnNumeric: "expert",
   genComparerFrequenceMarginaleConditionnelleQCM: "expert",
+  genCalculerPointMoyenNumeric: "facile",
+  genEquationDroiteAjustementNumeric: "standard",
+  genPredictionParAjustementNumeric: "standard",
 };
 
 function generate(difficulty) {
@@ -442,7 +529,7 @@ export default {
   meta: {
     id: "statistique-probabilites-premiere-non-spe",
     title: "De la statistique aux probabilités",
-    description: "Fréquences marginales et conditionnelles, probabilité conditionnelle P_A(B), indépendance de deux événements, arbres pondérés, formule des probabilités totales, répétition d'expériences identiques et indépendantes.",
+    description: "Fréquences marginales et conditionnelles, probabilité conditionnelle P_A(B), indépendance de deux événements, arbres pondérés, formule des probabilités totales, répétition d'expériences identiques et indépendantes, point moyen et droite d'ajustement d'un nuage de points.",
     pourquoi: "Passer des fréquences observées à la probabilité, c'est le raisonnement utilisé dans toute étude statistique ou sondage d'opinion.",
     level: "premiere-non-spe",
     free: false,

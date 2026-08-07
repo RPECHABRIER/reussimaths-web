@@ -187,12 +187,49 @@ function genAutoIndependanceMental() {
   };
 }
 
+// ---------- 6. Point moyen d'un petit nuage de points (mental) ----------
+// NOTE (audit programme 2026, M2) : ajout, miroir du volet quantitatif des
+// statistiques à deux variables introduit dans
+// statistique-probabilites-premiere-non-spe.js.
+function genAutoPointMoyenMental() {
+  const xs = [1, 2, 3];
+  const ys = xs.map(() => randInt(4, 20));
+  const ybar = roundTo(ys.reduce((a, b) => a + b, 0) / 3, 2);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — De la statistique aux probabilités",
+    prompt: `Un nuage de points a pour ordonnées ${ys.join(", ")} (pour les abscisses 1, 2, 3). Calcule l'ordonnée du point moyen (arrondie au centième).`,
+    answer: ybar,
+    tolerance: 0.01,
+    steps: [`\\dfrac{${ys.join(" + ")}}{3} = ${fr(ybar)}`],
+  };
+}
+
+// ---------- 7. Coefficient directeur de la droite d'ajustement (mental) ----------
+function genAutoCoefficientAjustementMental() {
+  const x1 = 0;
+  const xn = randInt(4, 8);
+  const y1 = randInt(5, 20);
+  const yn = randInt(5, 30);
+  const a = roundTo((yn - y1) / (xn - x1), 2);
+  return {
+    type: "numeric",
+    chapter: "Automatismes — De la statistique aux probabilités",
+    prompt: `Le premier point d'un nuage est \\((${x1} ; ${y1})\\), le dernier est \\((${xn} ; ${yn})\\). Calcule le coefficient directeur de la droite passant par ces deux points (arrondi au centième).`,
+    answer: a,
+    tolerance: 0.01,
+    steps: [`\\dfrac{${yn} - ${y1}}{${xn} - ${x1}} = ${fr(a)}`],
+  };
+}
+
 const CH_STATISTIQUE_PROBABILITES_PNS = [
   genAutoFrequenceConditionnelleMental,
   genAutoProbabiliteConditionnelleMental,
   genAutoProbabiliteContraireMental,
   genAutoProbabiliteCheminMental,
   genAutoIndependanceMental,
+  genAutoPointMoyenMental,
+  genAutoCoefficientAjustementMental,
 ];
 
 // =========================== Chapitre 3 : Croissance linéaire ===========================
@@ -361,6 +398,58 @@ const CH_CROISSANCE_EXPONENTIELLE_PNS = [
   genAutoCoefficientMultiplicateurGlobalMental,
   genAutoSensVariationExponentielleMental,
 ];
+
+// =========================== Chapitre 4bis : Modélisation quadratique ===========================
+// NOTE (audit programme 2026, M1) : nouveau thème, miroir de
+// modelisation-quadratique-premiere-non-spe.js. (Mini-exercices "Calcul
+// mental" en tête de page : signe de a, calcul rapide de Δ, nombre de
+// solutions selon le signe de Δ.)
+
+// ---------- 1. Signe du coefficient a (mental) ----------
+function genAutoSigneCoefficientAMental() {
+  const a = nonZero(-9, 9);
+  const b = randInt(-9, 9);
+  const c = randInt(-9, 9);
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Modélisation quadratique",
+    prompt: `On considère le trinôme \\(${a}x^2 ${b >= 0 ? "+" : "-"} ${Math.abs(b)}x ${c >= 0 ? "+" : "-"} ${Math.abs(c)}\\). Quel est le signe de son coefficient a ?`,
+    answer: a > 0 ? "positif" : "négatif",
+    options: ["positif", "négatif"],
+    steps: [`a = ${a}`],
+  };
+}
+
+// ---------- 2. Calcul rapide du discriminant (mental) ----------
+function genAutoCalculDiscriminantMental() {
+  const a = nonZero(1, 4);
+  const b = randInt(-6, 6);
+  const c = randInt(-6, 6);
+  const delta = b * b - 4 * a * c;
+  return {
+    type: "numeric",
+    chapter: "Automatismes — Modélisation quadratique",
+    prompt: `Calcule \\(\\Delta = b^2 - 4ac\\) pour \\(a = ${a}\\), \\(b = ${b}\\), \\(c = ${c}\\).`,
+    answer: delta,
+    steps: [`${b}^2 - 4 \\times ${a} \\times ${c} = ${delta}`],
+  };
+}
+
+// ---------- 3. Nombre de solutions selon le signe de Δ (mental) ----------
+function genAutoNombreSolutionsDeltaMental() {
+  const delta = pick([-5, -3, -1, 0, 1, 3, 5, 8]);
+  const nb = delta > 0 ? "2" : delta === 0 ? "1" : "0";
+  return {
+    type: "qcm",
+    chapter: "Automatismes — Modélisation quadratique",
+    prompt: `Une équation du second degré a un discriminant \\(\\Delta = ${delta}\\). Combien admet-elle de solutions réelles ?`,
+    answer: nb,
+    options: ["0", "1", "2"],
+    steps: [delta > 0 ? "Δ > 0 : deux solutions." : delta === 0 ? "Δ = 0 : une solution." : "Δ < 0 : aucune solution."],
+  };
+}
+
+const CH_MODELISATION_QUADRATIQUE_PNS = [genAutoSigneCoefficientAMental, genAutoCalculDiscriminantMental, genAutoNombreSolutionsDeltaMental];
 
 // =========================== Chapitre 5 : Variations instantanées ===========================
 // (Mini-exercices "Calcul mental" en tête de page : nombre dérivé depuis un
@@ -539,6 +628,7 @@ const THEMES = [
   { id: "statistique-probabilites-premiere-non-spe", title: "De la statistique aux probabilités", generators: CH_STATISTIQUE_PROBABILITES_PNS },
   { id: "croissance-lineaire-premiere-non-spe", title: "Croissance linéaire", generators: CH_CROISSANCE_LINEAIRE_PNS },
   { id: "croissance-exponentielle-premiere-non-spe", title: "Croissance exponentielle", generators: CH_CROISSANCE_EXPONENTIELLE_PNS },
+  { id: "modelisation-quadratique-premiere-non-spe", title: "Modélisation quadratique", generators: CH_MODELISATION_QUADRATIQUE_PNS },
   { id: "variations-instantanees-premiere-non-spe", title: "Variations instantanées", generators: CH_VARIATIONS_INSTANTANEES_PNS },
   { id: "variations-globales-premiere-non-spe", title: "Variations globales", generators: CH_VARIATIONS_GLOBALES_PNS },
 ];

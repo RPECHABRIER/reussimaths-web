@@ -3022,3 +3022,76 @@ Aucune migration SQL nécessaire.
 Ceci clôt la correction du niveau 2nde pour le programme 2026 (tâches #348
 à #357). Prochaine étape de la Phase 0 : les 3 filières de Première
 (non spé, spé, techno), selon leurs audits respectifs déjà réalisés.
+
+## 2026-08-07 — Phase 0 : mise en conformité Première non spé avec le nouveau programme 2026
+
+Correction des fichiers Première (enseignement mathématique, non spécialité)
+identifiés par l'audit officiel, plus un nouveau chapitre.
+
+**`src/chapters/modelisation-quadratique-premiere-non-spe.js`** (NOUVEAU
+FICHIER) : le trinôme du second degré n'apparaissait auparavant que comme
+support de dérivation (dans variations-globales-premiere-non-spe.js), jamais
+comme objet d'étude autonome via le discriminant — un manque confirmé par
+l'audit et absent de tout autre fichier du niveau. Nouveau chapitre complet :
+forme canonique/développée, discriminant, résolution d'équations et
+d'inéquations via Δ, sommet et signe de la parabole (6 générateurs). Inséré
+dans la séquence entre « Croissance exponentielle » et « Variations
+instantanées » (plannedChapters.js et meta.order des 3 fichiers suivants
+décalés en conséquence).
+
+**`src/chapters/statistique-probabilites-premiere-non-spe.js`** : ajout du
+volet quantitatif des statistiques à deux variables (absent jusqu'ici, seule
+la corrélation qualitative était traitée) : point moyen G(x̄ ; ȳ), droite
+d'ajustement par la méthode des points extrêmes, prédiction par
+extrapolation.
+
+**`src/chapters/analyse-information-chiffree-premiere-non-spe.js`** :
+`genQualifierCorrelationQCM` (corrélation qualitative/narrative) conservé
+mais documenté comme simple mise en bouche, le traitement quantitatif
+complet étant désormais dans statistique-probabilites-premiere-non-spe.js.
+
+**`src/chapters/automatismes-premiere-non-spe.js`** (miroir) : ajout de 2
+mini-exercices statistiques à deux variables (point moyen, coefficient
+d'ajustement) et d'un nouveau thème « Modélisation quadratique » (3
+mini-exercices : signe de a, calcul du discriminant, nombre de solutions
+selon le signe de Δ).
+
+**`src/chapters/preparation-eam-premiere-non-spe.js`** : ajout de 2
+générateurs originaux couvrant le nouveau programme (le second degré en
+contexte concret — aire, trajectoire, bénéfice — et les statistiques à deux
+variables avec ajustement et prévision). Note ajoutée en commentaire : les
+sujets officiels déjà intégrés (session juin 2026) sont composés sous
+l'ancien programme et restent valables comme entraînement au format, mais ne
+couvrent pas ces deux nouveautés ; la banque de sujets officiels sera
+enrichie à l'échéance de juin 2027 (première session sous le nouveau
+programme), sans suppression du contenu existant.
+
+**Vérifications effectuées :**
+- Les 5 fichiers modifiés/créés testés individuellement par script Node
+  (3000 à 6000 exercices générés selon les fichiers) : aucun crash, aucune
+  réponse manquante (`bad = 0`).
+- Tous les blocs LaTeX extraits des prompts/steps/options et revérifiés avec
+  KaTeX en mode strict : 0 erreur sur les 5 fichiers.
+- Build (`npm run build`) réussi depuis le dépôt Git.
+
+Fichiers synchronisés (diff vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire.
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+**Point signalé à Romain (non traité, confiance insuffisante) :** l'audit
+soulève un doute (R1, confiance faible/moyenne) sur le calibrage de
+croissance-lineaire/croissance-exponentielle/statistique-probabilites : la
+profondeur actuelle (racine n-ième pour un taux moyen, probabilités
+totales, répétition d'expériences) dépasserait peut-être le niveau
+« introduction » attendu par le nouveau texte réglementaire. L'auditeur n'a
+pas pu consulter l'annexe PDF officielle de l'arrêté (échec technique) et
+recommande explicitement une vérification humaine avant toute simplification
+de ce contenu. Aucune modification n'a donc été faite sur ce point.
+
+---
+
+Ceci clôt la correction du niveau Première non spé pour le programme 2026.
+Prochaine étape de la Phase 0 : Première Spécialité, puis Première
+technologique, selon leurs audits respectifs déjà réalisés.

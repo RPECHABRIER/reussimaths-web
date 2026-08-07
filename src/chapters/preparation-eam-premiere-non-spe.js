@@ -19,6 +19,18 @@
 //   des valeurs, contextes et nombres tirés aléatoirement à chaque exercice,
 //   pour un entraînement illimité une fois les sujets officiels épuisés.
 //
+// NOTE (audit programme 2026, M1/M2) : les sujets officiels ci-dessus
+// (session juin 2026) sont composés sous l'ANCIEN programme (2022 +
+// automatismes 2025) — ils restent valables comme entraînement au
+// format/automatismes de l'épreuve, mais ne couvrent pas le second degré via
+// discriminant ni les statistiques à deux variables quantitatives, ajoutés
+// par le programme 2026. Les sessions à partir de juin 2027 porteront sur le
+// nouveau programme ; c'est à cette échéance qu'il faudra enrichir la banque
+// de sujets officiels (pas de suppression du contenu existant, un ajout).
+// En attendant, deux générateurs originaux couvrent déjà ces compétences :
+// genSecondDegreContexteOriginalNumeric et
+// genStatsDeuxVariablesAjustementOriginalNumeric.
+//
 // Convention LaTeX : tout passage mathématique est entouré de \( ... \)
 // (rendu ensuite en jolie notation par le composant <MathText />, voir
 // src/components/MathText.jsx). Le reste du texte reste du français normal.
@@ -39,6 +51,14 @@ const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const roundTo = (n, d) => Math.round(n * 10 ** d) / 10 ** d;
 const fr = (n) => String(n).replace(".", ",");
 const signedL = (n, withVar = "") => (n >= 0 ? `+ ${n}${withVar}` : `- ${Math.abs(n)}${withVar}`);
+// Trinôme du second degré en LaTeX (sans les délimiteurs), ex: quadL(-3,-2,5) -> "-3x^2 - 2x + 5"
+const quadL = (a2, a1, a0) => {
+  const lead = (a2 === 1 ? "" : a2 === -1 ? "-" : String(a2)) + "x^2";
+  const parts = [lead];
+  if (a1 !== 0) parts.push(signedL(a1, "x"));
+  if (a0 !== 0) parts.push(signedL(a0));
+  return parts.join(" ");
+};
 
 // ============================================================================
 // ===================== 1. GÉNÉRATEURS OFFICIELS (sujets réels) ============
@@ -869,6 +889,108 @@ function genSigneDeriveeVariationsOriginalQCM() {
   };
 }
 
+// ---------- Original 14. Second degré en contexte (aire, trajectoire, bénéfice) ----------
+// NOTE (audit programme 2026, M1) : nouveau générateur, couvre le second
+// degré via discriminant en contexte, ajout du programme 2026 (miroir de
+// modelisation-quadratique-premiere-non-spe.js).
+function genSecondDegreContexteOriginalNumeric() {
+  const contextes = [
+    { nom: "l'aire d'un enclos rectangulaire adossé à un mur", variable: "la largeur (en m)", fonction: "A" },
+    { nom: "la hauteur d'un projectile lancé en l'air", variable: "le temps (en s)", fonction: "h" },
+    { nom: "le bénéfice d'une entreprise selon son prix de vente", variable: "le prix de vente (en euros)", fonction: "B" },
+  ];
+  const ctx = pick(contextes);
+  const r1 = randInt(0, 6);
+  const r2 = r1 + randInt(3, 10);
+  const a = pick([-1, -2]);
+  const b = -a * (r1 + r2);
+  const c = a * r1 * r2;
+  const delta = b * b - 4 * a * c;
+  const alpha = -b / (2 * a);
+  const beta = a * alpha * alpha + b * alpha + c;
+  const banque = [
+    {
+      question: `Calcule le discriminant \\(\\Delta\\) de ${ctx.fonction}.`,
+      answer: delta,
+      steps: [
+        { type: "regle", text: `\\Delta = b^2 - 4ac` },
+        { type: "resultat", text: `\\Delta = (${b})^2 - 4 \\times ${a} \\times (${c}) = ${delta}` },
+      ],
+    },
+    {
+      question: `Cette grandeur s'annule pour deux valeurs de x. Donne la plus petite.`,
+      answer: r1,
+      steps: [
+        { type: "calcul", text: `\\Delta = ${delta} > 0 : \\text{ deux solutions.}` },
+        { type: "resultat", text: `\\text{Les deux solutions sont } ${r1} \\text{ et } ${r2}. \\text{ La plus petite est } ${r1}.` },
+      ],
+    },
+    {
+      question: `Pour quelle valeur de x cette grandeur est-elle maximale (sommet de la parabole) ?`,
+      answer: alpha,
+      steps: [
+        { type: "regle", text: `\\text{L'abscisse du sommet est } \\alpha = -\\dfrac{b}{2a}.` },
+        { type: "resultat", text: `\\alpha = -\\dfrac{${b}}{2 \\times ${a}} = ${alpha}` },
+      ],
+    },
+  ];
+  const q = pick(banque);
+  return {
+    type: "numeric",
+    chapter: "Préparation EAM — Second degré",
+    prompt: `On modélise ${ctx.nom} par la fonction \\(${ctx.fonction}(x) = ${quadL(a, b, c)}\\), où x représente ${ctx.variable}. ${q.question}`,
+    answer: q.answer,
+    steps: q.steps,
+  };
+}
+
+// ---------- Original 15. Statistiques à deux variables (point moyen, ajustement, prévision) ----------
+// NOTE (audit programme 2026, M2) : nouveau générateur, couvre le volet
+// quantitatif des statistiques à deux variables, ajout du programme 2026
+// (miroir de statistique-probabilites-premiere-non-spe.js).
+function genStatsDeuxVariablesAjustementOriginalNumeric() {
+  const contextes = [
+    { nom: "le chiffre d'affaires mensuel (en milliers d'euros) d'une entreprise" },
+    { nom: "la fréquentation annuelle (en centaines de visiteurs) d'un musée" },
+    { nom: "le nombre d'abonnés (en dizaines) d'une chaîne au fil des mois" },
+  ];
+  const ctx = pick(contextes);
+  const x1 = randInt(0, 3);
+  const xn = x1 + randInt(4, 8);
+  const y1 = randInt(10, 30);
+  const yn = randInt(30, 60);
+  const a = roundTo((yn - y1) / (xn - x1), 2);
+  const b = roundTo(y1 - a * x1, 2);
+  const xPredict = xn + randInt(2, 6);
+  const banque = [
+    {
+      question: `On ajuste ce nuage de points par la droite passant par le premier point \\((${x1} ; ${y1})\\) et le dernier point \\((${xn} ; ${yn})\\). Calcule le coefficient directeur a de cette droite (arrondi au centième).`,
+      answer: a,
+      steps: [
+        { type: "regle", text: `a = \\dfrac{y_n - y_1}{x_n - x_1}` },
+        { type: "resultat", text: `a = \\dfrac{${yn} - ${y1}}{${xn} - ${x1}} = ${fr(a)}` },
+      ],
+    },
+    {
+      question: `La droite d'ajustement obtenue a pour équation \\(y = ${fr(a)}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). En utilisant ce modèle, quelle valeur peut-on prévoir pour \\(x = ${xPredict}\\) (arrondie au centième) ?`,
+      answer: roundTo(a * xPredict + b, 2),
+      steps: [
+        { type: "regle", text: `\\text{Prévoir par extrapolation consiste à substituer x dans l'équation de la droite d'ajustement.}` },
+        { type: "resultat", text: `y = ${fr(a)} \\times ${xPredict} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} \\approx ${fr(roundTo(a * xPredict + b, 2))}` },
+      ],
+    },
+  ];
+  const q = pick(banque);
+  return {
+    type: "numeric",
+    chapter: "Préparation EAM — Statistiques à deux variables",
+    prompt: `On étudie ${ctx.nom}. ${q.question}`,
+    answer: q.answer,
+    tolerance: 0.01,
+    steps: q.steps,
+  };
+}
+
 // ============================================================================
 
 const GENERATORS = [
@@ -895,6 +1017,8 @@ const GENERATORS = [
   genSuiteArithmetiqueModelisationOriginalNumeric,
   genSuiteGeometriqueModelisationOriginalNumeric,
   genSigneDeriveeVariationsOriginalQCM,
+  genSecondDegreContexteOriginalNumeric,
+  genStatsDeuxVariablesAjustementOriginalNumeric,
 ];
 
 const DIFFICULTY = {
@@ -921,6 +1045,8 @@ const DIFFICULTY = {
   genSuiteArithmetiqueModelisationOriginalNumeric: "standard",
   genSuiteGeometriqueModelisationOriginalNumeric: "standard",
   genSigneDeriveeVariationsOriginalQCM: "expert",
+  genSecondDegreContexteOriginalNumeric: "standard",
+  genStatsDeuxVariablesAjustementOriginalNumeric: "standard",
 };
 
 function generate(difficulty) {
@@ -936,11 +1062,11 @@ export default {
     id: "preparation-eam-premiere-non-spe",
     title: "Préparation à l'EAM",
     description:
-      "Exercices dans l'esprit de l'Épreuve Anticipée de Mathématiques (EAM) : automatismes-QCM, probabilités conditionnelles (tableau croisé, arbre pondéré), suites arithmétiques et géométriques, signe d'une dérivée. Comprend des sujets officiels de la session 2026 (source précisée : lieu, période, année) et des exercices originaux sur les mêmes compétences.",
+      "Exercices dans l'esprit de l'Épreuve Anticipée de Mathématiques (EAM) : automatismes-QCM, probabilités conditionnelles (tableau croisé, arbre pondéré), suites arithmétiques et géométriques, signe d'une dérivée, second degré en contexte, statistiques à deux variables. Comprend des sujets officiels de la session 2026 (source précisée : lieu, période, année) et des exercices originaux sur les mêmes compétences.",
     pourquoi:
       "Ce chapitre te met dans les conditions réelles de l'épreuve, avec des sujets et formats officiels, pour arriver serein le jour J.",
     level: "premiere-non-spe",
-    order: 9,
+    order: 10,
   },
   generate,
 };

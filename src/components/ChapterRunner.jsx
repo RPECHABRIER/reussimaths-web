@@ -12,16 +12,17 @@ import MathText from "./MathText";
 import StepsList from "./StepsList";
 import Figure from "./Figure";
 import Graph from "./Graph";
+import CoursPanel from "./CoursPanel";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
-// Composant générique d'exercice : Découverte/Entraînement/Défi, pavé
-// numérique, QCM, aide progressive, score/série. Partagé par TOUS les
+// Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
+// pavé numérique, QCM, aide progressive, score/série. Partagé par TOUS les
 // chapitres — un chapitre n'apporte que `chapter.generate()` (voir
 // src/chapters/*.js). Ne pas mettre de logique spécifique à un chapitre ici.
 //
-// Trois modes (triptyque, cf. proposition neurosciences) :
+// Trois modes d'exercice (triptyque, cf. proposition neurosciences) :
 //   - Découverte : la méthode (steps) est visible EN PERMANENCE, avant même
 //     de répondre (worked example, réduit la charge cognitive pour aborder
 //     une notion) — pas de score/streak sauvegardé, mode d'apprentissage pur.
@@ -29,6 +30,16 @@ import { colors, fonts, shadow } from "../theme";
 //     demande après une erreur ("Voir la méthode").
 //   - Défi (ex "Jeu") : chronométré, sans aide (pas de bouton méthode),
 //     score/streak/pts affichés, ambiance compétitive.
+//
+// + un 4e mode optionnel "Cours" (voir CoursPanel.jsx / MindMap.jsx), ajouté
+// EN PREMIÈRE POSITION dans le sélecteur uniquement si le chapitre définit
+// `meta.cours` (carte mentale + vidéos courtes éventuelles) — l'essentiel du
+// cours et des méthodes à connaître, avant même Découverte. Un chapitre sans
+// `meta.cours` ne montre pas cet onglet du tout (dégradation propre, pas de
+// case vide) : ce contenu est déployé progressivement chapitre par chapitre,
+// pas tout d'un coup. Quand il existe, on y atterrit par défaut en visite
+// libre (hors Parcours) — la logique est qu'un élève qui ouvre le chapitre
+// devrait d'abord voir "de quoi ça parle" avant de foncer sur les exercices.
 //
 // Chapitres "freemiumDaily" (ex: Automatismes) : un nombre limité de
 // questions par jour est offert sans abonnement (voir useDailyQuota), au-delà
@@ -56,11 +67,12 @@ import { colors, fonts, shadow } from "../theme";
 //     tout le chapitre.
 // ---------------------------------------------------------------------------
 
-const MODES = [
+const EXERCISE_MODES = [
   { id: "decouverte", label: "Découverte" },
   { id: "entrainement", label: "Entraînement" },
   { id: "defi", label: "Défi" },
 ];
+const COURS_MODE = { id: "cours", label: "Cours" };
 
 const DIFFICULTY_TIERS = ["facile", "standard", "expert"];
 
@@ -96,6 +108,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const quotaApplies = !!dailyLimit && !hasUnlimitedQuota(chapter, { user, subscription });
   const quotaExhausted = quotaApplies && quota.exhausted;
   const isSession = Number.isFinite(sessionLength) && sessionLength > 0;
+  const hasCours = !!chapter.meta.cours;
+  const MODES = hasCours ? [COURS_MODE, ...EXERCISE_MODES] : EXERCISE_MODES;
 
   // Palier fixe (Parcours) vs difficulté adaptative en continu (chapitre
   // visité librement) — voir commentaire d'en-tête.
@@ -104,7 +118,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [recentResults, setRecentResults] = useState([]);
   const effectiveDifficulty = difficulty ?? autoDifficulty;
 
-  const [mode, setMode] = useState(() => (isSession ? "entrainement" : "decouverte"));
+  // Visite libre avec un Cours disponible -> on y atterrit par défaut (voir
+  // commentaire d'en-tête) ; sinon comportement historique inchangé.
+  const [mode, setMode] = useState(() => (isSession ? "entrainement" : hasCours ? "cours" : "decouverte"));
   const [exercise, setExercise] = useState(() =>
     focusSkill ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill) : chapter.generate(effectiveDifficulty)
   );
@@ -126,6 +142,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
+  const isCours = mode === "cours";
 
   // Mode Découverte : la méthode reste visible en permanence, mais la
   // DERNIÈRE étape (celle qui porte la réponse finale) est masquée par
@@ -426,8 +443,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
             <span
               className="absolute top-1 bottom-1 rounded-full transition-all duration-300"
               style={{
-                width: `${100 / 3}%`,
-                left: `${(MODES.findIndex((m) => m.id === mode) * 100) / 3}%`,
+                width: `${100 / MODES.length}%`,
+                left: `${(MODES.findIndex((m) => m.id === mode) * 100) / MODES.length}%`,
                 backgroundColor: isDefi ? gold : ink,
                 boxShadow: isDefi ? `0 0 12px ${gold}88` : "0 1px 2px rgba(16,24,40,0.15)",
               }}
@@ -448,6 +465,10 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           </div>
         </div>
 
+        {isCours ? (
+          <CoursPanel cours={chapter.meta.cours} />
+        ) : (
+        <>
         {isDefi && (
           <div className="flex justify-center gap-4 mb-4">
             <div className="flex items-center gap-1.5 text-sm" style={{ color: gold }}>
@@ -755,6 +776,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           <p className="text-center text-xs mt-3" style={{ color: isDefi ? "#6c7fa3" : slate }}>
             Connecte-toi pour sauvegarder ta progression sur ce chapitre.
           </p>
+        )}
+        </>
         )}
       </div>
     </div>

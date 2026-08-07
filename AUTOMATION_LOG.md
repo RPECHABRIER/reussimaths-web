@@ -2470,3 +2470,69 @@ Aucune migration SQL nécessaire.
 
 ⚠️ Le push GitHub doit être fait manuellement par Romain.
 
+
+## 2026-08-05 — Nouvel onglet "Cours" (carte mentale + vidéos courtes), pilote sur 3 chapitres de 6e
+
+Romain a demandé d'ajouter une partie explicative à l'appli (jusqu'ici
+uniquement des exercices) : l'essentiel du cours et des méthodes à
+connaître, sous forme de cartes mentales et/ou de très courtes vidéos qu'il
+tournera lui-même avec l'IA. Discussion en chat pour cadrer l'approche
+(recommandations données, validées par Romain via deux questions posées) :
+cartes mentales en contenu structuré généré dans l'appli (pas des images,
+pour rester lisible sur mobile et cohérent visuellement) plutôt que produites
+par Romain dans un outil externe ; pilote sur 2-3 chapitres de 6e avant de
+généraliser.
+
+**Architecture.** Nouveau 4e mode "Cours", ajouté EN PREMIÈRE POSITION dans
+le sélecteur Découverte/Entraînement/Défi de `ChapterRunner.jsx`,
+uniquement si le chapitre définit `meta.cours` — dégradation propre : un
+chapitre sans `meta.cours` ne montre pas du tout cet onglet (pas de case
+vide), ce qui permet un déploiement progressif chapitre par chapitre sans
+jamais laisser un état bancal visible. Le sélecteur de mode (piste à pastille
+coulissante) était câblé en dur pour exactement 3 modes (`/3` partout) ; recalculé
+dynamiquement sur `MODES.length` pour s'adapter à 3 ou 4 modes selon le
+chapitre. En visite libre (hors Parcours), un chapitre avec `meta.cours`
+atterrit par défaut sur l'onglet Cours plutôt que Découverte (à confirmer à
+l'usage si Romain préfère garder Découverte par défaut).
+
+**Nouveaux composants :**
+- `src/components/MindMap.jsx` — rendu de la carte mentale : PAS un vrai
+  diagramme radial en SVG (illisible sur mobile sans zoomer/déplacer la vue),
+  mais un nœud central (titre du chapitre) suivi de cartes de branche en
+  grille responsive (`auto-fit`, une colonne sur téléphone, plusieurs sur
+  tablette/desktop), chacune avec ses points clés et une formule mise en
+  avant si besoin. Réutilise `MathText.jsx` pour le rendu LaTeX, palette
+  limitée aux couleurs déjà définies dans le thème.
+- `src/components/CoursPanel.jsx` — assemble vidéos (embeds YouTube via
+  youtube-nocookie.com, format 16:9 responsive) + `MindMap`, dans les deux
+  cas de façon optionnelle (aucune vidéo tant que Romain n'en a pas encore
+  tourné pour un chapitre donné).
+
+**Contenu pilote — 3 chapitres de 6e** (`meta.cours.mindMap` ajouté, pas de
+vidéo pour l'instant) :
+- Nombres décimaux : écriture décimale, fractions décimales, comparaison,
+  droite graduée.
+- Fractions : définition, fractions égales/simplification, comparaison,
+  addition/soustraction, multiplication.
+- Proportionnalité : reconnaître une situation de proportionnalité,
+  coefficient, produit en croix, pourcentages.
+
+Les 10 formules LaTeX ont été passées directement dans le moteur KaTeX
+(`katex.renderToString`) en Node avant intégration pour vérifier qu'aucune ne
+génère d'erreur de rendu (piège repéré et corrigé au passage : le caractère
+`%` déclenche un commentaire LaTeX/KaTeX et doit être échappé en `\%`).
+
+Build vérifié avec succès (`npx vite build` puis `npm run build` depuis le
+dépôt Git — une erreur transitoire `@supabase/auth-js` au premier essai,
+résolue au second, sans lien avec le contenu). Fichiers synchronisés (diff
+vide vérifié) vers les deux copies Application TOP.
+
+Aucune migration SQL nécessaire (uniquement du contenu client).
+
+⚠️ Le push GitHub doit être fait manuellement par Romain.
+
+Prochaine étape suggérée : une fois ce pilote testé/validé par Romain,
+généraliser la carte mentale aux autres chapitres (je peux les rédiger au
+même rythme que demandé), et brancher les vidéos dès que Romain en aura
+tourné (juste ajouter `videos: [{ title, youtubeId }]` dans `meta.cours` du
+chapitre concerné — aucun changement de code nécessaire).

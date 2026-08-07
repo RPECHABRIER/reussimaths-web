@@ -673,6 +673,55 @@ export default {
     level: "sixieme",
     free: false,
     order: 4,
+    // Onglet "Cours" — voir le commentaire équivalent dans
+    // src/chapters/nombres-decimaux.js.
+    cours: {
+      mindMap: {
+        title: "Fractions",
+        branches: [
+          {
+            title: "Une fraction, c'est quoi ?",
+            items: [
+              "Une fraction représente des parts prises sur un tout partagé en parts égales.",
+              "Le nombre du bas (dénominateur) ne peut jamais être 0.",
+            ],
+            formula: "\\(\\dfrac{3}{4}\\) : 3 parts prises sur 4 parts égales.",
+          },
+          {
+            title: "Fractions égales",
+            items: [
+              "On ne change pas la valeur d'une fraction en multipliant (ou en divisant) le haut et le bas par le même nombre.",
+              "Simplifier, c'est diviser haut et bas par un diviseur commun.",
+            ],
+            formula: "\\(\\dfrac{6}{8} = \\dfrac{6 \\div 2}{8 \\div 2} = \\dfrac{3}{4}\\)",
+          },
+          {
+            title: "Comparer des fractions",
+            items: [
+              "Même dénominateur : on compare directement les numérateurs.",
+              "Dénominateurs différents : on les met d'abord au même dénominateur.",
+            ],
+            formula: "\\(\\dfrac{5}{7} > \\dfrac{3}{7}\\)",
+          },
+          {
+            title: "Additionner, soustraire",
+            items: [
+              "Il faut le MÊME dénominateur pour additionner ou soustraire deux fractions.",
+              "On additionne (ou soustrait) alors seulement les numérateurs.",
+            ],
+            formula: "\\(\\dfrac{2}{5} + \\dfrac{1}{5} = \\dfrac{3}{5}\\)",
+          },
+          {
+            title: "Multiplier des fractions",
+            items: [
+              "On multiplie les numérateurs entre eux, puis les dénominateurs entre eux.",
+              "Pas besoin du même dénominateur pour multiplier.",
+            ],
+            formula: "\\(\\dfrac{2}{3} \\times \\dfrac{4}{5} = \\dfrac{8}{15}\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

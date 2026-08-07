@@ -487,6 +487,45 @@ export default {
     level: "sixieme",
     free: false,
     order: 10,
+    // Onglet "Cours" — voir le commentaire équivalent dans
+    // src/chapters/nombres-decimaux.js.
+    cours: {
+      mindMap: {
+        title: "Proportionnalité",
+        branches: [
+          {
+            title: "Reconnaître la proportionnalité",
+            items: [
+              "Deux grandeurs sont proportionnelles si on passe de l'une à l'autre en multipliant TOUJOURS par le même nombre.",
+              "Dans un tableau de proportionnalité, chaque colonne se déduit de la précédente par ce même coefficient.",
+            ],
+          },
+          {
+            title: "Coefficient de proportionnalité",
+            items: [
+              "C'est le nombre par lequel on multiplie une grandeur pour obtenir l'autre.",
+              "On le retrouve en divisant une valeur d'arrivée par la valeur de départ correspondante.",
+            ],
+          },
+          {
+            title: "Le produit en croix",
+            items: [
+              "Pour trouver une valeur manquante dans un tableau de proportionnalité.",
+              "On multiplie en diagonale, puis on divise par le nombre restant.",
+            ],
+            formula: "\\(x = \\dfrac{b \\times c}{a}\\)",
+          },
+          {
+            title: "Pourcentages",
+            items: [
+              "Un pourcentage est une proportionnalité ramenée à un total de 100.",
+              "Appliquer un pourcentage à une quantité, c'est la multiplier par ce pourcentage divisé par 100.",
+            ],
+            formula: "\\(20\\% \\times 80 = \\dfrac{20}{100}\\times 80 = 16\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

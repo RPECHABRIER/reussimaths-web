@@ -673,6 +673,49 @@ export default {
     level: "sixieme",
     free: false,
     order: 2,
+    // Onglet "Cours" (voir ChapterRunner.jsx / CoursPanel.jsx / MindMap.jsx) —
+    // chapitre pilote de la fonctionnalité, pas de vidéo pour l'instant
+    // (cours.videos resterait un tableau vide/absent tant que Romain n'en a
+    // pas tourné pour ce chapitre).
+    cours: {
+      mindMap: {
+        title: "Nombres décimaux",
+        branches: [
+          {
+            title: "Écriture décimale",
+            items: [
+              "Un nombre décimal a une partie entière et une partie décimale, séparées par une virgule.",
+              "Après la virgule, les rangs sont : dixièmes, centièmes, millièmes.",
+            ],
+            formula: "\\(12,45 = 12 + \\dfrac{4}{10} + \\dfrac{5}{100}\\)",
+          },
+          {
+            title: "Fractions décimales",
+            items: [
+              "Une fraction décimale a pour dénominateur 10, 100, 1000...",
+              "Elle s'écrit directement sous forme décimale.",
+            ],
+            formula: "\\(\\dfrac{7}{100} = 0,07\\)",
+          },
+          {
+            title: "Comparer deux décimaux",
+            items: [
+              "On compare d'abord les parties entières.",
+              "Si elles sont égales, on compare chiffre par chiffre après la virgule (en complétant avec des zéros si besoin).",
+              "Piège classique : 3,4 est plus grand que 3,25 (4 dixièmes, c'est plus que 2 dixièmes).",
+            ],
+          },
+          {
+            title: "Droite graduée",
+            items: [
+              "Placer un décimal, c'est repérer entre quels deux nombres il se trouve.",
+              "Un encadrement donne deux bornes qui entourent le nombre.",
+            ],
+            formula: "\\(4 < 4,6 < 5\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

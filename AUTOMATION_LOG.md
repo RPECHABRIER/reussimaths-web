@@ -1,5 +1,89 @@
 # Automation log — Reussimaths content pipeline
 
+## 2026-08-07 — Phase 0 : mise en conformité Première technologique avec le nouveau programme 2026
+
+Suite de l'audit programme 2026 (arrêté du 26-2-2026, BO n°14 du 2 avril
+2026, tronc commun voie technologique) pour le niveau Première technologique
+(STMG et proches). Six tâches (#373 à #378) traitées puis vérifiées,
+synchronisées et buildées ensemble dans ce batch final (#379).
+
+**Correction d'un bug de contenu (priorité haute, M10) :**
+- `automatismes-premiere-techno.js` : `genEvolutionReciproqueQCM` calculait
+  exactement la même chose que `genCoefficientMultiplicateurQCM` (un simple
+  coefficient multiplicateur), sans jamais calculer de taux réciproque (le
+  taux qui compense une évolution pour revenir à la valeur initiale). Corrigé
+  pour calculer réellement le taux réciproque, avec un piège explicite dans
+  les steps (les taux ne se compensent pas simplement : +25% ne s'annule pas
+  par -25% mais par -20%).
+
+**Nouveau chapitre créé :**
+- `algorithmique-python-premiere-techno.js` (id
+  `algorithmique-python-premiere-techno`, order 10, ajouté à la fin du
+  sommaire dans `plannedChapters.js`, après "Préparation à l'EAM"). 9
+  générateurs : écrire/reconnaître une fonction Python, compléter une boucle
+  `for`, corriger une erreur dans un programme, liste en extension/
+  compréhension, itération dans une liste, et les rubriques "Situations
+  algorithmiques" citées par chaque partie thématique du programme : terme de
+  suite par boucle (Suites), simulation d'un échantillon de Bernoulli
+  (Variables aléatoires), balayage pour approcher une solution d'équation
+  (Fonctions). Domaine transversal du tronc commun (sauf STD2A) qui était
+  totalement absent des générateurs existants avant cet ajout.
+
+**Chapitres existants corrigés :**
+- `automatismes-premiere-techno.js` : ajout du thème "Lecture de données" (M3
+  — diagramme en barres, circulaire, en boîte, étendue, médiane — absent
+  malgré la promesse de l'en-tête du fichier) et du thème "Vocabulaire et
+  logique" (M1 — appartenance, inclusion, équation/identité, contre-exemple,
+  réciproque, condition nécessaire/suffisante — partie transversale
+  officielle jusqu'ici totalement absente). Ajout au thème lecture-graphique
+  existant d'une variante inéquation `f(x) < k` / `f(x) > k` (M4) et d'une
+  lecture graphique du signe (M5), qui ne traitait jusqu'ici que des droites
+  en égalité.
+- `fonctions-second-degre-premiere-techno.js` : ajout de la résolution
+  graphique d'une inéquation `f(x) > 0` / `f(x) < 0` (M6, seule l'égalité
+  était traitée) et de la détermination de l'axe de symétrie via la méthode
+  explicitement recommandée par le texte officiel — résoudre `f(x) = c` à
+  partir de la forme développée `ax²+bx+c`, sans jamais utiliser de formule
+  (M7).
+- `suites-numeriques-premiere-techno.js` : introduction de la notation
+  fonctionnelle `u(n)` dans les générateurs de niveau "facile" (M11, le texte
+  officiel demande de l'utiliser avant la notation indicielle `u_n`, gardée
+  pour les niveaux standard/expert) et ajout de deux générateurs de
+  démonstration qu'une suite est arithmétique ou géométrique (M8, capacité
+  citée par le programme mais absente : seuls le calcul et la reconnaissance
+  existaient).
+- `statistiques-deux-variables-premiere-techno.js` : ajout de la méthode de
+  la droite de Mayer (M9 — partage du nuage en deux sous-nuages, calcul des
+  points moyens G1/G2, droite passant par ces deux points), méthode de
+  référence en STMG jusqu'ici jamais concrètement pratiquée (seule sa
+  conséquence géométrique générique — droite par deux points donnés
+  arbitrairement — existait).
+- `variables-aleatoires-premiere-techno.js` : reformulation de
+  `genFluctuationEchantillonnageQCM` (M12), qui appliquait une règle de
+  décision binaire stricte explicitement écartée par le texte officiel («
+  sans développer de théorie de décision ou de test »). Remplacée par une
+  question purement descriptive (à combien d'écarts-types correspond l'écart
+  observé ?), sans validation vrai/faux ni vocabulaire de test d'hypothèse.
+  Un bug préexistant sans lien (même double enrobage `\(\(...\)\)` que dans
+  `variables-aleatoires-premiere-spe.js`, dans `genInterpreterNotationsQCM`)
+  a été corrigé au passage.
+
+**Vérification :** chaque fichier modifié/créé a été testé via un script
+node + katex en mode strict (4000 à 6000 exercices générés par fichier,
+`bad=0 katexErrors=0` partout après corrections), y compris une passe dédiée
+sur `automatismes-premiere-techno.js` couvrant ses 6 thèmes avec simulation
+de l'auto-enrobage `\( \)` de `MathText.jsx`. Build (`npm run build`) validé
+sans erreur après synchronisation dans les deux copies
+(`Application TOP/reussimaths-web/` et `.../APPLI GITHUB/Sans titre/`).
+
+**Point de vigilance signalé par l'audit (non classé comme écart ferme,
+aucune action requise pour l'instant) :** les 4 sujets EAM réels utilisés
+dans `preparation-eam-premiere-techno.js` datent de la session 2026 (ancien
+programme). La première session d'EAM sur le nouveau programme aura lieu en
+2027 ; des « sujets zéro » officiels pourraient être publiés par le
+ministère à l'approche de la rentrée 2026. À surveiller (académies,
+eduscol) pour enrichir ce chapitre le moment venu.
+
 ## 2026-08-07 — Phase 0 : mise en conformité Première Spé avec le nouveau programme 2026
 
 Suite de l'audit programme 2026 (BO n°14 du 2 avril 2026) pour le niveau

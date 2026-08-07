@@ -204,6 +204,7 @@ export const PLANNED_CHAPTERS = {
     { id: "epreuves-independantes-premiere-techno", title: "Épreuves indépendantes et répétition de Bernoulli", order: 7 },
     { id: "variables-aleatoires-premiere-techno", title: "Variables aléatoires", order: 8 },
     { id: "preparation-eam-premiere-techno", title: "Préparation à l'EAM", order: 9 },
+    { id: "algorithmique-python-premiere-techno", title: "Algorithmique et programmation (Python)", order: 10 },
   ],
   // Sommaire du programme 2026 de Terminale technologique (voie STMG),
   // construit à partir de la progression annuelle et des fiches de séance de

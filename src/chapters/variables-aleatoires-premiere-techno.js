@@ -6,6 +6,15 @@
 // l'espérance, reconnaître une situation de Bernoulli, interpréter la
 // distance à p de la fréquence observée sur un échantillon (fluctuation
 // d'échantillonnage, écart-type de l'ordre de 1/√n).
+//
+// NOTE (audit programme 2026, M12) : genFluctuationEchantillonnageQCM
+// appliquait une règle de décision binaire stricte (écart <= 2 écarts-types
+// → "cohérent", sinon → "on peut s'interroger sur p"), ce que le texte
+// officiel écarte explicitement (« sans développer de théorie de décision ou
+// de test »). Reformulé en question purement descriptive (à combien
+// d'écarts-types correspond l'écart observé ?), sans validation vrai/faux
+// stricte et sans vocabulaire de test d'hypothèse, pour faire percevoir la
+// diversité des interprétations possibles plutôt qu'une règle automatique.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -36,8 +45,8 @@ function genLoiProbabiliteCompleterNumeric() {
 // ---------- 2. Interpréter {X=a} / {X≤a} ----------
 function genInterpreterNotationsQCM() {
   const cas = pick([
-    { description: "\\(P(X = 3)\\)", reponse: "La probabilité que X soit exactement égal à 3" },
-    { description: "\\(P(X \\leq 3)\\)", reponse: "La probabilité que X soit inférieur ou égal à 3" },
+    { description: "P(X = 3)", reponse: "La probabilité que X soit exactement égal à 3" },
+    { description: "P(X \\leq 3)", reponse: "La probabilité que X soit inférieur ou égal à 3" },
   ]);
   return {
     type: "qcm",
@@ -121,25 +130,32 @@ function genEsperanceNumeric() {
   };
 }
 
-// ---------- 7. Interpréter l'écart entre fréquence observée et p ----------
+// ---------- 7. Comparer l'écart entre fréquence observée et p à l'écart-type s ----------
 function genFluctuationEchantillonnageQCM() {
   const n = pick([50, 100, 200, 400]);
   const p = pick([0.3, 0.4, 0.5, 0.6]);
   const ecartType = roundTo(1 / Math.sqrt(n), 4);
-  const freqObservee = roundTo(p + pick([-1, 1]) * ecartType * pick([0.5, 1, 1.5]), 3);
+  const nbEcartsTypes = pick([0.5, 1, 2, 3]);
+  const freqObservee = roundTo(p + pick([-1, 1]) * ecartType * nbEcartsTypes, 3);
   const ecart = roundTo(Math.abs(freqObservee - p), 4);
-  const dansIntervalle = ecart <= 2 * ecartType;
-  const reponse = dansIntervalle ? "Cet écart est cohérent avec la fluctuation d'échantillonnage attendue" : "Cet écart est important, on peut s'interroger sur la valeur de p";
+  const ratio = roundTo(ecart / ecartType, 2);
+  let categorie;
+  if (ratio < 1) categorie = "moins d'un écart-type";
+  else if (ratio < 2) categorie = "entre un et deux écarts-types";
+  else if (ratio < 3) categorie = "entre deux et trois écarts-types";
+  else categorie = "plus de trois écarts-types";
+  const distracteurs = ["moins d'un écart-type", "entre un et deux écarts-types", "entre deux et trois écarts-types", "plus de trois écarts-types"].filter((c) => c !== categorie);
+  const options = shuffle([categorie, ...shuffle(distracteurs).slice(0, 2)]);
   return {
     type: "qcm",
     chapter: "Variables aléatoires (Première techno) — Fluctuation d'échantillonnage",
-    prompt: `Dans un échantillon de taille \\(n = ${n}\\), on suppose \\(p = ${fr(p)}\\) (l'écart-type de la fréquence est de l'ordre de \\(\\dfrac{1}{\\sqrt{n}} \\approx ${fr(ecartType)}\\)). On observe une fréquence de \\(${fr(freqObservee)}\\). Comment interpréter cet écart avec \\(p\\) ?`,
-    answer: reponse,
-    options: ["Cet écart est cohérent avec la fluctuation d'échantillonnage attendue", "Cet écart est important, on peut s'interroger sur la valeur de p"],
+    prompt: `Dans un échantillon de taille \\(n = ${n}\\), on suppose \\(p = ${fr(p)}\\) (l'écart-type de la fréquence est de l'ordre de \\(s = \\dfrac{1}{\\sqrt{n}} \\approx ${fr(ecartType)}\\)). On observe une fréquence de \\(${fr(freqObservee)}\\). À combien d'écarts-types \\(s\\) correspond environ l'écart entre cette fréquence et \\(p\\) ?`,
+    answer: categorie,
+    options,
     steps: [
       { type: "calcul", text: `\\text{Écart observé : } |${fr(freqObservee)} - ${fr(p)}| = ${fr(ecart)}` },
-      { type: "regle", text: `\\text{Écart-type attendu de l'ordre de } \\dfrac{1}{\\sqrt{${n}}} \\approx ${fr(ecartType)}\\text{ : on compare l'écart observé à environ 2 fois cette valeur.}` },
-      { type: "resultat", text: reponse },
+      { type: "regle", text: `\\text{On compare cet écart à } s \\approx ${fr(ecartType)} : \\dfrac{${fr(ecart)}}{${fr(ecartType)}} \\approx ${fr(ratio)}.` },
+      { type: "resultat", text: `\\text{L'écart observé représente ${categorie}. Plusieurs interprétations restent possibles selon le contexte : ce n'est pas une règle de décision automatique.}` },
     ],
   };
 }

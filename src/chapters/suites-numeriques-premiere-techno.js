@@ -6,6 +6,18 @@
 // ("croissance exponentielle") : relation de récurrence, terme de rang n,
 // sens de variation. Capacités : modéliser une situation, reconnaître le
 // type de suite, calculer un terme, déterminer le sens de variation.
+//
+// NOTE (audit programme 2026) :
+// - M11 : le texte officiel demande d'utiliser la notation fonctionnelle
+//   u(n) préalablement à la notation indicielle u_n. Les générateurs de
+//   niveau "facile" (récurrence arithmétique/géométrique, raison
+//   arithmétique, formule explicite) utilisent désormais u(n) ; les
+//   générateurs "standard"/"expert" gardent u_n, cohérent avec une
+//   progression pédagogique croissante.
+// - M8 : ajout de deux générateurs de démonstration qu'une suite est
+//   arithmétique ou géométrique (genDemontrerArithmetiqueNumeric,
+//   genDemontrerGeometriqueQCM), capacité citée par le programme mais
+//   absente jusqu'ici (seuls le calcul et la reconnaissance existaient).
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -28,12 +40,12 @@ function genTermeRecurrenceArithmetiqueNumeric() {
   return {
     type: "numeric",
     chapter: "Suites numériques (Première techno) — Récurrence arithmétique",
-    prompt: `Une suite \\((u_n)\\) est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = u_n ${r >= 0 ? "+" : "-"} ${Math.abs(r)}\\). Calcule \\(u_{${n}}\\).`,
+    prompt: `Une suite \\((u_n)\\) est définie par \\(u(0) = ${u0}\\) et, pour tout entier \\(n\\), \\(u(n+1) = u(n) ${r >= 0 ? "+" : "-"} ${Math.abs(r)}\\). Calcule \\(u(${n})\\).`,
     answer,
     steps: [
       { type: "regle", text: `\\text{On ajoute } ${r} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}` },
-      { type: "calcul", text: `u_{${n}} = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${n}` },
-      { type: "resultat", text: `u_{${n}} = ${answer}` },
+      { type: "calcul", text: `u(${n}) = ${u0} ${r >= 0 ? "+" : "-"} ${Math.abs(r)} \\times ${n}` },
+      { type: "resultat", text: `u(${n}) = ${answer}` },
     ],
   };
 }
@@ -47,13 +59,13 @@ function genTermeRecurrenceGeometriqueNumeric() {
   return {
     type: "numeric",
     chapter: "Suites numériques (Première techno) — Récurrence géométrique",
-    prompt: `Une suite \\((u_n)\\), à termes positifs, est définie par \\(u_0 = ${u0}\\) et, pour tout entier \\(n\\), \\(u_{n+1} = ${fr(q)} \\times u_n\\). Calcule \\(u_{${n}}\\).`,
+    prompt: `Une suite \\((u_n)\\), à termes positifs, est définie par \\(u(0) = ${u0}\\) et, pour tout entier \\(n\\), \\(u(n+1) = ${fr(q)} \\times u(n)\\). Calcule \\(u(${n})\\).`,
     answer,
     tolerance: 0.005,
     steps: [
       { type: "regle", text: `\\text{On multiplie par } ${fr(q)} \\text{ à chaque étape, } ${n} \\text{ fois de suite.}` },
-      { type: "calcul", text: `u_{${n}} = ${u0} \\times ${fr(q)}^{${n}}` },
-      { type: "resultat", text: `u_{${n}} = ${fr(answer)}` },
+      { type: "calcul", text: `u(${n}) = ${u0} \\times ${fr(q)}^{${n}}` },
+      { type: "resultat", text: `u(${n}) = ${fr(answer)}` },
     ],
   };
 }
@@ -103,11 +115,11 @@ function genRaisonArithmetiqueNumeric() {
   return {
     type: "numeric",
     chapter: "Suites numériques (Première techno) — Raison arithmétique",
-    prompt: `\\((u_n)\\) est une suite arithmétique telle que \\(u_5 = ${uA}\\) et \\(u_6 = ${uB}\\). Détermine la raison \\(r\\) de cette suite.`,
+    prompt: `\\((u_n)\\) est une suite arithmétique telle que \\(u(5) = ${uA}\\) et \\(u(6) = ${uB}\\). Détermine la raison \\(r\\) de cette suite.`,
     answer: r,
     steps: [
-      { type: "regle", text: "Formule de référence à connaître : r = u_{n+1} − u_n." },
-      { type: "resultat", text: `r = u_6 - u_5 = ${uB} - (${uA}) = ${r}` },
+      { type: "regle", text: "Formule de référence à connaître : r = u(n+1) − u(n)." },
+      { type: "resultat", text: `r = u(6) - u(5) = ${uB} - (${uA}) = ${r}` },
     ],
   };
 }
@@ -237,12 +249,44 @@ function genTermeExpliciteNumeric() {
   return {
     type: "numeric",
     chapter: "Suites numériques (Première techno) — Formule explicite",
-    prompt: `Une suite \\((u_n)\\) est définie pour tout entier naturel \\(n\\) par \\(u_n = ${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(u_{${n}}\\).`,
+    prompt: `Une suite \\((u_n)\\) est définie pour tout entier naturel \\(n\\) par \\(u(n) = ${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Calcule \\(u(${n})\\).`,
     answer,
     steps: [
-      { type: "calcul", text: `u_{${n}} = ${a} \\times ${n} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
-      { type: "resultat", text: `u_{${n}} = ${answer}` },
+      { type: "calcul", text: `u(${n}) = ${a} \\times ${n} ${b >= 0 ? "+" : "-"} ${Math.abs(b)}` },
+      { type: "resultat", text: `u(${n}) = ${answer}` },
     ],
+  };
+}
+
+// ---------- 13. Démontrer qu'une suite est arithmétique (M8) ----------
+function genDemontrerArithmetiqueNumeric() {
+  const a = nonZero(-6, 6);
+  const b = randInt(-10, 10);
+  return {
+    type: "numeric",
+    chapter: "Suites numériques (Première techno) — Démonstration",
+    prompt: `Une suite \\((u_n)\\) est définie pour tout entier \\(n\\) par \\(u_n = ${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Pour démontrer qu'elle est arithmétique, calcule \\(u_{n+1} - u_n\\) (le résultat ne doit pas dépendre de n).`,
+    answer: a,
+    steps: [
+      { type: "calcul", text: `u_{n+1} - u_n = \\left[${a}(n+1) ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right] - \\left[${a}n ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\right]` },
+      { type: "calcul", text: `= ${a}n + ${a} ${b >= 0 ? "+" : "-"} ${Math.abs(b)} - ${a}n ${b >= 0 ? "-" : "+"} ${Math.abs(b)} = ${a}` },
+      { type: "resultat", text: `u_{n+1} - u_n = ${a}\\text{, une constante indépendante de } n \\text{ : la suite est bien arithmétique, de raison } ${a}.` },
+    ],
+  };
+}
+
+// ---------- 14. Démontrer qu'une suite est géométrique (M8) ----------
+function genDemontrerGeometriqueQCM() {
+  const q = pick([2, 3, 0.5, 1.5]);
+  const correct = `\\text{On calcule } \\dfrac{u_{n+1}}{u_n} = ${fr(q)} \\text{, une constante : la suite est géométrique de raison } ${fr(q)}.`;
+  const wrong = `\\text{On calcule } u_{n+1} - u_n = ${fr(q)} \\text{, une constante : la suite est arithmétique de raison } ${fr(q)}.`;
+  return {
+    type: "qcm",
+    chapter: "Suites numériques (Première techno) — Démonstration",
+    prompt: `Une suite \\((u_n)\\), à termes strictement positifs, vérifie pour tout \\(n\\) : \\(u_{n+1} = ${fr(q)} \\times u_n\\). Quelle est la bonne façon de démontrer sa nature ?`,
+    answer: correct,
+    options: [correct, wrong],
+    steps: [{ type: "regle", text: `\\text{Pour démontrer qu'une suite est géométrique, on calcule le quotient } \\dfrac{u_{n+1}}{u_n} \\text{ et on vérifie qu'il est constant (le calcul d'une différence prouve une nature arithmétique, pas géométrique).}` }],
   };
 }
 
@@ -259,6 +303,8 @@ const GENERATORS = [
   genLectureNuagePointsQCM,
   genReconnaitreModeGenerationQCM,
   genTermeExpliciteNumeric,
+  genDemontrerArithmetiqueNumeric,
+  genDemontrerGeometriqueQCM,
 ];
 
 const DIFFICULTY = {
@@ -274,6 +320,8 @@ const DIFFICULTY = {
   genReconnaitreModeGenerationQCM: "standard",
   genModeliserPhenomeneQCM: "expert",
   genLectureNuagePointsQCM: "expert",
+  genDemontrerArithmetiqueNumeric: "expert",
+  genDemontrerGeometriqueQCM: "expert",
 };
 
 function generate(difficulty) {
@@ -288,7 +336,7 @@ export default {
   meta: {
     id: "suites-numeriques-premiere-techno",
     title: "Suites numériques",
-    description: "Modes de génération, suites arithmétiques (croissance linéaire) et géométriques (croissance exponentielle), sens de variation, nuage de points.",
+    description: "Modes de génération, suites arithmétiques (croissance linéaire) et géométriques (croissance exponentielle), sens de variation, nuage de points, démonstration de la nature d'une suite.",
     pourquoi: "Les suites arithmétiques et géométriques modélisent l'évolution d'un chiffre d'affaires, d'un stock ou d'un capital, année après année.",
     level: "premiere-techno",
     order: 2,

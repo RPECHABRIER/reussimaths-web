@@ -5,6 +5,14 @@
 // encore le changement de variable non-affine, réservé à la Terminale).
 // Capacités : représenter un nuage, calculer le point moyen, déterminer et
 // utiliser un ajustement affine, interpoler/extrapoler.
+//
+// NOTE (audit programme 2026, M9) : ajout de genMethodeMayerNumeric, qui
+// pratique concrètement la méthode de la droite de Mayer (partage du nuage
+// en deux sous-nuages, calcul des points moyens G1/G2 de chacun, droite
+// passant par ces deux points) — méthode de référence en STMG, citée par le
+// programme mais jusqu'ici jamais mise en œuvre (genDeterminerAjustementNumeric
+// ne fait que déterminer une droite passant par deux points donnés
+// arbitrairement, sans construire ces points par la méthode nommée).
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -161,6 +169,40 @@ function genPointMoyenSurDroiteNumeric() {
   };
 }
 
+// ---------- 8. Méthode de Mayer : coefficient directeur de la droite (G1G2) ----------
+function genMethodeMayerNumeric() {
+  const a = pick([2, 3, -2, -3, 1.5]);
+  const b = randInt(-10, 10);
+  const xs = [1, 2, 3, 4, 5, 6];
+  const offsets = [1, 0, -1, 1, 0, -1];
+  const ys = xs.map((x, i) => roundTo(a * x + b + offsets[i], 2));
+  const xG1 = (xs[0] + xs[1] + xs[2]) / 3;
+  const yG1 = roundTo((ys[0] + ys[1] + ys[2]) / 3, 2);
+  const xG2 = (xs[3] + xs[4] + xs[5]) / 3;
+  const yG2 = roundTo((ys[3] + ys[4] + ys[5]) / 3, 2);
+  const coeffDirecteur = roundTo((yG2 - yG1) / (xG2 - xG1), 3);
+  return {
+    type: "numeric",
+    chapter: "Statistiques à deux variables (Première techno) — Méthode de Mayer",
+    prompt: `Un nuage de points a pour données : (${xs.map((x, i) => `${x} ; ${fr(ys[i])}`).join("), (")}). On applique la méthode de Mayer : on partage le nuage en deux groupes de trois points (les trois premiers, les trois derniers dans l'ordre des abscisses), et on calcule les points moyens \\(G_1\\) et \\(G_2\\) de chaque groupe. Calcule le coefficient directeur de la droite \\((G_1G_2)\\) (arrondi au millième).`,
+    answer: coeffDirecteur,
+    tolerance: 0.005,
+    steps: [
+      { type: "calcul", text: `G_1\\left(\\dfrac{${xs[0]}+${xs[1]}+${xs[2]}}{3} \\ ; \\ \\dfrac{${fr(ys[0])}+${fr(ys[1])}+${fr(ys[2])}}{3}\\right) = G_1(${fr(xG1)} \\ ; \\ ${fr(yG1)})` },
+      { type: "calcul", text: `G_2\\left(\\dfrac{${xs[3]}+${xs[4]}+${xs[5]}}{3} \\ ; \\ \\dfrac{${fr(ys[3])}+${fr(ys[4])}+${fr(ys[5])}}{3}\\right) = G_2(${fr(xG2)} \\ ; \\ ${fr(yG2)})` },
+      { type: "resultat", text: `\\text{Coefficient directeur de } (G_1G_2) = \\dfrac{${fr(yG2)} - ${fr(yG1)}}{${fr(xG2)} - ${fr(xG1)}} = ${fr(coeffDirecteur)}` },
+    ],
+    graph: {
+      xMin: 0,
+      xMax: 7,
+      yMin: Math.min(...ys, yG1, yG2) - 2,
+      yMax: Math.max(...ys, yG1, yG2) + 2,
+      points: [...xs.map((x, i) => ({ x, y: ys[i] })), { x: xG1, y: yG1, label: "G1" }, { x: xG2, y: yG2, label: "G2" }],
+      lines: [{ a: coeffDirecteur, b: roundTo(yG1 - coeffDirecteur * xG1, 3), label: "(G1G2)" }],
+    },
+  };
+}
+
 const GENERATORS = [
   genPointMoyenNumeric,
   genLectureNuagePointsNumeric,
@@ -169,6 +211,7 @@ const GENERATORS = [
   genDeterminerAjustementNumeric,
   genReconnaitreAjustementPertinentQCM,
   genPointMoyenSurDroiteNumeric,
+  genMethodeMayerNumeric,
 ];
 
 const DIFFICULTY = {
@@ -179,6 +222,7 @@ const DIFFICULTY = {
   genAjustementAffineExtrapolerNumeric: "standard",
   genPointMoyenSurDroiteNumeric: "standard",
   genDeterminerAjustementNumeric: "expert",
+  genMethodeMayerNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -193,7 +237,7 @@ export default {
   meta: {
     id: "statistiques-deux-variables-premiere-techno",
     title: "Statistiques à deux variables",
-    description: "Nuage de points, point moyen, ajustement affine, interpolation et extrapolation.",
+    description: "Nuage de points, point moyen, ajustement affine (méthode de Mayer), interpolation et extrapolation.",
     pourquoi: "Ajuster un nuage de points par une droite, c'est ce qui permet de faire des prévisions à partir de données observées : ventes, météo, croissance.",
     level: "premiere-techno",
     order: 5,

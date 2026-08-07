@@ -8,6 +8,15 @@
 // x↦a(x-x1)(x-x2) ; résoudre graphiquement f(x)=k ou f(x)<k ; déterminer les
 // éléments caractéristiques sans formule (lecture graphique) ; factoriser
 // connaissant une racine.
+//
+// NOTE (audit programme 2026) :
+// - M6 : ajout de la résolution graphique d'une inéquation f(x) > 0 / f(x) <
+//   0 (genResoudreGraphiquementInequationSecondDegreQCM) — seule l'égalité
+//   était traitée jusqu'ici.
+// - M7 : ajout de la détermination de l'axe de symétrie via la méthode
+//   explicitement recommandée par le texte officiel — résoudre f(x) = c à
+//   partir de la forme développée ax²+bx+c (« aucune formule n'est
+//   attendue ») — genAxeSymetrieViaResolutionNumeric.
 // ---------------------------------------------------------------------------
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -247,6 +256,61 @@ function genDeterminerAConnaissantPointNumeric() {
   };
 }
 
+// ---------- 11. Résoudre graphiquement une inéquation f(x) > 0 / f(x) < 0 ----------
+function genResoudreGraphiquementInequationSecondDegreQCM() {
+  const a = pick([1, -1, 2, -2]);
+  const r1 = randInt(-4, 4);
+  const r2 = r1 + nonZero(2, 5);
+  const fn = (x) => a * (x - r1) * (x - r2);
+  const sens = pick([">", "<"]);
+  const positifEntre = a < 0;
+  const intervalleExterieur = `]-\\infty ; ${r1}[ \\cup ]${r2} ; +\\infty[`;
+  const intervalleInterieur = `]${r1} ; ${r2}[`;
+  const veutIntervalleInterieur = sens === ">" ? positifEntre : !positifEntre;
+  const correctRaw = veutIntervalleInterieur ? intervalleInterieur : intervalleExterieur;
+  const wrongRaw = veutIntervalleInterieur ? intervalleExterieur : intervalleInterieur;
+  const options = shuffle([correctRaw, wrongRaw]);
+  return {
+    type: "qcm",
+    chapter: "Fonctions second degré (Première techno) — Résolution graphique",
+    prompt: `On donne ci-dessous la représentation graphique d'une fonction polynôme du second degré \\(f\\), qui s'annule en \\(x = ${r1}\\) et \\(x = ${r2}\\). Résous graphiquement l'inéquation \\(f(x) ${sens} 0\\).`,
+    answer: correctRaw,
+    options,
+    steps: [
+      { type: "regle", text: `\\text{On lit sur le graphique où la courbe est ${sens === ">" ? "au-dessus" : "en dessous"} de l'axe des abscisses.}` },
+      { type: "resultat", text: `\\text{Solution : } ${correctRaw}` },
+    ],
+    graph: {
+      xMin: Math.min(r1, r2) - 3,
+      xMax: Math.max(r1, r2) + 3,
+      yMin: Math.min(-1, fn((r1 + r2) / 2)) - 2,
+      yMax: Math.max(1, fn(r1 - 2), fn(r2 + 2)) + 2,
+      curves: [{ fn, label: "f" }],
+    },
+  };
+}
+
+// ---------- 12. Axe de symétrie via résolution de f(x) = c (méthode officielle, sans formule) ----------
+function genAxeSymetrieViaResolutionNumeric() {
+  const a = nonZero(-4, 4);
+  const half = randInt(-6, 6);
+  const m = 2 * half; // deuxième solution de f(x) = c, la première étant x = 0
+  const b = -a * m;
+  const c = randInt(-9, 9);
+  const leadTerm = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+  return {
+    type: "numeric",
+    chapter: "Fonctions second degré (Première techno) — Sommet et axe de symétrie",
+    prompt: `On donne \\(f(x) = ${leadTerm}x^2 ${signedL(b, "x")} ${signedL(c)}\\), sous forme développée. On sait que \\(f(0) = ${c}\\). En résolvant l'équation \\(f(x) = ${c}\\) (sans utiliser de formule), détermine l'axe de symétrie de la parabole.`,
+    answer: half,
+    steps: [
+      { type: "regle", text: `f(x) = ${c} \\iff ${leadTerm}x^2 ${signedL(b, "x")} ${signedL(c)} = ${c} \\iff ${leadTerm}x^2 ${signedL(b, "x")} = 0 \\iff x(${a}x ${signedL(b)}) = 0.` },
+      { type: "calcul", text: `x = 0 \\text{ ou } ${a}x ${signedL(b)} = 0 \\Leftrightarrow x = ${m}` },
+      { type: "resultat", text: `\\text{L'axe de symétrie passe par le milieu des deux solutions : } x = \\dfrac{0 + ${m}}{2} = ${half}` },
+    ],
+  };
+}
+
 const GENERATORS = [
   genImageFormeFactoriseeNumeric,
   genRacinesFormeFactoriseeQCM,
@@ -258,6 +322,8 @@ const GENERATORS = [
   genLireSommetGraphiqueNumeric,
   genAssocierAxCarrePlusCQCM,
   genDeterminerAConnaissantPointNumeric,
+  genResoudreGraphiquementInequationSecondDegreQCM,
+  genAxeSymetrieViaResolutionNumeric,
 ];
 
 const DIFFICULTY = {
@@ -268,9 +334,11 @@ const DIFFICULTY = {
   genAssocierAxCarreQCM: "standard",
   genSigneFormeFactoriseeQCM: "standard",
   genLireSommetGraphiqueNumeric: "standard",
+  genResoudreGraphiquementInequationSecondDegreQCM: "standard",
   genAssocierAxCarrePlusCQCM: "expert",
   genResoudreGraphiquementEgaliteQCM: "expert",
   genDeterminerAConnaissantPointNumeric: "expert",
+  genAxeSymetrieViaResolutionNumeric: "expert",
 };
 
 function generate(difficulty) {
@@ -285,7 +353,7 @@ export default {
   meta: {
     id: "fonctions-second-degre-premiere-techno",
     title: "Fonctions polynômes de degré 2",
-    description: "Allure de la parabole, racines et signe sous forme factorisée (sans discriminant), sommet, résolution graphique.",
+    description: "Allure de la parabole, racines et signe sous forme factorisée (sans discriminant), sommet, résolution graphique (équations et inéquations), axe de symétrie par résolution.",
     pourquoi: "Étudier une parabole, c'est ce qui permet de trouver un maximum de profit, un minimum de coût, ou la trajectoire d'un objet lancé.",
     level: "premiere-techno",
     order: 3,

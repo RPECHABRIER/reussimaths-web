@@ -545,6 +545,7 @@ export default {
               "\\(ax = b\\) : on isole x en divisant les deux côtés par a.",
               "Ce qu'on fait à un membre de l'égalité, il faut le faire aussi à l'autre.",
             ],
+            formula: "\\(x + 5 = 12 \\Rightarrow x = 12 - 5 = 7 \\quad ; \\quad 3x = 12 \\Rightarrow x = 12 \\div 3 = 4\\)",
           },
         ],
       },

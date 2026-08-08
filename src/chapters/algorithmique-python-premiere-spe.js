@@ -270,6 +270,39 @@ export default {
     level: "premiere-spe",
     free: false,
     order: 12,
+    cours: {
+      mindMap: {
+        title: "Algorithmique et programmation (Python)",
+        branches: [
+          {
+            title: "Boucle for et range()",
+            items: [
+              "\\(\\text{range(n)}\\) parcourt les entiers de 0 à n-1 (n valeurs, pas n+1).",
+              "Piège classique très fréquent : oublier que range(n) s'arrête à n-1, pas à n.",
+            ],
+          },
+          {
+            title: "Calculer les termes d'une suite par script",
+            items: [
+              "Initialiser une variable avec le premier terme, puis la mettre à jour à chaque tour de boucle selon la relation de récurrence.",
+            ],
+          },
+          {
+            title: "Recherche par dichotomie",
+            items: [
+              "À chaque étape, on divise l'intervalle en deux et on garde la moitié qui contient la solution (test du signe au milieu).",
+              "Plus le nombre d'étapes augmente, plus l'intervalle final est précis (il est divisé par 2 à chaque étape).",
+            ],
+          },
+          {
+            title: "Simulation aléatoire",
+            items: [
+              "\\(\\text{random()}\\) renvoie un nombre décimal aléatoire dans \\([0 ; 1[\\), utilisé pour simuler une expérience à plusieurs issues.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

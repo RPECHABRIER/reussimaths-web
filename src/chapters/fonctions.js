@@ -126,7 +126,7 @@ function genProgrammeCalculFonctionNumeric() {
   return {
     type: "numeric",
     chapter: "Fonctions — Programme de calcul",
-    prompt: `On considère le programme de calcul suivant : choisir un nombre, ajouter ${add}, puis multiplier le résultat par ${mult}. On note f la fonction qui, à un nombre x, associe le résultat de ce programme. Calcule \\(f(${x})\\).`,
+    prompt: `On considère le programme de calcul suivant : choisir un nombre, ajouter ${add}, puis multiplier le résultat par ${mult}. Quel est le résultat de ce programme pour le nombre de départ ${x} ?`,
     answer,
     steps: [
       { type: "calcul", text: `${x} + ${add} = ${etape1}` },
@@ -294,9 +294,9 @@ function genAireCarreFonctionCoteNumeric() {
   return {
     type: "numeric",
     chapter: "Fonctions — Contexte : aire d'un carré",
-    prompt: `L'aire A d'un carré s'exprime en fonction de la longueur c de son côté par la formule \\(A(c) = c \\times c\\). Quelle est l'aire d'un carré de côté ${c} cm, en cm² ?`,
+    prompt: `L'aire A d'un carré s'exprime en fonction de la longueur c de son côté par la formule \\(A = c \\times c\\). Quelle est l'aire d'un carré de côté ${c} cm, en cm² ?`,
     answer,
-    steps: [{ type: "calcul", text: `A(${c}) = ${c} \\times ${c} = ${answer}` }],
+    steps: [{ type: "calcul", text: `A = ${c} \\times ${c} = ${answer}` }],
   };
 }
 
@@ -385,6 +385,7 @@ export default {
             items: [
               "Pour évaluer une formule pour une valeur donnée, on remplace la variable par cette valeur et on calcule.",
               "Un programme de calcul se traduit directement en formule, étape par étape.",
+              "Piège classique : pour retrouver le nombre de départ à partir du résultat, on refait les étapes dans l'ordre inverse, avec les opérations inverses (+ devient −, × devient ÷).",
             ],
             formula: "\\(P = a \\times d + b\\)",
           },

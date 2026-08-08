@@ -454,8 +454,9 @@ export default {
           {
             title: "Pyramide : vocabulaire et volume",
             items: [
-              "Une pyramide à base n-gonale a n faces latérales triangulaires + 1 base = n+1 faces, et n+1 sommets.",
+              "Une pyramide à base carrée a 4 faces triangulaires + 1 base = 5 faces, et 5 sommets. Plus généralement, avec une base à n côtés : n+1 faces, n+1 sommets, et 2n arêtes (n à la base, n reliant la base au sommet).",
               "Le volume dépend de l'aire de la base et de la hauteur (distance du sommet au plan de la base).",
+              "Piège classique : ne pas oublier de diviser par 3 — le volume d'une pyramide est le tiers de celui d'un prisme de même base et même hauteur.",
             ],
             formula: "\\(V = \\dfrac{\\text{aire de la base} \\times \\text{hauteur}}{3}\\)",
             figure: buildPyramideFigure(),
@@ -475,6 +476,7 @@ export default {
             items: [
               "Dans un pavé droit muni d'un repère, un point est repéré par un triplet (abscisse ; ordonnée ; altitude).",
               "Le milieu d'un segment a pour coordonnées la moyenne des coordonnées de ses extrémités, coordonnée par coordonnée.",
+              "Piège classique : toujours respecter l'ordre (abscisse ; ordonnée ; altitude) — ce n'est pas la même chose que (longueur ; largeur ; hauteur).",
             ],
             figure: buildPaveRepereFigure(),
           },

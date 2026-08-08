@@ -18,8 +18,26 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : croissance-exponentielle-premiere-non-spe.js (Première non
-spé) — 4e fichier de la Première non spé.**
+fichier : modelisation-quadratique-premiere-non-spe.js (Première non
+spé) — 5e fichier de la Première non spé.**
+
+`croissance-exponentielle-premiere-non-spe.js` (Première non spé) relu
+intégralement : 5 branches enrichies de 6 items + 1 formule (pas de
+nouvelle branche, tous les thèmes principaux avaient déjà une branche).
+Item ajouté sur le recul d'un rang (division par q), absent avant.
+Branche « Sens de variation » renommée « ... (suites et fonctions
+exponentielles) » + item ajouté sur le sens de variation de x↦a^x selon
+la base — absence notable car "fonctions exponentielles" est dans la
+description du chapitre mais totalement absent du cours avant, malgré
+le titre même du chapitre « Croissance exponentielle ». Item ajouté sur
+la comparaison de deux suites géométriques par leur raison. Piège
+classique ajouté sur le taux global ≠ somme des taux périodiques (avec
+exemple chiffré), signalé par le nom même du générateur
+genPiegeTauxGlobalQCM mais jamais formulé dans le cours. Item + formule
+ajoutés sur le coefficient multiplicateur réciproque (même concept que
+l'Évolution réciproque déjà ajoutée dans informations-chiffrees-seconde.js
+plus tôt dans ce chantier, ici absent à ce niveau aussi). Aucun €,
+aucun candidat texTable, fichier non géométrique.
 
 `croissance-lineaire-premiere-non-spe.js` (Première non spé) relu
 intégralement : 6 branches (4 avant). Nouvelle branche « Modéliser une
@@ -1130,7 +1148,7 @@ vérifiés pour débordement.)
 - [x] analyse-information-chiffree-premiere-non-spe.js *(items+formules ajoutés — comparer proportions pas effectifs, formule taux d'évolution, rapport hauteurs bâtons, angle secteur, vocabulaire corrélation ; 4 générateurs de tableaux croisés convertis en texTable)*
 - [x] statistique-probabilites-premiere-non-spe.js *(nouvelle branche Fréquences depuis un tableau croisé — gap le plus grave du fichier, tout le volet statistique était absent ; items sur P_A(B) non définie/somme, test d'indépendance par fréquences, formule points extrêmes ; 2 générateurs convertis en texTable)*
 - [x] croissance-lineaire-premiere-non-spe.js *(nouvelles branches Modéliser une situation par une suite, Fonctions affines et croissance continue ; formule raison non consécutive, piège inversion inégalité si r négatif)*
-- [ ] croissance-exponentielle-premiere-non-spe.js
+- [x] croissance-exponentielle-premiere-non-spe.js *(item sens de variation fonction exponentielle ajouté — absence notable malgré le titre du chapitre ; item recul d'un rang, comparaison de raisons, piège taux global≠somme, coefficient réciproque)*
 - [ ] modelisation-quadratique-premiere-non-spe.js
 - [ ] variations-instantanees-premiere-non-spe.js
 - [ ] variations-globales-premiere-non-spe.js

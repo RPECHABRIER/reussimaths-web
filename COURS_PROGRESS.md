@@ -124,8 +124,17 @@ les hashes). État actuel :
   `0537768`, pas de figure). `statistiques-deux-variables-terminale-techno.js`
   fait (commit `cb5f27a`, pas de figure).
   `probabilites-conditionnelles-terminale-techno.js` fait (commit
-  `cffd3a0`, pas de figure). **Prochain fichier :
-  `variables-aleatoires-terminale-techno.js`.**
+  `cffd3a0`, pas de figure). `variables-aleatoires-terminale-techno.js`
+  fait (commit `555b53a`, pas de figure). **La Terminale techno est
+  intégralement terminée.**
+
+**CHANTIER "COURS" TERMINÉ EN INTÉGRALITÉ** : les 6 niveaux lycée (2nde,
+Première non spé, Première Spé, Première techno, Terminale Spé, Terminale
+techno) sont désormais tous intégralement traités, en plus du collège
+(6e/5e/4e/3e) déjà terminé lors d'une session précédente. Il ne reste plus
+aucun fichier de la liste de tâche initiale à traiter. Voir la section
+"Checklist par niveau" ci-dessous (toutes les cases sont cochées) et le
+git log pour l'historique commit par commit complet.
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -179,10 +188,14 @@ git add <fichier(s)>; TREE=$(GIT_INDEX_FILE=$IDX git write-tree); ...` (le
 fiable de détecter ce genre de régression silencieuse tout de suite plutôt
 qu'en fin de session.
 
-Dernière mise à jour : 2026-08-08 — Collège (6e/5e/4e/3e, 49 chapitres) ET
-2nde (12 chapitres + 1 synthèse sans Cours) intégralement terminés, voir
-git log pour l'historique commit par commit. Prochain fichier :
-`analyse-information-chiffree-premiere-non-spe.js` (Première non spé).
+Dernière mise à jour : 2026-08-08 — **Chantier "Cours" terminé en
+intégralité** : collège (6e/5e/4e/3e, 49 chapitres) ET tout le lycée (2nde,
+Première non spé, Première Spé, Première techno, Terminale Spé, Terminale
+techno, 58 chapitres) sont intégralement traités — 107 chapitres avec
+`meta.cours.mindMap` au total, + 8 chapitres de synthèse/examen
+délibérément sans Cours (voir section "Total" en fin de fichier pour le
+détail). Voir git log pour l'historique commit par commit complet. Plus
+aucun fichier à traiter de la liste de tâche initiale.
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -448,17 +461,32 @@ sans Cours).
 - [x] logarithme-decimal-terminale-techno.js
 - [x] statistiques-deux-variables-terminale-techno.js
 - [x] probabilites-conditionnelles-terminale-techno.js
-- [ ] variables-aleatoires-terminale-techno.js
+- [x] variables-aleatoires-terminale-techno.js
+
+**La Terminale techno est intégralement terminée** (6 chapitres avec
+`meta.cours.mindMap`, aucun skip).
 
 ## Total
 
-61 / 148 chapitres principaux faits (hors `reviser-les-bases-*` et
-`automatismes-*`, à traiter plus tard ; et hors les chapitres de synthèse
-délibérément sans Cours : `exercices-fin-annee-quatrieme.js`,
-`dossier-brevet-troisieme.js`, `exercices-fin-annee-seconde.js`) — **le
-collège (6e/5e/4e/3e) ET la 2nde sont intégralement terminés.** Prochaine
-étape : Première non spé, puis Première Spé, Première techno, Terminale
-Spé, Terminale techno.
+**107 chapitres principaux avec `meta.cours.mindMap`** (hors
+`reviser-les-bases-*` et `automatismes-*`, à traiter plus tard si Romain le
+souhaite), + **8 chapitres de synthèse/révision/examen délibérément SANS
+Cours** (jugés au cas par cas, justification détaillée dans chaque
+checklist ci-dessus) : `exercices-fin-annee-quatrieme.js`,
+`dossier-brevet-troisieme.js`, `exercices-fin-annee-seconde.js`,
+`exercices-rituels-premiere-non-spe.js`,
+`preparation-eam-premiere-non-spe.js`, `preparation-bac-premiere-spe.js`,
+`preparation-eam-premiere-techno.js`,
+`exercices-transversaux-terminale-spe.js`.
+
+Répartition par niveau : 6e (9) + 5e (12) + 4e (14) + 3e (14) = 49 collège,
+2nde (12), Première non spé (7), Première Spé (11), Première techno (8),
+Terminale Spé (14), Terminale techno (6).
+
+**CHANTIER TERMINÉ : le collège (6e/5e/4e/3e) ET tout le lycée (2nde,
+Première non spé, Première Spé, Première techno, Terminale Spé, Terminale
+techno) sont désormais intégralement traités.** Aucun fichier restant de
+la liste de tâche initiale.
 
 ---
 

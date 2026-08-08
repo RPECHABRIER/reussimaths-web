@@ -35,6 +35,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable.js";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -69,6 +71,19 @@ function tableauCroise2x2() {
   };
 }
 
+// Construit un tableau croisé 2x2 en LaTeX propre via texTable() — évite tout
+// débordement du cadre de l'exercice (voir informations-chiffrees-seconde.js
+// pour le précédent buildCrossTableTex équivalent en 2nde).
+function buildTableauCroiseTex(t, rowNames, colNames, { hidden = null, includeTotals = false } = {}) {
+  const cell = (key, val) => (hidden === key ? "?" : String(val));
+  const header = ["", `\\text{${colNames[0]}}`, `\\text{${colNames[1]}}`, ...(includeTotals ? ["\\text{Total}"] : [])];
+  const row1 = [rowNames[0], cell("a", t.a), cell("b", t.b), ...(includeTotals ? [String(t.totalL1)] : [])];
+  const row2 = [rowNames[1], cell("c", t.c), cell("d", t.d), ...(includeTotals ? [String(t.totalL2)] : [])];
+  const rows = [header, row1, row2];
+  if (includeTotals) rows.push(["Total", String(t.totalC1), String(t.totalC2), String(t.total)]);
+  return texTable(rows);
+}
+
 // ---------- 1. Compléter une case manquante d'un tableau croisé ----------
 function genCompleterCaseTableauCroiseNumeric() {
   const contexte = pick([
@@ -82,7 +97,7 @@ function genCompleterCaseTableauCroiseNumeric() {
   return {
     type: "numeric",
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
-    prompt: `On étudie ${contexte.sujet} à l'aide d'un tableau croisé. On sait que : ${contexte.ligne} et ${contexte.colonne} : ${caseChoisie === "a" ? "?" : t.a} ; ${contexte.ligne} et ${contexte.colonne2} : ${caseChoisie === "b" ? "?" : t.b} ; ${contexte.ligne2} et ${contexte.colonne} : ${caseChoisie === "c" ? "?" : t.c} ; ${contexte.ligne2} et ${contexte.colonne2} : ${caseChoisie === "d" ? "?" : t.d}. Le total de la ligne « ${contexte.ligne} » est ${t.totalL1} et le total général est ${t.total}. Détermine la case manquante (« ? »).`,
+    prompt: `On étudie ${contexte.sujet} à l'aide d'un tableau croisé d'effectifs (la case « ? » est à déterminer) : ${buildTableauCroiseTex(t, [contexte.ligne, contexte.ligne2], [contexte.colonne, contexte.colonne2], { hidden: caseChoisie, includeTotals: true })} Détermine la case manquante (« ? »).`,
     answer: t[caseChoisie],
     steps: [
       { type: "regle", text: `\\text{La somme des trois cases connues et de la case manquante doit être égale au total général : la case manquante s'obtient donc par soustraction.}` },
@@ -99,7 +114,7 @@ function genTotalMarginalTableauCroiseNumeric() {
   return {
     type: "numeric",
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
-    prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${t.a}, ${t.b}, ${t.c}, ${t.d} (dans cet ordre : ligne 1/colonne 1, ligne 1/colonne 2, ligne 2/colonne 1, ligne 2/colonne 2). Calcule le total de ${demanderLigne ? "la première ligne" : "la première colonne"}.`,
+    prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${buildTableauCroiseTex(t, ["Ligne 1", "Ligne 2"], ["Colonne 1", "Colonne 2"])} Calcule le total de ${demanderLigne ? "la première ligne" : "la première colonne"}.`,
     answer: demanderLigne ? t.totalL1 : t.totalC1,
     steps: [
       { type: "regle", text: `\\text{Le total d'une ligne (ou d'une colonne) est la somme des cases qui la composent.}` },
@@ -114,7 +129,7 @@ function genProportionTableauCroiseNumeric() {
   return {
     type: "numeric",
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
-    prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${t.a}, ${t.b}, ${t.c}, ${t.d}. Le total général est de ${t.total}. Quelle proportion (arrondie au centième) représente la case ${t.a} par rapport au total général ?`,
+    prompt: `Un tableau croisé d'effectifs donne les quatre cases suivantes : ${buildTableauCroiseTex(t, ["Ligne 1", "Ligne 2"], ["Colonne 1", "Colonne 2"], { includeTotals: true })} Quelle proportion (arrondie au centième) représente la case « Ligne 1 / Colonne 1 » par rapport au total général ?`,
     answer: roundTo(t.a / t.total, 2),
     tolerance: 0.01,
     steps: [
@@ -350,7 +365,7 @@ function genVraiFauxTableauCroiseQCM() {
   return {
     type: "qcm",
     chapter: "Analyse de l'information chiffrée — Tableaux croisés",
-    prompt: `Un tableau croisé d'effectifs donne les quatre cases : ${t.a}, ${t.b}, ${t.c}, ${t.d}. Affirmation : « Le total général de ce tableau est ${totalAnnonce}. » Vrai ou faux ?`,
+    prompt: `Un tableau croisé d'effectifs donne les quatre cases : ${buildTableauCroiseTex(t, ["Ligne 1", "Ligne 2"], ["Colonne 1", "Colonne 2"])} Affirmation : « Le total général de ce tableau est ${totalAnnonce}. » Vrai ou faux ?`,
     answer: affirmationCorrecte ? "Vrai" : "Faux",
     options: ["Vrai", "Faux"],
     steps: [
@@ -456,7 +471,9 @@ export default {
             title: "Proportions et proportions conditionnelles",
             items: [
               "Proportion simple : effectif d'une case / effectif total. Proportion conditionnelle : effectif d'une case / total de sa ligne ou colonne.",
+              "Piège classique : pour comparer deux groupes d'effectifs différents, on compare toujours leurs proportions (pourcentages), jamais leurs effectifs bruts.",
             ],
+            formula: "\\(\\text{proportion} = \\dfrac{\\text{effectif de la catégorie}}{\\text{effectif total}} \\ (\\times 100 \\text{ pour un pourcentage})\\)",
           },
           {
             title: "Pourcentage d'évolution vs point de pourcentage",
@@ -464,17 +481,21 @@ export default {
               "Un taux qui passe de 20 % à 25 % gagne 5 points de pourcentage, mais évolue de +25 % (\\(\\frac{25-20}{20}\\)).",
               "Piège classique très fréquent : confondre les deux, surtout dans les articles de presse.",
             ],
+            formula: "\\(t = \\dfrac{V_1-V_0}{V_0}\\times 100\\)",
           },
           {
             title: "Lecture critique de diagrammes",
             items: [
               "Diagramme en bâtons à échelle tronquée (ne partant pas de 0) : exagère visuellement les écarts.",
+              "Dans un diagramme en bâtons, le rapport des hauteurs des bâtons doit être égal au rapport des valeurs représentées, sinon l'échelle est faussée.",
               "Diagramme circulaire : l'angle d'un secteur doit être proportionnel au pourcentage annoncé — vérifier que ce n'est pas trompeur.",
             ],
+            formula: "\\(\\text{angle du secteur} = \\text{pourcentage} \\times 360°\\)",
           },
           {
             title: "Corrélation entre deux variables",
             items: [
+              "Corrélation positive : les deux grandeurs augmentent ensemble. Corrélation négative : quand l'une augmente, l'autre diminue. Aucune corrélation visible : le nuage de points ne montre aucune tendance.",
               "Une corrélation observée entre deux variables ne prouve pas qu'une cause l'autre (piège classique : corrélation ≠ causalité).",
             ],
           },

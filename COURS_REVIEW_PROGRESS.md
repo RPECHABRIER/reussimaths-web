@@ -18,14 +18,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
-terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
-`derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js`,
-`fonction-exponentielle-premiere-spe.js`, `trigonometrie-premiere-spe.js`,
-`vecteurs-produit-scalaire-premiere-spe.js`,
-`geometrie-reperee-premiere-spe.js` et
-`probabilites-conditionnelles-premiere-spe.js` (Première Spé) sont
-faits. Prochain fichier : variables-aleatoires-premiere-spe.js
-(Première Spé, 10e des 11 fichiers de ce niveau).**
+terminées. 10 des 11 fichiers de Première Spé sont faits (tous sauf
+algorithmique-python-premiere-spe.js). Prochain fichier :
+algorithmique-python-premiere-spe.js (Première Spé, dernier fichier de
+ce niveau — après lui, passage à la Première techno, 8 fichiers).**
+
+`variables-aleatoires-premiere-spe.js` (Première Spé) relu
+intégralement : 5 branches inchangées en nombre mais enrichies. Branche
+« Loi de probabilité » enrichie : item sur la lecture cumulative de
+P(X≤a) (à distinguer de P(X=a)), absente avant. Branche « Espérance »
+enrichie : règle de comparaison de deux jeux par l'espérance, absente.
+Branche « Loi binomiale B(n,p) » enrichie : formules des cas extrêmes
+P(X=0)=(1-p)^n et P(X=n)=p^n ajoutées — la NOTE en tête de fichier
+signale ces 2 générateurs comme ajout intentionnel mais le cours ne
+donnait que E(X) et V(X). Aucun €, aucun candidat texTable, fichier
+sans figure.
 
 `probabilites-conditionnelles-premiere-spe.js` (Première Spé) relu
 intégralement : 5 branches (4 avant). Nouvelle branche « Arbre pondéré :
@@ -1333,7 +1340,7 @@ vérifiés pour débordement.)
 - [x] vecteurs-produit-scalaire-premiere-spe.js *(items+formules ajoutés — symétrie u·v=v·u, formule inversée pour l'angle, formule de la norme, règle de bilinéarité (u+v)·w=u·w+v·w, développement de ‖u-v‖²)*
 - [x] geometrie-reperee-premiere-spe.js *(formule x_Ω=-D/2, y_Ω=-E/2, r²=x_Ω²+y_Ω²-F ajoutée — utilisée dans 2 prompts mais absente du cours ; items ajoutés — méthode pour trouver c depuis point+vecteur normal, cas simples droites horizontales/verticales)*
 - [x] probabilites-conditionnelles-premiere-spe.js *(nouvelle branche Arbre pondéré : deux règles à connaître — multiplication/addition des chemins absentes malgré 4 générateurs ; formule loi binomiale ajoutée ; rappel formule union P(A∪B))*
-- [ ] variables-aleatoires-premiere-spe.js
+- [x] variables-aleatoires-premiere-spe.js *(items ajoutés — lecture cumulative de P(X≤a), règle de comparaison de deux jeux par l'espérance ; formules P(X=0)=(1-p)^n et P(X=n)=p^n ajoutées pour la loi binomiale)*
 - [ ] algorithmique-python-premiere-spe.js
 
 ### Première techno

@@ -288,13 +288,20 @@ export default {
             items: [
               "Somme arithmétique = (nombre de termes) × (premier terme + dernier terme) / 2.",
             ],
-            formula: "\\(u_0+u_0q+\\cdots+u_0q^{n-1} = u_0 \\times \\dfrac{1-q^n}{1-q}\\ (q \\neq 1)\\)",
+            formula: "\\(u_0+u_1+\\cdots+u_n = (n+1) \\times \\dfrac{u_0+u_n}{2},\\quad u_0+u_0q+\\cdots+u_0q^{n-1} = u_0 \\times \\dfrac{1-q^n}{1-q}\\ (q \\neq 1)\\)",
           },
           {
             title: "Prouver la nature d'une suite",
             items: [
               "Arithmétique : calculer \\(u_{n+1}-u_n\\) et vérifier que c'est constant.",
               "Géométrique : calculer \\(\\frac{u_{n+1}}{u_n}\\) et vérifier que c'est constant.",
+            ],
+          },
+          {
+            title: "Moyenne arithmétique et moyenne géométrique",
+            items: [
+              "Dans une suite arithmétique, un terme est la moyenne arithmétique de ses deux voisins immédiats : \\(u_n = \\dfrac{u_{n-1}+u_{n+1}}{2}\\).",
+              "Dans une suite géométrique à termes positifs, un terme est la moyenne géométrique de ses deux voisins immédiats : \\(u_n = \\sqrt{u_{n-1}\\times u_{n+1}}\\).",
             ],
           },
           {

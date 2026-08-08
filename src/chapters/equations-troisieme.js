@@ -479,6 +479,43 @@ export default {
     level: "troisieme",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Équations",
+        branches: [
+          {
+            title: "Équation du premier degré",
+            items: [
+              "On réduit et on développe chaque membre si nécessaire, puis on regroupe les x d'un côté et les nombres de l'autre.",
+              "Avec des fractions de même dénominateur, on peut multiplier les deux membres par ce dénominateur pour s'en débarrasser.",
+            ],
+            formula: "\\(ax + b = cx + d \\Rightarrow (a-c)x = d - b\\)",
+          },
+          {
+            title: "Équation produit",
+            items: [
+              "Un produit de facteurs est nul si et seulement si au moins un des facteurs est nul.",
+              "On résout chaque facteur séparément : chacun donne une solution (parfois la même pour les deux).",
+            ],
+            formula: "\\((ax+b)(cx+d)=0 \\Leftrightarrow ax+b=0\\ \\text{ou}\\ cx+d=0\\)",
+          },
+          {
+            title: "Équation x² = a",
+            items: [
+              "Si a > 0 : deux solutions, \\(\\sqrt{a}\\) et \\(-\\sqrt{a}\\). Si a = 0 : une seule solution, 0. Si a < 0 : aucune solution.",
+              "Piège classique : oublier la solution négative quand a > 0 — un carré ne détermine pas le signe de x.",
+            ],
+          },
+          {
+            title: "Modéliser un problème",
+            items: [
+              "On choisit une inconnue x, on traduit chaque donnée de l'énoncé en expression littérale, puis on assemble une égalité.",
+              "On résout l'équation obtenue, puis on vérifie que la solution a bien un sens dans le contexte de l'énoncé.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

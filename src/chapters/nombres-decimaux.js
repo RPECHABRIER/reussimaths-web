@@ -688,7 +688,7 @@ function buildCoursDroiteGradueeFigure() {
   points.push({ id: "M", x: 4 * scale, y, dy: -12, label: "3,4" });
   return {
     points,
-    lines: [{ from: "Lo", to: "Hi", extend: 12 }],
+    lines: [{ from: "Lo", to: "Hi", extend: 12, arrowEnd: true }],
     segments,
     freeLabels: [
       { x: 0, y: y + 22, text: "3" },

@@ -20,8 +20,11 @@
 // Champs supportés (tous optionnels sauf `points`) :
 //   points       : [{ id, x, y, label?, dx?, dy?, hideDot?, hideLabel? }]
 //   segments     : [{ from, to, ticks?: 0-3, dashed?: bool }]
-//   lines        : [{ from, to, label?, extend? }]  — droite infinie (tracée
-//                  au-delà des deux points), avec étiquette optionnelle
+//   lines        : [{ from, to, label?, extend?, arrowStart?, arrowEnd? }]
+//                  — droite infinie (tracée au-delà des deux points), avec
+//                  étiquette optionnelle ; arrowStart/arrowEnd (bool) ajoute
+//                  une pointe de flèche à l'extrémité correspondante (ex :
+//                  droite graduée orientée)
 //   circles      : [{ center, radius? , through? }]  — radius calculé depuis
 //                  `through` (point par lequel passe le cercle) si absent
 //   rightAngles  : [{ at, from, to, size? }]         — petit carré d'angle droit
@@ -76,9 +79,19 @@ export default function Figure({ spec }) {
           const y1 = a.y - uy * ext;
           const x2 = b.x + ux * ext;
           const y2 = b.y + uy * ext;
+          const arrowSize = 7;
+          const nx = -uy;
+          const ny = ux;
+          const arrowPoints = (px, py, dirx, diry) => {
+            const backx = px - dirx * arrowSize;
+            const backy = py - diry * arrowSize;
+            return `${px},${py} ${backx + nx * arrowSize * 0.55},${backy + ny * arrowSize * 0.55} ${backx - nx * arrowSize * 0.55},${backy - ny * arrowSize * 0.55}`;
+          };
           return (
             <g key={`l${i}`}>
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={ink} strokeWidth="1.4" />
+              {l.arrowEnd && <polygon points={arrowPoints(x2, y2, ux, uy)} fill={ink} />}
+              {l.arrowStart && <polygon points={arrowPoints(x1, y1, -ux, -uy)} fill={ink} />}
               {l.label && (
                 <text x={x2 + ux * 12} y={y2 + uy * 12} fontSize="11" fill={ink} textAnchor="middle">
                   {l.label}

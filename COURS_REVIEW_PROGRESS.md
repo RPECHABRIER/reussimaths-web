@@ -17,9 +17,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `nombres-relatifs.js` (5e)** *(flèches déjà
-corrigées lors d'une session antérieure — relire le reste du Cours et les
-exercices).**
+**Prochain fichier à traiter : `geometrie-espace.js` (5e).**
+
+`nombres-relatifs.js` (5e) relu intégralement : branche "Droite graduée"
+reformulée pour partir d'exemples concrets (opposé de 3, \\(|3|=|-3|=3\\))
+avant la notation abstraite en a ; piège classique ajouté à "Additionner
+des relatifs" (signes contraires : on soustrait les distances à zéro, on
+ne les additionne pas — testé par `genAdditionnerDeuxRelatifsSignesContraires`
+mais absent du cours) ; item de "Repérage dans le plan" sur les symétries
+par axe éclaté en deux puces distinctes (axe des abscisses / axe des
+ordonnées) au lieu d'une formulation ambiguë ("coordonnée perpendiculaire
+à cet axe"). Flèches de `buildGraduatedLineFigure` et `buildRepereFigure`
+(commit `da902e8`) confirmées toujours correctes, non retirées. Prompts
+d'exercices vérifiés, aucun candidat clair à `texTable()`
+(`genBilanCarboneAdditionSoustraction` reste à 3-4 items courts, sous le
+seuil de conversion).
 
 `calcul-litteral.js` (5e) relu : branche "Résoudre une équation" enrichie
 d'une formule illustrant les deux types d'équations autorisés en 5e
@@ -254,7 +266,7 @@ vérifiés pour débordement.)
 - [x] divisibilite-fractions.js *(branche multiples/diviseurs partie du concret, formule produits en croix ajoutée)*
 - [x] puissances.js *(formulation carré/cube clarifiée avec exemples numériques concrets, sinon déjà bon)*
 - [x] calcul-litteral.js *(formule "résoudre une équation" ajoutée avec exemples concrets, sinon déjà bon)*
-- [ ] nombres-relatifs.js *(flèches déjà corrigées — relire le reste)*
+- [x] nombres-relatifs.js *(branche droite graduée reformulée en partant du concret, piège classique addition signes contraires ajouté, item symétries par axe éclaté en deux puces — flèches déjà correctes, non touchées)*
 - [ ] geometrie-espace.js
 - [ ] symetrie-centrale-parallelogrammes.js
 - [ ] triangles.js

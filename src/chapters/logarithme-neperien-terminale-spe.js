@@ -354,6 +354,46 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Logarithme népérien",
+        branches: [
+          {
+            title: "Définition et domaine",
+            items: [
+              "ln est définie uniquement sur \\(]0 ; +\\infty[\\) : piège classique très fréquent, un ln d'un nombre négatif ou nul n'existe pas.",
+              "\\(\\ln(1)=0\\), \\(\\ln(e)=1\\).",
+            ],
+          },
+          {
+            title: "Propriétés algébriques",
+            items: [
+              "Transforme un produit en somme, un quotient en différence — exactement l'inverse de l'exponentielle.",
+            ],
+            formula: "\\(\\ln(ab)=\\ln a+\\ln b,\\quad \\ln\\left(\\dfrac{a}{b}\\right)=\\ln a-\\ln b,\\quad \\ln(a^n)=n\\ln a\\)",
+          },
+          {
+            title: "Signe et sens de variation",
+            items: [
+              "ln est strictement croissante sur son domaine : \\(\\ln a < \\ln b \\iff a<b\\) (pour a, b > 0).",
+              "\\(\\ln x > 0 \\iff x>1\\) ; \\(\\ln x<0 \\iff 0<x<1\\).",
+            ],
+          },
+          {
+            title: "Dérivée",
+            items: [],
+            formula: "\\((\\ln x)' = \\dfrac{1}{x},\\quad (\\ln u)' = \\dfrac{u'}{u}\\)",
+          },
+          {
+            title: "Résoudre une équation avec ln",
+            items: [
+              "\\(\\ln A = \\ln B \\iff A=B\\) (à condition que A et B soient strictement positifs — à vérifier avant de conclure).",
+              "Pour résoudre \\(e^x = k\\) (k > 0), passer au ln des deux côtés : \\(x = \\ln k\\).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

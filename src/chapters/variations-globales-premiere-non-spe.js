@@ -390,6 +390,40 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Variations globales",
+        branches: [
+          {
+            title: "Dérivées de référence",
+            items: [
+              "Fonction affine \\(ax+b\\) : dérivée constante a.",
+              "Fonction carré \\(x^2\\) : dérivée \\(2x\\). Fonction cube \\(x^3\\) : dérivée \\(3x^2\\).",
+            ],
+            formula: "\\((ax+b)'=a,\\quad (x^2)'=2x,\\quad (x^3)'=3x^2\\)",
+          },
+          {
+            title: "Linéarité de la dérivation",
+            items: [
+              "La dérivée d'une somme est la somme des dérivées ; celle de \\(k \\times f\\) est \\(k \\times f'\\).",
+            ],
+          },
+          {
+            title: "Tangentes horizontales",
+            items: [
+              "Résoudre \\(f'(x) = 0\\) donne les abscisses où la tangente est horizontale — candidats à un extremum.",
+            ],
+          },
+          {
+            title: "Signe de f' et sens de variation de f",
+            items: [
+              "\\(f'(x) > 0\\) sur un intervalle ⟹ f croissante sur cet intervalle ; \\(f'(x) < 0\\) ⟹ f décroissante.",
+              "Piège classique très fréquent : lire un tableau de signes de f' comme s'il donnait directement le signe de f — c'est le sens de variation, pas le signe.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

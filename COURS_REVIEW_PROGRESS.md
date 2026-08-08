@@ -17,8 +17,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `algorithmique-cinquieme.js` (5e) — dernier
-fichier de la 5e.**
+**La 5e est intégralement terminée (12/12). Prochain fichier :
+`nombres-relatifs-quatrieme.js` (4e).**
+
+`algorithmique-cinquieme.js` (5e) relu intégralement : piège classique
+ajouté à la branche "Traduire et calculer une formule" (bien recopier le
+signe + ou − de la formule dans l'instruction Calculer — testé par le
+distracteur `wrongFormula` de `genTraduireFormuleProgrammeQCM` mais absent
+du cours). Fichier déjà exemplaire par ailleurs : pseudo-code déjà
+présenté via `texTable()` dans tous les générateurs concernés
+(Lire/Calculer/Afficher/Répéter en colonnes — exactement la bonne pratique
+demandée après le bug de débordement mobile corrigé ailleurs), aucun € dans
+une cellule de tableau, cours déjà concis (4 branches), piège classique
+sur les boucles déjà présent, vocabulaire déjà clair et bien aligné avec
+`genVocabulaireAlgorithmiqueQCM`.
 
 `fonctions.js` (5e) relu intégralement : deux corrections de fond trouvées
 en scannant les générateurs, en plus de la relecture du cours —
@@ -372,7 +384,7 @@ vérifiés pour débordement.)
 - [x] statistiques-probabilites.js *(piège classique ajouté à « Calculer une probabilité » — comparer les proportions entre sacs, pas les nombres bruts de billes favorables ; sinon déjà bon, aucun candidat texTable, aucun €)*
 - [x] proportionnalite-cinquieme.js *(branche Pourcentages éclatée en items distincts remise/majoration + piège classique ajouté, formule ajoutée à « Identifier une situation » ; grep € vérifié = faux positif, aucun texTable)*
 - [x] fonctions.js *(2 corrections de fond : A(c)=c×c et f(x) explicite retirés — contredisaient la NOTE du fichier interdisant f(x) en 5e ; piège classique ajouté sur l'inversion d'étapes)*
-- [ ] algorithmique-cinquieme.js
+- [x] algorithmique-cinquieme.js *(piège classique ajouté sur le signe de la formule ; déjà exemplaire par ailleurs — texTable() déjà utilisé partout pour le pseudo-code, aucun €)*
 
 ### 4e
 - [ ] nombres-relatifs-quatrieme.js

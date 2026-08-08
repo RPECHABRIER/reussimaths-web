@@ -369,6 +369,7 @@ export default {
             items: [
               "Une fonction affine s'écrit \\(f(x) = ax + b\\) : a est le coefficient directeur, b l'ordonnée à l'origine.",
               "Il faut parfois réduire, développer ou simplifier une expression avant de lire a et b.",
+              "Piège classique : pour \\(f(x)=\\dfrac{px+q}{d}\\), il faut diviser CHAQUE terme du numérateur par d, pas seulement le terme en x.",
             ],
             formula: "\\(f(x) = ax + b\\)",
           },
@@ -376,7 +377,7 @@ export default {
             title: "Droites et coefficients",
             items: [
               "Le signe de a donne le sens de variation : a > 0, f est croissante ; a < 0, f est décroissante.",
-              "La droite passe par l'origine si et seulement si b = 0 (fonction linéaire).",
+              "Cas particuliers de fonction affine : b = 0 donne une fonction linéaire (droite par l'origine) ; a = 0 donne une fonction constante (droite horizontale).",
               "Un point appartient à la droite si ses coordonnées vérifient \\(y = ax+b\\).",
             ],
           },

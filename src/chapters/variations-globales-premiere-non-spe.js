@@ -399,6 +399,7 @@ export default {
             items: [
               "Fonction affine \\(ax+b\\) : dérivée constante a.",
               "Fonction carré \\(x^2\\) : dérivée \\(2x\\). Fonction cube \\(x^3\\) : dérivée \\(3x^2\\).",
+              "Pour dériver un trinôme, on dérive terme à terme : \\((ax^2+bx+c)' = 2ax+b\\) (la dérivée de la constante c est nulle).",
             ],
             formula: "\\((ax+b)'=a,\\quad (x^2)'=2x,\\quad (x^3)'=3x^2\\)",
           },
@@ -406,12 +407,15 @@ export default {
             title: "Linéarité de la dérivation",
             items: [
               "La dérivée d'une somme est la somme des dérivées ; celle de \\(k \\times f\\) est \\(k \\times f'\\).",
+              "La dérivée d'une fonction constante est toujours nulle : deux fonctions qui ne diffèrent que par une constante ont donc la même fonction dérivée.",
             ],
           },
           {
             title: "Tangentes horizontales",
             items: [
               "Résoudre \\(f'(x) = 0\\) donne les abscisses où la tangente est horizontale — candidats à un extremum.",
+              "Piège classique : une équation \\(x^2 = k\\) (avec k > 0) a DEUX solutions opposées, donc deux tangentes horizontales symétriques — ne pas en oublier une.",
+              "L'équation de la tangente horizontale au point d'abscisse \\(x_0\\) est \\(y = f(x_0)\\).",
             ],
           },
           {
@@ -419,6 +423,8 @@ export default {
             items: [
               "\\(f'(x) > 0\\) sur un intervalle ⟹ f croissante sur cet intervalle ; \\(f'(x) < 0\\) ⟹ f décroissante.",
               "Piège classique très fréquent : lire un tableau de signes de f' comme s'il donnait directement le signe de f — c'est le sens de variation, pas le signe.",
+              "Pour identifier un extremum sur un tableau de signes : f' positive puis négative ⟹ maximum ; f' négative puis positive ⟹ minimum.",
+              "Piège classique : \\(f'(a) = 0\\) ne signifie pas toujours que f admet un extremum en a — il faut que f' CHANGE de signe (sinon c'est un point d'inflexion, comme pour \\(f(x)=x^3\\) en \\(x=0\\)).",
             ],
           },
         ],

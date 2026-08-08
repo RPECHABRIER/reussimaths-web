@@ -394,6 +394,41 @@ export default {
     level: "seconde",
     free: false,
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Variations de fonctions",
+        branches: [
+          {
+            title: "Lire un tableau de variations",
+            items: [
+              "Une flèche qui monte = fonction croissante sur l'intervalle ; qui descend = décroissante.",
+              "Les valeurs écrites sont les images aux bornes des intervalles, pas les x.",
+            ],
+          },
+          {
+            title: "Maximum et minimum",
+            items: [
+              "Le maximum (resp. minimum) sur un intervalle est la plus grande (resp. petite) valeur lue en haut (resp. bas) d'une flèche.",
+              "Piège classique : un extremum local (sommet d'une flèche qui change de sens) n'est pas forcément le maximum/minimum global.",
+            ],
+          },
+          {
+            title: "Comparer ou encadrer des images",
+            items: [
+              "Sur un intervalle où f est croissante : a < b entraîne f(a) < f(b) (l'ordre est conservé).",
+              "Sur un intervalle où f est décroissante : a < b entraîne f(a) > f(b) (l'ordre est inversé).",
+            ],
+          },
+          {
+            title: "Nombre de solutions de f(x) = k",
+            items: [
+              "Sur chaque intervalle de monotonie, compter combien de fois la valeur k est atteinte.",
+              "Additionner les solutions trouvées sur chaque morceau du tableau pour avoir le total.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

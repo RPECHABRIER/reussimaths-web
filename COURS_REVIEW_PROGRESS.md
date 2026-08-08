@@ -18,8 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : variations-instantanees-premiere-non-spe.js (Première non
-spé) — 6e fichier de la Première non spé.**
+fichier : variations-globales-premiere-non-spe.js (Première non spé) —
+7e et dernier fichier de la Première non spé.**
+
+`variations-instantanees-premiere-non-spe.js` (Première non spé) relu
+intégralement : 5 branches (4 avant). Nouvelle branche « Taux
+d'accroissement, approximation du nombre dérivé » ajoutée — gap
+conceptuel important, (f(a+h)-f(a))/h qui relie le nombre dérivé à une
+pente moyenne calculable n'apparaissait dans aucune branche avant, alors
+que c'est le lien fondamental entre pente moyenne et nombre dérivé,
+testé par genTauxAccroissementApprocheNumeric. Branche « Nombre dérivé =
+coefficient directeur de la tangente » enrichie de 3 items : lecture
+graphique par déplacement d'une unité (absent) ; nombre dérivé constant
+d'une fonction affine = son coefficient directeur (chapter et générateur
+propres, absent) ; piège général ne pas confondre f(a) et f'(a) (plus
+général que le piège déjà présent sur le signe, qui n'en est qu'un
+corollaire). Branche « Signe du nombre dérivé » enrichie : item sur la
+comparaison de deux nombres dérivés (le plus grand = tangente la plus
+pentue), absent avant. Aucun €, aucun candidat texTable, fichier
+purement algébrique.
 
 `modelisation-quadratique-premiere-non-spe.js` (Première non spé) relu
 intégralement : 4 branches inchangées en nombre, branche 1 renommée
@@ -1168,7 +1185,7 @@ vérifiés pour débordement.)
 - [x] croissance-lineaire-premiere-non-spe.js *(nouvelles branches Modéliser une situation par une suite, Fonctions affines et croissance continue ; formule raison non consécutive, piège inversion inégalité si r négatif)*
 - [x] croissance-exponentielle-premiere-non-spe.js *(item sens de variation fonction exponentielle ajouté — absence notable malgré le titre du chapitre ; item recul d'un rang, comparaison de raisons, piège taux global≠somme, coefficient réciproque)*
 - [x] modelisation-quadratique-premiere-non-spe.js *(branche renommée Forme canonique et forme développée — la forme canonique a(x-α)²+β était totalement absente malgré la NOTE signalant que c'est l'ajout central du programme 2026 pour ce chapitre)*
-- [ ] variations-instantanees-premiere-non-spe.js
+- [x] variations-instantanees-premiere-non-spe.js *(nouvelle branche Taux d'accroissement — gap conceptuel fondamental ; items ajoutés — lecture graphique déplacement d'une unité, dérivée constante d'une fonction affine, piège général f(a) vs f'(a), comparaison de nombres dérivés)*
 - [ ] variations-globales-premiere-non-spe.js
 
 ### Première Spé

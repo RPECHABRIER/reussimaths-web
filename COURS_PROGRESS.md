@@ -11,13 +11,14 @@ committé/coché n'existe pas pour la session suivante.
 
 ## Reprise ici
 
-**Prochain chapitre à traiter : `distances-symetries.js` (6e, géométrie —
-figures requises)**, puis `angles.js`, `configurations-geometriques.js`,
+**Prochain chapitre à traiter : `angles.js` (6e, géométrie — figures
+requises)**, puis `configurations-geometriques.js`,
 `organisation-gestion-donnees.js` — dans cet ordre, pour finir la 6e (niveau
 pilote) avant de passer à la 5e.
 
 Dernière mise à jour : 2026-08-08 — `operations-decimaux.js` (commit
-`990e34d`) et `grandeurs-mesures.js` (commit `4e99276`) faits.
+`990e34d`), `grandeurs-mesures.js` (commit `4e99276`) et
+`distances-symetries.js` (commit `32102ab`, 5 figures) faits.
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -97,7 +98,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] proportionnalite.js
 - [x] operations-decimaux.js
 - [x] grandeurs-mesures.js
-- [ ] distances-symetries.js *(géométrie — figures requises)*
+- [x] distances-symetries.js *(géométrie — figures requises)*
 - [ ] angles.js *(géométrie — figures requises)*
 - [ ] configurations-geometriques.js *(géométrie — figures requises)*
 - [ ] organisation-gestion-donnees.js

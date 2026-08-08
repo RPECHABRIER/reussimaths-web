@@ -587,8 +587,8 @@ export default {
           {
             title: "Multiples et diviseurs",
             items: [
-              "b est un diviseur de a si la division de a par b tombe juste (reste 0).",
-              "a est alors un multiple de b.",
+              "\\(12 \\div 4 = 3\\), sans reste : 4 est un diviseur de 12, et 12 est un multiple de 4.",
+              "Autrement dit : b est un diviseur de a si la division de a par b tombe juste (reste 0), et a est alors un multiple de b.",
               "Piège classique : ne pas confondre «a est un multiple de b» et «a est un diviseur de b».",
             ],
           },
@@ -614,6 +614,7 @@ export default {
               "Mêmes dénominateurs : on compare directement les numérateurs.",
               "Dénominateurs différents : on compare les produits en croix, ou on passe à l'écriture décimale.",
             ],
+            formula: "\\(\\dfrac{2}{3}\\) et \\(\\dfrac{3}{4}\\) : \\(2\\times4=8\\) et \\(3\\times3=9\\), donc \\(\\dfrac{2}{3}<\\dfrac{3}{4}\\)",
           },
           {
             title: "Additionner / soustraire des fractions",

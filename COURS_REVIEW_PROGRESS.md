@@ -17,10 +17,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). Les 5 fichiers de 4e confiés
-dans cette session sont terminés (resolution-equations,
-statistiques-quatrieme, probabilites-quatrieme, notion-fonctions,
-proportionnalite-quatrieme). Prochain fichier : theoreme-thales.js (4e).**
+**La 5e est intégralement terminée (12/12). `theoreme-thales.js` (4e) est
+terminé. Prochain fichier : triangles-rectangles-quatrieme.js (4e).**
+
+`theoreme-thales.js` (4e) relu intégralement : figure ajoutée à la branche
+« Problèmes, agrandissement/réduction » (seule branche géométrique du
+fichier sans figure, alors que les 3 autres en ont une), item réécrit pour
+partir du concret (le petit triangle AMN est un agrandissement/réduction
+du grand ABC) avant la règle du coefficient. Reste déjà au niveau attendu
+(4 branches, formule utile, pièges classiques déjà bien ciblés : ordre du
+quotient, alignement des points). Le grep mécanique qui avait repéré ce
+fichier comme candidat (contexte long) est un faux positif confirmé : le
+long contexte est le commentaire d'en-tête narratif, pas un prompt
+d'exercice. Aucun candidat texTable, aucun symbole €.
 
 `proportionnalite-quatrieme.js` (4e) relu intégralement : branche
 « Grandeurs produits et quotients » reformulée pour partir du concret
@@ -507,7 +516,7 @@ vérifiés pour débordement.)
 - [x] probabilites-quatrieme.js
 - [x] notion-fonctions.js
 - [x] proportionnalite-quatrieme.js
-- [ ] theoreme-thales.js
+- [x] theoreme-thales.js *(figure ajoutée à la branche « Problèmes, agrandissement/réduction », seule branche géométrique sans figure ; item réécrit du concret vers la règle ; sinon déjà bon, faux positif du grep mécanique confirmé — commentaire d'en-tête long, pas un prompt)*
 - [ ] triangles-rectangles-quatrieme.js
 - [ ] geometrie-plane.js
 - [ ] geometrie-espace-quatrieme.js

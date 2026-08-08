@@ -465,10 +465,25 @@ function generate(difficulty) {
 
 // ===================== Figures pour le Cours (carte mentale) =====================
 // Pas de helper de figure existant dans ce fichier avant.
-function buildCoursDroiteFigure(pts, lines = [], vectors = []) {
+function buildCoursDroiteFigure(pts, lines = [], vectors = [], opts = {}) {
   const scale = 20;
   const toX = (v) => v * scale;
   const toY = (v) => -v * scale;
+  const range = opts.range ?? 3;
+  const axesPts = opts.axes
+    ? [
+        { id: "OX1", x: toX(-range), y: toY(0), hideDot: true, hideLabel: true },
+        { id: "OX2", x: toX(range), y: toY(0), hideDot: true, hideLabel: true },
+        { id: "OY1", x: toX(0), y: toY(-range), hideDot: true, hideLabel: true },
+        { id: "OY2", x: toX(0), y: toY(range), hideDot: true, hideLabel: true },
+      ]
+    : [];
+  const axesLines = opts.axes
+    ? [
+        { from: "OX1", to: "OX2", arrowEnd: true },
+        { from: "OY1", to: "OY2", arrowEnd: true },
+      ]
+    : [];
   const points = pts.map((p) => ({
     id: p.id,
     x: toX(p.x),
@@ -481,7 +496,7 @@ function buildCoursDroiteFigure(pts, lines = [], vectors = []) {
   }));
   const droiteLines = lines.map((l) => ({ from: l.from, to: l.to }));
   const vecLines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
-  return { points, lines: [...droiteLines, ...vecLines] };
+  return { points: [...axesPts, ...points], lines: [...axesLines, ...droiteLines, ...vecLines] };
 }
 
 export default {
@@ -501,12 +516,50 @@ export default {
             title: "Équation cartésienne et vecteur directeur",
             items: [
               "Toute droite du plan a une équation \\(ax+by+c=0\\) (avec a et b non tous les deux nuls).",
-              "Un vecteur directeur de cette droite est \\(\\overrightarrow{u}(-b ; a)\\).",
+              "Un vecteur directeur de cette droite est \\(\\overrightarrow{u}(-b ; a)\\) ; tout vecteur colinéaire à \\(\\overrightarrow{u}\\) (déterminant nul avec lui) est aussi un vecteur directeur de la droite.",
+              "Un point \\(M(x;y)\\) appartient à la droite si et seulement si \\(ax+by+c=0\\) : on remplace x et y par ses coordonnées et on vérifie que le résultat obtenu est 0.",
             ],
             formula: "\\(ax+by+c=0\\)",
             figure: buildCoursDroiteFigure(
               [{ id: "A", x: 0, y: -1, dx: -10, dy: 10 }, { id: "B", x: 2, y: 3, hideLabel: true }, { id: "V", x: 1, y: 1, label: "u", dx: 8, dy: -6 }],
               [{ from: "A", to: "B" }],
+              [{ from: "A", to: "V" }]
+            ),
+          },
+          {
+            title: "Droites verticales et horizontales",
+            items: [
+              "Une droite verticale (parallèle à l'axe des ordonnées) a une équation \\(x = k\\) : tous ses points ont la même abscisse k.",
+              "Une droite horizontale (parallèle à l'axe des abscisses) a une équation \\(y = k\\) : tous ses points ont la même ordonnée k.",
+              "Dans \\(ax+by+c=0\\) : \\(b=0\\) donne une droite verticale, \\(a=0\\) donne une droite horizontale.",
+            ],
+            formula: "\\(x=k \\text{ (verticale)} \\quad y=k \\text{ (horizontale)}\\)",
+            figure: buildCoursDroiteFigure(
+              [
+                { id: "V1", x: 2, y: -1, hideDot: true, hideLabel: true },
+                { id: "V2", x: 2, y: 1, label: "x = 2", dx: 18, dy: -6, hideDot: true },
+                { id: "H1", x: -1, y: -2, hideDot: true, hideLabel: true },
+                { id: "H2", x: 1, y: -2, label: "y = -2", dx: 22, dy: 6, hideDot: true },
+              ],
+              [{ from: "V1", to: "V2" }, { from: "H1", to: "H2" }],
+              [],
+              { axes: true, range: 3 }
+            ),
+          },
+          {
+            title: "Construire une équation à partir d'un point et d'un vecteur directeur",
+            items: [
+              "\\(M(x;y)\\) appartient à la droite passant par A et de vecteur directeur \\(\\vec{u}(dx ; dy)\\) si et seulement si \\(\\overrightarrow{AM}\\) est colinéaire à \\(\\vec{u}\\), c'est-à-dire si leur déterminant est nul.",
+              "Avec deux points A et B, on utilise \\(\\overrightarrow{AB}\\) comme vecteur directeur : même méthode, en remplaçant \\(\\vec{u}\\) par \\(\\overrightarrow{AB}\\).",
+            ],
+            formula: "\\(dy(x-x_A) - dx(y-y_A) = 0\\)",
+            figure: buildCoursDroiteFigure(
+              [
+                { id: "A", x: -2, y: -1, dx: -10, dy: 10 },
+                { id: "M", x: 2, y: 1, label: "M", dx: 8, dy: -10 },
+                { id: "V", x: 0, y: 0, label: "u", dx: -14, dy: 8 },
+              ],
+              [{ from: "A", to: "M" }],
               [{ from: "A", to: "V" }]
             ),
           },
@@ -523,6 +576,7 @@ export default {
             items: [
               "Vecteurs directeurs colinéaires ⟹ droites parallèles (confondues si en plus un point commun, sinon strictement parallèles).",
               "Vecteurs directeurs non colinéaires ⟹ droites sécantes (un seul point commun).",
+              "Le système formé par les deux équations réduites \\(y=m_1x+p_1\\) et \\(y=m_2x+p_2\\) a autant de solutions que de points communs aux deux droites : une seule solution si sécantes (\\(m_1 \\neq m_2\\)), aucune solution si strictement parallèles, une infinité de solutions si confondues.",
             ],
             figure: buildCoursDroiteFigure(
               [{ id: "A1", x: 0, y: 0, hideLabel: true }, { id: "A2", x: 4, y: 2, hideLabel: true }, { id: "B1", x: 0, y: 3, hideLabel: true }, { id: "B2", x: 3, y: 0, hideLabel: true }],

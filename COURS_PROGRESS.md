@@ -24,7 +24,8 @@ noté en commentaire dans le code seulement — voir `git log --oneline` pour
 les hashes). État actuel :
 
 - 2nde : `nombres-calculs-seconde.js` fait (commit `14e7c51`, pas de
-  figure). **Prochain fichier : `generalites-fonctions-seconde.js`.**
+  figure). `generalites-fonctions-seconde.js` fait (commit `05bcc23`, pas
+  de figure). **Prochain fichier : `variations-fonctions-seconde.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -231,7 +232,7 @@ initiale de Romain.
 ### 2nde (seconde)
 
 - [x] nombres-calculs-seconde.js
-- [ ] generalites-fonctions-seconde.js
+- [x] generalites-fonctions-seconde.js
 - [ ] variations-fonctions-seconde.js
 - [ ] fonctions-affines-seconde.js
 - [ ] fonctions-reference-seconde.js

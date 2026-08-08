@@ -355,6 +355,7 @@ export default {
             title: "Suite arithmétique",
             items: [
               "On ajoute toujours la même raison r. Le nuage de points \\((n ; u_n)\\) est aligné.",
+              "Sens de variation : croissante si \\(r>0\\), décroissante si \\(r<0\\) (constante si \\(r=0\\)).",
             ],
             formula: "\\(u_{n+1}=u_n+r,\\quad u_n=u_0+rn\\)",
           },
@@ -362,9 +363,18 @@ export default {
             title: "Suite géométrique",
             items: [
               "On multiplie toujours par la même raison q. Le nuage de points \\((n ; u_n)\\) dessine une courbe (croissance ou décroissance rapide).",
+              "Sens de variation (termes positifs) : croissante si \\(q>1\\), décroissante si \\(0<q<1\\).",
               "Piège classique : ne pas confondre les deux formules — l'une additionne, l'autre multiplie.",
             ],
             formula: "\\(u_{n+1}=q \\times u_n,\\quad u_n=u_0 \\times q^n\\)",
+          },
+          {
+            title: "Reconnaître une croissance linéaire ou exponentielle",
+            items: [
+              "Une évolution qui ajoute le même montant en euros à chaque étape (chiffre d'affaires, effectif d'une entreprise) est une croissance linéaire : suite arithmétique.",
+              "Une évolution qui applique le même pourcentage à chaque étape (taux d'intérêt, taux de croissance) est une croissance exponentielle : suite géométrique.",
+              "Sur un nuage de points \\((n \\, ; \\, u_n)\\) : points alignés → suite arithmétique ; points qui s'incurvent de plus en plus vite → suite géométrique.",
+            ],
           },
           {
             title: "Démontrer la nature d'une suite",

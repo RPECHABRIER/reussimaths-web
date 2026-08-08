@@ -404,8 +404,9 @@ export default {
           {
             title: "Grandeurs produits et quotients",
             items: [
-              "Une grandeur quotient combine deux grandeurs par une division : vitesse (km/h), débit (L/min), densité (hab/km²).",
-              "Une grandeur produit combine deux grandeurs par une multiplication : aire (m²), volume (m³).",
+              "La vitesse (km/h), le débit (L/min) ou la densité (hab/km²) sont des grandeurs quotients : elles combinent deux grandeurs par une division.",
+              "L'aire (m²) ou le volume (m³) sont des grandeurs produits : elles combinent deux grandeurs par une multiplication.",
+              "Piège classique : pour convertir une vitesse de km/h en m/s, on divise par 3,6 (et on multiplie par 3,6 pour l'opération inverse).",
             ],
             formula: "\\(\\text{vitesse} = \\dfrac{\\text{distance}}{\\text{temps}}\\)",
           },

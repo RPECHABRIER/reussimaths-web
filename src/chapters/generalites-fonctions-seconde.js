@@ -32,6 +32,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -148,7 +150,7 @@ function genLectureTableauImageNumeric() {
   return {
     type: "numeric",
     chapter: "Généralités sur les fonctions — Lecture d'un tableau",
-    prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${xs.map((x, i) => `${nom}(${x}) = ${ys[i]}`).join(", ")}. Quelle est l'image de ${xs[idx]} par ${nom} ?`,
+    prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${texTable([["x", ...xs], [`${nom}(x)`, ...ys]])} Quelle est l'image de ${xs[idx]} par ${nom} ?`,
     answer: ys[idx],
     steps: [{ type: "donnee", text: `${nom}(${xs[idx]}) = ${ys[idx]}` }],
   };
@@ -170,7 +172,7 @@ function genNombreAntecedentsTableauQCM() {
   return {
     type: "qcm",
     chapter: "Généralités sur les fonctions — Lecture d'un tableau",
-    prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${xs.map((x, i) => `${nom}(${x}) = ${ys[i]}`).join(", ")}. Combien le nombre ${valeurRepetee} a-t-il d'antécédents par ${nom} (parmi les valeurs du tableau) ?`,
+    prompt: `Voici un tableau de valeurs de la fonction ${nom} : ${texTable([["x", ...xs], [`${nom}(x)`, ...ys]])} Combien le nombre ${valeurRepetee} a-t-il d'antécédents par ${nom} (parmi les valeurs du tableau) ?`,
     answer: String(nombreAntecedents),
     options: ["0", "1", "2", "3"],
     steps: [
@@ -386,7 +388,7 @@ function genResoudreFEgalGTableauNumeric() {
   return {
     type: "numeric",
     chapter: "Généralités sur les fonctions — Résolution d'équations",
-    prompt: `Voici deux tableaux de valeurs : ${nomF} : ${xs.map((x, i) => `${nomF}(${x}) = ${ysF[i]}`).join(", ")}. ${nomG} : ${xs.map((x, i) => `${nomG}(${x}) = ${ysG[i]}`).join(", ")}. Détermine la solution de l'équation \\(${nomF}(x) = ${nomG}(x)\\) (parmi les valeurs du tableau).`,
+    prompt: `Voici les tableaux de valeurs de deux fonctions ${nomF} et ${nomG} : ${texTable([["x", ...xs], [`${nomF}(x)`, ...ysF], [`${nomG}(x)`, ...ysG]])} Détermine la solution de l'équation \\(${nomF}(x) = ${nomG}(x)\\) (parmi les valeurs du tableau).`,
     answer: xs[idxEgal],
     steps: [
       { type: "regle", text: `\\text{On cherche la valeur de x pour laquelle les deux tableaux donnent la même image.}` },
@@ -459,6 +461,7 @@ export default {
             items: [
               "\\(f(a) = b\\) : « a a pour image b », « b a pour antécédent a », le point \\(A(a ; b)\\) est sur la courbe.",
               "Un nombre a une seule image, mais peut avoir 0, 1 ou plusieurs antécédents.",
+              "Une fonction peut être décrite par une formule, un tableau de valeurs, une courbe ou un programme de calcul — quatre représentations équivalentes.",
             ],
             formula: "\\(f(a)=b \\iff A(a;b) \\in \\mathcal{C}_f\\)",
           },
@@ -474,6 +477,7 @@ export default {
             items: [
               "Étudier le signe de chaque facteur séparément, puis appliquer la règle des signes ligne par ligne.",
               "Pour un quotient, la valeur qui annule le dénominateur est exclue (double barre), jamais un zéro.",
+              "Pour résoudre une équation où un quotient est égal à une constante, on multiplie les deux membres par le dénominateur (non nul, car exclu du domaine).",
             ],
           },
           {

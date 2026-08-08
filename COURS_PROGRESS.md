@@ -74,8 +74,11 @@ les hashes). État actuel :
   `geometrie-reperee-premiere-spe.js` fait (commit `649f3ba`, 3 figures
   neuves). `probabilites-conditionnelles-premiere-spe.js` fait (commit
   `3915737`, pas de figure). `variables-aleatoires-premiere-spe.js` fait
-  (commit `232c59e`, pas de figure). **Prochain fichier :
-  `algorithmique-python-premiere-spe.js`.**
+  (commit `232c59e`, pas de figure). `algorithmique-python-premiere-spe.js`
+  fait (commit `8e6a395`, pas de figure). `preparation-bac-premiere-spe.js`
+  délibérément SANS Cours (synthèse EAM, voir checklist "Première Spé").
+  **La Première Spé est intégralement terminée. Prochain fichier :
+  `suites-numeriques-premiere-techno.js` (Première techno).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -339,8 +342,14 @@ Cours).
 - [x] geometrie-reperee-premiere-spe.js *(géométrie)*
 - [x] probabilites-conditionnelles-premiere-spe.js
 - [x] variables-aleatoires-premiere-spe.js
-- [ ] algorithmique-python-premiere-spe.js
-- [ ] preparation-bac-premiere-spe.js
+- [x] algorithmique-python-premiere-spe.js
+- [x] preparation-bac-premiere-spe.js (délibérément SANS Cours — banque de
+      questions type Épreuve Anticipée de Mathématiques (sujets officiels
+      2026 + variantes), synthèse transversale par nature, aucune notion
+      nouvelle)
+
+**La Première Spé est intégralement terminée** (11 chapitres avec
+`meta.cours.mindMap` + 1 chapitre d'examen délibérément sans Cours).
 
 ### Première techno (premiere-techno)
 

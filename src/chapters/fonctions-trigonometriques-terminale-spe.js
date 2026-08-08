@@ -389,32 +389,57 @@ export default {
         title: "Fonctions trigonométriques",
         branches: [
           {
+            title: "Valeurs remarquables et signe",
+            items: [
+              "Tableau à connaître par cœur pour \\(0, \\frac{\\pi}{6}, \\frac{\\pi}{4}, \\frac{\\pi}{3}, \\frac{\\pi}{2}, \\pi\\).",
+              "Signe selon le quadrant (cercle trigonométrique) : cos est positif à droite de l'axe vertical, négatif à gauche ; sin est positif au-dessus de l'axe horizontal, négatif en dessous.",
+            ],
+            formula: "\\[\\begin{array}{c|cccccc} x & 0 & \\frac{\\pi}{6} & \\frac{\\pi}{4} & \\frac{\\pi}{3} & \\frac{\\pi}{2} & \\pi \\\\ \\hline \\cos x & 1 & \\frac{\\sqrt3}{2} & \\frac{\\sqrt2}{2} & \\frac12 & 0 & -1 \\\\ \\sin x & 0 & \\frac12 & \\frac{\\sqrt2}{2} & \\frac{\\sqrt3}{2} & 1 & 0 \\end{array}\\]",
+          },
+          {
+            title: "Identité fondamentale et comparaison",
+            items: [
+              "Pour tout réel x : \\(\\cos^2 x+\\sin^2 x=1\\), et \\(-1\\leqslant \\cos x\\leqslant 1\\), \\(-1\\leqslant \\sin x \\leqslant 1\\).",
+              "Cosinus est strictement décroissante sur \\([0;\\pi]\\) : cela permet de comparer deux valeurs de cos sans calculatrice.",
+            ],
+          },
+          {
             title: "Dérivées",
             items: [
               "Piège classique : les dérivées de sin et cos s'échangent, avec un changement de signe pour cos.",
+              "Pour une composée affine \\(\\sin(ax+b)\\) ou \\(\\cos(ax+b)\\), on multiplie par la dérivée de l'intérieur (a) : \\((\\sin(ax+b))'=a\\cos(ax+b)\\), \\((\\cos(ax+b))'=-a\\sin(ax+b)\\).",
             ],
             formula: "\\((\\sin x)'=\\cos x,\\quad (\\cos x)'=-\\sin x\\)",
+          },
+          {
+            title: "Limites remarquables en 0",
+            items: [
+              "\\(\\dfrac{\\sin x}{x} \\to 1\\) et \\(\\dfrac{\\cos x - 1}{x} \\to 0\\) quand x tend vers 0 — ce sont respectivement les nombres dérivés de sin et de cos en 0.",
+            ],
           },
           {
             title: "Parité",
             items: [
               "cos est paire (\\(\\cos(-x)=\\cos x\\)) : courbe symétrique par rapport à l'axe des ordonnées.",
               "sin est impaire (\\(\\sin(-x)=-\\sin x\\)) : courbe symétrique par rapport à l'origine.",
+              "Composer avec la parité : paire×paire = paire, impaire×impaire = paire, paire×impaire = impaire ; paire+paire = paire, mais paire+impaire n'est en général ni paire ni impaire.",
             ],
           },
           {
             title: "Périodicité",
             items: [
               "sin et cos sont \\(2\\pi\\)-périodiques : leurs valeurs se répètent tous les \\(2\\pi\\).",
+              "La fonction \\(x \\mapsto \\cos(kx)\\) (ou \\(\\sin(kx)\\)) est périodique de période \\(\\frac{2\\pi}{k}\\).",
             ],
             formula: "\\(f(x+2\\pi)=f(x)\\)",
           },
           {
-            title: "Formules de réduction et d'addition",
+            title: "Formules d'addition et de réduction",
             items: [
               "\\(\\cos(\\pi-x)=-\\cos x\\), \\(\\sin(\\pi-x)=\\sin x\\), \\(\\cos(\\frac{\\pi}{2}-x)=\\sin x\\).",
-              "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a+\\cos b\\).",
+              "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a+\\cos b\\) — il faut utiliser les vraies formules d'addition.",
             ],
+            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b,\\quad \\sin(a+b)=\\sin a\\cos b+\\cos a\\sin b\\)",
           },
         ],
       },

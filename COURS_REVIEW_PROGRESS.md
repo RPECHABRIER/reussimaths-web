@@ -18,7 +18,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-generalites-fonctions-seconde.js (2nde) — 2e fichier de la 2nde.**
+variations-fonctions-seconde.js (2nde) — 3e fichier de la 2nde.**
+
+`generalites-fonctions-seconde.js` (2nde) relu intégralement : item ajouté
+à « Vocabulaire : image et antécédent » sur les 4 modes de représentation
+équivalents d'une fonction (formule, tableau, courbe, programme de
+calcul), testés par `genModeRepresentationQCM` mais absents du cours ;
+item ajouté à « Tableau de signes d'un produit ou quotient » sur la
+résolution d'une équation quotient=constante par multiplication des deux
+membres par le dénominateur, testée par `genResoudreEquationQuotientNumeric`
+mais absente. Exercices : import `texTable` ajouté, 3 prompts convertis
+(`genLectureTableauImageNumeric`, `genNombreAntecedentsTableauQCM`,
+`genResoudreFEgalGTableauNumeric`) qui énonçaient « voici un tableau de
+valeurs » puis listaient les paires x/image en prose séparée par des
+virgules au lieu d'un vrai tableau (même bug déjà vu sur
+`notion-fonction-troisieme.js`). Branches « Ensemble de définition » et
+« Résoudre f(x)=0 ou f(x)>0 » laissées inchangées (déjà claires).
 
 `nombres-calculs-seconde.js` (2nde, premier fichier de la 2nde) relu
 intégralement : plusieurs gaps de fond comblés. Branche « Intervalles » :
@@ -857,7 +872,7 @@ vérifiés pour débordement.)
 
 ### 2nde
 - [x] nombres-calculs-seconde.js *(branche Intervalles enrichie — transformation d'encadrement/piège négatif ; règle |X|=b ajoutée ; branche Racines carrées et puissances scindée en 2 + piège √(a²)=|a| + nouvelle branche Puissances ; heuristique rapport/différence ajoutée)*
-- [ ] generalites-fonctions-seconde.js
+- [x] generalites-fonctions-seconde.js *(item modes de représentation ajouté ; item résolution équation quotient=constante ajouté ; 3 prompts tableau-en-prose convertis en texTable)*
 - [ ] variations-fonctions-seconde.js
 - [ ] fonctions-affines-seconde.js
 - [ ] fonctions-reference-seconde.js

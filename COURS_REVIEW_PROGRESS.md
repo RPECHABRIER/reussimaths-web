@@ -18,7 +18,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : equations-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : notion-fonction-troisieme.js (3e).**
+
+`equations-troisieme.js` (3e) relu intégralement : piège classique ajouté
+à "Équation du premier degré" (en multipliant par le dénominateur commun,
+il faut multiplier TOUS les termes, pas seulement les fractions — testé
+par `genResoudreEquationFractionsNumeric` mais oubli fréquent non prévenu
+par le cours) ; piège classique ajouté à "Équation produit" (résoudre
+ax+b=0 donne x=-b/a, oubli du signe — testé explicitement par
+`genCorrigerErreurSigneEquationProduitQCM`, un QCM "un élève commet des
+erreurs de signe") ; branche "Modéliser un problème" renommée "Modéliser
+un problème, programmes de calcul" et complétée d'un item dédié (traduire
+chaque programme en expression littérale puis égaliser) — ce thème a son
+propre chapter (`Équations — Programmes de calcul`,
+`genProgrammeMemeResultatNumeric`) mais n'apparaissait nulle part dans le
+cours avant cette relecture. Branche "Équation x² = a" laissée inchangée
+(déjà au niveau attendu, piège classique déjà présent). Fichier purement
+algébrique, aucune figure. Un seul € dans tout le fichier (2 valeurs en
+prose courte), pas un candidat texTable.
 
 `calcul-litteral-troisieme.js` (3e) relu intégralement : branche
 "Programmes de calcul, problèmes" scindée en deux branches distinctes
@@ -621,7 +638,7 @@ vérifiés pour débordement.)
 - [x] nombres-entiers-troisieme.js *(branche "Divisibilité, nombres premiers" scindée en 2 + critères de divisibilité ajoutés, absents avant ; piège conjecture/contre-exemple ajouté ; piège parité ajouté ; formule nombre de diviseurs ajoutée ; exemple concret ajouté à division euclidienne)*
 - [x] calcul-numerique-troisieme.js *(piège classique ajouté à « Opérations sur les fractions » — priorité × avant + / − ; piège classique ajouté à « Puissances » — priorité puissance avant + / ×, (a+b)² ≠ a²+b² ; sinon déjà bon, « Racines carrées »/« Écriture scientifique » déjà claires)*
 - [x] calcul-litteral-troisieme.js *(branche « Programmes de calcul, problèmes » scindée en 2 ; item + piège classique ajoutés à « Problèmes de périmètre et d'aire » ; item ajouté à « Programmes de calcul » ; distributivité simple + piège classique ajoutés à « Développer » ; piège classique + formule ajoutés à « Factoriser »)*
-- [ ] equations-troisieme.js
+- [x] equations-troisieme.js *(piège classique ajouté à « Équation du premier degré » — multiplier TOUS les termes par le dénominateur ; piège classique ajouté à « Équation produit » — x=-b/a, signe ; branche « Modéliser un problème » renommée « …, programmes de calcul » + item ajouté, thème absent du cours avant)*
 - [ ] notion-fonction-troisieme.js
 - [ ] fonctions-affines-troisieme.js
 - [ ] proportionnalite-troisieme.js

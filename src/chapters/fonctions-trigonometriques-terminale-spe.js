@@ -384,6 +384,41 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Fonctions trigonométriques",
+        branches: [
+          {
+            title: "Dérivées",
+            items: [
+              "Piège classique : les dérivées de sin et cos s'échangent, avec un changement de signe pour cos.",
+            ],
+            formula: "\\((\\sin x)'=\\cos x,\\quad (\\cos x)'=-\\sin x\\)",
+          },
+          {
+            title: "Parité",
+            items: [
+              "cos est paire (\\(\\cos(-x)=\\cos x\\)) : courbe symétrique par rapport à l'axe des ordonnées.",
+              "sin est impaire (\\(\\sin(-x)=-\\sin x\\)) : courbe symétrique par rapport à l'origine.",
+            ],
+          },
+          {
+            title: "Périodicité",
+            items: [
+              "sin et cos sont \\(2\\pi\\)-périodiques : leurs valeurs se répètent tous les \\(2\\pi\\).",
+            ],
+            formula: "\\(f(x+2\\pi)=f(x)\\)",
+          },
+          {
+            title: "Formules de réduction et d'addition",
+            items: [
+              "\\(\\cos(\\pi-x)=-\\cos x\\), \\(\\sin(\\pi-x)=\\sin x\\), \\(\\cos(\\frac{\\pi}{2}-x)=\\sin x\\).",
+              "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a+\\cos b\\).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

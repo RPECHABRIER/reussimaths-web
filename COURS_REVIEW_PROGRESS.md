@@ -18,7 +18,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : trigonometrie-triangle-rectangle-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : transformations-plan-troisieme.js (3e).**
+
+`trigonometrie-triangle-rectangle-troisieme.js` (3e) relu intégralement :
+piège classique ajouté à « Calculer une longueur » (si le côté cherché
+est au dénominateur, souvent l'hypoténuse, on divise ; sinon, on
+multiplie) — seule branche du fichier sans piège classique explicite,
+alors que `genCalculerLongueurCosinusNumeric`/`Sinus`/`Tangente`/
+`genCalculerHypotenuseTrigoNumeric` alternent justement entre demander
+l'hypoténuse (division) et demander le côté opposé/adjacent
+(multiplication) à partir de la même relation, confusion fréquente
+(multiplier systématiquement). Reste déjà au niveau attendu (4 branches,
+figure `buildTrigoTriangleFigure` claire et bien étiquetée — triangle
+fini, aucun arrowStart/arrowEnd nécessaire). Aucun symbole €, aucun
+candidat texTable.
 
 `thales-triangles-semblables-troisieme.js` (3e) relu intégralement :
 **correction de fond** dans `genThalesPapillonNumeric` — les variables DE
@@ -758,7 +771,7 @@ vérifiés pour débordement.)
 - [x] statistiques-troisieme.js *(3 items ajoutés : valeur manquante via somme=moyenne×effectif, formule tableur MOYENNE(plage) + piège en-tête, classe médiane par cumul d'effectifs ; 8 prompts convertis en texTable() — séries de 5-11 valeurs en prose, notes de 2 élèves, catégorie/classe+effectif)*
 - [x] probabilites-troisieme.js *(item conversion pourcentage/décimal ajouté à « Calculer une probabilité », absent alors que testé par genProbabiliteDepuisPourcentageNumeric ; piège classique simplification fraction irréductible ajouté, testé par 3 générateurs dont un avec distracteur non simplifié ; sinon déjà bon, 4 branches déjà claires)*
 - [x] thales-triangles-semblables-troisieme.js *(correction de fond : DE/DF inversés dans genThalesPapillonNumeric, formule enseignée contredisait le Cours ; item coefficient réciproque 1/k ajouté, absent alors que testé ; sinon déjà bon, 3 figures déjà claires)*
-- [ ] trigonometrie-triangle-rectangle-troisieme.js
+- [x] trigonometrie-triangle-rectangle-troisieme.js *(piège classique ajouté à « Calculer une longueur » — diviser si l'inconnue est au dénominateur, multiplier sinon ; sinon déjà bon, figure déjà claire)*
 - [ ] transformations-plan-troisieme.js
 - [ ] geometrie-espace-troisieme.js
 - [ ] mesures-grandeurs-troisieme.js

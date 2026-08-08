@@ -396,6 +396,7 @@ export default {
             items: [
               "La somme des trois angles d'un triangle vaut toujours 180°.",
               "Dans un triangle isocèle, les deux angles à la base (opposés aux côtés égaux) sont égaux.",
+              "Piège classique : pour trouver un angle à la base, on retire d'abord l'angle au sommet à 180°, PUIS on partage le reste en deux (pas de division par 3).",
             ],
             formula: "\\(\\widehat{A} + \\widehat{B} + \\widehat{C} = 180°\\)",
             figure: buildAngleTriangleFigure(70, 60, 50, { A: "70°", B: "60°", C: "50°" }),
@@ -415,6 +416,7 @@ export default {
               "Une translation fait glisser une figure sans la retourner ni la déformer.",
               "Elle conserve les longueurs, les angles, les aires et le parallélisme.",
               "L'image d'un parallélogramme par translation reste un parallélogramme (et garde ses propriétés particulières).",
+              "Piège classique : si la figure image semble retournée (effet miroir), ce n'est pas une translation.",
             ],
             figure: buildTranslationFigure(),
           },

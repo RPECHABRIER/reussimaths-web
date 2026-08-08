@@ -356,13 +356,27 @@ export default {
             items: [
               "Découper l'intervalle d'intégration en plusieurs morceaux (Chasles) ou séparer une somme (linéarité) simplifie souvent le calcul.",
             ],
-            formula: "\\(\\displaystyle\\int_a^c f = \\int_a^b f + \\int_b^c f\\)",
+            formula: "\\(\\displaystyle\\int_a^c f = \\int_a^b f + \\int_b^c f,\\quad \\int_a^b [kf(x)+g(x)]\\,dx = k\\int_a^b f(x)\\,dx + \\int_a^b g(x)\\,dx\\)",
           },
           {
             title: "Signe et encadrement",
             items: [
-              "Si \\(f \\leqslant g\\) sur [a;b], alors \\(\\int_a^b f \\leqslant \\int_a^b g\\).",
+              "Si \\(f \\leqslant g\\) sur [a;b], alors \\(\\int_a^b f \\leqslant \\int_a^b g\\) (en particulier, si \\(f\\geqslant 0\\), l'intégrale est positive).",
+              "Encadrer une intégrale : si \\(m \\leqslant f(x) \\leqslant M\\) sur [a;b], alors en intégrant l'inégalité, \\(m(b-a) \\leqslant \\int_a^b f(x)\\,dx \\leqslant M(b-a)\\).",
               "Piège classique : inverser les bornes change le signe de l'intégrale.",
+            ],
+          },
+          {
+            title: "Fonction définie par une intégrale",
+            items: [
+              "Pour u continue, la fonction \\(f(x)=\\displaystyle\\int_c^x u(t)\\,dt\\) est dérivable et \\(f'(x)=u(x)\\) (théorème fondamental de l'analyse) : f est la primitive de u qui s'annule en c.",
+            ],
+          },
+          {
+            title: "Intégrale et parité",
+            items: [
+              "Si f est impaire, \\(\\displaystyle\\int_{-a}^{a} f(x)\\,dx = 0\\) (la partie négative compense exactement la partie positive).",
+              "Si f est paire, \\(\\displaystyle\\int_{-a}^{a} f(x)\\,dx = 2\\displaystyle\\int_0^a f(x)\\,dx\\).",
             ],
           },
           {

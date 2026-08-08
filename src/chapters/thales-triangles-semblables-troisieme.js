@@ -37,6 +37,63 @@ const prenoms = [
   "Sofia", "Tom", "Maya", "Adam", "Lina", "Zoé", "Nolan", "Jade", "Liam", "Mila",
 ];
 
+// Figures utilisées uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+function buildThalesTriangleFigure(ratio) {
+  const A = { id: "A", x: 150, y: 20, dy: -10 };
+  const B = { id: "B", x: 40, y: 190, dx: -14 };
+  const C = { id: "C", x: 260, y: 190, dx: 14 };
+  const M = { id: "M", x: A.x + ratio * (B.x - A.x), y: A.y + ratio * (B.y - A.y), dx: -16 };
+  const N = { id: "N", x: A.x + ratio * (C.x - A.x), y: A.y + ratio * (C.y - A.y), dx: 16 };
+  return {
+    points: [A, B, C, M, N],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "A", to: "C" },
+      { from: "B", to: "C" },
+      { from: "M", to: "N", dashed: true },
+    ],
+  };
+}
+
+function buildPapillonFigure() {
+  return {
+    points: [
+      { id: "A", x: 90, y: 40, dy: -8 },
+      { id: "B", x: 210, y: 40, dy: -8 },
+      { id: "D", x: 150, y: 90, dy: 16 },
+      { id: "E", x: 258, y: 180, dx: 12 },
+      { id: "F", x: 42, y: 180, dx: -14 },
+    ],
+    segments: [
+      { from: "A", to: "E" },
+      { from: "B", to: "F" },
+      { from: "A", to: "B" },
+      { from: "E", to: "F", dashed: true },
+    ],
+  };
+}
+
+function buildTrianglesSemblablesFigure() {
+  const A = { id: "A", x: 20, y: 160, dy: 16 };
+  const B = { id: "B", x: 90, y: 160, dy: 16 };
+  const C = { id: "C", x: 55, y: 100, dy: -8 };
+  const k = 1.6;
+  const D = { id: "D", x: 170, y: 160, dy: 16 };
+  const E = { id: "E", x: D.x + k * (B.x - A.x), y: D.y + k * (B.y - A.y), dy: 16 };
+  const F = { id: "F", x: D.x + k * (C.x - A.x), y: D.y + k * (C.y - A.y), dy: -8 };
+  return {
+    points: [A, B, C, D, E, F],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C" },
+      { from: "C", to: "A" },
+      { from: "D", to: "E" },
+      { from: "E", to: "F" },
+      { from: "F", to: "D" },
+    ],
+  };
+}
+
 // =========================== Le théorème de Thalès ===========================
 
 // ---------- 1. Calculer une longueur (configuration triangle) ----------
@@ -399,6 +456,48 @@ export default {
     level: "troisieme",
     free: false,
     order: 11,
+    cours: {
+      mindMap: {
+        title: "Théorème de Thalès et triangles semblables",
+        branches: [
+          {
+            title: "Le théorème de Thalès",
+            items: [
+              "M sur (AB), N sur (AC), avec (MN) parallèle à (BC) : les trois rapports issus de A sont égaux.",
+              "Piège classique : bien respecter l'ordre des points dans chaque rapport.",
+            ],
+            formula: "\\(\\dfrac{AM}{AB} = \\dfrac{AN}{AC} = \\dfrac{MN}{BC}\\)",
+            figure: buildThalesTriangleFigure(0.45),
+          },
+          {
+            title: "Configuration papillon",
+            items: [
+              "Deux droites sécantes en D, avec (AB) parallèle à (EF) : le théorème de Thalès s'applique aussi dans cette configuration « en croix ».",
+              "Les triangles DAB et DEF sont dans une position symétrique de part et d'autre de D.",
+            ],
+            formula: "\\(\\dfrac{DA}{DE} = \\dfrac{DB}{DF} = \\dfrac{AB}{EF}\\)",
+            figure: buildPapillonFigure(),
+          },
+          {
+            title: "Réciproque : prouver un parallélisme",
+            items: [
+              "Si les points sont alignés dans le même ordre sur chaque droite et que les rapports \\(\\frac{AM}{AB}\\) et \\(\\frac{AN}{AC}\\) sont égaux, alors (MN) et (BC) sont parallèles.",
+              "Si les rapports sont différents, les droites ne sont pas parallèles.",
+            ],
+            figure: buildThalesTriangleFigure(0.65),
+          },
+          {
+            title: "Agrandissement, réduction, triangles semblables",
+            items: [
+              "Un coefficient k multiplie les longueurs et le périmètre par k, et l'aire par \\(k^2\\).",
+              "Deux triangles sont semblables si leurs angles sont deux à deux égaux, ou si les rapports de leurs côtés correspondants sont tous égaux.",
+              "Piège classique : multiplier l'aire par k au lieu de \\(k^2\\).",
+            ],
+            figure: buildTrianglesSemblablesFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

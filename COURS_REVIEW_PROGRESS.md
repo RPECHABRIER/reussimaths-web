@@ -18,9 +18,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
-terminées. `second-degre.js` et `suites-numeriques-premiere-spe.js`
-(Première Spé) sont faits. Prochain fichier : derivation-premiere-spe.js
-(Première Spé, 3e des 11 fichiers de ce niveau).**
+terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js` et
+`derivation-premiere-spe.js` (Première Spé) sont faits. Prochain
+fichier : variations-courbes-premiere-spe.js (Première Spé, 4e des 11
+fichiers de ce niveau).**
+
+`derivation-premiere-spe.js` (Première Spé) relu intégralement : 6
+branches (5 avant). Nouvelle branche « Signe de f' et sens de
+variation » ajoutée — gap le plus grave : le théorème fondamental
+signe(f') → sens de variation n'apparaissait dans aucune branche avant,
+alors que 2 générateurs entiers le testent directement, et que c'est la
+raison d'être de la dérivation en analyse ; piège classique sur la
+réciproque fausse (f'(a)=0 n'implique pas extremum). Branche
+« Opérations » enrichie : règle (u+v)'=u'+v' ajoutée (seuls
+produit/quotient y figuraient). Items ajoutés : dérivée nulle d'une
+constante, non-dérivabilité (point anguleux, tangente verticale).
+Aucun €, aucun candidat texTable, fichier purement algébrique.
 
 `suites-numeriques-premiere-spe.js` (Première Spé) relu intégralement :
 6 branches (5 avant). Nouvelle branche « Reconnaître une situation
@@ -1240,7 +1253,7 @@ vérifiés pour débordement.)
 ### Première Spé
 - [x] second-degre.js *(nouvelle branche Déterminer un trinôme à partir de données — thème entier absent, racines+point et système à deux points ; items ajoutés — identités remarquables pour développer/factoriser, règle du produit nul, racines=valeurs interdites d'un quotient, symétrie de la parabole)*
 - [x] suites-numeriques-premiere-spe.js *(nouvelle branche Reconnaître une situation arithmétique ou géométrique — thème entier absent malgré le champ pourquoi du chapitre ; item+formule extraction de r/q depuis deux termes consécutifs ; formule de Gauss 1+2+...+n=n(n+1)/2 ajoutée)*
-- [ ] derivation-premiere-spe.js
+- [x] derivation-premiere-spe.js *(nouvelle branche Signe de f' et sens de variation — théorème fondamental totalement absent alors que testé par 2 générateurs ; règle (u+v)'=u'+v' ajoutée ; items dérivée nulle d'une constante et non-dérivabilité (point anguleux, tangente verticale))*
 - [ ] variations-courbes-premiere-spe.js
 - [ ] fonction-exponentielle-premiere-spe.js
 - [ ] trigonometrie-premiere-spe.js

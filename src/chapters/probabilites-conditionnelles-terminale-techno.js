@@ -215,6 +215,7 @@ export default {
             items: [
               "Sur chaque nœud, la somme des probabilités des branches issues de ce nœud vaut 1.",
               "La probabilité d'un chemin = produit des probabilités le long de ce chemin.",
+              "Interpréter une pondération : une branche partant de la racine porte une probabilité simple (P(A)) ; une branche partant d'un nœud intermédiaire A porte une probabilité conditionnelle (\\(P_A(B)\\), sachant que A est déjà réalisé).",
             ],
           },
           {

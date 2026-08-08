@@ -236,45 +236,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 4,
-    cours: {
-      mindMap: {
-        title: "Puissances d'un nombre, carré et cube",
-        branches: [
-          {
-            title: "Carré et cube",
-            items: [
-              "Le carré d'un nombre, c'est ce nombre multiplié par lui-même deux fois.",
-              "Le cube d'un nombre, c'est ce nombre multiplié par lui-même trois fois.",
-              "Piège classique : \\(n^2\\) n'est pas \\(n \\times 2\\), mais \\(n \\times n\\).",
-            ],
-            formula: "\\(n^2 = n \\times n \\quad ; \\quad n^3 = n \\times n \\times n\\)",
-          },
-          {
-            title: "Puissances de dix",
-            items: [
-              "\\(10^n\\) s'écrit 1 suivi de n zéros.",
-              "L'exposant compte le nombre de zéros après le 1.",
-            ],
-            formula: "\\(10^3 = 1\\,000\\)",
-          },
-          {
-            title: "Priorités avec puissances",
-            items: [
-              "Les puissances se calculent en premier, avant les multiplications et les additions.",
-              "Sauf si des parenthèses indiquent un autre ordre.",
-            ],
-            formula: "\\(2 + 3 \\times 4^2 = 2 + 3 \\times 16 = 50\\)",
-          },
-          {
-            title: "Aire et volume",
-            items: [
-              "Aire d'un carré de côté c : \\(c^2\\).",
-              "Volume d'un cube d'arête c : \\(c^3\\).",
-            ],
-          },
-        ],
-      },
-    },
   },
   generate,
 };

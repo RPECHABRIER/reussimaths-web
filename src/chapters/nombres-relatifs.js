@@ -62,7 +62,13 @@ function buildGraduatedLineFigure(markedValue, min, max, letter = "M") {
   for (let v = min; v <= max; v++) {
     freeLabels.push({ x: toX(v), y: y + 16, text: `${v}` });
   }
-  return { points: [Lo, Hi, Mk], lines: [{ from: "Lo", to: "Hi" }], freeLabels };
+  return {
+    points: [Lo, Hi, Mk],
+    // Ligne des relatifs : négatifs à gauche, positifs à droite, se prolonge
+    // à l'infini dans les deux sens — flèche aux deux extrémités.
+    lines: [{ from: "Lo", to: "Hi", arrowStart: true, arrowEnd: true }],
+    freeLabels,
+  };
 }
 
 // =========================== Série 2 : Nombres relatifs (définition) ===========================
@@ -481,7 +487,16 @@ function buildRepereFigure(px, py, range = 4) {
     freeLabels.push({ x: toX(v), y: toY(0) + 14, text: `${v}` });
     freeLabels.push({ x: toX(0) - 12, y: toY(v) + 4, text: `${v}` });
   }
-  return { points: [OX1, OX2, OY1, OY2, A], lines: [{ from: "OX1", to: "OX2" }, { from: "OY1", to: "OY2" }], freeLabels };
+  return {
+    points: [OX1, OX2, OY1, OY2, A],
+    // Repère couvrant les deux signes sur les deux axes — flèche aux deux
+    // extrémités de chaque axe.
+    lines: [
+      { from: "OX1", to: "OX2", arrowStart: true, arrowEnd: true },
+      { from: "OY1", to: "OY2", arrowStart: true, arrowEnd: true },
+    ],
+    freeLabels,
+  };
 }
 
 // ---------- 24. Compléter une graduation (demi-droite à échelle non unitaire) ----------

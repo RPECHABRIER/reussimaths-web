@@ -1669,8 +1669,14 @@ function buildAxeGradueFigure(nTicks, step, startValue, targetIndex) {
       freeLabels.push({ x, y: 16, text: String(startValue + i * step) });
     }
   }
-  segments.push({ from: "b0", to: `b${nTicks - 1}` });
-  return { points, segments, freeLabels };
+  return {
+    points,
+    segments,
+    // Trait principal de l'axe en `lines` (pas `segments`) pour pouvoir
+    // porter une flèche de sens à droite, comme toute droite graduée.
+    lines: [{ from: "b0", to: `b${nTicks - 1}`, extend: 0, arrowEnd: true }],
+    freeLabels,
+  };
 }
 
 function genLireAbscissePointAxeGradueAuto() {

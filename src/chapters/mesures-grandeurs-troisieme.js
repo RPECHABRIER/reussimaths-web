@@ -371,6 +371,36 @@ export default {
     level: "troisieme",
     free: false,
     order: 15,
+    cours: {
+      mindMap: {
+        title: "Mesures et grandeurs",
+        branches: [
+          {
+            title: "Vitesse, énergie, débit",
+            items: [
+              "Vitesse = distance ÷ temps ; énergie = puissance × temps ; débit = volume ÷ temps.",
+              "Pour convertir une vitesse km/h en m/s, on divise par 3,6 ; pour l'autre sens, on multiplie par 3,6.",
+            ],
+            formula: "\\(v = \\dfrac{d}{t}\\ ;\\ E = P \\times t\\ ;\\ \\text{débit} = \\dfrac{\\text{volume}}{\\text{temps}}\\)",
+          },
+          {
+            title: "Échelles",
+            items: [
+              "Sur un plan à l'échelle 1/n, 1 cm représente n cm dans la réalité : on multiplie par n pour passer du plan au réel.",
+              "Le coefficient d'échelle s'applique au carré sur les surfaces, au cube sur les volumes.",
+              "Piège classique : oublier de mettre les deux longueurs dans la même unité avant de calculer une échelle.",
+            ],
+          },
+          {
+            title: "Problèmes contextualisés",
+            items: [
+              "On combine souvent plusieurs formules (volume puis débit, distance puis vitesse) en plusieurs étapes.",
+              "Il faut toujours vérifier la cohérence des unités entre chaque étape du calcul (min/h, L/m³, cm/m...).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -383,6 +383,8 @@ export default {
             title: "Dérivée de fonctions composées",
             items: [
               "Multiplier par la dérivée de l'intérieur (\\(u'\\)) à chaque fois.",
+              "Rappel de la dérivée d'un produit, souvent combinée avec ces formules : \\((uv)'=u'v+uv'\\).",
+              "Domaine de dérivabilité : \\(\\sqrt{u}\\) n'est dérivable que là où \\(u\\) est STRICTEMENT positive (pas seulement positive ou nulle) — en un point où \\(u=0\\), la tangente devient verticale et f n'y est pas dérivable.",
             ],
             formula: "\\((u^n)'=nu'u^{n-1},\\quad (\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}},\\quad (e^u)'=u'e^u\\)",
           },
@@ -390,13 +392,15 @@ export default {
             title: "Dérivée seconde",
             items: [
               "\\(f''\\) est la dérivée de \\(f'\\) : elle mesure comment le sens de variation de f évolue.",
+              "Lien direct : \\(f''(x) > 0\\) sur I signifie que \\(f'\\) est croissante sur I ; \\(f''(x) < 0\\) signifie que \\(f'\\) est décroissante sur I.",
             ],
           },
           {
             title: "Convexité",
             items: [
-              "\\(f''(x) \\geqslant 0\\) sur un intervalle ⟹ f convexe (courbe « au-dessus » de ses tangentes, comme un bol).",
-              "\\(f''(x) \\leqslant 0\\) ⟹ f concave (courbe « en dessous » de ses tangentes).",
+              "\\(f''(x) \\geqslant 0\\) sur un intervalle ⟹ f convexe (courbe « au-dessus » de ses tangentes, comme un bol), ce qui équivaut à \\(f'\\) croissante sur cet intervalle.",
+              "\\(f''(x) \\leqslant 0\\) ⟹ f concave (courbe « en dessous » de ses tangentes), ce qui équivaut à \\(f'\\) décroissante.",
+              "Cas particulier : une fonction affine vérifie \\(f''=0\\) partout, elle est donc à la fois convexe et concave (sa courbe est confondue avec toutes ses tangentes).",
               "Piège classique : convexité (signe de f'') et sens de variation (signe de f') sont deux informations différentes.",
             ],
           },

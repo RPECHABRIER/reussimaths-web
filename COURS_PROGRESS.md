@@ -62,8 +62,9 @@ les hashes). État actuel :
   `suites-numeriques-premiere-spe.js` fait (commit `7420eb7`, pas de
   figure). `derivation-premiere-spe.js` fait (commit `41bb0b5`, pas de
   figure). `variations-courbes-premiere-spe.js` fait (commit `c0cb22f`,
-  pas de figure). **Prochain fichier :
-  `fonction-exponentielle-premiere-spe.js`.**
+  pas de figure). `fonction-exponentielle-premiere-spe.js` fait (commit
+  `2911256`, pas de figure). **Prochain fichier :
+  `trigonometrie-premiere-spe.js` (géométrie).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -321,7 +322,7 @@ Cours).
 - [x] suites-numeriques-premiere-spe.js
 - [x] derivation-premiere-spe.js
 - [x] variations-courbes-premiere-spe.js
-- [ ] fonction-exponentielle-premiere-spe.js
+- [x] fonction-exponentielle-premiere-spe.js
 - [ ] trigonometrie-premiere-spe.js *(géométrie)*
 - [ ] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
 - [ ] geometrie-reperee-premiere-spe.js *(géométrie)*

@@ -20,8 +20,9 @@ objet géométrique introduit), `addition-soustraction-rationnels.js` fait
 fait (commit `43dded0`, pas de figure), `puissances-quatrieme.js` fait
 (commit `c256392`, pas de figure), `calcul-litteral-quatrieme.js` fait
 (commit `b114e83`, pas de figure), `resolution-equations.js` fait
-(commit `d788d06`, pas de figure). **Prochain fichier à traiter :
-`statistiques-quatrieme.js`.** Même méthode : lire
+(commit `d788d06`, pas de figure), `statistiques-quatrieme.js` fait
+(commit `bccc7c9`, pas de figure). **Prochain fichier à traiter :
+`probabilites-quatrieme.js`.** Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -65,8 +66,9 @@ Dernière mise à jour : 2026-08-08 — 4e en cours : `nombres-relatifs-quatriem
 (commit `c0c63ef`), `addition-soustraction-rationnels.js` (commit `4b963cd`) et
 `multiplication-division-rationnels.js` (commit `43dded0`),
 `puissances-quatrieme.js` (commit `c256392`),
-`calcul-litteral-quatrieme.js` (commit `b114e83`) et
-`resolution-equations.js` (commit `d788d06`) faits. 6e ET 5e terminées avant
+`calcul-litteral-quatrieme.js` (commit `b114e83`),
+`resolution-equations.js` (commit `d788d06`) et
+`statistiques-quatrieme.js` (commit `bccc7c9`) faits. 6e ET 5e terminées avant
 ça. Les 12 chapitres 5e
 faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
 `divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
@@ -189,7 +191,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] puissances-quatrieme.js
 - [x] calcul-litteral-quatrieme.js
 - [x] resolution-equations.js
-- [ ] statistiques-quatrieme.js
+- [x] statistiques-quatrieme.js
 - [ ] probabilites-quatrieme.js
 - [ ] notion-fonctions.js
 - [ ] proportionnalite-quatrieme.js
@@ -301,7 +303,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ## Total
 
-27 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+28 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard) — la 6e ET la 5e
 sont intégralement terminées, la 4e est en cours.
 

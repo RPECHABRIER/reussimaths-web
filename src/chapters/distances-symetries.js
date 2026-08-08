@@ -475,6 +475,124 @@ export default {
     level: "sixieme",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Distances et symétries",
+        branches: [
+          {
+            title: "Distances : points alignés, milieu",
+            items: [
+              "Sur une droite, les longueurs s'additionnent : si C est entre A et B, alors AC + CB = AB.",
+              "M est le milieu de [AB] : AM = MB = AB ÷ 2.",
+            ],
+            formula: "\\(AM = MB = \\dfrac{AB}{2}\\)",
+            figure: {
+              points: [
+                { id: "A", x: 20, y: 70, dy: -8 },
+                { id: "M", x: 90, y: 70, dy: -8 },
+                { id: "B", x: 160, y: 70, dy: -8 },
+              ],
+              segments: [
+                { from: "A", to: "M", ticks: 1 },
+                { from: "M", to: "B", ticks: 1 },
+              ],
+            },
+          },
+          {
+            title: "Cercle et disque",
+            items: [
+              "Le cercle : tous les points situés exactement à la distance r (le rayon) du centre O.",
+              "Le disque : tous les points à l'intérieur du cercle, à une distance de O inférieure ou égale au rayon.",
+              "Piège classique : un point à la même distance que le rayon est SUR le cercle, pas strictement dans le disque.",
+            ],
+            formula: "\\(diamètre = 2 \\times rayon\\)",
+            figure: {
+              points: [
+                { id: "O", x: 0, y: 0, dx: -14, dy: 4 },
+                { id: "S", x: 40 * Math.cos((40 * Math.PI) / 180), y: 40 * Math.sin((40 * Math.PI) / 180), dy: -8 },
+                { id: "I", x: 20 * Math.cos((200 * Math.PI) / 180), y: 20 * Math.sin((200 * Math.PI) / 180), dy: -8 },
+                { id: "E", x: 58 * Math.cos((300 * Math.PI) / 180), y: 58 * Math.sin((300 * Math.PI) / 180), dy: -8 },
+              ],
+              circles: [{ center: "O", radius: 40 }],
+              freeLabels: [
+                { x: 40 * Math.cos((40 * Math.PI) / 180), y: 40 * Math.sin((40 * Math.PI) / 180) + 14, text: "sur le cercle" },
+                { x: 20 * Math.cos((200 * Math.PI) / 180), y: 20 * Math.sin((200 * Math.PI) / 180) + 14, text: "dans le disque" },
+                { x: 58 * Math.cos((300 * Math.PI) / 180), y: 58 * Math.sin((300 * Math.PI) / 180) + 14, text: "hors du disque" },
+              ],
+            },
+          },
+          {
+            title: "Médiatrice d'un segment",
+            items: [
+              "La médiatrice de [AB] est la droite perpendiculaire à [AB] qui passe par son milieu.",
+              "Tout point P de la médiatrice est à la même distance de A et de B : PA = PB.",
+            ],
+            formula: "\\(P \\in (d) \\Rightarrow PA = PB\\)",
+            figure: {
+              points: [
+                { id: "A", x: 20, y: 90, dy: -8 },
+                { id: "B", x: 160, y: 90, dy: -8 },
+                { id: "M", x: 90, y: 90, hideDot: true, hideLabel: true },
+                { id: "P", x: 90, y: 25, dy: -8 },
+              ],
+              segments: [
+                { from: "A", to: "B" },
+                { from: "P", to: "A", dashed: true, ticks: 1 },
+                { from: "P", to: "B", dashed: true, ticks: 1 },
+              ],
+              lines: [{ from: "M", to: "P", label: "(d)" }],
+            },
+          },
+          {
+            title: "Cercle circonscrit à un triangle",
+            items: [
+              "Les trois médiatrices d'un triangle sont concourantes : elles se coupent en un même point O.",
+              "O est le centre du cercle circonscrit au triangle (il passe par les 3 sommets) : OA = OB = OC.",
+            ],
+            formula: "\\(OA = OB = OC\\)",
+            figure: {
+              points: [
+                { id: "O", x: 0, y: 0, dx: -14, dy: 4 },
+                { id: "A", x: 45 * Math.cos((100 * Math.PI) / 180), y: 45 * Math.sin((100 * Math.PI) / 180), dy: -8 },
+                { id: "B", x: 45 * Math.cos((220 * Math.PI) / 180), y: 45 * Math.sin((220 * Math.PI) / 180), dx: -14 },
+                { id: "C", x: 45 * Math.cos((340 * Math.PI) / 180), y: 45 * Math.sin((340 * Math.PI) / 180), dx: 8 },
+              ],
+              circles: [{ center: "O", radius: 45 }],
+              segments: [
+                { from: "A", to: "B" },
+                { from: "B", to: "C" },
+                { from: "C", to: "A" },
+                { from: "O", to: "A", dashed: true, ticks: 1 },
+                { from: "O", to: "B", dashed: true, ticks: 1 },
+                { from: "O", to: "C", dashed: true, ticks: 1 },
+              ],
+            },
+          },
+          {
+            title: "Symétrie axiale",
+            items: [
+              "Le symétrique de A par rapport à (d) est le point A' tel que (d) soit la médiatrice de [AA'].",
+              "La symétrie conserve les longueurs et les angles : AB = A'B', et les angles ont la même mesure.",
+              "Piège classique : la symétrie est réciproque — si A' est le symétrique de A, alors A est le symétrique de A'.",
+            ],
+            figure: {
+              points: [
+                { id: "A", x: 40, y: 60, dy: -8 },
+                { id: "Ap", x: 120, y: 60, dy: -8, label: "A'" },
+                { id: "H", x: 80, y: 60, hideDot: true, hideLabel: true },
+                { id: "V", x: 80, y: 20, hideDot: true, hideLabel: true },
+              ],
+              segments: [
+                { from: "A", to: "H", dashed: true, ticks: 1 },
+                { from: "H", to: "Ap", dashed: true, ticks: 1 },
+              ],
+              lines: [{ from: "H", to: "V", label: "(d)" }],
+              rightAngles: [{ at: "H", from: "A", to: "V" }],
+            },
+          },
+        ],
+      },
+    },
   },
   generate,
 };

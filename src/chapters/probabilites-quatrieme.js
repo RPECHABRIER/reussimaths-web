@@ -14,6 +14,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
@@ -271,7 +273,7 @@ function genSommeProbabilitesVerificationQCM() {
   return {
     type: "qcm",
     chapter: "Probabilités — Vérifier",
-    prompt: `Voici les probabilités des issues d'une expérience aléatoire : ${probs.map((p) => fr(p)).join(", ")}. Cette répartition est-elle possible (la somme des probabilités doit valoir 1) ?`,
+    prompt: `Voici les probabilités des issues d'une expérience aléatoire : ${texTable([["Probabilité", ...probs.map((p) => fr(p))]])} Cette répartition est-elle possible (la somme des probabilités doit valoir 1) ?`,
     answer: reallyValid ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [
@@ -299,7 +301,7 @@ function genCompleterTableauProbabiliteNumeric() {
   return {
     type: "numeric",
     chapter: "Probabilités — Vérifier",
-    prompt: `Voici un tableau de probabilités : ${issues.slice(0, n - 1).map((iss, i) => `${iss} : ${fr(probs[i])}`).join(", ")}, ${issues[n - 1]} : ?. Sachant que la somme des probabilités vaut 1, quelle est la probabilité manquante ?`,
+    prompt: `Voici un tableau de probabilités : ${texTable([["Issue", ...issues], ["Probabilité", ...probs.map((p) => fr(p)), "?"]])} Sachant que la somme des probabilités vaut 1, quelle est la probabilité manquante ?`,
     answer: manquant,
     tolerance: 0.01,
     steps: [{ type: "calcul", text: `1 - (${probs.map((p) => fr(p)).join(" + ")}) = ${fr(manquant)}` }],
@@ -388,19 +390,19 @@ export default {
         title: "Probabilités",
         branches: [
           {
+            title: "Équiprobabilité",
+            items: [
+              "Une situation est équiprobable quand toutes les issues ont la même chance de se réaliser (ex. les faces d'un dé équilibré).",
+              "Piège classique : dans une urne avec des couleurs en nombres différents, les couleurs ne sont pas équiprobables — seules les boules le sont.",
+            ],
+          },
+          {
             title: "Calculer une probabilité",
             items: [
-              "Dans une situation d'équiprobabilité, \\(P(A) = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\).",
+              "Dans une situation d'équiprobabilité, on compte les issues qui réalisent l'événement, puis le nombre total d'issues possibles.",
               "Une probabilité est toujours un nombre entre 0 et 1 (soit entre 0 % et 100 %).",
             ],
             formula: "\\(P(A) = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}\\)",
-          },
-          {
-            title: "Équiprobabilité",
-            items: [
-              "Une situation est équiprobable quand toutes les issues ont la même chance de se réaliser.",
-              "Piège classique : dans une urne avec des couleurs en nombres différents, les couleurs ne sont pas équiprobables — seules les boules le sont.",
-            ],
           },
           {
             title: "Types d'événements",

@@ -463,6 +463,27 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant.
+function buildCoursDroiteFigure(pts, lines = [], vectors = []) {
+  const scale = 20;
+  const toX = (v) => v * scale;
+  const toY = (v) => -v * scale;
+  const points = pts.map((p) => ({
+    id: p.id,
+    x: toX(p.x),
+    y: toY(p.y),
+    label: p.label ?? p.id,
+    dx: p.dx ?? 8,
+    dy: p.dy ?? -8,
+    hideDot: p.hideDot,
+    hideLabel: p.hideLabel,
+  }));
+  const droiteLines = lines.map((l) => ({ from: l.from, to: l.to }));
+  const vecLines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
+  return { points, lines: [...droiteLines, ...vecLines] };
+}
+
 export default {
   meta: {
     id: "equations-droites-seconde",
@@ -472,6 +493,55 @@ export default {
     level: "seconde",
     free: false,
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Équations de droites",
+        branches: [
+          {
+            title: "Équation cartésienne et vecteur directeur",
+            items: [
+              "Toute droite du plan a une équation \\(ax+by+c=0\\) (avec a et b non tous les deux nuls).",
+              "Un vecteur directeur de cette droite est \\(\\overrightarrow{u}(-b ; a)\\).",
+            ],
+            formula: "\\(ax+by+c=0\\)",
+            figure: buildCoursDroiteFigure(
+              [{ id: "A", x: 0, y: -1, dx: -10, dy: 10 }, { id: "B", x: 2, y: 3, hideLabel: true }, { id: "V", x: 1, y: 1, label: "u", dx: 8, dy: -6 }],
+              [{ from: "A", to: "B" }],
+              [{ from: "A", to: "V" }]
+            ),
+          },
+          {
+            title: "Passer de cartésienne à réduite",
+            items: [
+              "Si \\(b \\neq 0\\), isoler y pour obtenir la forme \\(y=mx+p\\) (m = pente, p = ordonnée à l'origine).",
+              "Piège classique : si b = 0, la droite est verticale (\\(x = k\\)), elle n'a pas d'équation réduite \\(y=mx+p\\).",
+            ],
+            formula: "\\(ax+by+c=0 \\iff y = -\\dfrac{a}{b}x-\\dfrac{c}{b}\\ (b \\neq 0)\\)",
+          },
+          {
+            title: "Position relative de deux droites",
+            items: [
+              "Vecteurs directeurs colinéaires ⟹ droites parallèles (confondues si en plus un point commun, sinon strictement parallèles).",
+              "Vecteurs directeurs non colinéaires ⟹ droites sécantes (un seul point commun).",
+            ],
+            figure: buildCoursDroiteFigure(
+              [{ id: "A1", x: 0, y: 0, hideLabel: true }, { id: "A2", x: 4, y: 2, hideLabel: true }, { id: "B1", x: 0, y: 3, hideLabel: true }, { id: "B2", x: 3, y: 0, hideLabel: true }],
+              [{ from: "A1", to: "A2" }, { from: "B1", to: "B2" }]
+            ),
+          },
+          {
+            title: "Trouver l'intersection de deux droites",
+            items: [
+              "Résoudre le système formé par les deux équations réduites (ou cartésiennes) donne les coordonnées du point commun.",
+            ],
+            figure: buildCoursDroiteFigure(
+              [{ id: "A1", x: 0, y: 0, hideLabel: true }, { id: "A2", x: 4, y: 2, hideLabel: true }, { id: "B1", x: 0, y: 3, hideLabel: true }, { id: "B2", x: 3, y: 0, hideLabel: true }, { id: "I", x: 2, y: 1, label: "I", dy: 10 }],
+              [{ from: "A1", to: "A2" }, { from: "B1", to: "B2" }]
+            ),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

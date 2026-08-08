@@ -702,6 +702,80 @@ export default {
     level: "sixieme",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Grandeurs et mesures",
+        branches: [
+          {
+            title: "Périmètre et aire",
+            items: [
+              "Périmètre : le tour de la figure (on additionne les côtés) ; Aire : la surface couverte.",
+              "Rectangle : Périmètre \\(= 2 \\times (L + l)\\) ; Aire \\(= L \\times l\\).",
+              "Cercle : Périmètre \\(= \\pi \\times\\) diamètre.",
+            ],
+            formula: "\\(P = 2(L + l) \\qquad A = L \\times l\\)",
+            figure: {
+              points: [
+                { id: "A", x: 20, y: 20 },
+                { id: "B", x: 100, y: 20 },
+                { id: "C", x: 100, y: 70 },
+                { id: "D", x: 20, y: 70 },
+              ],
+              segments: [
+                { from: "A", to: "B", ticks: 1 },
+                { from: "D", to: "C", ticks: 1 },
+                { from: "A", to: "D", ticks: 2 },
+                { from: "B", to: "C", ticks: 2 },
+              ],
+              rightAngles: [
+                { at: "A", from: "D", to: "B" },
+                { at: "B", from: "A", to: "C" },
+                { at: "C", from: "B", to: "D" },
+                { at: "D", from: "C", to: "A" },
+              ],
+              hidePointLabels: true,
+              freeLabels: [
+                { x: 60, y: 12, text: "L" },
+                { x: 8, y: 45, text: "l" },
+              ],
+            },
+          },
+          {
+            title: "Unités de longueur",
+            items: [
+              "Échelle : km, hm, dam, m, dm, cm, mm — chaque unité vaut 10 fois la suivante.",
+              "Pour convertir, on multiplie ou on divise par une puissance de 10 selon le sens du déplacement dans l'échelle.",
+              "Piège classique : compter le nombre de rangs entre les deux unités, pas juste regarder leurs noms.",
+            ],
+          },
+          {
+            title: "Unités d'aire",
+            items: [
+              "Échelle des aires : km², hm², dam², m², dm², cm², mm².",
+              "Piège classique : entre deux unités d'aire consécutives, le facteur est 100 (pas 10), car une aire a deux dimensions.",
+            ],
+            formula: "\\(1\\ m^2 = 100\\ dm^2\\)",
+          },
+          {
+            title: "Volume : dénombrer des cubes",
+            items: [
+              "En 6e, on calcule un volume en dénombrant des petits cubes de 1 cm d'arête (donc 1 cm³ chacun).",
+              "On compte : cubes de front × rangées de profondeur × couches de hauteur.",
+            ],
+            formula: "\\(V = (\\text{cubes de front}) \\times (\\text{rangées}) \\times (\\text{couches})\\)",
+          },
+          {
+            title: "Durées",
+            items: [
+              "1 jour = 24 h ; 1 h = 60 min ; 1 min = 60 s — jamais en base 10 !",
+              "Piège classique : 1,5 h ne fait pas 1 h 50 min, mais 1 h 30 min (0,5 h = 30 min).",
+              "Écriture décimale vers minutes : on multiplie la partie décimale des heures par 60.",
+            ],
+            formula: "\\(1,5\\ h = 1\\ h\\ 30\\ min\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

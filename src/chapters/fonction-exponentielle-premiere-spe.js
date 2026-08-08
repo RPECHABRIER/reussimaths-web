@@ -336,6 +336,42 @@ export default {
     pourquoi: "La fonction exponentielle modélise toute croissance ou décroissance proportionnelle à la quantité déjà présente : population, radioactivité, propagation d'une épidémie.",
     level: "premiere-spe",
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Fonction exponentielle",
+        branches: [
+          {
+            title: "Propriétés algébriques",
+            items: [
+              "Ce sont les mêmes règles que pour les puissances : transformer un produit en somme d'exposants, et inversement.",
+              "\\(\\exp(0) = 1\\), et \\(\\exp(x) > 0\\) pour tout x.",
+            ],
+            formula: "\\(e^{a+b}=e^a e^b,\\quad e^{a-b}=\\dfrac{e^a}{e^b},\\quad (e^a)^n=e^{na}\\)",
+          },
+          {
+            title: "Signe et sens de variation",
+            items: [
+              "\\(e^x\\) est toujours strictement positive, et strictement croissante sur \\(\\mathbb{R}\\).",
+              "Piège classique : une exponentielle ne s'annule jamais — une équation \\(e^{u(x)}=0\\) n'a donc aucune solution.",
+            ],
+          },
+          {
+            title: "Dérivée",
+            items: [
+              "La fonction exponentielle est sa propre dérivée : \\((e^x)'=e^x\\).",
+            ],
+            formula: "\\((e^{ax+b})' = a \\times e^{ax+b}\\)",
+          },
+          {
+            title: "Équations et inéquations",
+            items: [
+              "\\(e^A=e^B \\iff A=B\\) (l'exponentielle est strictement croissante, donc injective).",
+              "Pour une inéquation \\(e^A > e^B\\), on garde le même sens en passant à \\(A > B\\) (fonction croissante).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

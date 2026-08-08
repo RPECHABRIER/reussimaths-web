@@ -438,7 +438,8 @@ export default {
             title: "Reconnaître et écrire f(x) = ax + b",
             items: [
               "a est le coefficient directeur, b l'ordonnée à l'origine (image de 0).",
-              "Développer/réduire l'expression pour vérifier qu'elle se ramène bien à cette forme.",
+              "Développer/réduire l'expression pour vérifier qu'elle se ramène bien à cette forme (sinon, un terme en x² ou plus révèle qu'elle n'est pas affine).",
+              "Cas particuliers : b = 0 ⇒ fonction linéaire ; a = 0 ⇒ fonction constante ; a ≠ 0 et b ≠ 0 ⇒ affine non linéaire.",
             ],
             formula: "\\(f(x) = ax+b\\)",
           },
@@ -465,9 +466,16 @@ export default {
           {
             title: "Équations, inéquations, intersections",
             items: [
-              "Résoudre \\(ax+b=0\\) donne l'antécédent de 0 (le zéro de la fonction).",
+              "Résoudre \\(ax+b=k\\) revient à isoler x (cas particulier k = 0 : on obtient le zéro de la fonction).",
               "L'intersection de deux droites s'obtient en résolvant \\(a_1x+b_1 = a_2x+b_2\\).",
               "Piège classique : diviser par a lors d'une inéquation change le sens de l'inégalité si a < 0.",
+            ],
+          },
+          {
+            title: "Modéliser un tarif par une fonction affine",
+            items: [
+              "Un tarif « forfait fixe + prix par unité » se modélise par f(x) = ax + b : b est le forfait fixe (l'image de 0), a le prix par unité.",
+              "Pour retrouver la quantité connaissant le prix payé, on résout l'équation ax + b = prix payé.",
             ],
           },
         ],

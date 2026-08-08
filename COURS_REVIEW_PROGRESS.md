@@ -17,10 +17,30 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). La 3e est désormais intégralement terminée (14/14).
-Prochain fichier : nombres-calculs-seconde.js (2nde) — premier fichier de
-la 2nde.**
+**La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
+generalites-fonctions-seconde.js (2nde) — 2e fichier de la 2nde.**
+
+`nombres-calculs-seconde.js` (2nde, premier fichier de la 2nde) relu
+intégralement : plusieurs gaps de fond comblés. Branche « Intervalles » :
+règle de transformation d'un encadrement par une opération ajoutée (piège
+classique multiplier/diviser par un négatif inverse le sens des
+inégalités), testée par `genEncadrementOperationNumeric` mais absente du
+cours. Branche « Valeur absolue et distance » : règle
+\\(|X|=b \\iff X=b \\text{ ou } X=-b\\) ajoutée, testée par
+`genResoudreValeurAbsolueEgaliteNumeric` mais absente (seule la version
+inégalité était couverte). Branche « Racines carrées et puissances »
+scindée en « Racines carrées » et « Puissances » : piège classique
+\\(\\sqrt{a^2}=|a|\\) ajouté (testé par `genSimplifierRacineCarreNumeric`
+avec a pouvant être négatif, absent avant) ; nouvelle branche
+« Puissances » créée (formule \\(a^{-n}=1/a^n\\) + piège parité de
+l'exposant) alors qu'un thème entier testé par 3 générateurs
+(`genPuissanceNegativeNumeric`, `genComparerPuissanceZeroQCM`,
+`genEcritureScientifiqueNumeric`) était absent du cours. Branche
+« Comparer deux quantités » : heuristique rapport/différence selon
+l'ordre de grandeur ajoutée, testée par `genChoisirComparaisonAdapteeQCM`
+mais absente. Branche « Identités remarquables » laissée inchangée (déjà
+claire). Aucune figure, aucun symbole € en cellule, aucun candidat
+texTable.
 
 `mesures-grandeurs-troisieme.js` (3e) relu intégralement : piège
 classique ajouté à « Vitesse, énergie, débit » sur la conversion
@@ -836,7 +856,7 @@ vérifiés pour débordement.)
 - [x] mesures-grandeurs-troisieme.js *(piège classique conversion minutes→heures décimales ajouté, testé par genVitesseMoyenneAvecMinutesNumeric ; item échelle complété pour le sens réel→plan ; sinon déjà bon — 3e intégralement terminée, 14/14)*
 
 ### 2nde
-- [ ] nombres-calculs-seconde.js
+- [x] nombres-calculs-seconde.js *(branche Intervalles enrichie — transformation d'encadrement/piège négatif ; règle |X|=b ajoutée ; branche Racines carrées et puissances scindée en 2 + piège √(a²)=|a| + nouvelle branche Puissances ; heuristique rapport/différence ajoutée)*
 - [ ] generalites-fonctions-seconde.js
 - [ ] variations-fonctions-seconde.js
 - [ ] fonctions-affines-seconde.js

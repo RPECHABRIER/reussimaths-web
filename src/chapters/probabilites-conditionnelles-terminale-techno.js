@@ -192,6 +192,40 @@ export default {
     pourquoi: "La formule des probabilités totales permet de calculer un risque global à partir de sous-populations différentes — assurance, contrôle qualité, épidémiologie.",
     level: "terminale-techno",
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Probabilités conditionnelles et probabilités totales",
+        branches: [
+          {
+            title: "Partition de l'univers",
+            items: [
+              "Une partition découpe tous les cas possibles en événements disjoints (aucun point commun) qui recouvrent tout l'univers.",
+              "La somme des probabilités des événements d'une partition vaut toujours 1.",
+            ],
+          },
+          {
+            title: "Formule des probabilités totales",
+            items: [
+              "Additionner les probabilités de B sur chaque morceau de la partition.",
+            ],
+            formula: "\\(P(B) = P(A_1)\\times P_{A_1}(B) + P(A_2)\\times P_{A_2}(B) + \\cdots\\)",
+          },
+          {
+            title: "Arbre à plusieurs niveaux",
+            items: [
+              "Sur chaque nœud, la somme des probabilités des branches issues de ce nœud vaut 1.",
+              "La probabilité d'un chemin = produit des probabilités le long de ce chemin.",
+            ],
+          },
+          {
+            title: "Piège classique : P_A(B) ≠ P_B(A)",
+            items: [
+              "Dans un test médical, « être malade sachant test positif » et « avoir un test positif sachant malade » sont deux probabilités très différentes.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

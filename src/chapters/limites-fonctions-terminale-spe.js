@@ -344,6 +344,46 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Limites de fonctions",
+        branches: [
+          {
+            title: "Limites en l'infini",
+            items: [
+              "Un polynôme a la même limite en \\(\\pm\\infty\\) que son terme de plus haut degré.",
+              "Un quotient de polynômes a la même limite que le quotient des termes de plus haut degré.",
+            ],
+          },
+          {
+            title: "Asymptotes",
+            items: [
+              "Asymptote horizontale : \\(\\lim_{x \\to \\pm\\infty} f(x) = \\ell\\) (droite \\(y=\\ell\\)).",
+              "Asymptote verticale en a : \\(\\lim_{x \\to a} f(x) = \\pm\\infty\\) (souvent quand un dénominateur s'annule).",
+            ],
+          },
+          {
+            title: "Formes indéterminées",
+            items: [
+              "\\(\\infty-\\infty\\), \\(\\frac{\\infty}{\\infty}\\), \\(0\\times\\infty\\), \\(\\frac{0}{0}\\) : transformer l'écriture (factoriser, simplifier) avant de conclure.",
+            ],
+          },
+          {
+            title: "Théorème des gendarmes",
+            items: [
+              "Si \\(u(x) \\leqslant f(x) \\leqslant v(x)\\) au voisinage de a et \\(u,v \\to \\ell\\), alors \\(f \\to \\ell\\).",
+            ],
+          },
+          {
+            title: "Croissance comparée",
+            items: [
+              "En \\(+\\infty\\), l'exponentielle « écrase » toute puissance de x, qui elle-même « écrase » le logarithme.",
+              "Piège classique très fréquent : appliquer une croissance comparée sans vérifier qu'on est bien en \\(+\\infty\\) (le résultat change en \\(-\\infty\\) ou en 0).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

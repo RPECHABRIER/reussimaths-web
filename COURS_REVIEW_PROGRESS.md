@@ -18,8 +18,30 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : statistique-probabilites-premiere-non-spe.js (Première non
-spé) — 2e fichier de la Première non spé.**
+fichier : croissance-lineaire-premiere-non-spe.js (Première non spé) —
+3e fichier de la Première non spé.**
+
+`statistique-probabilites-premiere-non-spe.js` (Première non spé) relu
+intégralement : 6 branches (5 avant). Nouvelle branche « Fréquences
+depuis un tableau croisé » ajoutée — c'était le gap le plus grave
+trouvé sur ce fichier : 5 générateurs entiers portant le chapter
+"Fréquences" (fréquence marginale/conditionnelle, case manquante,
+contraire, effectif depuis fréquence conditionnelle) n'avaient AUCUNE
+branche alors que le titre même du chapitre est « De la STATISTIQUE aux
+probabilités » — seul le volet probabilités était couvert avant. Branche
+« Probabilité conditionnelle » enrichie : item sur P_A(B) non définie si
+P(A)=0 et P_A(B)+P_A(non B)=1, testés par 2 des 6 affirmations de
+genVraiFauxProbabilitesQCM mais absents. Branche « Indépendance »
+enrichie : item sur le test par comparaison de fréquences dans un
+tableau croisé (technique utilisée dans les steps de 2 générateurs mais
+jamais reliée à la formule abstraite P_A(B)=P(B) présentée). Branche
+« Point moyen et droite d'ajustement » enrichie : formule explicite de
+la méthode des points extrêmes ajoutée (a=(yn-y1)/(xn-x1), b=y1-a×x1),
+nommée dans le cours et le générateur mais jamais donnée. Défaut de
+présentation corrigé sur 2 générateurs (tableau croisé en prose dense
+jusqu'à 477 caractères converti en texTable, même helper buildTableauCroiseTex
+que sur le fichier précédent). Validé par génération de 4000 exercices
+aléatoires : aucun undefined/NaN.
 
 `analyse-information-chiffree-premiere-non-spe.js` (Première non spé)
 relu intégralement : 5 branches enrichies de 5 items + 3 formules
@@ -1089,7 +1111,7 @@ vérifiés pour débordement.)
 
 ### Première non spé
 - [x] analyse-information-chiffree-premiere-non-spe.js *(items+formules ajoutés — comparer proportions pas effectifs, formule taux d'évolution, rapport hauteurs bâtons, angle secteur, vocabulaire corrélation ; 4 générateurs de tableaux croisés convertis en texTable)*
-- [ ] statistique-probabilites-premiere-non-spe.js
+- [x] statistique-probabilites-premiere-non-spe.js *(nouvelle branche Fréquences depuis un tableau croisé — gap le plus grave du fichier, tout le volet statistique était absent ; items sur P_A(B) non définie/somme, test d'indépendance par fréquences, formule points extrêmes ; 2 générateurs convertis en texTable)*
 - [ ] croissance-lineaire-premiere-non-spe.js
 - [ ] croissance-exponentielle-premiere-non-spe.js
 - [ ] modelisation-quadratique-premiere-non-spe.js

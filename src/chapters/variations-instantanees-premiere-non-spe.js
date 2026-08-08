@@ -418,6 +418,41 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Variations instantanées",
+        branches: [
+          {
+            title: "Nombre dérivé = coefficient directeur de la tangente",
+            items: [
+              "\\(f'(a)\\) est le coefficient directeur de la tangente à la courbe au point d'abscisse a.",
+              "\\(f'(a) = 0\\) ⟺ la tangente en a est horizontale.",
+            ],
+          },
+          {
+            title: "Équation de la tangente",
+            items: [
+              "Pour l'écrire, il faut deux informations : le nombre dérivé (pente) et un point de la courbe (a ; f(a)).",
+            ],
+            formula: "\\(y = f'(a)(x-a) + f(a)\\)",
+          },
+          {
+            title: "Signe du nombre dérivé et sens de variation",
+            items: [
+              "\\(f'(a) > 0\\) : f croissante autour de a. \\(f'(a) < 0\\) : f décroissante autour de a.",
+              "Piège classique très fréquent : le signe de \\(f'(a)\\) donne le sens de variation de f, ce n'est pas le signe de \\(f(a)\\).",
+            ],
+          },
+          {
+            title: "Interprétation physique",
+            items: [
+              "Pour une position en fonction du temps, le nombre dérivé est la vitesse instantanée.",
+              "Pour une vitesse en fonction du temps, le nombre dérivé est l'accélération.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

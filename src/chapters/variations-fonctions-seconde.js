@@ -417,6 +417,7 @@ export default {
             items: [
               "Sur un intervalle où f est croissante : a < b entraîne f(a) < f(b) (l'ordre est conservé).",
               "Sur un intervalle où f est décroissante : a < b entraîne f(a) > f(b) (l'ordre est inversé).",
+              "Si x est compris entre les deux bornes a et b d'un morceau monotone, alors f(x) est strictement compris entre f(a) et f(b), que f soit croissante ou décroissante sur ce morceau.",
             ],
           },
           {

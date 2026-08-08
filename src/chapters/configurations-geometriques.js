@@ -510,6 +510,7 @@ export default {
             title: "Triangle isocèle",
             items: [
               "Deux côtés égaux, et les deux angles à la base (opposés à ces côtés) sont égaux.",
+              "Piège classique : « isocèle en A » signifie que A est le sommet principal, là où se rejoignent les deux côtés égaux — ce n'est pas un angle à la base.",
             ],
             formula: "\\(\\hat{A} = 180° - 2 \\times \\hat{B}\\)",
             figure: buildTriangleFigure(50, 65, 65, { equalSides: ["AB", "CA"] }),

@@ -322,6 +322,7 @@ export default {
             items: [
               "\\(k \\times (a + b) = k \\times a + k \\times b\\) : on peut développer ou factoriser.",
               "Utile pour calculer astucieusement en regroupant un facteur commun.",
+              "Piège classique : \\(k \\times (a + b)\\) n'est PAS égal à \\(k \\times a + b\\) — il ne faut pas oublier de multiplier aussi \\(b\\) par \\(k\\).",
             ],
             formula: "\\(k \\times (a + b) = k \\times a + k \\times b\\)",
           },

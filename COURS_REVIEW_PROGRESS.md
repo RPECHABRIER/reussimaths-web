@@ -17,10 +17,26 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`,
-`addition-soustraction-rationnels.js`, `multiplication-division-rationnels.js`
-et `puissances-quatrieme.js` (4e) sont faits. Prochain fichier :
-`calcul-litteral-quatrieme.js` (4e, dernier du lot confié).**
+**La 5e est intégralement terminée (12/12). Les 5 fichiers de 4e confiés
+dans cette session sont terminés (nombres-relatifs-quatrieme,
+addition-soustraction-rationnels, multiplication-division-rationnels,
+puissances-quatrieme, calcul-litteral-quatrieme). Prochain fichier :
+`resolution-equations.js` (4e).**
+
+`calcul-litteral-quatrieme.js` (4e) relu intégralement : formules ajoutées
+aux branches "Exprimer, évaluer", "Réduire" et "Factoriser" (aucune des
+trois n'en avait, contrairement à "Développer"), chacune avec un exemple
+numérique concret (évaluer 3x-2 pour x=4 ; réduire 3x-5+2x ; factoriser
+ka+kb=k(a+b), qui fait écho à la formule de développement déjà présente).
+Le candidat repéré par le grep mécanique (fichier signalé comme "prompt
+possiblement trop long") a été vérifié sérieusement : **faux positif** —
+les lignes de code longues (`genReduireExpressionQuadratiqueCoefficientNumeric`,
+`genFactoriserParentheseCommuneNumeric`) contiennent des ternaires de
+signes dans le code source, mais le prompt affiché une fois substitué
+reste une seule expression algébrique courte, pas une énumération
+chiffrée en prose. Reste déjà au niveau attendu (pièges classiques déjà
+bien ciblés : signe devant une parenthèse, \\((-x)^2\\) vs \\(-x^2\\)).
+Aucun € dans le fichier.
 
 `puissances-quatrieme.js` (4e) relu intégralement : **RAS, aucun
 changement**. Cours déjà exemplaire (4 branches : Règles de calcul, Signe
@@ -435,7 +451,7 @@ vérifiés pour débordement.)
 - [x] addition-soustraction-rationnels.js *(exemples numériques ajoutés à 2 items sans exemple ; formule PPCM ajoutée à une branche qui n'en avait pas)*
 - [x] multiplication-division-rationnels.js *(formule opposé/inverse ajoutée à une branche qui n'en avait aucune, aligne avec son piège classique)*
 - [x] puissances-quatrieme.js *(déjà bon, RAS — cours exemplaire, formules et pièges déjà bien ciblés)*
-- [ ] calcul-litteral-quatrieme.js
+- [x] calcul-litteral-quatrieme.js *(formules ajoutées à 3 branches sans formule ; candidat texTable du grep mécanique vérifié = faux positif)*
 - [ ] resolution-equations.js
 - [ ] statistiques-quatrieme.js
 - [ ] probabilites-quatrieme.js

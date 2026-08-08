@@ -19,10 +19,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
 terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
-`derivation-premiere-spe.js` et `variations-courbes-premiere-spe.js`
-(Première Spé) sont faits. Prochain fichier :
-fonction-exponentielle-premiere-spe.js (Première Spé, 5e des 11
-fichiers de ce niveau).**
+`derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js` et
+`fonction-exponentielle-premiere-spe.js` (Première Spé) sont faits.
+Prochain fichier : trigonometrie-premiere-spe.js (Première Spé, 6e des
+11 fichiers de ce niveau).**
+
+`fonction-exponentielle-premiere-spe.js` (Première Spé) relu
+intégralement : 5 branches (4 avant). Nouvelle branche « Modéliser une
+croissance ou décroissance exponentielle » ajoutée, couvrant un thème
+entier absent : genModeliserCroissanceDecroissanceQCM teste la forme
+générale C(t)=C0 e^{kt} et la lecture du signe de k, absente de toute
+branche avant, alors que c'est exactement l'application annoncée par le
+champ pourquoi du chapitre. Aucun €, aucun candidat texTable, fichier
+purement algébrique.
 
 `variations-courbes-premiere-spe.js` (Première Spé) relu intégralement :
 5 branches (4 avant). Nouvelle branche « Allure et symétrie de la
@@ -1267,7 +1276,7 @@ vérifiés pour débordement.)
 - [x] suites-numeriques-premiere-spe.js *(nouvelle branche Reconnaître une situation arithmétique ou géométrique — thème entier absent malgré le champ pourquoi du chapitre ; item+formule extraction de r/q depuis deux termes consécutifs ; formule de Gauss 1+2+...+n=n(n+1)/2 ajoutée)*
 - [x] derivation-premiere-spe.js *(nouvelle branche Signe de f' et sens de variation — théorème fondamental totalement absent alors que testé par 2 générateurs ; règle (u+v)'=u'+v' ajoutée ; items dérivée nulle d'une constante et non-dérivabilité (point anguleux, tangente verticale))*
 - [x] variations-courbes-premiere-spe.js *(nouvelle branche Allure et symétrie de la parabole — 2 thèmes absents ; items ajoutés — f'=0 sur un intervalle donne f constante, monotonie pour comparer/encadrer des images, somme de fonctions de même monotonie ; formule α=-b/2a ajoutée)*
-- [ ] fonction-exponentielle-premiere-spe.js
+- [x] fonction-exponentielle-premiere-spe.js *(nouvelle branche Modéliser une croissance ou décroissance exponentielle — thème entier absent, forme C0 e^{kt} et signe de k jamais donnés malgré le champ pourquoi du chapitre)*
 - [ ] trigonometrie-premiere-spe.js
 - [ ] vecteurs-produit-scalaire-premiere-spe.js
 - [ ] geometrie-reperee-premiere-spe.js

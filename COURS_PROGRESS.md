@@ -39,7 +39,8 @@ démarrer la 3e**, en commençant par `nombres-entiers-troisieme.js` (voir
 la checklist "3e (troisieme)" ci-dessous, dans l'ordre où les fichiers y
 sont listés). `nombres-entiers-troisieme.js` fait (commit `56e3829`, pas
 de figure), `calcul-numerique-troisieme.js` fait (commit `f7cd750`, pas
-de figure). **Prochain fichier à traiter : `calcul-litteral-troisieme.js`.**
+de figure), `calcul-litteral-troisieme.js` fait (commit `eec8878`, pas
+de figure). **Prochain fichier à traiter : `equations-troisieme.js`.**
 Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
@@ -243,7 +244,7 @@ initiale de Romain.
 
 - [x] nombres-entiers-troisieme.js
 - [x] calcul-numerique-troisieme.js
-- [ ] calcul-litteral-troisieme.js
+- [x] calcul-litteral-troisieme.js
 - [ ] equations-troisieme.js
 - [ ] notion-fonction-troisieme.js
 - [ ] fonctions-affines-troisieme.js
@@ -341,7 +342,7 @@ initiale de Romain.
 
 ## Total
 
-37 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+38 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
 `exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
 ET la 4e sont intégralement terminées, prochaine étape : la 3e.

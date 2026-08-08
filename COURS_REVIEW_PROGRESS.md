@@ -18,7 +18,7 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 12 des 14 fichiers de
+la Première techno sont intégralement terminées. 13 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
@@ -27,9 +27,20 @@ continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
 logarithme-neperien-terminale-spe.js,
 fonctions-trigonometriques-terminale-spe.js,
 primitives-equations-differentielles-terminale-spe.js,
-calcul-integral-terminale-spe.js, loi-binomiale-terminale-spe.js).
-Prochain fichier : sommes-variables-aleatoires-terminale-spe.js
-(Terminale Spé).**
+calcul-integral-terminale-spe.js, loi-binomiale-terminale-spe.js,
+sommes-variables-aleatoires-terminale-spe.js). Prochain fichier :
+loi-grands-nombres-terminale-spe.js (Terminale Spé, DERNIER fichier de
+ce niveau — Terminale Spé sera intégralement terminée après lui).**
+
+`sommes-variables-aleatoires-terminale-spe.js` (Terminale Spé) relu
+intégralement : 4 branches inchangées en nombre mais enrichies.
+Branche « Linéarité de l'espérance » enrichie : cas général
+E(pX+qY)=pE(X)+qE(Y) ajouté, testé par 2 chapters dédiés mais seule la
+version à coefficients 1 figurait. Branche « Variance d'une somme »
+enrichie : cas général V(pX+qY)=p²V(X)+q²V(Y) ajouté, testé par 3
+chapters dédiés mais absent ; piège classique sur la différence pX-qY
+(variances qui s'additionnent quand même) explicité. Aucun €, aucun
+candidat texTable, fichier sans figure.
 
 `loi-binomiale-terminale-spe.js` (Terminale Spé) relu intégralement :
 4 branches inchangées en nombre mais enrichies. Branche « Calculer une
@@ -1606,7 +1617,7 @@ vérifiés pour débordement.)
 - [x] primitives-equations-differentielles-terminale-spe.js *(primitives de cos(ax+b)/sin(ax+b) ajoutées, propriété F-G solution de l'équation homogène ajoutée)*
 - [x] calcul-integral-terminale-spe.js *(2 branches entières ajoutées — fonction définie par une intégrale, intégrale et parité ; formule de linéarité et encadrement m⩽f⩽M ajoutés)*
 - [x] loi-binomiale-terminale-spe.js *(symétrie des coefficients binomiaux ajoutée, relation V(X)=(1-p)×E(X) ajoutée)*
-- [ ] sommes-variables-aleatoires-terminale-spe.js
+- [x] sommes-variables-aleatoires-terminale-spe.js *(cas général E(pX+qY) et V(pX+qY) ajoutés aux formules, piège classique sur pX-qY explicité)*
 - [ ] loi-grands-nombres-terminale-spe.js
 
 ### Terminale techno

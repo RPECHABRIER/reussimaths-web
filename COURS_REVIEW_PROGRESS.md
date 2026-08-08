@@ -18,8 +18,30 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : analyse-information-chiffree-premiere-non-spe.js (Première non
-spé) — 1er fichier de la Première non spé.**
+fichier : statistique-probabilites-premiere-non-spe.js (Première non
+spé) — 2e fichier de la Première non spé.**
+
+`analyse-information-chiffree-premiere-non-spe.js` (Première non spé)
+relu intégralement : 5 branches enrichies de 5 items + 3 formules
+absentes (pas de nouvelle branche, tous les thèmes principaux étaient
+déjà couverts). Piège classique ajouté sur la comparaison de proportions
+plutôt que d'effectifs bruts (genComparerProportionsQCM, absent) ;
+formule proportion=effectif/total ajoutée. Formule t=(V1-V0)/V0×100
+ajoutée pour le taux d'évolution (seul un exemple isolé existait).
+Diagrammes : item ajouté sur le rapport des hauteurs des bâtons
+(genVerifierDiagrammeBatonsQCM, absent, distinct du piège échelle
+tronquée déjà présent) ; formule angle=%×360° ajoutée pour les
+diagrammes circulaires (seule une phrase qualitative existait). Item
+ajouté en tête de la branche corrélation donnant le vocabulaire de base
+positive/négative/aucune (compétence principale de genQualifierCorrelationQCM,
+le cours ne contenait avant que l'avertissement corrélation≠causalité
+sans jamais définir les 3 qualifications). Défaut de présentation
+corrigé sur 4 générateurs de tableaux croisés 2x2 (un prompt atteignait
+527 caractères en énumération prose) : nouveau helper
+buildTableauCroiseTex() ajouté (import texTable, même précédent que
+buildCrossTableTex en 2nde) pour un vrai tableau lisible avec option
+totaux/case masquée. Validé par génération de 4000 exercices aléatoires :
+aucun undefined/NaN.
 
 `probabilites-echantillonnage-seconde.js` (2nde) relu intégralement : 6
 branches (4 avant), la 2nde est maintenant intégralement terminée
@@ -1066,7 +1088,7 @@ vérifiés pour débordement.)
 - [x] probabilites-echantillonnage-seconde.js *(nouvelles branches Vocabulaire des événements et Loi des grands nombres ; items ajoutés — axiomes de base, modéliser équiprobable/statistique, principe multiplicatif, arbre pondéré ; 2nde intégralement terminée 12/12)*
 
 ### Première non spé
-- [ ] analyse-information-chiffree-premiere-non-spe.js
+- [x] analyse-information-chiffree-premiere-non-spe.js *(items+formules ajoutés — comparer proportions pas effectifs, formule taux d'évolution, rapport hauteurs bâtons, angle secteur, vocabulaire corrélation ; 4 générateurs de tableaux croisés convertis en texTable)*
 - [ ] statistique-probabilites-premiere-non-spe.js
 - [ ] croissance-lineaire-premiere-non-spe.js
 - [ ] croissance-exponentielle-premiere-non-spe.js

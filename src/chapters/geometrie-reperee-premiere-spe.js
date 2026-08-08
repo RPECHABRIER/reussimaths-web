@@ -525,6 +525,7 @@ export default {
             items: [
               "Pour la droite \\(ax+by+c=0\\), le vecteur \\(\\overrightarrow{n}(a;b)\\) est perpendiculaire à la droite.",
               "Piège classique : ne pas confondre vecteur normal \\((a;b)\\) et vecteur directeur \\((-b;a)\\) — ils sont perpendiculaires entre eux.",
+              "Pour écrire l'équation connaissant un point A et un vecteur normal \\((a;b)\\) : remplacer x et y par les coordonnées de A dans \\(ax+by+c=0\\) pour trouver c.",
             ],
             figure: buildCoursVecteurNormalFigure(),
           },
@@ -542,11 +543,13 @@ export default {
               "Pour retrouver le centre et le rayon, il faut compléter le carré deux fois (une fois en x, une fois en y).",
               "Piège classique : une équation développée ne correspond à un vrai cercle que si le rayon obtenu est strictement positif.",
             ],
+            formula: "\\(x^2+y^2+Dx+Ey+F=0 \\implies x_\\Omega=-\\dfrac{D}{2},\\ y_\\Omega=-\\dfrac{E}{2},\\ r^2=x_\\Omega^2+y_\\Omega^2-F\\)",
           },
           {
             title: "Projection orthogonale et distance à une droite",
             items: [
               "H, projeté orthogonal de A sur d, est le point de d le plus proche de A : \\((AH)\\) est perpendiculaire à d.",
+              "Cas particulier plus simple : sur une droite verticale \\(x=k\\) ou horizontale \\(y=k\\), la projection se lit directement (une seule coordonnée change), et la distance est \\(|x_M-k|\\) ou \\(|y_M-k|\\).",
             ],
             formula: "\\(d(A,d) = \\dfrac{|ax_A+by_A+c|}{\\sqrt{a^2+b^2}}\\)",
             figure: buildCoursProjectionFigure(),

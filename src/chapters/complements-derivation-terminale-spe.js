@@ -375,6 +375,40 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Compléments sur la dérivation",
+        branches: [
+          {
+            title: "Dérivée de fonctions composées",
+            items: [
+              "Multiplier par la dérivée de l'intérieur (\\(u'\\)) à chaque fois.",
+            ],
+            formula: "\\((u^n)'=nu'u^{n-1},\\quad (\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}},\\quad (e^u)'=u'e^u\\)",
+          },
+          {
+            title: "Dérivée seconde",
+            items: [
+              "\\(f''\\) est la dérivée de \\(f'\\) : elle mesure comment le sens de variation de f évolue.",
+            ],
+          },
+          {
+            title: "Convexité",
+            items: [
+              "\\(f''(x) \\geqslant 0\\) sur un intervalle ⟹ f convexe (courbe « au-dessus » de ses tangentes, comme un bol).",
+              "\\(f''(x) \\leqslant 0\\) ⟹ f concave (courbe « en dessous » de ses tangentes).",
+              "Piège classique : convexité (signe de f'') et sens de variation (signe de f') sont deux informations différentes.",
+            ],
+          },
+          {
+            title: "Point d'inflexion",
+            items: [
+              "C'est le point où f'' s'annule en changeant de signe : la courbe traverse sa tangente à cet endroit.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

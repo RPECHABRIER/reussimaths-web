@@ -571,6 +571,44 @@ export default {
     level: "quatrieme",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Addition et soustraction de rationnels",
+        branches: [
+          {
+            title: "Rappels : simplifier, comparer",
+            items: [
+              "Pour décomposer un nombre en facteurs premiers, on le divise successivement par 2, 3, 5, 7...",
+              "On simplifie une fraction en divisant numérateur et dénominateur par un même facteur (jamais en supprimant un terme ajouté).",
+              "Pour comparer deux fractions de dénominateurs positifs, on compare les produits en croix.",
+            ],
+          },
+          {
+            title: "Trouver un dénominateur commun",
+            items: [
+              "On calcule le PPCM des dénominateurs, puis on récrit chaque fraction avec ce dénominateur commun.",
+              "PGCD (algorithme d'Euclide) et PPCM sont deux outils différents : le PGCD sert à simplifier, le PPCM à mettre au même dénominateur.",
+            ],
+          },
+          {
+            title: "Additionner, soustraire",
+            items: [
+              "Même dénominateur : on additionne ou soustrait directement les numérateurs.",
+              "Dénominateurs différents : on réduit au même dénominateur avant de combiner les numérateurs.",
+              "Piège classique : un entier relatif s'écrit \\(n = \\dfrac{n \\times d}{d}\\) avant d'être combiné à une fraction de dénominateur d.",
+            ],
+            formula: "\\(\\dfrac{a}{d} + \\dfrac{b}{d} = \\dfrac{a+b}{d}\\)",
+          },
+          {
+            title: "Problèmes de proportions",
+            items: [
+              "La part restante d'un tout se calcule en soustrayant les fractions connues à 1.",
+              "Pour un triangle, on compare les longueurs (réduites au même dénominateur) pour vérifier que le plus grand côté est inférieur à la somme des deux autres.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

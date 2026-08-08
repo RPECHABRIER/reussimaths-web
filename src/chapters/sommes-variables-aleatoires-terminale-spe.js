@@ -356,6 +356,41 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 14,
+    cours: {
+      mindMap: {
+        title: "Sommes de variables aléatoires",
+        branches: [
+          {
+            title: "Linéarité de l'espérance",
+            items: [
+              "Toujours vraie, même si les variables ne sont pas indépendantes.",
+            ],
+            formula: "\\(E(X+Y) = E(X)+E(Y)\\)",
+          },
+          {
+            title: "Variance d'une somme (variables indépendantes)",
+            items: [
+              "Piège classique très fréquent : cette formule n'est valable QUE si X et Y sont indépendantes.",
+            ],
+            formula: "\\(V(X+Y) = V(X)+V(Y)\\ \\text{(si X, Y indépendantes)}\\)",
+          },
+          {
+            title: "Somme de n variables identiques et indépendantes",
+            items: [
+              "Si \\(S_n = X_1+\\cdots+X_n\\) avec les \\(X_i\\) i.i.d. de même loi que X.",
+            ],
+            formula: "\\(E(S_n)=nE(X),\\quad V(S_n)=nV(X)\\)",
+          },
+          {
+            title: "Variable affine aX+b",
+            items: [
+              "Piège classique : le b disparaît dans la variance (translater ne change pas la dispersion).",
+            ],
+            formula: "\\(E(aX+b)=aE(X)+b,\\quad V(aX+b)=a^2V(X)\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -18,12 +18,23 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 5 des 14 fichiers de
+la Première techno sont intégralement terminées. 6 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
-suites-terminale-spe.js, limites-fonctions-terminale-spe.js). Prochain
-fichier : continuite-terminale-spe.js (Terminale Spé).**
+suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
+continuite-terminale-spe.js). Prochain fichier :
+complements-derivation-terminale-spe.js (Terminale Spé).**
+
+`continuite-terminale-spe.js` (Terminale Spé) relu intégralement : 7
+branches (4 avant). Trois thèmes entiers testés mais absents comblés :
+nouvelle branche « Continuité des fonctions usuelles » (continuité sur
+le domaine, distinction continuité/dérivabilité — 6+1 sous-cas de 2
+chapters dédiés sans couverture) ; nouvelle branche « Opérations sur
+les fonctions continues » (somme/produit/composée/quotient — 5
+sous-cas d'un chapter dédié) ; nouvelle branche « Suites récurrentes et
+point fixe » (équation f(l)=l, encadrement par récurrence — 2 chapters
+dédiés). Aucun €, aucun candidat texTable, fichier sans figure.
 
 `limites-fonctions-terminale-spe.js` (Terminale Spé) relu intégralement
 : 6 branches (5 avant). Nouvelle branche « Opérations sur les limites
@@ -1519,7 +1530,7 @@ vérifiés pour débordement.)
 - [x] orthogonalite-distances-espace-terminale-spe.js *(perpendicularité de plans ajoutée, théorème du toit, définition droite⊥plan, formule de distance entre 2 points ajoutée — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [x] suites-terminale-spe.js *(nouvelle branche « Suites monotones, bornées et convergence » — théorème de convergence monotone absent avant, corollaire produit vers 0, formule de conclusion arithmético-géométrique)*
 - [x] limites-fonctions-terminale-spe.js *(nouvelle branche « Opérations sur les limites » cas déterminés, règle des signes près d'une asymptote verticale, cas produit fonction bornée×0 ajoutés)*
-- [ ] continuite-terminale-spe.js
+- [x] continuite-terminale-spe.js *(3 branches entières ajoutées — continuité des fonctions usuelles, opérations sur les fonctions continues, suites récurrentes et point fixe)*
 - [ ] complements-derivation-terminale-spe.js
 - [ ] logarithme-neperien-terminale-spe.js
 - [ ] fonctions-trigonometriques-terminale-spe.js

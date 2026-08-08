@@ -17,6 +17,16 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
+**Prochain fichier à traiter : `divisibilite-fractions.js` (5e).**
+
+`calcul-numerique.js` (5e) relu : piège classique ajouté à la branche
+"Distributivité" (\\(k \\times (a+b) \\neq k \\times a + b\\), oubli de
+distribuer sur le second terme — testé par
+`genReconnaitreExpressionsEgalesDistributivite` mais absent du cours).
+Reste déjà au niveau attendu (branches "Priorités opératoires", "Nommer
+un calcul", "Programme de calcul", "Choisir la bonne opération" déjà
+concrètes et courtes, aucun prompt d'exercice candidat à `texTable()`).
+
 Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
 `grandeurs-mesures.js` / `distances-symetries.js` (6e) relus intégralement.
 
@@ -207,7 +217,7 @@ vérifiés pour débordement.)
 - [x] organisation-gestion-donnees.js *(branche "expérience aléatoire" reformulée + genLireTableauDonneesValeur converti en texTable)*
 
 ### 5e
-- [ ] calcul-numerique.js
+- [x] calcul-numerique.js *(piège classique distributivité k×(a+b)≠k×a+b ajouté, sinon déjà bon)*
 - [ ] divisibilite-fractions.js
 - [ ] puissances.js
 - [ ] calcul-litteral.js

@@ -242,6 +242,42 @@ export default {
     pourquoi: "Les probabilités conditionnelles permettent d'actualiser un risque quand une information nouvelle arrive — un test médical positif, un email détecté comme spam.",
     level: "premiere-techno",
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Probabilités conditionnelles et indépendance",
+        branches: [
+          {
+            title: "Probabilité conditionnelle",
+            items: [
+              "\\(P_A(B)\\) : probabilité de B sachant A déjà réalisé.",
+            ],
+            formula: "\\(P(A \\cap B) = P(A) \\times P_A(B)\\)",
+          },
+          {
+            title: "Indépendance de deux évènements",
+            items: [
+              "A et B indépendants ⟺ \\(P_A(B)=P(B)\\).",
+              "Piège classique : indépendant ne veut pas dire incompatible.",
+            ],
+          },
+          {
+            title: "Partition et probabilités totales",
+            items: [
+              "Une partition découpe l'univers en événements disjoints qui recouvrent tous les cas possibles.",
+              "Formule des probabilités totales : additionner les probabilités de B sur chaque morceau de la partition.",
+            ],
+            formula: "\\(P(B) = \\sum_i P(A_i) \\times P_{A_i}(B)\\)",
+          },
+          {
+            title: "Arbre pondéré",
+            items: [
+              "Sur chaque nœud, la somme des probabilités des branches vaut 1.",
+              "La probabilité d'un chemin = produit des probabilités le long des branches.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

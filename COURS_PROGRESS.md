@@ -63,8 +63,11 @@ les hashes). État actuel :
   figure). `derivation-premiere-spe.js` fait (commit `41bb0b5`, pas de
   figure). `variations-courbes-premiere-spe.js` fait (commit `c0cb22f`,
   pas de figure). `fonction-exponentielle-premiere-spe.js` fait (commit
-  `2911256`, pas de figure). **Prochain fichier :
-  `trigonometrie-premiere-spe.js` (géométrie).**
+  `2911256`, pas de figure). `trigonometrie-premiere-spe.js` fait (commit
+  `1f4f566`, 3 figures neuves — cercle trigo, cercle+projections cos/sin,
+  triangle rectangle — via `buildCoursCercleFigure()` /
+  `buildCoursTriangleTrigFigure()`). **Prochain fichier :
+  `vecteurs-produit-scalaire-premiere-spe.js` (géométrie).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -323,7 +326,7 @@ Cours).
 - [x] derivation-premiere-spe.js
 - [x] variations-courbes-premiere-spe.js
 - [x] fonction-exponentielle-premiere-spe.js
-- [ ] trigonometrie-premiere-spe.js *(géométrie)*
+- [x] trigonometrie-premiere-spe.js *(géométrie)*
 - [ ] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
 - [ ] geometrie-reperee-premiere-spe.js *(géométrie)*
 - [ ] probabilites-conditionnelles-premiere-spe.js

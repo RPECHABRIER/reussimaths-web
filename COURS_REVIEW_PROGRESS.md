@@ -18,10 +18,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
-la Première techno et maintenant la Terminale Spé sont intégralement
-terminées (14/14 pour la Terminale Spé). Prochain fichier :
-suites-terminale-techno.js (Terminale techno, 1er des 6 derniers
-fichiers du chantier — après ce niveau, 107/107 sera atteint).**
+la Première techno et la Terminale Spé sont intégralement terminées.
+1 des 6 fichiers de Terminale techno est relu
+(suites-terminale-techno.js). Prochain fichier :
+fonctions-exponentielles-terminale-techno.js (Terminale techno).**
+
+`suites-terminale-techno.js` (Terminale techno) relu intégralement : 5
+branches (4 avant). Nouvelle branche « Moyenne arithmétique et moyenne
+géométrique » ajoutée, thème entier absent malgré 2 générateurs dédiés
+: u_n=(u_{n-1}+u_{n+1})/2 (arithmétique) et u_n=√(u_{n-1}×u_{n+1})
+(géométrique). Branche « Somme des n premiers termes » enrichie :
+formule symbolique de la somme arithmétique ajoutée, seule la version
+géométrique figurait en LaTeX. Aucun €, aucun candidat texTable,
+fichier sans figure.
 
 `loi-grands-nombres-terminale-spe.js` (Terminale Spé, dernier fichier
 de ce niveau) relu intégralement : 4 branches inchangées en nombre mais
@@ -1622,7 +1631,7 @@ vérifiés pour débordement.)
 - [x] loi-grands-nombres-terminale-spe.js *(formule de l'inégalité de concentration ajoutée — absente malgré 4 générateurs dédiés ; formules E(Mn)=E(X) et V(Mn)=V(X)/n ajoutées — Terminale Spé terminée 14/14)*
 
 ### Terminale techno
-- [ ] suites-terminale-techno.js
+- [x] suites-terminale-techno.js *(nouvelle branche « Moyenne arithmétique et moyenne géométrique » ajoutée, formule symbolique de la somme arithmétique ajoutée)*
 - [ ] fonctions-exponentielles-terminale-techno.js
 - [ ] logarithme-decimal-terminale-techno.js
 - [ ] statistiques-deux-variables-terminale-techno.js

@@ -378,14 +378,25 @@ export default {
           {
             title: "Comparaison et théorème des gendarmes",
             items: [
-              "Si \\(u_n \\leqslant v_n\\) et \\(u_n \\to +\\infty\\), alors \\(v_n \\to +\\infty\\) (comparaison).",
+              "Si \\(u_n \\leqslant v_n\\) et \\(u_n \\to +\\infty\\), alors \\(v_n \\to +\\infty\\) (comparaison). Symétriquement, si \\(u_n \\leqslant v_n\\) et \\(v_n \\to -\\infty\\), alors \\(u_n \\to -\\infty\\).",
               "Si \\(u_n \\leqslant v_n \\leqslant w_n\\) et \\(u_n, w_n \\to \\ell\\), alors \\(v_n \\to \\ell\\) (gendarmes).",
+              "Cas particulier très utile : si \\(u_n \\to 0\\) et \\(v_n\\) est bornée, alors \\(u_n \\times v_n \\to 0\\).",
+            ],
+          },
+          {
+            title: "Suites monotones, bornées et convergence",
+            items: [
+              "Vocabulaire : une suite est majorée (resp. minorée) si tous ses termes restent inférieurs (resp. supérieurs) à un même réel fixe ; bornée si elle est à la fois majorée et minorée.",
+              "Théorème de convergence monotone : une suite croissante et majorée converge ; une suite décroissante et minorée converge.",
+              "Une suite convergente est toujours bornée. Attention, la réciproque est fausse : une suite bornée n'est pas forcément convergente (exemple : \\(u_n=(-1)^n\\)).",
+              "Passage à la limite : une inégalité large entre deux suites reste large entre leurs limites (une inégalité stricte peut devenir une égalité à la limite).",
             ],
           },
           {
             title: "Suites arithmético-géométriques",
             items: [
-              "\\(u_{n+1}=au_n+b\\) : chercher le point fixe \\(\\ell=a\\ell+b\\), puis poser \\(v_n=u_n-\\ell\\) pour obtenir une suite géométrique.",
+              "\\(u_{n+1}=au_n+b\\) : chercher le point fixe \\(\\ell=a\\ell+b\\), puis poser \\(v_n=u_n-\\ell\\) pour obtenir une suite géométrique de raison a.",
+              "Conclusion : \\(u_n=\\ell+(u_0-\\ell)\\times a^n\\) ; si \\(-1<a<1\\), \\(a^n\\to 0\\) donc \\((u_n)\\) converge vers \\(\\ell\\).",
             ],
           },
           {

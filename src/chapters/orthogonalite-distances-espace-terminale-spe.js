@@ -539,6 +539,8 @@ export default {
             title: "Vecteur normal à un plan",
             items: [
               "\\(\\overrightarrow{n}(a;b;c)\\) est normal au plan d'équation \\(ax+by+cz+d=0\\) : il est orthogonal à tous les vecteurs du plan.",
+              "Un vecteur normal n'est jamais unique : tout vecteur colinéaire à \\(\\overrightarrow{n}\\) est lui aussi normal au plan.",
+              "Un point M appartient au plan si et seulement si ses coordonnées vérifient l'équation cartésienne. Pour trouver d connaissant un point M et un vecteur normal, on substitue les coordonnées de M dans \\(ax+by+cz+d=0\\), puis on isole d.",
             ],
             formula: "\\(ax+by+cz+d=0\\)",
             figure: buildCoursPlanNormalFigure(),
@@ -547,15 +549,19 @@ export default {
             title: "Positions relatives",
             items: [
               "Deux plans sont parallèles si et seulement si leurs vecteurs normaux sont colinéaires.",
-              "Une droite est orthogonale à un plan si son vecteur directeur est colinéaire au vecteur normal du plan.",
+              "Deux plans sont perpendiculaires si et seulement si leurs vecteurs normaux sont orthogonaux (produit scalaire nul) — un critère différent du parallélisme.",
+              "Une droite est orthogonale à un plan si son vecteur directeur est colinéaire au vecteur normal du plan ; elle est alors orthogonale à TOUTES les droites de ce plan.",
+              "Critère pratique (théorème du toit) : une droite orthogonale à deux droites sécantes d'un plan est orthogonale au plan tout entier.",
+              "Deux droites orthogonales à un même plan sont parallèles entre elles.",
             ],
           },
           {
-            title: "Distance d'un point à un plan",
+            title: "Distances dans l'espace",
             items: [
+              "Distance entre deux points : même formule que la norme du vecteur qui les relie.",
               "H, projeté orthogonal de M sur le plan, est le point du plan le plus proche de M.",
             ],
-            formula: "\\(d(M,P) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}}\\)",
+            formula: "\\(AB = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2+(z_B-z_A)^2},\\quad d(M,P) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}}\\)",
             figure: buildCoursDistancePlanFigure(),
           },
         ],

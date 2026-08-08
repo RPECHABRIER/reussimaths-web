@@ -18,15 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 3 des 14 fichiers de
+la Première techno sont intégralement terminées. 4 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
-orthogonalite-distances-espace-terminale-spe.js — les 2 fichiers
-d'espace, bien que déjà rédigés lors du chantier initial, ont chacun
-révélé des gaps substantiels une fois relus sous l'angle qualité, ce
-qui confirme qu'ils n'avaient jamais été traités par CE chantier-ci
-malgré une consigne initiale erronée les disant déjà cochés). Prochain
-fichier : suites-terminale-spe.js (Terminale Spé).**
+orthogonalite-distances-espace-terminale-spe.js,
+suites-terminale-spe.js). Prochain fichier :
+limites-fonctions-terminale-spe.js (Terminale Spé).**
+
+`suites-terminale-spe.js` (Terminale Spé) relu intégralement : 6
+branches (5 avant). Nouvelle branche « Suites monotones, bornées et
+convergence » ajoutée, gap le plus grave : le théorème de convergence
+monotone (croissante+majorée / décroissante+minorée ⟹ convergente)
+totalement absent malgré 2 cas dédiés du vrai-faux ; fait qu'une suite
+convergente est bornée (réciproque fausse) et règle du passage à la
+limite ajoutés ; vocabulaire majorée/minorée/bornée défini. Branche
+« Comparaison et gendarmes » enrichie : direction symétrique du
+théorème de comparaison, corollaire produit vers 0 × bornée = 0.
+Branche « Arithmético-géométriques » enrichie : formule de conclusion
+u_n=ℓ+(u_0-ℓ)×a^n ajoutée. Aucun €, aucun candidat texTable, fichier
+sans figure.
 
 `orthogonalite-distances-espace-terminale-spe.js` (Terminale Spé) relu
 intégralement : 4 branches inchangées en nombre mais fortement
@@ -1496,7 +1506,7 @@ vérifiés pour débordement.)
 - [x] combinatoire-denombrement-terminale-spe.js *(formule de base des coefficients binomiaux, cas particuliers binom(n,0)/binom(n,n)/binom(n,1), relation arrangement-combinaison A(n,k)=binom(n,k)×k! ajoutés)*
 - [x] vecteurs-droites-plans-espace-terminale-spe.js *(formules AB depuis 2 points, milieu, somme de vecteurs, Chasles ajoutées ; critère de colinéarité pour alignement ; positions relatives droite-droite ajoutées — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [x] orthogonalite-distances-espace-terminale-spe.js *(perpendicularité de plans ajoutée, théorème du toit, définition droite⊥plan, formule de distance entre 2 points ajoutée — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
-- [ ] suites-terminale-spe.js
+- [x] suites-terminale-spe.js *(nouvelle branche « Suites monotones, bornées et convergence » — théorème de convergence monotone absent avant, corollaire produit vers 0, formule de conclusion arithmético-géométrique)*
 - [ ] limites-fonctions-terminale-spe.js
 - [ ] continuite-terminale-spe.js
 - [ ] complements-derivation-terminale-spe.js

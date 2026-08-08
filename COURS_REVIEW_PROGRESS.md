@@ -18,7 +18,28 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-statistiques-descriptives-seconde.js (2nde) — 11e fichier de la 2nde.**
+probabilites-echantillonnage-seconde.js (2nde) — 12e et dernier fichier
+de la 2nde.**
+
+`statistiques-descriptives-seconde.js` (2nde) relu intégralement : 6
+branches (5 avant). Nouvelle branche « Effectifs cumulés » ajoutée,
+couvrant genEffectifCumuleNumeric et genLectureTableauEffectifsQCM (« au
+moins k » / « au plus k »), 2 générateurs partageant un tag chapter
+dédié mais totalement absents du cours avant. Branche « Médiane et
+quartiles » enrichie : formules explicites du rang de la médiane
+ajoutées ((N+1)/2 si impair, sinon moyenne des rangs N/2 et N/2+1),
+utilisées dans les steps mais jamais données explicitement avant.
+Branche « Moyenne et écart type » enrichie : formule ajoutée donnant
+x̄=somme/effectif ET σ=racine carrée de la moyenne des carrés des écarts
+(la formule de calcul concrète de l'écart type manquait entièrement,
+seule une définition qualitative existait) ; item ajouté sur la
+linéarité de la moyenne (chapter dédié, genLineariteMoyenneNumeric,
+absent avant). Défaut de présentation corrigé sur 14 générateurs sur 20 :
+séries de valeurs et tableaux valeur/effectif en prose (jusqu'à 20
+éléments) convertis en texTable(), reproduisant le pattern déjà validé
+sur statistiques-troisieme.js (séries à une ligne, comparaisons à deux
+séries juxtaposées, classes au format `\,;\,`). Validé par génération
+de 3000 exercices aléatoires : aucun undefined/NaN.
 
 `informations-chiffrees-seconde.js` (2nde) relu intégralement : 6 branches
 (5 avant). Nouvelle branche « Évolution réciproque » ajoutée, couvrant
@@ -1019,7 +1040,7 @@ vérifiés pour débordement.)
 - [x] colinearite-vecteurs-seconde.js *(item vecteur nul colinéaire ajouté ; piège classique parallèles vs confondues ajouté ; 2 nouvelles branches — équation de colinéarité/coefficient, vecteurs directeurs d'une droite ; correction technique : droites sans flèche, seuls les vecteurs en portent)*
 - [x] equations-droites-seconde.js *(2 nouvelles branches — Droites verticales/horizontales avec figure à axes, Construire une équation depuis point+vecteur directeur ; items ajoutés sur vecteurs colinéaires directeurs, test d'appartenance par substitution, lien vocabulaire système/position relative)*
 - [x] informations-chiffrees-seconde.js *(nouvelle branche Évolution réciproque avec formule et piège chiffré ; items ajoutés — distinction proportion/évolution, formules inverses CM, comparaison de CM, taux global, complétion de case manquante)*
-- [ ] statistiques-descriptives-seconde.js
+- [x] statistiques-descriptives-seconde.js *(nouvelle branche Effectifs cumulés ; formules du rang de la médiane et de l'écart type ajoutées ; item linéarité de la moyenne ; 14 générateurs convertis en texTable — séries et tableaux valeur/effectif en prose)*
 - [ ] probabilites-echantillonnage-seconde.js
 
 ### Première non spé

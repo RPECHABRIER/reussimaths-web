@@ -332,6 +332,40 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 15,
+    cours: {
+      mindMap: {
+        title: "Loi des grands nombres",
+        branches: [
+          {
+            title: "Inégalité de Markov",
+            items: [
+              "Pour X ⩾ 0, majore la probabilité que X dépasse une valeur donnée, uniquement à partir de l'espérance.",
+            ],
+            formula: "\\(P(X \\geqslant a) \\leqslant \\dfrac{E(X)}{a}\\ (a>0)\\)",
+          },
+          {
+            title: "Inégalité de Bienaymé-Tchebychev",
+            items: [
+              "Majore la probabilité de s'écarter de l'espérance, à partir de la variance.",
+              "Piège classique : bien mettre le carré sur l'écart \\(\\delta\\) au dénominateur.",
+            ],
+            formula: "\\(P(|X-E(X)| \\geqslant \\delta) \\leqslant \\dfrac{V(X)}{\\delta^2}\\)",
+          },
+          {
+            title: "Inégalité de concentration",
+            items: [
+              "Appliquée à la moyenne empirique de n répétitions : plus n augmente, plus la moyenne se concentre autour de l'espérance.",
+            ],
+          },
+          {
+            title: "Loi des grands nombres",
+            items: [
+              "Quand n devient grand, la moyenne observée d'un échantillon se rapproche de plus en plus de l'espérance théorique.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

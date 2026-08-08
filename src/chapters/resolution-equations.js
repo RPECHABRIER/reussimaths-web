@@ -372,6 +372,37 @@ export default {
     level: "quatrieme",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Résolution d'équations",
+        branches: [
+          {
+            title: "Tester une solution",
+            items: [
+              "Une solution vérifie l'égalité : on remplace x par la valeur proposée dans les deux membres et on compare.",
+              "Si les deux membres sont égaux, c'est une solution ; sinon, ce n'en est pas une.",
+            ],
+          },
+          {
+            title: "Résoudre pas à pas",
+            items: [
+              "Ce que l'on fait à un membre de l'égalité, il faut le faire aussi à l'autre.",
+              "\\(x + a = b\\) : on soustrait a des deux côtés. \\(ax = b\\) : on divise les deux côtés par a.",
+              "S'il y a une parenthèse, on la développe d'abord ; si x est des deux côtés, on regroupe tous les termes en x d'un même côté.",
+            ],
+            formula: "\\(x + a = b \\Rightarrow x = b - a\\ ;\\ ax = b \\Rightarrow x = b \\div a\\)",
+          },
+          {
+            title: "Traduire un problème",
+            items: [
+              "On choisit une lettre pour l'inconnue, puis on traduit chaque phrase de l'énoncé en expression littérale.",
+              "On assemble ces expressions en une égalité (l'équation), qu'on résout ensuite normalement.",
+              "Piège classique : bien relire la solution trouvée dans le contexte de l'énoncé (un âge ou un prix ne peut pas être négatif).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

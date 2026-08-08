@@ -357,6 +357,40 @@ export default {
     pourquoi: "Étudier une parabole, c'est ce qui permet de trouver un maximum de profit, un minimum de coût, ou la trajectoire d'un objet lancé.",
     level: "premiere-techno",
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Fonctions polynômes de degré 2",
+        branches: [
+          {
+            title: "Allure de la parabole",
+            items: [
+              "a > 0 : parabole tournée vers le haut (le sommet est un minimum). a < 0 : tournée vers le bas (le sommet est un maximum).",
+            ],
+          },
+          {
+            title: "Forme factorisée : racines et signe",
+            items: [
+              "\\(a(x-x_1)(x-x_2)\\) : \\(x_1\\) et \\(x_2\\) sont les racines, lues directement.",
+              "Signe de a « à l'extérieur » des racines, signe opposé « entre » les racines.",
+            ],
+          },
+          {
+            title: "Sommet et axe de symétrie",
+            items: [
+              "L'axe de symétrie passe par le sommet et par le milieu des deux racines (si elles existent).",
+              "Piège classique : le sommet n'a pas pour abscisse la moyenne des racines si on ne connaît qu'une seule racine.",
+            ],
+          },
+          {
+            title: "Résolution graphique",
+            items: [
+              "Résoudre \\(f(x)=0\\) : lire les abscisses où la courbe coupe l'axe des abscisses.",
+              "Résoudre \\(f(x)>0\\) : lire les abscisses où la courbe est au-dessus de l'axe.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

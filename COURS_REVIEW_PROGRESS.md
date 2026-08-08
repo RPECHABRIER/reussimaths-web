@@ -17,7 +17,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `calcul-litteral.js` (5e).**
+**Prochain fichier à traiter : `nombres-relatifs.js` (5e)** *(flèches déjà
+corrigées lors d'une session antérieure — relire le reste du Cours et les
+exercices).**
+
+`calcul-litteral.js` (5e) relu : branche "Résoudre une équation" enrichie
+d'une formule illustrant les deux types d'équations autorisés en 5e
+(\\(x+5=12 \\Rightarrow x=7\\) ; \\(3x=12 \\Rightarrow x=4\\)), qui n'en
+avait pas. Reste déjà au niveau attendu ("Traduire en formule", "Tester
+une égalité", "Distributivité" déjà clairs et bien pourvus en pièges
+classiques — notamment le piège "oublier de multiplier TOUS les termes
+par k", bien aligné avec `genFactoriserTrouverFacteurCommun`/
+`genTesterVraiFauxDeveloppementQCM`). Prompts d'exercices déjà bien
+calibrés (le problème d'héritage façon Al-Khwârizmî, plus long et
+narratif, reste sous 400 caractères et n'est pas une énumération à
+convertir en tableau), aucun candidat `texTable()`.
 
 `puissances.js` (5e) relu : branche "Carré et cube" clarifiée — la
 formulation "multiplié par lui-même deux/trois fois" était ambiguë (source
@@ -239,7 +253,7 @@ vérifiés pour débordement.)
 - [x] calcul-numerique.js *(piège classique distributivité k×(a+b)≠k×a+b ajouté, sinon déjà bon)*
 - [x] divisibilite-fractions.js *(branche multiples/diviseurs partie du concret, formule produits en croix ajoutée)*
 - [x] puissances.js *(formulation carré/cube clarifiée avec exemples numériques concrets, sinon déjà bon)*
-- [ ] calcul-litteral.js
+- [x] calcul-litteral.js *(formule "résoudre une équation" ajoutée avec exemples concrets, sinon déjà bon)*
 - [ ] nombres-relatifs.js *(flèches déjà corrigées — relire le reste)*
 - [ ] geometrie-espace.js
 - [ ] symetrie-centrale-parallelogrammes.js

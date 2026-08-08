@@ -375,6 +375,7 @@ export default {
             title: "Calculer une probabilité",
             items: [
               "\\(\\binom{n}{k}\\) compte le nombre de chemins menant à exactement k succès.",
+              "Symétrie des coefficients binomiaux : \\(\\binom{n}{k}=\\binom{n}{n-k}\\) (choisir k éléments revient à en exclure n-k).",
             ],
             formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k}\\)",
           },
@@ -382,6 +383,7 @@ export default {
             title: "Espérance, variance, écart-type",
             items: [
               "Piège classique : ne pas confondre les trois formules, notamment le carré de \\(1-p\\) absent dans l'espérance.",
+              "Relation utile : comme \\(E(X)=np\\), on a \\(V(X)=(1-p)\\times E(X)\\) — pratique pour retrouver V(X) directement depuis E(X) et p.",
             ],
             formula: "\\(E(X)=np,\\quad V(X)=np(1-p),\\quad \\sigma(X)=\\sqrt{np(1-p)}\\)",
           },

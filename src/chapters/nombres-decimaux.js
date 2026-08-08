@@ -17,6 +17,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -547,7 +549,13 @@ function genProblemeTarifPoids() {
   const packaging = randDecimal(0.2, 0.6, 2);
   const total = roundTo(item1 + item2 + item3 + packaging, 3);
   const price = priceForWeight(total);
-  const tarifText = TARIFS.map((t) => `jusqu'à ${fr(t.max)} kg → ${fr(t.price)} €`).join(" ; ");
+  // Le tableau des tarifs déborde du cadre en phrase continue (9 paliers) —
+  // un vrai tableau LaTeX (texTable) reste lisible quel que soit l'écran, au
+  // lieu d'une longue énumération "jusqu'à ... € ; jusqu'à ... € ; ...".
+  const tarifTable = texTable([
+    ["Poids max (en kg)", ...TARIFS.map((t) => fr(t.max))],
+    ["Prix (en euros)", ...TARIFS.map((t) => fr(t.price))],
+  ]);
   const prenom = pick(prenoms);
   const objets = pick([
     ["un sac de bonbons", "un pull", "une paire de baskets"],
@@ -557,7 +565,7 @@ function genProblemeTarifPoids() {
   return {
     type: "numeric",
     chapter: "Nombres décimaux — Problèmes",
-    prompt: `${prenom} veut envoyer un colis contenant ${objets[0]} (${fr(item1)} kg), ${objets[1]} (${fr(item2)} kg) et ${objets[2]} (${fr(item3)} kg). L'emballage vide pèse ${fr(packaging)} kg. Tarifs : ${tarifText}. Combien doit payer ${prenom} pour envoyer ce colis (en €) ?`,
+    prompt: `${prenom} veut envoyer un colis contenant ${objets[0]} (${fr(item1)} kg), ${objets[1]} (${fr(item2)} kg) et ${objets[2]} (${fr(item3)} kg). L'emballage vide pèse ${fr(packaging)} kg. Voici les tarifs de livraison : ${tarifTable} Combien doit payer ${prenom} pour envoyer ce colis (en €) ?`,
     answer: price,
     steps: [
       { type: "calcul", text: `Poids total : ${fr(item1)} + ${fr(item2)} + ${fr(item3)} + ${fr(packaging)} = ${fr(total)} kg` },

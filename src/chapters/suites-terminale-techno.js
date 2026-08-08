@@ -272,6 +272,40 @@ export default {
     pourquoi: "Les suites modélisent l'évolution d'un capital, d'un stock ou d'une population, année après année ou terme après terme.",
     level: "terminale-techno",
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Suites numériques",
+        branches: [
+          {
+            title: "Terme de rang n",
+            items: [
+              "Arithmétique : on ajoute la raison r à chaque étape. Géométrique : on multiplie par la raison q.",
+            ],
+            formula: "\\(u_n=u_0+rn,\\quad u_n=u_0 \\times q^n\\)",
+          },
+          {
+            title: "Somme des n premiers termes",
+            items: [
+              "Somme arithmétique = (nombre de termes) × (premier terme + dernier terme) / 2.",
+            ],
+            formula: "\\(u_0+u_0q+\\cdots+u_0q^{n-1} = u_0 \\times \\dfrac{1-q^n}{1-q}\\ (q \\neq 1)\\)",
+          },
+          {
+            title: "Prouver la nature d'une suite",
+            items: [
+              "Arithmétique : calculer \\(u_{n+1}-u_n\\) et vérifier que c'est constant.",
+              "Géométrique : calculer \\(\\frac{u_{n+1}}{u_n}\\) et vérifier que c'est constant.",
+            ],
+          },
+          {
+            title: "Versements réguliers",
+            items: [
+              "Une suite de versements identiques placés à intérêts composés se modélise par une somme de termes géométriques.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

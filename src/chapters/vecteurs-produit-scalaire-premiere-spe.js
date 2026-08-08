@@ -416,6 +416,48 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant.
+function buildCoursScalaireAngleFigure() {
+  return {
+    points: [
+      { id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 14 },
+      { id: "U", x: 60, y: 0, label: "u", dy: 14 },
+      { id: "V", x: 42, y: -35, label: "v", dx: 6, dy: -6 },
+    ],
+    lines: [{ from: "O", to: "U", extend: 0, arrowEnd: true }, { from: "O", to: "V", extend: 0, arrowEnd: true }],
+    freeLabels: [{ x: 22, y: -10, text: "θ" }],
+  };
+}
+
+function buildCoursOrthogonaliteFigure() {
+  return {
+    points: [
+      { id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 14 },
+      { id: "A", x: 60, y: 0, label: "u", dy: 14 },
+      { id: "B", x: 0, y: -60, label: "v", dx: 8, dy: -4 },
+    ],
+    lines: [{ from: "O", to: "A", extend: 0, arrowEnd: true }, { from: "O", to: "B", extend: 0, arrowEnd: true }],
+    rightAngles: [{ at: "O", from: "A", to: "B" }],
+  };
+}
+
+function buildCoursAlKashiFigure() {
+  return {
+    points: [
+      { id: "A", x: 0, y: 0, dx: -10, dy: 10 },
+      { id: "B", x: 70, y: 0, dy: 14 },
+      { id: "C", x: 50, y: -55, dx: 6, dy: -6 },
+    ],
+    segments: [{ from: "A", to: "B" }, { from: "A", to: "C" }, { from: "B", to: "C" }],
+    freeLabels: [
+      { x: 60, y: -22, text: "a" },
+      { x: 20, y: -27, text: "b" },
+      { x: 35, y: 14, text: "c" },
+    ],
+  };
+}
+
 export default {
   meta: {
     id: "vecteurs-produit-scalaire-premiere-spe",
@@ -424,6 +466,46 @@ export default {
     pourquoi: "Le produit scalaire permet de calculer un angle ou de démontrer une perpendicularité sans rapporteur — utilisé en physique pour calculer un travail ou une force.",
     level: "premiere-spe",
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Calcul vectoriel et produit scalaire",
+        branches: [
+          {
+            title: "Produit scalaire : deux expressions",
+            items: [
+              "Par les coordonnées : produit des abscisses plus produit des ordonnées.",
+              "Par les normes et l'angle : utile dès qu'on connaît un angle mais pas les coordonnées.",
+            ],
+            formula: "\\(\\overrightarrow{u}\\cdot\\overrightarrow{v} = xx'+yy' = \\|\\overrightarrow{u}\\|\\|\\overrightarrow{v}\\|\\cos\\theta\\)",
+            figure: buildCoursScalaireAngleFigure(),
+          },
+          {
+            title: "Orthogonalité",
+            items: [
+              "\\(\\overrightarrow{u}\\) et \\(\\overrightarrow{v}\\) sont orthogonaux si et seulement si leur produit scalaire est nul.",
+              "C'est l'outil pour démontrer une perpendicularité sans rapporteur ni équerre.",
+            ],
+            figure: buildCoursOrthogonaliteFigure(),
+          },
+          {
+            title: "Développer, bilinéarité",
+            items: [
+              "Le produit scalaire se développe comme un produit algébrique classique (distributivité).",
+              "Piège classique : \\(\\overrightarrow{u}\\cdot\\overrightarrow{u} = \\|\\overrightarrow{u}\\|^2\\) (un nombre, pas un vecteur).",
+            ],
+            formula: "\\((\\overrightarrow{u}+\\overrightarrow{v})\\cdot(\\overrightarrow{u}+\\overrightarrow{v}) = \\|\\overrightarrow{u}\\|^2+2\\overrightarrow{u}\\cdot\\overrightarrow{v}+\\|\\overrightarrow{v}\\|^2\\)",
+          },
+          {
+            title: "Formule d'Al-Kashi",
+            items: [
+              "Généralise Pythagore à un triangle quelconque : utile quand le triangle n'est pas rectangle.",
+            ],
+            formula: "\\(a^2 = b^2+c^2-2bc\\cos A\\)",
+            figure: buildCoursAlKashiFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -18,8 +18,26 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : modelisation-quadratique-premiere-non-spe.js (Première non
-spé) — 5e fichier de la Première non spé.**
+fichier : variations-instantanees-premiere-non-spe.js (Première non
+spé) — 6e fichier de la Première non spé.**
+
+`modelisation-quadratique-premiere-non-spe.js` (Première non spé) relu
+intégralement : 4 branches inchangées en nombre, branche 1 renommée
+« Forme canonique et forme développée » (nom repris de la description
+officielle du chapitre) et enrichie. Gap le plus important du fichier :
+la forme canonique f(x)=a(x-α)²+β elle-même n'apparaissait NULLE PART
+dans le cours avant, alors que la NOTE en tête de fichier explique que
+ce chapitre est un AJOUT du programme 2026 spécifiquement pour
+introduire cette forme, et que le tout premier générateur du fichier
+(genFormeCanoniqueVersDeveloppee) la teste directement. Item ajouté sur
+la lecture directe du sommet S(α;β) sur la forme canonique (sans
+calcul, contraste avec x_S=-b/2a en forme développée) ; item sur la
+méthode de développement via l'identité remarquable (x-α)²=x²-2αx+α² ;
+formule complétée montrant les deux écritures ensemble. Les 3 autres
+branches déjà complètes, non modifiées. Pas de figure : Figure.jsx ne
+supporte pas les courbes/paraboles, cohérent avec second-degre.js
+(Première Spé) qui n'en a pas non plus. Aucun €, aucun candidat
+texTable, fichier purement algébrique.
 
 `croissance-exponentielle-premiere-non-spe.js` (Première non spé) relu
 intégralement : 5 branches enrichies de 6 items + 1 formule (pas de
@@ -1149,7 +1167,7 @@ vérifiés pour débordement.)
 - [x] statistique-probabilites-premiere-non-spe.js *(nouvelle branche Fréquences depuis un tableau croisé — gap le plus grave du fichier, tout le volet statistique était absent ; items sur P_A(B) non définie/somme, test d'indépendance par fréquences, formule points extrêmes ; 2 générateurs convertis en texTable)*
 - [x] croissance-lineaire-premiere-non-spe.js *(nouvelles branches Modéliser une situation par une suite, Fonctions affines et croissance continue ; formule raison non consécutive, piège inversion inégalité si r négatif)*
 - [x] croissance-exponentielle-premiere-non-spe.js *(item sens de variation fonction exponentielle ajouté — absence notable malgré le titre du chapitre ; item recul d'un rang, comparaison de raisons, piège taux global≠somme, coefficient réciproque)*
-- [ ] modelisation-quadratique-premiere-non-spe.js
+- [x] modelisation-quadratique-premiere-non-spe.js *(branche renommée Forme canonique et forme développée — la forme canonique a(x-α)²+β était totalement absente malgré la NOTE signalant que c'est l'ajout central du programme 2026 pour ce chapitre)*
 - [ ] variations-instantanees-premiere-non-spe.js
 - [ ] variations-globales-premiere-non-spe.js
 

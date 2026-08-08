@@ -375,6 +375,49 @@ export default {
     level: "quatrieme",
     free: false,
     order: 13,
+    cours: {
+      mindMap: {
+        title: "Propriétés des triangles rectangles",
+        branches: [
+          {
+            title: "Théorème de Pythagore",
+            items: [
+              "Dans un triangle rectangle, le carré de l'hypoténuse (côté opposé à l'angle droit) est égal à la somme des carrés des deux autres côtés.",
+              "On peut aussi isoler un côté de l'angle droit en soustrayant au lieu d'additionner.",
+            ],
+            formula: "\\(BC^2 = BA^2 + AC^2\\)",
+            figure: buildRightTriangleFigure({ right: "A", horiz: "B", vert: "C" }),
+          },
+          {
+            title: "Réciproque : le triangle est-il rectangle ?",
+            items: [
+              "On compare le carré du plus grand côté à la somme des carrés des deux autres.",
+              "Si les deux résultats sont égaux, le triangle est rectangle, et l'angle droit est au sommet opposé au plus grand côté.",
+              "Piège classique : identifier le bon sommet — c'est celui qui n'appartient pas au plus grand côté.",
+            ],
+            figure: buildRightTriangleFigure({ right: "K", horiz: "L", vert: "M" }),
+          },
+          {
+            title: "Cosinus : calculer un angle",
+            items: [
+              "Dans un triangle rectangle, le cosinus d'un angle aigu = côté adjacent ÷ hypoténuse.",
+              "Le cosinus est toujours compris entre 0 et 1 pour un angle aigu.",
+            ],
+            formula: "\\(\\cos(\\widehat{x}) = \\dfrac{\\text{côté adjacent}}{\\text{hypoténuse}}\\)",
+            figure: buildRightTriangleFigure({ right: "P", horiz: "N", vert: "Q" }),
+          },
+          {
+            title: "Cosinus : calculer une longueur",
+            items: [
+              "Pour trouver le côté adjacent, on multiplie l'hypoténuse par le cosinus de l'angle.",
+              "Pour trouver l'hypoténuse, on divise le côté adjacent par le cosinus de l'angle.",
+              "Piège classique : bien repérer l'angle utilisé — le côté adjacent change selon le sommet choisi.",
+            ],
+            figure: buildRightTriangleFigure({ right: "V", horiz: "U", vert: "W" }),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

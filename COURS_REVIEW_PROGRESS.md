@@ -17,11 +17,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
-terminées. 10 des 11 fichiers de Première Spé sont faits (tous sauf
-algorithmique-python-premiere-spe.js). Prochain fichier :
-algorithmique-python-premiere-spe.js (Première Spé, dernier fichier de
-ce niveau — après lui, passage à la Première techno, 8 fichiers).**
+**La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
+sont maintenant intégralement terminées (11/11 pour la Première Spé).
+Prochain fichier : suites-numeriques-premiere-techno.js (Première
+techno, 1er des 8 fichiers de ce niveau).**
+
+`algorithmique-python-premiere-spe.js` (Première Spé) relu intégralement,
+dernier fichier de ce niveau : 5 branches (4 avant). Nouvelle branche
+« Conditions et vocabulaire de base » ajoutée, couvrant if/else, le test
+de parité n % 2 == 0, l'instruction break et import random — thème
+entier absent malgré 4 sous-cas de genVocabulaireAlgoQCM et
+genCompleterConditionQCM qui le testent directement. Branche « Calculer
+les termes d'une suite par script » enrichie : item sur les deux
+schémas d'accumulation somme (part de 0, +=) vs produit (part de 1,
+*=), absent avant. Aucun €, aucun candidat texTable supplémentaire (le
+fichier utilise déjà texTable via pyBlock() pour le code, non touché).
 
 `variables-aleatoires-premiere-spe.js` (Première Spé) relu
 intégralement : 5 branches inchangées en nombre mais enrichies. Branche
@@ -1341,7 +1351,7 @@ vérifiés pour débordement.)
 - [x] geometrie-reperee-premiere-spe.js *(formule x_Ω=-D/2, y_Ω=-E/2, r²=x_Ω²+y_Ω²-F ajoutée — utilisée dans 2 prompts mais absente du cours ; items ajoutés — méthode pour trouver c depuis point+vecteur normal, cas simples droites horizontales/verticales)*
 - [x] probabilites-conditionnelles-premiere-spe.js *(nouvelle branche Arbre pondéré : deux règles à connaître — multiplication/addition des chemins absentes malgré 4 générateurs ; formule loi binomiale ajoutée ; rappel formule union P(A∪B))*
 - [x] variables-aleatoires-premiere-spe.js *(items ajoutés — lecture cumulative de P(X≤a), règle de comparaison de deux jeux par l'espérance ; formules P(X=0)=(1-p)^n et P(X=n)=p^n ajoutées pour la loi binomiale)*
-- [ ] algorithmique-python-premiere-spe.js
+- [x] algorithmique-python-premiere-spe.js *(nouvelle branche Conditions et vocabulaire de base — if/else, n%2==0, break, import random, thème entier absent malgré 4+1 générateurs le testant ; item sur les 2 schémas d'accumulation somme/produit)*
 
 ### Première techno
 - [ ] suites-numeriques-premiere-techno.js

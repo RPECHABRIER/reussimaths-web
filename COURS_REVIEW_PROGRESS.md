@@ -17,7 +17,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `geometrie-espace.js` (5e).**
+**Prochain fichier à traiter : `symetrie-centrale-parallelogrammes.js` (5e).**
+
+`geometrie-espace.js` (5e) relu intégralement : branche "Patrons et
+perspective cavalière" — item qui entassait deux règles (arêtes cachées en
+pointillés + parallélisme conservé) éclaté en deux puces distinctes ;
+branche "Volumes des solides usuels" enrichie d'un item unifiant les trois
+formules (Volume = aire de la base × hauteur, valable pour tout prisme
+droit — éclaire `genVolumePrismeDroitBaseTriangleNumeric`, qui utilise ce
+principe général sans qu'il soit énoncé dans le cours) ; piège classique
+ajouté à "Conversions volume et capacité" (facteur 1000 entre unités de
+volume, à ne pas confondre avec le facteur 10 des longueurs). Figures
+`buildPaveCavaliereFigure`/`buildCylindreFigure`/`buildDisqueRayonFigure`
+déjà claires et bien étiquetées (r, h), aucun axe/droite orienté à
+corriger (segments finis de solides, pas de droite graduée). Prompts
+d'exercices déjà courts et narratifs, aucun candidat à `texTable()`.
 
 `nombres-relatifs.js` (5e) relu intégralement : branche "Droite graduée"
 reformulée pour partir d'exemples concrets (opposé de 3, \\(|3|=|-3|=3\\))
@@ -267,7 +281,7 @@ vérifiés pour débordement.)
 - [x] puissances.js *(formulation carré/cube clarifiée avec exemples numériques concrets, sinon déjà bon)*
 - [x] calcul-litteral.js *(formule "résoudre une équation" ajoutée avec exemples concrets, sinon déjà bon)*
 - [x] nombres-relatifs.js *(branche droite graduée reformulée en partant du concret, piège classique addition signes contraires ajouté, item symétries par axe éclaté en deux puces — flèches déjà correctes, non touchées)*
-- [ ] geometrie-espace.js
+- [x] geometrie-espace.js *(item perspective cavalière éclaté en 2 puces, item unifiant Volume=aire base×hauteur ajouté, piège classique facteur 1000 ajouté)*
 - [ ] symetrie-centrale-parallelogrammes.js
 - [ ] triangles.js
 - [ ] statistiques-probabilites.js

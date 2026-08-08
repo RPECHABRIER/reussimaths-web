@@ -17,7 +17,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `proportionnalite-cinquieme.js` (5e).**
+**Prochain fichier à traiter : `fonctions.js` (5e).**
+
+`proportionnalite-cinquieme.js` (5e) relu intégralement : branche
+"Pourcentages" — item qui entassait remise et majoration/TVA en une seule
+puce éclaté en deux items distincts, piège classique ajouté (une remise de
+p % n'est pas « soustraire p » au prix, il faut d'abord calculer le
+montant de la remise puis le soustraire — testé par
+`genPrixApresRemiseNumeric` mais absent du cours) ; branche "Identifier
+une situation" enrichie d'une formule illustrant le critère d'égalité des
+quotients (\\(b_1/a_1 = b_2/a_2\\)), qui n'en avait pas alors que les 4
+autres branches en ont une. Reste déjà au niveau attendu (coefficient/
+valeur manquante, échelles, vitesse déjà clairs et concrets, piège
+classique tarif+abonnement déjà présent). Le candidat repéré par le grep
+mécanique a été vérifié : les prompts avec 2-3 valeurs en € restent en
+prose fluide et courte (jamais une énumération multi-lignes du type
+"jusqu'à X kg → Y €"), aucun candidat réel à `texTable()`.
 
 `statistiques-probabilites.js` (5e) relu intégralement : piège classique
 ajouté à la branche "Calculer une probabilité" (pour comparer qui a le
@@ -337,7 +352,7 @@ vérifiés pour débordement.)
 - [x] symetrie-centrale-parallelogrammes.js *(item centres de symétrie des figures usuelles ajouté, item angles parallèles reformulé en équivalence, item perpendiculaires-à-même-droite ajouté, piège diagonales ajouté ; candidat texTable du grep vérifié = faux positif)*
 - [x] triangles.js *(piège classique désambiguïsant médiatrice/hauteur/médiane ajouté, sinon déjà bon)*
 - [x] statistiques-probabilites.js *(piège classique ajouté à « Calculer une probabilité » — comparer les proportions entre sacs, pas les nombres bruts de billes favorables ; sinon déjà bon, aucun candidat texTable, aucun €)*
-- [ ] proportionnalite-cinquieme.js
+- [x] proportionnalite-cinquieme.js *(branche Pourcentages éclatée en items distincts remise/majoration + piège classique ajouté, formule ajoutée à « Identifier une situation » ; grep € vérifié = faux positif, aucun texTable)*
 - [ ] fonctions.js
 - [ ] algorithmique-cinquieme.js
 

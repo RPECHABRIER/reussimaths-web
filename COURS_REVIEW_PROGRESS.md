@@ -17,8 +17,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). Prochain fichier :
-`nombres-relatifs-quatrieme.js` (4e).**
+**La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`
+(4e) est fait. Prochain fichier : `addition-soustraction-rationnels.js`
+(4e).**
+
+`nombres-relatifs-quatrieme.js` (4e) relu intégralement : branche "Signe
+inconnu (produit, quotient)" renommée "Signe inconnu, programmes de
+calcul" (l'item sur les programmes de calcul n'avait pas sa place sous un
+titre parlant uniquement de signe) ; piège classique de la branche
+"Priorités opératoires" reformulé pour coller à ce que testent réellement
+les exercices (`genErreurCalculatriceQCM` teste l'oubli de multiplier
+TOUTE la parenthèse par le facteur, pas la distribution d'un signe « - »
+que décrivait l'ancien piège et qu'aucun exercice du fichier ne teste) ;
+formules ajoutées aux 3 premières branches (aucune n'en avait) avec
+exemples numériques concrets pour la mémorisation (ex.
+\\((-3)+(-5)=-8\\), \\((-4)\\times(-3)=12\\)). Reste déjà au niveau
+attendu (règles des signes, priorités déjà claires et bien pourvues en
+pièges classiques). Aucun symbole € dans le fichier, aucun candidat à
+`texTable()` (prompts déjà courts et narratifs, max 341 caractères).
 
 `algorithmique-cinquieme.js` (5e) relu intégralement : piège classique
 ajouté à la branche "Traduire et calculer une formule" (bien recopier le
@@ -387,7 +403,7 @@ vérifiés pour débordement.)
 - [x] algorithmique-cinquieme.js *(piège classique ajouté sur le signe de la formule ; déjà exemplaire par ailleurs — texTable() déjà utilisé partout pour le pseudo-code, aucun €)*
 
 ### 4e
-- [ ] nombres-relatifs-quatrieme.js
+- [x] nombres-relatifs-quatrieme.js *(branche "Signe inconnu" renommée pour inclure les programmes de calcul ; piège classique priorités reformulé pour coller aux exercices ; formules ajoutées à 3 branches)*
 - [ ] addition-soustraction-rationnels.js
 - [ ] multiplication-division-rationnels.js
 - [ ] puissances-quatrieme.js

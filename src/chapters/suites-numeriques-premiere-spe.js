@@ -331,6 +331,49 @@ export default {
     pourquoi: "Les suites modélisent tout ce qui évolue étape par étape : un capital qui s'accumule, une population qui croît, un médicament qui se dilue dans le sang.",
     level: "premiere-spe",
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Suites numériques, modèles discrets",
+        branches: [
+          {
+            title: "Deux modes de génération",
+            items: [
+              "Récurrence : chaque terme se calcule à partir du précédent (\\(u_{n+1} = ...\\)) — il faut connaître tous les termes avant.",
+              "Explicite : chaque terme se calcule directement à partir de n, sans passer par les précédents.",
+            ],
+          },
+          {
+            title: "Arithmétique et géométrique",
+            items: [
+              "Arithmétique : on ajoute la raison r à chaque étape. \\(u_n = u_0+rn\\).",
+              "Géométrique : on multiplie par la raison q à chaque étape. \\(u_n = u_0 \\times q^n\\).",
+              "Piège classique : ne pas confondre les deux formules — l'une additionne, l'autre multiplie.",
+            ],
+          },
+          {
+            title: "Sens de variation",
+            items: [
+              "Arithmétique : signe de r donne le sens (r > 0 croissante, r < 0 décroissante).",
+              "Géométrique (\\(u_0>0\\)) : q > 1 croissante, 0 < q < 1 décroissante, q < 0 non monotone (alterne de signe).",
+            ],
+          },
+          {
+            title: "Sommes de termes",
+            items: [
+              "Somme arithmétique = (nombre de termes) × (premier terme + dernier terme) / 2.",
+            ],
+            formula: "\\(\\sum_{k=0}^{n} u_0 q^k = u_0 \\times \\dfrac{1-q^{n+1}}{1-q}\\ (q \\neq 1)\\)",
+          },
+          {
+            title: "Limite d'une suite géométrique",
+            items: [
+              "Si -1 < q < 1 : \\(q^n\\) tend vers 0 quand n tend vers \\(+\\infty\\).",
+              "Si q > 1 : \\(q^n\\) tend vers \\(+\\infty\\). Si \\(q \\leqslant -1\\) : pas de limite (oscillation).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

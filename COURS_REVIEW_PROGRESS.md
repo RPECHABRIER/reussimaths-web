@@ -18,7 +18,27 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : proportionnalite-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : statistiques-troisieme.js (3e).**
+
+`proportionnalite-troisieme.js` (3e) relu intégralement : branche "Ratios"
+scindée en deux branches distinctes ("Ratios : simplifier, comparer,
+exprimer en %" et "Appliquer une proportionnalité") : sur 6 générateurs de
+la section Ratios, seuls 2 (simplifier, partager) étaient couverts par les
+2 items d'origine. Ajouts : item sur le ratio équivalent par mise à
+l'échelle (testé par `genRatioEquivalentQCM` mais absent — le cours ne
+montrait que la simplification, direction inverse), item sur l'expression
+d'un ratio en pourcentage (testé par `genPourcentageDepuisRatioNumeric`
+mais absent), item sur la technique du produit en croix/valeur unitaire
+pour une proportionnalité concrète type recette à l'échelle (testé par
+`genRecetteEchelleNumeric` mais absente du cours alors que c'est la
+technique centrale du chapitre — formule \\(a/b=c/d \\Rightarrow ad=bc\\)
+ajoutée, absente de tout le fichier avant), item sur la résolution
+ratio+différence connue (testé par `genDeuxNombresRatioDifferenceNumeric`
+mais absent). Branches "Coefficient multiplicateur", "Enchaîner des
+évolutions" (piège classique déjà présent) et "Coefficient réciproque"
+laissées inchangées (déjà au niveau attendu). Fichier purement numérique,
+aucune figure. 8 usages de € dans le fichier, tous en prose courte,
+aucun candidat texTable.
 
 `fonctions-affines-troisieme.js` (3e) relu intégralement : piège classique
 ajouté à "Identifier a et b" (pour f(x)=(px+q)/d, il faut diviser CHAQUE
@@ -670,7 +690,7 @@ vérifiés pour débordement.)
 - [x] equations-troisieme.js *(piège classique ajouté à « Équation du premier degré » — multiplier TOUS les termes par le dénominateur ; piège classique ajouté à « Équation produit » — x=-b/a, signe ; branche « Modéliser un problème » renommée « …, programmes de calcul » + item ajouté, thème absent du cours avant)*
 - [x] notion-fonction-troisieme.js *(notation x↦10^x remplacée par m(x)=10^x pour cohérence avec f(x) partout ailleurs ; genLectureTableauImageNumeric/genLectureTableauAntecedentNumeric convertis en texTable(), même bug déjà vu sur notion-fonctions.js 4e)*
 - [x] fonctions-affines-troisieme.js *(piège classique ajouté à « Identifier a et b » — diviser CHAQUE terme du numérateur par d ; item « Droites et coefficients » enrichi pour couvrir aussi le cas constante a=0, absent avant alors que testé par un QCM à 3 réponses)*
-- [ ] proportionnalite-troisieme.js
+- [x] proportionnalite-troisieme.js *(branche « Ratios » scindée en 2 : « Ratios : simplifier, comparer, exprimer en % » et « Appliquer une proportionnalité » + formule produit en croix ajoutée ; items ajoutés pour ratio équivalent, ratio en %, produit en croix/valeur unitaire, ratio+différence — 4 des 6 générateurs de la section n'étaient pas couverts avant)*
 - [ ] statistiques-troisieme.js
 - [ ] probabilites-troisieme.js
 - [ ] thales-triangles-semblables-troisieme.js

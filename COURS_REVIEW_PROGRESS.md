@@ -18,12 +18,23 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 4 des 14 fichiers de
+la Première techno sont intégralement terminées. 5 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
-suites-terminale-spe.js). Prochain fichier :
-limites-fonctions-terminale-spe.js (Terminale Spé).**
+suites-terminale-spe.js, limites-fonctions-terminale-spe.js). Prochain
+fichier : continuite-terminale-spe.js (Terminale Spé).**
+
+`limites-fonctions-terminale-spe.js` (Terminale Spé) relu intégralement
+: 6 branches (5 avant). Nouvelle branche « Opérations sur les limites
+(cas non indéterminés) » ajoutée : règles somme/produit/quotient pour
+les cas déterminables, testées par 3 chapters dédiés entiers mais
+absentes — seuls les cas indéterminés étaient couverts. Branche
+« Asymptotes » enrichie : une courbe peut croiser son asymptote
+horizontale ; règle des signes pour le signe d'une limite infinie près
+d'une asymptote verticale. Branche « Gendarmes » enrichie : cas du
+produit fonction bornée × fonction→0 ; passage à la limite. Aucun €,
+aucun candidat texTable, fichier sans figure.
 
 `suites-terminale-spe.js` (Terminale Spé) relu intégralement : 6
 branches (5 avant). Nouvelle branche « Suites monotones, bornées et
@@ -1507,7 +1518,7 @@ vérifiés pour débordement.)
 - [x] vecteurs-droites-plans-espace-terminale-spe.js *(formules AB depuis 2 points, milieu, somme de vecteurs, Chasles ajoutées ; critère de colinéarité pour alignement ; positions relatives droite-droite ajoutées — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [x] orthogonalite-distances-espace-terminale-spe.js *(perpendicularité de plans ajoutée, théorème du toit, définition droite⊥plan, formule de distance entre 2 points ajoutée — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [x] suites-terminale-spe.js *(nouvelle branche « Suites monotones, bornées et convergence » — théorème de convergence monotone absent avant, corollaire produit vers 0, formule de conclusion arithmético-géométrique)*
-- [ ] limites-fonctions-terminale-spe.js
+- [x] limites-fonctions-terminale-spe.js *(nouvelle branche « Opérations sur les limites » cas déterminés, règle des signes près d'une asymptote verticale, cas produit fonction bornée×0 ajoutés)*
 - [ ] continuite-terminale-spe.js
 - [ ] complements-derivation-terminale-spe.js
 - [ ] logarithme-neperien-terminale-spe.js

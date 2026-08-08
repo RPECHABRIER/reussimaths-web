@@ -17,7 +17,26 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `triangles.js` (5e).**
+**Prochain fichier à traiter : `statistiques-probabilites.js` (5e).**
+
+`triangles.js` (5e) relu intégralement : petite correction ciblée. Piège
+classique ajouté à la branche "Médiatrices, hauteurs, médianes" pour
+désambiguïser les trois cévians dont les noms se ressemblent et sont
+classiquement confondus par les élèves (médiatrice = perpendiculaire au
+milieu d'un côté, ne passe pas forcément par le sommet opposé ; hauteur =
+passe par le sommet, perpendiculaire au côté opposé ; médiane = passe par
+le sommet et le milieu du côté opposé). Le reste du fichier est déjà au
+niveau attendu (angles/classification, isocèle/rectangle, aire déjà clairs
+et concis, piège classique déjà présent pour l'aire — hauteur perpendiculaire,
+pas un côté oblique), figures `buildTriangleFigure` toutes bien proportionnées
+et étiquetées sans chevauchement, formules déjà utiles. Prompts d'exercices
+déjà courts et narratifs, aucun candidat à `texTable()`.
+
+**Les 4 fichiers de 5e confiés dans cette session sont terminés**
+(nombres-relatifs, geometrie-espace, symetrie-centrale-parallelogrammes,
+triangles). Il reste 4 fichiers de 5e dans la checklist ci-dessous
+(statistiques-probabilites, proportionnalite-cinquieme, fonctions,
+algorithmique-cinquieme), puis la 4e, la 3e, la 2nde et le lycée.
 
 `symetrie-centrale-parallelogrammes.js` (5e) relu intégralement : branche
 "Symétrie centrale" enrichie d'un item sur le centre de symétrie des
@@ -305,7 +324,7 @@ vérifiés pour débordement.)
 - [x] nombres-relatifs.js *(branche droite graduée reformulée en partant du concret, piège classique addition signes contraires ajouté, item symétries par axe éclaté en deux puces — flèches déjà correctes, non touchées)*
 - [x] geometrie-espace.js *(item perspective cavalière éclaté en 2 puces, item unifiant Volume=aire base×hauteur ajouté, piège classique facteur 1000 ajouté)*
 - [x] symetrie-centrale-parallelogrammes.js *(item centres de symétrie des figures usuelles ajouté, item angles parallèles reformulé en équivalence, item perpendiculaires-à-même-droite ajouté, piège diagonales ajouté ; candidat texTable du grep vérifié = faux positif)*
-- [ ] triangles.js
+- [x] triangles.js *(piège classique désambiguïsant médiatrice/hauteur/médiane ajouté, sinon déjà bon)*
 - [ ] statistiques-probabilites.js
 - [ ] proportionnalite-cinquieme.js
 - [ ] fonctions.js

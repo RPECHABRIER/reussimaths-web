@@ -58,7 +58,8 @@ les hashes). État actuel :
   et `preparation-eam-premiere-non-spe.js` délibérément SANS Cours (synthèses,
   voir checklist "Première non spé"). **La Première non spé est
   intégralement terminée. Prochain fichier : `second-degre.js` (Première
-  Spé).**
+  Spé).** `second-degre.js` fait (commit `dc3b126`, pas de figure).
+  **Prochain fichier : `suites-numeriques-premiere-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -312,7 +313,7 @@ Cours).
 
 ### Première Spé (premiere-spe)
 
-- [ ] second-degre.js
+- [x] second-degre.js
 - [ ] suites-numeriques-premiere-spe.js
 - [ ] derivation-premiere-spe.js
 - [ ] variations-courbes-premiere-spe.js

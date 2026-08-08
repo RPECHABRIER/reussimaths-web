@@ -579,16 +579,27 @@ export default {
           {
             title: "Division euclidienne",
             items: [
-              "Le reste est toujours strictement inférieur au diviseur.",
-              "On vérifie une division euclidienne en recalculant : dividende = diviseur × quotient + reste.",
+              "Exemple : pour diviser 17 par 5, on cherche le plus grand multiple de 5 qui ne dépasse pas 17 : \\(17 = 5 \\times 3 + 2\\) (quotient 3, reste 2).",
+              "Piège classique : le reste doit toujours être strictement inférieur au diviseur (sinon, ce n'est pas la bonne division euclidienne).",
+              "On vérifie un résultat en recalculant : dividende = diviseur × quotient + reste.",
             ],
             formula: "\\(a = b \\times q + r\\ \\text{avec}\\ 0 \\leqslant r < b\\)",
           },
           {
-            title: "Divisibilité, nombres premiers",
+            title: "Divisibilité",
             items: [
-              "Un nombre premier n'a que deux diviseurs : 1 et lui-même.",
+              "Par 2, 5 ou 10 : il suffit de regarder le chiffre des unités (pair ; 0 ou 5 ; 0).",
+              "Par 3 ou 9 : on additionne tous les chiffres du nombre (multiple de 3 ; multiple de 9).",
+              "Par 4 : les 2 derniers chiffres forment un multiple de 4. Par 6 : divisible à la fois par 2 et par 3.",
+              "Piège classique : \\(k \\times n\\) est toujours pair si k est pair, quel que soit n ; mais si k est impair, la parité du résultat dépend de celle de n.",
+            ],
+          },
+          {
+            title: "Nombres premiers",
+            items: [
+              "Un nombre premier n'a que deux diviseurs : 1 et lui-même (2 est le seul nombre premier pair).",
               "Pour tester si un nombre est premier, on cherche un diviseur parmi les nombres premiers inférieurs à sa racine carrée.",
+              "Piège classique : un seul contre-exemple suffit à prouver qu'une conjecture est fausse, même si elle semblait vraie pour beaucoup de valeurs testées avant.",
             ],
           },
           {
@@ -596,7 +607,9 @@ export default {
             items: [
               "Tout entier supérieur à 1 se décompose de façon unique en produit de nombres premiers.",
               "On divise successivement par 2, 3, 5, 7... jusqu'à obtenir 1.",
+              "Le nombre de diviseurs de N se calcule à partir des exposants de sa décomposition.",
             ],
+            formula: "\\(N = p^{a} \\times q^{b} \\Rightarrow \\text{nombre de diviseurs de } N = (a+1)(b+1)\\)",
           },
           {
             title: "PGCD",

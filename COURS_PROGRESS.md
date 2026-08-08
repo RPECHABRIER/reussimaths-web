@@ -112,8 +112,9 @@ les hashes). État actuel :
   `primitives-equations-differentielles-terminale-spe.js` fait (commit
   `bd8d710`, pas de figure). `calcul-integral-terminale-spe.js` fait
   (commit `0e83116`, pas de figure). `loi-binomiale-terminale-spe.js` fait
-  (commit `3049b14`, pas de figure). **Prochain fichier :
-  `sommes-variables-aleatoires-terminale-spe.js`.**
+  (commit `3049b14`, pas de figure). `sommes-variables-aleatoires-terminale-spe.js`
+  fait (commit `9e57ed2`, pas de figure). **Prochain fichier :
+  `loi-grands-nombres-terminale-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -418,7 +419,7 @@ Cours).
 - [x] primitives-equations-differentielles-terminale-spe.js
 - [x] calcul-integral-terminale-spe.js
 - [x] loi-binomiale-terminale-spe.js
-- [ ] sommes-variables-aleatoires-terminale-spe.js
+- [x] sommes-variables-aleatoires-terminale-spe.js
 - [ ] loi-grands-nombres-terminale-spe.js
 - [ ] exercices-transversaux-terminale-spe.js
 

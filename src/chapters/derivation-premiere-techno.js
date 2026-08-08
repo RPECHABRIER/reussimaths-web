@@ -276,6 +276,41 @@ export default {
     pourquoi: "La dérivée permet de savoir si une grandeur augmente ou diminue à un instant précis — indispensable pour optimiser un coût, une recette ou une production.",
     level: "premiere-techno",
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Dérivation",
+        branches: [
+          {
+            title: "Sécante, taux de variation, tangente",
+            items: [
+              "Le taux de variation entre deux points est le coefficient directeur de la sécante qui les relie.",
+              "Quand les deux points se rapprochent, la sécante « devient » la tangente : le nombre dérivé.",
+            ],
+          },
+          {
+            title: "Dérivées de référence",
+            items: [
+              "Piège classique : dériver un polynôme terme à terme, sans oublier de baisser chaque exposant.",
+            ],
+            formula: "\\((ax^n)'=nax^{n-1}\\)",
+          },
+          {
+            title: "Équation de la tangente",
+            items: [
+              "Il faut le nombre dérivé (pente) et un point de la courbe pour l'écrire.",
+            ],
+            formula: "\\(y=f'(a)(x-a)+f(a)\\)",
+          },
+          {
+            title: "Signe de f' et sens de variation",
+            items: [
+              "\\(f'(x)>0\\) ⟹ f croissante ; \\(f'(x)<0\\) ⟹ f décroissante.",
+              "Piège classique très fréquent : le signe de f' donne le sens de variation, ce n'est pas le signe de f.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

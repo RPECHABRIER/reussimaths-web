@@ -100,7 +100,10 @@ les hashes). État actuel :
   `project3D()`/`build3DFigure()` en perspective cavalière, à réutiliser
   pour `orthogonalite-distances-espace-terminale-spe.js`). **Prochain
   fichier : `orthogonalite-distances-espace-terminale-spe.js` (géométrie,
-  3D).**
+  3D).** `orthogonalite-distances-espace-terminale-spe.js` fait (commit
+  `184c223`, 3 figures neuves en perspective cavalière, même technique
+  project3D()/build3DFigure()). **Prochain fichier :
+  `suites-terminale-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -395,7 +398,7 @@ Cours).
 
 - [x] combinatoire-denombrement-terminale-spe.js
 - [x] vecteurs-droites-plans-espace-terminale-spe.js *(géométrie)*
-- [ ] orthogonalite-distances-espace-terminale-spe.js *(géométrie)*
+- [x] orthogonalite-distances-espace-terminale-spe.js *(géométrie)*
 - [ ] suites-terminale-spe.js
 - [ ] limites-fonctions-terminale-spe.js
 - [ ] continuite-terminale-spe.js

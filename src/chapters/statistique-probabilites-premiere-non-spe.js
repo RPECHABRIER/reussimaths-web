@@ -32,6 +32,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable.js";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -66,6 +68,19 @@ function tableauCroise2x2() {
   };
 }
 
+// Construit un tableau croisé 2x2 en LaTeX propre via texTable() — évite tout
+// débordement du cadre de l'exercice (même précédent que dans
+// analyse-information-chiffree-premiere-non-spe.js et informations-chiffrees-seconde.js).
+function buildTableauCroiseTex(t, rowNames, colNames, { hidden = null, includeTotals = false } = {}) {
+  const cell = (key, val) => (hidden === key ? "?" : String(val));
+  const header = ["", `\\text{${colNames[0]}}`, `\\text{${colNames[1]}}`, ...(includeTotals ? ["\\text{Total}"] : [])];
+  const row1 = [rowNames[0], cell("a", t.a), cell("b", t.b), ...(includeTotals ? [String(t.totalL1)] : [])];
+  const row2 = [rowNames[1], cell("c", t.c), cell("d", t.d), ...(includeTotals ? [String(t.totalL2)] : [])];
+  const rows = [header, row1, row2];
+  if (includeTotals) rows.push(["Total", String(t.totalC1), String(t.totalC2), String(t.total)]);
+  return texTable(rows);
+}
+
 const CONTEXTES_TABLEAU = [
   { ligne: "Fille", ligne2: "Garçon", colonne: "Espagnol", colonne2: "Allemand", sujet: "les élèves d'une classe" },
   { ligne: "Femme", ligne2: "Homme", colonne: "Souhaite participer", colonne2: "Ne souhaite pas participer", sujet: "les membres d'un club" },
@@ -84,7 +99,7 @@ function genFrequenceMarginaleNumeric() {
   return {
     type: "numeric",
     chapter: "De la statistique aux probabilités — Fréquences",
-    prompt: `Un tableau croisé d'effectifs sur ${ctx.sujet} donne les quatre cases : ${t.a} (${ctx.ligne}/${ctx.colonne}), ${t.b} (${ctx.ligne}/${ctx.colonne2}), ${t.c} (${ctx.ligne2}/${ctx.colonne}), ${t.d} (${ctx.ligne2}/${ctx.colonne2}). Calcule la fréquence marginale de « ${nom} » (arrondie au millième).`,
+    prompt: `Un tableau croisé d'effectifs sur ${ctx.sujet} : ${buildTableauCroiseTex(t, [ctx.ligne, ctx.ligne2], [ctx.colonne, ctx.colonne2])} Calcule la fréquence marginale de « ${nom} » (arrondie au millième).`,
     answer,
     tolerance: 0.001,
     steps: [
@@ -291,7 +306,7 @@ function genCompleterCaseTableauNumeric() {
   return {
     type: "numeric",
     chapter: "De la statistique aux probabilités — Fréquences",
-    prompt: `On étudie ${ctx.sujet} à l'aide d'un tableau croisé. On sait que : ${ctx.ligne} et ${ctx.colonne} : ${caseChoisie === "a" ? "?" : t.a} ; ${ctx.ligne} et ${ctx.colonne2} : ${caseChoisie === "b" ? "?" : t.b} ; ${ctx.ligne2} et ${ctx.colonne} : ${caseChoisie === "c" ? "?" : t.c} ; ${ctx.ligne2} et ${ctx.colonne2} : ${caseChoisie === "d" ? "?" : t.d}. Le total de la ligne « ${ctx.ligne} » est ${t.totalL1} et le total général est ${t.total}. Détermine la case manquante (« ? »).`,
+    prompt: `On étudie ${ctx.sujet} à l'aide d'un tableau croisé d'effectifs (la case « ? » est à déterminer) : ${buildTableauCroiseTex(t, [ctx.ligne, ctx.ligne2], [ctx.colonne, ctx.colonne2], { hidden: caseChoisie, includeTotals: true })} Détermine la case manquante (« ? »).`,
     answer: t[caseChoisie],
     steps: [
       { type: "regle", text: `\\text{La somme des trois cases connues et de la case manquante doit être égale au total général : la case manquante s'obtient donc par soustraction.}` },
@@ -539,10 +554,20 @@ export default {
         title: "De la statistique aux probabilités",
         branches: [
           {
+            title: "Fréquences depuis un tableau croisé",
+            items: [
+              "Fréquence marginale : effectif d'une ligne ou colonne divisé par l'effectif total. Fréquence conditionnelle : effectif d'une case divisé par le total de sa ligne ou colonne (pas le total général).",
+              "Une case manquante d'un tableau croisé se retrouve par différence à partir des totaux (ligne, colonne ou total général).",
+              "Événement contraire : \\(P(\\bar{E}) = 1 - P(E)\\).",
+            ],
+            formula: "\\(\\text{fréquence conditionnelle} = \\dfrac{\\text{effectif de la case}}{\\text{effectif de la sous-catégorie}}\\)",
+          },
+          {
             title: "Probabilité conditionnelle",
             items: [
               "\\(P_A(B)\\) : probabilité de B sachant que A est déjà réalisé.",
               "\\(P(A \\cap B) = P_A(B) \\times P(A)\\).",
+              "\\(P_A(B)\\) n'est définie que si \\(P(A) \\neq 0\\) ; et \\(P_A(B) + P_A(\\bar{B}) = 1\\) (sachant A, B et son contraire se partagent toute la probabilité).",
             ],
             formula: "\\(P_A(B) = \\dfrac{P(A \\cap B)}{P(A)}\\)",
           },
@@ -550,6 +575,7 @@ export default {
             title: "Indépendance de deux événements",
             items: [
               "A et B sont indépendants si \\(P_A(B) = P(B)\\) : savoir que A s'est réalisé ne change rien à la probabilité de B.",
+              "Dans un tableau croisé, on teste aussi l'indépendance en comparant les fréquences conditionnelles entre elles (ou à la fréquence marginale) : si elles sont égales, les événements sont indépendants.",
               "Piège classique : indépendant ≠ incompatible (deux événements incompatibles ne peuvent pas être indépendants, sauf cas particulier).",
             ],
           },
@@ -572,8 +598,10 @@ export default {
             title: "Point moyen et droite d'ajustement",
             items: [
               "Le point moyen \\(G(\\bar{x} ; \\bar{y})\\) a pour coordonnées les moyennes des deux séries, et appartient toujours à la droite d'ajustement.",
+              "Méthode des points extrêmes : la droite passe par le premier et le dernier point du nuage.",
               "Une prédiction par extrapolation reste fragile : elle suppose que la tendance se poursuit au-delà des données observées.",
             ],
+            formula: "\\(a = \\dfrac{y_n-y_1}{x_n-x_1}\\, ; \\quad b = y_1 - a x_1\\)",
           },
         ],
       },

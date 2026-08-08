@@ -355,6 +355,41 @@ export default {
     level: "troisieme",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Notion de fonction",
+        branches: [
+          {
+            title: "Image, antécédent",
+            items: [
+              "\\(f(x) = y\\) se lit « y est l'image de x par f » et « x est un antécédent de y par f ».",
+              "Pour calculer une image, on remplace x par sa valeur. Pour trouver un antécédent, on résout une équation.",
+            ],
+          },
+          {
+            title: "Tableau de valeurs",
+            items: [
+              "Dans un tableau f(x) = ..., on lit l'image en partant de x, l'antécédent en partant du résultat.",
+              "Piège classique : un même nombre peut avoir plusieurs antécédents, mais une seule image.",
+            ],
+          },
+          {
+            title: "Cas particuliers",
+            items: [
+              "Une fonction constante donne toujours la même image : le nombre atteint a une infinité d'antécédents, tout autre nombre n'en a aucun.",
+              "La fonction puissance de 10, \\(x \\mapsto 10^x\\), relie un exposant à son écriture décimale.",
+            ],
+          },
+          {
+            title: "Égalité de deux fonctions",
+            items: [
+              "Résoudre \\(f(x) = g(x)\\) revient à résoudre une équation (souvent une équation produit après réduction).",
+              "Un programme de calcul décrit aussi une fonction : on la traduit en formule avant de calculer une image ou un antécédent.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

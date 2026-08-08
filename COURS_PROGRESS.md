@@ -54,8 +54,14 @@ dans ce fichier avant), `transformations-plan-troisieme.js` fait (commit
 `6c142aa`, 2 figures neuves — aucun helper de figure n'existait dans ce
 fichier avant), `geometrie-espace-troisieme.js` fait (commit `41da838`,
 4 figures neuves — aucun helper de figure n'existait dans ce fichier
-avant). **Prochain fichier à traiter : `mesures-grandeurs-troisieme.js`.**
-Même méthode : lire
+avant), `mesures-grandeurs-troisieme.js` fait (commit `a340658`, pas de
+figure — chapitre calculatoire/contextualisé, aucun objet géométrique
+introduit). **Prochain fichier à traiter : `dossier-brevet-troisieme.js`**
+(dernier fichier de la checklist 3e — à juger au cas par cas, comme
+`exercices-fin-annee-quatrieme.js` : lire le fichier en entier et décider
+s'il introduit une notion nouvelle ou s'il s'agit d'une révision Brevet
+mixte sans contenu nouveau, auquel cas skip justifié dans ce fichier de
+suivi). Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -269,7 +275,7 @@ initiale de Romain.
 - [x] trigonometrie-triangle-rectangle-troisieme.js *(géométrie)*
 - [x] transformations-plan-troisieme.js *(géométrie)*
 - [x] geometrie-espace-troisieme.js *(géométrie)*
-- [ ] mesures-grandeurs-troisieme.js
+- [x] mesures-grandeurs-troisieme.js
 - [ ] dossier-brevet-troisieme.js
 
 ### 2nde (seconde)
@@ -356,10 +362,11 @@ initiale de Romain.
 
 ## Total
 
-48 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+49 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
 `exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
-ET la 4e sont intégralement terminées, prochaine étape : la 3e.
+ET la 4e sont intégralement terminées, la 3e est à 14/15 (il ne reste que
+`dossier-brevet-troisieme.js` à juger).
 
 ---
 

@@ -17,17 +17,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
-sont maintenant intégralement terminées (11/11 pour la Première Spé).
-7 des 8 fichiers de Première techno sont relus
-(suites-numeriques-premiere-techno.js,
-fonctions-second-degre-premiere-techno.js, derivation-premiere-techno.js,
-statistiques-deux-variables-premiere-techno.js,
-probabilites-conditionnelles-premiere-techno.js,
-epreuves-independantes-premiere-techno.js,
-variables-aleatoires-premiere-techno.js). Prochain fichier :
-algorithmique-python-premiere-techno.js (Première techno, dernier de ce
-niveau).**
+**La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
+maintenant la Première techno sont intégralement terminées (8/8 pour la
+Première techno). Prochain fichier :
+combinatoire-denombrement-terminale-spe.js (Terminale Spé, 1er des 14
+fichiers de ce niveau — la checklist montre aussi
+vecteurs-droites-plans-espace-terminale-spe.js et
+orthogonalite-distances-espace-terminale-spe.js comme non cochés dans
+CE fichier de suivi malgré des commits antérieurs de carte mentale
+existants : vérification faite, ces commits appartiennent au chantier
+de RÉDACTION initial (COURS_PROGRESS.md), pas à ce chantier de RELECTURE
+qualité — ils seront donc traités normalement dans l'ordre, comme tout
+autre fichier).**
+
+`algorithmique-python-premiere-techno.js` (Première techno) relu
+intégralement : 5 branches (4 avant), dernier fichier de ce niveau qui
+est maintenant intégralement terminé (8/8). Branche « Boucle for et
+listes » enrichie : forme range(a, b) ajoutée (testée par
+genCorrigerProgrammeQCM mais absente) ; écriture en compréhension
+ajoutée (genListeExtensionQCM, absente). Nouvelle branche « Vocabulaire
+Python de base » ajoutée : len(liste), test de parité n % 2 == 0,
+import random — 3 sous-cas de genVocabulaireAlgoQCM absents avant,
+même gap que la version Première Spé. Bug KaTeX corrigé : % non
+échappé dans \text{n % 2 == 0} cassait le rendu (caractère de
+commentaire LaTeX), corrigé en \% (détecté par check-cours-katex.mjs).
+Aucun € nouveau, aucun candidat texTable supplémentaire.
 
 `variables-aleatoires-premiere-techno.js` (Première techno) relu
 intégralement : 4 branches inchangées en nombre mais enrichies. Branche
@@ -1440,7 +1454,7 @@ vérifiés pour débordement.)
 - [x] probabilites-conditionnelles-premiere-techno.js *(formule P(A∩B)=P(A)×P(B) ajoutée à la branche Indépendance, item méthode tableau croisé, piège incompatible≠indépendant reformulé)*
 - [x] epreuves-independantes-premiere-techno.js *(notation du coefficient binomial \binom{n}{k} nommée, formule complète P(k succès) ajoutée)*
 - [x] variables-aleatoires-premiere-techno.js *(distinction P(X=a)/P(X≤a) ajoutée, formule s≈1/√n ajoutée à la branche Fluctuation d'échantillonnage)*
-- [ ] algorithmique-python-premiere-techno.js
+- [x] algorithmique-python-premiere-techno.js *(range(a,b) et compréhension de liste ajoutés, nouvelle branche Vocabulaire Python de base — len/parité/import random, bug KaTeX % non échappé corrigé — Première techno terminée 8/8)*
 
 ### Terminale Spé
 - [ ] combinatoire-denombrement-terminale-spe.js

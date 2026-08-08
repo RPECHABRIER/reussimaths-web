@@ -360,6 +360,48 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Combinatoire et dénombrement",
+        branches: [
+          {
+            title: "Principe multiplicatif",
+            items: [
+              "Pour une suite de choix indépendants, le nombre total de possibilités est le produit du nombre de choix à chaque étape.",
+            ],
+          },
+          {
+            title: "Reconnaître le type de tirage",
+            items: [
+              "Avec remise, ordre compté : \\(n^k\\). Sans remise, ordre compté (arrangement) : \\(\\frac{n!}{(n-k)!}\\).",
+              "Sans remise, ordre non compté (combinaison) : \\(\\binom{n}{k}\\).",
+              "Piège classique très fréquent : mal identifier si l'ordre compte avant de choisir la formule.",
+            ],
+          },
+          {
+            title: "Factorielle et permutations",
+            items: [
+              "\\(n!\\) compte le nombre de façons d'ordonner n objets distincts.",
+            ],
+            formula: "\\(n! = n\\times(n-1)\\times \\cdots \\times 2 \\times 1\\)",
+          },
+          {
+            title: "Coefficients binomiaux",
+            items: [
+              "Symétrie : choisir k éléments revient à en exclure n-k.",
+              "Relation de Pascal : utile pour construire le triangle de Pascal de proche en proche.",
+            ],
+            formula: "\\(\\binom{n}{k}=\\binom{n}{n-k},\\quad \\binom{n}{k}=\\binom{n-1}{k-1}+\\binom{n-1}{k}\\)",
+          },
+          {
+            title: "Nombre de parties d'un ensemble",
+            items: [
+              "Un ensemble à n éléments possède \\(2^n\\) parties (sous-ensembles), en comptant l'ensemble vide et l'ensemble complet.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

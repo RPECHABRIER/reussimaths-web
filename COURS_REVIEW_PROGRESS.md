@@ -18,7 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : thales-triangles-semblables-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : trigonometrie-triangle-rectangle-troisieme.js (3e).**
+
+`thales-triangles-semblables-troisieme.js` (3e) relu intégralement :
+**correction de fond** dans `genThalesPapillonNumeric` — les variables DE
+et DF étaient inversées par rapport à la configuration décrite dans le
+prompt (« droites (AE) et (BF) sécantes en D » implique DA/DE sur la même
+droite (AE) et DB/DF sur la même droite (BF), donc DE = DA×k et
+DF = DB×k), alors que le générateur calculait l'inverse et enseignait
+dans son step « regle » la formule DA/DF = DB/DE = AB/EF, en contradiction
+directe avec la formule DA/DE = DB/DF = AB/EF déjà correcte dans le Cours
+(branche « Configuration papillon ») — corrigé pour que le générateur et
+le Cours enseignent la même formule, cohérente avec la figure
+`buildPapillonFigure()` (déjà géométriquement correcte). Cours : item
+ajouté à « Agrandissement, réduction, triangles semblables » sur le
+coefficient réciproque 1/k (testé par `genCoefficientReciproqueNumeric`
+mais totalement absent du cours avant cette relecture). Reste déjà au
+niveau attendu (3 autres branches déjà claires, pièges classiques déjà
+présents, 3 figures bien proportionnées et étiquetées sans chevauchement).
+Aucun symbole €, aucun candidat texTable.
 
 `probabilites-troisieme.js` (3e) relu intégralement : item ajouté à
 « Calculer une probabilité » sur la conversion pourcentage/décimal
@@ -739,7 +757,7 @@ vérifiés pour débordement.)
 - [x] proportionnalite-troisieme.js *(branche « Ratios » scindée en 2 : « Ratios : simplifier, comparer, exprimer en % » et « Appliquer une proportionnalité » + formule produit en croix ajoutée ; items ajoutés pour ratio équivalent, ratio en %, produit en croix/valeur unitaire, ratio+différence — 4 des 6 générateurs de la section n'étaient pas couverts avant)*
 - [x] statistiques-troisieme.js *(3 items ajoutés : valeur manquante via somme=moyenne×effectif, formule tableur MOYENNE(plage) + piège en-tête, classe médiane par cumul d'effectifs ; 8 prompts convertis en texTable() — séries de 5-11 valeurs en prose, notes de 2 élèves, catégorie/classe+effectif)*
 - [x] probabilites-troisieme.js *(item conversion pourcentage/décimal ajouté à « Calculer une probabilité », absent alors que testé par genProbabiliteDepuisPourcentageNumeric ; piège classique simplification fraction irréductible ajouté, testé par 3 générateurs dont un avec distracteur non simplifié ; sinon déjà bon, 4 branches déjà claires)*
-- [ ] thales-triangles-semblables-troisieme.js
+- [x] thales-triangles-semblables-troisieme.js *(correction de fond : DE/DF inversés dans genThalesPapillonNumeric, formule enseignée contredisait le Cours ; item coefficient réciproque 1/k ajouté, absent alors que testé ; sinon déjà bon, 3 figures déjà claires)*
 - [ ] trigonometrie-triangle-rectangle-troisieme.js
 - [ ] transformations-plan-troisieme.js
 - [ ] geometrie-espace-troisieme.js

@@ -601,6 +601,52 @@ export default {
     level: "seconde",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Nombres et calculs",
+        branches: [
+          {
+            title: "Intervalles",
+            items: [
+              "Crochet tourné vers le nombre exclu : \\(]a ; b[\\) (bornes exclues), \\([a ; b]\\) (bornes incluses).",
+              "Piège classique : ne pas confondre \\(x < a\\) (demi-droite \\(]-\\infty ; a[\\)) avec \\(x > a\\).",
+            ],
+          },
+          {
+            title: "Valeur absolue et distance",
+            items: [
+              "\\(|x-a|\\) est la distance entre x et a sur la droite des réels.",
+              "\\(|x| \\leqslant b\\) équivaut à \\(-b \\leqslant x \\leqslant b\\) (intervalle centré).",
+            ],
+            formula: "\\(|x-a| \\leqslant r \\iff x \\in [a-r ; a+r]\\)",
+          },
+          {
+            title: "Racines carrées et puissances",
+            items: [
+              "Simplifier \\(\\sqrt{n}\\) : extraire le plus grand carré parfait facteur de n.",
+              "On additionne des racines carrées seulement si elles ont la même partie irrationnelle après simplification.",
+              "Piège classique : \\(\\sqrt{a+b} \\neq \\sqrt{a}+\\sqrt{b}\\).",
+            ],
+            formula: "\\(\\sqrt{k^2 \\times m} = k\\sqrt{m}\\)",
+          },
+          {
+            title: "Identités remarquables, dans les deux sens",
+            items: [
+              "Développer pour calculer mentalement (ex : \\(41^2 = (40+1)^2\\)), factoriser pour résoudre une équation.",
+              "\\((a+b)^2 \\neq a^2+b^2\\) : piège classique très fréquent.",
+            ],
+            formula: "\\((a+b)^2=a^2+2ab+b^2,\\ (a-b)^2=a^2-2ab+b^2,\\ a^2-b^2=(a-b)(a+b)\\)",
+          },
+          {
+            title: "Comparer deux quantités",
+            items: [
+              "Comparaison additive : la différence \\(b-a\\).",
+              "Comparaison multiplicative : le rapport \\(\\frac{b}{a}\\) (ou le pourcentage d'évolution).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

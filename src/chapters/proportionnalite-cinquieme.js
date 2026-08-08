@@ -460,6 +460,7 @@ export default {
               "Graphiquement : les points sont alignés sur une droite qui passe par l'origine.",
               "Piège classique : un tarif avec abonnement fixe (montant fixe + prix par unité) n'est PAS proportionnel.",
             ],
+            formula: "\\(\\text{proportionnel} \\iff \\dfrac{b_1}{a_1} = \\dfrac{b_2}{a_2}\\)",
           },
           {
             title: "Coefficient et valeur manquante",
@@ -473,7 +474,9 @@ export default {
             title: "Pourcentages",
             items: [
               "Calculer p % d'une quantité, c'est la multiplier par \\(\\dfrac{p}{100}\\).",
-              "Remise : nouveau prix = prix initial − remise. Majoration (TVA) : prix TTC = prix HT + taxe.",
+              "Remise : nouveau prix = prix initial − remise (avec remise = p % du prix initial).",
+              "Majoration (TVA) : prix TTC = prix HT + taxe (avec taxe = taux % du prix HT).",
+              "Piège classique : une remise de p % ne veut pas dire « soustraire p » au prix — il faut d'abord calculer p % du prix, puis soustraire ce montant.",
             ],
             formula: "\\(p\\% \\text{ de } N = N \\times \\dfrac{p}{100}\\)",
           },

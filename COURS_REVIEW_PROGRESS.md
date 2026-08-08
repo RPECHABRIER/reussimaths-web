@@ -18,7 +18,7 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
-`grandeurs-mesures.js` (6e) relus intégralement.
+`grandeurs-mesures.js` / `distances-symetries.js` (6e) relus intégralement.
 
 - `fractions.js` : **vraies corrections**. Piège classique ajouté sur la
   branche "Comparer des fractions" (à numérateur égal, la fraction au plus
@@ -38,10 +38,22 @@ Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
 - `grandeurs-mesures.js` : RAS. Trois pièges classiques déjà présents et
   bien ciblés (conversion de longueurs = compter les rangs, aires = facteur
   100 entre unités consécutives, durées en base 60 — 1,5 h ≠ 1 h 50 min).
+- `distances-symetries.js` : petite correction. Carte mentale déjà bien
+  construite (5 branches, pièges classiques déjà présents pour le
+  disque/cercle — "sur" n'est pas "dans" — et pour la réciprocité de la
+  symétrie, figures claires et non surchargées, aucune droite orientée à
+  corriger car les médiatrices/axes n'ont pas de sens à indiquer).
+  Seul défaut réel : la formule "diamètre = 2 × rayon" écrivait les mots
+  français en mode maths brut (lettres italiques collées, mal rendu par
+  KaTeX) — enveloppée en `\text{}`, cohérent avec le reste du fichier.
+  Prompts d'exercices déjà tous courts et compacts, aucun candidat à
+  `texTable()`.
 
-**Prochain fichier à traiter : `distances-symetries.js` (6e).** Puis le
-reste de la 6e, 5e, 4e, 3e dans cet ordre (périmètre de ce chantier =
-collège uniquement, voir consigne — 2nde/lycée hors scope pour l'instant).
+**Prochain fichier à traiter : `angles.js` (6e).** Puis
+`configurations-geometriques.js` et `organisation-gestion-donnees.js`
+(6e), puis le reste de la 5e, 4e, 3e dans cet ordre (périmètre de ce
+chantier = collège uniquement, voir consigne — 2nde/lycée hors scope pour
+l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -141,7 +153,7 @@ vérifiés pour débordement.)
 - [x] proportionnalite.js *(déjà bon, RAS)*
 - [x] operations-decimaux.js *(déjà bon, RAS)*
 - [x] grandeurs-mesures.js *(déjà bon, RAS)*
-- [ ] distances-symetries.js
+- [x] distances-symetries.js *(formule diamètre/rayon enveloppée en \text{}, sinon déjà bon)*
 - [ ] angles.js
 - [ ] configurations-geometriques.js
 - [ ] organisation-gestion-donnees.js

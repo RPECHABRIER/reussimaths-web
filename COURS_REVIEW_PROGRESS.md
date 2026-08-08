@@ -18,7 +18,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : geometrie-espace-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : mesures-grandeurs-troisieme.js (3e) —
+dernier fichier de la 3e.**
+
+`geometrie-espace-troisieme.js` (3e) relu intégralement : item ajouté à
+« Section d'une pyramide ou d'une sphère » sur le coefficient de
+réduction k = hauteur de la coupe ÷ hauteur totale (formule littéralement
+utilisée dans les steps de `genSectionPyramideLongueurNumeric` mais
+absente du cours, qui ne mentionnait que la nature « réduction » sans
+donner le moyen de calculer le coefficient) ; item ajouté à « La sphère :
+aire et volume » sur le volume d'une demi-sphère = moitié du volume
+complet (testé par `genVolumeDemiSphereNumeric` mais absent). Reste déjà
+au niveau attendu (sphère terrestre déjà claire avec formule
+cos(latitude), section cube/cylindre déjà claire, 4 figures déjà bien
+construites — solides finis sans besoin d'arrows, axe des pôles dans
+`buildLatitudeParalleleFigure` schématique fini, pas une droite
+infinie). Aucun symbole €, aucun candidat texTable.
 
 `transformations-plan-troisieme.js` (3e) relu intégralement : gap de
 fond comblé dans « Coordonnées d'une image » — la rotation était
@@ -786,7 +801,7 @@ vérifiés pour débordement.)
 - [x] thales-triangles-semblables-troisieme.js *(correction de fond : DE/DF inversés dans genThalesPapillonNumeric, formule enseignée contredisait le Cours ; item coefficient réciproque 1/k ajouté, absent alors que testé ; sinon déjà bon, 3 figures déjà claires)*
 - [x] trigonometrie-triangle-rectangle-troisieme.js *(piège classique ajouté à « Calculer une longueur » — diviser si l'inconnue est au dénominateur, multiplier sinon ; sinon déjà bon, figure déjà claire)*
 - [x] transformations-plan-troisieme.js *(gap de fond comblé : rotation totalement absente du cours alors que testée par genImageRotationCoordNumeric, formules 90°/180°/270° ajoutées + piège classique sens direct ; sinon déjà bon, figures déjà claires)*
-- [ ] geometrie-espace-troisieme.js
+- [x] geometrie-espace-troisieme.js *(item coefficient de réduction pyramide k=hauteur coupe/hauteur totale ajouté, formule utilisée dans les steps mais absente du cours ; item volume demi-sphère ajouté ; sinon déjà bon, 4 figures déjà claires)*
 - [ ] mesures-grandeurs-troisieme.js
 
 ### 2nde

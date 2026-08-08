@@ -21,10 +21,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
 `derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js`,
 `fonction-exponentielle-premiere-spe.js`, `trigonometrie-premiere-spe.js`,
-`vecteurs-produit-scalaire-premiere-spe.js` et
-`geometrie-reperee-premiere-spe.js` (Première Spé) sont faits. Prochain
-fichier : probabilites-conditionnelles-premiere-spe.js (Première Spé,
-9e des 11 fichiers de ce niveau).**
+`vecteurs-produit-scalaire-premiere-spe.js`,
+`geometrie-reperee-premiere-spe.js` et
+`probabilites-conditionnelles-premiere-spe.js` (Première Spé) sont
+faits. Prochain fichier : variables-aleatoires-premiere-spe.js
+(Première Spé, 10e des 11 fichiers de ce niveau).**
+
+`probabilites-conditionnelles-premiere-spe.js` (Première Spé) relu
+intégralement : 5 branches (4 avant). Nouvelle branche « Arbre pondéré :
+deux règles à connaître » ajoutée — les règles de multiplication le long
+d'un chemin et d'addition entre chemins n'apparaissaient dans aucune
+branche avant, alors que 4 générateurs s'appuient dessus directement.
+Branche « Épreuves de Bernoulli répétées » enrichie : formule complète
+de la loi binomiale P(k succès)=C(n,k)p^k(1-p)^{n-k} ajoutée, absente
+avant. Branche « Indépendance » enrichie : rappel de la formule de
+l'union P(A∪B)=P(A)+P(B)-P(A∩B), testée par un générateur dédié mais
+absente. Aucun €, aucun candidat texTable, fichier sans figure.
 
 `geometrie-reperee-premiere-spe.js` (Première Spé) relu intégralement :
 4 branches inchangées en nombre mais enrichies. Branche « Forme
@@ -1320,7 +1332,7 @@ vérifiés pour débordement.)
 - [x] trigonometrie-premiere-spe.js *(nouvelle branche Angles associés et signe selon le quadrant — 7 générateurs sur 21 sans aucune branche avant ; formule longueur d'arc ℓ=rθ ajoutée ; tableau des valeurs remarquables ajouté en formule via \begin{array})*
 - [x] vecteurs-produit-scalaire-premiere-spe.js *(items+formules ajoutés — symétrie u·v=v·u, formule inversée pour l'angle, formule de la norme, règle de bilinéarité (u+v)·w=u·w+v·w, développement de ‖u-v‖²)*
 - [x] geometrie-reperee-premiere-spe.js *(formule x_Ω=-D/2, y_Ω=-E/2, r²=x_Ω²+y_Ω²-F ajoutée — utilisée dans 2 prompts mais absente du cours ; items ajoutés — méthode pour trouver c depuis point+vecteur normal, cas simples droites horizontales/verticales)*
-- [ ] probabilites-conditionnelles-premiere-spe.js
+- [x] probabilites-conditionnelles-premiere-spe.js *(nouvelle branche Arbre pondéré : deux règles à connaître — multiplication/addition des chemins absentes malgré 4 générateurs ; formule loi binomiale ajoutée ; rappel formule union P(A∪B))*
 - [ ] variables-aleatoires-premiere-spe.js
 - [ ] algorithmique-python-premiere-spe.js
 

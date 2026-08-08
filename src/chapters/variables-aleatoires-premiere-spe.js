@@ -489,6 +489,49 @@ export default {
     pourquoi: "Une variable aléatoire et son espérance permettent de prévoir le résultat moyen d'un jeu, d'un pari ou d'une décision incertaine.",
     level: "premiere-spe",
     order: 11,
+    cours: {
+      mindMap: {
+        title: "Variables aléatoires réelles",
+        branches: [
+          {
+            title: "Loi de probabilité",
+            items: [
+              "Associe à chaque valeur possible de X sa probabilité ; la somme de toutes les probabilités vaut toujours 1.",
+            ],
+          },
+          {
+            title: "Espérance",
+            items: [
+              "L'espérance est la moyenne théorique : ce que l'on gagnerait en moyenne en répétant l'expérience un grand nombre de fois.",
+              "Jeu équitable : espérance de gain nulle.",
+            ],
+            formula: "\\(E(X) = \\sum_i p_i x_i\\)",
+          },
+          {
+            title: "Variance et écart-type",
+            items: [
+              "La formule de König-Huygens évite de calculer les écarts à la moyenne un par un.",
+              "L'écart-type (racine carrée de la variance) s'exprime dans la même unité que X, contrairement à la variance.",
+            ],
+            formula: "\\(V(X) = E(X^2) - [E(X)]^2,\\quad \\sigma(X) = \\sqrt{V(X)}\\)",
+          },
+          {
+            title: "Linéarité de l'espérance",
+            items: [
+              "Piège classique : la variance ne suit pas la même règle que l'espérance (le carré de a intervient).",
+            ],
+            formula: "\\(E(aX+b) = aE(X)+b,\\quad V(aX+b) = a^2V(X)\\)",
+          },
+          {
+            title: "Loi binomiale B(n,p)",
+            items: [
+              "Compte le nombre de succès sur n répétitions indépendantes d'une épreuve de Bernoulli de paramètre p.",
+            ],
+            formula: "\\(E(X)=np,\\quad V(X)=np(1-p)\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

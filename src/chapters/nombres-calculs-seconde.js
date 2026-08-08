@@ -610,24 +610,36 @@ export default {
             items: [
               "Crochet tourné vers le nombre exclu : \\(]a ; b[\\) (bornes exclues), \\([a ; b]\\) (bornes incluses).",
               "Piège classique : ne pas confondre \\(x < a\\) (demi-droite \\(]-\\infty ; a[\\)) avec \\(x > a\\).",
+              "Pour transformer un encadrement (addition, multiplication), on applique l'opération aux trois membres de l'inégalité.",
+              "Piège classique : multiplier (ou diviser) par un nombre négatif inverse le sens des inégalités.",
             ],
           },
           {
             title: "Valeur absolue et distance",
             items: [
               "\\(|x-a|\\) est la distance entre x et a sur la droite des réels.",
+              "\\(|X| = b \\iff X = b \\text{ ou } X = -b\\) (deux nombres ont pour valeur absolue b : lui-même et son opposé).",
               "\\(|x| \\leqslant b\\) équivaut à \\(-b \\leqslant x \\leqslant b\\) (intervalle centré).",
             ],
             formula: "\\(|x-a| \\leqslant r \\iff x \\in [a-r ; a+r]\\)",
           },
           {
-            title: "Racines carrées et puissances",
+            title: "Racines carrées",
             items: [
               "Simplifier \\(\\sqrt{n}\\) : extraire le plus grand carré parfait facteur de n.",
               "On additionne des racines carrées seulement si elles ont la même partie irrationnelle après simplification.",
               "Piège classique : \\(\\sqrt{a+b} \\neq \\sqrt{a}+\\sqrt{b}\\).",
+              "Piège classique : \\(\\sqrt{a^2} = |a|\\), pas directement a (a peut être négatif).",
             ],
             formula: "\\(\\sqrt{k^2 \\times m} = k\\sqrt{m}\\)",
+          },
+          {
+            title: "Puissances",
+            items: [
+              "Une puissance d'exposant négatif se transforme en fraction : plus l'exposant est négatif, plus le résultat est petit.",
+              "Piège classique : une puissance d'exposant pair est toujours positive ou nulle, quel que soit le signe de la base ; une puissance d'exposant impair garde le signe de la base.",
+            ],
+            formula: "\\(a^{-n} = \\dfrac{1}{a^{n}}\\)",
           },
           {
             title: "Identités remarquables, dans les deux sens",
@@ -642,6 +654,7 @@ export default {
             items: [
               "Comparaison additive : la différence \\(b-a\\).",
               "Comparaison multiplicative : le rapport \\(\\frac{b}{a}\\) (ou le pourcentage d'évolution).",
+              "Quand deux quantités sont d'ordres de grandeur très différents, le rapport est plus parlant ; quand elles sont proches, la différence suffit.",
             ],
           },
         ],

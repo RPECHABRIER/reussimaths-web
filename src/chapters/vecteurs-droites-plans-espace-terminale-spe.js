@@ -403,6 +403,111 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant. Figure.jsx ne rend que
+// du SVG 2D : les objets de l'espace sont donc projetés en perspective
+// cavalière (convention manuel : axe (Ox) oblique à 45° réduit de moitié vers
+// le bas-gauche, axe (Oy) horizontal vers la droite, axe (Oz) vertical vers
+// le haut) avant d'être passés au composant Figure existant.
+function project3D(x, y, z) {
+  const scale = 18;
+  const kx = 0.5 * Math.SQRT1_2; // réduction cavalière (0.5) x cos(45°)
+  return { x: y * scale - x * kx * scale, y: -z * scale + x * kx * scale };
+}
+
+function build3DFigure(pts3D, segments = [], lines = []) {
+  const points = pts3D.map((p) => {
+    const proj = project3D(p.x, p.y, p.z);
+    return { id: p.id, x: proj.x, y: proj.y, label: p.label ?? p.id, dx: p.dx ?? 8, dy: p.dy ?? -6, hideDot: p.hideDot, hideLabel: p.hideLabel };
+  });
+  return { points, segments, lines };
+}
+
+function buildCoursReperEspaceFigure() {
+  return build3DFigure(
+    [
+      { id: "O", x: 0, y: 0, z: 0, hideLabel: true, dx: -10, dy: 10 },
+      { id: "X", x: 3.4, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "Y", x: 0, y: 3.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "Z", x: 0, y: 0, z: 3.2, hideDot: true, hideLabel: true },
+      { id: "M", x: 2, y: 2, z: 2, label: "M" },
+      { id: "Mxy", x: 2, y: 2, z: 0, hideDot: true, hideLabel: true },
+      { id: "Mx", x: 2, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "My", x: 0, y: 2, z: 0, hideDot: true, hideLabel: true },
+    ],
+    [
+      { from: "M", to: "Mxy", dashed: true },
+      { from: "Mxy", to: "Mx", dashed: true },
+      { from: "Mxy", to: "My", dashed: true },
+    ],
+    [
+      { from: "O", to: "X", extend: 0, arrowEnd: true },
+      { from: "O", to: "Y", extend: 0, arrowEnd: true },
+      { from: "O", to: "Z", extend: 0, arrowEnd: true },
+      { from: "O", to: "M", extend: 0, arrowEnd: true },
+    ]
+  );
+}
+
+function buildCoursDroiteEspaceFigure() {
+  return build3DFigure(
+    [
+      { id: "P1", x: -1.5, y: -0.5, z: 2.5, hideDot: true, hideLabel: true },
+      { id: "P2", x: 4, y: 2.5, z: -1, hideDot: true, hideLabel: true },
+      { id: "A", x: 1, y: 1, z: 1, label: "A" },
+      { id: "U", x: 3, y: 2, z: 0, label: "u", dx: 8, dy: 6 },
+    ],
+    [],
+    [
+      { from: "P1", to: "P2", extend: 0 },
+      { from: "A", to: "U", extend: 0, arrowEnd: true },
+    ]
+  );
+}
+
+function buildCoursBaseEspaceFigure() {
+  return build3DFigure(
+    [
+      { id: "O", x: 0, y: 0, z: 0, hideLabel: true, dx: -10, dy: 10 },
+      { id: "I", x: 2, y: 0, z: 0, label: "i", dy: 12 },
+      { id: "J", x: 0, y: 2, z: 0, label: "j" },
+      { id: "K", x: 0, y: 0, z: 2, label: "k", dx: -10 },
+      { id: "V", x: 1.5, y: 1, z: 0, label: "v", dx: 8, dy: 8 },
+      { id: "IJ", x: 2, y: 2, z: 0, hideDot: true, hideLabel: true },
+    ],
+    [
+      { from: "I", to: "IJ", dashed: true },
+      { from: "J", to: "IJ", dashed: true },
+    ],
+    [
+      { from: "O", to: "I", extend: 0, arrowEnd: true },
+      { from: "O", to: "J", extend: 0, arrowEnd: true },
+      { from: "O", to: "K", extend: 0, arrowEnd: true },
+      { from: "O", to: "V", extend: 0, arrowEnd: true },
+    ]
+  );
+}
+
+function buildCoursPlansParallelesFigure() {
+  return build3DFigure(
+    [
+      { id: "A", x: 0, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "B", x: 3, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "C", x: 3, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "D", x: 0, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "A2", x: 0, y: 0, z: 2, hideDot: true, hideLabel: true },
+      { id: "B2", x: 3, y: 0, z: 2, hideDot: true, hideLabel: true },
+      { id: "C2", x: 3, y: 2.2, z: 2, hideDot: true, hideLabel: true },
+      { id: "D2", x: 0, y: 2.2, z: 2, hideDot: true, hideLabel: true },
+    ],
+    [
+      { from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "D" }, { from: "D", to: "A" },
+      { from: "A2", to: "B2" }, { from: "B2", to: "C2" }, { from: "C2", to: "D2" }, { from: "D2", to: "A2" },
+    ],
+    []
+  );
+}
+
 export default {
   meta: {
     id: "vecteurs-droites-plans-espace-terminale-spe",
@@ -412,6 +517,46 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Vecteurs, droites et plans de l'espace",
+        branches: [
+          {
+            title: "Repère de l'espace, coordonnées et norme",
+            items: [
+              "Un repère de l'espace ajoute un troisième axe (Oz) aux deux axes du plan.",
+            ],
+            formula: "\\(\\|\\overrightarrow{OM}\\| = \\sqrt{x^2+y^2+z^2}\\)",
+            figure: buildCoursReperEspaceFigure(),
+          },
+          {
+            title: "Représentation paramétrique d'une droite",
+            items: [
+              "Un point A et un vecteur directeur \\(\\overrightarrow{u}\\) suffisent pour décrire tous les points de la droite.",
+              "Piège classique : bien vérifier que le même paramètre t est utilisé sur les trois lignes (x, y, z) en même temps.",
+            ],
+            formula: "\\(\\begin{cases}x=x_A+ta \\\\ y=y_A+tb \\\\ z=z_A+tc\\end{cases},\\ t \\in \\mathbb{R}\\)",
+            figure: buildCoursDroiteEspaceFigure(),
+          },
+          {
+            title: "Base, décomposition et coplanarité",
+            items: [
+              "Trois vecteurs non coplanaires forment une base : tout vecteur de l'espace se décompose de façon unique sur cette base.",
+              "Des vecteurs coplanaires restent « à plat » dans un même plan (comme \\(\\overrightarrow{v}\\) ici, combinaison de \\(\\overrightarrow{i}\\) et \\(\\overrightarrow{j}\\)).",
+            ],
+            figure: buildCoursBaseEspaceFigure(),
+          },
+          {
+            title: "Positions relatives de droites et de plans",
+            items: [
+              "Deux plans sont parallèles si l'un contient deux vecteurs directeurs du plan de l'autre (ou s'ils sont confondus).",
+              "Une droite et un plan sont soit parallèles (aucun point commun ou droite incluse dans le plan), soit sécants en un seul point.",
+            ],
+            figure: buildCoursPlansParallelesFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

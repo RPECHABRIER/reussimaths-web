@@ -85,8 +85,9 @@ les hashes). État actuel :
   `9c7c6fb`, pas de figure). `statistiques-deux-variables-premiere-techno.js`
   fait (commit `08797a5`, pas de figure).
   `probabilites-conditionnelles-premiere-techno.js` fait (commit `0a2255b`,
-  pas de figure). **Prochain fichier :
-  `epreuves-independantes-premiere-techno.js`.**
+  pas de figure). `epreuves-independantes-premiere-techno.js` fait (commit
+  `4ed1f29`, pas de figure). **Prochain fichier :
+  `variables-aleatoires-premiere-techno.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -366,7 +367,7 @@ Cours).
 - [x] derivation-premiere-techno.js
 - [x] statistiques-deux-variables-premiere-techno.js
 - [x] probabilites-conditionnelles-premiere-techno.js
-- [ ] epreuves-independantes-premiere-techno.js
+- [x] epreuves-independantes-premiere-techno.js
 - [ ] variables-aleatoires-premiere-techno.js
 - [ ] preparation-eam-premiere-techno.js
 - [ ] algorithmique-python-premiere-techno.js

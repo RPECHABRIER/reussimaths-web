@@ -307,6 +307,35 @@ export default {
     level: "quatrieme",
     free: false,
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Notion de fonctions",
+        branches: [
+          {
+            title: "Image et antécédent",
+            items: [
+              "L'image de x par f, c'est le nombre associé à x : on remplace x par sa valeur dans la formule.",
+              "Un antécédent de y, c'est un nombre x dont l'image par f est y : on résout une équation pour le trouver.",
+            ],
+          },
+          {
+            title: "Fonction par tableau ou par courbe",
+            items: [
+              "Dans un tableau de valeurs, on lit directement l'image (ligne du bas) ou l'antécédent (ligne du haut).",
+              "Un point \\((x ; y)\\) appartient à la courbe de f si et seulement si y est bien l'image de x par f.",
+              "Piège classique : confondre image (on part de x) et antécédent (on part de y).",
+            ],
+          },
+          {
+            title: "Fonction et proportionnalité",
+            items: [
+              "Une fonction correspond à une situation de proportionnalité si le quotient \\(\\frac{y}{x}\\) reste constant pour toutes les valeurs.",
+              "Une fonction affine du type \\(x \\mapsto ax + b\\) n'est proportionnelle que si b = 0.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

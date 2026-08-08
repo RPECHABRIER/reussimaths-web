@@ -553,9 +553,17 @@ export default {
         title: "Probabilités",
         branches: [
           {
+            title: "Vocabulaire des événements",
+            items: [
+              "Événement certain : regroupe toutes les issues (probabilité 1). Événement impossible : ne regroupe aucune issue (probabilité 0). Événement élémentaire : ne correspond qu'à une seule issue de l'univers.",
+              "Une probabilité est toujours un nombre entre 0 et 1 ; la somme des probabilités de toutes les issues d'un univers vaut toujours 1.",
+            ],
+          },
+          {
             title: "Modèle équiprobable",
             items: [
               "Si toutes les issues ont la même chance de se produire, chaque probabilité vaut (nombre d'issues favorables) / (nombre d'issues possibles).",
+              "On utilise un modèle équiprobable quand les issues sont symétriques et dénombrables (dé, pièce, carte) ; sinon (phénomène réel non contrôlé), on se base sur une étude statistique (fréquences observées).",
             ],
             formula: "\\(P(E) = \\dfrac{\\text{nb issues favorables}}{\\text{nb issues possibles}}\\)",
           },
@@ -569,15 +577,24 @@ export default {
           {
             title: "Univers à deux épreuves",
             items: [
+              "Pour une expérience à deux épreuves successives, le nombre total d'issues est le produit du nombre d'issues de chaque épreuve (principe multiplicatif).",
               "Lister toutes les issues possibles (souvent en tableau double entrée) avant de compter les cas favorables.",
               "Piège classique : pour la somme de deux dés, les issues ne sont pas équiprobables (plus de façons d'obtenir 7 que 2).",
             ],
+            formula: "\\(\\text{card}(\\text{univers}) = \\text{nb issues épreuve 1} \\times \\text{nb issues épreuve 2}\\)",
           },
           {
             title: "Probabilités conditionnelles",
             items: [
               "\\(P_A(B)\\) : probabilité de B sachant que A est déjà réalisé, lue dans la ligne/colonne A d'un tableau croisé.",
+              "Sur un arbre pondéré, la probabilité d'un chemin s'obtient en multipliant les probabilités rencontrées : \\(P(A \\cap B) = P(A) \\times P_A(B)\\).",
               "Piège classique très fréquent : \\(P_A(B) \\neq P_B(A)\\) (ex : probabilité d'être malade sachant le test positif ≠ probabilité d'avoir un test positif sachant malade).",
+            ],
+          },
+          {
+            title: "Loi des grands nombres",
+            items: [
+              "Plus on répète une expérience aléatoire un grand nombre de fois, plus la fréquence observée d'un événement se rapproche de sa probabilité théorique.",
             ],
           },
         ],

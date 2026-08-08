@@ -465,6 +465,25 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// Figure du Cours pour l'inégalité triangulaire : un triangle "quelconque"
+// valide (angles 50°/60°/70°), avec les côtés étiquetés a, b, c (lettres
+// génériques, pas de longueurs précises) pour illustrer la règle sans laisser
+// croire qu'un dessin prouve l'existence — voir buildTriangleFigure() plus haut.
+function buildTriangleInegaliteFigure() {
+  const fig = buildTriangleFigure(50, 60, 70);
+  const byId = Object.fromEntries(fig.points.map((p) => [p.id, p]));
+  const mid = (p, q) => ({ x: (byId[p].x + byId[q].x) / 2, y: (byId[p].y + byId[q].y) / 2 });
+  const mAB = mid("A", "B");
+  const mBC = mid("B", "C");
+  const mCA = mid("C", "A");
+  fig.freeLabels = [
+    { x: mAB.x, y: mAB.y + 14, text: "c" },
+    { x: mBC.x + 12, y: mBC.y, text: "a" },
+    { x: mCA.x - 12, y: mCA.y, text: "b" },
+  ];
+  return fig;
+}
+
 export default {
   meta: {
     id: "configurations-geometriques",
@@ -474,6 +493,47 @@ export default {
     level: "sixieme",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Configurations géométriques",
+        branches: [
+          {
+            title: "Inégalité triangulaire",
+            items: [
+              "Un triangle existe seulement si la somme des deux plus petits côtés est strictement supérieure au plus grand côté.",
+              "Piège classique : une somme égale au plus grand côté (pas strictement supérieure) donne trois points alignés, pas un triangle.",
+            ],
+            formula: "\\(a + b > c\\) (si c est le plus grand côté)",
+            figure: buildTriangleInegaliteFigure(),
+          },
+          {
+            title: "Triangle isocèle",
+            items: [
+              "Deux côtés égaux, et les deux angles à la base (opposés à ces côtés) sont égaux.",
+            ],
+            formula: "\\(\\hat{A} = 180° - 2 \\times \\hat{B}\\)",
+            figure: buildTriangleFigure(50, 65, 65, { equalSides: ["AB", "CA"] }),
+          },
+          {
+            title: "Triangle équilatéral",
+            items: [
+              "Trois côtés égaux, donc trois angles égaux, chacun de 60°.",
+            ],
+            formula: "\\(180° \\div 3 = 60°\\)",
+            figure: buildTriangleFigure(60, 60, 60, { equalSides: ["AB", "BC", "CA"] }),
+          },
+          {
+            title: "Triangle rectangle (isocèle)",
+            items: [
+              "Rectangle : il a un angle droit (90°), marqué par un petit carré sur la figure.",
+              "Rectangle isocèle : angle droit + les deux autres angles sont égaux, donc chacun de 45°.",
+            ],
+            formula: "\\((180° - 90°) \\div 2 = 45°\\)",
+            figure: buildTriangleFigure(90, 45, 45, { rightAngleAt: "A", equalSides: ["AB", "CA"] }),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

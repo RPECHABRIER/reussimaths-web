@@ -222,6 +222,34 @@ export default {
     pourquoi: "x ↦ a^x modélise les évolutions en pourcentage constant (intérêts, inflation, décroissance d'un stock) qu'on retrouve partout en gestion et en économie.",
     level: "terminale-techno",
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Fonctions exponentielles",
+        branches: [
+          {
+            title: "Propriétés algébriques",
+            items: [
+              "Ce sont les mêmes règles que pour les puissances de nombres.",
+            ],
+            formula: "\\(a^{x+y}=a^x \\times a^y,\\quad a^{-x}=\\dfrac{1}{a^x},\\quad (a^x)^y=a^{xy}\\)",
+          },
+          {
+            title: "Sens de variation et allure",
+            items: [
+              "a > 1 : la fonction est croissante (croissance). 0 < a < 1 : elle est décroissante (décroissance).",
+              "Dans tous les cas, \\(a^0=1\\) et la fonction reste strictement positive.",
+            ],
+          },
+          {
+            title: "Taux d'évolution moyen par période",
+            items: [
+              "Utile pour comparer des évolutions sur des durées différentes en les ramenant à la même unité de temps.",
+            ],
+            formula: "\\(a_{\\text{moyen}} = \\sqrt[n]{a_{\\text{global}}}\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -18,8 +18,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). `resolution-equations.js`,
-`statistiques-quatrieme.js` et `probabilites-quatrieme.js` (4e) viennent
-d'être relus. Prochain fichier : `notion-fonctions.js` (4e).**
+`statistiques-quatrieme.js`, `probabilites-quatrieme.js` et
+`notion-fonctions.js` (4e) viennent d'être relus. Prochain fichier :
+`proportionnalite-quatrieme.js` (4e).**
+
+`notion-fonctions.js` (4e) relu intégralement : notation \\(x \\mapsto
+ax+b\\) remplacée par une formulation en langage naturel dans la branche
+« Fonction et proportionnalité », pour rester cohérente avec le Cours et
+les exercices qui n'utilisent jamais f(x) ni la flèche mapsto ailleurs
+dans le fichier (f(x) est réservée à la Troisième — même famille de bug
+que celui déjà repéré sur `fonctions.js` en 5e). Reste déjà bon (3
+branches, piège classique pertinent sur image/antécédent). Exercices : 2
+générateurs "tableau de valeurs" (jusqu'à 5 couples x/y en prose avec
+flèches — exactement le bug de présentation d'origine signalé par Romain)
+et 1 générateur "proportionnalité" convertis en `texTable()`.
 
 `probabilites-quatrieme.js` (4e) relu intégralement : branches
 « Équiprobabilité » et « Calculer une probabilité » inversées (l'ancienne
@@ -483,7 +495,7 @@ vérifiés pour débordement.)
 - [x] resolution-equations.js
 - [x] statistiques-quatrieme.js
 - [x] probabilites-quatrieme.js
-- [ ] notion-fonctions.js
+- [x] notion-fonctions.js
 - [ ] proportionnalite-quatrieme.js
 - [ ] theoreme-thales.js
 - [ ] triangles-rectangles-quatrieme.js

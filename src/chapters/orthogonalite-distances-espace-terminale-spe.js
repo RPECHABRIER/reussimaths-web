@@ -446,6 +446,73 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant. Même technique que
+// vecteurs-droites-plans-espace-terminale-spe.js : Figure.jsx ne rend que du
+// SVG 2D, les objets de l'espace sont donc projetés en perspective cavalière
+// (axe (Ox) oblique réduit vers le bas-gauche, (Oy) horizontal, (Oz) vertical).
+function project3D(x, y, z) {
+  const scale = 18;
+  const kx = 0.5 * Math.SQRT1_2;
+  return { x: y * scale - x * kx * scale, y: -z * scale + x * kx * scale };
+}
+
+function build3DFigure(pts3D, segments = [], lines = []) {
+  const points = pts3D.map((p) => {
+    const proj = project3D(p.x, p.y, p.z);
+    return { id: p.id, x: proj.x, y: proj.y, label: p.label ?? p.id, dx: p.dx ?? 8, dy: p.dy ?? -6, hideDot: p.hideDot, hideLabel: p.hideLabel };
+  });
+  return { points, segments, lines };
+}
+
+function buildCoursProduitScalaireEspaceFigure() {
+  return build3DFigure(
+    [
+      { id: "O", x: 0, y: 0, z: 0, hideLabel: true, dx: -10, dy: 10 },
+      { id: "U", x: 2, y: 1, z: 0, label: "u", dy: 12 },
+      { id: "V", x: 1, y: 0, z: 2, label: "v", dx: -10 },
+    ],
+    [],
+    [
+      { from: "O", to: "U", extend: 0, arrowEnd: true },
+      { from: "O", to: "V", extend: 0, arrowEnd: true },
+    ]
+  );
+}
+
+function buildCoursPlanNormalFigure() {
+  return build3DFigure(
+    [
+      { id: "A", x: 0, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "B", x: 3, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "C", x: 3, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "D", x: 0, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "P", x: 1.5, y: 1, z: 0, hideDot: true, hideLabel: true },
+      { id: "N", x: 1.5, y: 1, z: 2.5, label: "n", dx: 8, dy: -4 },
+    ],
+    [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "D" }, { from: "D", to: "A" }],
+    [{ from: "P", to: "N", extend: 0, arrowEnd: true }]
+  );
+}
+
+function buildCoursDistancePlanFigure() {
+  return build3DFigure(
+    [
+      { id: "A", x: 0, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "B", x: 3, y: 0, z: 0, hideDot: true, hideLabel: true },
+      { id: "C", x: 3, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "D", x: 0, y: 2.2, z: 0, hideDot: true, hideLabel: true },
+      { id: "M", x: 1, y: 1, z: 3, label: "M" },
+      { id: "H", x: 1, y: 1, z: 0, label: "H", dy: 12 },
+    ],
+    [
+      { from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "D" }, { from: "D", to: "A" },
+      { from: "M", to: "H", dashed: true },
+    ],
+    []
+  );
+}
+
 export default {
   meta: {
     id: "orthogonalite-distances-espace-terminale-spe",
@@ -455,6 +522,45 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Orthogonalité et distances dans l'espace",
+        branches: [
+          {
+            title: "Produit scalaire dans l'espace",
+            items: [
+              "Même formule qu'en 2D, avec une troisième coordonnée en plus.",
+              "\\(\\overrightarrow{u}\\) et \\(\\overrightarrow{v}\\) sont orthogonaux si et seulement si leur produit scalaire est nul.",
+            ],
+            formula: "\\(\\overrightarrow{u}\\cdot\\overrightarrow{v} = xx'+yy'+zz'\\)",
+            figure: buildCoursProduitScalaireEspaceFigure(),
+          },
+          {
+            title: "Vecteur normal à un plan",
+            items: [
+              "\\(\\overrightarrow{n}(a;b;c)\\) est normal au plan d'équation \\(ax+by+cz+d=0\\) : il est orthogonal à tous les vecteurs du plan.",
+            ],
+            formula: "\\(ax+by+cz+d=0\\)",
+            figure: buildCoursPlanNormalFigure(),
+          },
+          {
+            title: "Positions relatives",
+            items: [
+              "Deux plans sont parallèles si et seulement si leurs vecteurs normaux sont colinéaires.",
+              "Une droite est orthogonale à un plan si son vecteur directeur est colinéaire au vecteur normal du plan.",
+            ],
+          },
+          {
+            title: "Distance d'un point à un plan",
+            items: [
+              "H, projeté orthogonal de M sur le plan, est le point du plan le plus proche de M.",
+            ],
+            formula: "\\(d(M,P) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}}\\)",
+            figure: buildCoursDistancePlanFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

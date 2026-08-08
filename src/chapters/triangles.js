@@ -455,49 +455,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 9,
-    cours: {
-      mindMap: {
-        title: "Triangles",
-        branches: [
-          {
-            title: "Angles dans un triangle",
-            items: [
-              "La somme des trois angles d'un triangle vaut toujours 180°.",
-              "Classification : acutangle (3 angles aigus), rectangle (1 angle droit), obtusangle (1 angle obtus).",
-            ],
-            formula: "\\(\\widehat{A} + \\widehat{B} + \\widehat{C} = 180°\\)",
-            figure: buildTriangleFigure(70, 60, 50, { labels: { A: "70°", B: "60°", C: "50°" } }),
-          },
-          {
-            title: "Triangle isocèle et rectangle",
-            items: [
-              "Dans un triangle isocèle, les deux angles à la base (opposés aux côtés égaux) sont égaux.",
-              "Dans un triangle rectangle, deux des trois hauteurs sont confondues avec les côtés de l'angle droit.",
-            ],
-            formula: "\\(\\text{angle à la base} = (180° - \\text{angle au sommet}) \\div 2\\)",
-            figure: buildTriangleFigure(40, 70, 70, { equalSides: ["AB", "AC"], labels: { A: "40°" } }),
-          },
-          {
-            title: "Médiatrices, hauteurs, médianes",
-            items: [
-              "Tout point de la médiatrice d'un segment est équidistant de ses deux extrémités.",
-              "Une médiane relie un sommet au milieu du côté opposé, et partage le triangle en deux triangles de même aire.",
-              "Les trois médiatrices (comme les trois hauteurs, comme les trois médianes) d'un triangle sont concourantes.",
-            ],
-            figure: buildTriangleFigure(90, 50, 40, { rightAngleAt: "A" }),
-          },
-          {
-            title: "Aire d'un triangle",
-            items: [
-              "Aire = (base × hauteur) ÷ 2.",
-              "Piège classique : la hauteur doit être perpendiculaire à la base choisie, pas un côté oblique quelconque.",
-            ],
-            formula: "\\(\\mathcal{A} = \\dfrac{base \\times hauteur}{2}\\)",
-            figure: buildTriangleFigure(50, 90, 40, { rightAngleAt: "B" }),
-          },
-        ],
-      },
-    },
   },
   generate,
 };

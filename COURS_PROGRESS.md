@@ -106,8 +106,9 @@ les hashes). État actuel :
   `9785db2`, pas de figure). `limites-fonctions-terminale-spe.js` fait
   (commit `09e9ad7`, pas de figure). `continuite-terminale-spe.js` fait
   (commit `fb492c3`, pas de figure). `complements-derivation-terminale-spe.js`
-  fait (commit `e9d857d`, pas de figure). **Prochain fichier :
-  `logarithme-neperien-terminale-spe.js`.**
+  fait (commit `e9d857d`, pas de figure). `logarithme-neperien-terminale-spe.js`
+  fait (commit `9c4ab3e`, pas de figure). **Prochain fichier :
+  `fonctions-trigonometriques-terminale-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -407,7 +408,7 @@ Cours).
 - [x] limites-fonctions-terminale-spe.js
 - [x] continuite-terminale-spe.js
 - [x] complements-derivation-terminale-spe.js
-- [ ] logarithme-neperien-terminale-spe.js
+- [x] logarithme-neperien-terminale-spe.js
 - [ ] fonctions-trigonometriques-terminale-spe.js
 - [ ] primitives-equations-differentielles-terminale-spe.js
 - [ ] calcul-integral-terminale-spe.js

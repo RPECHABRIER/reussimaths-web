@@ -548,6 +548,41 @@ export default {
     level: "seconde",
     free: false,
     order: 13,
+    cours: {
+      mindMap: {
+        title: "Probabilités",
+        branches: [
+          {
+            title: "Modèle équiprobable",
+            items: [
+              "Si toutes les issues ont la même chance de se produire, chaque probabilité vaut (nombre d'issues favorables) / (nombre d'issues possibles).",
+            ],
+            formula: "\\(P(E) = \\dfrac{\\text{nb issues favorables}}{\\text{nb issues possibles}}\\)",
+          },
+          {
+            title: "Événement contraire et réunion",
+            items: [
+              "\\(P(\\bar{E}) = 1 - P(E)\\) : utile quand « au moins un » est plus simple à compter en négatif.",
+              "\\(P(A \\cup B) = P(A)+P(B)-P(A \\cap B)\\) : on retire l'intersection comptée deux fois.",
+            ],
+          },
+          {
+            title: "Univers à deux épreuves",
+            items: [
+              "Lister toutes les issues possibles (souvent en tableau double entrée) avant de compter les cas favorables.",
+              "Piège classique : pour la somme de deux dés, les issues ne sont pas équiprobables (plus de façons d'obtenir 7 que 2).",
+            ],
+          },
+          {
+            title: "Probabilités conditionnelles",
+            items: [
+              "\\(P_A(B)\\) : probabilité de B sachant que A est déjà réalisé, lue dans la ligne/colonne A d'un tableau croisé.",
+              "Piège classique très fréquent : \\(P_A(B) \\neq P_B(A)\\) (ex : probabilité d'être malade sachant le test positif ≠ probabilité d'avoir un test positif sachant malade).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

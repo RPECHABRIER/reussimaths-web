@@ -393,6 +393,7 @@ export default {
             items: [
               "On passe d'un terme au suivant en multipliant toujours par le même nombre q (la raison).",
               "Piège classique : contrairement à une suite arithmétique, la raison se calcule par un quotient, pas une différence.",
+              "Pour reculer d'un rang, on divise par q (opération inverse de la multiplication par la raison).",
             ],
             formula: "\\(u_{n+1} = q \\times u_n\\)",
           },
@@ -404,10 +405,12 @@ export default {
             formula: "\\(u_n = u_0 \\times q^n\\)",
           },
           {
-            title: "Sens de variation",
+            title: "Sens de variation (suites et fonctions exponentielles)",
             items: [
               "Pour \\(u_0 > 0\\) : q > 1 ⟹ croissante ; 0 < q < 1 ⟹ décroissante ; q = 1 ⟹ constante.",
+              "Même principe pour une fonction exponentielle \\(x \\mapsto a^x\\) : a > 1 ⟹ croissante sur \\(\\mathbb{R}\\) ; 0 < a < 1 ⟹ décroissante.",
               "Piège classique : q < 0 donne une suite qui alterne de signe, ni croissante ni décroissante.",
+              "Entre deux suites géométriques à termes positifs, celle qui a la plus grande raison (> 1) croît le plus rapidement à long terme.",
             ],
           },
           {
@@ -415,7 +418,10 @@ export default {
             items: [
               "Une évolution de t % à chaque étape se modélise par une suite géométrique de raison \\(q=1+\\frac{t}{100}\\).",
               "Coefficient multiplicateur global d'évolutions successives = produit des coefficients (pas leur somme).",
+              "Piège classique très fréquent : le taux d'évolution global sur plusieurs périodes n'est PAS la somme des taux périodiques (ex : +2 % par mois pendant 12 mois ne donne pas +24 %, mais environ +26,8 %, car ce sont les coefficients multiplicateurs qui se multiplient).",
+              "Coefficient multiplicateur réciproque (pour revenir à la valeur initiale) : l'inverse du coefficient d'origine.",
             ],
+            formula: "\\(CM_{\\text{réciproque}} = \\dfrac{1}{CM}\\)",
           },
           {
             title: "Taux d'évolution moyen par période",

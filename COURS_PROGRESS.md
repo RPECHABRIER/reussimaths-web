@@ -27,7 +27,9 @@ les hashes). État actuel :
   figure). `generalites-fonctions-seconde.js` fait (commit `05bcc23`, pas
   de figure). `variations-fonctions-seconde.js` fait (commit `b4875b0`,
   pas de figure). `fonctions-affines-seconde.js` fait (commit `9568b50`,
-  pas de figure). **Prochain fichier : `fonctions-reference-seconde.js`.**
+  pas de figure). `fonctions-reference-seconde.js` fait (commit `7e95059`,
+  pas de figure). **Prochain fichier : `reperage-configurations-seconde.js`
+  (géométrie — figures requises).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -237,7 +239,7 @@ initiale de Romain.
 - [x] generalites-fonctions-seconde.js
 - [x] variations-fonctions-seconde.js
 - [x] fonctions-affines-seconde.js
-- [ ] fonctions-reference-seconde.js
+- [x] fonctions-reference-seconde.js
 - [ ] reperage-configurations-seconde.js *(géométrie)*
 - [ ] vecteurs-seconde.js *(géométrie)*
 - [ ] colinearite-vecteurs-seconde.js *(géométrie)*

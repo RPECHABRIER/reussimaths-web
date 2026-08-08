@@ -17,7 +17,17 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `puissances.js` (5e).**
+**Prochain fichier à traiter : `calcul-litteral.js` (5e).**
+
+`puissances.js` (5e) relu : branche "Carré et cube" clarifiée — la
+formulation "multiplié par lui-même deux/trois fois" était ambiguë (source
+de confusion classique entre nombre de facteurs et nombre de
+multiplications, pourrait laisser croire que le cube = carré appliqué deux
+fois), remplacée par des exemples numériques concrets
+(\\(5^2=5\\times5=25\\), \\(5^3=5\\times5\\times5=125\\)). Reste déjà au
+niveau attendu (puissances de dix, priorités avec puissances, aire/volume
+déjà clairs et alignés sur les exercices, prompts courts, aucun candidat
+`texTable()`).
 
 `divisibilite-fractions.js` (5e) relu : branche "Multiples et diviseurs"
 reformulée pour partir d'un exemple concret (\\(12 \\div 4 = 3\\)) avant la
@@ -228,7 +238,7 @@ vérifiés pour débordement.)
 ### 5e
 - [x] calcul-numerique.js *(piège classique distributivité k×(a+b)≠k×a+b ajouté, sinon déjà bon)*
 - [x] divisibilite-fractions.js *(branche multiples/diviseurs partie du concret, formule produits en croix ajoutée)*
-- [ ] puissances.js
+- [x] puissances.js *(formulation carré/cube clarifiée avec exemples numériques concrets, sinon déjà bon)*
 - [ ] calcul-litteral.js
 - [ ] nombres-relatifs.js *(flèches déjà corrigées — relire le reste)*
 - [ ] geometrie-espace.js

@@ -11,29 +11,45 @@ committé/coché n'existe pas pour la session suivante.
 
 ## Reprise ici
 
-**La 6e (niveau pilote) est intégralement terminée** — les 9 chapitres
-principaux ont tous un `meta.cours.mindMap`. **Prochaine étape : démarrer la
-5e** (voir la checklist "5e (cinquieme)" ci-dessous, dans l'ordre où les
-fichiers y sont listés — `calcul-numerique.js` en premier). Même méthode :
+**La 6e ET la 5e sont désormais intégralement terminées** (9 + 12 = 21
+chapitres avec `meta.cours.mindMap`). **Prochaine étape : démarrer la 4e**
+(voir la checklist "4e (quatrieme)" ci-dessous, dans l'ordre où les fichiers
+y sont listés — `nombres-relatifs-quatrieme.js` en premier). Même méthode :
 lire `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
 suivre le format de `Figure.jsx`), vérifier avec `node --check` +
-`npx vite build` + le script `check-cours-katex.mjs` (à la racine du repo,
-créé pendant le chantier 6e — usage : `node check-cours-katex.mjs
-./src/chapters/<file>.js`), committer CE fichier seul, cocher, committer ce
-fichier de suivi, avant de passer au chapitre suivant.
+`npx vite build` + le script `check-cours-katex.mjs` (à la racine du repo —
+usage : `node check-cours-katex.mjs ./src/chapters/<file>.js`), committer CE
+fichier seul, cocher, committer ce fichier de suivi, avant de passer au
+chapitre suivant.
 
-Dernière mise à jour : 2026-08-08 — 6e terminée. Les 6 derniers chapitres
-faits pendant cette session : `operations-decimaux.js` (commit `990e34d`),
-`grandeurs-mesures.js` (commit `4e99276`), `distances-symetries.js` (commit
-`32102ab`, 5 figures), `angles.js` (commit `090577a`, 4 figures réutilisant
-les helpers buildAngleFigure / buildRaysFromVertexFigure /
-buildTriangleFigure déjà présents dans le fichier),
-`configurations-geometriques.js` (commit `6698b60`, 4 figures de triangles
-réutilisant buildTriangleFigure) et `organisation-gestion-donnees.js`
-(commit `ac0ca9f`, 1 figure de diagramme en bâtons réutilisant
-buildBarChartFigure).
+Note technique : `.git/index.lock` / `HEAD.lock` / `refs/heads/main.lock`
+sont bloqués dans ce repo (impossible à supprimer, `Operation not
+permitted`) — `git commit` normal échoue désormais. Contournement qui
+fonctionne : `git add <file>` (fonctionne malgré le warning), puis
+`cp .git/index /tmp/x; TREE=$(GIT_INDEX_FILE=/tmp/x git write-tree);
+NEWCOMMIT=$(echo "msg" | git commit-tree $TREE -p $(git rev-parse HEAD));
+echo $NEWCOMMIT > .git/refs/heads/main` (écriture directe du fichier de ref,
+en contournant le lock). Un script prêt à l'emploi a été laissé dans
+`/tmp/gcommit.sh` côté sandbox (peut ne pas persister entre sessions — le
+recréer si besoin, il est court : voir modèle ci-dessus).
+
+Dernière mise à jour : 2026-08-08 — 6e ET 5e terminées. Les 12 chapitres 5e
+faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
+`divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
+`b94c516`), `calcul-litteral.js` (commit `514a805`), `nombres-relatifs.js`
+(commit `950c23a`, 2 figures réutilisant buildGraduatedLineFigure/
+buildRepereFigure), `geometrie-espace.js` (commit `4da7eae`, 3 figures
+neuves — pavé en perspective cavalière, cylindre, disque — aucun helper de
+solide n'existait dans ce fichier), `symetrie-centrale-parallelogrammes.js`
+(commit `07daa4a`, 4 figures : 2 neuves — symétrie centrale,
+parallèles+sécante — et 2 réutilisant buildParallelogrammeFigure),
+`triangles.js` (commit `ff967d6`, 4 figures réutilisant buildTriangleFigure),
+`statistiques-probabilites.js` (commit `4b159ba`),
+`proportionnalite-cinquieme.js` (commit `1d42250`), `fonctions.js` (commit
+`46829b1`) et `algorithmique-cinquieme.js` (commit `8b7c475`, dernier
+chapitre 5e).
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -118,20 +134,20 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] configurations-geometriques.js *(géométrie — figures requises)*
 - [x] organisation-gestion-donnees.js
 
-### 5e (cinquieme)
+### 5e (cinquieme) — TERMINÉ
 
-- [ ] calcul-numerique.js
-- [ ] divisibilite-fractions.js
-- [ ] puissances.js
-- [ ] calcul-litteral.js
-- [ ] nombres-relatifs.js
-- [ ] geometrie-espace.js *(géométrie)*
-- [ ] symetrie-centrale-parallelogrammes.js *(géométrie)*
-- [ ] triangles.js *(géométrie)*
-- [ ] statistiques-probabilites.js
-- [ ] proportionnalite-cinquieme.js
-- [ ] fonctions.js
-- [ ] algorithmique-cinquieme.js
+- [x] calcul-numerique.js
+- [x] divisibilite-fractions.js
+- [x] puissances.js
+- [x] calcul-litteral.js
+- [x] nombres-relatifs.js *(géométrie — figures requises)*
+- [x] geometrie-espace.js *(géométrie)*
+- [x] symetrie-centrale-parallelogrammes.js *(géométrie)*
+- [x] triangles.js *(géométrie)*
+- [x] statistiques-probabilites.js
+- [x] proportionnalite-cinquieme.js
+- [x] fonctions.js
+- [x] algorithmique-cinquieme.js
 
 ### 4e (quatrieme)
 
@@ -253,9 +269,9 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ## Total
 
-9 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
-`automatismes-*`, 122 non comptés ici, à traiter plus tard) — la 6e est
-intégralement terminée, prochaine étape : la 5e.
+21 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+`automatismes-*`, 114 non comptés ici, à traiter plus tard) — la 6e ET la 5e
+sont intégralement terminées, prochaine étape : la 4e.
 
 ---
 

@@ -389,6 +389,44 @@ export default {
     level: "quatrieme",
     free: false,
     order: 11,
+    cours: {
+      mindMap: {
+        title: "Proportionnalité",
+        branches: [
+          {
+            title: "Quatrième proportionnelle",
+            items: [
+              "Dans un tableau de proportionnalité, tous les quotients colonne/colonne sont égaux.",
+              "On trouve la valeur manquante avec un produit en croix.",
+            ],
+            formula: "\\(\\dfrac{a}{b} = \\dfrac{c}{d} \\Rightarrow d = \\dfrac{c \\times b}{a}\\)",
+          },
+          {
+            title: "Grandeurs produits et quotients",
+            items: [
+              "Une grandeur quotient combine deux grandeurs par une division : vitesse (km/h), débit (L/min), densité (hab/km²).",
+              "Une grandeur produit combine deux grandeurs par une multiplication : aire (m²), volume (m³).",
+            ],
+            formula: "\\(\\text{vitesse} = \\dfrac{\\text{distance}}{\\text{temps}}\\)",
+          },
+          {
+            title: "Représentation graphique",
+            items: [
+              "Une situation de proportionnalité se représente par des points alignés avec l'origine du repère.",
+              "Pour vérifier, on contrôle que le quotient \\(\\frac{y}{x}\\) est constant pour chaque point.",
+            ],
+          },
+          {
+            title: "Agrandissement, réduction",
+            items: [
+              "Un rapport k multiplie les longueurs par k, les aires par \\(k^2\\), les volumes par \\(k^3\\).",
+              "k > 1 : agrandissement. 0 < k < 1 : réduction. k = 1 : reproduction.",
+              "Piège classique : multiplier l'aire ou le volume par k au lieu de \\(k^2\\) ou \\(k^3\\).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

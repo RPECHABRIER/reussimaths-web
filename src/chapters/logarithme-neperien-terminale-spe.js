@@ -368,7 +368,8 @@ export default {
           {
             title: "Propriétés algébriques",
             items: [
-              "Transforme un produit en somme, un quotient en différence — exactement l'inverse de l'exponentielle.",
+              "Transforme un produit en somme, un quotient en différence — exactement l'inverse de l'exponentielle : \\(\\mathrm{e}^{\\ln a}=a\\) (pour a>0) et \\(\\ln(\\mathrm{e}^k)=k\\) (pour tout réel k).",
+              "Piège classique : \\(\\ln(a^2)=2\\ln(a)\\) n'est vrai que si a>0. Pour a réel non nul quelconque, la formule correcte est \\(\\ln(a^2)=2\\ln(|a|)\\).",
             ],
             formula: "\\(\\ln(ab)=\\ln a+\\ln b,\\quad \\ln\\left(\\dfrac{a}{b}\\right)=\\ln a-\\ln b,\\quad \\ln(a^n)=n\\ln a\\)",
           },
@@ -385,9 +386,17 @@ export default {
             formula: "\\((\\ln x)' = \\dfrac{1}{x},\\quad (\\ln u)' = \\dfrac{u'}{u}\\)",
           },
           {
+            title: "Limites usuelles",
+            items: [
+              "En 0 par valeurs positives, ln tend vers \\(-\\infty\\) (asymptote verticale en x=0). En \\(+\\infty\\), ln tend vers \\(+\\infty\\), mais beaucoup plus lentement que x.",
+              "Croissance comparée : \\(\\dfrac{\\ln x}{x} \\to 0\\) en \\(+\\infty\\), et \\(x\\ln x \\to 0\\) en \\(0^+\\) (malgré la forme indéterminée de départ \\(0 \\times (-\\infty)\\)) — x l'emporte toujours sur ln(x).",
+            ],
+          },
+          {
             title: "Résoudre une équation avec ln",
             items: [
               "\\(\\ln A = \\ln B \\iff A=B\\) (à condition que A et B soient strictement positifs — à vérifier avant de conclure).",
+              "Pour résoudre \\(\\ln(x) = k\\), passer à l'exponentielle des deux côtés : \\(x = \\mathrm{e}^k\\) (toujours solution unique, car \\(\\mathrm{e}^k>0\\)).",
               "Pour résoudre \\(e^x = k\\) (k > 0), passer au ln des deux côtés : \\(x = \\ln k\\).",
             ],
           },

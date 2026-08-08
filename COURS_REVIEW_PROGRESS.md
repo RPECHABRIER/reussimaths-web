@@ -17,7 +17,16 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `divisibilite-fractions.js` (5e).**
+**Prochain fichier à traiter : `puissances.js` (5e).**
+
+`divisibilite-fractions.js` (5e) relu : branche "Multiples et diviseurs"
+reformulée pour partir d'un exemple concret (\\(12 \\div 4 = 3\\)) avant la
+définition abstraite en a/b ; branche "Comparer des fractions" enrichie
+d'une formule illustrant les produits en croix sur un exemple concret
+(n'en avait pas). Reste déjà au niveau attendu (nombres premiers, division
+par un décimal, addition/soustraction de fractions déjà clairs et bien
+pourvus en pièges classiques, prompts d'exercices courts, aucun candidat
+`texTable()`).
 
 `calcul-numerique.js` (5e) relu : piège classique ajouté à la branche
 "Distributivité" (\\(k \\times (a+b) \\neq k \\times a + b\\), oubli de
@@ -218,7 +227,7 @@ vérifiés pour débordement.)
 
 ### 5e
 - [x] calcul-numerique.js *(piège classique distributivité k×(a+b)≠k×a+b ajouté, sinon déjà bon)*
-- [ ] divisibilite-fractions.js
+- [x] divisibilite-fractions.js *(branche multiples/diviseurs partie du concret, formule produits en croix ajoutée)*
 - [ ] puissances.js
 - [ ] calcul-litteral.js
 - [ ] nombres-relatifs.js *(flèches déjà corrigées — relire le reste)*

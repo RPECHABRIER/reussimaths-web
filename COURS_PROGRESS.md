@@ -28,8 +28,10 @@ fait (commit `43dded0`, pas de figure), `puissances-quatrieme.js` fait
 `6887711`, 3 figures réutilisant `buildThalesFigure()` déjà présent dans
 le fichier), `triangles-rectangles-quatrieme.js` fait (commit `3cbbadd`,
 4 figures réutilisant `buildRightTriangleFigure()` déjà présent dans le
-fichier). **Prochain fichier à traiter :
-`geometrie-plane.js` (géométrie — figures requises).** Même méthode : lire
+fichier), `geometrie-plane.js` fait (commit `76a0586`, 3 figures neuves —
+aucun helper de figure n'existait dans ce fichier avant). **Prochain
+fichier à traiter : `geometrie-espace-quatrieme.js` (géométrie — figures
+requises).** Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -79,8 +81,9 @@ Dernière mise à jour : 2026-08-08 — 4e en cours : `nombres-relatifs-quatriem
 `probabilites-quatrieme.js` (commit `fa9e07f`),
 `notion-fonctions.js` (commit `bffb2c1`),
 `proportionnalite-quatrieme.js` (commit `4a84601`),
-`theoreme-thales.js` (commit `6887711`) et
-`triangles-rectangles-quatrieme.js` (commit `3cbbadd`) faits. 6e ET 5e terminées avant
+`theoreme-thales.js` (commit `6887711`),
+`triangles-rectangles-quatrieme.js` (commit `3cbbadd`) et
+`geometrie-plane.js` (commit `76a0586`) faits. 6e ET 5e terminées avant
 ça. Les 12 chapitres 5e
 faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
 `divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
@@ -209,7 +212,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] proportionnalite-quatrieme.js
 - [x] theoreme-thales.js *(géométrie)*
 - [x] triangles-rectangles-quatrieme.js *(géométrie)*
-- [ ] geometrie-plane.js *(géométrie)*
+- [x] geometrie-plane.js *(géométrie)*
 - [ ] geometrie-espace-quatrieme.js *(géométrie)*
 - [ ] exercices-fin-annee-quatrieme.js
 
@@ -315,7 +318,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ## Total
 
-33 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+34 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard) — la 6e ET la 5e
 sont intégralement terminées, la 4e est en cours.
 

@@ -450,6 +450,42 @@ export default {
     level: "seconde",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Généralités sur les fonctions",
+        branches: [
+          {
+            title: "Vocabulaire : image et antécédent",
+            items: [
+              "\\(f(a) = b\\) : « a a pour image b », « b a pour antécédent a », le point \\(A(a ; b)\\) est sur la courbe.",
+              "Un nombre a une seule image, mais peut avoir 0, 1 ou plusieurs antécédents.",
+            ],
+            formula: "\\(f(a)=b \\iff A(a;b) \\in \\mathcal{C}_f\\)",
+          },
+          {
+            title: "Ensemble de définition",
+            items: [
+              "Exclure les valeurs qui annulent un dénominateur, ou qui rendent une racine carrée négative.",
+              "Piège classique : oublier une des deux conditions quand elles se cumulent dans la même expression.",
+            ],
+          },
+          {
+            title: "Tableau de signes d'un produit ou quotient",
+            items: [
+              "Étudier le signe de chaque facteur séparément, puis appliquer la règle des signes ligne par ligne.",
+              "Pour un quotient, la valeur qui annule le dénominateur est exclue (double barre), jamais un zéro.",
+            ],
+          },
+          {
+            title: "Résoudre f(x) = 0 ou f(x) > 0",
+            items: [
+              "Factoriser d'abord l'expression, puis utiliser le tableau de signes du produit obtenu.",
+              "Piège classique : \\(f(x)>0\\) se lit sur le tableau de signes, ce n'est pas la même démarche que résoudre \\(f(x)=0\\).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

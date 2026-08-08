@@ -590,6 +590,49 @@ export default {
     level: "seconde",
     free: false,
     order: 12,
+    cours: {
+      mindMap: {
+        title: "Statistiques descriptives",
+        branches: [
+          {
+            title: "Médiane et quartiles",
+            items: [
+              "La série doit être triée avant tout calcul de médiane ou de quartile.",
+              "Q1 : au moins 25 % des valeurs lui sont inférieures ou égales ; Q3 : au moins 75 %.",
+              "Piège classique : la médiane n'est pas forcément une valeur de la série (moyenne des deux valeurs centrales si effectif pair).",
+            ],
+            formula: "\\(EIQ = Q_3-Q_1\\)",
+          },
+          {
+            title: "Moyenne et écart type",
+            items: [
+              "Moyenne pondérée : chaque valeur comptée autant de fois que son effectif, puis divisée par l'effectif total.",
+              "L'écart type mesure la dispersion autour de la moyenne : plus il est grand, plus les valeurs sont étalées.",
+            ],
+          },
+          {
+            title: "Regroupement par classes",
+            items: [
+              "Sans le détail des valeurs, on utilise le centre de chaque classe pour estimer une moyenne pondérée.",
+              "La classe médiane est celle qui contient la valeur qui partage l'effectif total en deux.",
+            ],
+          },
+          {
+            title: "Comparer deux séries",
+            items: [
+              "Couple médiane / écart interquartile : robuste, peu sensible aux valeurs extrêmes.",
+              "Couple moyenne / écart type : tient compte de toutes les valeurs, mais sensible aux valeurs extrêmes.",
+            ],
+          },
+          {
+            title: "Piège classique : graphiques trompeurs",
+            items: [
+              "Une échelle tronquée (qui ne part pas de 0) peut exagérer visuellement une différence réelle faible.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

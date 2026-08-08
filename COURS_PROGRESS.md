@@ -53,8 +53,12 @@ les hashes). État actuel :
   `8e608ac`, pas de figure). `croissance-exponentielle-premiere-non-spe.js`
   fait (commit `9c80e61`, pas de figure). `modelisation-quadratique-premiere-non-spe.js`
   fait (commit `19e39d7`, pas de figure). `variations-instantanees-premiere-non-spe.js`
-  fait (commit `508dcca`, pas de figure). **Prochain fichier :
-  `variations-globales-premiere-non-spe.js`.**
+  fait (commit `508dcca`, pas de figure). `variations-globales-premiere-non-spe.js`
+  fait (commit `f73038b`, pas de figure). `exercices-rituels-premiere-non-spe.js`
+  et `preparation-eam-premiere-non-spe.js` délibérément SANS Cours (synthèses,
+  voir checklist "Première non spé"). **La Première non spé est
+  intégralement terminée. Prochain fichier : `second-degre.js` (Première
+  Spé).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -291,9 +295,20 @@ initiale de Romain.
 - [x] croissance-exponentielle-premiere-non-spe.js
 - [x] modelisation-quadratique-premiere-non-spe.js
 - [x] variations-instantanees-premiere-non-spe.js
-- [ ] variations-globales-premiere-non-spe.js
-- [ ] exercices-rituels-premiere-non-spe.js
-- [ ] preparation-eam-premiere-non-spe.js
+- [x] variations-globales-premiere-non-spe.js
+- [x] exercices-rituels-premiere-non-spe.js (délibérément SANS Cours —
+      son propre commentaire d'en-tête le décrit comme une "synthèse de fin
+      d'année mêlant les automatismes... et un rappel d'une compétence clé
+      de chacun des 6 chapitres du programme" ; aucune notion nouvelle,
+      même raisonnement que `exercices-fin-annee-quatrieme.js`)
+- [x] preparation-eam-premiere-non-spe.js (délibérément SANS Cours — banque
+      de questions type Épreuve Anticipée de Mathématiques (sujets
+      officiels + variantes), synthèse transversale par nature, aucune
+      notion nouvelle)
+
+**La Première non spé est intégralement terminée** (7 chapitres avec
+`meta.cours.mindMap` + 2 chapitres de synthèse/examen délibérément sans
+Cours).
 
 ### Première Spé (premiere-spe)
 

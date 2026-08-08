@@ -18,14 +18,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 8 des 14 fichiers de
+la Première techno sont intégralement terminées. 9 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
 suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
 continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
-logarithme-neperien-terminale-spe.js). Prochain fichier :
-fonctions-trigonometriques-terminale-spe.js (Terminale Spé).**
+logarithme-neperien-terminale-spe.js,
+fonctions-trigonometriques-terminale-spe.js). Prochain fichier :
+primitives-equations-differentielles-terminale-spe.js (Terminale
+Spé).**
+
+`fonctions-trigonometriques-terminale-spe.js` (Terminale Spé) relu
+intégralement : 7 branches (4 avant), le plus de gaps rencontrés
+jusqu'ici. Nouvelles branches ajoutées : « Valeurs remarquables et
+signe » (tableau complet + règle du quadrant, 2 chapters dédiés sans
+couverture) ; « Identité fondamentale et comparaison » (cos²+sin²=1,
+bornes -1/1, décroissance de cos sur [0;π] — absentes malgré le
+sous-titre du chapitre) ; « Limites remarquables en 0 » (sin(x)/x→1,
+(cos(x)-1)/x→0). Branches enrichies : « Dérivées » (version composée
+affine) ; « Parité » (règles de composition paire/impaire) ;
+« Périodicité » (période de cos(kx)=2π/k) ; « Formules d'addition et de
+réduction » — correction la plus importante : les 4 vraies formules
+d'addition cos(a+b)/sin(a+b) étaient totalement absentes malgré le
+titre de la branche qui les annonçait déjà. Aucun €, aucun candidat
+texTable, fichier sans figure.
 
 `logarithme-neperien-terminale-spe.js` (Terminale Spé) relu
 intégralement : 6 branches (5 avant). Nouvelle branche « Limites
@@ -1556,7 +1573,7 @@ vérifiés pour débordement.)
 - [x] continuite-terminale-spe.js *(3 branches entières ajoutées — continuité des fonctions usuelles, opérations sur les fonctions continues, suites récurrentes et point fixe)*
 - [x] complements-derivation-terminale-spe.js *(formule du produit ajoutée, lien f''/monotonie de f' explicité, domaine de dérivabilité de racine(u), cas de la fonction affine convexe et concave)*
 - [x] logarithme-neperien-terminale-spe.js *(nouvelle branche Limites usuelles, formules réciproques e^ln(a)=a / ln(e^k)=k, piège ln(a²)=2ln(a) valable seulement pour a>0, direction ln(x)=k⟹x=e^k ajoutée)*
-- [ ] fonctions-trigonometriques-terminale-spe.js
+- [x] fonctions-trigonometriques-terminale-spe.js *(3 branches entières ajoutées — valeurs remarquables+signe, identité fondamentale+comparaison, limites en 0 ; formules d'addition ajoutées, totalement absentes malgré le titre de la branche qui les annonçait)*
 - [ ] primitives-equations-differentielles-terminale-spe.js
 - [ ] calcul-integral-terminale-spe.js
 - [ ] loi-binomiale-terminale-spe.js

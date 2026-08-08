@@ -19,12 +19,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
 la Première techno et la Terminale Spé sont intégralement terminées.
-4 des 6 fichiers de Terminale techno sont relus
+5 des 6 fichiers de Terminale techno sont relus
 (suites-terminale-techno.js,
 fonctions-exponentielles-terminale-techno.js,
 logarithme-decimal-terminale-techno.js,
-statistiques-deux-variables-terminale-techno.js). Prochain fichier :
-probabilites-conditionnelles-terminale-techno.js (Terminale techno).**
+statistiques-deux-variables-terminale-techno.js,
+probabilites-conditionnelles-terminale-techno.js). Prochain fichier :
+variables-aleatoires-terminale-techno.js (Terminale techno, DERNIER
+fichier du chantier — 107/107 sera atteint après lui).**
+
+`probabilites-conditionnelles-terminale-techno.js` (Terminale techno)
+relu intégralement : 4 branches inchangées en nombre mais enrichies.
+Branche « Arbre à plusieurs niveaux » enrichie : règle d'interprétation
+d'une pondération selon sa position (probabilité simple depuis la
+racine, conditionnelle depuis un nœud intermédiaire) ajoutée, testée
+par genInterpreterPonderationQCM mais absente. Aucun €, aucun candidat
+texTable, fichier sans figure.
 
 `statistiques-deux-variables-terminale-techno.js` (Terminale techno)
 relu intégralement : 4 branches inchangées en nombre mais enrichies,
@@ -1667,7 +1677,7 @@ vérifiés pour débordement.)
 - [x] fonctions-exponentielles-terminale-techno.js *(effet du coefficient k dans x↦k×a^x sur le sens de variation ajouté)*
 - [x] logarithme-decimal-terminale-techno.js *(formules x=log(b)/log(a) et x=10^(log(b)/a) ajoutées, formule du quotient log(a/b) ajoutée)*
 - [x] statistiques-deux-variables-terminale-techno.js *(correction de fond : \ln y remplacé par \log y pour cohérence avec le programme STMG ; table de correspondance allure→transformation ajoutée ; exemple chiffré du retour au modèle ajouté)*
-- [ ] probabilites-conditionnelles-terminale-techno.js
+- [x] probabilites-conditionnelles-terminale-techno.js *(règle d'interprétation d'une pondération selon sa position dans l'arbre ajoutée)*
 - [ ] variables-aleatoires-terminale-techno.js
 
 ## Note technique (git)

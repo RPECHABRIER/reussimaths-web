@@ -572,6 +572,43 @@ export default {
     level: "troisieme",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Nombres entiers",
+        branches: [
+          {
+            title: "Division euclidienne",
+            items: [
+              "Le reste est toujours strictement inférieur au diviseur.",
+              "On vérifie une division euclidienne en recalculant : dividende = diviseur × quotient + reste.",
+            ],
+            formula: "\\(a = b \\times q + r\\ \\text{avec}\\ 0 \\leqslant r < b\\)",
+          },
+          {
+            title: "Divisibilité, nombres premiers",
+            items: [
+              "Un nombre premier n'a que deux diviseurs : 1 et lui-même.",
+              "Pour tester si un nombre est premier, on cherche un diviseur parmi les nombres premiers inférieurs à sa racine carrée.",
+            ],
+          },
+          {
+            title: "Décomposition en facteurs premiers",
+            items: [
+              "Tout entier supérieur à 1 se décompose de façon unique en produit de nombres premiers.",
+              "On divise successivement par 2, 3, 5, 7... jusqu'à obtenir 1.",
+            ],
+          },
+          {
+            title: "PGCD",
+            items: [
+              "Le PGCD (plus grand commun diviseur) se calcule par l'algorithme d'Euclide (divisions successives).",
+              "Il sert à simplifier une fraction jusqu'à sa forme irréductible, ou à répartir des objets en lots identiques.",
+              "Piège classique : une fraction est irréductible seulement quand le PGCD du numérateur et du dénominateur vaut 1.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

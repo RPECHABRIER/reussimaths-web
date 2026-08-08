@@ -48,9 +48,11 @@ figure), `statistiques-troisieme.js` fait (commit `234d668`, pas de
 figure), `probabilites-troisieme.js` fait (commit `4dc3889`, pas de
 figure), `thales-triangles-semblables-troisieme.js` fait (commit
 `7217e2d`, 4 figures neuves — aucun helper de figure n'existait dans ce
-fichier avant). **Prochain fichier à traiter :
-`trigonometrie-triangle-rectangle-troisieme.js` (géométrie — figures
-requises).** Même méthode : lire
+fichier avant), `trigonometrie-triangle-rectangle-troisieme.js` fait
+(commit `cc496c9`, 1 figure neuve — aucun helper de figure n'existait
+dans ce fichier avant). **Prochain fichier à traiter :
+`transformations-plan-troisieme.js` (géométrie — figures requises).**
+Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -261,7 +263,7 @@ initiale de Romain.
 - [x] statistiques-troisieme.js
 - [x] probabilites-troisieme.js
 - [x] thales-triangles-semblables-troisieme.js *(géométrie)*
-- [ ] trigonometrie-triangle-rectangle-troisieme.js *(géométrie)*
+- [x] trigonometrie-triangle-rectangle-troisieme.js *(géométrie)*
 - [ ] transformations-plan-troisieme.js *(géométrie)*
 - [ ] geometrie-espace-troisieme.js *(géométrie)*
 - [ ] mesures-grandeurs-troisieme.js
@@ -351,7 +353,7 @@ initiale de Romain.
 
 ## Total
 
-45 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+46 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
 `exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
 ET la 4e sont intégralement terminées, prochaine étape : la 3e.

@@ -316,9 +316,11 @@ export default {
           {
             title: "Problèmes, agrandissement/réduction",
             items: [
-              "Le rapport \\(\\frac{AM}{AB}\\) donne aussi le rapport d'agrandissement/réduction entre les deux triangles.",
+              "Le petit triangle AMN est un agrandissement ou une réduction du grand triangle ABC.",
+              "Le rapport \\(\\frac{AM}{AB}\\) donne le coefficient : s'il est inférieur à 1, c'est une réduction ; s'il est supérieur à 1, c'est un agrandissement.",
               "Piège classique : vérifier que les points sont bien alignés (M sur (AB), N sur (AC)) avant d'appliquer le théorème.",
             ],
+            figure: buildThalesFigure(0.5),
           },
         ],
       },

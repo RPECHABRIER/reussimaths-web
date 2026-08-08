@@ -18,8 +18,28 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : nombres-entiers-troisieme.js (3e) —
-la 4e est intégralement terminée.**
+terminée (14/14). Prochain fichier : calcul-numerique-troisieme.js (3e).**
+
+`nombres-entiers-troisieme.js` (3e) relu intégralement : **vraies
+corrections de fond**. Branche "Divisibilité, nombres premiers" scindée en
+deux branches distinctes ("Divisibilité" et "Nombres premiers") et
+complétée : les critères de divisibilité (par 2/5/10, 3/9, 4/6), testés
+directement par `genCritereDivisibiliteQCM` mais totalement absents du
+cours avant cette relecture, ajoutés groupés par technique (unités / somme
+des chiffres / cas composés) pour la mémorisation. Piège classique ajouté
+à "Nombres premiers" sur les conjectures (un seul contre-exemple suffit à
+invalider — testé par `genConjectureNombrePremierQCM`, exemple classique
+d'Euler n²+n+41, mais absent du cours). Piège classique ajouté à
+"Divisibilité" sur la parité d'un programme de calcul (testé par
+`genProgrammeCalculPariteGeneraleQCM` mais absent). Branche "Décomposition
+en facteurs premiers" : formule du nombre de diviseurs ajoutée
+(N=p^a×q^b ⇒ (a+1)(b+1) diviseurs), littéralement énoncée dans les steps
+de `genNombreDeDiviseursNumeric` mais absente du cours. Branche "Division
+euclidienne" : exemple concret (17÷5) ajouté avant la règle abstraite.
+Branche "PGCD" laissée inchangée (déjà bonne). Fichier purement
+numérique/algébrique (pas de figure), aucun €, aucun candidat texTable
+(liste de nombres dans `genCompterNombresPremiersListeNumeric` reste
+courte sur une ligne).
 
 `geometrie-espace-quatrieme.js` (4e) relu intégralement : branche
 « Pyramide » reformulée pour partir du concret (base carrée = 5 faces / 5
@@ -557,7 +577,7 @@ vérifiés pour débordement.)
 - [x] geometrie-espace-quatrieme.js *(item "Pyramide" reformulé du concret vers la généralisation + formule des arêtes ajoutée ; piège classique ajouté à "Pyramide" (diviser par 3) et à "Repérage" (ordre abscisse/ordonnée/altitude) ; sinon déjà bon, 3 branches, figures déjà claires)*
 
 ### 3e
-- [ ] nombres-entiers-troisieme.js
+- [x] nombres-entiers-troisieme.js *(branche "Divisibilité, nombres premiers" scindée en 2 + critères de divisibilité ajoutés, absents avant ; piège conjecture/contre-exemple ajouté ; piège parité ajouté ; formule nombre de diviseurs ajoutée ; exemple concret ajouté à division euclidienne)*
 - [ ] calcul-numerique-troisieme.js
 - [ ] calcul-litteral-troisieme.js
 - [ ] equations-troisieme.js

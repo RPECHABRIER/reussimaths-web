@@ -377,8 +377,10 @@ export default {
           {
             title: "Signe de f' et sens de variation",
             items: [
-              "\\(f'>0\\) sur un intervalle ⟹ f croissante ; \\(f'<0\\) ⟹ f décroissante.",
+              "\\(f'>0\\) sur un intervalle ⟹ f croissante ; \\(f'<0\\) ⟹ f décroissante ; \\(f'=0\\) sur tout un intervalle ⟹ f constante sur cet intervalle.",
               "Piège classique très fréquent : le signe de f' donne le sens de variation de f, ce n'est pas le signe de f.",
+              "Utiliser la monotonie pour comparer ou encadrer des images sans calculer : si f est croissante et \\(a<b\\), alors \\(f(a)<f(b)\\) (inégalité inversée si f est décroissante).",
+              "Si deux fonctions ont le même sens de variation sur un intervalle, leur somme a aussi ce sens de variation.",
             ],
           },
           {
@@ -386,6 +388,14 @@ export default {
             items: [
               "Un extremum local correspond à un changement de signe de f' (tangente horizontale, \\(f'=0\\)).",
               "En optimisation, l'abscisse qui annule f' donne souvent la valeur qui maximise ou minimise la quantité étudiée.",
+            ],
+            formula: "\\(\\text{Pour une parabole } f(x)=ax^2+bx+c : \\alpha=\\dfrac{-b}{2a}\\)",
+          },
+          {
+            title: "Allure et symétrie de la parabole",
+            items: [
+              "a > 0 : parabole tournée vers le haut, le sommet est un minimum. a < 0 : tournée vers le bas, le sommet est un maximum.",
+              "Symétrie : deux abscisses équidistantes du sommet (par exemple \\(\\alpha - d\\) et \\(\\alpha + d\\)) donnent la même image par f.",
             ],
           },
           {

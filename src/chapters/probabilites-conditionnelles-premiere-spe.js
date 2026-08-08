@@ -492,6 +492,7 @@ export default {
             items: [
               "A et B indépendants ⟺ \\(P_A(B)=P(B)\\) ⟺ \\(P(A \\cap B)=P(A)\\times P(B)\\).",
               "Piège classique : indépendant ne veut pas dire incompatible — deux notions différentes.",
+              "Rappel (valable même sans indépendance) pour la réunion : \\(P(A \\cup B) = P(A) + P(B) - P(A \\cap B)\\).",
             ],
           },
           {
@@ -503,12 +504,21 @@ export default {
             formula: "\\(P(B) = \\sum_i P(A_i) \\times P_{A_i}(B)\\)",
           },
           {
+            title: "Arbre pondéré : deux règles à connaître",
+            items: [
+              "Règle du produit : la probabilité au bout d'un chemin (une succession de branches) s'obtient en multipliant les probabilités rencontrées le long de ce chemin.",
+              "Règle de la somme : si plusieurs chemins distincts mènent au même résultat final, on additionne leurs probabilités.",
+              "Sur chaque nœud, la somme des probabilités des branches qui en partent vaut 1.",
+            ],
+          },
+          {
             title: "Épreuves de Bernoulli répétées",
             items: [
               "Chaque répétition est identique et indépendante : succès (probabilité p) ou échec (probabilité 1-p).",
               "\\(P(\\text{au moins un succès}) = 1 - P(\\text{aucun succès}) = 1-(1-p)^n\\).",
-              "Le nombre de chemins menant à k succès sur n épreuves se compte sur l'arbre.",
+              "Le nombre de chemins menant à k succès sur n épreuves se compte sur l'arbre : c'est le coefficient binomial \\(\\binom{n}{k}\\).",
             ],
+            formula: "\\(P(k \\text{ succès}) = \\dbinom{n}{k}\\,p^k(1-p)^{n-k}\\)",
           },
         ],
       },

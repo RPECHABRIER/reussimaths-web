@@ -283,6 +283,40 @@ export default {
     level: "premiere-techno",
     free: false,
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Algorithmique et programmation (Python)",
+        branches: [
+          {
+            title: "Écrire et lire une fonction",
+            items: [
+              "Une fonction prend des paramètres, effectue des instructions, et renvoie un résultat avec \\(\\text{return}\\).",
+              "Piège classique : \\(\\text{return}\\) arrête immédiatement la fonction — le code écrit après ne s'exécute jamais.",
+            ],
+          },
+          {
+            title: "Boucle for et listes",
+            items: [
+              "\\(\\text{range(n)}\\) parcourt les entiers de 0 à n-1 (n valeurs, pas n+1).",
+              "Parcourir une liste avec une boucle for permet de traiter chaque élément un par un.",
+            ],
+          },
+          {
+            title: "Calculer un terme de suite par boucle",
+            items: [
+              "Initialiser une variable avec le premier terme, puis la mettre à jour à chaque tour selon la relation de récurrence.",
+            ],
+          },
+          {
+            title: "Balayage et simulation",
+            items: [
+              "Balayage : tester successivement des valeurs pour approcher la solution d'une équation.",
+              "\\(\\text{random()}\\) renvoie un nombre dans \\([0 ; 1[\\), utile pour simuler une expérience de Bernoulli.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

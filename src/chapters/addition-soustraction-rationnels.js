@@ -578,9 +578,9 @@ export default {
           {
             title: "Rappels : simplifier, comparer",
             items: [
-              "Pour décomposer un nombre en facteurs premiers, on le divise successivement par 2, 3, 5, 7...",
+              "Pour décomposer un nombre en facteurs premiers, on le divise successivement par 2, 3, 5, 7... Exemple : \\(60 = 2^2 \\times 3 \\times 5\\).",
               "On simplifie une fraction en divisant numérateur et dénominateur par un même facteur (jamais en supprimant un terme ajouté).",
-              "Pour comparer deux fractions de dénominateurs positifs, on compare les produits en croix.",
+              "Pour comparer deux fractions de dénominateurs positifs, on compare les produits en croix. Exemple : pour comparer \\(\\dfrac{3}{4}\\) et \\(\\dfrac{5}{6}\\), on compare \\(3 \\times 6 = 18\\) et \\(5 \\times 4 = 20\\).",
             ],
           },
           {
@@ -589,6 +589,7 @@ export default {
               "On calcule le PPCM des dénominateurs, puis on récrit chaque fraction avec ce dénominateur commun.",
               "PGCD (algorithme d'Euclide) et PPCM sont deux outils différents : le PGCD sert à simplifier, le PPCM à mettre au même dénominateur.",
             ],
+            formula: "\\(\\text{PPCM}(4, 6) = 12 \\ \\text{donc} \\ \\dfrac{1}{4} = \\dfrac{3}{12} \\ \\text{et} \\ \\dfrac{1}{6} = \\dfrac{2}{12}\\)",
           },
           {
             title: "Additionner, soustraire",

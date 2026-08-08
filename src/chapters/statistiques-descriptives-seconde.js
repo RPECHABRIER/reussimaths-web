@@ -29,6 +29,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable.js";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -76,7 +78,7 @@ function genMoyenneSimpleNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Moyenne",
-    prompt: `Calcule la moyenne de la série suivante : ${valeurs.join(" ; ")}.`,
+    prompt: `Calcule la moyenne de la série suivante : ${texTable([["Série", ...valeurs]])}`,
     answer: moy,
     steps: [
       { type: "regle", text: `\\text{La moyenne d'une série est la somme des valeurs divisée par leur effectif.}` },
@@ -95,7 +97,7 @@ function genMoyennePondereeNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Moyenne",
-    prompt: `Une série statistique est donnée par ce tableau : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")}. Calcule la moyenne de cette série (arrondie au centième).`,
+    prompt: `Une série statistique est donnée par ce tableau : ${texTable([["Valeur", ...valeurs], ["Effectif", ...effectifs]])} Calcule la moyenne de cette série (arrondie au centième).`,
     answer: moy,
     tolerance: 0.01,
     steps: [
@@ -112,7 +114,7 @@ function genMedianeImpairNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Médiane",
-    prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine la médiane de cette série.`,
+    prompt: `Voici une série ordonnée de ${n} valeurs : ${texTable([["Série", ...valeurs]])} Détermine la médiane de cette série.`,
     answer: mediane(valeurs),
     steps: [
       { type: "regle", text: `\\text{Si l'effectif N est impair, la médiane est la valeur de rang } \\dfrac{N+1}{2}.` },
@@ -129,7 +131,7 @@ function genMedianePairNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Médiane",
-    prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine la médiane de cette série.`,
+    prompt: `Voici une série ordonnée de ${n} valeurs : ${texTable([["Série", ...valeurs]])} Détermine la médiane de cette série.`,
     answer: med,
     steps: [
       { type: "regle", text: `\\text{Si l'effectif N est pair, la médiane est la moyenne des deux valeurs de rangs } \\dfrac{N}{2} \\text{ et } \\dfrac{N}{2}+1.` },
@@ -146,7 +148,7 @@ function genQuartile1Numeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Quartiles",
-    prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine le premier quartile \\(Q_1\\) de cette série.`,
+    prompt: `Voici une série ordonnée de ${n} valeurs : ${texTable([["Série", ...valeurs]])} Détermine le premier quartile \\(Q_1\\) de cette série.`,
     answer: quartile1(valeurs),
     steps: [
       { type: "regle", text: `\\text{Le premier quartile } Q_1 \\text{ est la valeur de rang } \\left\\lceil \\dfrac{N}{4} \\right\\rceil \\text{ dans la série ordonnée (au moins un quart des valeurs lui sont inférieures ou égales).}` },
@@ -164,7 +166,7 @@ function genQuartile3Numeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Quartiles",
-    prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Détermine le troisième quartile \\(Q_3\\) de cette série.`,
+    prompt: `Voici une série ordonnée de ${n} valeurs : ${texTable([["Série", ...valeurs]])} Détermine le troisième quartile \\(Q_3\\) de cette série.`,
     answer: quartile3(valeurs),
     steps: [
       { type: "regle", text: `\\text{Le troisième quartile } Q_3 \\text{ est la valeur de rang } \\left\\lceil \\dfrac{3N}{4} \\right\\rceil \\text{ dans la série ordonnée (au moins trois quarts des valeurs lui sont inférieures ou égales).}` },
@@ -183,7 +185,7 @@ function genEcartInterquartileNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Quartiles",
-    prompt: `Voici une série ordonnée de ${n} valeurs : ${valeurs.join(" ; ")}. Calcule l'écart interquartile \\(Q_3 - Q_1\\) de cette série.`,
+    prompt: `Voici une série ordonnée de ${n} valeurs : ${texTable([["Série", ...valeurs]])} Calcule l'écart interquartile \\(Q_3 - Q_1\\) de cette série.`,
     answer: q3 - q1,
     steps: [
       { type: "regle", text: `\\text{L'écart interquartile mesure la dispersion de la moitié centrale de la série : } Q_3 - Q_1.` },
@@ -207,7 +209,7 @@ function genEffectifCumuleNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Effectifs cumulés",
-    prompt: `Tableau d'effectifs : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")}. Quel est l'effectif cumulé croissant de la valeur ${valeurs[idx]} ?`,
+    prompt: `Tableau d'effectifs : ${texTable([["Valeur", ...valeurs], ["Effectif", ...effectifs]])} Quel est l'effectif cumulé croissant de la valeur ${valeurs[idx]} ?`,
     answer: cumules[idx],
     steps: [
       { type: "regle", text: `\\text{L'effectif cumulé croissant d'une valeur est le nombre total d'individus ayant une valeur inférieure ou égale à celle-ci : on additionne les effectifs de toutes les valeurs jusqu'à elle incluse.}` },
@@ -254,7 +256,7 @@ function genComparerMedianesQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques descriptives — Comparer deux séries",
-    prompt: `Notes de ${nomA} : ${valeursA.join(" ; ")}. Notes de ${nomB} : ${valeursB.join(" ; ")}. Quelle classe a obtenu de meilleurs résultats, au sens de la médiane ?`,
+    prompt: `${texTable([[`Notes de ${nomA}`, ...valeursA]])}${texTable([[`Notes de ${nomB}`, ...valeursB]])} Quelle classe a obtenu de meilleurs résultats, au sens de la médiane ?`,
     answer: meilleure,
     options: [nomA, nomB],
     steps: [
@@ -284,7 +286,7 @@ function genComparerDispersionQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques descriptives — Comparer deux séries",
-    prompt: `${nomA} : ${valeursA.join(" ; ")}. ${nomB} : ${valeursB.join(" ; ")}. Quelle série présente les résultats les plus dispersés, au sens de l'écart interquartile ?`,
+    prompt: `${texTable([[nomA, ...valeursA]])}${texTable([[nomB, ...valeursB]])} Quelle série présente les résultats les plus dispersés, au sens de l'écart interquartile ?`,
     answer: plusDispersee,
     options: [nomA, nomB],
     steps: [
@@ -306,7 +308,7 @@ function genLectureTableauEffectifsQCM() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Effectifs cumulés",
-    prompt: `Tableau d'effectifs : valeur ${valeurs.join(", ")} avec un effectif respectif de ${effectifs.join(", ")} (effectif total : ${effectifTotal}). Combien d'individus ont une valeur ${auMoins ? `supérieure ou égale à ${valeurs[idx]}` : `inférieure ou égale à ${valeurs[idx]}`} ?`,
+    prompt: `Tableau d'effectifs (effectif total : ${effectifTotal}) : ${texTable([["Valeur", ...valeurs], ["Effectif", ...effectifs]])} Combien d'individus ont une valeur ${auMoins ? `supérieure ou égale à ${valeurs[idx]}` : `inférieure ou égale à ${valeurs[idx]}`} ?`,
     answer: nb,
     steps: [
       {
@@ -404,11 +406,11 @@ function genMoyennePondereeParClassesNumeric() {
   const effectifTotal = effectifs.reduce((a, b) => a + b, 0);
   const somme = milieux.reduce((s, m, i) => s + m * effectifs[i], 0);
   const moy = roundTo(somme / effectifTotal, 2);
-  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  const classeLabels = classes.map(([a, b]) => `[${a}\\,;\\,${b}[`);
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Regroupement par classes",
-    prompt: `Une série est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. En utilisant le milieu de chaque classe, calcule la moyenne de cette série (arrondie au centième).`,
+    prompt: `Une série est regroupée en classes : ${texTable([["Classe", ...classeLabels], ["Effectif", ...effectifs]])} En utilisant le milieu de chaque classe, calcule la moyenne de cette série (arrondie au centième).`,
     answer: moy,
     tolerance: 0.01,
     steps: [
@@ -435,13 +437,13 @@ function genClasseMedianeQCM() {
       break;
     }
   }
-  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  const classeLabels = classes.map(([a, b]) => `[${a}\\,;\\,${b}[`);
   const bonneReponse = `[${classes[idxMediane][0]} ; ${classes[idxMediane][1]}[`;
   const options = shuffle(classes.map(([a, b]) => `[${a} ; ${b}[`));
   return {
     type: "qcm",
     chapter: "Statistiques descriptives — Regroupement par classes",
-    prompt: `Une série de ${effectifTotal} valeurs est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. Quelle est la classe médiane ?`,
+    prompt: `Une série de ${effectifTotal} valeurs est regroupée en classes : ${texTable([["Classe", ...classeLabels], ["Effectif", ...effectifs]])} Quelle est la classe médiane ?`,
     answer: bonneReponse,
     options,
     steps: [
@@ -457,11 +459,11 @@ function genLectureEffectifsClassesNumeric() {
   const classes = [0, 1, 2, 3, 4].map((i) => [debut + i * 10, debut + (i + 1) * 10]);
   const effectifs = classes.map(() => randInt(2, 12));
   const idx = randInt(0, classes.length - 1);
-  const classesTexte = classes.map(([a, b]) => `[${a} ; ${b}[`).join(", ");
+  const classeLabels = classes.map(([a, b]) => `[${a}\\,;\\,${b}[`);
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Regroupement par classes",
-    prompt: `Une série est regroupée en classes : ${classesTexte}, avec un effectif respectif de ${effectifs.join(", ")}. Quel est l'effectif de la classe \\([${classes[idx][0]} ; ${classes[idx][1]}[\\) ?`,
+    prompt: `Une série est regroupée en classes : ${texTable([["Classe", ...classeLabels], ["Effectif", ...effectifs]])} Quel est l'effectif de la classe \\([${classes[idx][0]} ; ${classes[idx][1]}[\\) ?`,
     answer: effectifs[idx],
     steps: [{ type: "donnee", text: `\\text{Effectif de } [${classes[idx][0]} ; ${classes[idx][1]}[ = ${effectifs[idx]}` }],
   };
@@ -482,7 +484,7 @@ function genEcartTypeNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques descriptives — Écart type",
-    prompt: `Calcule l'écart type de la série suivante (arrondi au centième) : ${valeurs.join(" ; ")}.`,
+    prompt: `Calcule l'écart type de la série suivante (arrondi au centième) : ${texTable([["Série", ...valeurs]])}`,
     answer: ecartType,
     tolerance: 0.01,
     steps: [
@@ -598,17 +600,27 @@ export default {
             title: "Médiane et quartiles",
             items: [
               "La série doit être triée avant tout calcul de médiane ou de quartile.",
+              "Rang de la médiane : \\(\\frac{N+1}{2}\\) si l'effectif N est impair (valeur exacte de la série) ; sinon, moyenne des valeurs de rang \\(\\frac{N}{2}\\) et \\(\\frac{N}{2}+1\\).",
               "Q1 : au moins 25 % des valeurs lui sont inférieures ou égales ; Q3 : au moins 75 %.",
               "Piège classique : la médiane n'est pas forcément une valeur de la série (moyenne des deux valeurs centrales si effectif pair).",
             ],
             formula: "\\(EIQ = Q_3-Q_1\\)",
           },
           {
+            title: "Effectifs cumulés",
+            items: [
+              "L'effectif cumulé croissant d'une valeur est le nombre total d'individus ayant une valeur inférieure ou égale à celle-ci : on additionne les effectifs jusqu'à elle incluse.",
+              "« Au moins k » : on additionne les effectifs des valeurs supérieures ou égales à k. « Au plus k » : on additionne les effectifs des valeurs inférieures ou égales à k.",
+            ],
+          },
+          {
             title: "Moyenne et écart type",
             items: [
               "Moyenne pondérée : chaque valeur comptée autant de fois que son effectif, puis divisée par l'effectif total.",
               "L'écart type mesure la dispersion autour de la moyenne : plus il est grand, plus les valeurs sont étalées.",
+              "Linéarité de la moyenne : si toutes les valeurs d'une série varient de la même quantité, la moyenne varie de cette même quantité.",
             ],
+            formula: "\\(\\bar{x} = \\dfrac{\\text{somme des valeurs}}{\\text{effectif}} \\quad ; \\quad \\sigma = \\sqrt{\\text{moyenne des carrés des écarts à la moyenne}}\\)",
           },
           {
             title: "Regroupement par classes",

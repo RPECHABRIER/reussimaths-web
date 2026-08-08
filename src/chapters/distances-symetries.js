@@ -505,7 +505,7 @@ export default {
               "Le disque : tous les points à l'intérieur du cercle, à une distance de O inférieure ou égale au rayon.",
               "Piège classique : un point à la même distance que le rayon est SUR le cercle, pas strictement dans le disque.",
             ],
-            formula: "\\(diamètre = 2 \\times rayon\\)",
+            formula: "\\(\\text{diamètre} = 2 \\times \\text{rayon}\\)",
             figure: {
               points: [
                 { id: "O", x: 0, y: 0, dx: -14, dy: 4 },

@@ -73,8 +73,9 @@ les hashes). État actuel :
   `geometrie-reperee-premiere-spe.js` (géométrie).**
   `geometrie-reperee-premiere-spe.js` fait (commit `649f3ba`, 3 figures
   neuves). `probabilites-conditionnelles-premiere-spe.js` fait (commit
-  `3915737`, pas de figure). **Prochain fichier :
-  `variables-aleatoires-premiere-spe.js`.**
+  `3915737`, pas de figure). `variables-aleatoires-premiere-spe.js` fait
+  (commit `232c59e`, pas de figure). **Prochain fichier :
+  `algorithmique-python-premiere-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -337,7 +338,7 @@ Cours).
 - [x] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
 - [x] geometrie-reperee-premiere-spe.js *(géométrie)*
 - [x] probabilites-conditionnelles-premiere-spe.js
-- [ ] variables-aleatoires-premiere-spe.js
+- [x] variables-aleatoires-premiere-spe.js
 - [ ] algorithmique-python-premiere-spe.js
 - [ ] preparation-bac-premiere-spe.js
 

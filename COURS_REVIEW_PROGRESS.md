@@ -18,9 +18,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
-terminées. `second-degre.js` (Première Spé) est fait. Prochain fichier :
-suites-numeriques-premiere-spe.js (Première Spé, 2e des 11 fichiers de
-ce niveau).**
+terminées. `second-degre.js` et `suites-numeriques-premiere-spe.js`
+(Première Spé) sont faits. Prochain fichier : derivation-premiere-spe.js
+(Première Spé, 3e des 11 fichiers de ce niveau).**
+
+`suites-numeriques-premiere-spe.js` (Première Spé) relu intégralement :
+6 branches (5 avant). Nouvelle branche « Reconnaître une situation
+arithmétique ou géométrique » ajoutée, couvrant un thème entier absent :
+genModeliserPhenomeneQCM (chapter dédié) testait déjà la distinction
+accroissement en montant fixe (arithmétique) vs en pourcentage fixe
+(géométrique) sur 6 situations concrètes, absente de toute branche
+avant, alors que c'est exactement le sujet annoncé par le champ pourquoi
+du chapitre. Branche « Arithmétique et géométrique » enrichie : item +
+formule sur l'extraction de la raison depuis deux termes consécutifs (r
+= soustraction, q = division), méthode testée mais jamais formulée.
+Branche « Sommes de termes » enrichie : formule de Gauss
+1+2+...+n=n(n+1)/2 ajoutée, cas particulier testé par un générateur à
+chapter dédié totalement absent du cours avant. Aucun €, aucun candidat
+texTable, fichier purement algébrique sans figure.
 
 `second-degre.js` (Première Spé) relu intégralement : 5 branches (4
 avant). Nouvelle branche « Déterminer un trinôme à partir de données »
@@ -1224,7 +1239,7 @@ vérifiés pour débordement.)
 
 ### Première Spé
 - [x] second-degre.js *(nouvelle branche Déterminer un trinôme à partir de données — thème entier absent, racines+point et système à deux points ; items ajoutés — identités remarquables pour développer/factoriser, règle du produit nul, racines=valeurs interdites d'un quotient, symétrie de la parabole)*
-- [ ] suites-numeriques-premiere-spe.js
+- [x] suites-numeriques-premiere-spe.js *(nouvelle branche Reconnaître une situation arithmétique ou géométrique — thème entier absent malgré le champ pourquoi du chapitre ; item+formule extraction de r/q depuis deux termes consécutifs ; formule de Gauss 1+2+...+n=n(n+1)/2 ajoutée)*
 - [ ] derivation-premiere-spe.js
 - [ ] variations-courbes-premiere-spe.js
 - [ ] fonction-exponentielle-premiere-spe.js

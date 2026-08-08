@@ -17,19 +17,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-`nombres-decimaux.js` (6e) relu intégralement et confirmé au niveau
-attendu : les 4 branches partent du concret (exemple chiffré avant la
-règle), le piège classique (3,4 > 3,25) est déjà présent sur la branche
-"Comparer", la figure de la droite graduée a déjà sa flèche
-(`buildCoursDroiteGradueeFigure`, `arrowEnd: true`), et le tableau de
-tarifs (`genProblemeTarifPoids`) est déjà en `texTable()`. Aucun autre
-défaut de présentation détecté dans les autres générateurs du fichier.
-**RAS, rien à committer pour ce fichier** au-delà des corrections déjà
-faites en amont (commits `9fa7fea`/`da902e8`).
+Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
+`grandeurs-mesures.js` (6e) relus intégralement.
 
-**Prochain fichier à traiter : `fractions.js` (6e).** Puis le reste de la
-6e, 5e, 4e, 3e dans cet ordre (périmètre de ce chantier = collège
-uniquement, voir consigne — 2nde/lycée hors scope pour l'instant).
+- `fractions.js` : **vraies corrections**. Piège classique ajouté sur la
+  branche "Comparer des fractions" (à numérateur égal, la fraction au plus
+  grand dénominateur n'est PAS la plus grande — révélé par le mode
+  `memeNum` de `genComparerDeuxFractions`), formule mise à jour pour
+  l'illustrer (\\(1/3 > 1/7\\)). Flèche de sens ajoutée sur la demi-droite
+  graduée de `genLireAbscisseFraction` (`arrowEnd: true`), qui n'en avait
+  pas — même défaut que celui déjà corrigé ailleurs (commit `da902e8`).
+- `proportionnalite.js` : RAS. Carte mentale déjà organisée selon la
+  progressivité du programme 2025 (linéarité → retour à l'unité →
+  coefficient), piège "situations qui semblent proportionnelles mais ne le
+  sont pas" déjà présent et bien aligné avec `genVraiFauxProportionnaliteConceptuel`,
+  tous les tableaux déjà en `texTable()`.
+- `operations-decimaux.js` : RAS. Piège classique déjà présent (0,5 × 0,5 =
+  0,25, un produit de décimaux ne "grandit" pas toujours), bien aligné avec
+  `genComparerAvantApresMultiplication`/`genOrdreDeGrandeurProduitDecimaux`.
+- `grandeurs-mesures.js` : RAS. Trois pièges classiques déjà présents et
+  bien ciblés (conversion de longueurs = compter les rangs, aires = facteur
+  100 entre unités consécutives, durées en base 60 — 1,5 h ≠ 1 h 50 min).
+
+**Prochain fichier à traiter : `distances-symetries.js` (6e).** Puis le
+reste de la 6e, 5e, 4e, 3e dans cet ordre (périmètre de ce chantier =
+collège uniquement, voir consigne — 2nde/lycée hors scope pour l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -125,10 +137,10 @@ vérifiés pour débordement.)
 
 ### 6e
 - [x] nombres-decimaux.js *(relu intégralement, déjà au niveau attendu — RAS)*
-- [ ] fractions.js
-- [ ] proportionnalite.js
-- [ ] operations-decimaux.js
-- [ ] grandeurs-mesures.js
+- [x] fractions.js *(piège classique numérateur égal + flèche demi-droite ajoutés)*
+- [x] proportionnalite.js *(déjà bon, RAS)*
+- [x] operations-decimaux.js *(déjà bon, RAS)*
+- [x] grandeurs-mesures.js *(déjà bon, RAS)*
 - [ ] distances-symetries.js
 - [ ] angles.js
 - [ ] configurations-geometriques.js

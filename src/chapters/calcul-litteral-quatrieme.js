@@ -410,6 +410,7 @@ export default {
               "Évaluer, c'est remplacer la lettre par sa valeur et calculer, en respectant les priorités opératoires.",
               "Piège classique : \\((-x)^2\\) et \\(-x^2\\) donnent des résultats différents pour une même valeur négative de x.",
             ],
+            formula: "\\(3x - 2\\ \\text{pour}\\ x = 4 : 3 \\times 4 - 2 = 10\\)",
           },
           {
             title: "Réduire",
@@ -417,6 +418,7 @@ export default {
               "On regroupe entre eux les termes de même nature (les x² ensemble, les x ensemble, les constantes ensemble).",
               "Chaque terme garde le signe qui le précède quand on le déplace.",
             ],
+            formula: "\\(3x - 5 + 2x = 3x + 2x - 5 = 5x - 5\\)",
           },
           {
             title: "Développer",
@@ -433,6 +435,7 @@ export default {
               "Factoriser, c'est l'opération inverse de développer : on fait apparaître un facteur commun.",
               "On vérifie toujours une factorisation en la redéveloppant : on doit retrouver l'expression de départ.",
             ],
+            formula: "\\(ka + kb = k(a+b)\\)",
           },
         ],
       },

@@ -18,7 +18,30 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-informations-chiffrees-seconde.js (2nde) — 10e fichier de la 2nde.**
+statistiques-descriptives-seconde.js (2nde) — 11e fichier de la 2nde.**
+
+`informations-chiffrees-seconde.js` (2nde) relu intégralement : 6 branches
+(5 avant). Nouvelle branche « Évolution réciproque » ajoutée, couvrant
+genEvolutionReciproqueNumeric (chapter dédié, difficulté "expert")
+totalement absent du cours avant alors que c'est un piège classique très
+fréquent (réciproque d'une baisse de 20 % = hausse de 25 %, pas 20 %) ;
+formule CM_réciproque=1/CM ajoutée avec piège chiffré. Branche
+« Proportions et pourcentages » enrichie : item distinguant explicitement
+proportion (partie d'un tout, même instant) et évolution (avant/après
+dans le temps), testé par genIdentifierProportionOuEvolutionQCM mais
+jamais formulé avant. Branche « Coefficient multiplicateur » enrichie de
+3 items : formule inverse t=(CM-1)×100 (genTauxDepuisCoefficientMultiplicateurNumeric,
+absent) ; piège diviser (pas multiplier) par CM pour la valeur initiale
+(genValeurInitialeDepuisValeurFinaleNumeric, absent, erreur fréquente) ;
+règle de comparaison de deux CM (genComparerCoefficientsMultiplicateursQCM,
+absent). Branche « Évolutions successives » enrichie : formule du taux
+global ajoutée (genTauxGlobalEvolutionsSuccessivesNumeric, absent, seul
+le CM global était donné). Branche « Tableau croisé » enrichie : item sur
+la complétion d'une case manquante par différence des totaux
+(genCompleterTableauCroiseNumeric, absent). Fichier non géométrique,
+aucune figure requise. Aucun candidat texTable supplémentaire (tableau
+croisé déjà via texTable()) ; un seul € en prose libre hors texTable,
+conforme à l'usage établi dans tout le repo.
 
 `equations-droites-seconde.js` (2nde) relu intégralement : 6 branches (4
 avant). Nouvelle branche « Droites verticales et horizontales » ajoutée,
@@ -995,7 +1018,7 @@ vérifiés pour débordement.)
 - [x] vecteurs-seconde.js *(3 nouvelles branches — Translation, Caractérisation du milieu, Combinaison linéaire, 2 signalées « ajout programme 2026 » par la NOTE du fichier ; item comparaison normes ajouté ; item somme de vecteurs ajouté)*
 - [x] colinearite-vecteurs-seconde.js *(item vecteur nul colinéaire ajouté ; piège classique parallèles vs confondues ajouté ; 2 nouvelles branches — équation de colinéarité/coefficient, vecteurs directeurs d'une droite ; correction technique : droites sans flèche, seuls les vecteurs en portent)*
 - [x] equations-droites-seconde.js *(2 nouvelles branches — Droites verticales/horizontales avec figure à axes, Construire une équation depuis point+vecteur directeur ; items ajoutés sur vecteurs colinéaires directeurs, test d'appartenance par substitution, lien vocabulaire système/position relative)*
-- [ ] informations-chiffrees-seconde.js
+- [x] informations-chiffrees-seconde.js *(nouvelle branche Évolution réciproque avec formule et piège chiffré ; items ajoutés — distinction proportion/évolution, formules inverses CM, comparaison de CM, taux global, complétion de case manquante)*
 - [ ] statistiques-descriptives-seconde.js
 - [ ] probabilites-echantillonnage-seconde.js
 

@@ -17,10 +17,23 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `theoreme-thales.js`,
-`triangles-rectangles-quatrieme.js` et `geometrie-plane.js` (4e) sont
-terminés. Prochain fichier : geometrie-espace-quatrieme.js (4e) — dernier
-fichier de la 4e.**
+**La 5e est intégralement terminée (12/12). La 4e est intégralement
+terminée (14/14). Prochain fichier : nombres-entiers-troisieme.js (3e) —
+la 4e est intégralement terminée.**
+
+`geometrie-espace-quatrieme.js` (4e) relu intégralement : branche
+« Pyramide » reformulée pour partir du concret (base carrée = 5 faces / 5
+sommets, puis généralisation n+1/n+1/2n incluant la formule des arêtes,
+absente jusqu'ici alors que testée par un générateur) au lieu de démarrer
+par le terme abstrait « base n-gonale » ; piège classique ajouté (ne pas
+oublier de diviser par 3) — seule branche du fichier sans piège classique
+avant cette revue. Branche « Repérage » : piège classique ajouté (ordre
+abscisse/ordonnée/altitude, à ne pas confondre avec longueur/largeur/
+hauteur). Reste déjà au niveau attendu (3 branches, formules utiles,
+figures buildPyramideFigure/buildConeFigure/buildPaveRepereFigure déjà
+claires ; cohérent avec la convention déjà établie sur geometrie-espace.js
+5e : les solides finis n'ont pas besoin d'arrowStart/arrowEnd). Aucun
+candidat texTable, aucun €.
 
 `geometrie-plane.js` (4e) relu intégralement : piège classique ajouté à
 « Angles dans un triangle » (isocèle : retirer d'abord l'angle au sommet à
@@ -541,7 +554,7 @@ vérifiés pour débordement.)
 - [x] theoreme-thales.js *(figure ajoutée à la branche « Problèmes, agrandissement/réduction », seule branche géométrique sans figure ; item réécrit du concret vers la règle ; sinon déjà bon, faux positif du grep mécanique confirmé — commentaire d'en-tête long, pas un prompt)*
 - [x] triangles-rectangles-quatrieme.js *(piège classique ajouté à « Théorème de Pythagore » — ne pas s'arrêter à BC², calculer la racine carrée ; sinon déjà bon, 4 branches, figures et pièges déjà bien ciblés ailleurs)*
 - [x] geometrie-plane.js *(piège classique ajouté à « Angles dans un triangle » — isocèle : 180° moins l'apex, puis diviser par 2 ; piège classique ajouté à « Translations » — image retournée = pas une translation ; sinon déjà bon, 3 branches, figures et ticks déjà bien appariés)*
-- [ ] geometrie-espace-quatrieme.js
+- [x] geometrie-espace-quatrieme.js *(item "Pyramide" reformulé du concret vers la généralisation + formule des arêtes ajoutée ; piège classique ajouté à "Pyramide" (diviser par 3) et à "Repérage" (ordre abscisse/ordonnée/altitude) ; sinon déjà bon, 3 branches, figures déjà claires)*
 
 ### 3e
 - [ ] nombres-entiers-troisieme.js

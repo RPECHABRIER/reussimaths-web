@@ -384,6 +384,7 @@ export default {
             items: [
               "Dans un triangle rectangle, le carré de l'hypoténuse (côté opposé à l'angle droit) est égal à la somme des carrés des deux autres côtés.",
               "On peut aussi isoler un côté de l'angle droit en soustrayant au lieu d'additionner.",
+              "Piège classique : ne pas s'arrêter à BC² — il faut ensuite calculer la racine carrée pour trouver BC.",
             ],
             formula: "\\(BC^2 = BA^2 + AC^2\\)",
             figure: buildRightTriangleFigure({ right: "A", horiz: "B", vert: "C" }),

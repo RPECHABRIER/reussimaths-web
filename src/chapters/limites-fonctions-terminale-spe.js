@@ -358,8 +358,8 @@ export default {
           {
             title: "Asymptotes",
             items: [
-              "Asymptote horizontale : \\(\\lim_{x \\to \\pm\\infty} f(x) = \\ell\\) (droite \\(y=\\ell\\)).",
-              "Asymptote verticale en a : \\(\\lim_{x \\to a} f(x) = \\pm\\infty\\) (souvent quand un dénominateur s'annule).",
+              "Asymptote horizontale : \\(\\lim_{x \\to \\pm\\infty} f(x) = \\ell\\) (droite \\(y=\\ell\\)). Une courbe peut croiser son asymptote horizontale, tant qu'elle s'en rapproche indéfiniment à l'infini (ce n'est pas interdit).",
+              "Asymptote verticale en a : \\(\\lim_{x \\to a} f(x) = \\pm\\infty\\) (souvent quand un dénominateur s'annule). Le signe de la limite se détermine par la règle des signes du quotient numérateur/dénominateur au voisinage de a.",
             ],
           },
           {
@@ -369,9 +369,18 @@ export default {
             ],
           },
           {
+            title: "Opérations sur les limites (cas non indéterminés)",
+            items: [
+              "Somme : deux limites infinies de même signe s'additionnent (\\(+\\infty+\\infty=+\\infty\\)) ; une limite infinie plus un réel reste infinie.",
+              "Produit et quotient : on applique la règle des signes habituelle (infini × réel non nul = infini du signe du produit ; réel/infini = 0 ; infini/réel non nul = infini du signe du quotient).",
+            ],
+          },
+          {
             title: "Théorème des gendarmes",
             items: [
               "Si \\(u(x) \\leqslant f(x) \\leqslant v(x)\\) au voisinage de a et \\(u,v \\to \\ell\\), alors \\(f \\to \\ell\\).",
+              "Cas particulier fréquent : le produit d'une fonction bornée (comme \\(\\sin\\) ou \\(\\cos\\)) par une fonction qui tend vers 0 (comme \\(\\frac{1}{x}\\)) tend vers 0.",
+              "Passage à la limite : une inégalité stricte entre deux fonctions peut devenir une égalité entre leurs limites.",
             ],
           },
           {

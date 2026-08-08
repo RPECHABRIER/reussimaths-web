@@ -92,6 +92,9 @@ les hashes). État actuel :
   fait (commit `d4b3bbe`, pas de figure). **La Première techno est
   intégralement terminée. Prochain fichier :
   `combinatoire-denombrement-terminale-spe.js` (Terminale Spé).**
+  `combinatoire-denombrement-terminale-spe.js` fait (commit `bb295c8`,
+  pas de figure). **Prochain fichier :
+  `vecteurs-droites-plans-espace-terminale-spe.js` (géométrie, 3D).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -384,7 +387,7 @@ Cours).
 
 ### Terminale Spé (terminale-spe)
 
-- [ ] combinatoire-denombrement-terminale-spe.js
+- [x] combinatoire-denombrement-terminale-spe.js
 - [ ] vecteurs-droites-plans-espace-terminale-spe.js *(géométrie)*
 - [ ] orthogonalite-distances-espace-terminale-spe.js *(géométrie)*
 - [ ] suites-terminale-spe.js

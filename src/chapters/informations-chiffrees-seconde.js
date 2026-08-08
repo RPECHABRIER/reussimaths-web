@@ -568,6 +568,7 @@ export default {
             items: [
               "Proportion = partie / total ; retrouver la partie ou le total en réorganisant cette égalité.",
               "Proportion d'une proportion : multiplier les deux proportions entre elles.",
+              "Ne pas confondre une proportion (une partie d'un tout, au même instant, ex. « 45 % des élèves ») et une évolution (une valeur qui change entre un avant et un après, ex. « le prix baisse de 20 % »).",
             ],
             formula: "\\(\\text{proportion} = \\dfrac{\\text{partie}}{\\text{total}}\\)",
           },
@@ -576,14 +577,26 @@ export default {
             items: [
               "Hausse de t % : coefficient \\(1+\\frac{t}{100}\\). Baisse de t % : coefficient \\(1-\\frac{t}{100}\\).",
               "Piège classique : un coefficient inférieur à 1 signifie une baisse, même s'il reste positif.",
+              "Pour retrouver le taux depuis le coefficient multiplicateur : \\(t = (CM-1)\\times 100\\).",
+              "Pour retrouver la valeur initiale depuis la valeur finale, on DIVISE par le coefficient multiplicateur (et non l'inverse) : \\(\\text{valeur initiale} = \\text{valeur finale} \\div CM\\).",
+              "Comparer deux évolutions : celle qui a le plus grand coefficient multiplicateur est la plus favorable (plus forte hausse, ou plus faible baisse).",
             ],
             formula: "\\(\\text{valeur finale} = \\text{valeur initiale} \\times CM\\)",
+          },
+          {
+            title: "Évolution réciproque",
+            items: [
+              "Pour revenir à la valeur de départ après une évolution, on multiplie par l'inverse du coefficient multiplicateur : \\(CM_{réciproque} = \\dfrac{1}{CM}\\).",
+              "Piège classique : la réciproque d'une baisse de 20 % n'est PAS une hausse de 20 %, mais une hausse de 25 % (\\(\\frac{1}{0{,}8} = 1{,}25\\)).",
+            ],
+            formula: "\\(CM_{réciproque} = \\dfrac{1}{CM}\\)",
           },
           {
             title: "Évolutions successives",
             items: [
               "Le coefficient multiplicateur global est le produit des coefficients de chaque étape (pas leur somme).",
               "Piège classique : deux hausses de 10 % ne donnent pas une hausse de 20 %, mais de 21 % (\\(1{,}1 \\times 1{,}1 = 1{,}21\\)).",
+              "Le taux d'évolution global se retrouve depuis le coefficient global : \\(t_{global} = (CM_{global}-1)\\times 100\\).",
             ],
           },
           {
@@ -598,6 +611,7 @@ export default {
             items: [
               "Fréquence marginale : effectif d'une ligne ou colonne, divisé par le total général.",
               "Fréquence conditionnelle : effectif d'une case, divisé par le total de sa ligne ou colonne (pas le total général).",
+              "Une case manquante d'un tableau croisé se retrouve par différence : total de la ligne (ou de la colonne) moins les effectifs déjà connus.",
             ],
           },
         ],

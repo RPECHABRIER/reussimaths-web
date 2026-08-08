@@ -19,13 +19,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-6 des 8 fichiers de Première techno sont relus
+7 des 8 fichiers de Première techno sont relus
 (suites-numeriques-premiere-techno.js,
 fonctions-second-degre-premiere-techno.js, derivation-premiere-techno.js,
 statistiques-deux-variables-premiere-techno.js,
 probabilites-conditionnelles-premiere-techno.js,
-epreuves-independantes-premiere-techno.js). Prochain fichier :
-variables-aleatoires-premiere-techno.js (Première techno).**
+epreuves-independantes-premiere-techno.js,
+variables-aleatoires-premiere-techno.js). Prochain fichier :
+algorithmique-python-premiere-techno.js (Première techno, dernier de ce
+niveau).**
+
+`variables-aleatoires-premiere-techno.js` (Première techno) relu
+intégralement : 4 branches inchangées en nombre mais enrichies. Branche
+« Loi de probabilité discrète » enrichie : distinction P(X=a) vs
+P(X≤a) (probabilité cumulée) ajoutée, testée mais absente avant.
+Branche « Fluctuation d'échantillonnage » enrichie : formule s≈1/√n
+ajoutée en formule affichée, utilisée dans 2 générateurs mais jamais
+montrée sous forme symbolique. Aucun €, aucun candidat texTable,
+fichier sans figure.
 
 `epreuves-independantes-premiere-techno.js` (Première techno) relu
 intégralement : 4 branches inchangées en nombre mais enrichies. Branche
@@ -1428,7 +1439,7 @@ vérifiés pour débordement.)
 - [x] statistiques-deux-variables-premiere-techno.js *(nouvelle branche « Déterminer et juger un ajustement affine » — formule du coefficient directeur depuis 2 points, critère de pertinence visuelle du nuage)*
 - [x] probabilites-conditionnelles-premiere-techno.js *(formule P(A∩B)=P(A)×P(B) ajoutée à la branche Indépendance, item méthode tableau croisé, piège incompatible≠indépendant reformulé)*
 - [x] epreuves-independantes-premiere-techno.js *(notation du coefficient binomial \binom{n}{k} nommée, formule complète P(k succès) ajoutée)*
-- [ ] variables-aleatoires-premiere-techno.js
+- [x] variables-aleatoires-premiere-techno.js *(distinction P(X=a)/P(X≤a) ajoutée, formule s≈1/√n ajoutée à la branche Fluctuation d'échantillonnage)*
 - [ ] algorithmique-python-premiere-techno.js
 
 ### Terminale Spé

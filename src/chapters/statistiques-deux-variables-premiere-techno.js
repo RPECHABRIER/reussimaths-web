@@ -241,6 +241,33 @@ export default {
     pourquoi: "Ajuster un nuage de points par une droite, c'est ce qui permet de faire des prévisions à partir de données observées : ventes, météo, croissance.",
     level: "premiere-techno",
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Statistiques à deux variables",
+        branches: [
+          {
+            title: "Nuage de points et point moyen",
+            items: [
+              "Chaque individu donne un point \\((x_i ; y_i)\\) ; le point moyen \\(G(\\bar{x} ; \\bar{y})\\) a pour coordonnées les moyennes des deux séries.",
+            ],
+          },
+          {
+            title: "Méthode de Mayer",
+            items: [
+              "Séparer le nuage trié en deux groupes de même taille (ou presque), calculer le point moyen de chaque groupe (\\(G_1\\), \\(G_2\\)).",
+              "La droite \\((G_1G_2)\\) passe toujours par le point moyen G de la série complète.",
+            ],
+          },
+          {
+            title: "Interpolation vs extrapolation",
+            items: [
+              "Interpolation : estimer une valeur à l'intérieur de l'intervalle des données observées (plus fiable).",
+              "Extrapolation : estimer une valeur en dehors de cet intervalle (piège classique : moins fiable, la tendance peut ne pas se poursuivre).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

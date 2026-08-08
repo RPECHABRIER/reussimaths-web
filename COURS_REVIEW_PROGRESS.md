@@ -18,7 +18,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-colinearite-vecteurs-seconde.js (2nde) — 8e fichier de la 2nde.**
+equations-droites-seconde.js (2nde) — 9e fichier de la 2nde.**
+
+`colinearite-vecteurs-seconde.js` (2nde) relu intégralement : item ajouté
+sur le vecteur nul colinéaire à tout vecteur (déterminant toujours nul) ;
+piège classique ajouté sur droites parallèles vs confondues (vecteurs
+directeurs colinéaires n'implique pas confondues, il faut vérifier un
+point commun) ; 2 nouvelles branches ajoutées — « Résoudre une équation de
+colinéarité, coefficient » (déterminant=0, formule k=x_v/x_u) et
+« Vecteurs directeurs d'une droite » (infinité colinéaire entre eux, cas
+particuliers axe-aligné), toutes deux avec figure dédiée. Correction
+technique dans `buildCoursColinFigure` : les droites (paramètre `lines`)
+ne portent plus de flèche par erreur — seuls les vecteurs (paramètre
+`vectors`) doivent en porter, une droite n'a pas de sens privilégié
+contrairement à un axe ou une droite graduée. 6 branches au total.
 
 `vecteurs-seconde.js` (2nde) relu intégralement : 3 nouvelles branches
 ajoutées pour des thèmes entiers absents. « Translation d'un point »
@@ -956,7 +969,7 @@ vérifiés pour débordement.)
 - [x] fonctions-reference-seconde.js *(item inverse jamais nul ajouté, item équations imprécis corrigé/scindé, item inéquations x²/|x| ajouté — thème entier absent avant)*
 - [x] reperage-configurations-seconde.js *(4 items ajoutés — orthogonal/orthonormé, symétrique origine, inverse milieu, distance axe-alignée ; branche Parallélogramme scindée ; 2 nouvelles branches ajoutées — Centre de gravité, Réciproque de Pythagore, avec figures ; flèches déjà correctes)*
 - [x] vecteurs-seconde.js *(3 nouvelles branches — Translation, Caractérisation du milieu, Combinaison linéaire, 2 signalées « ajout programme 2026 » par la NOTE du fichier ; item comparaison normes ajouté ; item somme de vecteurs ajouté)*
-- [ ] colinearite-vecteurs-seconde.js
+- [x] colinearite-vecteurs-seconde.js *(item vecteur nul colinéaire ajouté ; piège classique parallèles vs confondues ajouté ; 2 nouvelles branches — équation de colinéarité/coefficient, vecteurs directeurs d'une droite ; correction technique : droites sans flèche, seuls les vecteurs en portent)*
 - [ ] equations-droites-seconde.js
 - [ ] informations-chiffrees-seconde.js
 - [ ] statistiques-descriptives-seconde.js

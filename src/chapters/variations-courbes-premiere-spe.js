@@ -363,6 +363,40 @@ export default {
     pourquoi: "Étudier les variations d'une fonction, c'est trouver où un phénomène atteint son maximum ou son minimum — la base de tout problème d'optimisation.",
     level: "premiere-spe",
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Variations et courbes représentatives",
+        branches: [
+          {
+            title: "Parité d'une fonction",
+            items: [
+              "Paire : \\(f(-x)=f(x)\\), courbe symétrique par rapport à l'axe des ordonnées.",
+              "Impaire : \\(f(-x)=-f(x)\\), courbe symétrique par rapport à l'origine du repère.",
+            ],
+          },
+          {
+            title: "Signe de f' et sens de variation",
+            items: [
+              "\\(f'>0\\) sur un intervalle ⟹ f croissante ; \\(f'<0\\) ⟹ f décroissante.",
+              "Piège classique très fréquent : le signe de f' donne le sens de variation de f, ce n'est pas le signe de f.",
+            ],
+          },
+          {
+            title: "Extremums et optimisation",
+            items: [
+              "Un extremum local correspond à un changement de signe de f' (tangente horizontale, \\(f'=0\\)).",
+              "En optimisation, l'abscisse qui annule f' donne souvent la valeur qui maximise ou minimise la quantité étudiée.",
+            ],
+          },
+          {
+            title: "Position relative de deux courbes",
+            items: [
+              "Étudier le signe de \\(f(x)-g(x)\\) : positif ⟹ courbe de f au-dessus de celle de g.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

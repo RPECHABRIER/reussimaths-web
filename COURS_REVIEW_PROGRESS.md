@@ -18,17 +18,33 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 1 des 14 fichiers de
-Terminale Spé est relu (combinatoire-denombrement-terminale-spe.js).
-Prochain fichier : vecteurs-droites-plans-espace-terminale-spe.js
-(Terminale Spé). Note : ce fichier et le suivant
-(orthogonalite-distances-espace-terminale-spe.js) sont traités
-normalement dans l'ordre malgré une consigne reçue disant qu'ils
-seraient déjà cochés — vérification faite, les commits antérieurs
-existants pour ces 2 fichiers appartiennent au chantier de RÉDACTION
+la Première techno sont intégralement terminées. 2 des 14 fichiers de
+Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
+vecteurs-droites-plans-espace-terminale-spe.js). Prochain fichier :
+orthogonalite-distances-espace-terminale-spe.js (Terminale Spé). Note :
+ce fichier suivant est traité normalement malgré une consigne reçue
+disant qu'il serait déjà coché — vérification faite, le commit
+antérieur existant pour ce fichier appartient au chantier de RÉDACTION
 initial (COURS_PROGRESS.md, création de la carte mentale + figures 3D),
 pas à ce chantier-ci de RELECTURE qualité (COURS_REVIEW_PROGRESS.md) ;
-ils n'avaient jamais été relus sous cet angle.**
+il n'avait jamais été relu sous cet angle (confirmé par
+vecteurs-droites-plans-espace-terminale-spe.js qui contenait
+effectivement plusieurs gaps substantiels malgré la même consigne).**
+
+`vecteurs-droites-plans-espace-terminale-spe.js` (Terminale Spé) relu
+intégralement : 4 branches inchangées en nombre mais fortement
+enrichies (jamais relu sous l'angle qualité auparavant). Branche
+« Repère de l'espace, coordonnées et norme » enrichie de 4 formules
+absentes malgré des générateurs dédiés directs : coordonnées de AB
+depuis deux points, milieu I d'un segment, somme de deux vecteurs,
+relation de Chasles — 4 générateurs entiers sans règle correspondante.
+Branche « Représentation paramétrique d'une droite » enrichie : critère
+de colinéarité pour alignement/appartenance ajouté. Branche « Positions
+relatives de droites et de plans » enrichie : positions DROITE-DROITE
+ajoutées (parallèles/sécantes/gauches), intersection de 2 plans sécants
+= une droite — 3 des 5 cas du vrai-faux dédié étaient sans couverture.
+Aucun €, aucun candidat texTable, 4 figures existantes non modifiées
+(déjà conformes).
 
 `combinatoire-denombrement-terminale-spe.js` (Terminale Spé, 1er des 14
 fichiers de ce niveau) relu intégralement : 5 branches inchangées en
@@ -1468,7 +1484,7 @@ vérifiés pour débordement.)
 
 ### Terminale Spé
 - [x] combinatoire-denombrement-terminale-spe.js *(formule de base des coefficients binomiaux, cas particuliers binom(n,0)/binom(n,n)/binom(n,1), relation arrangement-combinaison A(n,k)=binom(n,k)×k! ajoutés)*
-- [ ] vecteurs-droites-plans-espace-terminale-spe.js
+- [x] vecteurs-droites-plans-espace-terminale-spe.js *(formules AB depuis 2 points, milieu, somme de vecteurs, Chasles ajoutées ; critère de colinéarité pour alignement ; positions relatives droite-droite ajoutées — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [ ] orthogonalite-distances-espace-terminale-spe.js
 - [ ] suites-terminale-spe.js
 - [ ] limites-fonctions-terminale-spe.js

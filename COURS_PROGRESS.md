@@ -95,6 +95,12 @@ les hashes). État actuel :
   `combinatoire-denombrement-terminale-spe.js` fait (commit `bb295c8`,
   pas de figure). **Prochain fichier :
   `vecteurs-droites-plans-espace-terminale-spe.js` (géométrie, 3D).**
+  `vecteurs-droites-plans-espace-terminale-spe.js` fait (commit `a701f2a`,
+  4 figures neuves — **première projection 3D→2D du chantier**, technique
+  `project3D()`/`build3DFigure()` en perspective cavalière, à réutiliser
+  pour `orthogonalite-distances-espace-terminale-spe.js`). **Prochain
+  fichier : `orthogonalite-distances-espace-terminale-spe.js` (géométrie,
+  3D).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -388,7 +394,7 @@ Cours).
 ### Terminale Spé (terminale-spe)
 
 - [x] combinatoire-denombrement-terminale-spe.js
-- [ ] vecteurs-droites-plans-espace-terminale-spe.js *(géométrie)*
+- [x] vecteurs-droites-plans-espace-terminale-spe.js *(géométrie)*
 - [ ] orthogonalite-distances-espace-terminale-spe.js *(géométrie)*
 - [ ] suites-terminale-spe.js
 - [ ] limites-fonctions-terminale-spe.js

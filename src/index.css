@@ -68,3 +68,19 @@ body {
   max-width: none;
   overflow-x: visible;
 }
+
+/* Sur petit écran, une formule un peu chargée (plusieurs termes, une racine
+   carrée...) peut rester plus large que la carte même après ce qui précède
+   -- elle reste alors lisible en la faisant glisser du doigt (comportement
+   volontaire, jamais tronquée), mais devoir glisser pour lire une formule
+   n'est pas un confort idéal. En réduisant légèrement sa taille sur les
+   petits écrans, la grande majorité des formules tiennent directement sans
+   aucun geste ; le glissement reste le filet de sécurité pour les rares
+   formules encore trop longues (ex. une distance avec 3 termes sous une
+   racine). Ne touche pas aux écrans plus larges (tablette/desktop), où la
+   place ne manque pas. */
+@media (max-width: 480px) {
+  .katex {
+    font-size: 0.88em;
+  }
+}

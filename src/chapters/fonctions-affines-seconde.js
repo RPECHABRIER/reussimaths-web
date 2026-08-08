@@ -430,6 +430,49 @@ export default {
     level: "seconde",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Fonctions affines",
+        branches: [
+          {
+            title: "Reconnaître et écrire f(x) = ax + b",
+            items: [
+              "a est le coefficient directeur, b l'ordonnée à l'origine (image de 0).",
+              "Développer/réduire l'expression pour vérifier qu'elle se ramène bien à cette forme.",
+            ],
+            formula: "\\(f(x) = ax+b\\)",
+          },
+          {
+            title: "Taux de variation = coefficient directeur",
+            items: [
+              "Entre deux points de la courbe, le taux de variation est toujours égal à a, quels que soient les points choisis.",
+              "Piège classique : ne pas confondre \\(\\frac{f(b)-f(a)}{b-a}\\) avec \\(\\frac{f(a)-f(b)}{b-a}\\) — l'ordre doit être le même au numérateur et au dénominateur.",
+            ],
+            formula: "\\(a = \\dfrac{f(x_2)-f(x_1)}{x_2-x_1}\\)",
+          },
+          {
+            title: "Sens de variation",
+            items: [
+              "a > 0 : f croissante ; a < 0 : f décroissante ; a = 0 : f constante.",
+            ],
+          },
+          {
+            title: "Déterminer f à partir de deux points",
+            items: [
+              "Calculer a avec le taux de variation, puis reporter dans \\(f(x)=ax+b\\) avec un point connu pour trouver b.",
+            ],
+          },
+          {
+            title: "Équations, inéquations, intersections",
+            items: [
+              "Résoudre \\(ax+b=0\\) donne l'antécédent de 0 (le zéro de la fonction).",
+              "L'intersection de deux droites s'obtient en résolvant \\(a_1x+b_1 = a_2x+b_2\\).",
+              "Piège classique : diviser par a lors d'une inéquation change le sens de l'inégalité si a < 0.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

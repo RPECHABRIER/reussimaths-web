@@ -348,14 +348,17 @@ export default {
             items: [
               "Majore la probabilité de s'écarter de l'espérance, à partir de la variance.",
               "Piège classique : bien mettre le carré sur l'écart \\(\\delta\\) au dénominateur.",
+              "Pour minorer l'événement contraire \\(P(|X-E(X)|<\\delta)\\), on passe par 1 moins le majorant obtenu.",
             ],
             formula: "\\(P(|X-E(X)| \\geqslant \\delta) \\leqslant \\dfrac{V(X)}{\\delta^2}\\)",
           },
           {
-            title: "Inégalité de concentration",
+            title: "Moyenne empirique et inégalité de concentration",
             items: [
-              "Appliquée à la moyenne empirique de n répétitions : plus n augmente, plus la moyenne se concentre autour de l'espérance.",
+              "Pour n répétitions indépendantes d'une même expérience associée à X, la moyenne empirique \\(M_n\\) vérifie \\(E(M_n)=E(X)\\) et \\(V(M_n)=\\dfrac{V(X)}{n}\\) : la variance diminue quand n augmente.",
+              "Appliquée à \\(M_n\\) : plus n augmente, plus le majorant diminue, donc plus la moyenne se concentre autour de l'espérance.",
             ],
+            formula: "\\(P(|M_n-E(X)| \\geqslant \\varepsilon) \\leqslant \\dfrac{V(X)}{n\\varepsilon^2}\\)",
           },
           {
             title: "Loi des grands nombres",

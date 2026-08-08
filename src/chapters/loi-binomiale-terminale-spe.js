@@ -360,6 +360,40 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 13,
+    cours: {
+      mindMap: {
+        title: "Loi binomiale",
+        branches: [
+          {
+            title: "Identifier une loi binomiale B(n,p)",
+            items: [
+              "n répétitions identiques et indépendantes d'une épreuve de Bernoulli de paramètre p (probabilité de succès).",
+              "X compte le nombre de succès obtenus sur les n répétitions.",
+            ],
+          },
+          {
+            title: "Calculer une probabilité",
+            items: [
+              "\\(\\binom{n}{k}\\) compte le nombre de chemins menant à exactement k succès.",
+            ],
+            formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k}\\)",
+          },
+          {
+            title: "Espérance, variance, écart-type",
+            items: [
+              "Piège classique : ne pas confondre les trois formules, notamment le carré de \\(1-p\\) absent dans l'espérance.",
+            ],
+            formula: "\\(E(X)=np,\\quad V(X)=np(1-p),\\quad \\sigma(X)=\\sqrt{np(1-p)}\\)",
+          },
+          {
+            title: "Événement complémentaire",
+            items: [
+              "\\(P(X \\geqslant 1) = 1-P(X=0)\\) : passer au contraire simplifie souvent le calcul de « au moins un succès ».",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

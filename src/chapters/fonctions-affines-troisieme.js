@@ -360,6 +360,43 @@ export default {
     level: "troisieme",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Fonctions affines",
+        branches: [
+          {
+            title: "Identifier a et b",
+            items: [
+              "Une fonction affine s'écrit \\(f(x) = ax + b\\) : a est le coefficient directeur, b l'ordonnée à l'origine.",
+              "Il faut parfois réduire, développer ou simplifier une expression avant de lire a et b.",
+            ],
+            formula: "\\(f(x) = ax + b\\)",
+          },
+          {
+            title: "Droites et coefficients",
+            items: [
+              "Le signe de a donne le sens de variation : a > 0, f est croissante ; a < 0, f est décroissante.",
+              "La droite passe par l'origine si et seulement si b = 0 (fonction linéaire).",
+              "Un point appartient à la droite si ses coordonnées vérifient \\(y = ax+b\\).",
+            ],
+          },
+          {
+            title: "Déterminer une fonction affine",
+            items: [
+              "Connaissant f(0), on obtient directement b ; avec une deuxième valeur, on en déduit a.",
+              "Pour trouver un antécédent (résoudre f(x) = cible), on résout une équation du premier degré.",
+            ],
+          },
+          {
+            title: "Comparer deux tarifs",
+            items: [
+              "Chaque tarif (forfait + prix unitaire) se modélise par une fonction affine.",
+              "Le seuil où deux tarifs coûtent le même prix s'obtient en résolvant f(x) = g(x).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -348,6 +348,16 @@ export default {
               "Arithmétique : on ajoute la raison r à chaque étape. \\(u_n = u_0+rn\\).",
               "Géométrique : on multiplie par la raison q à chaque étape. \\(u_n = u_0 \\times q^n\\).",
               "Piège classique : ne pas confondre les deux formules — l'une additionne, l'autre multiplie.",
+              "Pour retrouver la raison à partir de deux termes consécutifs donnés : on la SOUSTRAIT pour une suite arithmétique, on la DIVISE pour une suite géométrique (piège classique : diviser au lieu de soustraire, ou l'inverse).",
+            ],
+            formula: "\\(r = u_{n+1}-u_n\\quad ; \\quad q = \\dfrac{u_{n+1}}{u_n}\\)",
+          },
+          {
+            title: "Reconnaître une situation arithmétique ou géométrique",
+            items: [
+              "Un accroissement (ou une baisse) du même MONTANT à chaque étape → suite arithmétique (ex. un loyer qui augmente de 20 euros par an, une population qui perd 50 habitants par an).",
+              "Un accroissement (ou une baisse) du même POURCENTAGE à chaque étape → suite géométrique (ex. un capital placé à taux fixe, une substance radioactive qui perd le même % de sa masse).",
+              "Piège classique : « augmente toujours pareil » ne suffit pas à trancher — il faut regarder si c'est un montant fixe (arithmétique) ou un taux fixe (géométrique).",
             ],
           },
           {
@@ -361,8 +371,9 @@ export default {
             title: "Sommes de termes",
             items: [
               "Somme arithmétique = (nombre de termes) × (premier terme + dernier terme) / 2.",
+              "Cas particulier très classique : la somme des n premiers entiers \\(1+2+\\dots+n\\) (suite arithmétique de raison 1 démarrant à 1).",
             ],
-            formula: "\\(\\sum_{k=0}^{n} u_0 q^k = u_0 \\times \\dfrac{1-q^{n+1}}{1-q}\\ (q \\neq 1)\\)",
+            formula: "\\(1+2+\\dots+n=\\dfrac{n(n+1)}{2}\\quad ; \\quad \\sum_{k=0}^{n} u_0 q^k = u_0 \\times \\dfrac{1-q^{n+1}}{1-q}\\ (q \\neq 1)\\)",
           },
           {
             title: "Limite d'une suite géométrique",

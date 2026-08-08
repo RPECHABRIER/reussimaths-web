@@ -234,7 +234,7 @@ export default {
             items: [
               "Transforme un produit en somme, une puissance en produit — même logique que le ln.",
             ],
-            formula: "\\(\\log(ab)=\\log a+\\log b,\\quad \\log(a^n)=n\\log a\\)",
+            formula: "\\(\\log(ab)=\\log a+\\log b,\\quad \\log\\left(\\dfrac{a}{b}\\right)=\\log a-\\log b,\\quad \\log(a^n)=n\\log a\\)",
           },
           {
             title: "Sens de variation",
@@ -245,7 +245,8 @@ export default {
           {
             title: "Résoudre une équation",
             items: [
-              "\\(10^x = b \\iff x = \\log b\\). Pour \\(a^x=b\\) (a>0), passer au log des deux côtés.",
+              "\\(10^x = b \\iff x = \\log b\\). Pour \\(a^x=b\\) (a>0), passer au log des deux côtés : \\(x\\log(a)=\\log(b)\\), donc \\(x=\\dfrac{\\log b}{\\log a}\\).",
+              "Pour \\(x^a=b\\) (x>0, l'inconnue est à la base), on passe au log puis on revient à l'exponentielle en base 10 : \\(x = 10^{\\log(b)/a}\\) (c'est la racine a-ième de b).",
             ],
           },
           {

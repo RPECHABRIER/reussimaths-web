@@ -17,7 +17,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `fonctions.js` (5e).**
+**Prochain fichier à traiter : `algorithmique-cinquieme.js` (5e) — dernier
+fichier de la 5e.**
+
+`fonctions.js` (5e) relu intégralement : deux corrections de fond trouvées
+en scannant les générateurs, en plus de la relecture du cours —
+`genAireCarreFonctionCoteNumeric` utilisait la notation fonctionnelle
+`A(c) = c × c` et `genProgrammeCalculFonctionNumeric` introduisait
+explicitement « on note f la fonction... Calcule f(x) », deux usages de la
+notation f(x) en contradiction directe avec la NOTE de tête de fichier qui
+affirme cette notation retirée/reformulée partout dans ce chapitre 5e
+(réservée à la Troisième par le programme officiel) — les deux reformulés
+sans notation fonctionnelle, cohérents avec le reste du fichier. Cours :
+piège classique ajouté à la branche "Évaluer une formule" (pour retrouver
+le nombre de départ, on refait les étapes en sens inverse avec les
+opérations inverses — testé par `genRetrouverDepartFonctionNumeric` et
+`genDiametreEolienneNumeric` mais absent du cours). Reste déjà au niveau
+attendu (vocabulaire, proportionnelle ou non, formules en contexte réel
+déjà clairs). Aucun candidat à `texTable()` (énumérations restent à 3-4
+items courts, sous le seuil).
 
 `proportionnalite-cinquieme.js` (5e) relu intégralement : branche
 "Pourcentages" — item qui entassait remise et majoration/TVA en une seule
@@ -353,7 +371,7 @@ vérifiés pour débordement.)
 - [x] triangles.js *(piège classique désambiguïsant médiatrice/hauteur/médiane ajouté, sinon déjà bon)*
 - [x] statistiques-probabilites.js *(piège classique ajouté à « Calculer une probabilité » — comparer les proportions entre sacs, pas les nombres bruts de billes favorables ; sinon déjà bon, aucun candidat texTable, aucun €)*
 - [x] proportionnalite-cinquieme.js *(branche Pourcentages éclatée en items distincts remise/majoration + piège classique ajouté, formule ajoutée à « Identifier une situation » ; grep € vérifié = faux positif, aucun texTable)*
-- [ ] fonctions.js
+- [x] fonctions.js *(2 corrections de fond : A(c)=c×c et f(x) explicite retirés — contredisaient la NOTE du fichier interdisant f(x) en 5e ; piège classique ajouté sur l'inversion d'étapes)*
 - [ ] algorithmique-cinquieme.js
 
 ### 4e

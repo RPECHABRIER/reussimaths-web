@@ -544,6 +544,51 @@ export default {
     level: "sixieme",
     free: false,
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Organisation et gestion de données",
+        branches: [
+          {
+            title: "Lire des données : tableaux et diagrammes",
+            items: [
+              "Diagramme en bâtons : la hauteur du bâton donne l'effectif (la quantité) de chaque catégorie.",
+              "Tableau à double entrée : on croise une ligne et une colonne pour lire une case précise.",
+            ],
+            figure: buildBarChartFigure([
+              { label: "A", value: 3 },
+              { label: "B", value: 7 },
+              { label: "C", value: 5 },
+            ]),
+          },
+          {
+            title: "Expérience aléatoire et échelle de probabilité",
+            items: [
+              "Une issue est un résultat possible d'une expérience aléatoire (ex : les 6 faces d'un dé).",
+              "Échelle : impossible (0) — peu probable — une chance sur deux (0,5) — très probable — certain (1).",
+              "Piège classique : « peu probable » n'est pas « impossible » — l'événement peut quand même se réaliser.",
+            ],
+            formula: "\\(0 \\le P \\le 1\\)",
+          },
+          {
+            title: "Calculer une probabilité",
+            items: [
+              "Probabilité = nombre de cas favorables ÷ nombre de cas possibles.",
+              "Elle peut s'écrire sous forme de fraction, de nombre décimal ou de pourcentage.",
+            ],
+            formula: "\\(P(\\text{événement}) = \\dfrac{\\text{cas favorables}}{\\text{cas possibles}}\\)",
+          },
+          {
+            title: "Événement contraire et fréquence",
+            items: [
+              "L'événement contraire de A a pour probabilité \\(1 - P(A)\\) : les deux probabilités font toujours 1 ensemble.",
+              "Fréquence = effectif d'une catégorie ÷ effectif total, calculée après avoir réalisé l'expérience plusieurs fois.",
+              "Piège classique : fréquence (observée) et probabilité (calculée à l'avance) peuvent différer un peu, mais se rapprochent si on répète beaucoup l'expérience.",
+            ],
+            formula: "\\(P(\\overline{A}) = 1 - P(A)\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -18,8 +18,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-vecteurs-seconde.js (2nde) — 7e fichier de la 2nde, 2e fichier
-géométrie/figures/vecteurs (attention flèches de direction).**
+colinearite-vecteurs-seconde.js (2nde) — 8e fichier de la 2nde.**
+
+`vecteurs-seconde.js` (2nde) relu intégralement : 3 nouvelles branches
+ajoutées pour des thèmes entiers absents. « Translation d'un point »
+(image A'=A+u, antécédent inverse, vecteur de translation) : 3
+générateurs dédiés (chapitre "Vecteurs — Translations") sans aucune
+branche, alors que la NOTE en tête de fichier explique pourquoi ce thème
+est maintenu en 2nde. « Caractérisation vectorielle du milieu »
+(AM=MB) et « Combinaison linéaire de deux vecteurs » (w=au+bv) : les 2
+signalées explicitement "ajout du programme 2026" dans les NOTE du
+fichier lui-même mais absentes de toute branche avant cette relecture.
+Branche « Coordonnées et norme » : item comparaison de normes via leurs
+carrés ajouté (genComparerNormesQCM, absent). Branche « Vecteur opposé »
+renommée « Opérations sur les vecteurs : opposé, somme, multiplication »
++ item somme de vecteurs ajouté (genSommeDeuxVecteursNumeric, absent).
+8 branches au total (5 avant), 3 nouvelles figures suivant la convention
+déjà en place (arrowEnd correct sur tous les vecteurs). Aucun €, aucun
+candidat texTable.
 
 `reperage-configurations-seconde.js` (2nde, 1er fichier géométrie de la
 2nde) relu intégralement : item taxonomie orthogonal/orthonormé complété
@@ -939,7 +955,7 @@ vérifiés pour débordement.)
 - [x] fonctions-affines-seconde.js *(taxonomie linéaire/constante/affine ajoutée, équation généralisée à ax+b=k, nouvelle branche « Modéliser un tarif » ajoutée)*
 - [x] fonctions-reference-seconde.js *(item inverse jamais nul ajouté, item équations imprécis corrigé/scindé, item inéquations x²/|x| ajouté — thème entier absent avant)*
 - [x] reperage-configurations-seconde.js *(4 items ajoutés — orthogonal/orthonormé, symétrique origine, inverse milieu, distance axe-alignée ; branche Parallélogramme scindée ; 2 nouvelles branches ajoutées — Centre de gravité, Réciproque de Pythagore, avec figures ; flèches déjà correctes)*
-- [ ] vecteurs-seconde.js
+- [x] vecteurs-seconde.js *(3 nouvelles branches — Translation, Caractérisation du milieu, Combinaison linéaire, 2 signalées « ajout programme 2026 » par la NOTE du fichier ; item comparaison normes ajouté ; item somme de vecteurs ajouté)*
 - [ ] colinearite-vecteurs-seconde.js
 - [ ] equations-droites-seconde.js
 - [ ] informations-chiffrees-seconde.js

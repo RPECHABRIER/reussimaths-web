@@ -45,8 +45,10 @@ les hashes). État actuel :
   pas de figure). `probabilites-echantillonnage-seconde.js` fait (commit
   `b192366`, pas de figure). `exercices-fin-annee-seconde.js` délibérément
   SANS Cours (synthèse transversale, voir checklist "2nde" pour le détail).
-  **La 2nde est intégralement terminée. Prochain fichier :
-  `analyse-information-chiffree-premiere-non-spe.js` (Première non spé).**
+  **La 2nde est intégralement terminée.**
+- Première non spé : `analyse-information-chiffree-premiere-non-spe.js`
+  fait (commit `cafea33`, pas de figure). **Prochain fichier :
+  `statistique-probabilites-premiere-non-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -277,7 +279,7 @@ initiale de Romain.
 
 ### Première non spé (premiere-non-spe)
 
-- [ ] analyse-information-chiffree-premiere-non-spe.js
+- [x] analyse-information-chiffree-premiere-non-spe.js
 - [ ] statistique-probabilites-premiere-non-spe.js
 - [ ] croissance-lineaire-premiere-non-spe.js
 - [ ] croissance-exponentielle-premiere-non-spe.js

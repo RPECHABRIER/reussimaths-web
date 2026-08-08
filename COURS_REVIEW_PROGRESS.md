@@ -19,10 +19,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-2 des 8 fichiers de Première techno sont relus
+3 des 8 fichiers de Première techno sont relus
 (suites-numeriques-premiere-techno.js,
-fonctions-second-degre-premiere-techno.js). Prochain fichier :
-derivation-premiere-techno.js (Première techno).**
+fonctions-second-degre-premiere-techno.js,
+derivation-premiere-techno.js). Prochain fichier :
+statistiques-deux-variables-premiere-techno.js (Première techno).**
+
+`derivation-premiere-techno.js` (Première techno) relu intégralement :
+4 branches inchangées en nombre mais enrichies. Branche « Sécante, taux
+de variation, tangente » enrichie : item sur l'approximation du nombre
+dérivé par le taux de variation entre a et a+h, testée mais absente.
+Branche « Dérivées de référence » enrichie : formule (kf)'=kf' ajoutée
+— testée par genDeriveeMultipleNumeric mais totalement absente avant.
+Branche « Signe de f' et sens de variation » enrichie : principe de
+l'extremum (tangente horizontale, changement de signe de f') ajouté.
+Aucun €, aucun candidat texTable, fichier sans figure géométrique.
 
 `fonctions-second-degre-premiere-techno.js` (Première techno) relu
 intégralement : 5 branches (4 avant). Nouvelle branche « Fonctions de
@@ -1383,7 +1394,7 @@ vérifiés pour débordement.)
 ### Première techno
 - [x] suites-numeriques-premiere-techno.js *(règles de sens de variation ajoutées aux branches arithmétique/géométrique, nouvelle branche « Reconnaître une croissance linéaire ou exponentielle » couvrant modélisation concrète + lecture de nuage de points)*
 - [x] fonctions-second-degre-premiere-techno.js *(nouvelle branche « Fonctions de référence ax²/ax²+c », formule a depuis 2 racines+point, méthode officielle sans formule pour l'axe de symétrie)*
-- [ ] derivation-premiere-techno.js
+- [x] derivation-premiere-techno.js *(formule (kf)'=kf' ajoutée, approximation du nombre dérivé par le taux de variation, principe de l'extremum lié au signe de f')*
 - [ ] statistiques-deux-variables-premiere-techno.js
 - [ ] probabilites-conditionnelles-premiere-techno.js
 - [ ] epreuves-independantes-premiere-techno.js

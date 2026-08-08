@@ -717,8 +717,8 @@ export default {
           {
             title: "Droite graduée : opposé, valeur absolue, comparer",
             items: [
-              "L'opposé de a est le nombre situé à la même distance de 0, de l'autre côté.",
-              "La valeur absolue de a, notée |a|, est la distance entre a et 0 sur la droite graduée.",
+              "L'opposé de 3 est -3 : même distance de 0, mais de l'autre côté (l'opposé de a se note -a).",
+              "La valeur absolue de a, notée |a|, est sa distance à 0 sur la droite graduée (toujours positive) : |3| = |-3| = 3.",
               "Sur la droite graduée, plus un nombre est à droite, plus il est grand.",
             ],
             formula: "\\(-3 \\text{ et } 3 \\text{ sont opposés : } |{-3}| = |3| = 3\\)",
@@ -729,6 +729,7 @@ export default {
             items: [
               "Même signe : on additionne les distances à zéro et on garde le signe commun.",
               "Signes contraires : on soustrait la plus petite distance à zéro de la plus grande, et on garde le signe du nombre le plus « fort ».",
+              "Piège classique : pour des signes contraires, on ne les additionne pas — on les soustrait, comme dans (-5) + (+3) ci-dessous.",
             ],
             formula: "\\((-5) + (+3) = -2\\)",
           },
@@ -744,8 +745,9 @@ export default {
             title: "Repérage dans le plan",
             items: [
               "Un point est repéré par ses coordonnées (abscisse ; ordonnée).",
-              "Symétrique par rapport à l'origine : on change le signe des deux coordonnées.",
-              "Symétrique par rapport à un axe : seule la coordonnée perpendiculaire à cet axe change de signe.",
+              "Symétrique par rapport à l'origine : les deux coordonnées changent de signe.",
+              "Symétrique par rapport à l'axe des abscisses : l'abscisse ne change pas, l'ordonnée change de signe.",
+              "Symétrique par rapport à l'axe des ordonnées : l'ordonnée ne change pas, l'abscisse change de signe.",
             ],
             figure: buildRepereFigure(3, 2),
           },

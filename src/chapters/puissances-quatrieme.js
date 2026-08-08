@@ -423,6 +423,45 @@ export default {
     level: "quatrieme",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Puissances",
+        branches: [
+          {
+            title: "Règles de calcul",
+            items: [
+              "Produit de même base : on additionne les exposants ; quotient de même base : on les soustrait.",
+              "Puissance de puissance : on multiplie les exposants.",
+              "Tout nombre non nul à la puissance 0 vaut 1.",
+            ],
+            formula: "\\(a^m \\times a^n = a^{m+n}\\ ;\\ a^m \\div a^n = a^{m-n}\\ ;\\ (a^m)^n = a^{m \\times n}\\)",
+          },
+          {
+            title: "Signe d'une puissance",
+            items: [
+              "Un exposant pair donne toujours un résultat positif, un exposant impair garde le signe de la base.",
+              "Piège classique : \\((-a)^n\\) et \\(-a^n\\) ne sont pas la même écriture — les parenthèses changent tout.",
+            ],
+          },
+          {
+            title: "Notation scientifique",
+            items: [
+              "Un nombre en notation scientifique s'écrit \\(a \\times 10^n\\) avec \\(1 \\leqslant a < 10\\).",
+              "Multiplier par \\(10^n\\) décale la virgule de n rangs (droite si n > 0, gauche si n < 0).",
+            ],
+            formula: "\\(a \\times 10^{n}\\ \\text{avec}\\ 1 \\leqslant a < 10\\)",
+          },
+          {
+            title: "Racine carrée",
+            items: [
+              "\\(\\sqrt{n}\\) est le nombre positif qui, élevé au carré, donne n.",
+              "Pour encadrer \\(\\sqrt{n}\\) entre deux entiers, on repère les deux carrés parfaits qui entourent n.",
+              "Piège classique : \\(\\sqrt{n}\\) n'existe que pour n positif ou nul.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

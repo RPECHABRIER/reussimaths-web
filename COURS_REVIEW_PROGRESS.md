@@ -17,7 +17,29 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `symetrie-centrale-parallelogrammes.js` (5e).**
+**Prochain fichier à traiter : `triangles.js` (5e).**
+
+`symetrie-centrale-parallelogrammes.js` (5e) relu intégralement : branche
+"Symétrie centrale" enrichie d'un item sur le centre de symétrie des
+figures usuelles (cercle, carré, rectangle, losange, parallélogramme vs
+triangle équilatéral, pentagone régulier), notion testée par
+`genCentresDeSymetrieFigureUsuelleQCM`/`genFiguresAvecCentreDeSymetrieMulti`
+mais totalement absente du cours avant cette relecture. Branche "Angles et
+droites parallèles" : item alternes-internes/correspondants reformulé en
+équivalence bidirectionnelle (le cours ne donnait que le sens direct, alors
+que `genDroitesParallelesTestAnglesQCM` teste la réciproque), item ajouté
+sur deux droites perpendiculaires à une même troisième (testé par
+`genPerpendiculairesMemeDroiteParallelesQCM` mais absent). Piège classique
+ajouté à "Propriétés du parallélogramme" (diagonales égales/perpendiculaires
+ne suffisent pas sans savoir déjà que c'est un parallélogramme — testé par
+`genReconnaitreCasParticulierViaDiagonalesQCM`). Figures déjà claires, pas
+d'axe gradué nécessitant des flèches (droites géométriques finies avec
+`extend`, cohérent avec la convention d'`angles.js`/
+`configurations-geometriques.js`). Le prompt candidat repéré par le grep
+mécanique (`genAireParallelogrammeDemiDisquesComposeeNumeric`, 348
+caractères) a été vérifié sérieusement comme demandé : **faux positif**,
+c'est un problème d'aire composée légitimement long (pas une énumération de
+valeurs chiffrées), pas un candidat à `texTable()`.
 
 `geometrie-espace.js` (5e) relu intégralement : branche "Patrons et
 perspective cavalière" — item qui entassait deux règles (arêtes cachées en
@@ -282,7 +304,7 @@ vérifiés pour débordement.)
 - [x] calcul-litteral.js *(formule "résoudre une équation" ajoutée avec exemples concrets, sinon déjà bon)*
 - [x] nombres-relatifs.js *(branche droite graduée reformulée en partant du concret, piège classique addition signes contraires ajouté, item symétries par axe éclaté en deux puces — flèches déjà correctes, non touchées)*
 - [x] geometrie-espace.js *(item perspective cavalière éclaté en 2 puces, item unifiant Volume=aire base×hauteur ajouté, piège classique facteur 1000 ajouté)*
-- [ ] symetrie-centrale-parallelogrammes.js
+- [x] symetrie-centrale-parallelogrammes.js *(item centres de symétrie des figures usuelles ajouté, item angles parallèles reformulé en équivalence, item perpendiculaires-à-même-droite ajouté, piège diagonales ajouté ; candidat texTable du grep vérifié = faux positif)*
 - [ ] triangles.js
 - [ ] statistiques-probabilites.js
 - [ ] proportionnalite-cinquieme.js

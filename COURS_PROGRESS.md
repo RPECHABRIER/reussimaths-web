@@ -31,7 +31,11 @@ les hashes). État actuel :
   pas de figure). `reperage-configurations-seconde.js` fait (commit
   `2b9c25f`, 5 figures neuves — helper `buildCoursRepereFigure()` créé,
   aucun helper de figure n'existait dans ce fichier avant). **Prochain
-  fichier : `vecteurs-seconde.js` (géométrie).**
+  fichier : `vecteurs-seconde.js` (géométrie).** `vecteurs-seconde.js` fait
+  (commit `9da70f9`, 5 figures neuves — helper `buildCoursVecteurFigure()`
+  créé, utilise `arrowEnd`/`extend:0` sur `lines` pour dessiner des
+  vecteurs finis fléchés). **Prochain fichier :
+  `colinearite-vecteurs-seconde.js` (géométrie).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -243,7 +247,7 @@ initiale de Romain.
 - [x] fonctions-affines-seconde.js
 - [x] fonctions-reference-seconde.js
 - [x] reperage-configurations-seconde.js *(géométrie)*
-- [ ] vecteurs-seconde.js *(géométrie)*
+- [x] vecteurs-seconde.js *(géométrie)*
 - [ ] colinearite-vecteurs-seconde.js *(géométrie)*
 - [ ] equations-droites-seconde.js *(géométrie)*
 - [ ] informations-chiffrees-seconde.js

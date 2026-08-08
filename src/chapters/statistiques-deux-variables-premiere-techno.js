@@ -252,6 +252,13 @@ export default {
             ],
           },
           {
+            title: "Déterminer et juger un ajustement affine",
+            items: [
+              "Coefficient directeur depuis deux points \\(A(x_1;y_1)\\) et \\(B(x_2;y_2)\\) de la droite : \\(a=\\dfrac{y_2-y_1}{x_2-x_1}\\), puis on trouve b en remplaçant les coordonnées d'un point dans \\(y=ax+b\\).",
+              "Un ajustement affine n'est pertinent que si les points du nuage semblent globalement alignés ; si le nuage forme une courbe qui s'incurve nettement, une droite ne le représente pas correctement.",
+            ],
+          },
+          {
             title: "Méthode de Mayer",
             items: [
               "Séparer le nuage trié en deux groupes de même taille (ou presque), calculer le point moyen de chaque groupe (\\(G_1\\), \\(G_2\\)).",

@@ -37,7 +37,9 @@ révision mixte, aucune notion nouvelle — voir checklist "4e" pour le
 détail). **La 4e est donc intégralement terminée. Prochaine étape :
 démarrer la 3e**, en commençant par `nombres-entiers-troisieme.js` (voir
 la checklist "3e (troisieme)" ci-dessous, dans l'ordre où les fichiers y
-sont listés). Même méthode : lire
+sont listés). `nombres-entiers-troisieme.js` fait (commit `56e3829`, pas
+de figure). **Prochain fichier à traiter : `calcul-numerique-troisieme.js`.**
+Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -238,7 +240,7 @@ initiale de Romain.
 
 ### 3e (troisieme)
 
-- [ ] nombres-entiers-troisieme.js
+- [x] nombres-entiers-troisieme.js
 - [ ] calcul-numerique-troisieme.js
 - [ ] calcul-litteral-troisieme.js
 - [ ] equations-troisieme.js
@@ -338,7 +340,7 @@ initiale de Romain.
 
 ## Total
 
-35 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+36 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
 `exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
 ET la 4e sont intégralement terminées, prochaine étape : la 3e.

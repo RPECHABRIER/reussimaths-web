@@ -110,8 +110,9 @@ les hashes). État actuel :
   fait (commit `9c4ab3e`, pas de figure). `fonctions-trigonometriques-terminale-spe.js`
   fait (commit `baf8d03`, pas de figure).
   `primitives-equations-differentielles-terminale-spe.js` fait (commit
-  `bd8d710`, pas de figure). **Prochain fichier :
-  `calcul-integral-terminale-spe.js`.**
+  `bd8d710`, pas de figure). `calcul-integral-terminale-spe.js` fait
+  (commit `0e83116`, pas de figure). **Prochain fichier :
+  `loi-binomiale-terminale-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -414,7 +415,7 @@ Cours).
 - [x] logarithme-neperien-terminale-spe.js
 - [x] fonctions-trigonometriques-terminale-spe.js
 - [x] primitives-equations-differentielles-terminale-spe.js
-- [ ] calcul-integral-terminale-spe.js
+- [x] calcul-integral-terminale-spe.js
 - [ ] loi-binomiale-terminale-spe.js
 - [ ] sommes-variables-aleatoires-terminale-spe.js
 - [ ] loi-grands-nombres-terminale-spe.js

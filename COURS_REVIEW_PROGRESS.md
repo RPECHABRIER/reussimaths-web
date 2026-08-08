@@ -19,11 +19,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
 la Première techno et la Terminale Spé sont intégralement terminées.
-3 des 6 fichiers de Terminale techno sont relus
+4 des 6 fichiers de Terminale techno sont relus
 (suites-terminale-techno.js,
 fonctions-exponentielles-terminale-techno.js,
-logarithme-decimal-terminale-techno.js). Prochain fichier :
-statistiques-deux-variables-terminale-techno.js (Terminale techno).**
+logarithme-decimal-terminale-techno.js,
+statistiques-deux-variables-terminale-techno.js). Prochain fichier :
+probabilites-conditionnelles-terminale-techno.js (Terminale techno).**
+
+`statistiques-deux-variables-terminale-techno.js` (Terminale techno)
+relu intégralement : 4 branches inchangées en nombre mais enrichies,
+avec une correction de fond. Correction : branche « Pourquoi changer de
+variable » utilisait \ln y comme exemple, alors que tous les
+générateurs du fichier utilisent le logarithme DÉCIMAL log (cohérent
+avec logarithme-decimal-terminale-techno.js, ln hors programme STMG) —
+corrigé en \log y. Branche « Choisir le bon changement de variable »
+enrichie : table de correspondance allure→transformation ajoutée.
+Branche « Revenir au modèle d'origine » enrichie : exemple chiffré
+y=10^(ax+b) ajouté. Aucun €, aucun candidat texTable, figure existante
+non modifiée.
 
 `logarithme-decimal-terminale-techno.js` (Terminale techno) relu
 intégralement : 5 branches inchangées en nombre mais enrichies.
@@ -1653,7 +1666,7 @@ vérifiés pour débordement.)
 - [x] suites-terminale-techno.js *(nouvelle branche « Moyenne arithmétique et moyenne géométrique » ajoutée, formule symbolique de la somme arithmétique ajoutée)*
 - [x] fonctions-exponentielles-terminale-techno.js *(effet du coefficient k dans x↦k×a^x sur le sens de variation ajouté)*
 - [x] logarithme-decimal-terminale-techno.js *(formules x=log(b)/log(a) et x=10^(log(b)/a) ajoutées, formule du quotient log(a/b) ajoutée)*
-- [ ] statistiques-deux-variables-terminale-techno.js
+- [x] statistiques-deux-variables-terminale-techno.js *(correction de fond : \ln y remplacé par \log y pour cohérence avec le programme STMG ; table de correspondance allure→transformation ajoutée ; exemple chiffré du retour au modèle ajouté)*
 - [ ] probabilites-conditionnelles-terminale-techno.js
 - [ ] variables-aleatoires-terminale-techno.js
 

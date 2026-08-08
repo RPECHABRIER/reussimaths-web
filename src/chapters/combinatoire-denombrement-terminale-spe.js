@@ -390,8 +390,10 @@ export default {
             items: [
               "Symétrie : choisir k éléments revient à en exclure n-k.",
               "Relation de Pascal : utile pour construire le triangle de Pascal de proche en proche.",
+              "Cas particuliers à connaître : \\(\\binom{n}{0}=\\binom{n}{n}=1\\) (une seule façon de ne rien choisir, ou de tout choisir) ; \\(\\binom{n}{1}=n\\) (n façons de choisir 1 élément parmi n).",
+              "Lien avec les arrangements : un arrangement s'obtient en choisissant k éléments (combinaison), puis en les ordonnant (k! façons possibles) : \\(A(n,k)=\\binom{n}{k}\\times k!\\).",
             ],
-            formula: "\\(\\binom{n}{k}=\\binom{n}{n-k},\\quad \\binom{n}{k}=\\binom{n-1}{k-1}+\\binom{n-1}{k}\\)",
+            formula: "\\(\\binom{n}{k}=\\dfrac{n!}{k!(n-k)!},\\quad \\binom{n}{k}=\\binom{n}{n-k},\\quad \\binom{n}{k}=\\binom{n-1}{k-1}+\\binom{n-1}{k}\\)",
           },
           {
             title: "Nombre de parties d'un ensemble",

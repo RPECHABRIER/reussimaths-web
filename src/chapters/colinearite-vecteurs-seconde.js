@@ -439,6 +439,29 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant. Vecteurs dessinés comme
+// des segments finis fléchés (extend: 0, arrowEnd: true), même convention que
+// vecteurs-seconde.js.
+function buildCoursColinFigure(pts, vectors = [], lines = []) {
+  const scale = 20;
+  const toX = (v) => v * scale;
+  const toY = (v) => -v * scale;
+  const points = pts.map((p) => ({
+    id: p.id,
+    x: toX(p.x),
+    y: toY(p.y),
+    label: p.label ?? p.id,
+    dx: p.dx ?? 8,
+    dy: p.dy ?? -8,
+    hideDot: p.hideDot,
+    hideLabel: p.hideLabel,
+  }));
+  const vecLines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
+  const extraLines = lines.map((l) => ({ from: l.from, to: l.to, arrowEnd: true }));
+  return { points, lines: [...vecLines, ...extraLines] };
+}
+
 export default {
   meta: {
     id: "colinearite-vecteurs-seconde",
@@ -448,6 +471,57 @@ export default {
     level: "seconde",
     free: false,
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Colinéarité de vecteurs",
+        branches: [
+          {
+            title: "Déterminant de deux vecteurs",
+            items: [
+              "Pour \\(\\overrightarrow{u}(x;y)\\) et \\(\\overrightarrow{v}(x';y')\\), le déterminant se calcule en croix.",
+            ],
+            formula: "\\(\\det(\\overrightarrow{u},\\overrightarrow{v}) = xy'-x'y\\)",
+            figure: buildCoursColinFigure(
+              [{ id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 10 }, { id: "U", x: 2, y: 1, label: "u", dy: 10 }, { id: "V", x: 1, y: 3, label: "v", dx: -12 }],
+              [{ from: "O", to: "U" }, { from: "O", to: "V" }]
+            ),
+          },
+          {
+            title: "Critère de colinéarité",
+            items: [
+              "\\(\\overrightarrow{u}\\) et \\(\\overrightarrow{v}\\) sont colinéaires (même direction) si et seulement si leur déterminant est nul.",
+              "Piège classique : « colinéaires » n'implique pas « même sens » — les vecteurs peuvent pointer en sens opposés et rester colinéaires.",
+            ],
+            formula: "\\(\\overrightarrow{u} \\text{ et } \\overrightarrow{v} \\text{ colinéaires} \\iff xy'-x'y = 0\\)",
+            figure: buildCoursColinFigure(
+              [{ id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 10 }, { id: "U", x: 1, y: 1, label: "u", dy: 10 }, { id: "W", x: 3, y: 3, label: "v" }],
+              [{ from: "O", to: "U" }, { from: "O", to: "W" }]
+            ),
+          },
+          {
+            title: "Alignement de trois points",
+            items: [
+              "A, B, C sont alignés si et seulement si \\(\\overrightarrow{AB}\\) et \\(\\overrightarrow{AC}\\) sont colinéaires.",
+            ],
+            figure: buildCoursColinFigure(
+              [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "B", x: 2, y: 1, dy: 10 }, { id: "C", x: 4, y: 2 }],
+              [{ from: "A", to: "B" }, { from: "A", to: "C" }]
+            ),
+          },
+          {
+            title: "Parallélisme de deux droites",
+            items: [
+              "Deux droites sont parallèles si et seulement si leurs vecteurs directeurs sont colinéaires.",
+            ],
+            figure: buildCoursColinFigure(
+              [{ id: "P1", x: 0, y: 0, hideLabel: true }, { id: "P2", x: 3, y: 1, hideLabel: true }, { id: "Q1", x: 0, y: 2, hideLabel: true }, { id: "Q2", x: 3, y: 3, hideLabel: true }],
+              [],
+              [{ from: "P1", to: "P2" }, { from: "Q1", to: "Q2" }]
+            ),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

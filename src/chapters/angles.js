@@ -564,6 +564,57 @@ export default {
     level: "sixieme",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Angles",
+        branches: [
+          {
+            title: "Nature d'un angle",
+            items: [
+              "Aigu : moins de 90°. Droit : exactement 90°. Obtus : entre 90° et 180°. Plat : 180°.",
+              "Piège classique : un angle plat (180°) fait se ressembler les deux demi-droites à une seule droite.",
+            ],
+            figure: buildAngleFigure(60, 20),
+          },
+          {
+            title: "Droites sécantes : supplémentaires et opposés",
+            items: [
+              "Deux angles supplémentaires, formés de part et d'autre d'une droite, ont une somme de 180°.",
+              "Deux droites sécantes forment aussi des angles opposés par le sommet, toujours égaux deux à deux.",
+            ],
+            formula: "\\(a + b = 180°\\)",
+            figure: buildRaysFromVertexFigure([
+              { id: "A", angleDeg: 0 },
+              { id: "C", angleDeg: 70 },
+              { id: "B", angleDeg: 180 },
+              { id: "D", angleDeg: 250 },
+            ]),
+          },
+          {
+            title: "Bissectrice",
+            items: [
+              "Une demi-droite intérieure à un angle le partage en deux angles adjacents dont la somme est égale à l'angle total.",
+              "La bissectrice est le cas particulier où ces deux angles adjacents ont la même mesure.",
+            ],
+            formula: "\\(\\text{ASB} = 2 \\times \\text{ASd}\\)",
+            figure: buildRaysFromVertexFigure([
+              { id: "A", angleDeg: 20 },
+              { id: "d", angleDeg: 55, dashed: true },
+              { id: "B", angleDeg: 90 },
+            ]),
+          },
+          {
+            title: "Angles d'un triangle",
+            items: [
+              "La somme des trois angles d'un triangle est toujours égale à 180°.",
+              "Un triangle rectangle a un angle droit ; un triangle isocèle a deux angles égaux.",
+            ],
+            formula: "\\(\\widehat{A} + \\widehat{B} + \\widehat{C} = 180°\\)",
+            figure: buildTriangleFigure(70, 60, 50, { labels: { A: "70°", B: "60°", C: "50°" } }),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

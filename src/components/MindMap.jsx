@@ -1,4 +1,5 @@
 import MathText from "./MathText";
+import Figure from "./Figure";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
@@ -20,6 +21,11 @@ import { colors, fonts, shadow } from "../theme";
 //         title: "Écriture décimale",             // titre de la branche
 //         items: ["Point clé 1", "Point clé 2"],  // texte libre, LaTeX \( \) accepté (MathText)
 //         formula: "\\(12,45 = 12 + \\dfrac{4}{10} + \\dfrac{5}{100}\\)", // optionnel, mis en avant
+//         figure: { points: [...], segments: [...], ... },              // optionnel,
+//                  // même format que le champ `figure` d'un exercice (voir
+//                  // Figure.jsx) — pour les chapitres de géométrie, une
+//                  // branche qui introduit un objet (médiatrice, angle,
+//                  // symétrie...) gagne presque toujours à être illustrée.
 //       },
 //       ...
 //     ],
@@ -70,6 +76,7 @@ export default function MindMap({ mindMap }) {
               <p className="font-bold mb-2" style={{ color, fontFamily: fonts.display, fontSize: "0.95rem" }}>
                 <MathText text={branch.title} />
               </p>
+              {branch.figure && <Figure spec={branch.figure} />}
               <ul className="flex flex-col gap-1.5">
                 {branch.items.map((item, j) => (
                   <li key={j} className="text-sm leading-snug flex gap-1.5" style={{ color: colors.ink }}>

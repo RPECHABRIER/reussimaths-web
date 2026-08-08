@@ -11,79 +11,42 @@ committé/coché n'existe pas pour la session suivante.
 
 ## Reprise ici
 
-**La 6e ET la 5e sont désormais intégralement terminées** (9 + 12 = 21
-chapitres avec `meta.cours.mindMap`). **La 4e est en cours** (voir la
-checklist "4e (quatrieme)" ci-dessous) : `nombres-relatifs-quatrieme.js`
-fait (commit `c0c63ef`, pas de figure — chapitre 100% calculatoire, aucun
-objet géométrique introduit), `addition-soustraction-rationnels.js` fait
-(commit `4b963cd`, pas de figure), `multiplication-division-rationnels.js`
-fait (commit `43dded0`, pas de figure), `puissances-quatrieme.js` fait
-(commit `c256392`, pas de figure), `calcul-litteral-quatrieme.js` fait
-(commit `b114e83`, pas de figure), `resolution-equations.js` fait
-(commit `d788d06`, pas de figure), `statistiques-quatrieme.js` fait
-(commit `bccc7c9`, pas de figure), `probabilites-quatrieme.js` fait
-(commit `fa9e07f`, pas de figure), `notion-fonctions.js` fait
-(commit `bffb2c1`, pas de figure), `proportionnalite-quatrieme.js` fait
-(commit `4a84601`, pas de figure), `theoreme-thales.js` fait (commit
-`6887711`, 3 figures réutilisant `buildThalesFigure()` déjà présent dans
-le fichier), `triangles-rectangles-quatrieme.js` fait (commit `3cbbadd`,
-4 figures réutilisant `buildRightTriangleFigure()` déjà présent dans le
-fichier), `geometrie-plane.js` fait (commit `76a0586`, 3 figures neuves —
-aucun helper de figure n'existait dans ce fichier avant),
-`geometrie-espace-quatrieme.js` fait (commit `0030468`, 3 figures neuves —
-aucun helper de figure n'existait dans ce fichier avant).
-`exercices-fin-annee-quatrieme.js` délibérément SANS Cours (chapitre de
-révision mixte, aucune notion nouvelle — voir checklist "4e" pour le
-détail). **La 4e est donc intégralement terminée. Prochaine étape :
-démarrer la 3e**, en commençant par `nombres-entiers-troisieme.js` (voir
-la checklist "3e (troisieme)" ci-dessous, dans l'ordre où les fichiers y
-sont listés). `nombres-entiers-troisieme.js` fait (commit `56e3829`, pas
-de figure), `calcul-numerique-troisieme.js` fait (commit `f7cd750`, pas
-de figure), `calcul-litteral-troisieme.js` fait (commit `eec8878`, pas
-de figure), `equations-troisieme.js` fait (commit `536d1fd`, pas de
-figure), `notion-fonction-troisieme.js` fait (commit `5d7e1b9`, pas de
-figure), `fonctions-affines-troisieme.js` fait (commit `d682391`, pas de
-figure), `proportionnalite-troisieme.js` fait (commit `326d3e4`, pas de
-figure), `statistiques-troisieme.js` fait (commit `234d668`, pas de
-figure), `probabilites-troisieme.js` fait (commit `4dc3889`, pas de
-figure), `thales-triangles-semblables-troisieme.js` fait (commit
-`7217e2d`, 4 figures neuves — aucun helper de figure n'existait dans ce
-fichier avant), `trigonometrie-triangle-rectangle-troisieme.js` fait
-(commit `cc496c9`, 1 figure neuve — aucun helper de figure n'existait
-dans ce fichier avant), `transformations-plan-troisieme.js` fait (commit
-`6c142aa`, 2 figures neuves — aucun helper de figure n'existait dans ce
-fichier avant), `geometrie-espace-troisieme.js` fait (commit `41da838`,
-4 figures neuves — aucun helper de figure n'existait dans ce fichier
-avant), `mesures-grandeurs-troisieme.js` fait (commit `a340658`, pas de
-figure — chapitre calculatoire/contextualisé, aucun objet géométrique
-introduit). `dossier-brevet-troisieme.js` délibérément SANS Cours (lu en
-entier : c'est le "Dossier Brevet" de synthèse, chapitre 15/16 — son
-propre commentaire d'en-tête le décrit comme une "révision transversale
-mêlant programmes de calcul... dans l'esprit des exercices type Brevet
-qui combinent plusieurs notions du programme de 3e" ; les 15 générateurs
-qu'il contient recombinent des notions déjà couvertes par les 14 autres
-chapitres 3e avec Cours — programmes de calcul, identités remarquables,
-écriture scientifique, équations, tarifs/fonctions affines, moyenne
-pondérée, probabilités, Pythagore+trigonométrie, volume d'un cône,
-pourcentages — sans en introduire aucune de nouvelle. Même raisonnement
-que pour `exercices-fin-annee-quatrieme.js` en 4e.
+**Collège (6e, 5e, 4e, 3e) intégralement terminé** — 49 chapitres avec
+`meta.cours.mindMap` (+ 2 chapitres de synthèse/révision mixte
+délibérément sans Cours : `exercices-fin-annee-quatrieme.js` et
+`dossier-brevet-troisieme.js` — voir git log pour le détail commit par
+commit de ce lot, ou l'historique de ce fichier). Détail par niveau dans
+les checklists ci-dessous (toutes cochées pour 6e/5e/4e/3e).
 
-**La 3e est donc intégralement terminée** (14 chapitres avec
-`meta.cours.mindMap` + `dossier-brevet-troisieme.js` délibérément sans
-Cours). **Chantier "4e + 3e" complet — les 30 fichiers ont été traités.**
-Pour la suite du chantier global (au-delà de ce lot 4e+3e), voir la
-checklist des niveaux suivants (2nde, 1ère, Terminale, etc.) plus bas dans
-ce fichier.
+**Chantier lycée (2nde → Terminale techno) en cours.** Progression détaillée
+dans les checklists par niveau ci-dessous (cases cochées = fait, avec commit
+noté en commentaire dans le code seulement — voir `git log --oneline` pour
+les hashes). État actuel :
 
-Méthode utilisée tout au long (à réutiliser pour les niveaux suivants) :
-lire `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
+- 2nde : `nombres-calculs-seconde.js` fait (commit `14e7c51`, pas de
+  figure). **Prochain fichier : `generalites-fonctions-seconde.js`.**
+
+Note technique importante (rencontrée dans cette session) : `git commit`
+normal a recommencé à échouer de façon permanente sur ce repo
+(`.git/index.lock` reste bloqué après la première tentative, contrairement
+aux sessions précédentes où il fonctionnait). **Contournement utilisé pour
+tous les commits suivants** : script `/tmp/gcommit.sh "message" fichier1
+[fichier2...]` (le recréer si absent — voir modèle dans la section
+"Note technique" plus bas, qui explique aussi le piège historique à éviter
+— ne jamais copier `.git/index` tel quel, toujours `git read-tree HEAD`).
+**Toujours vérifier `git diff HEAD --stat` vide après chaque commit.**
+
+Méthode (à réutiliser pour tous les niveaux restants) : lire
+`src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
-suivre le format de `Figure.jsx`), vérifier avec `node --check` +
-`npx vite build` + le script `check-cours-katex.mjs` (à la racine du repo —
-usage : `node check-cours-katex.mjs ./src/chapters/<file>.js`), committer CE
-fichier seul, cocher, committer ce fichier de suivi, avant de passer au
-chapitre suivant.
+suivre le format de `Figure.jsx` ; pour la géométrie dans l'espace en
+1ère/Terminale, envisager une projection façon "perspective cavalière" en
+2D plutôt qu'une vraie 3D — `Figure.jsx` ne rend que du SVG 2D), vérifier
+avec `node --check` + `node check-cours-katex.mjs ./src/chapters/<file>.js`
++ `ulimit -n 4096 && npx vite build --outDir /tmp/dist-verify-cours-<file>`,
+committer CE fichier seul, cocher la checklist ci-dessous, committer ce
+fichier de suivi, avant de passer au chapitre suivant.
 
 Note technique : `.git/index.lock` / `HEAD.lock` / `refs/heads/main.lock`
 sont bloqués dans ce repo (impossible à supprimer, `Operation not
@@ -115,38 +78,10 @@ git add <fichier(s)>; TREE=$(GIT_INDEX_FILE=$IDX git write-tree); ...` (le
 fiable de détecter ce genre de régression silencieuse tout de suite plutôt
 qu'en fin de session.
 
-Dernière mise à jour : 2026-08-08 — **la 4e est intégralement terminée**
-(14 chapitres avec `meta.cours.mindMap` + `exercices-fin-annee-quatrieme.js`
-délibérément sans Cours) : `nombres-relatifs-quatrieme.js` (commit `c0c63ef`),
-`addition-soustraction-rationnels.js` (commit `4b963cd`),
-`multiplication-division-rationnels.js` (commit `43dded0`),
-`puissances-quatrieme.js` (commit `c256392`),
-`calcul-litteral-quatrieme.js` (commit `b114e83`),
-`resolution-equations.js` (commit `d788d06`),
-`statistiques-quatrieme.js` (commit `bccc7c9`),
-`probabilites-quatrieme.js` (commit `fa9e07f`),
-`notion-fonctions.js` (commit `bffb2c1`),
-`proportionnalite-quatrieme.js` (commit `4a84601`),
-`theoreme-thales.js` (commit `6887711`),
-`triangles-rectangles-quatrieme.js` (commit `3cbbadd`),
-`geometrie-plane.js` (commit `76a0586`) et
-`geometrie-espace-quatrieme.js` (commit `0030468`). Passage direct à la 3e
-per la consigne de Romain. 6e ET 5e terminées avant
-ça. Les 12 chapitres 5e
-faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
-`divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
-`b94c516`), `calcul-litteral.js` (commit `514a805`), `nombres-relatifs.js`
-(commit `950c23a`, 2 figures réutilisant buildGraduatedLineFigure/
-buildRepereFigure), `geometrie-espace.js` (commit `4da7eae`, 3 figures
-neuves — pavé en perspective cavalière, cylindre, disque — aucun helper de
-solide n'existait dans ce fichier), `symetrie-centrale-parallelogrammes.js`
-(commit `07daa4a`, 4 figures : 2 neuves — symétrie centrale,
-parallèles+sécante — et 2 réutilisant buildParallelogrammeFigure),
-`triangles.js` (commit `ff967d6`, 4 figures réutilisant buildTriangleFigure),
-`statistiques-probabilites.js` (commit `4b159ba`),
-`proportionnalite-cinquieme.js` (commit `1d42250`), `fonctions.js` (commit
-`46829b1`) et `algorithmique-cinquieme.js` (commit `8b7c475`, dernier
-chapitre 5e).
+Dernière mise à jour : 2026-08-08 — Collège (6e/5e/4e/3e, 49 chapitres)
+intégralement terminé, voir git log pour l'historique commit par commit de
+ce lot. Chantier lycée démarré : `nombres-calculs-seconde.js` fait (commit
+`14e7c51`). Prochain fichier : `generalites-fonctions-seconde.js`.
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -295,7 +230,7 @@ initiale de Romain.
 
 ### 2nde (seconde)
 
-- [ ] nombres-calculs-seconde.js
+- [x] nombres-calculs-seconde.js
 - [ ] generalites-fonctions-seconde.js
 - [ ] variations-fonctions-seconde.js
 - [ ] fonctions-affines-seconde.js

@@ -18,7 +18,23 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-fonctions-reference-seconde.js (2nde) — 5e fichier de la 2nde.**
+reperage-configurations-seconde.js (2nde) — 6e fichier de la 2nde,
+premier fichier géométrie/figures de ce niveau (attention particulière
+aux figures et flèches par consigne de la tâche).**
+
+`fonctions-reference-seconde.js` (2nde) relu intégralement : item ajouté
+à « Fonction inverse » sur le fait que l'inverse n'est jamais nul (0 sans
+antécédent), testé par 2 générateurs mais absent. Branche « Comparer des
+images, résoudre » : item générique imprécis corrigé — l'ancienne
+formulation « compter les solutions selon le signe de a » pour les 3
+fonctions était fausse pour l'inverse (1/x=a a toujours 1 solution si
+a≠0, indépendamment du signe de a, contrairement au carré/valeur
+absolue) ; scindé en 2 items distincts. Item ajouté sur la résolution
+d'inéquations x²<a/x²>a et |x|<a/|x|>a (technique racines/extérieur),
+testée par 2 générateurs experts mais totalement absente du cours (seules
+les équations =a étaient couvertes). Branches « Fonction carré » et
+« Fonction valeur absolue » laissées inchangées. Aucune figure, aucun €,
+aucun candidat texTable.
 
 `fonctions-affines-seconde.js` (2nde) relu intégralement : item taxonomie
 linéaire/constante/affine non linéaire ajouté à « Reconnaître et écrire
@@ -901,7 +917,7 @@ vérifiés pour débordement.)
 - [x] generalites-fonctions-seconde.js *(item modes de représentation ajouté ; item résolution équation quotient=constante ajouté ; 3 prompts tableau-en-prose convertis en texTable)*
 - [x] variations-fonctions-seconde.js *(item encadrement d'une image intermédiaire ajouté, testé par genEncadrerImageQCM mais absent ; sinon déjà bon)*
 - [x] fonctions-affines-seconde.js *(taxonomie linéaire/constante/affine ajoutée, équation généralisée à ax+b=k, nouvelle branche « Modéliser un tarif » ajoutée)*
-- [ ] fonctions-reference-seconde.js
+- [x] fonctions-reference-seconde.js *(item inverse jamais nul ajouté, item équations imprécis corrigé/scindé, item inéquations x²/|x| ajouté — thème entier absent avant)*
 - [ ] reperage-configurations-seconde.js
 - [ ] vecteurs-seconde.js
 - [ ] colinearite-vecteurs-seconde.js

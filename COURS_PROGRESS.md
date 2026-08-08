@@ -28,8 +28,10 @@ les hashes). État actuel :
   de figure). `variations-fonctions-seconde.js` fait (commit `b4875b0`,
   pas de figure). `fonctions-affines-seconde.js` fait (commit `9568b50`,
   pas de figure). `fonctions-reference-seconde.js` fait (commit `7e95059`,
-  pas de figure). **Prochain fichier : `reperage-configurations-seconde.js`
-  (géométrie — figures requises).**
+  pas de figure). `reperage-configurations-seconde.js` fait (commit
+  `2b9c25f`, 5 figures neuves — helper `buildCoursRepereFigure()` créé,
+  aucun helper de figure n'existait dans ce fichier avant). **Prochain
+  fichier : `vecteurs-seconde.js` (géométrie).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -240,7 +242,7 @@ initiale de Romain.
 - [x] variations-fonctions-seconde.js
 - [x] fonctions-affines-seconde.js
 - [x] fonctions-reference-seconde.js
-- [ ] reperage-configurations-seconde.js *(géométrie)*
+- [x] reperage-configurations-seconde.js *(géométrie)*
 - [ ] vecteurs-seconde.js *(géométrie)*
 - [ ] colinearite-vecteurs-seconde.js *(géométrie)*
 - [ ] equations-droites-seconde.js *(géométrie)*

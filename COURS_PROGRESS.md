@@ -79,6 +79,9 @@ les hashes). État actuel :
   délibérément SANS Cours (synthèse EAM, voir checklist "Première Spé").
   **La Première Spé est intégralement terminée. Prochain fichier :
   `suites-numeriques-premiere-techno.js` (Première techno).**
+  `suites-numeriques-premiere-techno.js` fait (commit `fc7ed27`, pas de
+  figure). **Prochain fichier :
+  `fonctions-second-degre-premiere-techno.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -353,7 +356,7 @@ Cours).
 
 ### Première techno (premiere-techno)
 
-- [ ] suites-numeriques-premiere-techno.js
+- [x] suites-numeriques-premiere-techno.js
 - [ ] fonctions-second-degre-premiere-techno.js
 - [ ] derivation-premiere-techno.js
 - [ ] statistiques-deux-variables-premiere-techno.js

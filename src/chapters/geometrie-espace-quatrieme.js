@@ -22,6 +22,86 @@ const fr = (n) => String(n).replace(".", ",");
 
 const PRENOMS = ["Léa", "Nathan", "Camille", "Yanis", "Inès", "Malo", "Sofia", "Adam", "Lina", "Théo", "Rania", "Enzo"];
 
+// Figures utilisées uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+function buildPyramideFigure() {
+  const A = { id: "A", x: 20, y: 150, dy: 16 };
+  const B = { id: "B", x: 140, y: 150, dy: 16 };
+  const C = { id: "C", x: 170, y: 110, hideLabel: true };
+  const D = { id: "D", x: 50, y: 110, hideLabel: true };
+  const S = { id: "S", x: 95, y: 20, dy: -10 };
+  const O = { id: "O", x: 95, y: 110, hideDot: true, hideLabel: true };
+  return {
+    points: [A, B, C, D, S, O],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C", dashed: true },
+      { from: "C", to: "D", dashed: true },
+      { from: "D", to: "A" },
+      { from: "S", to: "A" },
+      { from: "S", to: "B" },
+      { from: "S", to: "C", dashed: true },
+      { from: "S", to: "D" },
+      { from: "S", to: "O", dashed: true },
+    ],
+    freeLabels: [{ x: (S.x + O.x) / 2 + 16, y: (S.y + O.y) / 2, text: "hauteur" }],
+  };
+}
+
+function buildConeFigure() {
+  const O = { id: "O", x: 70, y: 110, hideDot: true, hideLabel: true };
+  const Rleft = { id: "Rleft", x: 30, y: 110, hideLabel: true };
+  const Rright = { id: "Rright", x: 110, y: 110, hideLabel: true };
+  const S = { id: "S", x: 70, y: 20, dy: -10 };
+  return {
+    points: [O, Rleft, Rright, S],
+    circles: [{ center: "O", radius: 40 }],
+    segments: [{ from: "O", to: "Rright" }],
+    lines: [
+      { from: "S", to: "Rleft", extend: 0 },
+      { from: "S", to: "Rright", extend: 0 },
+    ],
+    freeLabels: [
+      { x: (O.x + Rright.x) / 2, y: O.y - 8, text: "r" },
+      { x: (S.x + O.x) / 2 - 16, y: (S.y + O.y) / 2, text: "h" },
+      { x: (S.x + Rright.x) / 2 + 20, y: (S.y + Rright.y) / 2, text: "génératrice" },
+    ],
+  };
+}
+
+function buildPaveRepereFigure() {
+  const dx = 36;
+  const dy = -30;
+  const A = { id: "A", x: 20, y: 150, dy: 16 };
+  const B = { id: "B", x: 130, y: 150, dy: 16 };
+  const E = { id: "E", x: 20, y: 60, dy: -8 };
+  const F = { id: "F", x: 130, y: 60, dy: -8 };
+  const D = { id: "D", x: A.x + dx, y: A.y + dy, hideLabel: true };
+  const C = { id: "C", x: B.x + dx, y: B.y + dy, hideLabel: true };
+  const H = { id: "H", x: E.x + dx, y: E.y + dy, hideLabel: true };
+  const G = { id: "G", x: F.x + dx, y: F.y + dy, hideLabel: true };
+  return {
+    points: [A, B, C, D, E, F, G, H],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "F" },
+      { from: "F", to: "E" },
+      { from: "E", to: "A" },
+      { from: "B", to: "C" },
+      { from: "F", to: "G" },
+      { from: "C", to: "G" },
+      { from: "G", to: "H" },
+      { from: "A", to: "D", dashed: true },
+      { from: "D", to: "C", dashed: true },
+      { from: "D", to: "H", dashed: true },
+    ],
+    freeLabels: [
+      { x: (A.x + B.x) / 2, y: A.y + 16, text: "abscisses" },
+      { x: A.x - 20, y: (A.y + E.y) / 2, text: "altitudes" },
+      { x: (A.x + D.x) / 2 + 8, y: (A.y + D.y) / 2 - 4, text: "ordonnées" },
+    ],
+  };
+}
+
 // =========================== Volumes ===========================
 
 // ---------- 1. Volume d'une pyramide ----------
@@ -367,6 +447,40 @@ export default {
     level: "quatrieme",
     free: false,
     order: 15,
+    cours: {
+      mindMap: {
+        title: "Géométrie dans l'espace",
+        branches: [
+          {
+            title: "Pyramide : vocabulaire et volume",
+            items: [
+              "Une pyramide à base n-gonale a n faces latérales triangulaires + 1 base = n+1 faces, et n+1 sommets.",
+              "Le volume dépend de l'aire de la base et de la hauteur (distance du sommet au plan de la base).",
+            ],
+            formula: "\\(V = \\dfrac{\\text{aire de la base} \\times \\text{hauteur}}{3}\\)",
+            figure: buildPyramideFigure(),
+          },
+          {
+            title: "Cône de révolution : vocabulaire et volume",
+            items: [
+              "La génératrice relie le sommet à un point du cercle de base ; la hauteur relie le sommet au centre du disque de base (perpendiculairement).",
+              "Le patron du cône déplié donne un secteur de disque dont l'arc a la même longueur que le périmètre du disque de base.",
+              "Piège classique : ne pas confondre hauteur et génératrice — seule la hauteur est perpendiculaire à la base.",
+            ],
+            formula: "\\(V = \\dfrac{\\pi \\times r^2 \\times h}{3}\\)",
+            figure: buildConeFigure(),
+          },
+          {
+            title: "Repérage dans l'espace",
+            items: [
+              "Dans un pavé droit muni d'un repère, un point est repéré par un triplet (abscisse ; ordonnée ; altitude).",
+              "Le milieu d'un segment a pour coordonnées la moyenne des coordonnées de ses extrémités, coordonnée par coordonnée.",
+            ],
+            figure: buildPaveRepereFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

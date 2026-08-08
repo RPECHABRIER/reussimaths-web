@@ -14,6 +14,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
@@ -41,7 +43,7 @@ function genMoyennePondereeSimpleNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Moyennes",
-    prompt: `Une série statistique a pour valeurs ${valeurs.join(", ")} avec pour effectifs respectifs ${effectifs.join(", ")}. Calcule la moyenne pondérée de cette série (arrondie au centième si nécessaire).`,
+    prompt: `Voici une série statistique : ${texTable([["Valeur", ...valeurs], ["Effectif", ...effectifs]])} Calcule la moyenne pondérée de cette série (arrondie au centième si nécessaire).`,
     answer,
     tolerance: 0.01,
     steps: [
@@ -72,7 +74,7 @@ function genMoyennePondereeCoefficientsNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Moyennes",
-    prompt: `Un élève a obtenu les notes suivantes : ${notes.map((n, i) => `${n} (coefficient ${coefs[i]})`).join(", ")}. Calcule sa moyenne pondérée (arrondie au centième).`,
+    prompt: `Un élève a obtenu les notes suivantes : ${texTable([["Note", ...notes], ["Coefficient", ...coefs]])} Calcule sa moyenne pondérée (arrondie au centième).`,
     answer,
     tolerance: 0.01,
     steps: [
@@ -104,7 +106,7 @@ function genComparerMoyennesQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques — Moyennes",
-    prompt: `L'entreprise A a des salaires de ${A.vals.join(", ")} €. L'entreprise B a des salaires de ${B.vals.join(", ")} €. Quelle entreprise a le salaire moyen le plus élevé ?`,
+    prompt: `L'entreprise A a les salaires suivants : ${texTable([["Salaire A (en euros)", ...A.vals]])} L'entreprise B a les salaires suivants : ${texTable([["Salaire B (en euros)", ...B.vals]])} Quelle entreprise a le salaire moyen le plus élevé ?`,
     answer: winner,
     options: ["Entreprise A", "Entreprise B"],
     steps: [
@@ -289,7 +291,7 @@ function genEffectifTotalTableauNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Vocabulaire",
-    prompt: `Un tableau d'effectifs donne les valeurs suivantes : ${effectifs.join(", ")}. Quel est l'effectif total ?`,
+    prompt: `Un tableau d'effectifs donne les valeurs suivantes : ${texTable([["Effectif", ...effectifs]])} Quel est l'effectif total ?`,
     answer: total,
     steps: [{ type: "calcul", text: `${effectifs.join(" + ")} = ${total}` }],
   };
@@ -329,7 +331,7 @@ function genCategorieExtremeQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques — Vocabulaire",
-    prompt: `Voici un tableau d'effectifs : ${categories.map((c, i) => `${c} : ${effectifs[i]}`).join(", ")}. Quelle catégorie a l'effectif le ${askMax ? "plus grand" : "plus petit"} ?`,
+    prompt: `Voici un tableau d'effectifs : ${texTable([["Catégorie", ...categories], ["Effectif", ...effectifs]])} Quelle catégorie a l'effectif le ${askMax ? "plus grand" : "plus petit"} ?`,
     answer: targetCat,
     options: categories,
     steps: [
@@ -432,7 +434,7 @@ export default {
               "Moyenne = (somme des valeurs × leurs effectifs ou coefficients) ÷ (somme des effectifs ou coefficients).",
               "Piège classique : diviser par le nombre de valeurs différentes au lieu de l'effectif total (ou de la somme des coefficients).",
             ],
-            formula: "\\(\\overline{x} = \\dfrac{\\sum v_i \\times e_i}{\\sum e_i}\\)",
+            formula: "\\(\\overline{x} = \\dfrac{v_1 \\times e_1 + v_2 \\times e_2 + \\cdots}{e_1 + e_2 + \\cdots}\\)",
           },
           {
             title: "Médiane",

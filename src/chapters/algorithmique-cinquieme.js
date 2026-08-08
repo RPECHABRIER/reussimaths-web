@@ -337,6 +337,7 @@ export default {
             items: [
               "Un programme suit toujours le même schéma : Lire → Calculer → Afficher.",
               "Pour prévoir un résultat, on exécute le programme « à la main », étape par étape, avec la valeur donnée.",
+              "Piège classique : en traduisant une formule, on recopie le signe (+ ou −) exactement comme dans la formule — une erreur de signe change tout le résultat affiché.",
             ],
             formula: "Lire n ; Calculer r = an + b ; Afficher r",
           },

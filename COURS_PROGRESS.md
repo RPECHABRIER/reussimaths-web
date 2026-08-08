@@ -41,7 +41,9 @@ les hashes). État actuel :
   `equations-droites-seconde.js` (géométrie).** `equations-droites-seconde.js`
   fait (commit `d31c684`, 3 figures neuves via `buildCoursDroiteFigure()`).
   `informations-chiffrees-seconde.js` fait (commit `1b48bea`, pas de
-  figure). **Prochain fichier : `statistiques-descriptives-seconde.js`.**
+  figure). `statistiques-descriptives-seconde.js` fait (commit `97919fc`,
+  pas de figure). **Prochain fichier :
+  `probabilites-echantillonnage-seconde.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -257,7 +259,7 @@ initiale de Romain.
 - [x] colinearite-vecteurs-seconde.js *(géométrie)*
 - [x] equations-droites-seconde.js *(géométrie)*
 - [x] informations-chiffrees-seconde.js
-- [ ] statistiques-descriptives-seconde.js
+- [x] statistiques-descriptives-seconde.js
 - [ ] probabilites-echantillonnage-seconde.js
 - [ ] exercices-fin-annee-seconde.js
 

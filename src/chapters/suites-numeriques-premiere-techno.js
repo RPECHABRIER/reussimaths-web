@@ -340,6 +340,42 @@ export default {
     pourquoi: "Les suites arithmétiques et géométriques modélisent l'évolution d'un chiffre d'affaires, d'un stock ou d'un capital, année après année.",
     level: "premiere-techno",
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Suites numériques",
+        branches: [
+          {
+            title: "Deux modes de génération",
+            items: [
+              "Récurrence : chaque terme se calcule à partir du précédent.",
+              "Explicite : chaque terme se calcule directement à partir de n.",
+            ],
+          },
+          {
+            title: "Suite arithmétique",
+            items: [
+              "On ajoute toujours la même raison r. Le nuage de points \\((n ; u_n)\\) est aligné.",
+            ],
+            formula: "\\(u_{n+1}=u_n+r,\\quad u_n=u_0+rn\\)",
+          },
+          {
+            title: "Suite géométrique",
+            items: [
+              "On multiplie toujours par la même raison q. Le nuage de points \\((n ; u_n)\\) dessine une courbe (croissance ou décroissance rapide).",
+              "Piège classique : ne pas confondre les deux formules — l'une additionne, l'autre multiplie.",
+            ],
+            formula: "\\(u_{n+1}=q \\times u_n,\\quad u_n=u_0 \\times q^n\\)",
+          },
+          {
+            title: "Démontrer la nature d'une suite",
+            items: [
+              "Arithmétique : calculer \\(u_{n+1}-u_n\\) et vérifier que c'est constant.",
+              "Géométrique : calculer \\(\\frac{u_{n+1}}{u_n}\\) et vérifier que c'est constant (et que \\(u_n \\neq 0\\)).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

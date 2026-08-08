@@ -18,8 +18,27 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
-terminées. Prochain fichier : second-degre.js (Première Spé) — 1er
-fichier de la Première Spé.**
+terminées. `second-degre.js` (Première Spé) est fait. Prochain fichier :
+suites-numeriques-premiere-spe.js (Première Spé, 2e des 11 fichiers de
+ce niveau).**
+
+`second-degre.js` (Première Spé) relu intégralement : 5 branches (4
+avant). Nouvelle branche « Déterminer un trinôme à partir de données »
+ajoutée, couvrant un thème entier totalement absent du cours avant :
+trouver a depuis racines connues + un point (genConstructionRacines), et
+trouver a,b depuis un système à deux points (2 exercices FIXED_BANK
+« Bac • détermination de f »). Branche « Trois formes du trinôme »
+enrichie de 2 items : identités remarquables (A+B)² et A²-B² pour
+développer/factoriser sans discriminant (genExpandQCM, genFactorQCM,
+absentes avant) ; règle du produit nul A×B=0 ⟺ A=0 ou B=0 (chapter dédié
+de genFactoredEquation, jamais énoncée). Branche « Discriminant et
+racines » enrichie : item sur les racines comme valeurs interdites d'un
+quotient (chapter FIXED_BANK « Bac • domaine de définition », absent).
+Branche « Sommet et sens de la parabole » enrichie : item sur la
+symétrie de la parabole (FIXED_BANK « Bac • signe et variations »,
+absent). Aucun €, aucun candidat texTable, fichier purement algébrique
+sans figure (Figure.jsx ne supporte pas les paraboles, cohérent avec
+modelisation-quadratique-premiere-non-spe.js).
 
 `variations-globales-premiere-non-spe.js` (Première non spé) relu
 intégralement : 4 branches enrichies de 6 items absents (pas de
@@ -1204,7 +1223,7 @@ vérifiés pour débordement.)
 - [x] variations-globales-premiere-non-spe.js *(items ajoutés — dérivation d'un trinôme, dérivée nulle d'une constante, piège x²=k deux solutions, équation tangente horizontale, règle max/min sur tableau de signes, piège f'(a)=0 n'implique pas extremum ; Première non spé terminée 7/7)*
 
 ### Première Spé
-- [ ] second-degre.js
+- [x] second-degre.js *(nouvelle branche Déterminer un trinôme à partir de données — thème entier absent, racines+point et système à deux points ; items ajoutés — identités remarquables pour développer/factoriser, règle du produit nul, racines=valeurs interdites d'un quotient, symétrie de la parabole)*
 - [ ] suites-numeriques-premiere-spe.js
 - [ ] derivation-premiere-spe.js
 - [ ] variations-courbes-premiere-spe.js

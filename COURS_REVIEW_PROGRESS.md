@@ -19,8 +19,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-Prochain fichier : suites-numeriques-premiere-techno.js (Première
-techno, 1er des 8 fichiers de ce niveau).**
+`suites-numeriques-premiere-techno.js` (1er des 8 fichiers de Première
+techno) vient d'être relu. Prochain fichier :
+fonctions-second-degre-premiere-techno.js (Première techno).**
+
+`suites-numeriques-premiere-techno.js` (Première techno) relu
+intégralement : 5 branches (4 avant). Branche « Suite arithmétique »
+enrichie : règle de sens de variation ajoutée (r>0 croissante, r<0
+décroissante), testée par genSensVariationArithmetiqueQCM mais absente.
+Branche « Suite géométrique » enrichie : règle de sens de variation
+ajoutée (q>1 croissante, 0<q<1 décroissante, termes positifs), testée
+par genSensVariationGeometriqueQCM mais absente. Nouvelle branche
+« Reconnaître une croissance linéaire ou exponentielle » ajoutée :
+distinction montant fixe (arithmétique) vs pourcentage fixe
+(géométrique) en situation concrète (genModeliserPhenomeneQCM), et
+règle de lecture d'un nuage de points (n, u_n) pour reconnaître le type
+de suite (genLectureNuagePointsQCM) — les deux étaient testés mais
+absents de toute branche. Aucun €, aucun candidat texTable, fichier
+sans figure géométrique.
 
 `algorithmique-python-premiere-spe.js` (Première Spé) relu intégralement,
 dernier fichier de ce niveau : 5 branches (4 avant). Nouvelle branche
@@ -1354,7 +1370,7 @@ vérifiés pour débordement.)
 - [x] algorithmique-python-premiere-spe.js *(nouvelle branche Conditions et vocabulaire de base — if/else, n%2==0, break, import random, thème entier absent malgré 4+1 générateurs le testant ; item sur les 2 schémas d'accumulation somme/produit)*
 
 ### Première techno
-- [ ] suites-numeriques-premiere-techno.js
+- [x] suites-numeriques-premiere-techno.js *(règles de sens de variation ajoutées aux branches arithmétique/géométrique, nouvelle branche « Reconnaître une croissance linéaire ou exponentielle » couvrant modélisation concrète + lecture de nuage de points)*
 - [ ] fonctions-second-degre-premiere-techno.js
 - [ ] derivation-premiere-techno.js
 - [ ] statistiques-deux-variables-premiere-techno.js

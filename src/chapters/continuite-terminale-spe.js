@@ -396,10 +396,31 @@ export default {
             ],
           },
           {
+            title: "Continuité des fonctions usuelles",
+            items: [
+              "Les fonctions usuelles (racine carrée, exponentielle, valeur absolue, fonctions rationnelles) sont continues sur leur domaine de définition — un domaine restreint (comme x≠0 pour l'inverse) empêche la continuité sur \\(\\mathbb{R}\\) tout entier.",
+              "Continuité et dérivabilité sont deux notions différentes : une fonction peut être continue en un point sans y être dérivable (racine carrée en 0 : tangente verticale ; valeur absolue en 0 : point anguleux). En revanche, toute fonction dérivable est automatiquement continue.",
+            ],
+          },
+          {
+            title: "Opérations sur les fonctions continues",
+            items: [
+              "La somme, le produit et la composée de deux fonctions continues (sur un même intervalle) sont continus.",
+              "Le quotient de deux fonctions continues est continu uniquement là où le dénominateur ne s'annule pas.",
+            ],
+          },
+          {
             title: "Dichotomie",
             items: [
               "À chaque étape, on teste le signe au milieu de l'intervalle et on garde la moitié qui contient la solution.",
               "Le produit des images aux bornes est négatif quand la solution est encadrée (changement de signe).",
+            ],
+          },
+          {
+            title: "Suites récurrentes et point fixe",
+            items: [
+              "Pour une suite définie par \\(u_{n+1}=f(u_n)\\) avec f continue : si la suite converge, sa limite l vérifie l'équation du point fixe \\(f(l)=l\\).",
+              "Pour démontrer par récurrence qu'une suite reste dans un intervalle, on vérifie d'abord l'initialisation (\\(u_0\\) dans l'intervalle), puis l'hérédité.",
             ],
           },
         ],

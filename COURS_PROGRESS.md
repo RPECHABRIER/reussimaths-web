@@ -118,6 +118,8 @@ les hashes). État actuel :
   délibérément SANS Cours (révision transversale). **La Terminale Spé est
   intégralement terminée. Prochain fichier :
   `suites-terminale-techno.js` (Terminale techno).**
+  `suites-terminale-techno.js` fait (commit `21536fe`, pas de figure).
+  **Prochain fichier : `fonctions-exponentielles-terminale-techno.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -435,7 +437,7 @@ sans Cours).
 
 ### Terminale techno (terminale-techno)
 
-- [ ] suites-terminale-techno.js
+- [x] suites-terminale-techno.js
 - [ ] fonctions-exponentielles-terminale-techno.js
 - [ ] logarithme-decimal-terminale-techno.js
 - [ ] statistiques-deux-variables-terminale-techno.js

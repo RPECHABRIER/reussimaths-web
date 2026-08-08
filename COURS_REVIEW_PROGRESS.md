@@ -17,8 +17,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `resolution-equations.js` (4e)
-vient d'être relu. Prochain fichier : `statistiques-quatrieme.js` (4e).**
+**La 5e est intégralement terminée (12/12). `resolution-equations.js` et
+`statistiques-quatrieme.js` (4e) viennent d'être relus. Prochain fichier :
+`probabilites-quatrieme.js` (4e).**
+
+`statistiques-quatrieme.js` (4e) relu intégralement : formule de la moyenne
+pondérée réécrite sans notation Σ/indices (non enseignée au collège,
+remplacée par une somme explicite \\(v_1 e_1 + v_2 e_2 + \\cdots\\)).
+Reste déjà bon (4 branches, piège classique pertinent, distinction
+médiane/moyenne déjà explicite). Exercices : 5 prompts qui énuméraient
+jusqu'à 5-7 valeurs chiffrées en prose (série valeurs/effectifs,
+notes/coefficients, salaires de deux entreprises avec €, effectifs d'un
+tableau, effectifs par catégorie) convertis en `texTable()` — même bug de
+présentation que l'énumération "jusqu'à X kg → Y €" déjà corrigée ailleurs
+— avec labels "(en euros)" pour respecter la règle jamais-€-en-cellule.
 
 `resolution-equations.js` (4e) relu intégralement : branche "Tester une
 solution" reformulée pour partir du concret (remplacer x puis calculer
@@ -459,7 +471,7 @@ vérifiés pour débordement.)
 - [x] puissances-quatrieme.js *(déjà bon, RAS — cours exemplaire, formules et pièges déjà bien ciblés)*
 - [x] calcul-litteral-quatrieme.js *(formules ajoutées à 3 branches sans formule ; candidat texTable du grep mécanique vérifié = faux positif)*
 - [x] resolution-equations.js
-- [ ] statistiques-quatrieme.js
+- [x] statistiques-quatrieme.js
 - [ ] probabilites-quatrieme.js
 - [ ] notion-fonctions.js
 - [ ] proportionnalite-quatrieme.js

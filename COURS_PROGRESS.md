@@ -51,8 +51,9 @@ les hashes). État actuel :
   `statistique-probabilites-premiere-non-spe.js` fait (commit `8c52d7b`,
   pas de figure). `croissance-lineaire-premiere-non-spe.js` fait (commit
   `8e608ac`, pas de figure). `croissance-exponentielle-premiere-non-spe.js`
-  fait (commit `9c80e61`, pas de figure). **Prochain fichier :
-  `modelisation-quadratique-premiere-non-spe.js`.**
+  fait (commit `9c80e61`, pas de figure). `modelisation-quadratique-premiere-non-spe.js`
+  fait (commit `19e39d7`, pas de figure). **Prochain fichier :
+  `variations-instantanees-premiere-non-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -287,7 +288,7 @@ initiale de Romain.
 - [x] statistique-probabilites-premiere-non-spe.js
 - [x] croissance-lineaire-premiere-non-spe.js
 - [x] croissance-exponentielle-premiere-non-spe.js
-- [ ] modelisation-quadratique-premiere-non-spe.js
+- [x] modelisation-quadratique-premiere-non-spe.js
 - [ ] variations-instantanees-premiere-non-spe.js
 - [ ] variations-globales-premiere-non-spe.js
 - [ ] exercices-rituels-premiere-non-spe.js

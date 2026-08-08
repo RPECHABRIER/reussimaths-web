@@ -19,9 +19,17 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
 la Première techno et la Terminale Spé sont intégralement terminées.
-1 des 6 fichiers de Terminale techno est relu
-(suites-terminale-techno.js). Prochain fichier :
-fonctions-exponentielles-terminale-techno.js (Terminale techno).**
+2 des 6 fichiers de Terminale techno sont relus
+(suites-terminale-techno.js,
+fonctions-exponentielles-terminale-techno.js). Prochain fichier :
+logarithme-decimal-terminale-techno.js (Terminale techno).**
+
+`fonctions-exponentielles-terminale-techno.js` (Terminale techno) relu
+intégralement : 3 branches inchangées en nombre mais enrichies.
+Branche « Sens de variation et allure » enrichie : effet du
+coefficient k dans x↦k×a^x sur le sens de variation ajouté (k>0 ne
+change rien, k<0 inverse), testé par genSensVariationQCM mais absent.
+Aucun €, aucun candidat texTable, figure existante non modifiée.
 
 `suites-terminale-techno.js` (Terminale techno) relu intégralement : 5
 branches (4 avant). Nouvelle branche « Moyenne arithmétique et moyenne
@@ -1632,7 +1640,7 @@ vérifiés pour débordement.)
 
 ### Terminale techno
 - [x] suites-terminale-techno.js *(nouvelle branche « Moyenne arithmétique et moyenne géométrique » ajoutée, formule symbolique de la somme arithmétique ajoutée)*
-- [ ] fonctions-exponentielles-terminale-techno.js
+- [x] fonctions-exponentielles-terminale-techno.js *(effet du coefficient k dans x↦k×a^x sur le sens de variation ajouté)*
 - [ ] logarithme-decimal-terminale-techno.js
 - [ ] statistiques-deux-variables-terminale-techno.js
 - [ ] probabilites-conditionnelles-terminale-techno.js

@@ -86,8 +86,12 @@ les hashes). État actuel :
   fait (commit `08797a5`, pas de figure).
   `probabilites-conditionnelles-premiere-techno.js` fait (commit `0a2255b`,
   pas de figure). `epreuves-independantes-premiere-techno.js` fait (commit
-  `4ed1f29`, pas de figure). **Prochain fichier :
-  `variables-aleatoires-premiere-techno.js`.**
+  `4ed1f29`, pas de figure). `variables-aleatoires-premiere-techno.js` fait
+  (commit `ae4e87f`, pas de figure). `preparation-eam-premiere-techno.js`
+  délibérément SANS Cours (synthèse EAM). `algorithmique-python-premiere-techno.js`
+  fait (commit `d4b3bbe`, pas de figure). **La Première techno est
+  intégralement terminée. Prochain fichier :
+  `combinatoire-denombrement-terminale-spe.js` (Terminale Spé).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -368,9 +372,15 @@ Cours).
 - [x] statistiques-deux-variables-premiere-techno.js
 - [x] probabilites-conditionnelles-premiere-techno.js
 - [x] epreuves-independantes-premiere-techno.js
-- [ ] variables-aleatoires-premiere-techno.js
-- [ ] preparation-eam-premiere-techno.js
-- [ ] algorithmique-python-premiere-techno.js
+- [x] variables-aleatoires-premiere-techno.js
+- [x] preparation-eam-premiere-techno.js (délibérément SANS Cours — banque
+      de questions construite à partir de 4 sujets officiels de l'EAM voie
+      technologique + variantes originales, synthèse transversale par
+      nature, aucune notion nouvelle)
+- [x] algorithmique-python-premiere-techno.js
+
+**La Première techno est intégralement terminée** (9 chapitres avec
+`meta.cours.mindMap` + 1 chapitre d'examen délibérément sans Cours).
 
 ### Terminale Spé (terminale-spe)
 

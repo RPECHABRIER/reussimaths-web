@@ -534,6 +534,50 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "De la statistique aux probabilités",
+        branches: [
+          {
+            title: "Probabilité conditionnelle",
+            items: [
+              "\\(P_A(B)\\) : probabilité de B sachant que A est déjà réalisé.",
+              "\\(P(A \\cap B) = P_A(B) \\times P(A)\\).",
+            ],
+            formula: "\\(P_A(B) = \\dfrac{P(A \\cap B)}{P(A)}\\)",
+          },
+          {
+            title: "Indépendance de deux événements",
+            items: [
+              "A et B sont indépendants si \\(P_A(B) = P(B)\\) : savoir que A s'est réalisé ne change rien à la probabilité de B.",
+              "Piège classique : indépendant ≠ incompatible (deux événements incompatibles ne peuvent pas être indépendants, sauf cas particulier).",
+            ],
+          },
+          {
+            title: "Arbre pondéré",
+            items: [
+              "Sur chaque nœud, la somme des probabilités des branches vaut 1.",
+              "La probabilité d'un chemin = produit des probabilités le long des branches.",
+              "Formule des probabilités totales : additionner les probabilités de tous les chemins qui mènent à B.",
+            ],
+          },
+          {
+            title: "Répétitions et \"au moins un\"",
+            items: [
+              "Pour des tirages avec remise (expériences identiques et indépendantes), on multiplie les probabilités.",
+              "\\(P(\\text{au moins un succès}) = 1 - P(\\text{aucun succès})\\) : passer au contraire simplifie souvent le calcul.",
+            ],
+          },
+          {
+            title: "Point moyen et droite d'ajustement",
+            items: [
+              "Le point moyen \\(G(\\bar{x} ; \\bar{y})\\) a pour coordonnées les moyennes des deux séries, et appartient toujours à la droite d'ajustement.",
+              "Une prédiction par extrapolation reste fragile : elle suppose que la tendance se poursuit au-delà des données observées.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

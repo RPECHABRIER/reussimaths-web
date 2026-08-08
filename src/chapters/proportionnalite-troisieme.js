@@ -427,11 +427,21 @@ export default {
         title: "Situations de proportionnalité",
         branches: [
           {
-            title: "Ratios",
+            title: "Ratios : simplifier, comparer, exprimer en %",
             items: [
               "On simplifie un ratio comme une fraction, en divisant chaque terme par leur PGCD.",
-              "Pour partager une quantité selon un ratio p : q, on divise le total en (p+q) parts égales.",
+              "Un ratio équivalent s'obtient en multipliant (ou divisant) chaque terme par un même nombre.",
+              "La proportion d'une grandeur en pourcentage s'obtient en divisant sa part par le total, puis en multipliant par 100.",
             ],
+          },
+          {
+            title: "Appliquer une proportionnalité",
+            items: [
+              "Pour partager un total selon un ratio p : q, on divise le total en (p+q) parts égales.",
+              "Pour deux grandeurs proportionnelles (recette, échelle...), on calcule d'abord la valeur pour une unité, puis on multiplie par la quantité voulue.",
+              "Si deux nombres sont dans un ratio p : q et que leur différence est connue, on pose x = pk et y = qk pour un même k, puis on résout \\(pk - qk = \\text{différence}\\).",
+            ],
+            formula: "\\(\\dfrac{a}{b} = \\dfrac{c}{d} \\Rightarrow a \\times d = b \\times c\\)",
           },
           {
             title: "Coefficient multiplicateur",

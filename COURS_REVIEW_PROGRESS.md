@@ -18,14 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 7 des 14 fichiers de
+la Première techno sont intégralement terminées. 8 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
 suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
-continuite-terminale-spe.js, complements-derivation-terminale-spe.js).
-Prochain fichier : logarithme-neperien-terminale-spe.js (Terminale
-Spé).**
+continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
+logarithme-neperien-terminale-spe.js). Prochain fichier :
+fonctions-trigonometriques-terminale-spe.js (Terminale Spé).**
+
+`logarithme-neperien-terminale-spe.js` (Terminale Spé) relu
+intégralement : 6 branches (5 avant). Nouvelle branche « Limites
+usuelles » ajoutée, thème testé par 4 sous-cas d'un chapter dédié mais
+totalement absent (limite en 0+, en +∞, croissance comparée ln(x)/x et
+x×ln(x)). Branche « Propriétés algébriques » enrichie : formules
+réciproques e^{ln a}=a et ln(e^k)=k explicitées ; piège classique
+ln(a²)=2ln(a) valable seulement pour a>0 (formule générale 2ln(|a|))
+ajouté. Branche « Résoudre une équation avec ln » enrichie : direction
+manquante ajoutée (résoudre ln(x)=k donne x=e^k). Aucun €, aucun
+candidat texTable, fichier sans figure.
 
 `complements-derivation-terminale-spe.js` (Terminale Spé) relu
 intégralement : 4 branches inchangées en nombre mais fortement
@@ -1544,7 +1555,7 @@ vérifiés pour débordement.)
 - [x] limites-fonctions-terminale-spe.js *(nouvelle branche « Opérations sur les limites » cas déterminés, règle des signes près d'une asymptote verticale, cas produit fonction bornée×0 ajoutés)*
 - [x] continuite-terminale-spe.js *(3 branches entières ajoutées — continuité des fonctions usuelles, opérations sur les fonctions continues, suites récurrentes et point fixe)*
 - [x] complements-derivation-terminale-spe.js *(formule du produit ajoutée, lien f''/monotonie de f' explicité, domaine de dérivabilité de racine(u), cas de la fonction affine convexe et concave)*
-- [ ] logarithme-neperien-terminale-spe.js
+- [x] logarithme-neperien-terminale-spe.js *(nouvelle branche Limites usuelles, formules réciproques e^ln(a)=a / ln(e^k)=k, piège ln(a²)=2ln(a) valable seulement pour a>0, direction ln(x)=k⟹x=e^k ajoutée)*
 - [ ] fonctions-trigonometriques-terminale-spe.js
 - [ ] primitives-equations-differentielles-terminale-spe.js
 - [ ] calcul-integral-terminale-spe.js

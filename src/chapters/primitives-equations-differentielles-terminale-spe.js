@@ -359,6 +359,41 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 11,
+    cours: {
+      mindMap: {
+        title: "Primitives, équations différentielles",
+        branches: [
+          {
+            title: "Primitives usuelles",
+            items: [
+              "Une primitive F de f vérifie \\(F'=f\\) ; il en existe une infinité, qui diffèrent toutes d'une constante.",
+            ],
+            formula: "\\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+k,\\quad \\int e^{ax+b}\\,dx = \\dfrac{1}{a}e^{ax+b}+k\\)",
+          },
+          {
+            title: "Déterminer la constante",
+            items: [
+              "Une condition initiale (une valeur connue de F) permet de fixer la constante k parmi toutes les primitives possibles.",
+              "Piège classique : chercher LA primitive sans utiliser de condition — il en existe une infinité tant qu'aucune valeur n'est fixée.",
+            ],
+          },
+          {
+            title: "Équation différentielle y'=ay",
+            items: [
+              "Les solutions sont exactement les fonctions \\(x \\mapsto Ce^{ax}\\) (C constante réelle quelconque).",
+            ],
+            formula: "\\(y'=ay \\iff y(x) = Ce^{ax}\\)",
+          },
+          {
+            title: "Équation différentielle y'=ay+b",
+            items: [
+              "On cherche d'abord la solution constante \\(y=-\\frac{b}{a}\\), puis on ajoute la solution générale de \\(y'=ay\\).",
+            ],
+            formula: "\\(y'=ay+b \\iff y(x) = Ce^{ax}-\\dfrac{b}{a}\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

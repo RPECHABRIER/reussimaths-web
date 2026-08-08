@@ -18,7 +18,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-fonctions-affines-seconde.js (2nde) — 4e fichier de la 2nde.**
+fonctions-reference-seconde.js (2nde) — 5e fichier de la 2nde.**
+
+`fonctions-affines-seconde.js` (2nde) relu intégralement : item taxonomie
+linéaire/constante/affine non linéaire ajouté à « Reconnaître et écrire
+f(x)=ax+b » (testée par genClasserFonctionQCM à 4 réponses mais absente,
+même famille de gap déjà vue sur fonctions-affines-troisieme.js) ; item
+équation généralisé de ax+b=0 à ax+b=k (genResoudreEquationAffineNumeric
+résout le cas général) ; nouvelle branche « Modéliser un tarif par une
+fonction affine » ajoutée (b=forfait fixe, a=prix unitaire, résolution
+inverse), 2 générateurs dédiés (genTarifContexteNumeric,
+genTarifInverseNumeric) sans aucune branche correspondante avant cette
+relecture. Reste déjà au niveau attendu (Taux de variation, Sens de
+variation, Déterminer f à partir de deux points déjà clairs). Aucune
+figure, € en prose courte seulement (2 tarifs par prompt), aucun
+candidat texTable.
 
 `variations-fonctions-seconde.js` (2nde) relu intégralement : item ajouté
 à « Comparer ou encadrer des images » sur l'encadrement d'une image
@@ -886,7 +900,7 @@ vérifiés pour débordement.)
 - [x] nombres-calculs-seconde.js *(branche Intervalles enrichie — transformation d'encadrement/piège négatif ; règle |X|=b ajoutée ; branche Racines carrées et puissances scindée en 2 + piège √(a²)=|a| + nouvelle branche Puissances ; heuristique rapport/différence ajoutée)*
 - [x] generalites-fonctions-seconde.js *(item modes de représentation ajouté ; item résolution équation quotient=constante ajouté ; 3 prompts tableau-en-prose convertis en texTable)*
 - [x] variations-fonctions-seconde.js *(item encadrement d'une image intermédiaire ajouté, testé par genEncadrerImageQCM mais absent ; sinon déjà bon)*
-- [ ] fonctions-affines-seconde.js
+- [x] fonctions-affines-seconde.js *(taxonomie linéaire/constante/affine ajoutée, équation généralisée à ax+b=k, nouvelle branche « Modéliser un tarif » ajoutée)*
 - [ ] fonctions-reference-seconde.js
 - [ ] reperage-configurations-seconde.js
 - [ ] vecteurs-seconde.js

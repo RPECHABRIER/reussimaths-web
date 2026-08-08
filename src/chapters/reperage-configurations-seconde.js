@@ -501,6 +501,42 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant (les exercices restent
+// purement numériques/QCM) : repère orthonormé minimal avec axes fléchés.
+function buildCoursRepereFigure(pts, segs = [], range = 6) {
+  const scale = 20;
+  const toX = (v) => v * scale;
+  const toY = (v) => -v * scale;
+  const axes = [
+    { id: "OX1", x: toX(-1), y: toY(0), hideDot: true, hideLabel: true },
+    { id: "OX2", x: toX(range), y: toY(0), hideDot: true, hideLabel: true },
+    { id: "OY1", x: toX(0), y: toY(-1), hideDot: true, hideLabel: true },
+    { id: "OY2", x: toX(0), y: toY(range), hideDot: true, hideLabel: true },
+  ];
+  const points = pts.map((p) => ({
+    id: p.id,
+    x: toX(p.x),
+    y: toY(p.y),
+    label: p.label ?? p.id,
+    dx: p.dx ?? 8,
+    dy: p.dy ?? -8,
+    hideDot: p.hideDot,
+  }));
+  return {
+    points: [...axes, ...points],
+    lines: [
+      { from: "OX1", to: "OX2", arrowEnd: true },
+      { from: "OY1", to: "OY2", arrowEnd: true },
+    ],
+    segments: segs,
+    freeLabels: [
+      { x: toX(range) + 10, y: toY(0) + 4, text: "x" },
+      { x: toX(0) - 6, y: toY(range) - 8, text: "y" },
+    ],
+  };
+}
+
 export default {
   meta: {
     id: "reperage-configurations-seconde",
@@ -510,6 +546,82 @@ export default {
     level: "seconde",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Repérage et configurations dans le plan",
+        branches: [
+          {
+            title: "Coordonnées d'un point",
+            items: [
+              "Dans un repère \\((O ; I, J)\\), un point A a des coordonnées \\((x_A ; y_A)\\) uniques.",
+              "Repère orthonormé : axes perpendiculaires et même unité — indispensable pour utiliser la formule de distance.",
+            ],
+            figure: buildCoursRepereFigure([{ id: "A", x: 3, y: 2 }]),
+          },
+          {
+            title: "Milieu d'un segment",
+            items: [
+              "Les coordonnées du milieu sont la moyenne des coordonnées des extrémités, pas leur somme.",
+            ],
+            formula: "\\(I\\left(\\dfrac{x_A+x_B}{2} ; \\dfrac{y_A+y_B}{2}\\right)\\)",
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 1, y: 1, dy: 10 },
+                { id: "B", x: 5, y: 3 },
+                { id: "I", x: 3, y: 2, dx: -14, dy: 10 },
+              ],
+              [{ from: "A", to: "B" }]
+            ),
+          },
+          {
+            title: "Distance entre deux points",
+            items: [
+              "C'est Pythagore appliqué au triangle rectangle formé par les écarts en x et en y.",
+              "Piège classique : ne pas oublier la racine carrée à la fin du calcul.",
+            ],
+            formula: "\\(AB = \\sqrt{(x_B-x_A)^2 + (y_B-y_A)^2}\\)",
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 1, y: 1, dy: 10 },
+                { id: "B", x: 5, y: 4 },
+                { id: "H", x: 5, y: 1, dy: 12 },
+              ],
+              [{ from: "A", to: "B" }, { from: "A", to: "H", dashed: true }, { from: "H", to: "B", dashed: true }]
+            ),
+          },
+          {
+            title: "Alignement de trois points",
+            items: [
+              "A, B, C alignés ⟺ les vecteurs \\(\\overrightarrow{AB}\\) et \\(\\overrightarrow{AC}\\) sont colinéaires (mêmes coordonnées proportionnelles).",
+            ],
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 0, y: 0, dx: -10, dy: 10 },
+                { id: "B", x: 2, y: 1, dy: 10 },
+                { id: "C", x: 4, y: 2 },
+              ],
+              [{ from: "A", to: "C" }]
+            ),
+          },
+          {
+            title: "Parallélogramme : milieu commun",
+            items: [
+              "ABCD est un parallélogramme ⟺ [AC] et [BD] ont le même milieu (les diagonales se coupent en leur milieu).",
+              "Le centre de gravité (isobarycentre) d'un triangle a pour coordonnées la moyenne des trois sommets.",
+            ],
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 0, y: 0, dx: -10, dy: 10 },
+                { id: "B", x: 4, y: 0, dy: 12 },
+                { id: "C", x: 5, y: 3 },
+                { id: "D", x: 1, y: 3, dx: -12, dy: -8 },
+              ],
+              [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "D" }, { from: "D", to: "A" }, { from: "A", to: "C", dashed: true }, { from: "B", to: "D", dashed: true }]
+            ),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

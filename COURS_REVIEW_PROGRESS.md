@@ -19,10 +19,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
 la Première techno et la Terminale Spé sont intégralement terminées.
-2 des 6 fichiers de Terminale techno sont relus
+3 des 6 fichiers de Terminale techno sont relus
 (suites-terminale-techno.js,
-fonctions-exponentielles-terminale-techno.js). Prochain fichier :
-logarithme-decimal-terminale-techno.js (Terminale techno).**
+fonctions-exponentielles-terminale-techno.js,
+logarithme-decimal-terminale-techno.js). Prochain fichier :
+statistiques-deux-variables-terminale-techno.js (Terminale techno).**
+
+`logarithme-decimal-terminale-techno.js` (Terminale techno) relu
+intégralement : 5 branches inchangées en nombre mais enrichies.
+Branche « Résoudre une équation » enrichie de 2 formules absentes :
+x=log(b)/log(a) pour a^x=b (seule une description en mots figurait) ;
+x=10^(log(b)/a) pour x^a=b (inconnue à la base, chapter dédié entier
+absent). Branche « Propriétés algébriques » enrichie : formule du
+quotient log(a/b)=log(a)-log(b) ajoutée pour compléter le triptyque
+annoncé par le titre. Aucun €, aucun candidat texTable, fichier sans
+figure.
 
 `fonctions-exponentielles-terminale-techno.js` (Terminale techno) relu
 intégralement : 3 branches inchangées en nombre mais enrichies.
@@ -1641,7 +1652,7 @@ vérifiés pour débordement.)
 ### Terminale techno
 - [x] suites-terminale-techno.js *(nouvelle branche « Moyenne arithmétique et moyenne géométrique » ajoutée, formule symbolique de la somme arithmétique ajoutée)*
 - [x] fonctions-exponentielles-terminale-techno.js *(effet du coefficient k dans x↦k×a^x sur le sens de variation ajouté)*
-- [ ] logarithme-decimal-terminale-techno.js
+- [x] logarithme-decimal-terminale-techno.js *(formules x=log(b)/log(a) et x=10^(log(b)/a) ajoutées, formule du quotient log(a/b) ajoutée)*
 - [ ] statistiques-deux-variables-terminale-techno.js
 - [ ] probabilites-conditionnelles-terminale-techno.js
 - [ ] variables-aleatoires-terminale-techno.js

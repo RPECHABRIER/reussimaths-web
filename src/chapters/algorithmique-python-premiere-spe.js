@@ -285,6 +285,16 @@ export default {
             title: "Calculer les termes d'une suite par script",
             items: [
               "Initialiser une variable avec le premier terme, puis la mettre à jour à chaque tour de boucle selon la relation de récurrence.",
+              "Deux schémas d'accumulation à reconnaître : total = total + i (somme, on part de 0) et total = total * i (produit, on part de 1) — le choix de la valeur initiale dépend de l'opération.",
+            ],
+          },
+          {
+            title: "Conditions et vocabulaire de base",
+            items: [
+              "Structure if / else : le bloc if s'exécute si la condition est vraie, sinon c'est le bloc else qui s'exécute.",
+              "\\(\\text{n \\% 2}\\) est le reste de la division de n par 2 : ce reste vaut 0 si et seulement si n est pair — le test de parité classique est \\(\\text{n \\% 2 == 0}\\).",
+              "L'instruction break interrompt immédiatement la boucle en cours, sans attendre la fin normale du parcours.",
+              "import random en début de programme donne accès aux fonctions de génération de nombres aléatoires (dont random()).",
             ],
           },
           {

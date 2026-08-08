@@ -339,6 +339,49 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 12,
+    cours: {
+      mindMap: {
+        title: "Calcul intégral",
+        branches: [
+          {
+            title: "Intégrale = aire algébrique",
+            items: [
+              "Se calcule avec une primitive F de f : différence des valeurs de F aux bornes.",
+              "Si f ⩾ 0 sur [a;b], l'intégrale est l'aire sous la courbe, en unités d'aire ; si f ⩽ 0, elle est négative.",
+            ],
+            formula: "\\(\\displaystyle\\int_a^b f(x)\\,dx = F(b)-F(a)\\)",
+          },
+          {
+            title: "Linéarité et relation de Chasles",
+            items: [
+              "Découper l'intervalle d'intégration en plusieurs morceaux (Chasles) ou séparer une somme (linéarité) simplifie souvent le calcul.",
+            ],
+            formula: "\\(\\displaystyle\\int_a^c f = \\int_a^b f + \\int_b^c f\\)",
+          },
+          {
+            title: "Signe et encadrement",
+            items: [
+              "Si \\(f \\leqslant g\\) sur [a;b], alors \\(\\int_a^b f \\leqslant \\int_a^b g\\).",
+              "Piège classique : inverser les bornes change le signe de l'intégrale.",
+            ],
+          },
+          {
+            title: "Aire entre deux courbes",
+            items: [
+              "L'aire entre les courbes de f et g sur [a;b] (avec \\(f \\geqslant g\\)) s'obtient en intégrant \\(f-g\\).",
+            ],
+            formula: "\\(\\mathcal{A} = \\displaystyle\\int_a^b (f(x)-g(x))\\,dx\\)",
+          },
+          {
+            title: "Valeur moyenne",
+            items: [
+              "C'est la « hauteur moyenne » de la courbe sur l'intervalle.",
+            ],
+            formula: "\\(m = \\dfrac{1}{b-a}\\displaystyle\\int_a^b f(x)\\,dx\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -49,11 +49,25 @@ Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
   Prompts d'exercices déjà tous courts et compacts, aucun candidat à
   `texTable()`.
 
-**Prochain fichier à traiter : `angles.js` (6e).** Puis
-`configurations-geometriques.js` et `organisation-gestion-donnees.js`
-(6e), puis le reste de la 5e, 4e, 3e dans cet ordre (périmètre de ce
-chantier = collège uniquement, voir consigne — 2nde/lycée hors scope pour
-l'instant).
+- `angles.js` : **vraies corrections**. Branche "Nature d'un angle"
+  reformulée : l'item qui entassait 4 définitions (aigu/droit/obtus/plat)
+  dans une seule puce a été éclaté en puces distinctes, et les natures
+  "nul" (0°) et "plein" (360°) — testées par `genNatureAngleQCM` et
+  `genClassifierAngleMulti` mais absentes du cours — ajoutées au piège
+  classique. Branche "Droites sécantes" (renommée "Deux droites qui se
+  croisent") reformulée pour partir d'une image concrète (angles côte à
+  côte / droites qui se croisent) avant d'énoncer la règle
+  (supplémentaires / opposés par le sommet), le terme "sécantes" n'étant
+  auparavant jamais expliqué. Branches Bissectrice et Angles d'un triangle :
+  RAS. Figures toutes correctes (angles/triangles construits aux bonnes
+  proportions, pas de chevauchement), pas de droite orientée à corriger
+  (rayons d'angle, pas d'axes gradués). Prompts d'exercices déjà courts,
+  aucun candidat à `texTable()`.
+
+**Prochain fichier à traiter : `configurations-geometriques.js` (6e).**
+Puis `organisation-gestion-donnees.js` (6e), puis le reste de la 5e, 4e,
+3e dans cet ordre (périmètre de ce chantier = collège uniquement, voir
+consigne — 2nde/lycée hors scope pour l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -154,7 +168,7 @@ vérifiés pour débordement.)
 - [x] operations-decimaux.js *(déjà bon, RAS)*
 - [x] grandeurs-mesures.js *(déjà bon, RAS)*
 - [x] distances-symetries.js *(formule diamètre/rayon enveloppée en \text{}, sinon déjà bon)*
-- [ ] angles.js
+- [x] angles.js *(item "nature d'un angle" éclaté en puces + nul/plein ajoutés, branche "droites sécantes" reformulée)*
 - [ ] configurations-geometriques.js
 - [ ] organisation-gestion-donnees.js
 

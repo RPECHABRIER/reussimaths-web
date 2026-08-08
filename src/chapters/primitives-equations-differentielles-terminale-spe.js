@@ -367,8 +367,9 @@ export default {
             title: "Primitives usuelles",
             items: [
               "Une primitive F de f vérifie \\(F'=f\\) ; il en existe une infinité, qui diffèrent toutes d'une constante.",
+              "Pour cos(ax+b) et sin(ax+b), on retrouve la primitive en pensant à la dérivée qui redonnerait la fonction de départ (avec le changement de signe propre à sin).",
             ],
-            formula: "\\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+k,\\quad \\int e^{ax+b}\\,dx = \\dfrac{1}{a}e^{ax+b}+k\\)",
+            formula: "\\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+k,\\quad \\int e^{ax+b}\\,dx = \\dfrac{1}{a}e^{ax+b}+k,\\quad \\int \\cos(ax+b)\\,dx = \\dfrac{1}{a}\\sin(ax+b)+k,\\quad \\int \\sin(ax+b)\\,dx = -\\dfrac{1}{a}\\cos(ax+b)+k\\)",
           },
           {
             title: "Déterminer la constante",
@@ -388,6 +389,7 @@ export default {
             title: "Équation différentielle y'=ay+b",
             items: [
               "On cherche d'abord la solution constante \\(y=-\\frac{b}{a}\\), puis on ajoute la solution générale de \\(y'=ay\\).",
+              "Si F et G sont deux solutions de \\(y'=ay+b\\), alors leur différence F−G est solution de l'équation homogène \\(y'=ay\\) (les termes en b s'annulent).",
             ],
             formula: "\\(y'=ay+b \\iff y(x) = Ce^{ax}-\\dfrac{b}{a}\\)",
           },

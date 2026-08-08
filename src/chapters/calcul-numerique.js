@@ -297,6 +297,51 @@ export default {
     level: "cinquieme",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Opérations sur les nombres",
+        branches: [
+          {
+            title: "Priorités opératoires",
+            items: [
+              "Dans une expression sans parenthèses : multiplications et divisions d'abord, puis additions et soustractions.",
+              "Avec parenthèses : on calcule toujours ce qu'il y a à l'intérieur en premier.",
+              "Piège classique : calculer de gauche à droite sans respecter les priorités.",
+            ],
+            formula: "\\(2 + 3 \\times 4 = 2 + 12 = 14\\)",
+          },
+          {
+            title: "Nommer un calcul",
+            items: [
+              "La dernière opération effectuée (en respectant les priorités) donne le nom de l'expression.",
+              "\\(a + b \\times c\\) est une somme ; \\((a + b) \\times c\\) est un produit.",
+            ],
+          },
+          {
+            title: "Distributivité",
+            items: [
+              "\\(k \\times (a + b) = k \\times a + k \\times b\\) : on peut développer ou factoriser.",
+              "Utile pour calculer astucieusement en regroupant un facteur commun.",
+            ],
+            formula: "\\(k \\times (a + b) = k \\times a + k \\times b\\)",
+          },
+          {
+            title: "Programme de calcul",
+            items: [
+              "On applique les étapes dans l'ordre donné, une par une.",
+              "Pour retrouver le nombre de départ, on fait les opérations inverses en partant de la fin.",
+            ],
+          },
+          {
+            title: "Choisir la bonne opération",
+            items: [
+              "Regrouper en parts égales → division. Répéter un même prix/une même quantité → multiplication.",
+              "Réunir deux quantités → addition. Ce qu'il reste après avoir retiré → soustraction.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

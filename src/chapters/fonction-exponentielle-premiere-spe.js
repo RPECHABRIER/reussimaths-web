@@ -346,7 +346,7 @@ export default {
               "Ce sont les mêmes règles que pour les puissances : transformer un produit en somme d'exposants, et inversement.",
               "\\(\\exp(0) = 1\\), et \\(\\exp(x) > 0\\) pour tout x.",
             ],
-            formula: "\\(e^{a+b}=e^a e^b,\\quad e^{a-b}=\\dfrac{e^a}{e^b},\\quad (e^a)^n=e^{na}\\)",
+            formula: "\\(e^{a+b}=e^a e^b\\), \\(e^{a-b}=\\dfrac{e^a}{e^b}\\), \\((e^a)^n=e^{na}\\)",
           },
           {
             title: "Signe et sens de variation",
@@ -376,7 +376,7 @@ export default {
               "Le signe du coefficient \\(k\\) donne le comportement : \\(k>0\\) → croissance exponentielle, \\(k<0\\) → décroissance exponentielle (piège classique : ne pas confondre le signe de \\(k\\) avec celui de \\(C_0\\)).",
               "Exemples : capital qui rapporte des intérêts (k>0), population qui croît (k>0), substance radioactive qui se désintègre (k<0).",
             ],
-            formula: "\\(f(t)=C_0 e^{kt},\\quad f(0)=C_0\\)",
+            formula: "\\(f(t)=C_0 e^{kt}\\), \\(f(0)=C_0\\)",
           },
         ],
       },

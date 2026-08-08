@@ -234,7 +234,7 @@ export default {
             items: [
               "Transforme un produit en somme, une puissance en produit — même logique que le ln.",
             ],
-            formula: "\\(\\log(ab)=\\log a+\\log b,\\quad \\log\\left(\\dfrac{a}{b}\\right)=\\log a-\\log b,\\quad \\log(a^n)=n\\log a\\)",
+            formula: "\\(\\log(ab)=\\log a+\\log b\\), \\(\\log\\left(\\dfrac{a}{b}\\right)=\\log a-\\log b\\), \\(\\log(a^n)=n\\log a\\)",
           },
           {
             title: "Sens de variation",

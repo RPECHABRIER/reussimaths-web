@@ -403,7 +403,7 @@ export default {
               "\\(f'(a)\\) est la limite du taux de variation quand h tend vers 0 ; c'est le coefficient directeur de la tangente en a.",
               "Toute fonction n'est pas dérivable partout : point anguleux (ex. valeur absolue en 0, plusieurs tangentes possibles) ou tangente verticale (ex. racine carrée en 0, coefficient directeur infini) → pas de nombre dérivé en ce point.",
             ],
-            formula: "\\(f'(a) = \\displaystyle\\lim_{h \\to 0} \\dfrac{f(a+h)-f(a)}{h},\\quad y=f'(a)(x-a)+f(a)\\)",
+            formula: "\\(f'(a) = \\displaystyle\\lim_{h \\to 0} \\dfrac{f(a+h)-f(a)}{h}\\), \\(y=f'(a)(x-a)+f(a)\\)",
           },
           {
             title: "Approximation linéaire",
@@ -418,7 +418,7 @@ export default {
               "Piège classique : la dérivée de \\(\\frac{1}{x}\\) est négative alors que \\(x^n\\) et \\(\\sqrt{x}\\) ont une dérivée positive sur leur domaine.",
               "La dérivée d'une fonction constante est toujours nulle (piège classique : ce n'est PAS la constante elle-même).",
             ],
-            formula: "\\((x^n)'=nx^{n-1},\\quad \\left(\\dfrac{1}{x}\\right)'=-\\dfrac{1}{x^2},\\quad (\\sqrt{x})'=\\dfrac{1}{2\\sqrt{x}}\\)",
+            formula: "\\((x^n)'=nx^{n-1}\\), \\(\\left(\\dfrac{1}{x}\\right)'=-\\dfrac{1}{x^2}\\), \\((\\sqrt{x})'=\\dfrac{1}{2\\sqrt{x}}\\)",
           },
           {
             title: "Opérations : somme, produit, quotient",
@@ -426,7 +426,7 @@ export default {
               "La dérivée d'une somme est la somme des dérivées (on dérive terme à terme).",
               "Piège classique très fréquent : la dérivée d'un produit n'est PAS le produit des dérivées.",
             ],
-            formula: "\\((u+v)'=u'+v',\\quad (uv)'=u'v+uv',\\quad \\left(\\dfrac{u}{v}\\right)'=\\dfrac{u'v-uv'}{v^2}\\)",
+            formula: "\\((u+v)'=u'+v'\\), \\((uv)'=u'v+uv'\\), \\(\\left(\\dfrac{u}{v}\\right)'=\\dfrac{u'v-uv'}{v^2}\\)",
           },
           {
             title: "Signe de f' et sens de variation",
@@ -435,7 +435,7 @@ export default {
               "En un extremum local où f est dérivable, la tangente est horizontale : \\(f'(a)=0\\).",
               "Piège classique : la réciproque est fausse en général — \\(f'(a)=0\\) n'implique pas toujours un extremum (ex. \\(f(x)=x^3\\) en 0, point d'inflexion).",
             ],
-            formula: "\\(f'>0 \\Rightarrow f \\nearrow,\\quad f'<0 \\Rightarrow f \\searrow,\\quad \\text{extremum local en } a \\Rightarrow f'(a)=0\\)",
+            formula: "\\(f'>0 \\Rightarrow f \\nearrow\\), \\(f'<0 \\Rightarrow f \\searrow\\), \\(\\text{extremum local en } a \\Rightarrow f'(a)=0\\)",
           },
           {
             title: "Dérivée d'une composée affine",

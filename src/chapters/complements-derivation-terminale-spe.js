@@ -386,7 +386,7 @@ export default {
               "Rappel de la dérivée d'un produit, souvent combinée avec ces formules : \\((uv)'=u'v+uv'\\).",
               "Domaine de dérivabilité : \\(\\sqrt{u}\\) n'est dérivable que là où \\(u\\) est STRICTEMENT positive (pas seulement positive ou nulle) — en un point où \\(u=0\\), la tangente devient verticale et f n'y est pas dérivable.",
             ],
-            formula: "\\((u^n)'=nu'u^{n-1},\\quad (\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}},\\quad (e^u)'=u'e^u\\)",
+            formula: "\\((u^n)'=nu'u^{n-1}\\), \\((\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}}\\), \\((e^u)'=u'e^u\\)",
           },
           {
             title: "Dérivée seconde",

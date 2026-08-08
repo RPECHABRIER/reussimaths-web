@@ -561,7 +561,7 @@ export default {
               "Distance entre deux points : même formule que la norme du vecteur qui les relie.",
               "H, projeté orthogonal de M sur le plan, est le point du plan le plus proche de M.",
             ],
-            formula: "\\(AB = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2+(z_B-z_A)^2},\\quad d(M,P) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}}\\)",
+            formula: "\\(AB = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2+(z_B-z_A)^2}\\), \\(d(M,P) = \\dfrac{|ax_M+by_M+cz_M+d|}{\\sqrt{a^2+b^2+c^2}}\\)",
             figure: buildCoursDistancePlanFigure(),
           },
         ],

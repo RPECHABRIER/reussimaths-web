@@ -369,7 +369,7 @@ export default {
               "Une primitive F de f vérifie \\(F'=f\\) ; il en existe une infinité, qui diffèrent toutes d'une constante.",
               "Pour cos(ax+b) et sin(ax+b), on retrouve la primitive en pensant à la dérivée qui redonnerait la fonction de départ (avec le changement de signe propre à sin).",
             ],
-            formula: "\\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+k,\\quad \\int e^{ax+b}\\,dx = \\dfrac{1}{a}e^{ax+b}+k,\\quad \\int \\cos(ax+b)\\,dx = \\dfrac{1}{a}\\sin(ax+b)+k,\\quad \\int \\sin(ax+b)\\,dx = -\\dfrac{1}{a}\\cos(ax+b)+k\\)",
+            formula: "\\(\\int x^n\\,dx = \\dfrac{x^{n+1}}{n+1}+k\\), \\(\\int e^{ax+b}\\,dx = \\dfrac{1}{a}e^{ax+b}+k\\), \\(\\int \\cos(ax+b)\\,dx = \\dfrac{1}{a}\\sin(ax+b)+k\\), \\(\\int \\sin(ax+b)\\,dx = -\\dfrac{1}{a}\\cos(ax+b)+k\\)",
           },
           {
             title: "Déterminer la constante",

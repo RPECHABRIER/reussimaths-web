@@ -539,7 +539,7 @@ export default {
               "Signes différents : le résultat a le signe du nombre le plus « loin » de 0, et on soustrait les distances. Exemple : \\((-3) + 5 = +2\\) (5 est plus loin de 0 que 3).",
               "Soustraire un nombre revient à ajouter son opposé : \\(7 - (+3) = 7 + (-3) = 4\\).",
             ],
-            formula: "\\((-3) + (-5) = -8 \\quad ; \\quad (-3) + 5 = +2\\)",
+            formula: "\\((-3) + (-5) = -8\\), \\((-3) + 5 = +2\\)",
           },
           {
             title: "Multiplier, diviser",
@@ -548,7 +548,7 @@ export default {
               "Avec plusieurs facteurs : le produit est positif si le nombre de facteurs négatifs est pair, négatif s'il est impair.",
               "Piège classique : un carré \\((-n)^2\\) est toujours positif, ce n'est pas le cas de \\(-n^2\\).",
             ],
-            formula: "\\((-4) \\times (-3) = 12 \\quad ; \\quad (-4) \\times 3 = -12\\)",
+            formula: "\\((-4) \\times (-3) = 12\\), \\((-4) \\times 3 = -12\\)",
           },
           {
             title: "Priorités opératoires",

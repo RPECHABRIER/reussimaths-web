@@ -556,7 +556,7 @@ export default {
               "La norme se calcule avec Pythagore, comme une distance.",
               "Pour comparer deux normes sans calculer de racine carrée, il suffit de comparer leurs carrés.",
             ],
-            formula: "\\(\\overrightarrow{AB}\\begin{pmatrix}x_B-x_A\\\\y_B-y_A\\end{pmatrix},\\ \\|\\overrightarrow{AB}\\| = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2}\\)",
+            formula: "\\(\\overrightarrow{AB}\\begin{pmatrix}x_B-x_A\\\\y_B-y_A\\end{pmatrix}\\), \\(\\|\\overrightarrow{AB}\\| = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2}\\)",
             figure: buildCoursVecteurFigure(
               [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "B", x: 5, y: 3 }, { id: "H", x: 5, y: 0, hideDot: true, hideLabel: true }],
               [{ from: "A", to: "B" }],
@@ -602,7 +602,7 @@ export default {
             items: [
               "M est le milieu de \\([AB]\\) si et seulement si \\(\\overrightarrow{AM} = \\overrightarrow{MB}\\) (même vecteur, donc même direction, même sens et même longueur).",
             ],
-            formula: "\\(\\overrightarrow{AM}=\\overrightarrow{MB} \\iff x_M = \\dfrac{x_A+x_B}{2},\\ y_M = \\dfrac{y_A+y_B}{2}\\)",
+            formula: "\\(\\overrightarrow{AM}=\\overrightarrow{MB} \\iff x_M = \\dfrac{x_A+x_B}{2}\\), \\(y_M = \\dfrac{y_A+y_B}{2}\\)",
             figure: buildCoursVecteurFigure(
               [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "M", x: 2, y: 1, dy: 10 }, { id: "B", x: 4, y: 2 }],
               [{ from: "A", to: "M" }, { from: "M", to: "B" }]

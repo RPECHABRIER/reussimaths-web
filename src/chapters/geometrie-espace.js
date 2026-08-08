@@ -582,7 +582,7 @@ export default {
               "Cylindre de révolution : π × rayon² × hauteur.",
               "Autrement dit : Volume = aire de la base × hauteur — cette même règle vaut pour tout prisme droit, même à base triangulaire.",
             ],
-            formula: "\\(V_{pavé} = L \\times l \\times h \\quad ; \\quad V_{cylindre} = \\pi r^2 h\\)",
+            formula: "\\(V_{pavé} = L \\times l \\times h\\), \\(V_{cylindre} = \\pi r^2 h\\)",
             figure: buildCylindreFigure(),
           },
           {

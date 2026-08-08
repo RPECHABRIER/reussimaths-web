@@ -529,7 +529,7 @@ export default {
               "Milieu I du segment [AB] : on fait la moyenne des coordonnées de A et de B, composante par composante.",
               "Somme de deux vecteurs : on additionne leurs coordonnées composante par composante. Relation de Chasles : \\(\\overrightarrow{AC}=\\overrightarrow{AB}+\\overrightarrow{BC}\\).",
             ],
-            formula: "\\(\\overrightarrow{AB}(x_B-x_A;y_B-y_A;z_B-z_A),\\quad I\\left(\\dfrac{x_A+x_B}{2};\\dfrac{y_A+y_B}{2};\\dfrac{z_A+z_B}{2}\\right),\\quad \\|\\overrightarrow{OM}\\| = \\sqrt{x^2+y^2+z^2}\\)",
+            formula: "\\(\\overrightarrow{AB}(x_B-x_A;y_B-y_A;z_B-z_A)\\), \\(I\\left(\\dfrac{x_A+x_B}{2};\\dfrac{y_A+y_B}{2};\\dfrac{z_A+z_B}{2}\\right)\\), \\(\\|\\overrightarrow{OM}\\| = \\sqrt{x^2+y^2+z^2}\\)",
             figure: buildCoursReperEspaceFigure(),
           },
           {

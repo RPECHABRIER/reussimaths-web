@@ -88,7 +88,7 @@ export default function MindMap({ mindMap }) {
               {branch.formula && (
                 <div
                   className="mt-3 rounded-xl px-3 py-2 text-center text-sm"
-                  style={{ backgroundColor: `${color}14`, color: colors.ink }}
+                  style={{ backgroundColor: `${color}14`, color: colors.ink, maxWidth: "100%", overflowX: "auto" }}
                 >
                   <MathText text={branch.formula} />
                 </div>

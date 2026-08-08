@@ -620,7 +620,7 @@ export default {
               "L'écart type mesure la dispersion autour de la moyenne : plus il est grand, plus les valeurs sont étalées.",
               "Linéarité de la moyenne : si toutes les valeurs d'une série varient de la même quantité, la moyenne varie de cette même quantité.",
             ],
-            formula: "\\(\\bar{x} = \\dfrac{\\text{somme des valeurs}}{\\text{effectif}} \\quad ; \\quad \\sigma = \\sqrt{\\text{moyenne des carrés des écarts à la moyenne}}\\)",
+            formula: "\\(\\bar{x} = \\dfrac{\\text{somme des valeurs}}{\\text{effectif}}\\), \\(\\sigma = \\sqrt{\\text{moyenne des carrés des écarts à la moyenne}}\\)",
           },
           {
             title: "Regroupement par classes",

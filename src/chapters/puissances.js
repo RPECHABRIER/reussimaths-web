@@ -247,7 +247,7 @@ export default {
               "Le cube d'un nombre, c'est ce nombre écrit trois fois en facteur : \\(5^3 = 5 \\times 5 \\times 5 = 125\\).",
               "Piège classique : \\(n^2\\) n'est pas \\(n \\times 2\\), mais \\(n \\times n\\).",
             ],
-            formula: "\\(n^2 = n \\times n \\quad ; \\quad n^3 = n \\times n \\times n\\)",
+            formula: "\\(n^2 = n \\times n\\), \\(n^3 = n \\times n \\times n\\)",
           },
           {
             title: "Puissances de dix",

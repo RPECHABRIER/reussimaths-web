@@ -371,7 +371,7 @@ export default {
               "Transforme un produit en somme, un quotient en différence — exactement l'inverse de l'exponentielle : \\(\\mathrm{e}^{\\ln a}=a\\) (pour a>0) et \\(\\ln(\\mathrm{e}^k)=k\\) (pour tout réel k).",
               "Piège classique : \\(\\ln(a^2)=2\\ln(a)\\) n'est vrai que si a>0. Pour a réel non nul quelconque, la formule correcte est \\(\\ln(a^2)=2\\ln(|a|)\\).",
             ],
-            formula: "\\(\\ln(ab)=\\ln a+\\ln b,\\quad \\ln\\left(\\dfrac{a}{b}\\right)=\\ln a-\\ln b,\\quad \\ln(a^n)=n\\ln a\\)",
+            formula: "\\(\\ln(ab)=\\ln a+\\ln b\\), \\(\\ln\\left(\\dfrac{a}{b}\\right)=\\ln a-\\ln b\\), \\(\\ln(a^n)=n\\ln a\\)",
           },
           {
             title: "Signe et sens de variation",
@@ -383,7 +383,7 @@ export default {
           {
             title: "Dérivée",
             items: [],
-            formula: "\\((\\ln x)' = \\dfrac{1}{x},\\quad (\\ln u)' = \\dfrac{u'}{u}\\)",
+            formula: "\\((\\ln x)' = \\dfrac{1}{x}\\), \\((\\ln u)' = \\dfrac{u'}{u}\\)",
           },
           {
             title: "Limites usuelles",

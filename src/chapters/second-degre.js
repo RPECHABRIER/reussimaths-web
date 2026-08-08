@@ -520,7 +520,7 @@ export default {
               "Passer d'une forme à l'autre sans discriminant : reconnaître une identité remarquable, ex. \\((A+B)^2=A^2+2AB+B^2\\) pour développer, \\(A^2-B^2=(A-B)(A+B)\\) pour factoriser.",
               "Une équation déjà sous forme factorisée se résout par la règle du produit nul : \\(A \\times B = 0 \\Leftrightarrow A = 0 \\text{ ou } B = 0\\).",
             ],
-            formula: "\\(\\alpha = -\\dfrac{b}{2a},\\quad \\beta = f(\\alpha)\\)",
+            formula: "\\(\\alpha = -\\dfrac{b}{2a}\\), \\(\\beta = f(\\alpha)\\)",
           },
           {
             title: "Discriminant et racines",
@@ -529,7 +529,7 @@ export default {
               "Piège classique : oublier le \\(2a\\) au dénominateur ou une erreur de signe devant b.",
               "Si le trinôme est au dénominateur d'un quotient, ses racines sont exactement les valeurs interdites (ensemble de définition = \\(\\mathbb{R}\\) privé des racines).",
             ],
-            formula: "\\(\\Delta = b^2-4ac,\\quad x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)",
+            formula: "\\(\\Delta = b^2-4ac\\), \\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)",
           },
           {
             title: "Signe du trinôme",

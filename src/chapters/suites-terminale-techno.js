@@ -281,14 +281,14 @@ export default {
             items: [
               "Arithmétique : on ajoute la raison r à chaque étape. Géométrique : on multiplie par la raison q.",
             ],
-            formula: "\\(u_n=u_0+rn,\\quad u_n=u_0 \\times q^n\\)",
+            formula: "\\(u_n=u_0+rn\\), \\(u_n=u_0 \\times q^n\\)",
           },
           {
             title: "Somme des n premiers termes",
             items: [
               "Somme arithmétique = (nombre de termes) × (premier terme + dernier terme) / 2.",
             ],
-            formula: "\\(u_0+u_1+\\cdots+u_n = (n+1) \\times \\dfrac{u_0+u_n}{2},\\quad u_0+u_0q+\\cdots+u_0q^{n-1} = u_0 \\times \\dfrac{1-q^n}{1-q}\\ (q \\neq 1)\\)",
+            formula: "\\(u_0+u_1+\\cdots+u_n = (n+1) \\times \\dfrac{u_0+u_n}{2}\\), \\(u_0+u_0q+\\cdots+u_0q^{n-1} = u_0 \\times \\dfrac{1-q^n}{1-q}\\ (q \\neq 1)\\)",
           },
           {
             title: "Prouver la nature d'une suite",

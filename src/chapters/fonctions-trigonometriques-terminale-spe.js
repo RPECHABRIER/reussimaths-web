@@ -409,7 +409,7 @@ export default {
               "Piège classique : les dérivées de sin et cos s'échangent, avec un changement de signe pour cos.",
               "Pour une composée affine \\(\\sin(ax+b)\\) ou \\(\\cos(ax+b)\\), on multiplie par la dérivée de l'intérieur (a) : \\((\\sin(ax+b))'=a\\cos(ax+b)\\), \\((\\cos(ax+b))'=-a\\sin(ax+b)\\).",
             ],
-            formula: "\\((\\sin x)'=\\cos x,\\quad (\\cos x)'=-\\sin x\\)",
+            formula: "\\((\\sin x)'=\\cos x\\), \\((\\cos x)'=-\\sin x\\)",
           },
           {
             title: "Limites remarquables en 0",
@@ -439,7 +439,7 @@ export default {
               "\\(\\cos(\\pi-x)=-\\cos x\\), \\(\\sin(\\pi-x)=\\sin x\\), \\(\\cos(\\frac{\\pi}{2}-x)=\\sin x\\).",
               "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a+\\cos b\\) — il faut utiliser les vraies formules d'addition.",
             ],
-            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b,\\quad \\sin(a+b)=\\sin a\\cos b+\\cos a\\sin b\\)",
+            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b\\), \\(\\sin(a+b)=\\sin a\\cos b+\\cos a\\sin b\\)",
           },
         ],
       },

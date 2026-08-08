@@ -231,7 +231,7 @@ export default {
             items: [
               "Ce sont les mêmes règles que pour les puissances de nombres.",
             ],
-            formula: "\\(a^{x+y}=a^x \\times a^y,\\quad a^{-x}=\\dfrac{1}{a^x},\\quad (a^x)^y=a^{xy}\\)",
+            formula: "\\(a^{x+y}=a^x \\times a^y\\), \\(a^{-x}=\\dfrac{1}{a^x}\\), \\((a^x)^y=a^{xy}\\)",
           },
           {
             title: "Sens de variation et allure",

@@ -295,7 +295,7 @@ export default {
               "Dérivée de kf (un multiple d'une fonction) : on multiplie simplement la dérivée par k.",
               "Piège classique : dériver un polynôme terme à terme, sans oublier de baisser chaque exposant.",
             ],
-            formula: "\\((ax^n)'=nax^{n-1},\\quad (kf)'=kf'\\)",
+            formula: "\\((ax^n)'=nax^{n-1}\\), \\((kf)'=kf'\\)",
           },
           {
             title: "Équation de la tangente",

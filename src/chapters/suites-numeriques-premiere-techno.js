@@ -357,7 +357,7 @@ export default {
               "On ajoute toujours la même raison r. Le nuage de points \\((n ; u_n)\\) est aligné.",
               "Sens de variation : croissante si \\(r>0\\), décroissante si \\(r<0\\) (constante si \\(r=0\\)).",
             ],
-            formula: "\\(u_{n+1}=u_n+r,\\quad u_n=u_0+rn\\)",
+            formula: "\\(u_{n+1}=u_n+r\\), \\(u_n=u_0+rn\\)",
           },
           {
             title: "Suite géométrique",
@@ -366,7 +366,7 @@ export default {
               "Sens de variation (termes positifs) : croissante si \\(q>1\\), décroissante si \\(0<q<1\\).",
               "Piège classique : ne pas confondre les deux formules — l'une additionne, l'autre multiplie.",
             ],
-            formula: "\\(u_{n+1}=q \\times u_n,\\quad u_n=u_0 \\times q^n\\)",
+            formula: "\\(u_{n+1}=q \\times u_n\\), \\(u_n=u_0 \\times q^n\\)",
           },
           {
             title: "Reconnaître une croissance linéaire ou exponentielle",

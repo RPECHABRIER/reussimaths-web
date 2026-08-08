@@ -381,14 +381,14 @@ export default {
             items: [
               "Si \\(S_n = X_1+\\cdots+X_n\\) avec les \\(X_i\\) i.i.d. de même loi que X.",
             ],
-            formula: "\\(E(S_n)=nE(X),\\quad V(S_n)=nV(X)\\)",
+            formula: "\\(E(S_n)=nE(X)\\), \\(V(S_n)=nV(X)\\)",
           },
           {
             title: "Variable affine aX+b",
             items: [
               "Piège classique : le b disparaît dans la variance (translater ne change pas la dispersion).",
             ],
-            formula: "\\(E(aX+b)=aE(X)+b,\\quad V(aX+b)=a^2V(X)\\)",
+            formula: "\\(E(aX+b)=aE(X)+b\\), \\(V(aX+b)=a^2V(X)\\)",
           },
         ],
       },

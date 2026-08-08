@@ -543,7 +543,7 @@ export default {
               "Un tour complet = \\(2\\pi\\) rad = 360°.",
               "La longueur d'un arc de cercle de rayon r correspondant à un angle θ (en radians) se calcule directement, sans passer par les degrés.",
             ],
-            formula: "\\(\\text{angle (rad)} = \\text{angle (°)} \\times \\dfrac{\\pi}{180},\\quad \\ell = r \\times \\theta\\)",
+            formula: "\\(\\text{angle (rad)} = \\text{angle (°)} \\times \\dfrac{\\pi}{180}\\), \\(\\ell = r \\times \\theta\\)",
             figure: buildCoursCercleFigure(),
           },
           {
@@ -564,7 +564,7 @@ export default {
               "\\(\\pi + x\\) (symétrique par rapport à l'origine) : le cosinus ET le sinus changent de signe.",
               "Signe selon le quadrant du cercle trigonométrique : cos positif à droite (quadrants 1 et 4), sin positif en haut (quadrants 1 et 2).",
             ],
-            formula: "\\(\\cos(-x)=\\cos(x),\\ \\sin(-x)=-\\sin(x)\\quad;\\quad\\cos(\\pi-x)=-\\cos(x),\\ \\sin(\\pi-x)=\\sin(x)\\quad;\\quad\\cos(\\pi+x)=-\\cos(x),\\ \\sin(\\pi+x)=-\\sin(x)\\)",
+            formula: "\\(\\cos(-x)=\\cos(x),\\ \\sin(-x)=-\\sin(x)\\), \\(\\cos(\\pi-x)=-\\cos(x),\\ \\sin(\\pi-x)=\\sin(x)\\), \\(\\cos(\\pi+x)=-\\cos(x),\\ \\sin(\\pi+x)=-\\sin(x)\\)",
           },
           {
             title: "Lien avec le triangle rectangle",
@@ -578,7 +578,7 @@ export default {
             items: [
               "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a + \\cos b\\).",
             ],
-            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b,\\quad \\sin(2a)=2\\sin a\\cos a\\)",
+            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b\\), \\(\\sin(2a)=2\\sin a\\cos a\\)",
           },
           {
             title: "Résoudre \\(\\cos(x)=a\\) ou \\(\\sin(x)=a\\)",

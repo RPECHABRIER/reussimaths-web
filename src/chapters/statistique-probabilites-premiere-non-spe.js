@@ -601,7 +601,7 @@ export default {
               "Méthode des points extrêmes : la droite passe par le premier et le dernier point du nuage.",
               "Une prédiction par extrapolation reste fragile : elle suppose que la tendance se poursuit au-delà des données observées.",
             ],
-            formula: "\\(a = \\dfrac{y_n-y_1}{x_n-x_1}\\, ; \\quad b = y_1 - a x_1\\)",
+            formula: "\\(a = \\dfrac{y_n-y_1}{x_n-x_1}\\, ;\\), \\(b = y_1 - a x_1\\)",
           },
         ],
       },

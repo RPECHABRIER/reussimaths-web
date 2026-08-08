@@ -356,7 +356,7 @@ export default {
             items: [
               "Découper l'intervalle d'intégration en plusieurs morceaux (Chasles) ou séparer une somme (linéarité) simplifie souvent le calcul.",
             ],
-            formula: "\\(\\displaystyle\\int_a^c f = \\int_a^b f + \\int_b^c f,\\quad \\int_a^b [kf(x)+g(x)]\\,dx = k\\int_a^b f(x)\\,dx + \\int_a^b g(x)\\,dx\\)",
+            formula: "\\(\\displaystyle\\int_a^c f = \\int_a^b f + \\int_b^c f\\), \\(\\int_a^b [kf(x)+g(x)]\\,dx = k\\int_a^b f(x)\\,dx + \\int_a^b g(x)\\,dx\\)",
           },
           {
             title: "Signe et encadrement",

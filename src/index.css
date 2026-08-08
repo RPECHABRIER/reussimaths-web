@@ -26,3 +26,22 @@ body {
   max-width: 100%;
   padding-bottom: 2px;
 }
+
+/* Filet de sécurité pour les formules EN LIGNE (\( ... \), rendues par
+   MathText/KaTeX un peu partout : cartes "formula" du Cours, énoncés
+   d'exercice, étapes de correction, options de QCM...). Une formule LaTeX
+   est un bloc non-sécable : si son contenu (plusieurs sous-formules
+   accolées, une fraction/racine large, etc.) est plus large que son
+   conteneur, sans cette règle elle déborde purement et simplement du cadre
+   voire de l'écran sur mobile (bug remonté par capture d'écran, formule
+   coupée net par le bord du téléphone). En rendant .katex-html
+   scrollable horizontalement au lieu de la laisser déborder, la formule
+   reste entièrement lisible (glisser le doigt dessus) sans jamais casser
+   la mise en page de la carte qui la contient. */
+.katex-html {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}

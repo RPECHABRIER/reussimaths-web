@@ -515,14 +515,14 @@ export default {
               "La formule de König-Huygens évite de calculer les écarts à la moyenne un par un.",
               "L'écart-type (racine carrée de la variance) s'exprime dans la même unité que X, contrairement à la variance.",
             ],
-            formula: "\\(V(X) = E(X^2) - [E(X)]^2,\\quad \\sigma(X) = \\sqrt{V(X)}\\)",
+            formula: "\\(V(X) = E(X^2) - [E(X)]^2\\), \\(\\sigma(X) = \\sqrt{V(X)}\\)",
           },
           {
             title: "Linéarité de l'espérance",
             items: [
               "Piège classique : la variance ne suit pas la même règle que l'espérance (le carré de a intervient).",
             ],
-            formula: "\\(E(aX+b) = aE(X)+b,\\quad V(aX+b) = a^2V(X)\\)",
+            formula: "\\(E(aX+b) = aE(X)+b\\), \\(V(aX+b) = a^2V(X)\\)",
           },
           {
             title: "Loi binomiale B(n,p)",
@@ -530,7 +530,7 @@ export default {
               "Compte le nombre de succès sur n répétitions indépendantes d'une épreuve de Bernoulli de paramètre p.",
               "Cas extrêmes faciles à calculer sans coefficient binomial : aucun succès (échec à chaque fois), ou succès à chaque fois.",
             ],
-            formula: "\\(E(X)=np,\\quad V(X)=np(1-p)\\quad;\\quad P(X=0)=(1-p)^n,\\ P(X=n)=p^n\\)",
+            formula: "\\(E(X)=np\\), \\(V(X)=np(1-p)\\), \\(P(X=0)=(1-p)^n,\\ P(X=n)=p^n\\)",
           },
         ],
       },

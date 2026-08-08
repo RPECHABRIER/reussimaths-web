@@ -533,7 +533,7 @@ export default {
               "Une droite horizontale (parallèle à l'axe des abscisses) a une équation \\(y = k\\) : tous ses points ont la même ordonnée k.",
               "Dans \\(ax+by+c=0\\) : \\(b=0\\) donne une droite verticale, \\(a=0\\) donne une droite horizontale.",
             ],
-            formula: "\\(x=k \\text{ (verticale)} \\quad y=k \\text{ (horizontale)}\\)",
+            formula: "\\(x=k \\text{ (verticale)}\\), \\(y=k \\text{ (horizontale)}\\)",
             figure: buildCoursDroiteFigure(
               [
                 { id: "V1", x: 2, y: -1, hideDot: true, hideLabel: true },

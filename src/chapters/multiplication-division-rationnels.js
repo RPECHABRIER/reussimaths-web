@@ -431,7 +431,7 @@ export default {
               "L'inverse échange numérateur et dénominateur, et vérifie \\(\\frac{a}{b} \\times \\frac{b}{a} = 1\\).",
               "Piège classique : confondre opposé et inverse, surtout quand le nombre est négatif.",
             ],
-            formula: "\\(\\text{opposé de } \\dfrac{2}{3} = -\\dfrac{2}{3} \\quad ; \\quad \\text{inverse de } \\dfrac{2}{3} = \\dfrac{3}{2}\\)",
+            formula: "\\(\\text{opposé de } \\dfrac{2}{3} = -\\dfrac{2}{3}\\), \\(\\text{inverse de } \\dfrac{2}{3} = \\dfrac{3}{2}\\)",
           },
           {
             title: "Diviser par une fraction",

@@ -239,7 +239,7 @@ export default {
               "Forme développée : pratique pour calculer une image directement.",
               "a > 0 : parabole tournée vers le haut (minimum au sommet) ; a < 0 : tournée vers le bas (maximum).",
             ],
-            formula: "\\(f(x) = a(x-\\alpha)^2+\\beta = ax^2+bx+c,\\quad \\alpha = -\\dfrac{b}{2a}\\)",
+            formula: "\\(f(x) = a(x-\\alpha)^2+\\beta = ax^2+bx+c\\), \\(\\alpha = -\\dfrac{b}{2a}\\)",
           },
           {
             title: "Discriminant",

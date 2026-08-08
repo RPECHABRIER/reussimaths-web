@@ -401,7 +401,7 @@ export default {
               "Fonction carré \\(x^2\\) : dérivée \\(2x\\). Fonction cube \\(x^3\\) : dérivée \\(3x^2\\).",
               "Pour dériver un trinôme, on dérive terme à terme : \\((ax^2+bx+c)' = 2ax+b\\) (la dérivée de la constante c est nulle).",
             ],
-            formula: "\\((ax+b)'=a,\\quad (x^2)'=2x,\\quad (x^3)'=3x^2\\)",
+            formula: "\\((ax+b)'=a\\), \\((x^2)'=2x\\), \\((x^3)'=3x^2\\)",
           },
           {
             title: "Linéarité de la dérivation",

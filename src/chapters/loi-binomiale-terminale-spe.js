@@ -385,7 +385,7 @@ export default {
               "Piège classique : ne pas confondre les trois formules, notamment le carré de \\(1-p\\) absent dans l'espérance.",
               "Relation utile : comme \\(E(X)=np\\), on a \\(V(X)=(1-p)\\times E(X)\\) — pratique pour retrouver V(X) directement depuis E(X) et p.",
             ],
-            formula: "\\(E(X)=np,\\quad V(X)=np(1-p),\\quad \\sigma(X)=\\sqrt{np(1-p)}\\)",
+            formula: "\\(E(X)=np\\), \\(V(X)=np(1-p)\\), \\(\\sigma(X)=\\sqrt{np(1-p)}\\)",
           },
           {
             title: "Événement complémentaire",

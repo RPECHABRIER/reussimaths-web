@@ -295,7 +295,7 @@ export default {
             items: [
               "Piège classique : ne pas oublier le coefficient binomial dans le calcul, sinon on ne compte qu'un seul chemin sur tous les possibles.",
             ],
-            formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k},\\quad E(X)=np\\)",
+            formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k}\\), \\(E(X)=np\\)",
           },
           {
             title: "Cas particuliers et calculs avec des évènements liés à X",
@@ -303,7 +303,7 @@ export default {
               "P(X=0) : un seul chemin de l'arbre mène à 0 succès (que des échecs) ; P(X=n) : un seul chemin mène à n succès (que des succès).",
               "Pour \\(P(X \\leqslant k)\\), on additionne les probabilités des évènements incompatibles \\(\\{X=0\\}, \\{X=1\\}, \\ldots, \\{X=k\\}\\).",
             ],
-            formula: "\\(P(X=0) = (1-p)^n \\quad ; \\quad P(X=n) = p^n\\)",
+            formula: "\\(P(X=0) = (1-p)^n\\), \\(P(X=n) = p^n\\)",
           },
         ],
       },

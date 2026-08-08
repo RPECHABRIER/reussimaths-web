@@ -479,7 +479,7 @@ export default {
               "En isolant le cosinus dans la formule avec les normes, on peut retrouver l'angle entre deux vecteurs.",
               "La norme d'un vecteur se calcule directement à partir de ses coordonnées.",
             ],
-            formula: "\\(\\overrightarrow{u}\\cdot\\overrightarrow{v} = xx'+yy' = \\|\\overrightarrow{u}\\|\\|\\overrightarrow{v}\\|\\cos\\theta,\\quad \\cos\\theta = \\dfrac{\\overrightarrow{u}\\cdot\\overrightarrow{v}}{\\|\\overrightarrow{u}\\|\\|\\overrightarrow{v}\\|},\\quad \\|\\overrightarrow{u}\\|=\\sqrt{x^2+y^2}\\)",
+            formula: "\\(\\overrightarrow{u}\\cdot\\overrightarrow{v} = xx'+yy' = \\|\\overrightarrow{u}\\|\\|\\overrightarrow{v}\\|\\cos\\theta\\), \\(\\cos\\theta = \\dfrac{\\overrightarrow{u}\\cdot\\overrightarrow{v}}{\\|\\overrightarrow{u}\\|\\|\\overrightarrow{v}\\|}\\), \\(\\|\\overrightarrow{u}\\|=\\sqrt{x^2+y^2}\\)",
             figure: buildCoursScalaireAngleFigure(),
           },
           {
@@ -497,7 +497,7 @@ export default {
               "Piège classique : \\(\\overrightarrow{u}\\cdot\\overrightarrow{u} = \\|\\overrightarrow{u}\\|^2\\) (un nombre, pas un vecteur).",
               "Attention au signe : le développement de \\(\\|\\overrightarrow{u}-\\overrightarrow{v}\\|^2\\) fait apparaître \\(-2\\overrightarrow{u}\\cdot\\overrightarrow{v}\\) (moins), contrairement à celui de \\(\\|\\overrightarrow{u}+\\overrightarrow{v}\\|^2\\).",
             ],
-            formula: "\\((\\overrightarrow{u}+\\overrightarrow{v})\\cdot(\\overrightarrow{u}+\\overrightarrow{v}) = \\|\\overrightarrow{u}\\|^2+2\\overrightarrow{u}\\cdot\\overrightarrow{v}+\\|\\overrightarrow{v}\\|^2,\\quad \\|\\overrightarrow{u}-\\overrightarrow{v}\\|^2 = \\|\\overrightarrow{u}\\|^2-2\\overrightarrow{u}\\cdot\\overrightarrow{v}+\\|\\overrightarrow{v}\\|^2\\)",
+            formula: "\\((\\overrightarrow{u}+\\overrightarrow{v})\\cdot(\\overrightarrow{u}+\\overrightarrow{v}) = \\|\\overrightarrow{u}\\|^2+2\\overrightarrow{u}\\cdot\\overrightarrow{v}+\\|\\overrightarrow{v}\\|^2\\), \\(\\|\\overrightarrow{u}-\\overrightarrow{v}\\|^2 = \\|\\overrightarrow{u}\\|^2-2\\overrightarrow{u}\\cdot\\overrightarrow{v}+\\|\\overrightarrow{v}\\|^2\\)",
           },
           {
             title: "Formule d'Al-Kashi",

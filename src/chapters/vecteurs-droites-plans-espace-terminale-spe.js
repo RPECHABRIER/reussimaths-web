@@ -525,14 +525,18 @@ export default {
             title: "Repère de l'espace, coordonnées et norme",
             items: [
               "Un repère de l'espace ajoute un troisième axe (Oz) aux deux axes du plan.",
+              "Coordonnées de \\(\\overrightarrow{AB}\\) depuis deux points : on soustrait, composante par composante, les coordonnées de A à celles de B.",
+              "Milieu I du segment [AB] : on fait la moyenne des coordonnées de A et de B, composante par composante.",
+              "Somme de deux vecteurs : on additionne leurs coordonnées composante par composante. Relation de Chasles : \\(\\overrightarrow{AC}=\\overrightarrow{AB}+\\overrightarrow{BC}\\).",
             ],
-            formula: "\\(\\|\\overrightarrow{OM}\\| = \\sqrt{x^2+y^2+z^2}\\)",
+            formula: "\\(\\overrightarrow{AB}(x_B-x_A;y_B-y_A;z_B-z_A),\\quad I\\left(\\dfrac{x_A+x_B}{2};\\dfrac{y_A+y_B}{2};\\dfrac{z_A+z_B}{2}\\right),\\quad \\|\\overrightarrow{OM}\\| = \\sqrt{x^2+y^2+z^2}\\)",
             figure: buildCoursReperEspaceFigure(),
           },
           {
             title: "Représentation paramétrique d'une droite",
             items: [
               "Un point A et un vecteur directeur \\(\\overrightarrow{u}\\) suffisent pour décrire tous les points de la droite.",
+              "Alignement et appartenance à une droite : trois points A, B, C sont alignés (et un point M appartient à la droite passant par A de vecteur directeur \\(\\overrightarrow{u}\\)) si et seulement si les vecteurs concernés sont colinéaires — l'un est un multiple scalaire de l'autre.",
               "Piège classique : bien vérifier que le même paramètre t est utilisé sur les trois lignes (x, y, z) en même temps.",
             ],
             formula: "\\(\\begin{cases}x=x_A+ta \\\\ y=y_A+tb \\\\ z=z_A+tc\\end{cases},\\ t \\in \\mathbb{R}\\)",
@@ -549,7 +553,9 @@ export default {
           {
             title: "Positions relatives de droites et de plans",
             items: [
+              "Deux droites de l'espace sont soit parallèles (même direction, donc toujours coplanaires), soit sécantes (un point commun, donc coplanaires), soit non coplanaires (« gauches ») — dans ce dernier cas, ni parallèles ni sécantes, sans aucun point commun.",
               "Deux plans sont parallèles si l'un contient deux vecteurs directeurs du plan de l'autre (ou s'ils sont confondus).",
+              "Si deux plans sont sécants, leur intersection est toujours une droite (jamais un seul point).",
               "Une droite et un plan sont soit parallèles (aucun point commun ou droite incluse dans le plan), soit sécants en un seul point.",
             ],
             figure: buildCoursPlansParallelesFigure(),

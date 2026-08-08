@@ -17,8 +17,9 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `theoreme-thales.js` (4e) est
-terminé. Prochain fichier : triangles-rectangles-quatrieme.js (4e).**
+**La 5e est intégralement terminée (12/12). `theoreme-thales.js` et
+`triangles-rectangles-quatrieme.js` (4e) sont terminés. Prochain fichier :
+geometrie-plane.js (4e).**
 
 `theoreme-thales.js` (4e) relu intégralement : figure ajoutée à la branche
 « Problèmes, agrandissement/réduction » (seule branche géométrique du
@@ -30,6 +31,16 @@ quotient, alignement des points). Le grep mécanique qui avait repéré ce
 fichier comme candidat (contexte long) est un faux positif confirmé : le
 long contexte est le commentaire d'en-tête narratif, pas un prompt
 d'exercice. Aucun candidat texTable, aucun symbole €.
+
+`triangles-rectangles-quatrieme.js` (4e) relu intégralement : piège
+classique ajouté à la branche « Théorème de Pythagore » (ne pas s'arrêter
+à BC², il faut ensuite calculer la racine carrée) — seule branche du
+fichier sans piège classique explicite, alors que l'oubli de la racine
+carrée est une erreur très fréquente et visible dans les steps mêmes des
+exercices. Reste déjà au niveau attendu (4 branches, formules utiles,
+figures buildRightTriangleFigure toutes claires et bien étiquetées, pièges
+classiques déjà présents ailleurs : bon sommet dans la réciproque, côté
+adjacent qui change selon l'angle). Aucun candidat texTable, aucun €.
 
 `proportionnalite-quatrieme.js` (4e) relu intégralement : branche
 « Grandeurs produits et quotients » reformulée pour partir du concret
@@ -517,7 +528,7 @@ vérifiés pour débordement.)
 - [x] notion-fonctions.js
 - [x] proportionnalite-quatrieme.js
 - [x] theoreme-thales.js *(figure ajoutée à la branche « Problèmes, agrandissement/réduction », seule branche géométrique sans figure ; item réécrit du concret vers la règle ; sinon déjà bon, faux positif du grep mécanique confirmé — commentaire d'en-tête long, pas un prompt)*
-- [ ] triangles-rectangles-quatrieme.js
+- [x] triangles-rectangles-quatrieme.js *(piège classique ajouté à « Théorème de Pythagore » — ne pas s'arrêter à BC², calculer la racine carrée ; sinon déjà bon, 4 branches, figures et pièges déjà bien ciblés ailleurs)*
 - [ ] geometrie-plane.js
 - [ ] geometrie-espace-quatrieme.js
 

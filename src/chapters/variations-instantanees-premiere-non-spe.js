@@ -423,10 +423,20 @@ export default {
         title: "Variations instantanées",
         branches: [
           {
+            title: "Taux d'accroissement, approximation du nombre dérivé",
+            items: [
+              "Le taux d'accroissement \\(\\dfrac{f(a+h)-f(a)}{h}\\) mesure la pente moyenne entre deux points proches de la courbe ; pour h très petit, il donne une approximation du nombre dérivé \\(f'(a)\\).",
+            ],
+            formula: "\\(f'(a) \\approx \\dfrac{f(a+h)-f(a)}{h} \\text{ pour } h \\text{ petit}\\)",
+          },
+          {
             title: "Nombre dérivé = coefficient directeur de la tangente",
             items: [
               "\\(f'(a)\\) est le coefficient directeur de la tangente à la courbe au point d'abscisse a.",
               "\\(f'(a) = 0\\) ⟺ la tangente en a est horizontale.",
+              "Lecture graphique : en se déplaçant d'une unité vers la droite sur la tangente, la variation de l'ordonnée est directement égale à \\(f'(a)\\).",
+              "La courbe d'une fonction affine est une droite : sa tangente en tout point est cette droite elle-même, donc son nombre dérivé est constant, égal à son coefficient directeur.",
+              "Ne pas confondre \\(f(a)\\) (l'image, la hauteur de la courbe) et \\(f'(a)\\) (le nombre dérivé, la pente de la tangente) : ce sont deux nombres différents.",
             ],
           },
           {
@@ -441,6 +451,7 @@ export default {
             items: [
               "\\(f'(a) > 0\\) : f croissante autour de a. \\(f'(a) < 0\\) : f décroissante autour de a.",
               "Piège classique très fréquent : le signe de \\(f'(a)\\) donne le sens de variation de f, ce n'est pas le signe de \\(f(a)\\).",
+              "Plus \\(|f'(a)|\\) est grand, plus la tangente est pentue (la fonction varie vite) : pour comparer deux points, celui où le nombre dérivé est le plus élevé a la tangente la plus pentue.",
             ],
           },
           {

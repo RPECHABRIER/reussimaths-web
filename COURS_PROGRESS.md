@@ -81,8 +81,9 @@ les hashes). État actuel :
   `suites-numeriques-premiere-techno.js` (Première techno).**
   `suites-numeriques-premiere-techno.js` fait (commit `fc7ed27`, pas de
   figure). `fonctions-second-degre-premiere-techno.js` fait (commit
-  `23bf741`, pas de figure). **Prochain fichier :
-  `derivation-premiere-techno.js`.**
+  `23bf741`, pas de figure). `derivation-premiere-techno.js` fait (commit
+  `9c7c6fb`, pas de figure). **Prochain fichier :
+  `statistiques-deux-variables-premiere-techno.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -359,7 +360,7 @@ Cours).
 
 - [x] suites-numeriques-premiere-techno.js
 - [x] fonctions-second-degre-premiere-techno.js
-- [ ] derivation-premiere-techno.js
+- [x] derivation-premiere-techno.js
 - [ ] statistiques-deux-variables-premiere-techno.js
 - [ ] probabilites-conditionnelles-premiere-techno.js
 - [ ] epreuves-independantes-premiere-techno.js

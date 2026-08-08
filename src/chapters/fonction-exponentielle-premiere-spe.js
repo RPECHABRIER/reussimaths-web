@@ -369,6 +369,15 @@ export default {
               "Pour une inéquation \\(e^A > e^B\\), on garde le même sens en passant à \\(A > B\\) (fonction croissante).",
             ],
           },
+          {
+            title: "Modéliser une croissance ou décroissance exponentielle",
+            items: [
+              "Un phénomène qui évolue proportionnellement à la quantité déjà présente se modélise par \\(f(t)=C_0 e^{kt}\\), où \\(C_0\\) est la quantité initiale (à \\(t=0\\)).",
+              "Le signe du coefficient \\(k\\) donne le comportement : \\(k>0\\) → croissance exponentielle, \\(k<0\\) → décroissance exponentielle (piège classique : ne pas confondre le signe de \\(k\\) avec celui de \\(C_0\\)).",
+              "Exemples : capital qui rapporte des intérêts (k>0), population qui croît (k>0), substance radioactive qui se désintègre (k<0).",
+            ],
+            formula: "\\(f(t)=C_0 e^{kt},\\quad f(0)=C_0\\)",
+          },
         ],
       },
     },

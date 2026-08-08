@@ -483,6 +483,7 @@ export default {
             items: [
               "En situation d'équiprobabilité : probabilité = nombre d'issues favorables ÷ nombre d'issues possibles.",
               "Plus on répète une expérience, plus la fréquence observée se rapproche de la probabilité théorique (loi des grands nombres).",
+              "Piège classique : pour savoir qui a le plus de chances, on compare les proportions (les fractions), pas les nombres de billes favorables — un sac avec plus de billes rouges n'a pas forcément la plus grande probabilité si son total de billes est aussi plus grand.",
             ],
             formula: "\\(P = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\)",
           },

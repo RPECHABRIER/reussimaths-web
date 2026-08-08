@@ -18,8 +18,39 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : mesures-grandeurs-troisieme.js (3e) —
-dernier fichier de la 3e.**
+terminée (14/14). La 3e est désormais intégralement terminée (14/14).
+Prochain fichier : nombres-calculs-seconde.js (2nde) — premier fichier de
+la 2nde.**
+
+`mesures-grandeurs-troisieme.js` (3e) relu intégralement : piège
+classique ajouté à « Vitesse, énergie, débit » sur la conversion
+heures/minutes en heures décimales avant calcul (30 min = 0,5 h, ne pas
+utiliser directement les minutes comme centièmes d'heure) — testé par
+`genVitesseMoyenneAvecMinutesNumeric` dont le step montre explicitement
+cette conversion, confusion très classique (2h30 lu comme 2,30)
+totalement absente du cours avant cette relecture. Item « Échelles »
+complété pour couvrir explicitement le sens réel→plan (division par n),
+qui n'était pas énoncé alors que testé symétriquement par
+`genEchelleDistancePlanNumeric` (seul le sens plan→réel était donné).
+Reste déjà au niveau attendu (3 branches, formule vitesse/énergie/débit
+déjà présente, piège classique échelle/unités déjà présent, branche
+« Problèmes contextualisés » déjà claire). Fichier purement numérique,
+aucune figure, aucun symbole €, aucun candidat texTable.
+
+**Avec ce fichier, la 3e est intégralement terminée (14/14).** Les 6
+fichiers confiés dans cette session (probabilites, thales-triangles-
+semblables, trigonometrie-triangle-rectangle, transformations-plan,
+geometrie-espace, mesures-grandeurs) ont tous été relus intégralement.
+Point notable : `thales-triangles-semblables-troisieme.js` avait une
+**vraie correction de fond** dans `genThalesPapillonNumeric` (formule
+enseignée par l'exercice contredisait la formule, correcte, du Cours —
+DE et DF étaient inversés). Deux autres gaps de fond notables : la
+rotation était totalement absente du cours de
+`transformations-plan-troisieme.js` alors que directement testée par un
+générateur dédié ; le coefficient de réduction d'une section de pyramide
+(k = hauteur coupe / hauteur totale) était absent de
+`geometrie-espace-troisieme.js` alors que littéralement utilisé dans les
+steps d'un générateur.
 
 `geometrie-espace-troisieme.js` (3e) relu intégralement : item ajouté à
 « Section d'une pyramide ou d'une sphère » sur le coefficient de
@@ -802,7 +833,7 @@ vérifiés pour débordement.)
 - [x] trigonometrie-triangle-rectangle-troisieme.js *(piège classique ajouté à « Calculer une longueur » — diviser si l'inconnue est au dénominateur, multiplier sinon ; sinon déjà bon, figure déjà claire)*
 - [x] transformations-plan-troisieme.js *(gap de fond comblé : rotation totalement absente du cours alors que testée par genImageRotationCoordNumeric, formules 90°/180°/270° ajoutées + piège classique sens direct ; sinon déjà bon, figures déjà claires)*
 - [x] geometrie-espace-troisieme.js *(item coefficient de réduction pyramide k=hauteur coupe/hauteur totale ajouté, formule utilisée dans les steps mais absente du cours ; item volume demi-sphère ajouté ; sinon déjà bon, 4 figures déjà claires)*
-- [ ] mesures-grandeurs-troisieme.js
+- [x] mesures-grandeurs-troisieme.js *(piège classique conversion minutes→heures décimales ajouté, testé par genVitesseMoyenneAvecMinutesNumeric ; item échelle complété pour le sens réel→plan ; sinon déjà bon — 3e intégralement terminée, 14/14)*
 
 ### 2nde
 - [ ] nombres-calculs-seconde.js

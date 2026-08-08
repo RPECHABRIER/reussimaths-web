@@ -528,6 +528,43 @@ export default {
     level: "quatrieme",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Nombres relatifs",
+        branches: [
+          {
+            title: "Additionner, soustraire",
+            items: [
+              "Même signe : on garde le signe commun et on ajoute les distances à 0.",
+              "Signes différents : le résultat a le signe du nombre le plus « loin » de 0, et on soustrait les distances.",
+              "Soustraire un nombre revient à ajouter son opposé : \\(a - b = a + (-b)\\).",
+            ],
+          },
+          {
+            title: "Multiplier, diviser",
+            items: [
+              "Même signe → résultat positif ; signes différents → résultat négatif.",
+              "Avec plusieurs facteurs : le produit est positif si le nombre de facteurs négatifs est pair, négatif s'il est impair.",
+              "Piège classique : un carré \\((-n)^2\\) est toujours positif, ce n'est pas le cas de \\(-n^2\\).",
+            ],
+          },
+          {
+            title: "Priorités opératoires",
+            items: [
+              "On calcule d'abord les parenthèses, puis les multiplications/divisions, puis les additions/soustractions.",
+              "Piège classique : oublier de distribuer un signe « - » devant une parenthèse à tous ses termes.",
+            ],
+          },
+          {
+            title: "Signe inconnu (produit, quotient)",
+            items: [
+              "Pour trouver le signe d'un facteur inconnu, on part du signe voulu pour le résultat et on « remonte » la règle des signes.",
+              "Un programme de calcul se résout en appliquant les opérations inverses dans l'ordre inverse.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

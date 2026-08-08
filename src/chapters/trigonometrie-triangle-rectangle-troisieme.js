@@ -449,6 +449,7 @@ export default {
             items: [
               "Cosinus = adjacent ÷ hypoténuse ; sinus = opposé ÷ hypoténuse ; tangente = opposé ÷ adjacent.",
               "On choisit la relation selon les deux côtés connus (ou à calculer) parmi les trois.",
+              "Piège classique : si le côté cherché est au dénominateur (souvent l'hypoténuse), on divise ; sinon, on multiplie.",
             ],
             formula: "\\(\\cos(\\widehat{x}) = \\dfrac{adj}{hyp}\\ ;\\ \\sin(\\widehat{x}) = \\dfrac{opp}{hyp}\\ ;\\ \\tan(\\widehat{x}) = \\dfrac{opp}{adj}\\)",
           },

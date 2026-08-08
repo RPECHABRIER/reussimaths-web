@@ -385,8 +385,11 @@ function genThalesPapillonNumeric() {
   const DA = randInt(3, 12);
   const DB = randInt(3, 12);
   const AB = randInt(4, 15);
-  const DF = roundTo(DA * k, 2);
-  const DE = roundTo(DB * k, 2);
+  // (AE) et (BF) secantes en D : DA et DE sont sur la meme droite (AE),
+  // DB et DF sur la meme droite (BF) -- donc DE = DA*k et DF = DB*k, pour
+  // rester coherent avec la formule du Cours (DA/DE = DB/DF = AB/EF).
+  const DE = roundTo(DA * k, 2);
+  const DF = roundTo(DB * k, 2);
   const EF = roundTo(AB * k, 2);
   const askDF = Math.random() < 0.5;
   return {
@@ -396,9 +399,9 @@ function genThalesPapillonNumeric() {
     answer: askDF ? DF : DE,
     tolerance: 0.05,
     steps: [
-      { type: "regle", text: `\\dfrac{DA}{DF} = \\dfrac{DB}{DE} = \\dfrac{AB}{EF}` },
+      { type: "regle", text: `\\dfrac{DA}{DE} = \\dfrac{DB}{DF} = \\dfrac{AB}{EF}` },
       { type: "calcul", text: `\\text{Coefficient} = \\dfrac{EF}{AB} = ${fr(k)}` },
-      { type: "resultat", text: askDF ? `DF = DA \\times ${fr(k)} = ${fr(DF)}` : `DE = DB \\times ${fr(k)} = ${fr(DE)}` },
+      { type: "resultat", text: askDF ? `DF = DB \\times ${fr(k)} = ${fr(DF)}` : `DE = DA \\times ${fr(k)} = ${fr(DE)}` },
     ],
   };
 }
@@ -490,6 +493,7 @@ export default {
             title: "Agrandissement, réduction, triangles semblables",
             items: [
               "Un coefficient k multiplie les longueurs et le périmètre par k, et l'aire par \\(k^2\\).",
+              "Pour repasser de la figure agrandie/réduite à la figure de départ, on utilise le coefficient réciproque \\(\\dfrac{1}{k}\\).",
               "Deux triangles sont semblables si leurs angles sont deux à deux égaux, ou si les rapports de leurs côtés correspondants sont tous égaux.",
               "Piège classique : multiplier l'aire par k au lieu de \\(k^2\\).",
             ],

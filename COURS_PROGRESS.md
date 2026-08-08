@@ -31,9 +31,13 @@ le fichier), `triangles-rectangles-quatrieme.js` fait (commit `3cbbadd`,
 fichier), `geometrie-plane.js` fait (commit `76a0586`, 3 figures neuves —
 aucun helper de figure n'existait dans ce fichier avant),
 `geometrie-espace-quatrieme.js` fait (commit `0030468`, 3 figures neuves —
-aucun helper de figure n'existait dans ce fichier avant). **Prochain
-fichier à traiter : `exercices-fin-annee-quatrieme.js` (chapitre de
-révision mixte — juger au cas par cas si un Cours est utile).** Même méthode : lire
+aucun helper de figure n'existait dans ce fichier avant).
+`exercices-fin-annee-quatrieme.js` délibérément SANS Cours (chapitre de
+révision mixte, aucune notion nouvelle — voir checklist "4e" pour le
+détail). **La 4e est donc intégralement terminée. Prochaine étape :
+démarrer la 3e**, en commençant par `nombres-entiers-troisieme.js` (voir
+la checklist "3e (troisieme)" ci-dessous, dans l'ordre où les fichiers y
+sont listés). Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -73,8 +77,10 @@ git add <fichier(s)>; TREE=$(GIT_INDEX_FILE=$IDX git write-tree); ...` (le
 fiable de détecter ce genre de régression silencieuse tout de suite plutôt
 qu'en fin de session.
 
-Dernière mise à jour : 2026-08-08 — 4e en cours : `nombres-relatifs-quatrieme.js`
-(commit `c0c63ef`), `addition-soustraction-rationnels.js` (commit `4b963cd`) et
+Dernière mise à jour : 2026-08-08 — **la 4e est intégralement terminée**
+(14 chapitres avec `meta.cours.mindMap` + `exercices-fin-annee-quatrieme.js`
+délibérément sans Cours) : `nombres-relatifs-quatrieme.js` (commit `c0c63ef`),
+`addition-soustraction-rationnels.js` (commit `4b963cd`),
 `multiplication-division-rationnels.js` (commit `43dded0`),
 `puissances-quatrieme.js` (commit `c256392`),
 `calcul-litteral-quatrieme.js` (commit `b114e83`),
@@ -86,7 +92,8 @@ Dernière mise à jour : 2026-08-08 — 4e en cours : `nombres-relatifs-quatriem
 `theoreme-thales.js` (commit `6887711`),
 `triangles-rectangles-quatrieme.js` (commit `3cbbadd`),
 `geometrie-plane.js` (commit `76a0586`) et
-`geometrie-espace-quatrieme.js` (commit `0030468`) faits. 6e ET 5e terminées avant
+`geometrie-espace-quatrieme.js` (commit `0030468`). Passage direct à la 3e
+per la consigne de Romain. 6e ET 5e terminées avant
 ça. Les 12 chapitres 5e
 faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
 `divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
@@ -217,7 +224,17 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] triangles-rectangles-quatrieme.js *(géométrie)*
 - [x] geometrie-plane.js *(géométrie)*
 - [x] geometrie-espace-quatrieme.js *(géométrie)*
-- [ ] exercices-fin-annee-quatrieme.js
+- [x] exercices-fin-annee-quatrieme.js *(délibérément SANS `meta.cours` — chapitre
+  de révision mixte confirmé par son propre commentaire d'en-tête : "il ne
+  s'agit pas d'un chapitre du programme à proprement parler mais d'une
+  révision finale mélangeant les notions vues toute l'année de 4e" ; aucune
+  notion nouvelle à résumer, tout est déjà couvert par les 14 Cours
+  précédents de 4e)*
+
+**La 4e est désormais intégralement terminée** (14 chapitres avec
+`meta.cours.mindMap` + 1 chapitre de révision mixte délibérément sans
+Cours). Passage direct à la 3e (troisième), comme prévu par la consigne
+initiale de Romain.
 
 ### 3e (troisieme)
 
@@ -322,8 +339,9 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 ## Total
 
 35 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
-`automatismes-*`, 114 non comptés ici, à traiter plus tard) — la 6e ET la 5e
-sont intégralement terminées, la 4e est en cours.
+`automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
+`exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
+ET la 4e sont intégralement terminées, prochaine étape : la 3e.
 
 ---
 

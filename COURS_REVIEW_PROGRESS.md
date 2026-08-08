@@ -17,9 +17,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
-fichier : variations-globales-premiere-non-spe.js (Première non spé) —
-7e et dernier fichier de la Première non spé.**
+**La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
+terminées. Prochain fichier : second-degre.js (Première Spé) — 1er
+fichier de la Première Spé.**
+
+`variations-globales-premiere-non-spe.js` (Première non spé) relu
+intégralement : 4 branches enrichies de 6 items absents (pas de
+nouvelle branche). La Première non spé est maintenant intégralement
+terminée (7/7). Item ajouté montrant la dérivation d'un trinôme terme à
+terme. Item ajouté sur la dérivée nulle d'une constante et sa
+conséquence (fonctions différant d'une constante = même dérivée).
+2 items ajoutés à « Tangentes horizontales » : piège x²=k a deux
+solutions opposées ; équation de la tangente horizontale y=f(x0).
+2 items ajoutés à « Signe de f' et sens de variation » : règle
+d'identification max/min sur un tableau de signes (jusque-là le cours
+disait seulement « candidats à un extremum » sans dire comment
+trancher) ; piège important f'(a)=0 n'implique pas toujours un
+extremum (contre-exemple x³ en 0, point d'inflexion). Aucun €, aucun
+candidat texTable, fichier purement algébrique.
 
 `variations-instantanees-premiere-non-spe.js` (Première non spé) relu
 intégralement : 5 branches (4 avant). Nouvelle branche « Taux
@@ -1186,7 +1201,7 @@ vérifiés pour débordement.)
 - [x] croissance-exponentielle-premiere-non-spe.js *(item sens de variation fonction exponentielle ajouté — absence notable malgré le titre du chapitre ; item recul d'un rang, comparaison de raisons, piège taux global≠somme, coefficient réciproque)*
 - [x] modelisation-quadratique-premiere-non-spe.js *(branche renommée Forme canonique et forme développée — la forme canonique a(x-α)²+β était totalement absente malgré la NOTE signalant que c'est l'ajout central du programme 2026 pour ce chapitre)*
 - [x] variations-instantanees-premiere-non-spe.js *(nouvelle branche Taux d'accroissement — gap conceptuel fondamental ; items ajoutés — lecture graphique déplacement d'une unité, dérivée constante d'une fonction affine, piège général f(a) vs f'(a), comparaison de nombres dérivés)*
-- [ ] variations-globales-premiere-non-spe.js
+- [x] variations-globales-premiere-non-spe.js *(items ajoutés — dérivation d'un trinôme, dérivée nulle d'une constante, piège x²=k deux solutions, équation tangente horizontale, règle max/min sur tableau de signes, piège f'(a)=0 n'implique pas extremum ; Première non spé terminée 7/7)*
 
 ### Première Spé
 - [ ] second-degre.js

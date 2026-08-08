@@ -467,6 +467,7 @@ export default {
             items: [
               "Pour additionner/soustraire, on réduit au même dénominateur ; pour multiplier, on multiplie termes à termes.",
               "Diviser par une fraction, c'est multiplier par son inverse.",
+              "Piège classique : dans une expression avec + ou − et ×, on calcule d'abord la multiplication, comme pour les nombres décimaux.",
               "On donne toujours le résultat sous forme irréductible (dénominateur positif).",
             ],
             formula: "\\(\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}\\)",
@@ -477,6 +478,7 @@ export default {
               "Une puissance négative s'écrit comme une fraction : \\(a^{-n} = \\dfrac{1}{a^n}\\).",
               "Produit de même base : on additionne les exposants. Quotient de même base : on les soustrait. Puissance de puissance : on les multiplie.",
               "Produit de même exposant : \\(a^n \\times b^n = (a \\times b)^n\\).",
+              "Piège classique : sans parenthèses, on calcule d'abord les puissances, puis l'addition ou la multiplication ; avec parenthèses, on calcule d'abord l'intérieur. \\((a+b)^2 \\neq a^2+b^2\\) en général.",
             ],
             formula: "\\(a^m \\times a^n = a^{m+n}\\ ;\\ (a^m)^n = a^{m \\times n}\\)",
           },

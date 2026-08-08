@@ -450,45 +450,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 10,
-    cours: {
-      mindMap: {
-        title: "Statistiques, probabilités",
-        branches: [
-          {
-            title: "Effectifs et fréquences",
-            items: [
-              "La fréquence d'une catégorie = effectif de la catégorie ÷ effectif total (souvent exprimée en %).",
-              "Dans un diagramme circulaire, l'angle d'un secteur est proportionnel à l'effectif de la catégorie.",
-            ],
-            formula: "\\(\\text{angle} = \\dfrac{\\text{effectif}}{\\text{total}} \\times 360°\\)",
-          },
-          {
-            title: "Moyenne",
-            items: [
-              "Moyenne = somme des valeurs ÷ nombre de valeurs.",
-              "L'écart à la moyenne d'une valeur, c'est la distance entre cette valeur et la moyenne.",
-              "Piège classique : une valeur extrême (très grande ou très petite) peut fortement déformer la moyenne.",
-            ],
-            formula: "\\(\\bar{x} = \\dfrac{\\text{somme des valeurs}}{\\text{nombre de valeurs}}\\)",
-          },
-          {
-            title: "Vocabulaire des probabilités",
-            items: [
-              "Une expérience aléatoire a un résultat qui dépend du hasard, et ses résultats possibles sont les issues.",
-              "Un événement impossible a une probabilité de 0 ; un événement certain a une probabilité de 1.",
-            ],
-          },
-          {
-            title: "Calculer une probabilité",
-            items: [
-              "En situation d'équiprobabilité : probabilité = nombre d'issues favorables ÷ nombre d'issues possibles.",
-              "Plus on répète une expérience, plus la fréquence observée se rapproche de la probabilité théorique (loi des grands nombres).",
-            ],
-            formula: "\\(P = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\)",
-          },
-        ],
-      },
-    },
   },
   generate,
 };

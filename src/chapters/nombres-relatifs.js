@@ -695,48 +695,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 6,
-    cours: {
-      mindMap: {
-        title: "Nombres relatifs",
-        branches: [
-          {
-            title: "Droite graduée : opposé, valeur absolue, comparer",
-            items: [
-              "L'opposé de a est le nombre situé à la même distance de 0, de l'autre côté.",
-              "La valeur absolue de a, notée |a|, est la distance entre a et 0 sur la droite graduée.",
-              "Sur la droite graduée, plus un nombre est à droite, plus il est grand.",
-            ],
-            formula: "\\(-3 \\text{ et } 3 \\text{ sont opposés : } |{-3}| = |3| = 3\\)",
-            figure: buildGraduatedLineFigure(-3, -5, 5, "A"),
-          },
-          {
-            title: "Additionner des relatifs",
-            items: [
-              "Même signe : on additionne les distances à zéro et on garde le signe commun.",
-              "Signes contraires : on soustrait la plus petite distance à zéro de la plus grande, et on garde le signe du nombre le plus « fort ».",
-            ],
-            formula: "\\((-5) + (+3) = -2\\)",
-          },
-          {
-            title: "Soustraire des relatifs",
-            items: [
-              "Soustraire un nombre relatif, c'est additionner son opposé.",
-              "Piège classique : oublier de changer le signe du nombre soustrait.",
-            ],
-            formula: "\\(a - b = a + (-b)\\)",
-          },
-          {
-            title: "Repérage dans le plan",
-            items: [
-              "Un point est repéré par ses coordonnées (abscisse ; ordonnée).",
-              "Symétrique par rapport à l'origine : on change le signe des deux coordonnées.",
-              "Symétrique par rapport à un axe : seule la coordonnée perpendiculaire à cet axe change de signe.",
-            ],
-            figure: buildRepereFigure(3, 2),
-          },
-        ],
-      },
-    },
   },
   generate,
 };

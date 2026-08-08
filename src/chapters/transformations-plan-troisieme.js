@@ -33,6 +33,44 @@ const roundTo = (n, d) => Math.round(n * 10 ** d) / 10 ** d;
 const fr = (n) => String(n).replace(".", ",");
 const signedTex = (n) => `${n >= 0 ? "+" : ""}${fr(n)}`;
 
+// Figures utilisées uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+// Repère avec un point M et son image M' par symétrie centrale de centre O (l'origine).
+function buildRepereImageFigure() {
+  const scale = 24;
+  const range = 4;
+  const toX = (v) => v * scale;
+  const toY = (v) => -v * scale;
+  const OX1 = { id: "OX1", x: toX(-range - 0.5), y: toY(0), hideDot: true, hideLabel: true };
+  const OX2 = { id: "OX2", x: toX(range + 0.5), y: toY(0), hideDot: true, hideLabel: true };
+  const OY1 = { id: "OY1", x: toX(0), y: toY(-range - 0.5), hideDot: true, hideLabel: true };
+  const OY2 = { id: "OY2", x: toX(0), y: toY(range + 0.5), hideDot: true, hideLabel: true };
+  const O = { id: "O", x: toX(0), y: toY(0), dx: -16, dy: 16 };
+  const M = { id: "M", x: toX(3), y: toY(2), dx: 8, dy: -8 };
+  const Mp = { id: "Mp", label: "M'", x: toX(-3), y: toY(-2), dx: -20, dy: 14 };
+  return {
+    points: [OX1, OX2, OY1, OY2, O, M, Mp],
+    lines: [
+      { from: "OX1", to: "OX2", arrowEnd: true },
+      { from: "OY1", to: "OY2", arrowEnd: true },
+    ],
+    segments: [{ from: "M", to: "Mp", dashed: true }],
+  };
+}
+
+// Homothétie de centre O, coefficient positif : O, M, M' alignés du même côté.
+function buildHomothetieFigure() {
+  const O = { id: "O", x: 20, y: 100, dx: -14, dy: 4 };
+  const M = { id: "M", x: 120, y: 100, dy: -10 };
+  const Mp = { id: "Mp", label: "M'", x: 230, y: 100, dy: -10 };
+  return {
+    points: [O, M, Mp],
+    segments: [
+      { from: "O", to: "M" },
+      { from: "M", to: "Mp", dashed: true },
+    ],
+  };
+}
+
 // =========================== Coordonnées d'images ===========================
 
 // ---------- 1. Image par translation (coordonnées) ----------
@@ -366,6 +404,46 @@ export default {
     level: "troisieme",
     free: false,
     order: 13,
+    cours: {
+      mindMap: {
+        title: "Transformations dans le plan et leurs effets",
+        branches: [
+          {
+            title: "Coordonnées d'une image",
+            items: [
+              "Translation : on ajoute les mêmes nombres à toutes les abscisses et à toutes les ordonnées.",
+              "Symétrie centrale de centre O : \\(M' = 2O - M\\) (O est le milieu de [MM']).",
+              "Symétrie d'axe vertical/horizontal : une seule coordonnée change, l'axe est le milieu entre M et son image.",
+            ],
+            figure: buildRepereImageFigure(),
+          },
+          {
+            title: "Homothétie : coefficient",
+            items: [
+              "\\(OM' = |k| \\times OM\\), avec O, M, M' toujours alignés.",
+              "Coefficient positif : M' du même côté de O que M. Coefficient négatif : O est entre M et M'.",
+            ],
+            formula: "\\(OM' = |k| \\times OM\\)",
+            figure: buildHomothetieFigure(),
+          },
+          {
+            title: "Homothétie : périmètre et aire",
+            items: [
+              "Une homothétie de coefficient k multiplie les longueurs et le périmètre par |k|, et l'aire par \\(k^2\\).",
+              "Piège classique : multiplier l'aire par k au lieu de \\(k^2\\).",
+            ],
+          },
+          {
+            title: "Propriétés conservées",
+            items: [
+              "Translation, symétries et rotation conservent longueurs, angles et aires.",
+              "Une homothétie conserve les angles, mais multiplie les longueurs par |k| (donc ne les conserve que si |k| = 1).",
+              "Toute transformation usuelle conserve le milieu d'un segment.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -17,16 +17,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
-la Première techno et la Terminale Spé sont intégralement terminées.
-5 des 6 fichiers de Terminale techno sont relus
-(suites-terminale-techno.js,
-fonctions-exponentielles-terminale-techno.js,
-logarithme-decimal-terminale-techno.js,
-statistiques-deux-variables-terminale-techno.js,
-probabilites-conditionnelles-terminale-techno.js). Prochain fichier :
-variables-aleatoires-terminale-techno.js (Terminale techno, DERNIER
-fichier du chantier — 107/107 sera atteint après lui).**
+**LE CHANTIER DE RELECTURE QUALITÉ EST INTÉGRALEMENT TERMINÉ : 107/107
+fichiers relus.** Tous les niveaux (5e, 4e, 3e, 2nde, Première non spé,
+Première Spé, Première techno, Terminale Spé, Terminale techno) sont
+désormais intégralement passés en revue selon la méthodologie décrite
+en tête de ce fichier (comparaison mindMap ↔ générateurs, ajout des
+thèmes entiers absents en priorité, puis des pièges/formules classiques
+manquants, correction des € en cellule de tableau, conversion en
+texTable() des énumérations de données, vérification des figures). Le
+dernier fichier traité est `variables-aleatoires-terminale-techno.js`
+(Terminale techno) : nouvelle branche « Cas particuliers et calculs
+avec des évènements liés à X » ajoutée (thème absent malgré 3
+générateurs dédiés : P(X=0)=(1-p)^n, P(X=n)=p^n, règle d'addition pour
+P(X⩽k)) ; branche « Identifier une loi binomiale » enrichie de la
+notation X~B(n;p) et du piège classique du tirage sans remise. Aucun
+travail restant sur ce chantier ; `git diff HEAD --stat` vide après
+chaque commit tout au long de la session.
 
 `probabilites-conditionnelles-terminale-techno.js` (Terminale techno)
 relu intégralement : 4 branches inchangées en nombre mais enrichies.
@@ -1678,7 +1684,7 @@ vérifiés pour débordement.)
 - [x] logarithme-decimal-terminale-techno.js *(formules x=log(b)/log(a) et x=10^(log(b)/a) ajoutées, formule du quotient log(a/b) ajoutée)*
 - [x] statistiques-deux-variables-terminale-techno.js *(correction de fond : \ln y remplacé par \log y pour cohérence avec le programme STMG ; table de correspondance allure→transformation ajoutée ; exemple chiffré du retour au modèle ajouté)*
 - [x] probabilites-conditionnelles-terminale-techno.js *(règle d'interprétation d'une pondération selon sa position dans l'arbre ajoutée)*
-- [ ] variables-aleatoires-terminale-techno.js
+- [x] variables-aleatoires-terminale-techno.js *(nouvelle branche « Cas particuliers et calculs avec des évènements liés à X » ajoutée — P(X=0)=(1-p)^n, P(X=n)=p^n, règle d'addition pour P(X⩽k), thème absent malgré 3 générateurs dédiés ; notation X~B(n;p) et piège du tirage sans remise ajoutés — Terminale techno terminée 6/6, CHANTIER COMPLET 107/107)*
 
 ## Note technique (git)
 

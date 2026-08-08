@@ -18,7 +18,7 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 11 des 14 fichiers de
+la Première techno sont intégralement terminées. 12 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
@@ -27,8 +27,17 @@ continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
 logarithme-neperien-terminale-spe.js,
 fonctions-trigonometriques-terminale-spe.js,
 primitives-equations-differentielles-terminale-spe.js,
-calcul-integral-terminale-spe.js). Prochain fichier :
-loi-binomiale-terminale-spe.js (Terminale Spé).**
+calcul-integral-terminale-spe.js, loi-binomiale-terminale-spe.js).
+Prochain fichier : sommes-variables-aleatoires-terminale-spe.js
+(Terminale Spé).**
+
+`loi-binomiale-terminale-spe.js` (Terminale Spé) relu intégralement :
+4 branches inchangées en nombre mais enrichies. Branche « Calculer une
+probabilité » enrichie : symétrie des coefficients binomiaux
+\binom{n}{k}=\binom{n}{n-k} ajoutée (chapter dédié, absente). Branche
+« Espérance, variance, écart-type » enrichie : relation
+V(X)=(1-p)×E(X) ajoutée (chapter dédié, absente). Aucun €, aucun
+candidat texTable, fichier sans figure.
 
 `calcul-integral-terminale-spe.js` (Terminale Spé) relu intégralement :
 7 branches (5 avant). Nouvelles branches ajoutées : « Fonction définie
@@ -1596,7 +1605,7 @@ vérifiés pour débordement.)
 - [x] fonctions-trigonometriques-terminale-spe.js *(3 branches entières ajoutées — valeurs remarquables+signe, identité fondamentale+comparaison, limites en 0 ; formules d'addition ajoutées, totalement absentes malgré le titre de la branche qui les annonçait)*
 - [x] primitives-equations-differentielles-terminale-spe.js *(primitives de cos(ax+b)/sin(ax+b) ajoutées, propriété F-G solution de l'équation homogène ajoutée)*
 - [x] calcul-integral-terminale-spe.js *(2 branches entières ajoutées — fonction définie par une intégrale, intégrale et parité ; formule de linéarité et encadrement m⩽f⩽M ajoutés)*
-- [ ] loi-binomiale-terminale-spe.js
+- [x] loi-binomiale-terminale-spe.js *(symétrie des coefficients binomiaux ajoutée, relation V(X)=(1-p)×E(X) ajoutée)*
 - [ ] sommes-variables-aleatoires-terminale-spe.js
 - [ ] loi-grands-nombres-terminale-spe.js
 

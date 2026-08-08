@@ -517,6 +517,8 @@ export default {
               "Développée \\(ax^2+bx+c\\) : pratique pour calculer une image ou résoudre par le discriminant.",
               "Canonique \\(a(x-\\alpha)^2+\\beta\\) : donne directement le sommet \\(S(\\alpha ; \\beta)\\).",
               "Factorisée \\(a(x-x_1)(x-x_2)\\) : donne directement les racines et le signe (si elle existe).",
+              "Passer d'une forme à l'autre sans discriminant : reconnaître une identité remarquable, ex. \\((A+B)^2=A^2+2AB+B^2\\) pour développer, \\(A^2-B^2=(A-B)(A+B)\\) pour factoriser.",
+              "Une équation déjà sous forme factorisée se résout par la règle du produit nul : \\(A \\times B = 0 \\Leftrightarrow A = 0 \\text{ ou } B = 0\\).",
             ],
             formula: "\\(\\alpha = -\\dfrac{b}{2a},\\quad \\beta = f(\\alpha)\\)",
           },
@@ -525,6 +527,7 @@ export default {
             items: [
               "Δ > 0 : deux racines distinctes. Δ = 0 : une racine double. Δ < 0 : aucune racine réelle.",
               "Piège classique : oublier le \\(2a\\) au dénominateur ou une erreur de signe devant b.",
+              "Si le trinôme est au dénominateur d'un quotient, ses racines sont exactement les valeurs interdites (ensemble de définition = \\(\\mathbb{R}\\) privé des racines).",
             ],
             formula: "\\(\\Delta = b^2-4ac,\\quad x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)",
           },
@@ -540,6 +543,14 @@ export default {
             items: [
               "a > 0 : parabole tournée vers le haut, sommet = minimum. a < 0 : tournée vers le bas, sommet = maximum.",
               "Utile en modélisation (aire maximale, bénéfice maximal, trajectoire d'un projectile).",
+              "Symétrie : deux abscisses équidistantes du sommet (ex. \\(\\alpha - k\\) et \\(\\alpha + k\\)) donnent la même image par \\(f\\).",
+            ],
+          },
+          {
+            title: "Déterminer un trinôme à partir de données",
+            items: [
+              "Si on connaît les deux racines \\(x_1\\) et \\(x_2\\) et un point de la parabole : écrire \\(f(x)=a(x-x_1)(x-x_2)\\), remplacer par les coordonnées du point connu, puis isoler \\(a\\).",
+              "Si on connaît seulement deux points de la parabole (et pas les racines) : remplacer \\(x\\) et \\(f(x)\\) par les coordonnées de chaque point dans \\(f(x)=ax^2+bx+c\\), ce qui donne un système de deux équations à résoudre (par exemple par addition ou soustraction membre à membre).",
             ],
           },
         ],

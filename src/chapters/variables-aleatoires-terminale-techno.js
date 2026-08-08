@@ -280,7 +280,8 @@ export default {
           {
             title: "Identifier une loi binomiale",
             items: [
-              "n répétitions identiques et indépendantes d'une épreuve à deux issues (succès/échec) ; X compte le nombre de succès.",
+              "n répétitions identiques et indépendantes d'une épreuve à deux issues (succès/échec) ; X compte le nombre de succès : on note \\(X \\sim \\mathcal{B}(n\\,;\\,p)\\).",
+              "Piège classique : un tirage sans remise change la probabilité de succès à chaque tirage → les répétitions ne sont plus indépendantes, ce n'est pas une loi binomiale.",
             ],
           },
           {
@@ -295,6 +296,14 @@ export default {
               "Piège classique : ne pas oublier le coefficient binomial dans le calcul, sinon on ne compte qu'un seul chemin sur tous les possibles.",
             ],
             formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k},\\quad E(X)=np\\)",
+          },
+          {
+            title: "Cas particuliers et calculs avec des évènements liés à X",
+            items: [
+              "P(X=0) : un seul chemin de l'arbre mène à 0 succès (que des échecs) ; P(X=n) : un seul chemin mène à n succès (que des succès).",
+              "Pour \\(P(X \\leqslant k)\\), on additionne les probabilités des évènements incompatibles \\(\\{X=0\\}, \\{X=1\\}, \\ldots, \\{X=k\\}\\).",
+            ],
+            formula: "\\(P(X=0) = (1-p)^n \\quad ; \\quad P(X=n) = p^n\\)",
           },
         ],
       },

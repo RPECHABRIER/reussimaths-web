@@ -412,6 +412,45 @@ export default {
     level: "quatrieme",
     free: false,
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Multiplication et division de rationnels",
+        branches: [
+          {
+            title: "Multiplier des fractions",
+            items: [
+              "On multiplie les numérateurs entre eux, et les dénominateurs entre eux.",
+              "« Calculer les \\(\\frac{a}{b}\\) d'un nombre » signifie multiplier ce nombre par la fraction.",
+            ],
+            formula: "\\(\\dfrac{a}{b} \\times \\dfrac{c}{d} = \\dfrac{a \\times c}{b \\times d}\\)",
+          },
+          {
+            title: "Opposé et inverse",
+            items: [
+              "L'opposé change le signe : l'opposé de \\(\\frac{a}{b}\\) est \\(-\\frac{a}{b}\\).",
+              "L'inverse échange numérateur et dénominateur, et vérifie \\(\\frac{a}{b} \\times \\frac{b}{a} = 1\\).",
+              "Piège classique : confondre opposé et inverse, surtout quand le nombre est négatif.",
+            ],
+          },
+          {
+            title: "Diviser par une fraction",
+            items: [
+              "Diviser par une fraction, c'est multiplier par son inverse.",
+              "0 n'a pas d'inverse : on ne peut jamais diviser par 0.",
+            ],
+            formula: "\\(\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}\\)",
+          },
+          {
+            title: "Priorités et problèmes",
+            items: [
+              "Multiplications et divisions sont prioritaires sur les additions et soustractions, sauf parenthèses.",
+              "Un pourcentage \\(p\\ \\%\\) d'un effectif se calcule en multipliant par \\(\\frac{p}{100}\\).",
+              "Aire d'un rectangle = longueur × largeur, même quand les côtés sont des fractions.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

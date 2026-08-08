@@ -56,13 +56,27 @@ fichier avant), `geometrie-espace-troisieme.js` fait (commit `41da838`,
 4 figures neuves — aucun helper de figure n'existait dans ce fichier
 avant), `mesures-grandeurs-troisieme.js` fait (commit `a340658`, pas de
 figure — chapitre calculatoire/contextualisé, aucun objet géométrique
-introduit). **Prochain fichier à traiter : `dossier-brevet-troisieme.js`**
-(dernier fichier de la checklist 3e — à juger au cas par cas, comme
-`exercices-fin-annee-quatrieme.js` : lire le fichier en entier et décider
-s'il introduit une notion nouvelle ou s'il s'agit d'une révision Brevet
-mixte sans contenu nouveau, auquel cas skip justifié dans ce fichier de
-suivi). Même méthode : lire
-`src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
+introduit). `dossier-brevet-troisieme.js` délibérément SANS Cours (lu en
+entier : c'est le "Dossier Brevet" de synthèse, chapitre 15/16 — son
+propre commentaire d'en-tête le décrit comme une "révision transversale
+mêlant programmes de calcul... dans l'esprit des exercices type Brevet
+qui combinent plusieurs notions du programme de 3e" ; les 15 générateurs
+qu'il contient recombinent des notions déjà couvertes par les 14 autres
+chapitres 3e avec Cours — programmes de calcul, identités remarquables,
+écriture scientifique, équations, tarifs/fonctions affines, moyenne
+pondérée, probabilités, Pythagore+trigonométrie, volume d'un cône,
+pourcentages — sans en introduire aucune de nouvelle. Même raisonnement
+que pour `exercices-fin-annee-quatrieme.js` en 4e.
+
+**La 3e est donc intégralement terminée** (14 chapitres avec
+`meta.cours.mindMap` + `dossier-brevet-troisieme.js` délibérément sans
+Cours). **Chantier "4e + 3e" complet — les 30 fichiers ont été traités.**
+Pour la suite du chantier global (au-delà de ce lot 4e+3e), voir la
+checklist des niveaux suivants (2nde, 1ère, Terminale, etc.) plus bas dans
+ce fichier.
+
+Méthode utilisée tout au long (à réutiliser pour les niveaux suivants) :
+lire `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
 suivre le format de `Figure.jsx`), vérifier avec `node --check` +
@@ -276,7 +290,8 @@ initiale de Romain.
 - [x] transformations-plan-troisieme.js *(géométrie)*
 - [x] geometrie-espace-troisieme.js *(géométrie)*
 - [x] mesures-grandeurs-troisieme.js
-- [ ] dossier-brevet-troisieme.js
+- [x] dossier-brevet-troisieme.js (délibérément SANS Cours — chapitre de
+      synthèse type Brevet, aucune notion nouvelle, voir "Reprise ici")
 
 ### 2nde (seconde)
 
@@ -364,9 +379,10 @@ initiale de Romain.
 
 49 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
-`exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
-ET la 4e sont intégralement terminées, la 3e est à 14/15 (il ne reste que
-`dossier-brevet-troisieme.js` à juger).
+`exercices-fin-annee-quatrieme.js` et `dossier-brevet-troisieme.js`,
+délibérément sans Cours) — **la 6e, la 5e, la 4e ET la 3e sont
+intégralement terminées.** Prochaine étape : niveaux suivants (2nde,
+1ère, Terminale...).
 
 ---
 

@@ -18,8 +18,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`
-(4e) est fait. Prochain fichier : `addition-soustraction-rationnels.js`
-(4e).**
+et `addition-soustraction-rationnels.js` (4e) sont faits. Prochain
+fichier : `multiplication-division-rationnels.js` (4e).**
+
+`addition-soustraction-rationnels.js` (4e) relu intégralement : branche
+"Rappels : simplifier, comparer" — les 2 items qui n'avaient pas d'exemple
+numérique en ont reçu un (décomposition de 60 en facteurs premiers,
+produits en croix sur 3/4 vs 5/6) ; formule ajoutée à la branche "Trouver
+un dénominateur commun" (PPCM(4,6)=12), qui n'en avait aucune alors que
+c'est l'étape la plus utilisée dans les exercices. Reste déjà au niveau
+attendu (branches "Additionner, soustraire" et "Problèmes de proportions"
+déjà claires et concrètes, piège classique déjà présent sur l'entier
+relatif à réécrire en fraction). Aucun € dans le fichier, aucun candidat
+`texTable()` (prompts déjà courts, max 326 caractères).
 
 `nombres-relatifs-quatrieme.js` (4e) relu intégralement : branche "Signe
 inconnu (produit, quotient)" renommée "Signe inconnu, programmes de
@@ -404,7 +415,7 @@ vérifiés pour débordement.)
 
 ### 4e
 - [x] nombres-relatifs-quatrieme.js *(branche "Signe inconnu" renommée pour inclure les programmes de calcul ; piège classique priorités reformulé pour coller aux exercices ; formules ajoutées à 3 branches)*
-- [ ] addition-soustraction-rationnels.js
+- [x] addition-soustraction-rationnels.js *(exemples numériques ajoutés à 2 items sans exemple ; formule PPCM ajoutée à une branche qui n'en avait pas)*
 - [ ] multiplication-division-rationnels.js
 - [ ] puissances-quatrieme.js
 - [ ] calcul-litteral-quatrieme.js

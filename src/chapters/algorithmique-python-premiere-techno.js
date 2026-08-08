@@ -297,8 +297,9 @@ export default {
           {
             title: "Boucle for et listes",
             items: [
-              "\\(\\text{range(n)}\\) parcourt les entiers de 0 à n-1 (n valeurs, pas n+1).",
+              "\\(\\text{range(n)}\\) parcourt les entiers de 0 à n-1 (n valeurs, pas n+1). \\(\\text{range(a, b)}\\) parcourt les entiers de a à b-1 (b exclu) : range(n) est un raccourci pour range(0, n).",
               "Parcourir une liste avec une boucle for permet de traiter chaque élément un par un.",
+              "Écriture en compréhension : \\(\\text{[expression for i in range(n)]}\\) construit directement la liste des valeurs de l'expression, pour i variant de 0 à n-1.",
             ],
           },
           {
@@ -312,6 +313,14 @@ export default {
             items: [
               "Balayage : tester successivement des valeurs pour approcher la solution d'une équation.",
               "\\(\\text{random()}\\) renvoie un nombre dans \\([0 ; 1[\\), utile pour simuler une expérience de Bernoulli.",
+            ],
+          },
+          {
+            title: "Vocabulaire Python de base",
+            items: [
+              "\\(\\text{len(liste)}\\) renvoie le nombre d'éléments de la liste.",
+              "Test de parité d'un entier n : \\(\\text{n \\% 2 == 0}\\) (le reste de la division euclidienne par 2 vaut 0 si n est pair).",
+              "\\(\\text{import random}\\) en début de programme est nécessaire pour pouvoir utiliser des fonctions de génération aléatoire comme \\(\\text{random()}\\).",
             ],
           },
         ],

@@ -18,7 +18,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : probabilites-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : thales-triangles-semblables-troisieme.js (3e).**
+
+`probabilites-troisieme.js` (3e) relu intégralement : item ajouté à
+« Calculer une probabilité » sur la conversion pourcentage/décimal
+(p% = p/100, testée par `genProbabiliteDepuisPourcentageNumeric` mais
+absente du cours) ; piège classique ajouté sur la simplification en
+fraction irréductible (`genProbabiliteDeNumeric`/`genProbabiliteCarteQCM`/
+`genProbabiliteMultipleNumeric` demandent tous une fraction irréductible
+p/q, dont `genProbabiliteCarteQCM` propose explicitement la fraction non
+simplifiée comme distracteur, mais aucun item du cours ne rappelait la
+nécessité de simplifier). Reste déjà au niveau attendu (4 branches,
+vocabulaire/équiprobabilité/événement contraire/tirage sans remise déjà
+clairs et concrets, piège classique tirage sans remise déjà présent).
+Fichier purement numérique, aucune figure, aucun symbole €, aucun
+candidat texTable (les 2 énumérations de probabilités restent à 4 valeurs
+décimales courtes maximum, sous le seuil).
 
 `statistiques-troisieme.js` (3e) relu intégralement : 3 items ajoutés au
 cours — relation inverse pour retrouver une valeur manquante connaissant
@@ -723,7 +738,7 @@ vérifiés pour débordement.)
 - [x] fonctions-affines-troisieme.js *(piège classique ajouté à « Identifier a et b » — diviser CHAQUE terme du numérateur par d ; item « Droites et coefficients » enrichi pour couvrir aussi le cas constante a=0, absent avant alors que testé par un QCM à 3 réponses)*
 - [x] proportionnalite-troisieme.js *(branche « Ratios » scindée en 2 : « Ratios : simplifier, comparer, exprimer en % » et « Appliquer une proportionnalité » + formule produit en croix ajoutée ; items ajoutés pour ratio équivalent, ratio en %, produit en croix/valeur unitaire, ratio+différence — 4 des 6 générateurs de la section n'étaient pas couverts avant)*
 - [x] statistiques-troisieme.js *(3 items ajoutés : valeur manquante via somme=moyenne×effectif, formule tableur MOYENNE(plage) + piège en-tête, classe médiane par cumul d'effectifs ; 8 prompts convertis en texTable() — séries de 5-11 valeurs en prose, notes de 2 élèves, catégorie/classe+effectif)*
-- [ ] probabilites-troisieme.js
+- [x] probabilites-troisieme.js *(item conversion pourcentage/décimal ajouté à « Calculer une probabilité », absent alors que testé par genProbabiliteDepuisPourcentageNumeric ; piège classique simplification fraction irréductible ajouté, testé par 3 générateurs dont un avec distracteur non simplifié ; sinon déjà bon, 4 branches déjà claires)*
 - [ ] thales-triangles-semblables-troisieme.js
 - [ ] trigonometrie-triangle-rectangle-troisieme.js
 - [ ] transformations-plan-troisieme.js

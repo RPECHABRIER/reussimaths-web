@@ -110,7 +110,7 @@ function genLireAbscisseFraction() {
       { id: "endR", x: x1, y, hideDot: true, hideLabel: true },
       { id: letter, x: px, y, dy: -14 },
     ],
-    lines: [{ from: "endL", to: "endR", extend: 6 }],
+    lines: [{ from: "endL", to: "endR", extend: 6, arrowEnd: true }],
     freeLabels: [
       { x: x0, y: y + 20, text: "0" },
       { x: x1, y: y + 20, text: String(maxEntier) },
@@ -690,8 +690,9 @@ export default {
             items: [
               "Même dénominateur : on compare directement les numérateurs.",
               "Dénominateurs différents : on les met d'abord au même dénominateur.",
+              "Piège classique : à numérateur égal, ce n'est PAS la fraction au plus grand dénominateur qui est la plus grande — plus on partage en parts nombreuses, plus chaque part est petite.",
             ],
-            formula: "\\(\\dfrac{5}{7} > \\dfrac{3}{7}\\)",
+            formula: "\\(\\dfrac{5}{7} > \\dfrac{3}{7}\\) mais \\(\\dfrac{1}{3} > \\dfrac{1}{7}\\)",
           },
           {
             title: "Additionner, soustraire",

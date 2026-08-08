@@ -227,6 +227,43 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Modélisation quadratique",
+        branches: [
+          {
+            title: "Forme développée et sommet",
+            items: [
+              "Forme développée \\(ax^2+bx+c\\) : pratique pour calculer une image ; le sommet donne le maximum ou minimum.",
+              "a > 0 : parabole tournée vers le haut (minimum au sommet) ; a < 0 : tournée vers le bas (maximum).",
+            ],
+            formula: "\\(f(x) = ax^2+bx+c,\\quad x_S = -\\dfrac{b}{2a}\\)",
+          },
+          {
+            title: "Discriminant",
+            items: [
+              "Δ renseigne sur le nombre de solutions de \\(ax^2+bx+c=0\\) avant même de les calculer.",
+            ],
+            formula: "\\(\\Delta = b^2-4ac\\)",
+          },
+          {
+            title: "Résoudre \\(ax^2+bx+c=0\\)",
+            items: [
+              "Δ > 0 : deux solutions distinctes. Δ = 0 : une solution unique (le sommet touche l'axe). Δ < 0 : aucune solution réelle.",
+              "Piège classique : oublier le cas Δ < 0 et chercher des solutions qui n'existent pas.",
+            ],
+            formula: "\\(x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)",
+          },
+          {
+            title: "Signe du trinôme",
+            items: [
+              "Le trinôme a le signe de a « à l'extérieur » des racines, et le signe opposé « entre » les racines (si Δ > 0).",
+              "Si Δ < 0 : le trinôme garde partout le signe de a.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -497,6 +497,7 @@ export default {
             title: "Loi de probabilité",
             items: [
               "Associe à chaque valeur possible de X sa probabilité ; la somme de toutes les probabilités vaut toujours 1.",
+              "\\(P(X \\leqslant a)\\) (notation à ne pas confondre avec \\(P(X=a)\\)) s'obtient en additionnant les probabilités de toutes les valeurs inférieures ou égales à a.",
             ],
           },
           {
@@ -504,6 +505,7 @@ export default {
             items: [
               "L'espérance est la moyenne théorique : ce que l'on gagnerait en moyenne en répétant l'expérience un grand nombre de fois.",
               "Jeu équitable : espérance de gain nulle.",
+              "Pour comparer deux jeux ou deux décisions, le plus avantageux est celui dont l'espérance est la plus grande.",
             ],
             formula: "\\(E(X) = \\sum_i p_i x_i\\)",
           },
@@ -526,8 +528,9 @@ export default {
             title: "Loi binomiale B(n,p)",
             items: [
               "Compte le nombre de succès sur n répétitions indépendantes d'une épreuve de Bernoulli de paramètre p.",
+              "Cas extrêmes faciles à calculer sans coefficient binomial : aucun succès (échec à chaque fois), ou succès à chaque fois.",
             ],
-            formula: "\\(E(X)=np,\\quad V(X)=np(1-p)\\)",
+            formula: "\\(E(X)=np,\\quad V(X)=np(1-p)\\quad;\\quad P(X=0)=(1-p)^n,\\ P(X=n)=p^n\\)",
           },
         ],
       },

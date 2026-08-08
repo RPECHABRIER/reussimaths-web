@@ -18,9 +18,29 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-reperage-configurations-seconde.js (2nde) — 6e fichier de la 2nde,
-premier fichier géométrie/figures de ce niveau (attention particulière
-aux figures et flèches par consigne de la tâche).**
+vecteurs-seconde.js (2nde) — 7e fichier de la 2nde, 2e fichier
+géométrie/figures/vecteurs (attention flèches de direction).**
+
+`reperage-configurations-seconde.js` (2nde, 1er fichier géométrie de la
+2nde) relu intégralement : item taxonomie orthogonal/orthonormé complété
+(testé par genTypeRepereDepuisDescriptionQCM à 3 réponses, seul le cas
+orthonormé était défini) ; item symétrique par rapport à l'origine ajouté
+(genSymetriqueOrigineNumeric, absent) ; item technique inverse
+x_B=2x_M-x_A ajouté (genPointMilieuVersACoordinateNumeric, absent) ; item
+cas particulier axe-aligné ajouté à « Distance entre deux points »
+(genVraiFauxParalleleAxeQCM/genDistanceSegmentAxeAligneNumeric, absent).
+Branche « Parallélogramme : milieu commun » scindée : le centre de
+gravité devient sa propre branche « Centre de gravité d'un triangle »
+avec formule explicite (absente avant) et figure dédiée. Nouvelle branche
+« Réciproque du théorème de Pythagore » ajoutée avec formule et figure
+(triangle non axe-aligné) : thème testé par
+genTriangleRectangleReciproquePythagoreQCM (portant littéralement ce nom
+de chapitre) mais totalement absent du cours avant cette relecture.
+Figures : 7 figures, toutes via buildCoursRepereFigure avec axes fléchés
+(arrowEnd) — convention déjà confirmée correcte pour ce fichier lors de
+l'audit flèches antérieur (voir section « Ce qui a déclenché ce
+chantier » plus bas). Aucun symbole €, aucun candidat texTable (grep
+mécanique confirmé faux positif comme anticipé — coordonnées de points).
 
 `fonctions-reference-seconde.js` (2nde) relu intégralement : item ajouté
 à « Fonction inverse » sur le fait que l'inverse n'est jamais nul (0 sans
@@ -918,7 +938,7 @@ vérifiés pour débordement.)
 - [x] variations-fonctions-seconde.js *(item encadrement d'une image intermédiaire ajouté, testé par genEncadrerImageQCM mais absent ; sinon déjà bon)*
 - [x] fonctions-affines-seconde.js *(taxonomie linéaire/constante/affine ajoutée, équation généralisée à ax+b=k, nouvelle branche « Modéliser un tarif » ajoutée)*
 - [x] fonctions-reference-seconde.js *(item inverse jamais nul ajouté, item équations imprécis corrigé/scindé, item inéquations x²/|x| ajouté — thème entier absent avant)*
-- [ ] reperage-configurations-seconde.js
+- [x] reperage-configurations-seconde.js *(4 items ajoutés — orthogonal/orthonormé, symétrique origine, inverse milieu, distance axe-alignée ; branche Parallélogramme scindée ; 2 nouvelles branches ajoutées — Centre de gravité, Réciproque de Pythagore, avec figures ; flèches déjà correctes)*
 - [ ] vecteurs-seconde.js
 - [ ] colinearite-vecteurs-seconde.js
 - [ ] equations-droites-seconde.js

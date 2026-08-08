@@ -17,9 +17,18 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`
-et `addition-soustraction-rationnels.js` (4e) sont faits. Prochain
-fichier : `multiplication-division-rationnels.js` (4e).**
+**La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`,
+`addition-soustraction-rationnels.js` et `multiplication-division-rationnels.js`
+(4e) sont faits. Prochain fichier : `puissances-quatrieme.js` (4e).**
+
+`multiplication-division-rationnels.js` (4e) relu intégralement : formule
+ajoutée à la branche "Opposé et inverse" (opposé de 2/3 = -2/3 ; inverse de
+2/3 = 3/2, affichés côte à côte), qui n'en avait aucune alors que le piège
+classique de cette branche porte justement sur la confusion opposé/inverse.
+Reste déjà au niveau attendu (branches "Multiplier des fractions",
+"Diviser par une fraction", "Priorités et problèmes" déjà claires et
+concrètes, formules déjà présentes où utiles). Aucun € dans le fichier,
+aucun candidat `texTable()` (prompts déjà courts, max 278 caractères).
 
 `addition-soustraction-rationnels.js` (4e) relu intégralement : branche
 "Rappels : simplifier, comparer" — les 2 items qui n'avaient pas d'exemple
@@ -416,7 +425,7 @@ vérifiés pour débordement.)
 ### 4e
 - [x] nombres-relatifs-quatrieme.js *(branche "Signe inconnu" renommée pour inclure les programmes de calcul ; piège classique priorités reformulé pour coller aux exercices ; formules ajoutées à 3 branches)*
 - [x] addition-soustraction-rationnels.js *(exemples numériques ajoutés à 2 items sans exemple ; formule PPCM ajoutée à une branche qui n'en avait pas)*
-- [ ] multiplication-division-rationnels.js
+- [x] multiplication-division-rationnels.js *(formule opposé/inverse ajoutée à une branche qui n'en avait aucune, aligne avec son piège classique)*
 - [ ] puissances-quatrieme.js
 - [ ] calcul-litteral-quatrieme.js
 - [ ] resolution-equations.js

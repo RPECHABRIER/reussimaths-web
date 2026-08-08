@@ -476,6 +476,43 @@ export default {
     pourquoi: "Les probabilités conditionnelles permettent d'actualiser un risque quand une information nouvelle arrive — un test médical positif, un email détecté comme spam.",
     level: "premiere-spe",
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Probabilités conditionnelles et indépendance",
+        branches: [
+          {
+            title: "Probabilité conditionnelle",
+            items: [
+              "\\(P_A(B)\\) : probabilité de B sachant A déjà réalisé.",
+            ],
+            formula: "\\(P(A \\cap B) = P(A) \\times P_A(B)\\)",
+          },
+          {
+            title: "Indépendance de deux évènements",
+            items: [
+              "A et B indépendants ⟺ \\(P_A(B)=P(B)\\) ⟺ \\(P(A \\cap B)=P(A)\\times P(B)\\).",
+              "Piège classique : indépendant ne veut pas dire incompatible — deux notions différentes.",
+            ],
+          },
+          {
+            title: "Partition et probabilités totales",
+            items: [
+              "Une partition de l'univers découpe tous les cas possibles en événements disjoints qui recouvrent tout.",
+              "Formule des probabilités totales : additionner les probabilités de B sur chaque morceau de la partition.",
+            ],
+            formula: "\\(P(B) = \\sum_i P(A_i) \\times P_{A_i}(B)\\)",
+          },
+          {
+            title: "Épreuves de Bernoulli répétées",
+            items: [
+              "Chaque répétition est identique et indépendante : succès (probabilité p) ou échec (probabilité 1-p).",
+              "\\(P(\\text{au moins un succès}) = 1 - P(\\text{aucun succès}) = 1-(1-p)^n\\).",
+              "Le nombre de chemins menant à k succès sur n épreuves se compte sur l'arbre.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -466,6 +466,48 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant.
+function buildCoursVecteurNormalFigure() {
+  return {
+    points: [
+      { id: "P1", x: 0, y: 0, hideLabel: true },
+      { id: "P2", x: -30, y: 10, hideLabel: true },
+      { id: "N", x: 10, y: 30, label: "n", dx: 8, dy: 8 },
+    ],
+    lines: [{ from: "P1", to: "P2" }, { from: "P1", to: "N", extend: 0, arrowEnd: true }],
+    rightAngles: [{ at: "P1", from: "P2", to: "N" }],
+    freeLabels: [{ x: -46, y: 14, text: "d" }],
+  };
+}
+
+function buildCoursCercleReperFigure() {
+  return {
+    points: [
+      { id: "O", x: 0, y: 0, label: "Ω", dx: -14, dy: 10 },
+      { id: "M", x: 32, y: -32, hideLabel: true },
+    ],
+    segments: [{ from: "O", to: "M" }],
+    circles: [{ center: "O", radius: 45 }],
+    freeLabels: [{ x: 14, y: -18, text: "r" }],
+  };
+}
+
+function buildCoursProjectionFigure() {
+  return {
+    points: [
+      { id: "P1", x: 0, y: 0, hideLabel: true },
+      { id: "P2", x: 60, y: 20, hideLabel: true },
+      { id: "A", x: 20, y: -40, label: "A", dx: 8, dy: -6 },
+      { id: "H", x: 6, y: 2, label: "H", dx: 4, dy: 16 },
+    ],
+    lines: [{ from: "P1", to: "P2" }],
+    segments: [{ from: "A", to: "H", dashed: true }],
+    rightAngles: [{ at: "H", from: "A", to: "P2" }],
+    freeLabels: [{ x: -12, y: 14, text: "d" }],
+  };
+}
+
 export default {
   meta: {
     id: "geometrie-reperee-premiere-spe",
@@ -474,6 +516,44 @@ export default {
     pourquoi: "Passer du vecteur à l'équation de droite ou de cercle, c'est le langage utilisé en physique et en informatique graphique pour décrire des positions.",
     level: "premiere-spe",
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Géométrie repérée",
+        branches: [
+          {
+            title: "Vecteur normal à une droite",
+            items: [
+              "Pour la droite \\(ax+by+c=0\\), le vecteur \\(\\overrightarrow{n}(a;b)\\) est perpendiculaire à la droite.",
+              "Piège classique : ne pas confondre vecteur normal \\((a;b)\\) et vecteur directeur \\((-b;a)\\) — ils sont perpendiculaires entre eux.",
+            ],
+            figure: buildCoursVecteurNormalFigure(),
+          },
+          {
+            title: "Équation de cercle : centre et rayon",
+            items: [
+              "Un point M appartient au cercle de centre Ω et de rayon r si et seulement si \\(\\Omega M = r\\).",
+            ],
+            formula: "\\((x-x_\\Omega)^2+(y-y_\\Omega)^2 = r^2\\)",
+            figure: buildCoursCercleReperFigure(),
+          },
+          {
+            title: "Forme développée du cercle",
+            items: [
+              "Pour retrouver le centre et le rayon, il faut compléter le carré deux fois (une fois en x, une fois en y).",
+              "Piège classique : une équation développée ne correspond à un vrai cercle que si le rayon obtenu est strictement positif.",
+            ],
+          },
+          {
+            title: "Projection orthogonale et distance à une droite",
+            items: [
+              "H, projeté orthogonal de A sur d, est le point de d le plus proche de A : \\((AH)\\) est perpendiculaire à d.",
+            ],
+            formula: "\\(d(A,d) = \\dfrac{|ax_A+by_A+c|}{\\sqrt{a^2+b^2}}\\)",
+            figure: buildCoursProjectionFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

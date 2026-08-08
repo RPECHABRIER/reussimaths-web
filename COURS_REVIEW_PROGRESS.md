@@ -17,14 +17,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Démarrage du chantier.** Premier fichier à revoir : `nombres-decimaux.js`
-(6e) — déjà partiellement traité ce jour (tableau de tarifs + flèche de la
-droite graduée déjà corrigés, commits `9fa7fea` et la mise en place de
-l'infra flèche `7fa736f`/`e54d8cc`) : reprendre en relisant l'intégralité de
-son Cours pour confirmer qu'il est déjà au niveau attendu, puis continuer
-avec `fractions.js`, `proportionnalite.js`, et le reste de la 6e, puis 5e,
-4e, 3e, 2nde, Première (x3), Terminale (x2), dans cet ordre (même ordre que
-`COURS_PROGRESS.md`).
+`nombres-decimaux.js` (6e) relu intégralement et confirmé au niveau
+attendu : les 4 branches partent du concret (exemple chiffré avant la
+règle), le piège classique (3,4 > 3,25) est déjà présent sur la branche
+"Comparer", la figure de la droite graduée a déjà sa flèche
+(`buildCoursDroiteGradueeFigure`, `arrowEnd: true`), et le tableau de
+tarifs (`genProblemeTarifPoids`) est déjà en `texTable()`. Aucun autre
+défaut de présentation détecté dans les autres générateurs du fichier.
+**RAS, rien à committer pour ce fichier** au-delà des corrections déjà
+faites en amont (commits `9fa7fea`/`da902e8`).
+
+**Prochain fichier à traiter : `fractions.js` (6e).** Puis le reste de la
+6e, 5e, 4e, 3e dans cet ordre (périmètre de ce chantier = collège
+uniquement, voir consigne — 2nde/lycée hors scope pour l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -119,8 +124,7 @@ sauf signal du grep ci-dessus ou repéré à l'œil) :
 vérifiés pour débordement.)
 
 ### 6e
-- [ ] nombres-decimaux.js *(partiellement fait — tarif + flèche déjà
-  corrigés, relire le reste du Cours)*
+- [x] nombres-decimaux.js *(relu intégralement, déjà au niveau attendu — RAS)*
 - [ ] fractions.js
 - [ ] proportionnalite.js
 - [ ] operations-decimaux.js

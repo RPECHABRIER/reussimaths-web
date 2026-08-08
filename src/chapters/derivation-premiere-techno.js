@@ -285,14 +285,17 @@ export default {
             items: [
               "Le taux de variation entre deux points est le coefficient directeur de la sécante qui les relie.",
               "Quand les deux points se rapprochent, la sécante « devient » la tangente : le nombre dérivé.",
+              "Le taux de variation entre a et a+h, pour h très petit, donne une valeur approchée du nombre dérivé \\(f'(a)\\).",
             ],
           },
           {
             title: "Dérivées de référence",
             items: [
+              "Pour un polynôme, on dérive chaque terme séparément puis on additionne (dérivée d'une somme = somme des dérivées).",
+              "Dérivée de kf (un multiple d'une fonction) : on multiplie simplement la dérivée par k.",
               "Piège classique : dériver un polynôme terme à terme, sans oublier de baisser chaque exposant.",
             ],
-            formula: "\\((ax^n)'=nax^{n-1}\\)",
+            formula: "\\((ax^n)'=nax^{n-1},\\quad (kf)'=kf'\\)",
           },
           {
             title: "Équation de la tangente",
@@ -305,6 +308,7 @@ export default {
             title: "Signe de f' et sens de variation",
             items: [
               "\\(f'(x)>0\\) ⟹ f croissante ; \\(f'(x)<0\\) ⟹ f décroissante.",
+              "En un extremum (maximum ou minimum), la tangente est horizontale : le signe de f' change en changeant de sens de part et d'autre.",
               "Piège classique très fréquent : le signe de f' donne le sens de variation, ce n'est pas le signe de f.",
             ],
           },

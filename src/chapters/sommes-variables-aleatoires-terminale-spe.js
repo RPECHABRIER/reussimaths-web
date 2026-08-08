@@ -364,6 +364,7 @@ export default {
             title: "Linéarité de l'espérance",
             items: [
               "Toujours vraie, même si les variables ne sont pas indépendantes.",
+              "Cas général avec des coefficients : \\(E(pX+qY) = pE(X)+qE(Y)\\), quels que soient les réels p et q.",
             ],
             formula: "\\(E(X+Y) = E(X)+E(Y)\\)",
           },
@@ -371,6 +372,7 @@ export default {
             title: "Variance d'une somme (variables indépendantes)",
             items: [
               "Piège classique très fréquent : cette formule n'est valable QUE si X et Y sont indépendantes.",
+              "Cas général avec des coefficients (X, Y indépendantes) : \\(V(pX+qY) = p^2V(X)+q^2V(Y)\\) — attention, même pour une différence \\(pX-qY\\), les variances s'AJOUTENT (\\(V(-qY)=q^2V(Y)\\geqslant 0\\)).",
             ],
             formula: "\\(V(X+Y) = V(X)+V(Y)\\ \\text{(si X, Y indépendantes)}\\)",
           },

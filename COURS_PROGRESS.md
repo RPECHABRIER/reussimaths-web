@@ -68,6 +68,9 @@ les hashes). État actuel :
   triangle rectangle — via `buildCoursCercleFigure()` /
   `buildCoursTriangleTrigFigure()`). **Prochain fichier :
   `vecteurs-produit-scalaire-premiere-spe.js` (géométrie).**
+  `vecteurs-produit-scalaire-premiere-spe.js` fait (commit `cfc5be6`, 3
+  figures neuves). **Prochain fichier :
+  `geometrie-reperee-premiere-spe.js` (géométrie).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -327,7 +330,7 @@ Cours).
 - [x] variations-courbes-premiere-spe.js
 - [x] fonction-exponentielle-premiere-spe.js
 - [x] trigonometrie-premiere-spe.js *(géométrie)*
-- [ ] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
+- [x] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
 - [ ] geometrie-reperee-premiere-spe.js *(géométrie)*
 - [ ] probabilites-conditionnelles-premiere-spe.js
 - [ ] variables-aleatoires-premiere-spe.js

@@ -18,16 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 9 des 14 fichiers de
+la Première techno sont intégralement terminées. 10 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
 suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
 continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
 logarithme-neperien-terminale-spe.js,
-fonctions-trigonometriques-terminale-spe.js). Prochain fichier :
-primitives-equations-differentielles-terminale-spe.js (Terminale
-Spé).**
+fonctions-trigonometriques-terminale-spe.js,
+primitives-equations-differentielles-terminale-spe.js). Prochain
+fichier : calcul-integral-terminale-spe.js (Terminale Spé).**
+
+`primitives-equations-differentielles-terminale-spe.js` (Terminale
+Spé) relu intégralement : 4 branches inchangées en nombre mais
+enrichies. Branche « Primitives usuelles » enrichie : formules des
+primitives de cos(ax+b) et sin(ax+b) ajoutées, testées par 2 chapters
+dédiés mais absentes (seules x^n et e^(ax+b) figuraient). Branche
+« Équation différentielle y'=ay+b » enrichie : propriété F-G solution
+de l'équation homogène quand F et G sont solutions de y'=ay+b ajoutée.
+Aucun €, aucun candidat texTable, fichier sans figure.
 
 `fonctions-trigonometriques-terminale-spe.js` (Terminale Spé) relu
 intégralement : 7 branches (4 avant), le plus de gaps rencontrés
@@ -1574,7 +1583,7 @@ vérifiés pour débordement.)
 - [x] complements-derivation-terminale-spe.js *(formule du produit ajoutée, lien f''/monotonie de f' explicité, domaine de dérivabilité de racine(u), cas de la fonction affine convexe et concave)*
 - [x] logarithme-neperien-terminale-spe.js *(nouvelle branche Limites usuelles, formules réciproques e^ln(a)=a / ln(e^k)=k, piège ln(a²)=2ln(a) valable seulement pour a>0, direction ln(x)=k⟹x=e^k ajoutée)*
 - [x] fonctions-trigonometriques-terminale-spe.js *(3 branches entières ajoutées — valeurs remarquables+signe, identité fondamentale+comparaison, limites en 0 ; formules d'addition ajoutées, totalement absentes malgré le titre de la branche qui les annonçait)*
-- [ ] primitives-equations-differentielles-terminale-spe.js
+- [x] primitives-equations-differentielles-terminale-spe.js *(primitives de cos(ax+b)/sin(ax+b) ajoutées, propriété F-G solution de l'équation homogène ajoutée)*
 - [ ] calcul-integral-terminale-spe.js
 - [ ] loi-binomiale-terminale-spe.js
 - [ ] sommes-variables-aleatoires-terminale-spe.js

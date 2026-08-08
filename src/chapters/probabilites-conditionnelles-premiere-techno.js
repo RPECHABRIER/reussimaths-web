@@ -256,9 +256,11 @@ export default {
           {
             title: "Indépendance de deux évènements",
             items: [
-              "A et B indépendants ⟺ \\(P_A(B)=P(B)\\).",
-              "Piège classique : indépendant ne veut pas dire incompatible.",
+              "A et B indépendants ⟺ \\(P_A(B)=P(B)\\), ce qui équivaut aussi à \\(P(A \\cap B)=P(A) \\times P(B)\\) (produit, et non une somme).",
+              "Pour vérifier l'indépendance sur un tableau croisé : comparer la valeur lue de \\(P(A \\cap B)\\) au produit calculé \\(P(A) \\times P(B)\\).",
+              "Piège classique : indépendant ne veut pas dire incompatible — deux évènements incompatibles de probabilités non nulles ne sont jamais indépendants.",
             ],
+            formula: "\\(P(A \\cap B) = P(A) \\times P(B)\\)",
           },
           {
             title: "Partition et probabilités totales",

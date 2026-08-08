@@ -19,11 +19,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-4 des 8 fichiers de Première techno sont relus
+5 des 8 fichiers de Première techno sont relus
 (suites-numeriques-premiere-techno.js,
 fonctions-second-degre-premiere-techno.js, derivation-premiere-techno.js,
-statistiques-deux-variables-premiere-techno.js). Prochain fichier :
-probabilites-conditionnelles-premiere-techno.js (Première techno).**
+statistiques-deux-variables-premiere-techno.js,
+probabilites-conditionnelles-premiere-techno.js). Prochain fichier :
+epreuves-independantes-premiere-techno.js (Première techno).**
+
+`probabilites-conditionnelles-premiere-techno.js` (Première techno)
+relu intégralement : 4 branches inchangées en nombre mais enrichies.
+Branche « Indépendance de deux évènements » enrichie : formule
+P(A∩B)=P(A)×P(B) ajoutée, équivalente à P_A(B)=P(B) mais jamais donnée
+explicitement — testée par genCalculerIntersectionIndependantsNumeric,
+la méthode du tableau croisé, et le piège produit/somme du vrai-faux.
+Item ajouté sur la vérification par tableau croisé ; piège classique
+reformulé (incompatible ≠ indépendant). Aucun €, aucun candidat
+texTable, fichier sans figure.
 
 `statistiques-deux-variables-premiere-techno.js` (Première techno) relu
 intégralement : 4 branches (3 avant). Nouvelle branche « Déterminer et
@@ -1405,7 +1416,7 @@ vérifiés pour débordement.)
 - [x] fonctions-second-degre-premiere-techno.js *(nouvelle branche « Fonctions de référence ax²/ax²+c », formule a depuis 2 racines+point, méthode officielle sans formule pour l'axe de symétrie)*
 - [x] derivation-premiere-techno.js *(formule (kf)'=kf' ajoutée, approximation du nombre dérivé par le taux de variation, principe de l'extremum lié au signe de f')*
 - [x] statistiques-deux-variables-premiere-techno.js *(nouvelle branche « Déterminer et juger un ajustement affine » — formule du coefficient directeur depuis 2 points, critère de pertinence visuelle du nuage)*
-- [ ] probabilites-conditionnelles-premiere-techno.js
+- [x] probabilites-conditionnelles-premiere-techno.js *(formule P(A∩B)=P(A)×P(B) ajoutée à la branche Indépendance, item méthode tableau croisé, piège incompatible≠indépendant reformulé)*
 - [ ] epreuves-independantes-premiere-techno.js
 - [ ] variables-aleatoires-premiere-techno.js
 - [ ] algorithmique-python-premiere-techno.js

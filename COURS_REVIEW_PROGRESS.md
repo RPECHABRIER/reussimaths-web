@@ -19,10 +19,26 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
 terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
-`derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js` et
-`fonction-exponentielle-premiere-spe.js` (Première Spé) sont faits.
-Prochain fichier : trigonometrie-premiere-spe.js (Première Spé, 6e des
-11 fichiers de ce niveau).**
+`derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js`,
+`fonction-exponentielle-premiere-spe.js` et `trigonometrie-premiere-spe.js`
+(Première Spé) sont faits. Prochain fichier :
+vecteurs-produit-scalaire-premiere-spe.js (Première Spé, 7e des 11
+fichiers de ce niveau).**
+
+`trigonometrie-premiere-spe.js` (Première Spé) relu intégralement : 6
+branches (5 avant). Nouvelle branche « Angles associés et signe selon
+le quadrant » ajoutée — gap le plus grave du fichier : 7 générateurs
+sur 21 (un tiers du fichier) testent les angles associés et le signe
+selon le quadrant, sans qu'aucune de ces règles n'apparaisse dans une
+seule branche avant. Branche « Cercle trigonométrique et radian »
+enrichie : formule de longueur d'arc ℓ=r×θ ajoutée. Branche « Cosinus
+et sinus » enrichie : tableau des valeurs remarquables (0, π/6, π/4,
+π/3, π/2) ajouté en formule sous forme de vrai tableau LaTeX
+\begin{array}, alors que 3 générateurs demandent de les connaître « par
+cœur » sans qu'aucun tableau ne les récapitule avant. Aucun €, aucun
+candidat texTable dans les exercices. Fichier géométrique : figures
+existantes (cercle trigo, triangle rectangle) non modifiées, toujours
+correctes.
 
 `fonction-exponentielle-premiere-spe.js` (Première Spé) relu
 intégralement : 5 branches (4 avant). Nouvelle branche « Modéliser une
@@ -1277,7 +1293,7 @@ vérifiés pour débordement.)
 - [x] derivation-premiere-spe.js *(nouvelle branche Signe de f' et sens de variation — théorème fondamental totalement absent alors que testé par 2 générateurs ; règle (u+v)'=u'+v' ajoutée ; items dérivée nulle d'une constante et non-dérivabilité (point anguleux, tangente verticale))*
 - [x] variations-courbes-premiere-spe.js *(nouvelle branche Allure et symétrie de la parabole — 2 thèmes absents ; items ajoutés — f'=0 sur un intervalle donne f constante, monotonie pour comparer/encadrer des images, somme de fonctions de même monotonie ; formule α=-b/2a ajoutée)*
 - [x] fonction-exponentielle-premiere-spe.js *(nouvelle branche Modéliser une croissance ou décroissance exponentielle — thème entier absent, forme C0 e^{kt} et signe de k jamais donnés malgré le champ pourquoi du chapitre)*
-- [ ] trigonometrie-premiere-spe.js
+- [x] trigonometrie-premiere-spe.js *(nouvelle branche Angles associés et signe selon le quadrant — 7 générateurs sur 21 sans aucune branche avant ; formule longueur d'arc ℓ=rθ ajoutée ; tableau des valeurs remarquables ajouté en formule via \begin{array})*
 - [ ] vecteurs-produit-scalaire-premiere-spe.js
 - [ ] geometrie-reperee-premiere-spe.js
 - [ ] probabilites-conditionnelles-premiere-spe.js

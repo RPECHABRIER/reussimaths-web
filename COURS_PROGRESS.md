@@ -47,8 +47,10 @@ les hashes). État actuel :
   SANS Cours (synthèse transversale, voir checklist "2nde" pour le détail).
   **La 2nde est intégralement terminée.**
 - Première non spé : `analyse-information-chiffree-premiere-non-spe.js`
-  fait (commit `cafea33`, pas de figure). **Prochain fichier :
-  `statistique-probabilites-premiere-non-spe.js`.**
+  fait (commit `cafea33`, pas de figure).
+  `statistique-probabilites-premiere-non-spe.js` fait (commit `8c52d7b`,
+  pas de figure). **Prochain fichier :
+  `croissance-lineaire-premiere-non-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -280,7 +282,7 @@ initiale de Romain.
 ### Première non spé (premiere-non-spe)
 
 - [x] analyse-information-chiffree-premiere-non-spe.js
-- [ ] statistique-probabilites-premiere-non-spe.js
+- [x] statistique-probabilites-premiere-non-spe.js
 - [ ] croissance-lineaire-premiere-non-spe.js
 - [ ] croissance-exponentielle-premiere-non-spe.js
 - [ ] modelisation-quadratique-premiere-non-spe.js

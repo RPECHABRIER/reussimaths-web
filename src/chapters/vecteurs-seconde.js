@@ -554,6 +554,7 @@ export default {
             items: [
               "Les coordonnées de \\(\\overrightarrow{AB}\\) s'obtiennent en soustrayant les coordonnées de A à celles de B (arrivée moins départ).",
               "La norme se calcule avec Pythagore, comme une distance.",
+              "Pour comparer deux normes sans calculer de racine carrée, il suffit de comparer leurs carrés.",
             ],
             formula: "\\(\\overrightarrow{AB}\\begin{pmatrix}x_B-x_A\\\\y_B-y_A\\end{pmatrix},\\ \\|\\overrightarrow{AB}\\| = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2}\\)",
             figure: buildCoursVecteurFigure(
@@ -561,6 +562,16 @@ export default {
               [{ from: "A", to: "B" }],
               [{ from: "A", to: "H", dashed: true }, { from: "H", to: "B", dashed: true }]
             ),
+          },
+          {
+            title: "Translation d'un point",
+            items: [
+              "L'image A' d'un point A(x ; y) par la translation de vecteur \\(\\vec{u}(dx ; dy)\\) a pour coordonnées \\((x+dx ; y+dy)\\).",
+              "Pour retrouver l'antécédent A connaissant l'image A', on inverse : \\(x = x' - dx,\\ y = y' - dy\\).",
+              "Le vecteur de translation qui envoie A sur A' est \\(\\overrightarrow{AA'}\\).",
+            ],
+            formula: "\\(A'(x+dx ; y+dy)\\)",
+            figure: buildCoursVecteurFigure([{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "Aprime", x: 4, y: 2, label: "A'" }], [{ from: "A", to: "Aprime" }]),
           },
           {
             title: "Égalité de vecteurs, relation de Chasles",
@@ -587,9 +598,21 @@ export default {
             ),
           },
           {
-            title: "Vecteur opposé et multiplication par un nombre",
+            title: "Caractérisation vectorielle du milieu",
+            items: [
+              "M est le milieu de \\([AB]\\) si et seulement si \\(\\overrightarrow{AM} = \\overrightarrow{MB}\\) (même vecteur, donc même direction, même sens et même longueur).",
+            ],
+            formula: "\\(\\overrightarrow{AM}=\\overrightarrow{MB} \\iff x_M = \\dfrac{x_A+x_B}{2},\\ y_M = \\dfrac{y_A+y_B}{2}\\)",
+            figure: buildCoursVecteurFigure(
+              [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "M", x: 2, y: 1, dy: 10 }, { id: "B", x: 4, y: 2 }],
+              [{ from: "A", to: "M" }, { from: "M", to: "B" }]
+            ),
+          },
+          {
+            title: "Opérations sur les vecteurs : opposé, somme, multiplication",
             items: [
               "\\(-\\overrightarrow{u}\\) a la même longueur mais le sens opposé ; \\(k\\overrightarrow{u}\\) a la même direction, une longueur multipliée par \\(|k|\\), et le sens opposé si k < 0.",
+              "Pour additionner deux vecteurs, on additionne leurs coordonnées une à une : \\((x_1;y_1)+(x_2;y_2)=(x_1+x_2 ; y_1+y_2)\\).",
             ],
             figure: buildCoursVecteurFigure(
               [
@@ -599,6 +622,23 @@ export default {
                 { id: "C", x: -2, y: -1, label: "-u", dx: -16, dy: 6 },
               ],
               [{ from: "O", to: "A" }, { from: "O", to: "B" }, { from: "O", to: "C" }]
+            ),
+          },
+          {
+            title: "Combinaison linéaire de deux vecteurs",
+            items: [
+              "Si \\(\\vec{u}\\) et \\(\\vec{v}\\) ne sont pas colinéaires, tout vecteur \\(\\vec{w}\\) du plan s'écrit de façon unique \\(\\vec{w} = a\\vec{u}+b\\vec{v}\\).",
+              "Pour trouver a et b, on identifie les coordonnées : cela donne un système de deux équations à résoudre.",
+            ],
+            formula: "\\(\\vec{w} = a\\vec{u}+b\\vec{v}\\)",
+            figure: buildCoursVecteurFigure(
+              [
+                { id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 10 },
+                { id: "U", x: 3, y: 1, label: "u", dy: 10 },
+                { id: "V", x: 1, y: 3, label: "v", dx: -14, dy: -6 },
+                { id: "W", x: 4, y: 4, label: "w" },
+              ],
+              [{ from: "O", to: "U" }, { from: "O", to: "V" }, { from: "O", to: "W" }]
             ),
           },
         ],

@@ -19,11 +19,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-3 des 8 fichiers de Première techno sont relus
+4 des 8 fichiers de Première techno sont relus
 (suites-numeriques-premiere-techno.js,
-fonctions-second-degre-premiere-techno.js,
-derivation-premiere-techno.js). Prochain fichier :
-statistiques-deux-variables-premiere-techno.js (Première techno).**
+fonctions-second-degre-premiere-techno.js, derivation-premiere-techno.js,
+statistiques-deux-variables-premiere-techno.js). Prochain fichier :
+probabilites-conditionnelles-premiere-techno.js (Première techno).**
+
+`statistiques-deux-variables-premiere-techno.js` (Première techno) relu
+intégralement : 4 branches (3 avant). Nouvelle branche « Déterminer et
+juger un ajustement affine » ajoutée : formule a=(y2-y1)/(x2-x1) depuis
+deux points connus de la droite (genDeterminerAjustementNumeric,
+absente avant) ; critère de pertinence visuelle (points alignés vs
+nuage incurvé, genReconnaitreAjustementPertinentQCM, thème entier
+absent avant). Aucun €, aucun candidat texTable (coordonnées de points
+= faux positif), fichier sans figure géométrique.
 
 `derivation-premiere-techno.js` (Première techno) relu intégralement :
 4 branches inchangées en nombre mais enrichies. Branche « Sécante, taux
@@ -1395,7 +1404,7 @@ vérifiés pour débordement.)
 - [x] suites-numeriques-premiere-techno.js *(règles de sens de variation ajoutées aux branches arithmétique/géométrique, nouvelle branche « Reconnaître une croissance linéaire ou exponentielle » couvrant modélisation concrète + lecture de nuage de points)*
 - [x] fonctions-second-degre-premiere-techno.js *(nouvelle branche « Fonctions de référence ax²/ax²+c », formule a depuis 2 racines+point, méthode officielle sans formule pour l'axe de symétrie)*
 - [x] derivation-premiere-techno.js *(formule (kf)'=kf' ajoutée, approximation du nombre dérivé par le taux de variation, principe de l'extremum lié au signe de f')*
-- [ ] statistiques-deux-variables-premiere-techno.js
+- [x] statistiques-deux-variables-premiere-techno.js *(nouvelle branche « Déterminer et juger un ajustement affine » — formule du coefficient directeur depuis 2 points, critère de pertinence visuelle du nuage)*
 - [ ] probabilites-conditionnelles-premiere-techno.js
 - [ ] epreuves-independantes-premiere-techno.js
 - [ ] variables-aleatoires-premiere-techno.js

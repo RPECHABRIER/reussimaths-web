@@ -18,7 +18,38 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : statistiques-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : probabilites-troisieme.js (3e).**
+
+`statistiques-troisieme.js` (3e) relu intégralement : 3 items ajoutés au
+cours — relation inverse pour retrouver une valeur manquante connaissant
+la moyenne (testé par `genValeurManquanteMoyenneNumeric` mais absent) ;
+formule tableur MOYENNE(plage) avec piège classique sur la ligne
+d'en-tête (testé par `genFormuleTableurQCM`, dont les distracteurs
+incluent une plage démarrant à la ligne 1 au lieu de 2, mais absent du
+cours) ; technique de la classe médiane par cumul d'effectifs (testée par
+`genMedianeClasseQCM`, seule technique de "Tableau à classes" totalement
+absente du cours). Exercices : 8 prompts convertis en `texTable()` (import
+ajouté) — `genMoyenneSimpleNumeric`/`genMedianeImpairNumeric`/
+`genMedianePairNumeric`/`genEtendueNumeric`/
+`genValeurManquanteMoyenneNumeric` énuméraient une série de 5 à 11 valeurs
+séparées par " ; " en prose (risque de débordement fort sur mobile pour
+n=11) ; `genMoyennePondereeNumeric` énumérait jusqu'à 5 fragments de
+phrase grammaticalement variables ; `genComparerSeriesQCM` énumérait 2
+séries de 5-6 notes en prose (motif déjà corrigé sur
+statistiques-quatrieme.js) ; `genLectureTableauEffectifsQCM` et
+`genMoyenneClasseNumeric`/`genMedianeClasseQCM` énuméraient des paires
+catégorie/classe + effectif en prose (motif "Catégorie/Effectif" déjà
+corrigé sur statistiques-quatrieme.js). Branches "Comparer deux séries" et
+"Diagramme circulaire" laissées inchangées (déjà au niveau attendu).
+Aucun symbole € dans le fichier.
+
+**Les 7 fichiers de 3e confiés dans cette session sont terminés**
+(calcul-numerique, calcul-litteral, equations, notion-fonction,
+fonctions-affines, proportionnalite, statistiques — en plus de
+nombres-entiers-troisieme.js terminé en amont). Il reste 6 fichiers de 3e
+dans la checklist ci-dessous (probabilites, thales-triangles-semblables,
+trigonometrie-triangle-rectangle, transformations-plan, geometrie-espace,
+mesures-grandeurs), puis la 2nde et le lycée.
 
 `proportionnalite-troisieme.js` (3e) relu intégralement : branche "Ratios"
 scindée en deux branches distinctes ("Ratios : simplifier, comparer,
@@ -691,7 +722,7 @@ vérifiés pour débordement.)
 - [x] notion-fonction-troisieme.js *(notation x↦10^x remplacée par m(x)=10^x pour cohérence avec f(x) partout ailleurs ; genLectureTableauImageNumeric/genLectureTableauAntecedentNumeric convertis en texTable(), même bug déjà vu sur notion-fonctions.js 4e)*
 - [x] fonctions-affines-troisieme.js *(piège classique ajouté à « Identifier a et b » — diviser CHAQUE terme du numérateur par d ; item « Droites et coefficients » enrichi pour couvrir aussi le cas constante a=0, absent avant alors que testé par un QCM à 3 réponses)*
 - [x] proportionnalite-troisieme.js *(branche « Ratios » scindée en 2 : « Ratios : simplifier, comparer, exprimer en % » et « Appliquer une proportionnalité » + formule produit en croix ajoutée ; items ajoutés pour ratio équivalent, ratio en %, produit en croix/valeur unitaire, ratio+différence — 4 des 6 générateurs de la section n'étaient pas couverts avant)*
-- [ ] statistiques-troisieme.js
+- [x] statistiques-troisieme.js *(3 items ajoutés : valeur manquante via somme=moyenne×effectif, formule tableur MOYENNE(plage) + piège en-tête, classe médiane par cumul d'effectifs ; 8 prompts convertis en texTable() — séries de 5-11 valeurs en prose, notes de 2 élèves, catégorie/classe+effectif)*
 - [ ] probabilites-troisieme.js
 - [ ] thales-triangles-semblables-troisieme.js
 - [ ] trigonometrie-triangle-rectangle-troisieme.js

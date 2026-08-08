@@ -468,6 +468,42 @@ export default {
     level: "seconde",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Fonctions de référence",
+        branches: [
+          {
+            title: "Fonction carré : x ↦ x²",
+            items: [
+              "Définie sur \\(\\mathbb{R}\\), décroissante sur \\(]-\\infty ; 0]\\), croissante sur \\([0 ; +\\infty[\\), minimum 0 en x = 0.",
+              "Piège classique : un nombre strictement positif a toujours 2 antécédents par le carré (opposés l'un de l'autre).",
+            ],
+          },
+          {
+            title: "Fonction valeur absolue : x ↦ |x|",
+            items: [
+              "Définie sur \\(\\mathbb{R}\\), même allure en V que le carré : décroissante puis croissante, minimum 0 en x = 0.",
+              "\\(|x| = a\\) (a > 0) a deux solutions : x = a ou x = -a.",
+            ],
+          },
+          {
+            title: "Fonction inverse : x ↦ 1/x",
+            items: [
+              "Définie sur \\(\\mathbb{R}\\) privé de 0, décroissante sur \\(]-\\infty ; 0[\\) et décroissante sur \\(]0 ; +\\infty[\\) (mais pas sur la réunion des deux).",
+              "Piège classique : ne jamais dire « décroissante sur \\(\\mathbb{R}^*\\) » — le sens ne se compare pas d'un côté de 0 à l'autre.",
+            ],
+            formula: "\\(f(x) = \\dfrac{1}{x}\\)",
+          },
+          {
+            title: "Comparer des images, résoudre",
+            items: [
+              "Utiliser le sens de variation sur l'intervalle concerné pour comparer deux images sans calculer.",
+              "Pour résoudre \\(x^2=a\\), \\(|x|=a\\) ou \\(\\frac{1}{x}=a\\) : compter les solutions selon le signe de a.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

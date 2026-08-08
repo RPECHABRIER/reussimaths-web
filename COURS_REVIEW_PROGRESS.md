@@ -18,7 +18,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : notion-fonction-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : fonctions-affines-troisieme.js (3e).**
+
+`notion-fonction-troisieme.js` (3e) relu intégralement : notation
+\\(x \\mapsto 10^x\\) de la branche "Cas particuliers" remplacée par
+\\(m(x)=10^x\\), pour rester cohérente avec la notation f(x) utilisée
+partout ailleurs dans ce fichier et avec `genPuissanceDixAntecedentNumeric`
+lui-même qui définit "la fonction m par m(x) = 10^x" (même famille de bug
+que celui déjà repéré sur `notion-fonctions.js` 4e, ici en sens inverse
+puisque f(x) est la notation propre à la 3e). Reste déjà au niveau attendu
+(4 branches, piège classique pertinent). Exercices :
+`genLectureTableauImageNumeric` et `genLectureTableauAntecedentNumeric`
+énuméraient jusqu'à 5 couples f(x)=y en prose séparés par des virgules —
+exactement le même bug déjà corrigé sur `notion-fonctions.js` 4e (mêmes
+deux générateurs à l'identique) — convertis en `texTable()` (import
+ajouté). Aucun symbole € dans le fichier.
 
 `equations-troisieme.js` (3e) relu intégralement : piège classique ajouté
 à "Équation du premier degré" (en multipliant par le dénominateur commun,
@@ -639,7 +653,7 @@ vérifiés pour débordement.)
 - [x] calcul-numerique-troisieme.js *(piège classique ajouté à « Opérations sur les fractions » — priorité × avant + / − ; piège classique ajouté à « Puissances » — priorité puissance avant + / ×, (a+b)² ≠ a²+b² ; sinon déjà bon, « Racines carrées »/« Écriture scientifique » déjà claires)*
 - [x] calcul-litteral-troisieme.js *(branche « Programmes de calcul, problèmes » scindée en 2 ; item + piège classique ajoutés à « Problèmes de périmètre et d'aire » ; item ajouté à « Programmes de calcul » ; distributivité simple + piège classique ajoutés à « Développer » ; piège classique + formule ajoutés à « Factoriser »)*
 - [x] equations-troisieme.js *(piège classique ajouté à « Équation du premier degré » — multiplier TOUS les termes par le dénominateur ; piège classique ajouté à « Équation produit » — x=-b/a, signe ; branche « Modéliser un problème » renommée « …, programmes de calcul » + item ajouté, thème absent du cours avant)*
-- [ ] notion-fonction-troisieme.js
+- [x] notion-fonction-troisieme.js *(notation x↦10^x remplacée par m(x)=10^x pour cohérence avec f(x) partout ailleurs ; genLectureTableauImageNumeric/genLectureTableauAntecedentNumeric convertis en texTable(), même bug déjà vu sur notion-fonctions.js 4e)*
 - [ ] fonctions-affines-troisieme.js
 - [ ] proportionnalite-troisieme.js
 - [ ] statistiques-troisieme.js

@@ -20,10 +20,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
 terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
 `derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js`,
-`fonction-exponentielle-premiere-spe.js`, `trigonometrie-premiere-spe.js`
-et `vecteurs-produit-scalaire-premiere-spe.js` (Première Spé) sont
-faits. Prochain fichier : geometrie-reperee-premiere-spe.js (Première
-Spé, 8e des 11 fichiers de ce niveau).**
+`fonction-exponentielle-premiere-spe.js`, `trigonometrie-premiere-spe.js`,
+`vecteurs-produit-scalaire-premiere-spe.js` et
+`geometrie-reperee-premiere-spe.js` (Première Spé) sont faits. Prochain
+fichier : probabilites-conditionnelles-premiere-spe.js (Première Spé,
+9e des 11 fichiers de ce niveau).**
+
+`geometrie-reperee-premiere-spe.js` (Première Spé) relu intégralement :
+4 branches inchangées en nombre mais enrichies. Branche « Forme
+développée du cercle » enrichie de la formule x_Ω=-D/2, y_Ω=-E/2,
+r²=x_Ω²+y_Ω²-F, absente alors qu'utilisée directement dans 2 prompts.
+Branche « Vecteur normal à une droite » enrichie : item sur la méthode
+pour trouver c depuis un point et un vecteur normal. Branche
+« Projection orthogonale et distance à une droite » enrichie : item sur
+les cas simples droites horizontales/verticales, testés par 3
+générateurs mais absents avant (seule la formule générale figurait).
+Aucun €, aucun candidat texTable. Figures existantes non modifiées.
 
 `vecteurs-produit-scalaire-premiere-spe.js` (Première Spé) relu
 intégralement : 4 branches inchangées en nombre mais enrichies. Branche
@@ -1307,7 +1319,7 @@ vérifiés pour débordement.)
 - [x] fonction-exponentielle-premiere-spe.js *(nouvelle branche Modéliser une croissance ou décroissance exponentielle — thème entier absent, forme C0 e^{kt} et signe de k jamais donnés malgré le champ pourquoi du chapitre)*
 - [x] trigonometrie-premiere-spe.js *(nouvelle branche Angles associés et signe selon le quadrant — 7 générateurs sur 21 sans aucune branche avant ; formule longueur d'arc ℓ=rθ ajoutée ; tableau des valeurs remarquables ajouté en formule via \begin{array})*
 - [x] vecteurs-produit-scalaire-premiere-spe.js *(items+formules ajoutés — symétrie u·v=v·u, formule inversée pour l'angle, formule de la norme, règle de bilinéarité (u+v)·w=u·w+v·w, développement de ‖u-v‖²)*
-- [ ] geometrie-reperee-premiere-spe.js
+- [x] geometrie-reperee-premiere-spe.js *(formule x_Ω=-D/2, y_Ω=-E/2, r²=x_Ω²+y_Ω²-F ajoutée — utilisée dans 2 prompts mais absente du cours ; items ajoutés — méthode pour trouver c depuis point+vecteur normal, cas simples droites horizontales/verticales)*
 - [ ] probabilites-conditionnelles-premiere-spe.js
 - [ ] variables-aleatoires-premiere-spe.js
 - [ ] algorithmique-python-premiere-spe.js

@@ -11,38 +11,29 @@ committé/coché n'existe pas pour la session suivante.
 
 ## Reprise ici
 
-**La 6e (niveau pilote) est intégralement terminée.** La 5e est en cours :
-`calcul-numerique.js` fait. **Prochaine étape : `symetrie-centrale-parallelogrammes.js`** (géométrie — figures requises)
-(voir la checklist "5e (cinquieme)" ci-dessous, dans l'ordre où les fichiers
-y sont listés). Même méthode : lire `src/chapters/<file>.js` en entier, 3-5
-branches courtes, figure obligatoire pour toute branche géométrique
-(réutiliser les éventuels `build...Figure()` déjà présents dans le fichier
-cible s'il y en a, sinon suivre le format de `Figure.jsx`), vérifier avec
-`node --check` + `npx vite build` + le script `check-cours-katex.mjs` (à la
-racine du repo, créé pendant le chantier 6e — usage : `node
-check-cours-katex.mjs ./src/chapters/<file>.js`), committer CE fichier seul,
-cocher, committer ce fichier de suivi, avant de passer au chapitre suivant.
+**La 6e (niveau pilote) est intégralement terminée** — les 9 chapitres
+principaux ont tous un `meta.cours.mindMap`. **Prochaine étape : démarrer la
+5e** (voir la checklist "5e (cinquieme)" ci-dessous, dans l'ordre où les
+fichiers y sont listés — `calcul-numerique.js` en premier). Même méthode :
+lire `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
+obligatoire pour toute branche géométrique (réutiliser les éventuels
+`build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
+suivre le format de `Figure.jsx`), vérifier avec `node --check` +
+`npx vite build` + le script `check-cours-katex.mjs` (à la racine du repo,
+créé pendant le chantier 6e — usage : `node check-cours-katex.mjs
+./src/chapters/<file>.js`), committer CE fichier seul, cocher, committer ce
+fichier de suivi, avant de passer au chapitre suivant.
 
-Note technique : `.git/index.lock` / `HEAD.lock` / `refs/heads/main.lock`
-sont bloqués dans ce repo (impossible à supprimer, `Operation not
-permitted`) — `git commit` normal échoue désormais. Contournement qui
-fonctionne : `git add <file>` (fonctionne malgré le warning), puis
-`cp .git/index /tmp/x; TREE=$(GIT_INDEX_FILE=/tmp/x git write-tree);
-NEWCOMMIT=$(echo "msg" | git commit-tree $TREE -p $(git rev-parse HEAD));
-echo $NEWCOMMIT > .git/refs/heads/main` (écriture directe du fichier de ref,
-en contournant le lock). Un script prêt à l'emploi a été laissé dans
-`/tmp/gcommit.sh` côté sandbox (peut ne pas persister entre sessions — le
-recréer si besoin, il est court).
-
-Dernière mise à jour : 2026-08-08 — 6e terminée, 5e en cours
-(`calcul-numerique.js` commit `47455ab`, `divisibilite-fractions.js` commit
-`c16f70a`, `puissances.js` commit `b94c516`, `calcul-litteral.js` commit
-`514a805`, `nombres-relatifs.js` commit `950c23a` (2 figures réutilisant
-buildGraduatedLineFigure/buildRepereFigure), `geometrie-espace.js` commit
-`4da7eae` (3 figures neuves écrites pour ce chapitre — pavé en perspective
-cavalière, cylindre, disque — aucun helper de solide n'existait déjà dans
-ce fichier). Prochaine étape :
-`symetrie-centrale-parallelogrammes.js` (géométrie, figures requises).
+Dernière mise à jour : 2026-08-08 — 6e terminée. Les 6 derniers chapitres
+faits pendant cette session : `operations-decimaux.js` (commit `990e34d`),
+`grandeurs-mesures.js` (commit `4e99276`), `distances-symetries.js` (commit
+`32102ab`, 5 figures), `angles.js` (commit `090577a`, 4 figures réutilisant
+les helpers buildAngleFigure / buildRaysFromVertexFigure /
+buildTriangleFigure déjà présents dans le fichier),
+`configurations-geometriques.js` (commit `6698b60`, 4 figures de triangles
+réutilisant buildTriangleFigure) et `organisation-gestion-donnees.js`
+(commit `ac0ca9f`, 1 figure de diagramme en bâtons réutilisant
+buildBarChartFigure).
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -129,12 +120,12 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ### 5e (cinquieme)
 
-- [x] calcul-numerique.js
-- [x] divisibilite-fractions.js
-- [x] puissances.js
-- [x] calcul-litteral.js
-- [x] nombres-relatifs.js *(géométrie — figures requises)*
-- [x] geometrie-espace.js *(géométrie)*
+- [ ] calcul-numerique.js
+- [ ] divisibilite-fractions.js
+- [ ] puissances.js
+- [ ] calcul-litteral.js
+- [ ] nombres-relatifs.js
+- [ ] geometrie-espace.js *(géométrie)*
 - [ ] symetrie-centrale-parallelogrammes.js *(géométrie)*
 - [ ] triangles.js *(géométrie)*
 - [ ] statistiques-probabilites.js

@@ -491,6 +491,7 @@ export default {
             items: [
               "Définie sur \\(\\mathbb{R}\\) privé de 0, décroissante sur \\(]-\\infty ; 0[\\) et décroissante sur \\(]0 ; +\\infty[\\) (mais pas sur la réunion des deux).",
               "Piège classique : ne jamais dire « décroissante sur \\(\\mathbb{R}^*\\) » — le sens ne se compare pas d'un côté de 0 à l'autre.",
+              "L'inverse d'un nombre n'est jamais nul : 0 n'a donc aucun antécédent par la fonction inverse.",
             ],
             formula: "\\(f(x) = \\dfrac{1}{x}\\)",
           },
@@ -498,7 +499,9 @@ export default {
             title: "Comparer des images, résoudre",
             items: [
               "Utiliser le sens de variation sur l'intervalle concerné pour comparer deux images sans calculer.",
-              "Pour résoudre \\(x^2=a\\), \\(|x|=a\\) ou \\(\\frac{1}{x}=a\\) : compter les solutions selon le signe de a.",
+              "Pour \\(x^2=a\\) ou \\(|x|=a\\) : 2 solutions opposées si a > 0, une seule solution (0) si a = 0, aucune si a < 0.",
+              "Pour \\(\\frac{1}{x}=a\\) : toujours exactement une solution si a ≠ 0 (contrairement au carré et à la valeur absolue, le signe de a ne change pas le nombre de solutions), aucune si a = 0.",
+              "Pour une inéquation \\(x^2 < a\\) ou \\(|x| < a\\) (a > 0) : solutions comprises entre les deux racines opposées ; pour \\(x^2 > a\\) ou \\(|x| > a\\) : solutions à l'extérieur des deux racines opposées.",
             ],
           },
         ],

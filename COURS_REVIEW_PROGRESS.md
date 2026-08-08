@@ -77,11 +77,31 @@ Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
   les autres), formules déjà utiles. Prompts d'exercices déjà courts,
   aucun candidat à `texTable()`.
 
-**Prochain fichier à traiter : `organisation-gestion-donnees.js` (6e) —
-dernier fichier de la 6e pour ce chantier (statistiques/données, pas de
-géométrie).** Puis le reste de la 5e, 4e, 3e dans cet ordre (périmètre de
-ce chantier = collège uniquement, voir consigne — 2nde/lycée hors scope
-pour l'instant).
+- `organisation-gestion-donnees.js` : **vraies corrections**. Branche
+  "Expérience aléatoire et échelle de probabilité" reformulée pour définir
+  "expérience aléatoire" avant "issue" (l'ordre précédent utilisait le
+  terme non défini pour définir l'autre). `genLireTableauDonneesValeur`
+  convertie en `texTable()` : le prompt énumérait 7 paires âge→taille en
+  prose continue ("0 mois → 50 cm ; 6 mois → 55 cm ; ..."), exactement le
+  même défaut de débordement mobile que le cas d'origine corrigé dans
+  `nombres-decimaux.js` (import `texTable` ajouté, même convention).
+  `node check-cours-katex.mjs` échoue sur ce fichier avec
+  `ERR_MODULE_NOT_FOUND` pour l'import extensionless de `texTable.js` —
+  vérifié que c'est une limitation préexistante du script (échoue
+  identiquement sur `nombres-decimaux.js`, qui a le même import depuis une
+  session antérieure), pas un défaut introduit ici ; `npx vite build`
+  passe sans erreur et confirme la résolution/syntaxe. Reste du fichier
+  (branches "Lire des données", "Calculer une probabilité", "Événement
+  contraire et fréquence") déjà au niveau attendu, pièges classiques déjà
+  bien ciblés, figure du diagramme en bâtons claire.
+
+**La 6e est intégralement terminée pour ce chantier** (9/9 fichiers :
+nombres-decimaux, fractions, proportionnalite, operations-decimaux,
+grandeurs-mesures, distances-symetries, angles,
+configurations-geometriques, organisation-gestion-donnees). **Prochain
+fichier à traiter : `calcul-numerique.js` (5e).** Puis le reste de la 5e,
+4e, 3e dans cet ordre (périmètre de ce chantier = collège uniquement, voir
+consigne — 2nde/lycée hors scope pour l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -184,7 +204,7 @@ vérifiés pour débordement.)
 - [x] distances-symetries.js *(formule diamètre/rayon enveloppée en \text{}, sinon déjà bon)*
 - [x] angles.js *(item "nature d'un angle" éclaté en puces + nul/plein ajoutés, branche "droites sécantes" reformulée)*
 - [x] configurations-geometriques.js *(piège "isocèle en A = sommet principal" ajouté)*
-- [ ] organisation-gestion-donnees.js
+- [x] organisation-gestion-donnees.js *(branche "expérience aléatoire" reformulée + genLireTableauDonneesValeur converti en texTable)*
 
 ### 5e
 - [ ] calcul-numerique.js

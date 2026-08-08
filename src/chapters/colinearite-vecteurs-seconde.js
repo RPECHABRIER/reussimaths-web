@@ -458,7 +458,10 @@ function buildCoursColinFigure(pts, vectors = [], lines = []) {
     hideLabel: p.hideLabel,
   }));
   const vecLines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
-  const extraLines = lines.map((l) => ({ from: l.from, to: l.to, arrowEnd: true }));
+  // Droites (pas des vecteurs) : pas de flèche — une droite n'a pas de sens privilégié,
+  // contrairement à un axe ou une droite graduée (voir Figure.jsx : arrowStart/arrowEnd
+  // n'est pertinent que pour une direction, ex. droite graduée orientée).
+  const extraLines = lines.map((l) => ({ from: l.from, to: l.to }));
   return { points, lines: [...vecLines, ...extraLines] };
 }
 
@@ -491,6 +494,7 @@ export default {
             items: [
               "\\(\\overrightarrow{u}\\) et \\(\\overrightarrow{v}\\) sont colinéaires (même direction) si et seulement si leur déterminant est nul.",
               "Piège classique : « colinéaires » n'implique pas « même sens » — les vecteurs peuvent pointer en sens opposés et rester colinéaires.",
+              "Le vecteur nul est colinéaire à tout vecteur (son déterminant avec n'importe quel vecteur est toujours nul).",
             ],
             formula: "\\(\\overrightarrow{u} \\text{ et } \\overrightarrow{v} \\text{ colinéaires} \\iff xy'-x'y = 0\\)",
             figure: buildCoursColinFigure(
@@ -512,11 +516,40 @@ export default {
             title: "Parallélisme de deux droites",
             items: [
               "Deux droites sont parallèles si et seulement si leurs vecteurs directeurs sont colinéaires.",
+              "Piège classique : des vecteurs directeurs colinéaires ne garantissent pas que les droites sont confondues — elles peuvent être strictement parallèles (disjointes) ou confondues, il faut vérifier en plus si elles partagent un point.",
             ],
             figure: buildCoursColinFigure(
               [{ id: "P1", x: 0, y: 0, hideLabel: true }, { id: "P2", x: 3, y: 1, hideLabel: true }, { id: "Q1", x: 0, y: 2, hideLabel: true }, { id: "Q2", x: 3, y: 3, hideLabel: true }],
               [],
               [{ from: "P1", to: "P2" }, { from: "Q1", to: "Q2" }]
+            ),
+          },
+          {
+            title: "Résoudre une équation de colinéarité, coefficient",
+            items: [
+              "Pour trouver une coordonnée inconnue rendant deux vecteurs colinéaires, on pose déterminant = 0 et on résout l'équation obtenue.",
+              "Si \\(\\overrightarrow{v}=k\\overrightarrow{u}\\) avec \\(x_u \\neq 0\\), alors \\(k = \\dfrac{x_v}{x_u}\\) (rapport des coordonnées correspondantes).",
+            ],
+            figure: buildCoursColinFigure(
+              [{ id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 10 }, { id: "U", x: 1, y: 2, label: "u", dx: -10, dy: 10 }, { id: "V", x: 2, y: 4, label: "v" }],
+              [{ from: "O", to: "U" }, { from: "O", to: "V" }]
+            ),
+          },
+          {
+            title: "Vecteurs directeurs d'une droite",
+            items: [
+              "Une droite a une infinité de vecteurs directeurs, tous colinéaires entre eux (n'importe quel multiple non nul de l'un d'eux convient).",
+              "Un vecteur \\((x;0)\\) est colinéaire à l'axe des abscisses ; un vecteur \\((0;y)\\) est colinéaire à l'axe des ordonnées.",
+            ],
+            figure: buildCoursColinFigure(
+              [
+                { id: "P1", x: -1, y: 1, hideDot: true, hideLabel: true },
+                { id: "P2", x: 5, y: 1, hideDot: true, hideLabel: true },
+                { id: "A", x: 0, y: 1, hideLabel: true },
+                { id: "B", x: 2, y: 1, label: "u", dy: 10 },
+              ],
+              [{ from: "A", to: "B" }],
+              [{ from: "P1", to: "P2" }]
             ),
           },
         ],

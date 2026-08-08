@@ -422,6 +422,42 @@ export default {
     level: "troisieme",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Situations de proportionnalité",
+        branches: [
+          {
+            title: "Ratios",
+            items: [
+              "On simplifie un ratio comme une fraction, en divisant chaque terme par leur PGCD.",
+              "Pour partager une quantité selon un ratio p : q, on divise le total en (p+q) parts égales.",
+            ],
+          },
+          {
+            title: "Coefficient multiplicateur",
+            items: [
+              "Augmenter de p % revient à multiplier par \\(1 + \\frac{p}{100}\\) ; diminuer de p % revient à multiplier par \\(1 - \\frac{p}{100}\\).",
+              "Pour retrouver le prix initial, on divise le prix final par le coefficient multiplicateur.",
+            ],
+            formula: "\\(\\text{prix final} = \\text{prix initial} \\times \\text{coefficient multiplicateur}\\)",
+          },
+          {
+            title: "Enchaîner des évolutions",
+            items: [
+              "Pour deux évolutions successives, on multiplie les deux coefficients multiplicateurs (dans l'ordre).",
+              "Piège classique : deux réductions successives de p % ne s'additionnent pas — une réduction de 10 % puis 10 % n'est pas une réduction de 20 %.",
+            ],
+          },
+          {
+            title: "Coefficient réciproque",
+            items: [
+              "Pour revenir au prix de départ après une évolution de coefficient k, on multiplie par \\(\\frac{1}{k}\\).",
+              "Une baisse de 50 % nécessite une hausse de 100 % pour revenir au prix initial, pas 50 %.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

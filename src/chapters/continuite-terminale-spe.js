@@ -372,6 +372,39 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Continuité",
+        branches: [
+          {
+            title: "Théorème des valeurs intermédiaires (TVI)",
+            items: [
+              "Si f est continue sur [a;b] et k est compris entre f(a) et f(b), alors l'équation f(x)=k a au moins une solution dans [a;b].",
+            ],
+          },
+          {
+            title: "Corollaire : unicité de la solution",
+            items: [
+              "Si en plus f est strictement monotone sur [a;b], la solution est unique.",
+              "Piège classique : oublier de justifier la stricte monotonie avant de conclure à l'unicité.",
+            ],
+          },
+          {
+            title: "Nombre de solutions sur un tableau de variations",
+            items: [
+              "Sur chaque intervalle de monotonie, compter combien de fois la valeur k est atteinte, puis additionner.",
+            ],
+          },
+          {
+            title: "Dichotomie",
+            items: [
+              "À chaque étape, on teste le signe au milieu de l'intervalle et on garde la moitié qui contient la solution.",
+              "Le produit des images aux bornes est négatif quand la solution est encadrée (changement de signe).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

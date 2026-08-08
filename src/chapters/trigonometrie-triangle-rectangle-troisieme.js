@@ -39,6 +39,28 @@ const prenoms = [
   "Sofia", "Tom", "Maya", "Adam", "Lina", "Zoé", "Nolan", "Jade", "Liam", "Mila",
 ];
 
+// Figure utilisée uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+// Triangle rectangle en A, angle étudié en B : [AB] adjacent, [AC] opposé, [BC] hypoténuse.
+function buildTrigoTriangleFigure() {
+  const A = { id: "A", x: 40, y: 190, dx: -14 };
+  const B = { id: "B", x: 240, y: 190, dx: 14 };
+  const C = { id: "C", x: 40, y: 40, dy: -10 };
+  return {
+    points: [A, B, C],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "A", to: "C" },
+      { from: "B", to: "C" },
+    ],
+    rightAngles: [{ at: "A", from: "B", to: "C" }],
+    freeLabels: [
+      { x: (A.x + B.x) / 2, y: A.y + 16, text: "adjacent" },
+      { x: A.x - 30, y: (A.y + C.y) / 2, text: "opposé" },
+      { x: (B.x + C.x) / 2 + 22, y: (B.y + C.y) / 2 - 6, text: "hypoténuse" },
+    ],
+  };
+}
+
 // =========================== Relations trigonométriques ===========================
 
 // ---------- 1. Identifier la relation à utiliser ----------
@@ -410,6 +432,43 @@ export default {
     level: "troisieme",
     free: false,
     order: 12,
+    cours: {
+      mindMap: {
+        title: "Trigonométrie dans le triangle rectangle",
+        branches: [
+          {
+            title: "Identifier les côtés",
+            items: [
+              "Par rapport à l'angle étudié : le côté adjacent le touche, le côté opposé lui fait face, l'hypoténuse est toujours en face de l'angle droit.",
+              "Piège classique : le côté adjacent change selon l'angle choisi — bien identifier le sommet de l'angle étudié.",
+            ],
+            figure: buildTrigoTriangleFigure(),
+          },
+          {
+            title: "Calculer une longueur",
+            items: [
+              "Cosinus = adjacent ÷ hypoténuse ; sinus = opposé ÷ hypoténuse ; tangente = opposé ÷ adjacent.",
+              "On choisit la relation selon les deux côtés connus (ou à calculer) parmi les trois.",
+            ],
+            formula: "\\(\\cos(\\widehat{x}) = \\dfrac{adj}{hyp}\\ ;\\ \\sin(\\widehat{x}) = \\dfrac{opp}{hyp}\\ ;\\ \\tan(\\widehat{x}) = \\dfrac{opp}{adj}\\)",
+          },
+          {
+            title: "Calculer un angle",
+            items: [
+              "On calcule d'abord le cosinus, le sinus ou la tangente de l'angle, puis on utilise la fonction réciproque de la calculatrice (arccos, arcsin, arctan).",
+              "Le cosinus et le sinus d'un angle aigu sont toujours compris strictement entre 0 et 1.",
+            ],
+          },
+          {
+            title: "Angles complémentaires, Pythagore + trigo",
+            items: [
+              "Les deux angles aigus d'un triangle rectangle sont complémentaires (leur somme vaut 90°).",
+              "Dans un problème à deux étapes, on calcule parfois d'abord une longueur avec Pythagore avant d'utiliser la trigonométrie.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

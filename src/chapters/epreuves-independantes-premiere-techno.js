@@ -191,6 +191,37 @@ export default {
     pourquoi: "Modéliser une répétition d'épreuves indépendantes, c'est ce qui permet de calculer le risque d'un événement répété (contrôle qualité, sondage, jeu de hasard).",
     level: "premiere-techno",
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Épreuves indépendantes et répétition de Bernoulli",
+        branches: [
+          {
+            title: "Épreuve de Bernoulli",
+            items: [
+              "Une expérience à deux issues : succès (probabilité p) ou échec (probabilité 1-p).",
+            ],
+          },
+          {
+            title: "Probabilité d'un chemin sur l'arbre",
+            items: [
+              "Chaque répétition étant identique et indépendante, la probabilité d'un chemin est le produit des probabilités le long de ce chemin.",
+            ],
+          },
+          {
+            title: "Nombre de chemins et probabilité exacte",
+            items: [
+              "Compter le nombre de chemins menant à exactement k succès sur l'arbre, puis multiplier par la probabilité d'un chemin (tous les chemins à k succès ont la même probabilité).",
+            ],
+          },
+          {
+            title: "Au moins un succès",
+            items: [
+              "Passer au contraire simplifie souvent le calcul : \\(P(\\text{au moins un succès}) = 1-P(\\text{aucun succès})\\).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

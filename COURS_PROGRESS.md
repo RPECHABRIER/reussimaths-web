@@ -44,7 +44,8 @@ de figure), `equations-troisieme.js` fait (commit `536d1fd`, pas de
 figure), `notion-fonction-troisieme.js` fait (commit `5d7e1b9`, pas de
 figure), `fonctions-affines-troisieme.js` fait (commit `d682391`, pas de
 figure), `proportionnalite-troisieme.js` fait (commit `326d3e4`, pas de
-figure). **Prochain fichier à traiter : `statistiques-troisieme.js`.**
+figure), `statistiques-troisieme.js` fait (commit `234d668`, pas de
+figure). **Prochain fichier à traiter : `probabilites-troisieme.js`.**
 Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
@@ -253,7 +254,7 @@ initiale de Romain.
 - [x] notion-fonction-troisieme.js
 - [x] fonctions-affines-troisieme.js
 - [x] proportionnalite-troisieme.js
-- [ ] statistiques-troisieme.js
+- [x] statistiques-troisieme.js
 - [ ] probabilites-troisieme.js
 - [ ] thales-triangles-semblables-troisieme.js *(géométrie)*
 - [ ] trigonometrie-triangle-rectangle-troisieme.js *(géométrie)*
@@ -346,7 +347,7 @@ initiale de Romain.
 
 ## Total
 
-42 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+43 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
 `exercices-fin-annee-quatrieme.js`, délibérément sans Cours) — la 6e, la 5e
 ET la 4e sont intégralement terminées, prochaine étape : la 3e.

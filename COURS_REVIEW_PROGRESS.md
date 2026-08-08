@@ -64,10 +64,24 @@ Lot `fractions.js` / `proportionnalite.js` / `operations-decimaux.js` /
   (rayons d'angle, pas d'axes gradués). Prompts d'exercices déjà courts,
   aucun candidat à `texTable()`.
 
-**Prochain fichier à traiter : `configurations-geometriques.js` (6e).**
-Puis `organisation-gestion-donnees.js` (6e), puis le reste de la 5e, 4e,
-3e dans cet ordre (périmètre de ce chantier = collège uniquement, voir
-consigne — 2nde/lycée hors scope pour l'instant).
+- `configurations-geometriques.js` : **vraie correction, ciblée**. Piège
+  classique ajouté à la branche "Triangle isocèle" : « isocèle en A »
+  signifie que A est le sommet principal (là où se rejoignent les deux
+  côtés égaux), pas un angle à la base — confusion que les exercices
+  testent explicitement via le paramètre `sommetLettre` de
+  `genAngleTriangleIsocele`/`genProblemeIsoceleRectangleCombine` mais que
+  le cours n'expliquait pas. Le reste (inégalité triangulaire, équilatéral,
+  rectangle isocèle) déjà au niveau attendu — pièges déjà présents,
+  figures claires (triangle générique étiqueté a/b/c pour l'inégalité,
+  triangles avec codage de côtés/angle droit sans lettres superflues pour
+  les autres), formules déjà utiles. Prompts d'exercices déjà courts,
+  aucun candidat à `texTable()`.
+
+**Prochain fichier à traiter : `organisation-gestion-donnees.js` (6e) —
+dernier fichier de la 6e pour ce chantier (statistiques/données, pas de
+géométrie).** Puis le reste de la 5e, 4e, 3e dans cet ordre (périmètre de
+ce chantier = collège uniquement, voir consigne — 2nde/lycée hors scope
+pour l'instant).
 
 ## Ce qui a déclenché ce chantier
 
@@ -169,7 +183,7 @@ vérifiés pour débordement.)
 - [x] grandeurs-mesures.js *(déjà bon, RAS)*
 - [x] distances-symetries.js *(formule diamètre/rayon enveloppée en \text{}, sinon déjà bon)*
 - [x] angles.js *(item "nature d'un angle" éclaté en puces + nul/plein ajoutés, branche "droites sécantes" reformulée)*
-- [ ] configurations-geometriques.js
+- [x] configurations-geometriques.js *(piège "isocèle en A = sommet principal" ajouté)*
 - [ ] organisation-gestion-donnees.js
 
 ### 5e

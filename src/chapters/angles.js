@@ -571,16 +571,18 @@ export default {
           {
             title: "Nature d'un angle",
             items: [
-              "Aigu : moins de 90°. Droit : exactement 90°. Obtus : entre 90° et 180°. Plat : 180°.",
-              "Piège classique : un angle plat (180°) fait se ressembler les deux demi-droites à une seule droite.",
+              "Aigu : entre 0° et 90° (par exemple 60°, comme sur la figure).",
+              "Droit : exactement 90°, marqué par un petit carré sur les figures.",
+              "Obtus : entre 90° et 180°.",
+              "Piège classique : un angle plat (180°) ressemble à une droite (ses deux demi-droites sont alignées) ; un angle nul (0°) ou plein (360°, un tour complet) n'est ni aigu, ni droit, ni obtus, ni plat.",
             ],
             figure: buildAngleFigure(60, 20),
           },
           {
-            title: "Droites sécantes : supplémentaires et opposés",
+            title: "Deux droites qui se croisent",
             items: [
-              "Deux angles supplémentaires, formés de part et d'autre d'une droite, ont une somme de 180°.",
-              "Deux droites sécantes forment aussi des angles opposés par le sommet, toujours égaux deux à deux.",
+              "Deux angles côte à côte, situés de part et d'autre d'une même droite, forment ensemble un angle plat : on dit qu'ils sont supplémentaires, et leur somme fait toujours 180°.",
+              "Quand deux droites se croisent (sécantes) en un point, elles forment 4 angles ; les deux angles opposés (pas côte à côte) sont appelés opposés par le sommet et sont toujours égaux.",
             ],
             formula: "\\(a + b = 180°\\)",
             figure: buildRaysFromVertexFigure([

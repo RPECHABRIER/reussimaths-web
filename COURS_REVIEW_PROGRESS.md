@@ -17,9 +17,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-probabilites-echantillonnage-seconde.js (2nde) — 12e et dernier fichier
-de la 2nde.**
+**La 5e, la 4e, la 3e et la 2nde sont intégralement terminées. Prochain
+fichier : analyse-information-chiffree-premiere-non-spe.js (Première non
+spé) — 1er fichier de la Première non spé.**
+
+`probabilites-echantillonnage-seconde.js` (2nde) relu intégralement : 6
+branches (4 avant), la 2nde est maintenant intégralement terminée
+(12/12). Nouvelle branche « Vocabulaire des événements » ajoutée,
+couvrant genTypeEvenementQCM (certain/impossible/élémentaire/non
+élémentaire) totalement absent avant ; item ajouté sur les axiomes de
+base (probabilité entre 0 et 1, somme des probabilités de l'univers = 1),
+testés par 2 des 6 affirmations de genVraiFauxProbabiliteQCM mais jamais
+énoncés. Nouvelle branche « Loi des grands nombres » ajoutée, couvrant
+genLoiGrandsNombresQCM — absence d'autant plus notable que la NOTE en
+tête de fichier explique que c'est le SEUL élément d'échantillonnage
+maintenu au programme 2026 en 2nde (le reste du volet a été retiré), or
+il n'apparaissait dans aucune branche. Branche « Modèle équiprobable »
+enrichie : item distinguant modèle équiprobable et étude statistique
+(genModeliserExperienceQCM, absent). Branche « Univers à deux épreuves »
+enrichie : principe multiplicatif ajouté en item ET en formule (absent,
+seule la consigne de lister les issues était donnée, pas la règle de
+comptage). Branche « Probabilités conditionnelles » enrichie : item sur
+l'arbre pondéré et la règle P(A∩B)=P(A)×P_A(B) (genProbabiliteConditionnelleArbreNumeric,
+difficulté "expert", absent — seule la lecture via tableau croisé était
+couverte). Aucun €, aucun candidat texTable supplémentaire, fichier non
+géométrique.
 
 `statistiques-descriptives-seconde.js` (2nde) relu intégralement : 6
 branches (5 avant). Nouvelle branche « Effectifs cumulés » ajoutée,
@@ -1041,7 +1063,7 @@ vérifiés pour débordement.)
 - [x] equations-droites-seconde.js *(2 nouvelles branches — Droites verticales/horizontales avec figure à axes, Construire une équation depuis point+vecteur directeur ; items ajoutés sur vecteurs colinéaires directeurs, test d'appartenance par substitution, lien vocabulaire système/position relative)*
 - [x] informations-chiffrees-seconde.js *(nouvelle branche Évolution réciproque avec formule et piège chiffré ; items ajoutés — distinction proportion/évolution, formules inverses CM, comparaison de CM, taux global, complétion de case manquante)*
 - [x] statistiques-descriptives-seconde.js *(nouvelle branche Effectifs cumulés ; formules du rang de la médiane et de l'écart type ajoutées ; item linéarité de la moyenne ; 14 générateurs convertis en texTable — séries et tableaux valeur/effectif en prose)*
-- [ ] probabilites-echantillonnage-seconde.js
+- [x] probabilites-echantillonnage-seconde.js *(nouvelles branches Vocabulaire des événements et Loi des grands nombres ; items ajoutés — axiomes de base, modéliser équiprobable/statistique, principe multiplicatif, arbre pondéré ; 2nde intégralement terminée 12/12)*
 
 ### Première non spé
 - [ ] analyse-information-chiffree-premiere-non-spe.js

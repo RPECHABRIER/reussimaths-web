@@ -22,6 +22,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -153,11 +155,10 @@ function genLectureTableauImageNumeric() {
   const xs = [-2, -1, 0, 1, 2];
   const ys = randomDistinctInts(5, -9, 9);
   const idx = randInt(0, 4);
-  const table = xs.map((x, i) => `f(${x}) = ${ys[i]}`).join(", ");
   return {
     type: "numeric",
     chapter: "Notion de fonction — Tableau de valeurs",
-    prompt: `Voici les images de quelques nombres par une fonction f : ${table}. Quelle est l'image de ${xs[idx]} par f ?`,
+    prompt: `Voici les images de quelques nombres par une fonction f : ${texTable([["x", ...xs], ["f(x)", ...ys]])} Quelle est l'image de ${xs[idx]} par f ?`,
     answer: ys[idx],
     steps: [{ type: "donnee", text: `f(${xs[idx]}) = ${ys[idx]}` }],
   };
@@ -168,11 +169,10 @@ function genLectureTableauAntecedentNumeric() {
   const xs = [-2, -1, 0, 1, 2];
   const ys = randomDistinctInts(5, -9, 9);
   const idx = randInt(0, 4);
-  const table = xs.map((x, i) => `f(${x}) = ${ys[i]}`).join(", ");
   return {
     type: "numeric",
     chapter: "Notion de fonction — Tableau de valeurs",
-    prompt: `Voici les images de quelques nombres par une fonction f : ${table}. Quel est l'antécédent de ${ys[idx]} par f ?`,
+    prompt: `Voici les images de quelques nombres par une fonction f : ${texTable([["x", ...xs], ["f(x)", ...ys]])} Quel est l'antécédent de ${ys[idx]} par f ?`,
     answer: xs[idx],
     steps: [{ type: "resultat", text: `f(${xs[idx]}) = ${ys[idx]}, \\text{ donc } ${xs[idx]} \\text{ est l'antécédent de } ${ys[idx]}.` }],
   };
@@ -377,7 +377,7 @@ export default {
             title: "Cas particuliers",
             items: [
               "Une fonction constante donne toujours la même image : le nombre atteint a une infinité d'antécédents, tout autre nombre n'en a aucun.",
-              "La fonction puissance de 10, \\(x \\mapsto 10^x\\), relie un exposant à son écriture décimale.",
+              "La fonction puissance de 10, \\(m(x) = 10^x\\), relie un exposant à son écriture décimale.",
             ],
           },
           {

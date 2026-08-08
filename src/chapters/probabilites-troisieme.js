@@ -466,7 +466,8 @@ export default {
             title: "Calculer une probabilité",
             items: [
               "Dans une situation d'équiprobabilité : \\(P(A) = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\).",
-              "Une probabilité est toujours comprise entre 0 et 1 (ou entre 0 % et 100 %).",
+              "Une probabilité est toujours comprise entre 0 et 1 (ou entre 0 % et 100 %) ; elle peut aussi s'écrire en pourcentage : \\(p\\% = \\dfrac{p}{100}\\).",
+              "Piège classique : penser à simplifier la fraction obtenue pour donner une fraction irréductible.",
             ],
             formula: "\\(P(A) = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}\\)",
           },

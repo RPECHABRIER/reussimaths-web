@@ -478,6 +478,7 @@ export default {
             items: [
               "Aire d'une sphère = \\(4 \\pi R^2\\). Volume d'une boule = \\(\\dfrac{4}{3} \\pi R^3\\).",
               "Si on donne le diamètre, on calcule d'abord le rayon (diamètre ÷ 2) avant d'appliquer les formules.",
+              "Volume d'une demi-sphère (bol) = la moitié du volume de la sphère complète.",
             ],
             formula: "\\(A = 4\\pi R^2\\ ;\\ V = \\dfrac{4}{3}\\pi R^3\\)",
             figure: buildSphereDisqueFigure(),
@@ -504,6 +505,7 @@ export default {
             title: "Section d'une pyramide ou d'une sphère",
             items: [
               "Un plan parallèle à la base d'une pyramide donne une réduction de cette base (figure semblable, plus petite).",
+              "Le coefficient de cette réduction est égal au rapport des hauteurs depuis le sommet : \\(k = \\dfrac{\\text{hauteur de la coupe}}{\\text{hauteur totale}}\\).",
               "Un plan coupant une sphère donne un disque : de rayon R s'il passe par le centre, strictement inférieur à R sinon.",
             ],
             figure: buildPyramideSectionFigure(),

@@ -8,7 +8,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
-import { colors, fonts, shadow } from "../theme";
+import { colors, fonts, shadow, cycleColors } from "../theme";
 import ComingSoon from "./ComingSoon";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId), en mélangeant les
@@ -49,6 +49,8 @@ export default function Niveau() {
     ...plannedChapters.map((p) => ({ kind: "planned", chapter: p, order: p.order ?? 999 })),
   ].sort((a, b) => a.order - b.order);
 
+  const cc = cycleColors[level.cycle] ?? cycleColors.college;
+
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
@@ -57,6 +59,7 @@ export default function Niveau() {
         </Link>
 
         <div className="text-center my-7">
+          <div className="inline-block mb-2 rounded-full" style={{ width: 36, height: 3, backgroundColor: cc.accent }} />
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             {level.label}
           </h1>
@@ -66,13 +69,13 @@ export default function Niveau() {
           <Link to={`/parcours/niveau/${levelId}`}>
             <div
               className="rounded-3xl px-5 py-4 flex items-center gap-3 mb-5 transition-transform active:scale-[0.98]"
-              style={{ backgroundColor: colors.card, boxShadow: shadow.raised }}
+              style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderLeft: `3px solid ${cc.accent}` }}
             >
               <div
                 className="flex items-center justify-center rounded-2xl flex-shrink-0"
-                style={{ width: 44, height: 44, backgroundColor: `${colors.gold}18` }}
+                style={{ width: 44, height: 44, backgroundColor: `${cc.accent}1f` }}
               >
-                <Sparkles size={20} color={colors.gold} />
+                <Sparkles size={20} color={cc.accent} />
               </div>
               <div>
                 <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>
@@ -115,7 +118,12 @@ export default function Niveau() {
             const content = (
               <div
                 className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
-                style={{ backgroundColor: colors.card, boxShadow: shadow.soft, opacity: locked ? 0.6 : 1 }}
+                style={{
+                  backgroundColor: colors.card,
+                  boxShadow: shadow.soft,
+                  opacity: locked ? 0.6 : 1,
+                  borderLeft: `3px solid ${locked ? colors.hairline : cc.accent}`,
+                }}
               >
                 <div>
                   <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.05rem", fontWeight: 700 }}>

@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getLevelsByCycle, CYCLES } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
-import { colors, fonts, shadow } from "../theme";
+import { colors, fonts, shadow, cycleColors } from "../theme";
 
 // Deuxième étape de l'accueil (/college ou /lycee) : la liste des niveaux du
 // cycle choisi (repris de l'ancien LevelSelect.jsx, désormais filtré par
@@ -14,6 +14,7 @@ export default function CycleLevels() {
   const cycleId = pathname.replace(/^\//, "");
   const cycle = CYCLES.find((c) => c.id === cycleId);
   const levels = getLevelsByCycle(cycleId);
+  const c = cycleColors[cycleId] ?? cycleColors.college;
 
   if (!cycle) {
     return (
@@ -34,6 +35,12 @@ export default function CycleLevels() {
         </Link>
 
         <div className="text-center my-7">
+          <div
+            className="inline-flex items-center justify-center rounded-2xl mb-3"
+            style={{ width: 48, height: 48, backgroundColor: `${c.accent}1f` }}
+          >
+            <div style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: c.accent }} />
+          </div>
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             {cycle.label}
           </h1>
@@ -51,7 +58,7 @@ export default function CycleLevels() {
               <Link key={level.id} to={`/niveau/${level.id}`}>
                 <div
                   className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
-                  style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}
+                  style={{ backgroundColor: colors.card, boxShadow: shadow.soft, borderLeft: `3px solid ${c.accent}` }}
                 >
                   <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>
                     {level.label}

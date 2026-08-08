@@ -22,6 +22,24 @@ export const shadow = {
   raised: "0 2px 6px rgba(16,24,40,0.06), 0 26px 52px -20px rgba(16,24,40,0.20)",
 };
 
+// Couleurs de cycle — donnent une identité visuelle distincte au collège et
+// au lycée (demande explicite de Romain : "une vraie différence entre la
+// partie collège et la partie lycée"), sans toucher à la palette de marque
+// (navy/or) qui reste l'identité globale de l'appli. Teal = collège (frais,
+// énergique), violet = lycée (plus mature). Volontairement distinctes de
+// colors.green (réservé au sens "disponible/succès") pour ne pas créer
+// d'ambiguïté sémantique.
+export const cycleColors = {
+  college: { accent: "#1789A0", dark: "#0B4E5C" },
+  lycee: { accent: "#6C5CE7", dark: "#3F35A0" },
+};
+
+export function getCycleColor(cycleId) {
+  const c = cycleColors[cycleId];
+  if (!c) return { accent: colors.gold, dark: colors.gold, tint: `${colors.gold}18`, tintStrong: `${colors.gold}26` };
+  return { ...c, tint: `${c.accent}18`, tintStrong: `${c.accent}26` };
+}
+
 export const fonts = {
   // Typo système : rend en San Francisco sur Apple, sinon Inter (chargée en
   // fallback web). Utilisée partout, y compris les titres (plus de serif).

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Check } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
@@ -137,6 +137,7 @@ export default function Account() {
 
       {!user ? (
         <div className="flex flex-col gap-3 w-full max-w-xs rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+          <Mascot size={72} className="mx-auto" />
           <p className="text-center text-sm" style={{ color: colors.slate }}>
             Connexion simplifiée, aucun nom réel n'est affiché dans l'app : tu choisis un pseudo après connexion.
           </p>
@@ -149,7 +150,7 @@ export default function Account() {
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full max-w-xs text-center rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-          <Mascot size={64} className="mx-auto" />
+          <Mascot size={84} className="mx-auto" />
           <p style={{ fontFamily: fonts.display, fontWeight: 700, color: colors.ink, fontSize: "1.1rem" }}>
             {profile?.pseudo ?? "Connecté"}
           </p>
@@ -388,44 +389,100 @@ export default function Account() {
           )}
 
           {!isActive && !admin && (
-            <>
-              <div className="rounded-2xl p-3.5 text-left flex flex-col gap-2" style={{ backgroundColor: colors.bg }}>
-                <div>
-                  <p className="text-xs font-semibold" style={{ color: colors.ink }}>
-                    Abonnement complet — 4,99 €/mois
+            <div className="flex flex-col gap-4 -mx-6 px-6 pt-2" style={{ borderTop: `1px solid ${colors.hairline}` }}>
+              <div>
+                <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>
+                  Débloque tout Reussimaths
+                </p>
+                <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                  Tous les chapitres, tous les niveaux, corrections détaillées illimitées.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-3">
+                {[
+                  { label: "exercices", value: "Illimités" },
+                  { label: "niveaux", value: "6e → Tale" },
+                  { label: "programme", value: "2026" },
+                ].map((s, i) => (
+                  <div key={s.label} className="flex items-center gap-3">
+                    {i > 0 && <div style={{ width: 1, height: 24, backgroundColor: colors.hairline }} />}
+                    <div className="text-center">
+                      <p className="text-sm font-bold" style={{ color: colors.ink }}>
+                        {s.value}
+                      </p>
+                      <p className="text-[10px]" style={{ color: colors.slate }}>
+                        {s.label}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="relative rounded-2xl p-4 text-left" style={{ backgroundColor: colors.card, border: `2px solid ${colors.gold}` }}>
+                <span
+                  className="absolute -top-2.5 left-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full"
+                  style={{ backgroundColor: colors.gold, color: colors.ink }}
+                >
+                  Le plus choisi
+                </span>
+                <div className="flex items-baseline justify-between mt-1">
+                  <p className="text-sm font-bold" style={{ color: colors.ink }}>
+                    Accès complet
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
-                    Accès à tous les niveaux et tous les chapitres, sans restriction.
+                  <p className="text-base font-bold" style={{ color: colors.ink }}>
+                    4,99 € <span className="text-xs font-medium" style={{ color: colors.slate }}>/mois</span>
                   </p>
                 </div>
-                <div>
-                  <p className="text-xs font-semibold" style={{ color: colors.ink }}>
-                    Pack Examen — 9 € / 3 mois
-                  </p>
-                  <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
-                    Pour UN niveau au choix (à choisir après l'achat) : le chapitre de préparation à l'examen (Brevet,
-                    EAM ou Bac selon le niveau), les Automatismes en illimité, et 2 chapitres bonus au choix. N'inclut
-                    pas les autres niveaux. Offre non reconductible.
-                  </p>
+                <div className="flex flex-col gap-1 mt-2">
+                  {[
+                    "Tous les niveaux, tous les chapitres",
+                    "Bilan hebdomadaire pour suivre les progrès",
+                    "Résiliable en un clic, sans engagement",
+                  ].map((f) => (
+                    <p key={f} className="text-xs flex items-center gap-1.5" style={{ color: colors.slate }}>
+                      <Check size={12} color={colors.green} className="flex-shrink-0" />
+                      {f}
+                    </p>
+                  ))}
                 </div>
               </div>
+
               <button
                 disabled={checkoutLoading}
                 onClick={() => startCheckout("mensuel")}
-                className="py-2.5 rounded-full font-semibold"
+                className="py-3 rounded-full font-bold"
                 style={{ backgroundColor: colors.gold, color: colors.ink }}
               >
                 S'abonner — 4,99 €/mois
               </button>
-              <button
-                disabled={checkoutLoading}
-                onClick={() => startCheckout("special_examen")}
-                className="py-2 rounded-full text-sm font-medium"
-                style={{ color: colors.slate }}
-              >
-                Offre spéciale examen (3 mois — 9 €)
-              </button>
-            </>
+              <p className="text-[11px] text-center -mt-2" style={{ color: colors.slate }}>
+                Rejoins les élèves qui progressent déjà avec la méthode.
+              </p>
+
+              <div className="rounded-2xl p-3.5 text-left" style={{ backgroundColor: colors.bg, border: `1px solid ${colors.hairline}` }}>
+                <div className="flex items-baseline justify-between">
+                  <p className="text-xs font-semibold" style={{ color: colors.ink }}>
+                    Pack Examen
+                  </p>
+                  <p className="text-sm font-bold" style={{ color: colors.ink }}>
+                    9 € <span className="text-[10px] font-medium" style={{ color: colors.slate }}>/3 mois</span>
+                  </p>
+                </div>
+                <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
+                  Pour UN niveau au choix : préparation à l'examen (Brevet, EAM ou Bac), Automatismes illimités et 2
+                  chapitres bonus. Offre non reconductible.
+                </p>
+                <button
+                  disabled={checkoutLoading}
+                  onClick={() => startCheckout("special_examen")}
+                  className="text-xs font-semibold mt-2"
+                  style={{ color: colors.gold }}
+                >
+                  Choisir le Pack Examen →
+                </button>
+              </div>
+            </div>
           )}
           <button onClick={signOut} className="py-2 rounded-full text-sm font-medium mt-2" style={{ color: colors.slate }}>
             Se déconnecter

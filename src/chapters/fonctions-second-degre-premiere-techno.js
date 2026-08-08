@@ -372,12 +372,21 @@ export default {
             items: [
               "\\(a(x-x_1)(x-x_2)\\) : \\(x_1\\) et \\(x_2\\) sont les racines, lues directement.",
               "Signe de a « à l'extérieur » des racines, signe opposé « entre » les racines.",
+              "Pour retrouver a connaissant les deux racines et un point \\((x_0 ; y_0)\\) de la courbe : \\(a = \\dfrac{y_0}{(x_0-x_1)(x_0-x_2)}\\).",
+            ],
+          },
+          {
+            title: "Fonctions de référence \\(x \\mapsto ax^2\\) et \\(x \\mapsto ax^2+c\\)",
+            items: [
+              "\\(x \\mapsto ax^2\\) : parabole de sommet l'origine \\((0 ; 0)\\). On retrouve a à partir d'un point connu \\((x ; y)\\), \\(x \\neq 0\\) : \\(a = \\dfrac{y}{x^2}\\).",
+              "\\(x \\mapsto ax^2+c\\) : même parabole translatée verticalement, de sommet \\((0 ; c)\\).",
             ],
           },
           {
             title: "Sommet et axe de symétrie",
             items: [
               "L'axe de symétrie passe par le sommet et par le milieu des deux racines (si elles existent).",
+              "Sans formule (méthode officielle) : à partir de la forme développée, résoudre \\(f(x)=f(0)\\) donne une deuxième solution \\(x=m\\), symétrique de 0 par rapport à l'axe ; l'axe de symétrie est alors la droite \\(x=\\dfrac{0+m}{2}\\).",
               "Piège classique : le sommet n'a pas pour abscisse la moyenne des racines si on ne connaît qu'une seule racine.",
             ],
           },

@@ -35,6 +35,116 @@ const toRad = (deg) => (deg * Math.PI) / 180;
 
 const villes = ["Arras", "Lima", "Nairobi", "Osaka", "Quito", "Bergen", "Perth", "Kingston", "Dakar", "Riga"];
 
+// Figures utilisées uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+function buildSphereDisqueFigure() {
+  const O = { id: "O", x: 0, y: 0, dx: -14, dy: 4 };
+  const R = { id: "R", x: 60, y: 0, dy: -8 };
+  return {
+    points: [O, R],
+    circles: [{ center: "O", radius: 60 }],
+    segments: [{ from: "O", to: "R" }],
+    freeLabels: [{ x: 30, y: -8, text: "R" }],
+  };
+}
+
+// Coupe méridienne : centre O, point P à la latitude donnée, H pied de la perpendiculaire
+// à l'axe des pôles (rayon r du parallèle), illustrant r = R × cos(latitude).
+function buildLatitudeParalleleFigure() {
+  const O = { id: "O", x: 80, y: 140, dx: -16, dy: 4 };
+  const latRad = (40 * Math.PI) / 180;
+  const Rval = 90;
+  const P = { id: "P", x: O.x + Rval * Math.cos(latRad), y: O.y - Rval * Math.sin(latRad), dx: 10, dy: -6 };
+  const H = { id: "H", x: O.x, y: P.y, dx: -14, dy: 4 };
+  const Ntop = { id: "Ntop", x: 80, y: 10, hideDot: true, hideLabel: true };
+  const Sbottom = { id: "Sbottom", x: 80, y: 170, hideDot: true, hideLabel: true };
+  return {
+    points: [O, P, H, Ntop, Sbottom],
+    lines: [{ from: "Ntop", to: "Sbottom", extend: 0 }],
+    segments: [
+      { from: "O", to: "P" },
+      { from: "H", to: "P" },
+    ],
+    rightAngles: [{ at: "H", from: "O", to: "P" }],
+    freeLabels: [
+      { x: (O.x + P.x) / 2 + 6, y: (O.y + P.y) / 2 + 10, text: "R" },
+      { x: (H.x + P.x) / 2, y: H.y + 14, text: "r" },
+    ],
+  };
+}
+
+// Section d'un cube par un plan parallèle à une face (illustration cube + plan de coupe en pointillés).
+function buildCubeSectionFigure() {
+  const A = { id: "A", x: 20, y: 90, hideLabel: true };
+  const B = { id: "B", x: 110, y: 90, hideLabel: true };
+  const C = { id: "C", x: 110, y: 30, hideLabel: true };
+  const D = { id: "D", x: 20, y: 30, hideLabel: true };
+  const dx = 40;
+  const dy = -30;
+  const A2 = { id: "A2", x: A.x + dx, y: A.y + dy, hideLabel: true };
+  const B2 = { id: "B2", x: B.x + dx, y: B.y + dy, hideLabel: true };
+  const C2 = { id: "C2", x: C.x + dx, y: C.y + dy, hideLabel: true };
+  const D2 = { id: "D2", x: D.x + dx, y: D.y + dy, hideLabel: true };
+  const t = 0.55;
+  const As = { id: "As", x: A.x + t * dx, y: A.y + t * dy, hideLabel: true };
+  const Bs = { id: "Bs", x: B.x + t * dx, y: B.y + t * dy, hideLabel: true };
+  const Cs = { id: "Cs", x: C.x + t * dx, y: C.y + t * dy, hideLabel: true };
+  const Ds = { id: "Ds", x: D.x + t * dx, y: D.y + t * dy, hideLabel: true };
+  return {
+    points: [A, B, C, D, A2, B2, C2, D2, As, Bs, Cs, Ds],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C" },
+      { from: "C", to: "D" },
+      { from: "D", to: "A" },
+      { from: "B", to: "B2" },
+      { from: "C", to: "C2" },
+      { from: "D", to: "D2" },
+      { from: "B2", to: "C2" },
+      { from: "C2", to: "D2" },
+      { from: "A", to: "A2", dashed: true },
+      { from: "A2", to: "B2", dashed: true },
+      { from: "A2", to: "D2", dashed: true },
+      { from: "As", to: "Bs", dashed: true },
+      { from: "Bs", to: "Cs", dashed: true },
+      { from: "Cs", to: "Ds", dashed: true },
+      { from: "Ds", to: "As", dashed: true },
+    ],
+    freeLabels: [{ x: (As.x + Cs.x) / 2, y: (As.y + Cs.y) / 2, text: "section" }],
+  };
+}
+
+// Section d'une pyramide par un plan parallèle à la base (réduction de la base près du sommet).
+function buildPyramideSectionFigure() {
+  const A = { id: "A", x: 20, y: 150, hideLabel: true };
+  const B = { id: "B", x: 140, y: 150, hideLabel: true };
+  const C = { id: "C", x: 170, y: 110, hideLabel: true };
+  const D = { id: "D", x: 50, y: 110, hideLabel: true };
+  const S = { id: "S", x: 95, y: 20, dy: -10 };
+  const f = 0.4;
+  const scale = (P) => ({ x: S.x + f * (P.x - S.x), y: S.y + f * (P.y - S.y) });
+  const As = { id: "As", ...scale(A), hideLabel: true };
+  const Bs = { id: "Bs", ...scale(B), hideLabel: true };
+  const Cs = { id: "Cs", ...scale(C), hideLabel: true };
+  const Ds = { id: "Ds", ...scale(D), hideLabel: true };
+  return {
+    points: [A, B, C, D, S, As, Bs, Cs, Ds],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C", dashed: true },
+      { from: "C", to: "D", dashed: true },
+      { from: "D", to: "A" },
+      { from: "S", to: "A" },
+      { from: "S", to: "B" },
+      { from: "S", to: "C", dashed: true },
+      { from: "S", to: "D" },
+      { from: "As", to: "Bs", dashed: true },
+      { from: "Bs", to: "Cs", dashed: true },
+      { from: "Cs", to: "Ds", dashed: true },
+      { from: "Ds", to: "As", dashed: true },
+    ],
+  };
+}
+
 // =========================== La sphère ===========================
 
 // ---------- 1. Volume d'une sphère depuis le rayon ----------
@@ -359,6 +469,48 @@ export default {
     level: "troisieme",
     free: false,
     order: 14,
+    cours: {
+      mindMap: {
+        title: "Géométrie dans l'espace",
+        branches: [
+          {
+            title: "La sphère : aire et volume",
+            items: [
+              "Aire d'une sphère = \\(4 \\pi R^2\\). Volume d'une boule = \\(\\dfrac{4}{3} \\pi R^3\\).",
+              "Si on donne le diamètre, on calcule d'abord le rayon (diamètre ÷ 2) avant d'appliquer les formules.",
+            ],
+            formula: "\\(A = 4\\pi R^2\\ ;\\ V = \\dfrac{4}{3}\\pi R^3\\)",
+            figure: buildSphereDisqueFigure(),
+          },
+          {
+            title: "La sphère terrestre",
+            items: [
+              "La latitude se mesure par rapport à l'équateur (Nord/Sud), la longitude par rapport au méridien de référence (Est/Ouest).",
+              "Un méridien est un demi grand cercle : sa longueur vaut \\(\\pi R\\).",
+              "Le rayon d'un parallèle à la latitude donnée vaut \\(R \\times \\cos(\\text{latitude})\\).",
+            ],
+            formula: "\\(r_{\\text{parallèle}} = R \\times \\cos(\\text{latitude})\\)",
+            figure: buildLatitudeParalleleFigure(),
+          },
+          {
+            title: "Section d'un cube ou d'un cylindre",
+            items: [
+              "Un plan parallèle à une face d'un cube donne un carré identique ; parallèle à une arête seulement, un rectangle.",
+              "Un plan parallèle à la base d'un cylindre donne un disque de même rayon que la base.",
+            ],
+            figure: buildCubeSectionFigure(),
+          },
+          {
+            title: "Section d'une pyramide ou d'une sphère",
+            items: [
+              "Un plan parallèle à la base d'une pyramide donne une réduction de cette base (figure semblable, plus petite).",
+              "Un plan coupant une sphère donne un disque : de rayon R s'il passe par le centre, strictement inférieur à R sinon.",
+            ],
+            figure: buildPyramideSectionFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

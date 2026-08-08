@@ -15,6 +15,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -147,7 +149,7 @@ function genFonctionDepuisTableauLireNumeric() {
   return {
     type: "numeric",
     chapter: "Notion de fonctions — Tableau de valeurs",
-    prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Quel est le nombre associé à ${xs[idx]} par f ?`,
+    prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${texTable([["x", ...xs], ["y (image de x)", ...ys]])} Quel est le nombre associé à ${xs[idx]} par f ?`,
     answer: ys[idx],
     steps: [{ type: "donnee", text: `D'après le tableau, à x = ${xs[idx]} on associe ${ys[idx]}.` }],
   };
@@ -169,7 +171,7 @@ function genFonctionDepuisTableauAntecedentNumeric() {
   return {
     type: "numeric",
     chapter: "Notion de fonctions — Tableau de valeurs",
-    prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Quel nombre a pour image ${ys[idx]} par f (antécédent de ${ys[idx]}) ?`,
+    prompt: `Une fonction f est définie par le tableau de valeurs suivant : ${texTable([["x", ...xs], ["y (image de x)", ...ys]])} Quel nombre a pour image ${ys[idx]} par f (antécédent de ${ys[idx]}) ?`,
     answer: xs[idx],
     steps: [{ type: "donnee", text: `D'après le tableau, ${ys[idx]} est associé à x = ${xs[idx]}.` }],
   };
@@ -186,7 +188,7 @@ function genProportionnaliteOuNonQCM() {
   return {
     type: "qcm",
     chapter: "Notion de fonctions — Proportionnalité",
-    prompt: `Voici un tableau de valeurs : ${xs.map((x, i) => `x=${x} → ${ys[i]}`).join(", ")}. Cette fonction correspond-elle à une situation de proportionnalité ?`,
+    prompt: `Voici un tableau de valeurs : ${texTable([["x", ...xs], ["y (image de x)", ...ys]])} Cette fonction correspond-elle à une situation de proportionnalité ?`,
     answer: isProportional ? "Oui" : "Non",
     options: ["Oui", "Non"],
     steps: [{ type: "calcul", text: `On vérifie si le quotient y/x est constant : ${xs.map((x, i) => fr(roundTo(ys[i] / x, 3))).join(", ")}.` }],
@@ -330,7 +332,7 @@ export default {
             title: "Fonction et proportionnalité",
             items: [
               "Une fonction correspond à une situation de proportionnalité si le quotient \\(\\frac{y}{x}\\) reste constant pour toutes les valeurs.",
-              "Une fonction affine du type \\(x \\mapsto ax + b\\) n'est proportionnelle que si b = 0.",
+              "Si f associe à x le nombre \\(ax + b\\), la fonction n'est proportionnelle que si b = 0 (sinon le quotient y/x n'est pas constant).",
             ],
           },
         ],

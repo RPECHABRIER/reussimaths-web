@@ -393,6 +393,48 @@ export default {
     pourquoi: "Le nombre dérivé mesure la vitesse instantanée d'un phénomène — la notion centrale pour étudier comment une quantité varie, en sciences comme en économie.",
     level: "premiere-spe",
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Dérivation",
+        branches: [
+          {
+            title: "Taux de variation, nombre dérivé, tangente",
+            items: [
+              "\\(f'(a)\\) est la limite du taux de variation quand h tend vers 0 ; c'est le coefficient directeur de la tangente en a.",
+            ],
+            formula: "\\(f'(a) = \\displaystyle\\lim_{h \\to 0} \\dfrac{f(a+h)-f(a)}{h},\\quad y=f'(a)(x-a)+f(a)\\)",
+          },
+          {
+            title: "Approximation linéaire",
+            items: [
+              "Pour h proche de 0, la tangente donne une bonne approximation de f près de a.",
+            ],
+            formula: "\\(f(a+h) \\approx f(a) + h \\times f'(a)\\)",
+          },
+          {
+            title: "Dérivées de référence",
+            items: [
+              "Piège classique : la dérivée de \\(\\frac{1}{x}\\) est négative alors que \\(x^n\\) et \\(\\sqrt{x}\\) ont une dérivée positive sur leur domaine.",
+            ],
+            formula: "\\((x^n)'=nx^{n-1},\\quad \\left(\\dfrac{1}{x}\\right)'=-\\dfrac{1}{x^2},\\quad (\\sqrt{x})'=\\dfrac{1}{2\\sqrt{x}}\\)",
+          },
+          {
+            title: "Opérations : somme, produit, quotient",
+            items: [
+              "Piège classique très fréquent : la dérivée d'un produit n'est PAS le produit des dérivées.",
+            ],
+            formula: "\\((uv)'=u'v+uv',\\quad \\left(\\dfrac{u}{v}\\right)'=\\dfrac{u'v-uv'}{v^2}\\)",
+          },
+          {
+            title: "Dérivée d'une composée affine",
+            items: [
+              "Pour \\(g(x)=u(ax+b)\\), on multiplie par le coefficient directeur a de l'intérieur.",
+            ],
+            formula: "\\(g(x)=u(ax+b) \\implies g'(x)=a \\times u'(ax+b)\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

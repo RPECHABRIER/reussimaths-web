@@ -18,18 +18,28 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 2 des 14 fichiers de
+la Première techno sont intégralement terminées. 3 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
-vecteurs-droites-plans-espace-terminale-spe.js). Prochain fichier :
-orthogonalite-distances-espace-terminale-spe.js (Terminale Spé). Note :
-ce fichier suivant est traité normalement malgré une consigne reçue
-disant qu'il serait déjà coché — vérification faite, le commit
-antérieur existant pour ce fichier appartient au chantier de RÉDACTION
-initial (COURS_PROGRESS.md, création de la carte mentale + figures 3D),
-pas à ce chantier-ci de RELECTURE qualité (COURS_REVIEW_PROGRESS.md) ;
-il n'avait jamais été relu sous cet angle (confirmé par
-vecteurs-droites-plans-espace-terminale-spe.js qui contenait
-effectivement plusieurs gaps substantiels malgré la même consigne).**
+vecteurs-droites-plans-espace-terminale-spe.js,
+orthogonalite-distances-espace-terminale-spe.js — les 2 fichiers
+d'espace, bien que déjà rédigés lors du chantier initial, ont chacun
+révélé des gaps substantiels une fois relus sous l'angle qualité, ce
+qui confirme qu'ils n'avaient jamais été traités par CE chantier-ci
+malgré une consigne initiale erronée les disant déjà cochés). Prochain
+fichier : suites-terminale-spe.js (Terminale Spé).**
+
+`orthogonalite-distances-espace-terminale-spe.js` (Terminale Spé) relu
+intégralement : 4 branches inchangées en nombre mais fortement
+enrichies. Branche « Vecteur normal à un plan » enrichie : non-unicité
+du vecteur normal, méthode pour trouver d depuis un point+normal.
+Branche « Positions relatives » fortement enrichie (gap le plus grave) :
+perpendicularité de 2 plans (normaux orthogonaux, critère distinct du
+parallélisme, absent avant) ; théorème du toit ; définition complète
+droite⊥plan ; 2 droites ⊥ même plan sont parallèles — 4 des 5 cas du
+vrai-faux dédié étaient sans couverture. Branche renommée « Distances
+dans l'espace » : formule AB=√((xB-xA)²+...) ajoutée, absente malgré
+son caractère fondamental. Aucun €, aucun candidat texTable, 3 figures
+non modifiées.
 
 `vecteurs-droites-plans-espace-terminale-spe.js` (Terminale Spé) relu
 intégralement : 4 branches inchangées en nombre mais fortement
@@ -1485,7 +1495,7 @@ vérifiés pour débordement.)
 ### Terminale Spé
 - [x] combinatoire-denombrement-terminale-spe.js *(formule de base des coefficients binomiaux, cas particuliers binom(n,0)/binom(n,n)/binom(n,1), relation arrangement-combinaison A(n,k)=binom(n,k)×k! ajoutés)*
 - [x] vecteurs-droites-plans-espace-terminale-spe.js *(formules AB depuis 2 points, milieu, somme de vecteurs, Chasles ajoutées ; critère de colinéarité pour alignement ; positions relatives droite-droite ajoutées — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
-- [ ] orthogonalite-distances-espace-terminale-spe.js
+- [x] orthogonalite-distances-espace-terminale-spe.js *(perpendicularité de plans ajoutée, théorème du toit, définition droite⊥plan, formule de distance entre 2 points ajoutée — fichier jamais relu sous l'angle qualité, gaps substantiels comblés)*
 - [ ] suites-terminale-spe.js
 - [ ] limites-fonctions-terminale-spe.js
 - [ ] continuite-terminale-spe.js

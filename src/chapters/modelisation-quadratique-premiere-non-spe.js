@@ -232,12 +232,14 @@ export default {
         title: "Modélisation quadratique",
         branches: [
           {
-            title: "Forme développée et sommet",
+            title: "Forme canonique et forme développée",
             items: [
-              "Forme développée \\(ax^2+bx+c\\) : pratique pour calculer une image ; le sommet donne le maximum ou minimum.",
+              "Forme canonique \\(f(x)=a(x-\\alpha)^2+\\beta\\) : le sommet de la parabole se lit directement, \\(S(\\alpha ; \\beta)\\), sans aucun calcul.",
+              "Pour passer de la forme canonique à la forme développée \\(ax^2+bx+c\\), on développe avec l'identité remarquable \\((x-\\alpha)^2=x^2-2\\alpha x+\\alpha^2\\).",
+              "Forme développée : pratique pour calculer une image directement.",
               "a > 0 : parabole tournée vers le haut (minimum au sommet) ; a < 0 : tournée vers le bas (maximum).",
             ],
-            formula: "\\(f(x) = ax^2+bx+c,\\quad x_S = -\\dfrac{b}{2a}\\)",
+            formula: "\\(f(x) = a(x-\\alpha)^2+\\beta = ax^2+bx+c,\\quad \\alpha = -\\dfrac{b}{2a}\\)",
           },
           {
             title: "Discriminant",

@@ -23,6 +23,79 @@ const fr = (n) => String(n).replace(".", ",");
 
 const PRENOMS = ["Léa", "Nathan", "Camille", "Yanis", "Inès", "Malo", "Sofia", "Adam", "Lina", "Théo", "Rania", "Enzo"];
 
+// Figures utilisées uniquement par la carte mentale du Cours (meta.cours.mindMap ci-dessous).
+function buildAngleTriangleFigure(angA, angB, angC, labels = {}) {
+  const toRad = (d) => (d * Math.PI) / 180;
+  const L = 100;
+  const t = (L * Math.sin(toRad(angC))) / Math.sin(toRad(angA));
+  const A = { x: t * Math.cos(toRad(angB)), y: -t * Math.sin(toRad(angB)) };
+  const B = { x: 0, y: 0 };
+  const C = { x: L, y: 0 };
+  const centroid = { x: (A.x + B.x + C.x) / 3, y: (A.y + B.y + C.y) / 3 };
+  const inset = (P, frac = 0.24) => ({ x: P.x + (centroid.x - P.x) * frac, y: P.y + (centroid.y - P.y) * frac });
+  const points = [
+    { id: "A", x: A.x, y: A.y, dy: -8, hideLabel: true },
+    { id: "B", x: B.x, y: B.y, dy: 16, hideLabel: true },
+    { id: "C", x: C.x, y: C.y, dy: 16, hideLabel: true },
+  ];
+  const segments = [
+    { from: "A", to: "B" },
+    { from: "B", to: "C" },
+    { from: "C", to: "A" },
+  ];
+  const freeLabels = [];
+  const vertexByKey = { A, B, C };
+  Object.entries(labels).forEach(([key, text]) => {
+    if (!text) return;
+    const pos = inset(vertexByKey[key]);
+    freeLabels.push({ x: pos.x, y: pos.y, text });
+  });
+  return { points, segments, freeLabels };
+}
+
+function buildEgaliteTrianglesFigure() {
+  return {
+    points: [
+      { id: "A", x: 20, y: 130, dx: -12 },
+      { id: "B", x: 110, y: 130, dx: 8, dy: 18 },
+      { id: "C", x: 55, y: 40, dy: -8 },
+      { id: "D", x: 190, y: 130, dx: -12 },
+      { id: "E", x: 280, y: 130, dx: 8, dy: 18 },
+      { id: "F", x: 225, y: 40, dy: -8 },
+    ],
+    segments: [
+      { from: "A", to: "B", ticks: 1 },
+      { from: "B", to: "C", ticks: 2 },
+      { from: "C", to: "A", ticks: 3 },
+      { from: "D", to: "E", ticks: 1 },
+      { from: "E", to: "F", ticks: 2 },
+      { from: "F", to: "D", ticks: 3 },
+    ],
+  };
+}
+
+function buildTranslationFigure() {
+  return {
+    points: [
+      { id: "A", x: 20, y: 150, dy: 16 },
+      { id: "B", x: 80, y: 150, dy: 16 },
+      { id: "C", x: 50, y: 100, dy: -8 },
+      { id: "D", x: 140, y: 80, dy: 16 },
+      { id: "E", x: 200, y: 80, dy: 16 },
+      { id: "F", x: 170, y: 30, dy: -8 },
+    ],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C" },
+      { from: "C", to: "A" },
+      { from: "D", to: "E", dashed: true },
+      { from: "E", to: "F", dashed: true },
+      { from: "F", to: "D", dashed: true },
+    ],
+    lines: [{ from: "A", to: "D", extend: 0, arrowEnd: true }],
+  };
+}
+
 // =========================== Égalité de triangles ===========================
 
 // ---------- 1. Calculer un angle inconnu dans un triangle ----------
@@ -314,6 +387,40 @@ export default {
     level: "quatrieme",
     free: false,
     order: 14,
+    cours: {
+      mindMap: {
+        title: "Géométrie plane",
+        branches: [
+          {
+            title: "Angles dans un triangle",
+            items: [
+              "La somme des trois angles d'un triangle vaut toujours 180°.",
+              "Dans un triangle isocèle, les deux angles à la base (opposés aux côtés égaux) sont égaux.",
+            ],
+            formula: "\\(\\widehat{A} + \\widehat{B} + \\widehat{C} = 180°\\)",
+            figure: buildAngleTriangleFigure(70, 60, 50, { A: "70°", B: "60°", C: "50°" }),
+          },
+          {
+            title: "Égalité de deux triangles",
+            items: [
+              "Deux triangles sont égaux si leurs côtés sont deux à deux de même longueur (côté-côté-côté).",
+              "Ils sont aussi égaux si un angle égal est situé entre deux côtés égaux, ou un côté égal entre deux angles égaux.",
+              "Piège classique : bien faire correspondre les sommets dans le même ordre pour comparer les bons côtés et angles.",
+            ],
+            figure: buildEgaliteTrianglesFigure(),
+          },
+          {
+            title: "Translations : propriétés conservées",
+            items: [
+              "Une translation fait glisser une figure sans la retourner ni la déformer.",
+              "Elle conserve les longueurs, les angles, les aires et le parallélisme.",
+              "L'image d'un parallélogramme par translation reste un parallélogramme (et garde ses propriétés particulières).",
+            ],
+            figure: buildTranslationFigure(),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

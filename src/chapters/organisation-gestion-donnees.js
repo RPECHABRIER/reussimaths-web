@@ -29,6 +29,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -136,10 +138,13 @@ function genLireTableauDonneesValeur() {
   let tailles = [randInt(48, 54)];
   for (let i = 1; i < ages.length; i++) tailles.push(tailles[i - 1] + randInt(3, 9));
   const idx = randInt(1, ages.length - 1);
+  // 7 paires âge/taille en prose ("0 mois → 50 cm ; 6 mois → 55 cm ; ...")
+  // déborde du cadre sur mobile — un vrai tableau texTable() reste lisible.
+  const table = texTable([["Âge (en mois)", ...ages], ["Taille (en cm)", ...tailles]]);
   return {
     type: "numeric",
     chapter: "Organisation et gestion de données — Tableau de données",
-    prompt: `Voici l'évolution de la taille de ${n} (en cm) selon son âge (en mois) : ${ages.map((a, i) => `${a} mois → ${tailles[i]} cm`).join(" ; ")}. Quelle était la taille de ${n} à ${ages[idx]} mois ?`,
+    prompt: `Voici l'évolution de la taille de ${n} (en cm) selon son âge (en mois) : ${table} Quelle était la taille de ${n} à ${ages[idx]} mois ?`,
     answer: tailles[idx],
     steps: [{ type: "donnee", text: `On lit la valeur associée à ${ages[idx]} mois dans le tableau : ${tailles[idx]} cm.` }],
   };
@@ -563,7 +568,8 @@ export default {
           {
             title: "Expérience aléatoire et échelle de probabilité",
             items: [
-              "Une issue est un résultat possible d'une expérience aléatoire (ex : les 6 faces d'un dé).",
+              "Une expérience aléatoire est une situation dont on ne connaît pas le résultat à l'avance : lancer un dé, tirer une carte, faire tourner une roue.",
+              "Chaque résultat possible s'appelle une issue (ex : chacune des 6 faces d'un dé).",
               "Échelle : impossible (0) — peu probable — une chance sur deux (0,5) — très probable — certain (1).",
               "Piège classique : « peu probable » n'est pas « impossible » — l'événement peut quand même se réaliser.",
             ],

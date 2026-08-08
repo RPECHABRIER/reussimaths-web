@@ -458,6 +458,45 @@ export default {
     level: "troisieme",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Calcul numérique",
+        branches: [
+          {
+            title: "Opérations sur les fractions",
+            items: [
+              "Pour additionner/soustraire, on réduit au même dénominateur ; pour multiplier, on multiplie termes à termes.",
+              "Diviser par une fraction, c'est multiplier par son inverse.",
+              "On donne toujours le résultat sous forme irréductible (dénominateur positif).",
+            ],
+            formula: "\\(\\dfrac{a}{b} \\div \\dfrac{c}{d} = \\dfrac{a}{b} \\times \\dfrac{d}{c}\\)",
+          },
+          {
+            title: "Puissances",
+            items: [
+              "Une puissance négative s'écrit comme une fraction : \\(a^{-n} = \\dfrac{1}{a^n}\\).",
+              "Produit de même base : on additionne les exposants. Quotient de même base : on les soustrait. Puissance de puissance : on les multiplie.",
+              "Produit de même exposant : \\(a^n \\times b^n = (a \\times b)^n\\).",
+            ],
+            formula: "\\(a^m \\times a^n = a^{m+n}\\ ;\\ (a^m)^n = a^{m \\times n}\\)",
+          },
+          {
+            title: "Racines carrées",
+            items: [
+              "Pour encadrer \\(\\sqrt{n}\\), on repère les deux carrés parfaits consécutifs qui entourent n.",
+              "Un carré parfait est le carré d'un nombre entier.",
+            ],
+          },
+          {
+            title: "Écriture scientifique",
+            items: [
+              "Un nombre en écriture scientifique s'écrit \\(m \\times 10^n\\) avec \\(1 \\leqslant |m| < 10\\).",
+              "Piège classique : bien compenser l'exposant à chaque déplacement de la virgule dans la mantisse.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

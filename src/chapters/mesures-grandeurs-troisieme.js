@@ -380,13 +380,14 @@ export default {
             items: [
               "Vitesse = distance ÷ temps ; énergie = puissance × temps ; débit = volume ÷ temps.",
               "Pour convertir une vitesse km/h en m/s, on divise par 3,6 ; pour l'autre sens, on multiplie par 3,6.",
+              "Piège classique : pour une durée en heures et minutes, convertir d'abord les minutes en heures décimales (30 min = 0,5 h) avant de calculer — ne pas utiliser directement les minutes comme des centièmes d'heure.",
             ],
             formula: "\\(v = \\dfrac{d}{t}\\ ;\\ E = P \\times t\\ ;\\ \\text{débit} = \\dfrac{\\text{volume}}{\\text{temps}}\\)",
           },
           {
             title: "Échelles",
             items: [
-              "Sur un plan à l'échelle 1/n, 1 cm représente n cm dans la réalité : on multiplie par n pour passer du plan au réel.",
+              "Sur un plan à l'échelle 1/n, 1 cm représente n cm dans la réalité : on multiplie par n pour passer du plan au réel, on divise par n pour passer du réel au plan.",
               "Le coefficient d'échelle s'applique au carré sur les surfaces, au cube sur les volumes.",
               "Piège classique : oublier de mettre les deux longueurs dans la même unité avant de calculer une échelle.",
             ],

@@ -506,6 +506,28 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant (les exercices restent
+// purement numériques). Vecteurs dessinés comme des segments finis fléchés
+// (extend: 0 pour ne pas prolonger au-delà des deux points, arrowEnd: true).
+function buildCoursVecteurFigure(pts, vectors = [], segments = []) {
+  const scale = 20;
+  const toX = (v) => v * scale;
+  const toY = (v) => -v * scale;
+  const points = pts.map((p) => ({
+    id: p.id,
+    x: toX(p.x),
+    y: toY(p.y),
+    label: p.label ?? p.id,
+    dx: p.dx ?? 8,
+    dy: p.dy ?? -8,
+    hideDot: p.hideDot,
+    hideLabel: p.hideLabel,
+  }));
+  const lines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
+  return { points, lines, segments };
+}
+
 export default {
   meta: {
     id: "vecteurs-seconde",
@@ -515,6 +537,73 @@ export default {
     level: "seconde",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Notion de vecteur",
+        branches: [
+          {
+            title: "Un vecteur : direction, sens, longueur",
+            items: [
+              "\\(\\overrightarrow{AB}\\) est caractérisé par trois éléments : sa direction (droite (AB)), son sens (de A vers B) et sa longueur (\\(\\|\\overrightarrow{AB}\\|=AB\\)).",
+              "Piège classique : \\(\\overrightarrow{AB}\\) et \\(\\overrightarrow{BA}\\) ont la même longueur mais un sens opposé — ce ne sont pas le même vecteur.",
+            ],
+            figure: buildCoursVecteurFigure([{ id: "A", x: 0, y: 1, dx: -10, dy: 8 }, { id: "B", x: 4, y: 3 }], [{ from: "A", to: "B" }]),
+          },
+          {
+            title: "Coordonnées et norme d'un vecteur",
+            items: [
+              "Les coordonnées de \\(\\overrightarrow{AB}\\) s'obtiennent en soustrayant les coordonnées de A à celles de B (arrivée moins départ).",
+              "La norme se calcule avec Pythagore, comme une distance.",
+            ],
+            formula: "\\(\\overrightarrow{AB}\\begin{pmatrix}x_B-x_A\\\\y_B-y_A\\end{pmatrix},\\ \\|\\overrightarrow{AB}\\| = \\sqrt{(x_B-x_A)^2+(y_B-y_A)^2}\\)",
+            figure: buildCoursVecteurFigure(
+              [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "B", x: 5, y: 3 }, { id: "H", x: 5, y: 0, hideDot: true, hideLabel: true }],
+              [{ from: "A", to: "B" }],
+              [{ from: "A", to: "H", dashed: true }, { from: "H", to: "B", dashed: true }]
+            ),
+          },
+          {
+            title: "Égalité de vecteurs, relation de Chasles",
+            items: [
+              "Deux vecteurs sont égaux s'ils ont même direction, même sens et même longueur (peu importe leur position).",
+              "La relation de Chasles permet de décomposer un trajet en étapes.",
+            ],
+            formula: "\\(\\overrightarrow{AB}+\\overrightarrow{BC}=\\overrightarrow{AC}\\)",
+            figure: buildCoursVecteurFigure(
+              [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "B", x: 3, y: 1, dy: 10 }, { id: "C", x: 5, y: 3 }],
+              [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "A", to: "C" }]
+            ),
+          },
+          {
+            title: "Propriété du parallélogramme",
+            items: [
+              "ABCD est un parallélogramme si et seulement si \\(\\overrightarrow{AB}=\\overrightarrow{DC}\\).",
+              "Piège classique : bien respecter l'ordre des lettres — c'est \\(\\overrightarrow{DC}\\), pas \\(\\overrightarrow{CD}\\).",
+            ],
+            figure: buildCoursVecteurFigure(
+              [{ id: "A", x: 0, y: 0, dx: -10, dy: 10 }, { id: "B", x: 4, y: 0, dy: 12 }, { id: "C", x: 5, y: 3 }, { id: "D", x: 1, y: 3, dx: -12, dy: -8 }],
+              [{ from: "A", to: "B" }, { from: "D", to: "C" }],
+              [{ from: "B", to: "C" }, { from: "A", to: "D" }]
+            ),
+          },
+          {
+            title: "Vecteur opposé et multiplication par un nombre",
+            items: [
+              "\\(-\\overrightarrow{u}\\) a la même longueur mais le sens opposé ; \\(k\\overrightarrow{u}\\) a la même direction, une longueur multipliée par \\(|k|\\), et le sens opposé si k < 0.",
+            ],
+            figure: buildCoursVecteurFigure(
+              [
+                { id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 10 },
+                { id: "A", x: 2, y: 1, label: "u", dy: 10 },
+                { id: "B", x: 4, y: 2, label: "2u" },
+                { id: "C", x: -2, y: -1, label: "-u", dx: -16, dy: 6 },
+              ],
+              [{ from: "O", to: "A" }, { from: "O", to: "B" }, { from: "O", to: "C" }]
+            ),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

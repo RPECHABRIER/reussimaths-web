@@ -19,9 +19,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé et la Première Spé
 sont maintenant intégralement terminées (11/11 pour la Première Spé).
-`suites-numeriques-premiere-techno.js` (1er des 8 fichiers de Première
-techno) vient d'être relu. Prochain fichier :
-fonctions-second-degre-premiere-techno.js (Première techno).**
+2 des 8 fichiers de Première techno sont relus
+(suites-numeriques-premiere-techno.js,
+fonctions-second-degre-premiere-techno.js). Prochain fichier :
+derivation-premiere-techno.js (Première techno).**
+
+`fonctions-second-degre-premiere-techno.js` (Première techno) relu
+intégralement : 5 branches (4 avant). Nouvelle branche « Fonctions de
+référence x↦ax² et x↦ax²+c » ajoutée, thème entier absent malgré 2
+générateurs dédiés (genAssocierAxCarreQCM, genAssocierAxCarrePlusCQCM).
+Branche « Forme factorisée » enrichie : formule a=y0/((x0-x1)(x0-x2))
+ajoutée. Branche « Sommet et axe de symétrie » enrichie : méthode
+officielle sans formule (résoudre f(x)=f(0), prendre le milieu) ajoutée
+— ajout M7 signalé par la NOTE du fichier, testé mais absent avant.
+Aucun €, aucun candidat texTable, fichier sans figure géométrique.
 
 `suites-numeriques-premiere-techno.js` (Première techno) relu
 intégralement : 5 branches (4 avant). Branche « Suite arithmétique »
@@ -1371,7 +1382,7 @@ vérifiés pour débordement.)
 
 ### Première techno
 - [x] suites-numeriques-premiere-techno.js *(règles de sens de variation ajoutées aux branches arithmétique/géométrique, nouvelle branche « Reconnaître une croissance linéaire ou exponentielle » couvrant modélisation concrète + lecture de nuage de points)*
-- [ ] fonctions-second-degre-premiere-techno.js
+- [x] fonctions-second-degre-premiere-techno.js *(nouvelle branche « Fonctions de référence ax²/ax²+c », formule a depuis 2 racines+point, méthode officielle sans formule pour l'axe de symétrie)*
 - [ ] derivation-premiere-techno.js
 - [ ] statistiques-deux-variables-premiere-techno.js
 - [ ] probabilites-conditionnelles-premiere-techno.js

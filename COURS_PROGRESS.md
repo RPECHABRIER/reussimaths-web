@@ -29,9 +29,11 @@ fait (commit `43dded0`, pas de figure), `puissances-quatrieme.js` fait
 le fichier), `triangles-rectangles-quatrieme.js` fait (commit `3cbbadd`,
 4 figures réutilisant `buildRightTriangleFigure()` déjà présent dans le
 fichier), `geometrie-plane.js` fait (commit `76a0586`, 3 figures neuves —
+aucun helper de figure n'existait dans ce fichier avant),
+`geometrie-espace-quatrieme.js` fait (commit `0030468`, 3 figures neuves —
 aucun helper de figure n'existait dans ce fichier avant). **Prochain
-fichier à traiter : `geometrie-espace-quatrieme.js` (géométrie — figures
-requises).** Même méthode : lire
+fichier à traiter : `exercices-fin-annee-quatrieme.js` (chapitre de
+révision mixte — juger au cas par cas si un Cours est utile).** Même méthode : lire
 `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
 obligatoire pour toute branche géométrique (réutiliser les éventuels
 `build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
@@ -82,8 +84,9 @@ Dernière mise à jour : 2026-08-08 — 4e en cours : `nombres-relatifs-quatriem
 `notion-fonctions.js` (commit `bffb2c1`),
 `proportionnalite-quatrieme.js` (commit `4a84601`),
 `theoreme-thales.js` (commit `6887711`),
-`triangles-rectangles-quatrieme.js` (commit `3cbbadd`) et
-`geometrie-plane.js` (commit `76a0586`) faits. 6e ET 5e terminées avant
+`triangles-rectangles-quatrieme.js` (commit `3cbbadd`),
+`geometrie-plane.js` (commit `76a0586`) et
+`geometrie-espace-quatrieme.js` (commit `0030468`) faits. 6e ET 5e terminées avant
 ça. Les 12 chapitres 5e
 faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
 `divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit
@@ -213,7 +216,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] theoreme-thales.js *(géométrie)*
 - [x] triangles-rectangles-quatrieme.js *(géométrie)*
 - [x] geometrie-plane.js *(géométrie)*
-- [ ] geometrie-espace-quatrieme.js *(géométrie)*
+- [x] geometrie-espace-quatrieme.js *(géométrie)*
 - [ ] exercices-fin-annee-quatrieme.js
 
 ### 3e (troisieme)
@@ -318,7 +321,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ## Total
 
-34 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+35 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
 `automatismes-*`, 114 non comptés ici, à traiter plus tard) — la 6e ET la 5e
 sont intégralement terminées, la 4e est en cours.
 

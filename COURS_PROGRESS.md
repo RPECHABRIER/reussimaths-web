@@ -71,6 +71,9 @@ les hashes). État actuel :
   `vecteurs-produit-scalaire-premiere-spe.js` fait (commit `cfc5be6`, 3
   figures neuves). **Prochain fichier :
   `geometrie-reperee-premiere-spe.js` (géométrie).**
+  `geometrie-reperee-premiere-spe.js` fait (commit `649f3ba`, 3 figures
+  neuves). **Prochain fichier :
+  `probabilites-conditionnelles-premiere-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -331,7 +334,7 @@ Cours).
 - [x] fonction-exponentielle-premiere-spe.js
 - [x] trigonometrie-premiere-spe.js *(géométrie)*
 - [x] vecteurs-produit-scalaire-premiere-spe.js *(géométrie)*
-- [ ] geometrie-reperee-premiere-spe.js *(géométrie)*
+- [x] geometrie-reperee-premiere-spe.js *(géométrie)*
 - [ ] probabilites-conditionnelles-premiere-spe.js
 - [ ] variables-aleatoires-premiere-spe.js
 - [ ] algorithmique-python-premiere-spe.js

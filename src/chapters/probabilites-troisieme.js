@@ -451,6 +451,43 @@ export default {
     level: "troisieme",
     free: false,
     order: 10,
+    cours: {
+      mindMap: {
+        title: "Probabilités",
+        branches: [
+          {
+            title: "Vocabulaire",
+            items: [
+              "Événement certain : probabilité 1. Événement impossible : probabilité 0. Événement élémentaire : une seule issue.",
+              "Il y a équiprobabilité quand toutes les issues ont la même chance de se réaliser.",
+            ],
+          },
+          {
+            title: "Calculer une probabilité",
+            items: [
+              "Dans une situation d'équiprobabilité : \\(P(A) = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\).",
+              "Une probabilité est toujours comprise entre 0 et 1 (ou entre 0 % et 100 %).",
+            ],
+            formula: "\\(P(A) = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}\\)",
+          },
+          {
+            title: "Événement contraire, somme des probabilités",
+            items: [
+              "\\(P(A) + P(\\overline{A}) = 1\\).",
+              "La somme des probabilités de toutes les issues d'une expérience aléatoire vaut toujours 1.",
+              "Sur un grand nombre d'expériences, l'effectif attendu = probabilité × nombre d'expériences.",
+            ],
+          },
+          {
+            title: "Tirage sans remise",
+            items: [
+              "Après un tirage sans remise, l'effectif total et éventuellement l'effectif favorable diminuent tous les deux de 1.",
+              "Piège classique : oublier de retirer l'objet tiré du décompte pour le calcul de la deuxième probabilité.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

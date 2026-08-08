@@ -243,8 +243,8 @@ export default {
           {
             title: "Carré et cube",
             items: [
-              "Le carré d'un nombre, c'est ce nombre multiplié par lui-même deux fois.",
-              "Le cube d'un nombre, c'est ce nombre multiplié par lui-même trois fois.",
+              "Le carré d'un nombre, c'est ce nombre multiplié par lui-même : \\(5^2 = 5 \\times 5 = 25\\) (deux facteurs, ce n'est pas deux multiplications).",
+              "Le cube d'un nombre, c'est ce nombre écrit trois fois en facteur : \\(5^3 = 5 \\times 5 \\times 5 = 125\\).",
               "Piège classique : \\(n^2\\) n'est pas \\(n \\times 2\\), mais \\(n \\times n\\).",
             ],
             formula: "\\(n^2 = n \\times n \\quad ; \\quad n^3 = n \\times n \\times n\\)",

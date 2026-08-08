@@ -18,7 +18,24 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : calcul-numerique-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : calcul-litteral-troisieme.js (3e).**
+
+`calcul-numerique-troisieme.js` (3e) relu intégralement : piège classique
+ajouté à la branche "Opérations sur les fractions" (dans une expression
+avec + ou − et ×, on calcule d'abord la multiplication, comme pour les
+décimaux — testé par `genPrioriteFractionsNumeric` mais absent du cours)
+et à la branche "Puissances" (sans parenthèses on calcule d'abord les
+puissances puis l'addition/multiplication, avec parenthèses l'intérieur
+d'abord, \\((a+b)^2 \\neq a^2+b^2\\) en général — testé par
+`genPrioritePuissanceSommeNumeric`/`genPrioritePuissanceProduitNumeric`
+mais absent). Sur 4 branches, seule "Écriture scientifique" avait un
+piège classique explicite avant cette relecture, alors que les priorités
+opératoires sont directement testées par 3 générateurs. Reste déjà au
+niveau attendu (branches "Racines carrées" et "Écriture scientifique"
+déjà claires et concrètes, formules déjà présentes où utiles). Fichier
+purement numérique/algébrique, aucune figure, aucun symbole €, aucun
+candidat texTable (tous les prompts restent de courtes expressions LaTeX
+ou 2 phrases narratives, jamais une énumération chiffrée).
 
 `nombres-entiers-troisieme.js` (3e) relu intégralement : **vraies
 corrections de fond**. Branche "Divisibilité, nombres premiers" scindée en
@@ -578,7 +595,7 @@ vérifiés pour débordement.)
 
 ### 3e
 - [x] nombres-entiers-troisieme.js *(branche "Divisibilité, nombres premiers" scindée en 2 + critères de divisibilité ajoutés, absents avant ; piège conjecture/contre-exemple ajouté ; piège parité ajouté ; formule nombre de diviseurs ajoutée ; exemple concret ajouté à division euclidienne)*
-- [ ] calcul-numerique-troisieme.js
+- [x] calcul-numerique-troisieme.js *(piège classique ajouté à « Opérations sur les fractions » — priorité × avant + / − ; piège classique ajouté à « Puissances » — priorité puissance avant + / ×, (a+b)² ≠ a²+b² ; sinon déjà bon, « Racines carrées »/« Écriture scientifique » déjà claires)*
 - [ ] calcul-litteral-troisieme.js
 - [ ] equations-troisieme.js
 - [ ] notion-fonction-troisieme.js

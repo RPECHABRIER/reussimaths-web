@@ -414,6 +414,8 @@ export default {
               "Translation : on ajoute les mêmes nombres à toutes les abscisses et à toutes les ordonnées.",
               "Symétrie centrale de centre O : \\(M' = 2O - M\\) (O est le milieu de [MM']).",
               "Symétrie d'axe vertical/horizontal : une seule coordonnée change, l'axe est le milieu entre M et son image.",
+              "Rotation de centre O (sens direct) : \\(90° : (x;y) \\rightarrow (-y;x)\\) ; \\(180° : (x;y) \\rightarrow (-x;-y)\\) ; \\(270° : (x;y) \\rightarrow (y;-x)\\).",
+              "Piège classique : le sens direct est le sens contraire des aiguilles d'une montre (sens trigonométrique).",
             ],
             figure: buildRepereImageFigure(),
           },

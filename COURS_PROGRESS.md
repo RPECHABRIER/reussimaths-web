@@ -113,8 +113,11 @@ les hashes). État actuel :
   `bd8d710`, pas de figure). `calcul-integral-terminale-spe.js` fait
   (commit `0e83116`, pas de figure). `loi-binomiale-terminale-spe.js` fait
   (commit `3049b14`, pas de figure). `sommes-variables-aleatoires-terminale-spe.js`
-  fait (commit `9e57ed2`, pas de figure). **Prochain fichier :
-  `loi-grands-nombres-terminale-spe.js`.**
+  fait (commit `9e57ed2`, pas de figure). `loi-grands-nombres-terminale-spe.js`
+  fait (commit `8f960a9`, pas de figure). `exercices-transversaux-terminale-spe.js`
+  délibérément SANS Cours (révision transversale). **La Terminale Spé est
+  intégralement terminée. Prochain fichier :
+  `suites-terminale-techno.js` (Terminale techno).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -420,8 +423,15 @@ Cours).
 - [x] calcul-integral-terminale-spe.js
 - [x] loi-binomiale-terminale-spe.js
 - [x] sommes-variables-aleatoires-terminale-spe.js
-- [ ] loi-grands-nombres-terminale-spe.js
-- [ ] exercices-transversaux-terminale-spe.js
+- [x] loi-grands-nombres-terminale-spe.js
+- [x] exercices-transversaux-terminale-spe.js (délibérément SANS Cours —
+      son propre commentaire d'en-tête le décrit comme un "chapitre de
+      révision croisant les grands thèmes de l'année" ; recombine les 14
+      autres chapitres sans notion nouvelle)
+
+**La Terminale Spé est intégralement terminée** (14 chapitres avec
+`meta.cours.mindMap` + 1 chapitre de révision transversale délibérément
+sans Cours).
 
 ### Terminale techno (terminale-techno)
 

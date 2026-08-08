@@ -238,6 +238,7 @@ export default {
             items: [
               "a > 1 : la fonction est croissante (croissance). 0 < a < 1 : elle est décroissante (décroissance).",
               "Dans tous les cas, \\(a^0=1\\) et la fonction reste strictement positive.",
+              "Pour \\(x \\mapsto k \\times a^x\\) : si \\(k>0\\), le sens de variation ne change pas ; si \\(k<0\\), il s'inverse (croissante devient décroissante, et réciproquement).",
             ],
           },
           {

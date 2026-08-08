@@ -213,13 +213,14 @@ export default {
             title: "Pourquoi changer de variable",
             items: [
               "Quand le nuage de points \\((x;y)\\) n'est pas aligné, une droite d'ajustement directe serait peu fiable.",
-              "On transforme y en une nouvelle variable Y (ex : \\(Y=y^2\\), \\(Y=\\frac{1}{y}\\), \\(Y=\\ln y\\)) pour que le nuage \\((x;Y)\\) devienne, lui, aligné.",
+              "On transforme y en une nouvelle variable Y (ex : \\(Y=y^2\\), \\(Y=\\frac{1}{y}\\), \\(Y=\\log y\\) — le logarithme décimal, cohérent avec ce niveau) pour que le nuage \\((x;Y)\\) devienne, lui, aligné.",
             ],
           },
           {
             title: "Choisir le bon changement de variable",
             items: [
               "L'allure du nuage de départ guide le choix (courbe qui explose, qui plafonne, qui ralentit...).",
+              "Allure de parabole (croissance de plus en plus rapide, symétrique) → poser \\(Y=y^2\\). Décroissance qui ralentit vers 0 → poser \\(Y=\\frac{1}{y}\\). Croissance exponentielle très rapide → poser \\(Y=\\log y\\).",
             ],
           },
           {
@@ -232,6 +233,7 @@ export default {
             title: "Revenir au modèle d'origine",
             items: [
               "Piège classique très fréquent : oublier l'étape finale — remplacer Y par son expression en y pour retrouver le modèle en y.",
+              "Exemple avec \\(Y=\\log y\\) : si l'ajustement donne \\(Y=ax+b\\), alors \\(y=10^{ax+b}\\) (on repasse à la puissance de 10, réciproque du logarithme décimal).",
             ],
           },
         ],

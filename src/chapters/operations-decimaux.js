@@ -578,6 +578,47 @@ export default {
     level: "sixieme",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Opérations sur les décimaux",
+        branches: [
+          {
+            title: "Multiplier / diviser par 10, 100, 1000",
+            items: [
+              "Multiplier par 10, 100 ou 1000 : la virgule se décale vers la droite (1, 2 ou 3 rangs).",
+              "Diviser par 10, 100 ou 1000 : la virgule se décale vers la gauche.",
+              "Multiplier par 0,1 ; 0,01 ; 0,001, c'est comme diviser par 10, 100, 1000 : la virgule recule.",
+            ],
+            formula: "\\(3,4 \\times 100 = 340\\)",
+          },
+          {
+            title: "Multiplier deux décimaux",
+            items: [
+              "On multiplie d'abord comme si c'étaient des nombres entiers, sans les virgules.",
+              "On compte le nombre total de chiffres après la virgule dans les deux facteurs : le résultat en a autant.",
+              "Piège classique : multiplier deux décimaux ne donne pas toujours un résultat plus grand (\\(0,5 \\times 0,5 = 0,25\\)).",
+            ],
+            formula: "\\(1,2 \\times 0,3 : \\; 12 \\times 3 = 36 \\;\\Rightarrow\\; 1,2 \\times 0,3 = 0,36\\)",
+          },
+          {
+            title: "Diviser ; division euclidienne",
+            items: [
+              "Diviser un décimal par un entier se fait comme une division posée, en continuant après la virgule.",
+              "Division euclidienne : dividende = diviseur × quotient + reste, avec toujours un reste plus petit que le diviseur.",
+            ],
+            formula: "\\(23 = 4 \\times 5 + 3\\)",
+          },
+          {
+            title: "Programme de calcul & ordre de grandeur",
+            items: [
+              "Un programme de calcul s'applique étape par étape, dans l'ordre donné.",
+              "Pour retrouver le nombre de départ, on refait les étapes en sens inverse avec les opérations contraires.",
+              "Un ordre de grandeur : on arrondit chaque nombre avant de calculer, pour vérifier vite un résultat.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

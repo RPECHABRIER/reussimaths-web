@@ -541,8 +541,9 @@ export default {
             items: [
               "Le radian mesure un angle via la longueur de l'arc parcouru sur le cercle de rayon 1.",
               "Un tour complet = \\(2\\pi\\) rad = 360°.",
+              "La longueur d'un arc de cercle de rayon r correspondant à un angle θ (en radians) se calcule directement, sans passer par les degrés.",
             ],
-            formula: "\\(\\text{angle (rad)} = \\text{angle (°)} \\times \\dfrac{\\pi}{180}\\)",
+            formula: "\\(\\text{angle (rad)} = \\text{angle (°)} \\times \\dfrac{\\pi}{180},\\quad \\ell = r \\times \\theta\\)",
             figure: buildCoursCercleFigure(),
           },
           {
@@ -550,8 +551,20 @@ export default {
             items: [
               "Pour M sur le cercle trigonométrique associé à l'angle θ, \\(\\cos\\theta\\) et \\(\\sin\\theta\\) sont les coordonnées de M.",
               "Piège classique : \\(\\cos^2\\theta + \\sin^2\\theta = 1\\) toujours, mais \\(\\cos\\theta + \\sin\\theta \\neq 1\\) en général.",
+              "Valeurs remarquables à connaître par cœur (tableau à mémoriser, symétrique entre cos et sin) :",
             ],
+            formula: "\\[\\begin{array}{|l|c|c|c|c|c|} \\hline \\theta & 0 & \\frac{\\pi}{6} & \\frac{\\pi}{4} & \\frac{\\pi}{3} & \\frac{\\pi}{2} \\\\ \\hline \\cos\\theta & 1 & \\frac{\\sqrt{3}}{2} & \\frac{\\sqrt{2}}{2} & \\frac{1}{2} & 0 \\\\ \\hline \\sin\\theta & 0 & \\frac{1}{2} & \\frac{\\sqrt{2}}{2} & \\frac{\\sqrt{3}}{2} & 1 \\\\ \\hline \\end{array}\\]",
             figure: buildCoursCercleFigure({ withProjections: true }),
+          },
+          {
+            title: "Angles associés et signe selon le quadrant",
+            items: [
+              "cos est une fonction paire : \\(\\cos(-x)=\\cos(x)\\). sin est une fonction impaire : \\(\\sin(-x)=-\\sin(x)\\).",
+              "\\(\\pi - x\\) (symétrique par rapport à l'axe des sinus) : le cosinus change de signe, le sinus reste identique.",
+              "\\(\\pi + x\\) (symétrique par rapport à l'origine) : le cosinus ET le sinus changent de signe.",
+              "Signe selon le quadrant du cercle trigonométrique : cos positif à droite (quadrants 1 et 4), sin positif en haut (quadrants 1 et 2).",
+            ],
+            formula: "\\(\\cos(-x)=\\cos(x),\\ \\sin(-x)=-\\sin(x)\\quad;\\quad\\cos(\\pi-x)=-\\cos(x),\\ \\sin(\\pi-x)=\\sin(x)\\quad;\\quad\\cos(\\pi+x)=-\\cos(x),\\ \\sin(\\pi+x)=-\\sin(x)\\)",
           },
           {
             title: "Lien avec le triangle rectangle",

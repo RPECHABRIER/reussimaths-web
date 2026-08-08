@@ -18,7 +18,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : transformations-plan-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : geometrie-espace-troisieme.js (3e).**
+
+`transformations-plan-troisieme.js` (3e) relu intégralement : gap de
+fond comblé dans « Coordonnées d'une image » — la rotation était
+totalement absente du cours (seules translation/symétrie centrale/
+symétrie axiale étaient couvertes) alors que
+`genImageRotationCoordNumeric` teste directement les 3 formules de
+coordonnées (90°/180°/270° sens direct) ; formules ajoutées, groupées par
+angle. Piège classique ajouté sur le sens direct = sens trigonométrique
+(chaque appel du générateur le précise dans le prompt lui-même, signe
+d'une confusion attendue, mais le cours ne le rappelait pas). Reste déjà
+au niveau attendu (branches homothétie coefficient/périmètre+aire/
+propriétés conservées déjà claires, piège classique aire=k² déjà présent,
+figures déjà claires). Aucun symbole €, aucun candidat texTable.
 
 `trigonometrie-triangle-rectangle-troisieme.js` (3e) relu intégralement :
 piège classique ajouté à « Calculer une longueur » (si le côté cherché
@@ -772,7 +785,7 @@ vérifiés pour débordement.)
 - [x] probabilites-troisieme.js *(item conversion pourcentage/décimal ajouté à « Calculer une probabilité », absent alors que testé par genProbabiliteDepuisPourcentageNumeric ; piège classique simplification fraction irréductible ajouté, testé par 3 générateurs dont un avec distracteur non simplifié ; sinon déjà bon, 4 branches déjà claires)*
 - [x] thales-triangles-semblables-troisieme.js *(correction de fond : DE/DF inversés dans genThalesPapillonNumeric, formule enseignée contredisait le Cours ; item coefficient réciproque 1/k ajouté, absent alors que testé ; sinon déjà bon, 3 figures déjà claires)*
 - [x] trigonometrie-triangle-rectangle-troisieme.js *(piège classique ajouté à « Calculer une longueur » — diviser si l'inconnue est au dénominateur, multiplier sinon ; sinon déjà bon, figure déjà claire)*
-- [ ] transformations-plan-troisieme.js
+- [x] transformations-plan-troisieme.js *(gap de fond comblé : rotation totalement absente du cours alors que testée par genImageRotationCoordNumeric, formules 90°/180°/270° ajoutées + piège classique sens direct ; sinon déjà bon, figures déjà claires)*
 - [ ] geometrie-espace-troisieme.js
 - [ ] mesures-grandeurs-troisieme.js
 

@@ -205,6 +205,38 @@ export default {
     pourquoi: "Changer de variable pour ajuster un nuage de points, c'est aller au-delà de la simple droite pour modéliser des phénomènes qui accélèrent, ralentissent ou explosent.",
     level: "terminale-techno",
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Statistiques à deux variables (ajustement non affine)",
+        branches: [
+          {
+            title: "Pourquoi changer de variable",
+            items: [
+              "Quand le nuage de points \\((x;y)\\) n'est pas aligné, une droite d'ajustement directe serait peu fiable.",
+              "On transforme y en une nouvelle variable Y (ex : \\(Y=y^2\\), \\(Y=\\frac{1}{y}\\), \\(Y=\\ln y\\)) pour que le nuage \\((x;Y)\\) devienne, lui, aligné.",
+            ],
+          },
+          {
+            title: "Choisir le bon changement de variable",
+            items: [
+              "L'allure du nuage de départ guide le choix (courbe qui explose, qui plafonne, qui ralentit...).",
+            ],
+          },
+          {
+            title: "Ajustement affine sur les données transformées",
+            items: [
+              "Une fois le nuage \\((x;Y)\\) aligné, on lui applique les méthodes habituelles (Mayer, point moyen) pour trouver \\(Y=ax+b\\).",
+            ],
+          },
+          {
+            title: "Revenir au modèle d'origine",
+            items: [
+              "Piège classique très fréquent : oublier l'étape finale — remplacer Y par son expression en y pour retrouver le modèle en y.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

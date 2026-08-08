@@ -507,6 +507,44 @@ export default {
     level: "premiere-spe",
     free: true,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Second degré",
+        branches: [
+          {
+            title: "Trois formes du trinôme",
+            items: [
+              "Développée \\(ax^2+bx+c\\) : pratique pour calculer une image ou résoudre par le discriminant.",
+              "Canonique \\(a(x-\\alpha)^2+\\beta\\) : donne directement le sommet \\(S(\\alpha ; \\beta)\\).",
+              "Factorisée \\(a(x-x_1)(x-x_2)\\) : donne directement les racines et le signe (si elle existe).",
+            ],
+            formula: "\\(\\alpha = -\\dfrac{b}{2a},\\quad \\beta = f(\\alpha)\\)",
+          },
+          {
+            title: "Discriminant et racines",
+            items: [
+              "Δ > 0 : deux racines distinctes. Δ = 0 : une racine double. Δ < 0 : aucune racine réelle.",
+              "Piège classique : oublier le \\(2a\\) au dénominateur ou une erreur de signe devant b.",
+            ],
+            formula: "\\(\\Delta = b^2-4ac,\\quad x = \\dfrac{-b \\pm \\sqrt{\\Delta}}{2a}\\)",
+          },
+          {
+            title: "Signe du trinôme",
+            items: [
+              "Si Δ > 0 : signe de a « à l'extérieur » des racines, signe opposé à a « entre » les racines.",
+              "Si Δ ⩽ 0 : le trinôme garde le signe de a sur tout \\(\\mathbb{R}\\) (sauf en la racine double si Δ = 0).",
+            ],
+          },
+          {
+            title: "Sommet et sens de la parabole",
+            items: [
+              "a > 0 : parabole tournée vers le haut, sommet = minimum. a < 0 : tournée vers le bas, sommet = maximum.",
+              "Utile en modélisation (aire maximale, bénéfice maximal, trajectoire d'un projectile).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

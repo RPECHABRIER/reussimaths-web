@@ -487,6 +487,43 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+// ===================== Figures pour le Cours (carte mentale) =====================
+// Pas de helper de figure existant dans ce fichier avant (les exercices restent
+// purement numériques/QCM). Cercle trigonométrique et triangle rectangle
+// dessinés directement en coordonnées pixel (pas de repère gradué nécessaire).
+const R = 55;
+const TRIG_M = { x: R * 0.5, y: -R * 0.866 }; // point à 60°
+
+function buildCoursCercleFigure({ withProjections = false } = {}) {
+  const points = [
+    { id: "O", x: 0, y: 0, hideLabel: true, dx: -4, dy: 14 },
+    { id: "X", x: R + 15, y: 0, hideDot: true, hideLabel: true },
+    { id: "M", x: TRIG_M.x, y: TRIG_M.y, label: "M", dx: 8, dy: -6 },
+  ];
+  const segments = [{ from: "O", to: "M" }];
+  const lines = [{ from: "O", to: "X", extend: 0, arrowEnd: true }];
+  const freeLabels = [{ x: 16, y: -10, text: "θ" }];
+  if (withProjections) {
+    points.push({ id: "H", x: TRIG_M.x, y: 0, hideDot: true, hideLabel: true }, { id: "K", x: 0, y: TRIG_M.y, hideDot: true, hideLabel: true });
+    segments.push({ from: "M", to: "H", dashed: true }, { from: "M", to: "K", dashed: true });
+    freeLabels.push({ x: TRIG_M.x, y: 14, text: "cos θ" }, { x: -22, y: TRIG_M.y, text: "sin θ" });
+  }
+  return { points, segments, lines, circles: [{ center: "O", radius: R }], freeLabels };
+}
+
+function buildCoursTriangleTrigFigure() {
+  return {
+    points: [
+      { id: "A", x: 0, y: 0, dx: -10, dy: 14 },
+      { id: "B", x: 60, y: 0, dy: 14 },
+      { id: "C", x: 60, y: -45, dx: 8, dy: -6 },
+    ],
+    segments: [{ from: "A", to: "B" }, { from: "A", to: "C" }, { from: "B", to: "C" }],
+    rightAngles: [{ at: "A", from: "B", to: "C" }],
+    freeLabels: [{ x: 42, y: -10, text: "θ" }],
+  };
+}
+
 export default {
   meta: {
     id: "trigonometrie-premiere-spe",
@@ -495,6 +532,51 @@ export default {
     pourquoi: "Le cercle trigonométrique et les angles remarquables sont à la base de toute modélisation des phénomènes périodiques.",
     level: "premiere-spe",
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Trigonométrie",
+        branches: [
+          {
+            title: "Cercle trigonométrique et radian",
+            items: [
+              "Le radian mesure un angle via la longueur de l'arc parcouru sur le cercle de rayon 1.",
+              "Un tour complet = \\(2\\pi\\) rad = 360°.",
+            ],
+            formula: "\\(\\text{angle (rad)} = \\text{angle (°)} \\times \\dfrac{\\pi}{180}\\)",
+            figure: buildCoursCercleFigure(),
+          },
+          {
+            title: "Cosinus et sinus",
+            items: [
+              "Pour M sur le cercle trigonométrique associé à l'angle θ, \\(\\cos\\theta\\) et \\(\\sin\\theta\\) sont les coordonnées de M.",
+              "Piège classique : \\(\\cos^2\\theta + \\sin^2\\theta = 1\\) toujours, mais \\(\\cos\\theta + \\sin\\theta \\neq 1\\) en général.",
+            ],
+            figure: buildCoursCercleFigure({ withProjections: true }),
+          },
+          {
+            title: "Lien avec le triangle rectangle",
+            items: [
+              "Dans un triangle rectangle, \\(\\cos\\theta = \\frac{\\text{adjacent}}{\\text{hypoténuse}}\\), \\(\\sin\\theta = \\frac{\\text{opposé}}{\\text{hypoténuse}}\\) — cohérent avec la définition sur le cercle.",
+            ],
+            figure: buildCoursTriangleTrigFigure(),
+          },
+          {
+            title: "Formules d'addition et de duplication",
+            items: [
+              "Piège classique très fréquent : \\(\\cos(a+b) \\neq \\cos a + \\cos b\\).",
+            ],
+            formula: "\\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b,\\quad \\sin(2a)=2\\sin a\\cos a\\)",
+          },
+          {
+            title: "Résoudre \\(\\cos(x)=a\\) ou \\(\\sin(x)=a\\)",
+            items: [
+              "Sur un intervalle, ces équations ont en général deux solutions symétriques (par rapport à l'axe des cosinus ou des sinus).",
+              "Penser à ajouter/soustraire des multiples de \\(2\\pi\\) si l'intervalle dépasse un tour complet.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -238,6 +238,40 @@ export default {
     pourquoi: "Une variable aléatoire et son espérance permettent de prévoir le résultat moyen d'un jeu, d'un pari ou d'une décision incertaine.",
     level: "premiere-techno",
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Variables aléatoires",
+        branches: [
+          {
+            title: "Loi de probabilité discrète",
+            items: [
+              "Associe à chaque valeur possible sa probabilité ; la somme de toutes les probabilités vaut 1.",
+            ],
+          },
+          {
+            title: "Loi de Bernoulli",
+            items: [
+              "Deux issues : succès (1, probabilité p) ou échec (0, probabilité 1-p).",
+            ],
+            formula: "\\(E(X) = p\\)",
+          },
+          {
+            title: "Espérance d'une variable aléatoire",
+            items: [
+              "La moyenne théorique, pondérée par les probabilités de chaque valeur.",
+            ],
+            formula: "\\(E(X) = \\sum_i p_i x_i\\)",
+          },
+          {
+            title: "Fluctuation d'échantillonnage",
+            items: [
+              "D'un échantillon à l'autre, la fréquence observée varie autour de la probabilité théorique — c'est normal, ce n'est pas une erreur.",
+              "Plus la taille de l'échantillon augmente, plus cette fluctuation diminue.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

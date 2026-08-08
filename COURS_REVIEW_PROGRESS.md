@@ -17,20 +17,21 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 13 des 14 fichiers de
-Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
-vecteurs-droites-plans-espace-terminale-spe.js,
-orthogonalite-distances-espace-terminale-spe.js,
-suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
-continuite-terminale-spe.js, complements-derivation-terminale-spe.js,
-logarithme-neperien-terminale-spe.js,
-fonctions-trigonometriques-terminale-spe.js,
-primitives-equations-differentielles-terminale-spe.js,
-calcul-integral-terminale-spe.js, loi-binomiale-terminale-spe.js,
-sommes-variables-aleatoires-terminale-spe.js). Prochain fichier :
-loi-grands-nombres-terminale-spe.js (Terminale Spé, DERNIER fichier de
-ce niveau — Terminale Spé sera intégralement terminée après lui).**
+**La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé,
+la Première techno et maintenant la Terminale Spé sont intégralement
+terminées (14/14 pour la Terminale Spé). Prochain fichier :
+suites-terminale-techno.js (Terminale techno, 1er des 6 derniers
+fichiers du chantier — après ce niveau, 107/107 sera atteint).**
+
+`loi-grands-nombres-terminale-spe.js` (Terminale Spé, dernier fichier
+de ce niveau) relu intégralement : 4 branches inchangées en nombre mais
+fortement enrichies. Branche « Bienaymé-Tchebychev » enrichie :
+technique de l'événement contraire ajoutée. Branche renommée « Moyenne
+empirique et inégalité de concentration » — gap le plus grave du
+fichier : la formule P(|Mn-E(X)|≥ε)≤V(X)/(nε²) était totalement
+absente malgré 4 générateurs dédiés qui la citent comme référence ;
+formules E(Mn)=E(X) et V(Mn)=V(X)/n ajoutées, absentes également.
+Aucun €, aucun candidat texTable, fichier sans figure.
 
 `sommes-variables-aleatoires-terminale-spe.js` (Terminale Spé) relu
 intégralement : 4 branches inchangées en nombre mais enrichies.
@@ -1618,7 +1619,7 @@ vérifiés pour débordement.)
 - [x] calcul-integral-terminale-spe.js *(2 branches entières ajoutées — fonction définie par une intégrale, intégrale et parité ; formule de linéarité et encadrement m⩽f⩽M ajoutés)*
 - [x] loi-binomiale-terminale-spe.js *(symétrie des coefficients binomiaux ajoutée, relation V(X)=(1-p)×E(X) ajoutée)*
 - [x] sommes-variables-aleatoires-terminale-spe.js *(cas général E(pX+qY) et V(pX+qY) ajoutés aux formules, piège classique sur pX-qY explicité)*
-- [ ] loi-grands-nombres-terminale-spe.js
+- [x] loi-grands-nombres-terminale-spe.js *(formule de l'inégalité de concentration ajoutée — absente malgré 4 générateurs dédiés ; formules E(Mn)=E(X) et V(Mn)=V(X)/n ajoutées — Terminale Spé terminée 14/14)*
 
 ### Terminale techno
 - [ ] suites-terminale-techno.js

@@ -568,7 +568,8 @@ export default {
             title: "Patrons et perspective cavalière",
             items: [
               "Un patron est le dessin à plat qui, une fois plié, permet de reconstruire le solide.",
-              "En perspective cavalière : les arêtes cachées sont en pointillés, les arêtes parallèles et de même longueur dans la réalité le restent sur le dessin.",
+              "En perspective cavalière, les arêtes cachées se dessinent en pointillés (comme les traits en tirets de la figure ci-contre).",
+              "Les arêtes parallèles et de même longueur dans la réalité le restent sur le dessin.",
               "Un prisme droit a autant de faces latérales que de côtés à sa base.",
             ],
             figure: buildPaveCavaliereFigure(),
@@ -579,6 +580,7 @@ export default {
               "Pavé droit : longueur × largeur × hauteur.",
               "Cube : arête × arête × arête.",
               "Cylindre de révolution : π × rayon² × hauteur.",
+              "Autrement dit : Volume = aire de la base × hauteur — cette même règle vaut pour tout prisme droit, même à base triangulaire.",
             ],
             formula: "\\(V_{pavé} = L \\times l \\times h \\quad ; \\quad V_{cylindre} = \\pi r^2 h\\)",
             figure: buildCylindreFigure(),
@@ -596,6 +598,7 @@ export default {
             title: "Conversions volume et capacité",
             items: [
               "Chaque unité de volume vaut 1000 fois la précédente : mm³, cm³, dm³, m³.",
+              "Piège classique : contrairement aux longueurs (facteur 10 entre unités), le volume utilise un facteur 1000.",
               "1 dm³ = 1 L et 1 cm³ = 1 mL : le lien entre volume et capacité.",
             ],
           },

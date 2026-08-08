@@ -415,6 +415,43 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Croissance linéaire",
+        branches: [
+          {
+            title: "Suite arithmétique : la raison",
+            items: [
+              "On passe d'un terme au suivant en ajoutant toujours le même nombre r (la raison).",
+              "r > 0 : suite croissante ; r < 0 : suite décroissante ; r = 0 : suite constante.",
+            ],
+            formula: "\\(u_{n+1} = u_n + r\\)",
+          },
+          {
+            title: "Expression explicite",
+            items: [
+              "Permet de calculer directement un terme de rang élevé, sans passer par tous les précédents.",
+              "Piège classique : bien repérer le rang du premier terme (\\(u_0\\) ou \\(u_1\\)) avant d'appliquer la formule.",
+            ],
+            formula: "\\(u_n = u_0 + r \\times n\\)",
+          },
+          {
+            title: "Résoudre \\(u_n \\geqslant k\\)",
+            items: [
+              "Remplacer \\(u_n\\) par son expression explicite, puis résoudre l'inéquation en n comme une inéquation affine classique.",
+              "Le résultat est un rang (nombre entier) : arrondir à l'entier qui convient selon le sens du problème.",
+            ],
+          },
+          {
+            title: "Modèle discret vs modèle continu",
+            items: [
+              "Suite arithmétique : phénomène qui évolue par étapes (années, mois) — seules les valeurs entières de n ont un sens.",
+              "Fonction affine : phénomène qui évolue de façon continue (temps qui s'écoule en continu).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

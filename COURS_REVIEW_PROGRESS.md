@@ -18,7 +18,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-equations-droites-seconde.js (2nde) — 9e fichier de la 2nde.**
+informations-chiffrees-seconde.js (2nde) — 10e fichier de la 2nde.**
+
+`equations-droites-seconde.js` (2nde) relu intégralement : 6 branches (4
+avant). Nouvelle branche « Droites verticales et horizontales » ajoutée,
+couvrant 2 générateurs partageant le tag chapter "Droites particulières"
+(genDroiteVerticaleHorizontaleQCM — classification depuis a=0/b=0 —, et
+genEquationDroiteVerticaleHorizontaleNumeric — écrire x=k ou y=k passant
+par un point) totalement absents du cours avant, seul un piège isolé
+mentionnait b=0 ; figure dédiée avec axes gradués fléchés (nouveau
+paramètre `opts` sur buildCoursDroiteFigure, rétrocompatible). Nouvelle
+branche « Construire une équation à partir d'un point et d'un vecteur
+directeur » ajoutée, couvrant 3 générateurs
+(genEquationCartesienneDepuisPointVecteurNumeric,
+genEquationCartesienneDepuisDeuxPointsNumeric,
+genVecteurDirecteurDepuisDeuxPointsQCM) dont la méthode de correction
+(colinéarité de AM et u, déterminant nul) n'apparaissait dans aucune
+branche, le cours ne présentant que le sens inverse (équation → vecteur
+directeur) ; figure dédiée. Branche « Équation cartésienne et vecteur
+directeur » enrichie : item sur les vecteurs colinéaires aussi
+directeurs (genVecteurDirecteurValideQCM, absent) et item sur le test
+d'appartenance d'un point par substitution (genPointAppartientDroiteCartesienneQCM,
+absent). Branche « Position relative de deux droites » enrichie : item
+reliant le vocabulaire système (une seule/aucune/infinité de solutions,
+genNombreSolutionsSystemeQCM, difficulté "expert") à la position
+géométrique déjà présentée. Aucun €, aucun candidat texTable.
 
 `colinearite-vecteurs-seconde.js` (2nde) relu intégralement : item ajouté
 sur le vecteur nul colinéaire à tout vecteur (déterminant toujours nul) ;
@@ -970,7 +994,7 @@ vérifiés pour débordement.)
 - [x] reperage-configurations-seconde.js *(4 items ajoutés — orthogonal/orthonormé, symétrique origine, inverse milieu, distance axe-alignée ; branche Parallélogramme scindée ; 2 nouvelles branches ajoutées — Centre de gravité, Réciproque de Pythagore, avec figures ; flèches déjà correctes)*
 - [x] vecteurs-seconde.js *(3 nouvelles branches — Translation, Caractérisation du milieu, Combinaison linéaire, 2 signalées « ajout programme 2026 » par la NOTE du fichier ; item comparaison normes ajouté ; item somme de vecteurs ajouté)*
 - [x] colinearite-vecteurs-seconde.js *(item vecteur nul colinéaire ajouté ; piège classique parallèles vs confondues ajouté ; 2 nouvelles branches — équation de colinéarité/coefficient, vecteurs directeurs d'une droite ; correction technique : droites sans flèche, seuls les vecteurs en portent)*
-- [ ] equations-droites-seconde.js
+- [x] equations-droites-seconde.js *(2 nouvelles branches — Droites verticales/horizontales avec figure à axes, Construire une équation depuis point+vecteur directeur ; items ajoutés sur vecteurs colinéaires directeurs, test d'appartenance par substitution, lien vocabulaire système/position relative)*
 - [ ] informations-chiffrees-seconde.js
 - [ ] statistiques-descriptives-seconde.js
 - [ ] probabilites-echantillonnage-seconde.js

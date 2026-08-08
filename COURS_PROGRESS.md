@@ -120,8 +120,9 @@ les hashes). État actuel :
   `suites-terminale-techno.js` (Terminale techno).**
   `suites-terminale-techno.js` fait (commit `21536fe`, pas de figure).
   `fonctions-exponentielles-terminale-techno.js` fait (commit `b16ab2e`,
-  pas de figure). **Prochain fichier :
-  `logarithme-decimal-terminale-techno.js`.**
+  pas de figure). `logarithme-decimal-terminale-techno.js` fait (commit
+  `0537768`, pas de figure). **Prochain fichier :
+  `statistiques-deux-variables-terminale-techno.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -441,7 +442,7 @@ sans Cours).
 
 - [x] suites-terminale-techno.js
 - [x] fonctions-exponentielles-terminale-techno.js
-- [ ] logarithme-decimal-terminale-techno.js
+- [x] logarithme-decimal-terminale-techno.js
 - [ ] statistiques-deux-variables-terminale-techno.js
 - [ ] probabilites-conditionnelles-terminale-techno.js
 - [ ] variables-aleatoires-terminale-techno.js

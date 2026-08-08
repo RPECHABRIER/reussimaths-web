@@ -358,6 +358,46 @@ export default {
     level: "terminale-spe",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Suites",
+        branches: [
+          {
+            title: "Limite d'une suite géométrique",
+            items: [
+              "-1 < q < 1 : \\(q^n\\) tend vers 0. q > 1 : \\(q^n\\) tend vers \\(+\\infty\\). \\(q \\leqslant -1\\) : pas de limite.",
+            ],
+          },
+          {
+            title: "Formes indéterminées",
+            items: [
+              "\\(\\infty-\\infty\\), \\(\\frac{\\infty}{\\infty}\\), \\(0\\times\\infty\\), \\(\\frac{0}{0}\\) : il faut transformer l'écriture avant de conclure.",
+              "Piège classique : pour un quotient de polynômes, factoriser par le terme de plus haut degré au numérateur et au dénominateur.",
+            ],
+          },
+          {
+            title: "Comparaison et théorème des gendarmes",
+            items: [
+              "Si \\(u_n \\leqslant v_n\\) et \\(u_n \\to +\\infty\\), alors \\(v_n \\to +\\infty\\) (comparaison).",
+              "Si \\(u_n \\leqslant v_n \\leqslant w_n\\) et \\(u_n, w_n \\to \\ell\\), alors \\(v_n \\to \\ell\\) (gendarmes).",
+            ],
+          },
+          {
+            title: "Suites arithmético-géométriques",
+            items: [
+              "\\(u_{n+1}=au_n+b\\) : chercher le point fixe \\(\\ell=a\\ell+b\\), puis poser \\(v_n=u_n-\\ell\\) pour obtenir une suite géométrique.",
+            ],
+          },
+          {
+            title: "Raisonnement par récurrence",
+            items: [
+              "Trois étapes : initialisation (vérifier au premier rang), hérédité (si vrai au rang n, vrai au rang n+1), conclusion.",
+              "Piège classique : oublier l'initialisation, ou ne pas utiliser l'hypothèse de récurrence dans l'étape d'hérédité.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

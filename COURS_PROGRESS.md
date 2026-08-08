@@ -11,18 +11,29 @@ committé/coché n'existe pas pour la session suivante.
 
 ## Reprise ici
 
-**Prochain (et dernier) chapitre 6e à traiter : `organisation-gestion-donnees.js`.**
-Une fois ce fichier fait et coché, la 6e (niveau pilote) sera intégralement
-terminée — la prochaine étape sera de démarrer la 5e (nouvelle session, hors
-scope de cette tâche-ci).
+**La 6e (niveau pilote) est intégralement terminée** — les 9 chapitres
+principaux ont tous un `meta.cours.mindMap`. **Prochaine étape : démarrer la
+5e** (voir la checklist "5e (cinquieme)" ci-dessous, dans l'ordre où les
+fichiers y sont listés — `calcul-numerique.js` en premier). Même méthode :
+lire `src/chapters/<file>.js` en entier, 3-5 branches courtes, figure
+obligatoire pour toute branche géométrique (réutiliser les éventuels
+`build...Figure()` déjà présents dans le fichier cible s'il y en a, sinon
+suivre le format de `Figure.jsx`), vérifier avec `node --check` +
+`npx vite build` + le script `check-cours-katex.mjs` (à la racine du repo,
+créé pendant le chantier 6e — usage : `node check-cours-katex.mjs
+./src/chapters/<file>.js`), committer CE fichier seul, cocher, committer ce
+fichier de suivi, avant de passer au chapitre suivant.
 
-Dernière mise à jour : 2026-08-08 — `operations-decimaux.js` (commit
-`990e34d`), `grandeurs-mesures.js` (commit `4e99276`),
-`distances-symetries.js` (commit `32102ab`, 5 figures), `angles.js` (commit
-`090577a`, 4 figures réutilisant les helpers buildAngleFigure /
-buildRaysFromVertexFigure / buildTriangleFigure déjà présents dans le
-fichier) et `configurations-geometriques.js` (commit `6698b60`, 4 figures de
-triangles réutilisant buildTriangleFigure) faits.
+Dernière mise à jour : 2026-08-08 — 6e terminée. Les 6 derniers chapitres
+faits pendant cette session : `operations-decimaux.js` (commit `990e34d`),
+`grandeurs-mesures.js` (commit `4e99276`), `distances-symetries.js` (commit
+`32102ab`, 5 figures), `angles.js` (commit `090577a`, 4 figures réutilisant
+les helpers buildAngleFigure / buildRaysFromVertexFigure /
+buildTriangleFigure déjà présents dans le fichier),
+`configurations-geometriques.js` (commit `6698b60`, 4 figures de triangles
+réutilisant buildTriangleFigure) et `organisation-gestion-donnees.js`
+(commit `ac0ca9f`, 1 figure de diagramme en bâtons réutilisant
+buildBarChartFigure).
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -95,7 +106,7 @@ Cases cochées = `meta.cours` déjà écrit. `reviser-les-bases-*` et
 `automatismes-*` sont exclus de cette liste pour l'instant (priorité aux
 chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
-### 6e — EN COURS (niveau pilote)
+### 6e — TERMINÉ (niveau pilote)
 
 - [x] nombres-decimaux.js
 - [x] fractions.js
@@ -105,7 +116,7 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 - [x] distances-symetries.js *(géométrie — figures requises)*
 - [x] angles.js *(géométrie — figures requises)*
 - [x] configurations-geometriques.js *(géométrie — figures requises)*
-- [ ] organisation-gestion-donnees.js
+- [x] organisation-gestion-donnees.js
 
 ### 5e (cinquieme)
 
@@ -242,8 +253,9 @@ chapitres principaux ; à traiter plus tard si Romain le souhaite).
 
 ## Total
 
-3 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
-`automatismes-*`, 122 non comptés ici, à traiter plus tard).
+9 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
+`automatismes-*`, 122 non comptés ici, à traiter plus tard) — la 6e est
+intégralement terminée, prochaine étape : la 5e.
 
 ---
 

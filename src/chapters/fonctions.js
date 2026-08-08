@@ -369,42 +369,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 12,
-    cours: {
-      mindMap: {
-        title: "Fonctions",
-        branches: [
-          {
-            title: "Vocabulaire « en fonction de »",
-            items: [
-              "Une grandeur s'exprime « en fonction de » une autre quand sa valeur dépend de celle-ci.",
-              "Sur un tableau ou un graphique, on donne toujours un nom et une unité à chaque grandeur (pas de x, y abstraits).",
-            ],
-          },
-          {
-            title: "Évaluer une formule",
-            items: [
-              "Pour évaluer une formule pour une valeur donnée, on remplace la variable par cette valeur et on calcule.",
-              "Un programme de calcul se traduit directement en formule, étape par étape.",
-            ],
-            formula: "\\(P = a \\times d + b\\)",
-          },
-          {
-            title: "Proportionnelle ou non ?",
-            items: [
-              "Une relation est proportionnelle si tous les quotients (grandeur ÷ variable) sont égaux.",
-              "Piège classique : un tarif avec une partie fixe (abonnement, forfait) n'est jamais proportionnel.",
-            ],
-          },
-          {
-            title: "Formules en contexte réel",
-            items: [
-              "Une même formule peut décrire des situations très différentes : prix, puissance, température, volume...",
-              "On identifie toujours quelle grandeur dépend de quelle autre avant de calculer.",
-            ],
-          },
-        ],
-      },
-    },
   },
   generate,
 };

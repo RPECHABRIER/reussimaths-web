@@ -20,10 +20,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 **La 5e, la 4e, la 3e, la 2nde et la Première non spé sont intégralement
 terminées. `second-degre.js`, `suites-numeriques-premiere-spe.js`,
 `derivation-premiere-spe.js`, `variations-courbes-premiere-spe.js`,
-`fonction-exponentielle-premiere-spe.js` et `trigonometrie-premiere-spe.js`
-(Première Spé) sont faits. Prochain fichier :
-vecteurs-produit-scalaire-premiere-spe.js (Première Spé, 7e des 11
-fichiers de ce niveau).**
+`fonction-exponentielle-premiere-spe.js`, `trigonometrie-premiere-spe.js`
+et `vecteurs-produit-scalaire-premiere-spe.js` (Première Spé) sont
+faits. Prochain fichier : geometrie-reperee-premiere-spe.js (Première
+Spé, 8e des 11 fichiers de ce niveau).**
+
+`vecteurs-produit-scalaire-premiere-spe.js` (Première Spé) relu
+intégralement : 4 branches inchangées en nombre mais enrichies. Branche
+« Produit scalaire : deux expressions » enrichie : symétrie u·v=v·u
+(absente avant, chapter dédié) ; formule inversée cosθ=(u·v)/(‖u‖‖v‖)
+pour retrouver un angle (absente) ; formule de la norme ‖u‖=√(x²+y²)
+(absente). Branche « Développer, bilinéarité » enrichie : la règle de
+bilinéarité elle-même (u+v)·w=u·w+v·w ajoutée en toutes lettres (le
+titre l'annonçait mais seule la formule du carré de la somme figurait) ;
+formule de développement de ‖u-v‖² ajoutée (seule la version ‖u+v‖²
+existait) avec piège sur le signe du terme croisé. Aucun €, aucun
+candidat texTable. Figures existantes non modifiées.
 
 `trigonometrie-premiere-spe.js` (Première Spé) relu intégralement : 6
 branches (5 avant). Nouvelle branche « Angles associés et signe selon
@@ -1294,7 +1306,7 @@ vérifiés pour débordement.)
 - [x] variations-courbes-premiere-spe.js *(nouvelle branche Allure et symétrie de la parabole — 2 thèmes absents ; items ajoutés — f'=0 sur un intervalle donne f constante, monotonie pour comparer/encadrer des images, somme de fonctions de même monotonie ; formule α=-b/2a ajoutée)*
 - [x] fonction-exponentielle-premiere-spe.js *(nouvelle branche Modéliser une croissance ou décroissance exponentielle — thème entier absent, forme C0 e^{kt} et signe de k jamais donnés malgré le champ pourquoi du chapitre)*
 - [x] trigonometrie-premiere-spe.js *(nouvelle branche Angles associés et signe selon le quadrant — 7 générateurs sur 21 sans aucune branche avant ; formule longueur d'arc ℓ=rθ ajoutée ; tableau des valeurs remarquables ajouté en formule via \begin{array})*
-- [ ] vecteurs-produit-scalaire-premiere-spe.js
+- [x] vecteurs-produit-scalaire-premiere-spe.js *(items+formules ajoutés — symétrie u·v=v·u, formule inversée pour l'angle, formule de la norme, règle de bilinéarité (u+v)·w=u·w+v·w, développement de ‖u-v‖²)*
 - [ ] geometrie-reperee-premiere-spe.js
 - [ ] probabilites-conditionnelles-premiere-spe.js
 - [ ] variables-aleatoires-premiere-spe.js

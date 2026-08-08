@@ -59,7 +59,8 @@ les hashes). État actuel :
   voir checklist "Première non spé"). **La Première non spé est
   intégralement terminée. Prochain fichier : `second-degre.js` (Première
   Spé).** `second-degre.js` fait (commit `dc3b126`, pas de figure).
-  **Prochain fichier : `suites-numeriques-premiere-spe.js`.**
+  `suites-numeriques-premiere-spe.js` fait (commit `7420eb7`, pas de
+  figure). **Prochain fichier : `derivation-premiere-spe.js`.**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -314,7 +315,7 @@ Cours).
 ### Première Spé (premiere-spe)
 
 - [x] second-degre.js
-- [ ] suites-numeriques-premiere-spe.js
+- [x] suites-numeriques-premiere-spe.js
 - [ ] derivation-premiere-spe.js
 - [ ] variations-courbes-premiere-spe.js
 - [ ] fonction-exponentielle-premiere-spe.js

@@ -37,6 +37,79 @@ const prenoms = [
 
 const piTolerance = (answer) => Math.max(0.05, roundTo(Math.abs(answer) * 0.005, 2));
 
+// Figure "cours" : pavé droit en perspective cavalière (patron/solide), pour
+// la carte mentale — aucun helper de solide n'existait déjà dans ce fichier.
+function buildPaveCavaliereFigure() {
+  const A = { id: "A", x: 20, y: 90 };
+  const B = { id: "B", x: 110, y: 90 };
+  const C = { id: "C", x: 110, y: 30 };
+  const D = { id: "D", x: 20, y: 30 };
+  const dx = 40, dy = -30;
+  const A2 = { id: "A2", x: A.x + dx, y: A.y + dy, hideLabel: true };
+  const B2 = { id: "B2", x: B.x + dx, y: B.y + dy, hideLabel: true };
+  const C2 = { id: "C2", x: C.x + dx, y: C.y + dy, hideLabel: true };
+  const D2 = { id: "D2", x: D.x + dx, y: D.y + dy, hideLabel: true };
+  return {
+    points: [A, B, C, D, A2, B2, C2, D2],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "B", to: "C" },
+      { from: "C", to: "D" },
+      { from: "D", to: "A" },
+      { from: "B", to: "B2" },
+      { from: "C", to: "C2" },
+      { from: "D", to: "D2" },
+      { from: "B2", to: "C2" },
+      { from: "C2", to: "D2" },
+      { from: "A", to: "A2", dashed: true },
+      { from: "A2", to: "B2", dashed: true },
+      { from: "A2", to: "D2", dashed: true },
+    ],
+    freeLabels: [
+      { x: (A.x + B.x) / 2, y: A.y + 14, text: "longueur" },
+      { x: A.x - 22, y: (A.y + D.y) / 2, text: "hauteur" },
+    ],
+  };
+}
+
+// Figure "cours" : cylindre de révolution (base circulaire, hauteur) pour la
+// carte mentale.
+function buildCylindreFigure() {
+  const r = 36;
+  const h = 70;
+  const O = { id: "O", x: 70, y: 20, hideDot: true, hideLabel: true };
+  const Ltop = { id: "Ltop", x: O.x - r, y: O.y, hideLabel: true };
+  const Rtop = { id: "Rtop", x: O.x + r, y: O.y, hideLabel: true };
+  const Lbot = { id: "Lbot", x: O.x - r, y: O.y + h, hideLabel: true };
+  const Rbot = { id: "Rbot", x: O.x + r, y: O.y + h, hideLabel: true };
+  return {
+    points: [O, Ltop, Rtop, Lbot, Rbot],
+    circles: [{ center: "O", radius: r }],
+    segments: [
+      { from: "O", to: "Rtop", dashed: true },
+      { from: "Ltop", to: "Lbot" },
+      { from: "Rtop", to: "Rbot" },
+      { from: "Lbot", to: "Rbot" },
+    ],
+    freeLabels: [
+      { x: (O.x + Rtop.x) / 2, y: O.y - 8, text: "r" },
+      { x: Rtop.x + 14, y: (Rtop.y + Rbot.y) / 2, text: "h" },
+    ],
+  };
+}
+
+// Figure "cours" : disque, rayon (branche "Aire du disque").
+function buildDisqueRayonFigure() {
+  const O = { id: "O", x: 0, y: 0, dx: -14, dy: 4 };
+  const R = { id: "R", x: 40, y: 0, dy: -8 };
+  return {
+    points: [O, R],
+    circles: [{ center: "O", radius: 40 }],
+    segments: [{ from: "O", to: "R" }],
+    freeLabels: [{ x: 20, y: -8, text: "r" }],
+  };
+}
+
 // =========================== Patrons et perspective cavalière ===========================
 
 // ---------- 1. Nombre de faces latérales d'un patron de prisme droit ----------
@@ -487,6 +560,48 @@ export default {
     level: "cinquieme",
     free: false,
     order: 7,
+    cours: {
+      mindMap: {
+        title: "Géométrie dans l'espace",
+        branches: [
+          {
+            title: "Patrons et perspective cavalière",
+            items: [
+              "Un patron est le dessin à plat qui, une fois plié, permet de reconstruire le solide.",
+              "En perspective cavalière : les arêtes cachées sont en pointillés, les arêtes parallèles et de même longueur dans la réalité le restent sur le dessin.",
+              "Un prisme droit a autant de faces latérales que de côtés à sa base.",
+            ],
+            figure: buildPaveCavaliereFigure(),
+          },
+          {
+            title: "Volumes des solides usuels",
+            items: [
+              "Pavé droit : longueur × largeur × hauteur.",
+              "Cube : arête × arête × arête.",
+              "Cylindre de révolution : π × rayon² × hauteur.",
+            ],
+            formula: "\\(V_{pavé} = L \\times l \\times h \\quad ; \\quad V_{cylindre} = \\pi r^2 h\\)",
+            figure: buildCylindreFigure(),
+          },
+          {
+            title: "Aire du disque",
+            items: [
+              "Aire d'un disque = π × rayon².",
+              "Piège classique : ne pas confondre rayon et diamètre (rayon = diamètre ÷ 2).",
+            ],
+            formula: "\\(\\mathcal{A} = \\pi r^2\\)",
+            figure: buildDisqueRayonFigure(),
+          },
+          {
+            title: "Conversions volume et capacité",
+            items: [
+              "Chaque unité de volume vaut 1000 fois la précédente : mm³, cm³, dm³, m³.",
+              "1 dm³ = 1 L et 1 cm³ = 1 mL : le lien entre volume et capacité.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

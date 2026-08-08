@@ -580,6 +580,52 @@ export default {
     level: "cinquieme",
     free: false,
     order: 3,
+    cours: {
+      mindMap: {
+        title: "Divisibilité, fractions",
+        branches: [
+          {
+            title: "Multiples et diviseurs",
+            items: [
+              "b est un diviseur de a si la division de a par b tombe juste (reste 0).",
+              "a est alors un multiple de b.",
+              "Piège classique : ne pas confondre «a est un multiple de b» et «a est un diviseur de b».",
+            ],
+          },
+          {
+            title: "Nombres premiers",
+            items: [
+              "Un nombre premier n'a exactement que deux diviseurs : 1 et lui-même.",
+              "2 est le seul nombre premier pair.",
+              "1 n'est pas un nombre premier (il n'a qu'un seul diviseur).",
+            ],
+          },
+          {
+            title: "Diviser par un nombre décimal",
+            items: [
+              "On multiplie le dividende et le diviseur par le même nombre (10, 100...) pour se ramener à un diviseur entier.",
+              "Le quotient ne change pas si on multiplie les deux nombres par la même quantité.",
+            ],
+            formula: "\\(12{,}6 \\div 0{,}3 = 126 \\div 3\\)",
+          },
+          {
+            title: "Comparer des fractions",
+            items: [
+              "Mêmes dénominateurs : on compare directement les numérateurs.",
+              "Dénominateurs différents : on compare les produits en croix, ou on passe à l'écriture décimale.",
+            ],
+          },
+          {
+            title: "Additionner / soustraire des fractions",
+            items: [
+              "On met les fractions au même dénominateur avant d'additionner ou de soustraire.",
+              "Piège classique : additionner numérateurs ET dénominateurs entre eux sans mettre au même dénominateur.",
+            ],
+            formula: "\\(\\dfrac{a}{b} + \\dfrac{c}{b} = \\dfrac{a+c}{b}\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

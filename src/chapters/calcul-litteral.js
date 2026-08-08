@@ -510,6 +510,45 @@ export default {
     level: "cinquieme",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Calcul littéral",
+        branches: [
+          {
+            title: "Traduire en formule",
+            items: [
+              "Une lettre (x, n...) représente un nombre inconnu ou variable.",
+              "« Le double d'un nombre » se traduit par \\(2 \\times n\\), « augmenté de 7 » par \\(n + 7\\).",
+              "Pour calculer la valeur d'une expression, on remplace la lettre par le nombre donné.",
+            ],
+          },
+          {
+            title: "Tester une égalité",
+            items: [
+              "Pour vérifier si une valeur de x est solution, on la remplace dans les deux membres et on compare.",
+              "Une identité vraie pour toute valeur de x reste vraie après avoir développé.",
+            ],
+          },
+          {
+            title: "Distributivité",
+            items: [
+              "Développer : \\(k(ax + b) = kax + kb\\).",
+              "Factoriser, c'est l'opération inverse : retrouver le facteur commun.",
+              "Piège classique : oublier de multiplier TOUS les termes de la parenthèse par k.",
+            ],
+            formula: "\\(k(ax + b) = kax + kb\\)",
+          },
+          {
+            title: "Résoudre une équation",
+            items: [
+              "\\(x + a = b\\) : on isole x en soustrayant a des deux côtés.",
+              "\\(ax = b\\) : on isole x en divisant les deux côtés par a.",
+              "Ce qu'on fait à un membre de l'égalité, il faut le faire aussi à l'autre.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

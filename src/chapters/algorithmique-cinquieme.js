@@ -321,6 +321,42 @@ export default {
     level: "cinquieme",
     free: false,
     order: 13,
+    cours: {
+      mindMap: {
+        title: "Algorithmique",
+        branches: [
+          {
+            title: "Séquencer, entrées et sorties",
+            items: [
+              "Un programme s'exécute dans l'ordre, ligne par ligne : il faut lire une valeur avant de pouvoir l'utiliser.",
+              "L'entrée, c'est la donnée saisie (« Lire »). La sortie, c'est ce qui est affiché (« Afficher »).",
+            ],
+          },
+          {
+            title: "Traduire et calculer une formule",
+            items: [
+              "Un programme suit toujours le même schéma : Lire → Calculer → Afficher.",
+              "Pour prévoir un résultat, on exécute le programme « à la main », étape par étape, avec la valeur donnée.",
+            ],
+            formula: "Lire n ; Calculer r = an + b ; Afficher r",
+          },
+          {
+            title: "Boucle inconditionnelle",
+            items: [
+              "« Répéter k fois » exécute exactement k fois les instructions qu'elle contient.",
+              "Piège classique : bien compter le nombre total de répétitions avant de calculer un total (distance, score...).",
+            ],
+          },
+          {
+            title: "Vocabulaire",
+            items: [
+              "Variable : une donnée qu'on peut stocker (en 5e, uniquement une valeur lue en entrée).",
+              "Boucle, entrée, sortie : le vocabulaire de base de la pensée informatique.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

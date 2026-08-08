@@ -37,6 +37,49 @@ const prenoms = [
   "Sofia", "Tom", "Maya", "Adam", "Lina", "Zoé", "Nolan", "Jade", "Liam", "Mila",
 ];
 
+// Figure "cours" : symétrie centrale d'un segment [AB] par rapport à un
+// centre O (aucun helper de ce type n'existait déjà dans ce fichier).
+function buildSymetrieCentraleFigure() {
+  const O = { id: "O", x: 80, y: 60 };
+  const A = { id: "A", x: 30, y: 30, dx: -10, dy: -6 };
+  const B = { id: "B", x: 30, y: 90, dx: -10, dy: 8 };
+  const Ap = { id: "Ap", x: 130, y: 90, label: "A'", dx: 10, dy: 8 };
+  const Bp = { id: "Bp", x: 130, y: 30, label: "B'", dx: 10, dy: -6 };
+  return {
+    points: [O, A, B, Ap, Bp],
+    segments: [
+      { from: "A", to: "B" },
+      { from: "Ap", to: "Bp" },
+      { from: "A", to: "O", dashed: true },
+      { from: "O", to: "Ap", dashed: true },
+      { from: "B", to: "O", dashed: true },
+      { from: "O", to: "Bp", dashed: true },
+    ],
+  };
+}
+
+// Figure "cours" : deux droites parallèles coupées par une sécante, avec
+// deux angles marqués (correspondants) — aucun helper de ce type n'existait
+// déjà dans ce fichier.
+function buildParallelesSecanteFigure() {
+  const I1 = { id: "I1", x: 70, y: 20, hideLabel: true };
+  const Q1 = { id: "Q1", x: 130, y: 20, hideDot: true, hideLabel: true };
+  const I2 = { id: "I2", x: 100, y: 90, hideLabel: true };
+  const Q2 = { id: "Q2", x: 160, y: 90, hideDot: true, hideLabel: true };
+  return {
+    points: [I1, Q1, I2, Q2],
+    lines: [
+      { from: "I1", to: "Q1", extend: 30, label: "d₁" },
+      { from: "I2", to: "Q2", extend: 30, label: "d₂" },
+      { from: "I1", to: "I2", extend: 25 },
+    ],
+    freeLabels: [
+      { x: I1.x + 16, y: I1.y + 16, text: "a" },
+      { x: I2.x + 16, y: I2.y - 14, text: "a" },
+    ],
+  };
+}
+
 function shuffleStatements(items) {
   const order = shuffle(items.map((_, i) => i));
   const options = order.map((i) => items[i].text);
@@ -707,6 +750,49 @@ export default {
     level: "cinquieme",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Symétrie centrale, parallélogrammes",
+        branches: [
+          {
+            title: "Symétrie centrale",
+            items: [
+              "La symétrie centrale conserve les longueurs, les aires et les angles.",
+              "O est le centre : A et son symétrique A' sont alignés avec O, avec OA = OA'.",
+              "Piège classique : contrairement à la symétrie axiale, la figure n'est pas « retournée », elle est tournée de 180° autour de O.",
+            ],
+            figure: buildSymetrieCentraleFigure(),
+          },
+          {
+            title: "Angles et droites parallèles",
+            items: [
+              "Deux angles opposés par le sommet ont toujours la même mesure.",
+              "Deux droites parallèles coupées par une sécante : les angles alternes-internes sont égaux, tout comme les angles correspondants.",
+              "Deux angles adjacents sur une droite sont supplémentaires (leur somme fait 180°).",
+            ],
+            figure: buildParallelesSecanteFigure(),
+          },
+          {
+            title: "Propriétés du parallélogramme",
+            items: [
+              "Côtés opposés égaux deux à deux : AB = CD et BC = AD.",
+              "Les diagonales se coupent en leur milieu.",
+              "Angles opposés égaux ; deux angles consécutifs supplémentaires.",
+            ],
+            figure: buildParallelogrammeFigure(10, 6, 3, { withDiagonales: true }),
+          },
+          {
+            title: "Aire du parallélogramme",
+            items: [
+              "Aire = base × hauteur (hauteur relative à cette base).",
+              "Piège classique : la hauteur doit être perpendiculaire à la base choisie, pas un côté oblique.",
+            ],
+            formula: "\\(\\mathcal{A} = base \\times hauteur\\)",
+            figure: buildParallelogrammeFigure(10, 6, 3, { withHauteur: true }),
+          },
+        ],
+      },
+    },
   },
   generate,
 };

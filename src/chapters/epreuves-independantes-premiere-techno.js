@@ -210,8 +210,10 @@ export default {
           {
             title: "Nombre de chemins et probabilité exacte",
             items: [
+              "Le nombre de chemins de l'arbre menant à exactement k succès sur n épreuves se note \\(\\binom{n}{k}\\) (coefficient binomial).",
               "Compter le nombre de chemins menant à exactement k succès sur l'arbre, puis multiplier par la probabilité d'un chemin (tous les chemins à k succès ont la même probabilité).",
             ],
+            formula: "\\(P(k \\text{ succès}) = \\binom{n}{k} \\, p^k (1-p)^{n-k}\\)",
           },
           {
             title: "Au moins un succès",

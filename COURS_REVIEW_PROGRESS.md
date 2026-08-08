@@ -17,10 +17,20 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `resolution-equations.js`,
-`statistiques-quatrieme.js`, `probabilites-quatrieme.js` et
-`notion-fonctions.js` (4e) viennent d'être relus. Prochain fichier :
-`proportionnalite-quatrieme.js` (4e).**
+**La 5e est intégralement terminée (12/12). Les 5 fichiers de 4e confiés
+dans cette session sont terminés (resolution-equations,
+statistiques-quatrieme, probabilites-quatrieme, notion-fonctions,
+proportionnalite-quatrieme). Prochain fichier : theoreme-thales.js (4e).**
+
+`proportionnalite-quatrieme.js` (4e) relu intégralement : branche
+« Grandeurs produits et quotients » reformulée pour partir du concret
+(vitesse/débit/densité nommés d'abord, puis la règle) au lieu de démarrer
+par le terme abstrait "grandeur quotient" ; piège classique ajouté sur la
+conversion km/h ↔ m/s (diviser par 3,6, pas multiplier), testée par un
+générateur mais absente jusqu'ici de cette branche. Reste déjà bon (4
+branches, piège classique déjà présent et pertinent dans « Agrandissement,
+réduction »). Aucun candidat texTable (le seul tableau à 2 colonnes du
+fichier ne liste que 2 couples, sous le seuil).
 
 `notion-fonctions.js` (4e) relu intégralement : notation \\(x \\mapsto
 ax+b\\) remplacée par une formulation en langage naturel dans la branche
@@ -496,7 +506,7 @@ vérifiés pour débordement.)
 - [x] statistiques-quatrieme.js
 - [x] probabilites-quatrieme.js
 - [x] notion-fonctions.js
-- [ ] proportionnalite-quatrieme.js
+- [x] proportionnalite-quatrieme.js
 - [ ] theoreme-thales.js
 - [ ] triangles-rectangles-quatrieme.js
 - [ ] geometrie-plane.js

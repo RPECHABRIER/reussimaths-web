@@ -21,6 +21,8 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
+import { texTable } from "../utils/texTable";
+
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {
   let n = 0;
@@ -48,7 +50,7 @@ function genMoyenneSimpleNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Calcule la moyenne de la série suivante : ${values.join(" ; ")}.`,
+    prompt: `Calcule la moyenne de la série suivante : ${texTable([["Série", ...values]])}`,
     answer,
     tolerance: 0.02,
     steps: [{ type: "calcul", text: `\\dfrac{${values.join(" + ")}}{${n}} = \\dfrac{${somme}}{${n}} \\approx ${fr(answer)}` }],
@@ -67,9 +69,7 @@ function genMoyennePondereeNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Dans une classe, on a demandé le nombre de livres lus ce mois-ci. ${valeurs
-      .map((v, i) => `${effectifs[i]} élève${effectifs[i] > 1 ? "s" : ""} en ${effectifs[i] > 1 ? "ont" : "a"} lu ${v}`)
-      .join(", ")}. Calcule le nombre moyen de livres lus par élève.`,
+    prompt: `Dans une classe, on a demandé le nombre de livres lus ce mois-ci. ${texTable([["Livres lus", ...valeurs], ["Nombre d'élèves", ...effectifs]])} Calcule le nombre moyen de livres lus par élève.`,
     answer,
     tolerance: 0.02,
     steps: [{ type: "calcul", text: `\\dfrac{${detail}}{${total}} = \\dfrac{${sommeProduits}}{${total}} \\approx ${fr(answer)}` }],
@@ -85,7 +85,7 @@ function genMedianeImpairNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Détermine la médiane de la série suivante : ${values.join(" ; ")}.`,
+    prompt: `Détermine la médiane de la série suivante : ${texTable([["Série", ...values]])}`,
     answer,
     steps: [
       { type: "calcul", text: `On range les valeurs dans l'ordre croissant : ${sorted.join(" ; ")}.` },
@@ -105,7 +105,7 @@ function genMedianePairNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Détermine la médiane de la série suivante : ${values.join(" ; ")}.`,
+    prompt: `Détermine la médiane de la série suivante : ${texTable([["Série", ...values]])}`,
     answer,
     tolerance: 0.02,
     steps: [
@@ -126,7 +126,7 @@ function genEtendueNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Calcule l'étendue de la série suivante : ${values.join(" ; ")}.`,
+    prompt: `Calcule l'étendue de la série suivante : ${texTable([["Série", ...values]])}`,
     answer,
     steps: [
       { type: "donnee", text: `La valeur maximale est ${max} et la valeur minimale est ${min}.` },
@@ -145,7 +145,7 @@ function genValeurManquanteMoyenneNumeric() {
   return {
     type: "numeric",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `Une série de ${n} valeurs est : ${autres.join(" ; ")} et x. Sachant que la moyenne de cette série est ${fr(moyenne)}, détermine la valeur de x.`,
+    prompt: `Une série de ${n} valeurs est : ${texTable([["Série", ...autres, "x"]])} Sachant que la moyenne de cette série est ${fr(moyenne)}, détermine la valeur de x.`,
     answer: xSol,
     steps: [
       { type: "donnee", text: `\\dfrac{${autres.join(" + ")} + x}{${n}} = ${fr(moyenne)}` },
@@ -198,7 +198,7 @@ function genComparerSeriesQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques — Paramètres statistiques",
-    prompt: `${prenom1} a obtenu les notes suivantes : ${notes1.join(" ; ")}. ${prenom2} a obtenu les notes suivantes : ${notes2.join(" ; ")}. ${question}`,
+    prompt: `${texTable([[`Notes de ${prenom1}`, ...notes1]])}${texTable([[`Notes de ${prenom2}`, ...notes2]])} ${question}`,
     answer,
     options,
     steps,
@@ -240,7 +240,7 @@ function genLectureTableauEffectifsQCM() {
   return {
     type: "qcm",
     chapter: "Statistiques — Représentations graphiques",
-    prompt: `Voici un tableau d'effectifs pour un sondage sur le(la) ${objet} : ${noms.map((c, j) => `${c} (${effectifs[j]})`).join(", ")}. Quelle catégorie a le ${askMax ? "plus grand" : "plus petit"} effectif ?`,
+    prompt: `Voici un tableau d'effectifs pour un sondage sur le(la) ${objet} : ${texTable([["Catégorie", ...noms], ["Effectif", ...effectifs]])} Quelle catégorie a le ${askMax ? "plus grand" : "plus petit"} effectif ?`,
     answer: noms[idx],
     options: shuffle([...noms]),
     steps: [
@@ -292,12 +292,12 @@ function genMoyenneClasseNumeric() {
   const total = effectifs.reduce((a, b) => a + b, 0);
   const sommeProduits = centres.reduce((s, c, j) => s + c * effectifs[j], 0);
   const answer = roundTo(sommeProduits / total, 1);
-  const classesTexte = bornes.slice(0, -1).map((b, j) => `[${b} ; ${bornes[j + 1]}[ : ${effectifs[j]}`).join(", ");
+  const classeLabels = bornes.slice(0, -1).map((b, j) => `[${b}\\,;\\,${bornes[j + 1]}[`);
   const detail = centres.map((c, j) => `${fr(c)} \\times ${effectifs[j]}`).join(" + ");
   return {
     type: "numeric",
     chapter: "Statistiques — Représentations graphiques",
-    prompt: `Voici un tableau d'effectifs par classes : ${classesTexte}. En utilisant la valeur centrale de chaque classe, calcule la moyenne de cette série (arrondie au dixième).`,
+    prompt: `Voici un tableau d'effectifs par classes : ${texTable([["Classe", ...classeLabels], ["Effectif", ...effectifs]])} En utilisant la valeur centrale de chaque classe, calcule la moyenne de cette série (arrondie au dixième).`,
     answer,
     tolerance: 0.15,
     steps: [
@@ -326,12 +326,12 @@ function genMedianeClasseQCM() {
       break;
     }
   }
-  const classesTexte = bornes.slice(0, -1).map((b, j) => `[${b} ; ${bornes[j + 1]}[ : ${effectifs[j]}`).join(", ");
   const options = bornes.slice(0, -1).map((b, j) => `[${b} ; ${bornes[j + 1]}[`);
+  const classeLabels = bornes.slice(0, -1).map((b, j) => `[${b}\\,;\\,${bornes[j + 1]}[`);
   return {
     type: "qcm",
     chapter: "Statistiques — Représentations graphiques",
-    prompt: `Voici un tableau d'effectifs par classes : ${classesTexte}. Dans quelle classe se situe la médiane de cette série ?`,
+    prompt: `Voici un tableau d'effectifs par classes : ${texTable([["Classe", ...classeLabels], ["Effectif", ...effectifs]])} Dans quelle classe se situe la médiane de cette série ?`,
     answer: options[classeMediane],
     options,
     steps: [
@@ -472,6 +472,8 @@ export default {
               "Moyenne = somme des valeurs ÷ effectif total (ou moyenne pondérée avec des effectifs différents).",
               "Médiane : on range les valeurs, puis on prend la valeur centrale (effectif impair) ou la moyenne des deux valeurs centrales (effectif pair).",
               "Étendue = valeur maximale - valeur minimale : elle mesure la dispersion d'une série.",
+              "Pour retrouver une valeur manquante connaissant la moyenne, on utilise la relation inverse : somme des valeurs = moyenne × effectif total.",
+              "Dans un tableur, on calcule une moyenne avec la formule MOYENNE(plage) — piège classique : bien faire commencer la plage après la ligne d'en-tête.",
             ],
           },
           {
@@ -487,6 +489,7 @@ export default {
             items: [
               "Toutes les classes d'un regroupement doivent avoir la même amplitude pour être comparables.",
               "Pour calculer une moyenne à partir de classes, on utilise la valeur centrale de chaque classe.",
+              "Pour trouver la classe médiane, on cumule les effectifs classe par classe jusqu'à atteindre le rang médian.",
             ],
           },
           {

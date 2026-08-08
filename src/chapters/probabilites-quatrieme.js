@@ -383,6 +383,44 @@ export default {
     level: "quatrieme",
     free: false,
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Probabilités",
+        branches: [
+          {
+            title: "Calculer une probabilité",
+            items: [
+              "Dans une situation d'équiprobabilité, \\(P(A) = \\dfrac{\\text{issues favorables}}{\\text{issues possibles}}\\).",
+              "Une probabilité est toujours un nombre entre 0 et 1 (soit entre 0 % et 100 %).",
+            ],
+            formula: "\\(P(A) = \\dfrac{\\text{nombre d'issues favorables}}{\\text{nombre d'issues possibles}}\\)",
+          },
+          {
+            title: "Équiprobabilité",
+            items: [
+              "Une situation est équiprobable quand toutes les issues ont la même chance de se réaliser.",
+              "Piège classique : dans une urne avec des couleurs en nombres différents, les couleurs ne sont pas équiprobables — seules les boules le sont.",
+            ],
+          },
+          {
+            title: "Types d'événements",
+            items: [
+              "Un événement certain a une probabilité de 1 ; un événement impossible a une probabilité de 0.",
+              "Un événement élémentaire correspond à une seule issue possible.",
+            ],
+          },
+          {
+            title: "Événement contraire",
+            items: [
+              "L'événement contraire de A se réalise exactement quand A ne se réalise pas.",
+              "La somme des probabilités de A et de son contraire vaut toujours 1.",
+              "Piège classique : la somme des probabilités de TOUTES les issues d'une expérience doit aussi valoir 1.",
+            ],
+            formula: "\\(P(\\overline{A}) = 1 - P(A)\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

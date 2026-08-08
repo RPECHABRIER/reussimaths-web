@@ -246,6 +246,7 @@ export default {
             title: "Loi de probabilité discrète",
             items: [
               "Associe à chaque valeur possible sa probabilité ; la somme de toutes les probabilités vaut 1.",
+              "\\(P(X=a)\\) : probabilité que X soit exactement égal à a. \\(P(X \\leq a)\\) : probabilité cumulée, somme des \\(P(X=x_i)\\) pour toutes les valeurs \\(x_i \\leq a\\) — à ne pas confondre.",
             ],
           },
           {
@@ -268,6 +269,7 @@ export default {
               "D'un échantillon à l'autre, la fréquence observée varie autour de la probabilité théorique — c'est normal, ce n'est pas une erreur.",
               "Plus la taille de l'échantillon augmente, plus cette fluctuation diminue.",
             ],
+            formula: "\\(s \\approx \\dfrac{1}{\\sqrt{n}}\\)",
           },
         ],
       },

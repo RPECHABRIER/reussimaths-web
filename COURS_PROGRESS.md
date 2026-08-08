@@ -42,8 +42,11 @@ les hashes). État actuel :
   fait (commit `d31c684`, 3 figures neuves via `buildCoursDroiteFigure()`).
   `informations-chiffrees-seconde.js` fait (commit `1b48bea`, pas de
   figure). `statistiques-descriptives-seconde.js` fait (commit `97919fc`,
-  pas de figure). **Prochain fichier :
-  `probabilites-echantillonnage-seconde.js`.**
+  pas de figure). `probabilites-echantillonnage-seconde.js` fait (commit
+  `b192366`, pas de figure). `exercices-fin-annee-seconde.js` délibérément
+  SANS Cours (synthèse transversale, voir checklist "2nde" pour le détail).
+  **La 2nde est intégralement terminée. Prochain fichier :
+  `analyse-information-chiffree-premiere-non-spe.js` (Première non spé).**
 
 Note technique importante (rencontrée dans cette session) : `git commit`
 normal a recommencé à échouer de façon permanente sur ce repo
@@ -97,10 +100,10 @@ git add <fichier(s)>; TREE=$(GIT_INDEX_FILE=$IDX git write-tree); ...` (le
 fiable de détecter ce genre de régression silencieuse tout de suite plutôt
 qu'en fin de session.
 
-Dernière mise à jour : 2026-08-08 — Collège (6e/5e/4e/3e, 49 chapitres)
-intégralement terminé, voir git log pour l'historique commit par commit de
-ce lot. Chantier lycée démarré : `nombres-calculs-seconde.js` fait (commit
-`14e7c51`). Prochain fichier : `generalites-fonctions-seconde.js`.
+Dernière mise à jour : 2026-08-08 — Collège (6e/5e/4e/3e, 49 chapitres) ET
+2nde (12 chapitres + 1 synthèse sans Cours) intégralement terminés, voir
+git log pour l'historique commit par commit. Prochain fichier :
+`analyse-information-chiffree-premiere-non-spe.js` (Première non spé).
 
 ## Ce qui a été fait avant ce chantier (état de départ)
 
@@ -260,8 +263,17 @@ initiale de Romain.
 - [x] equations-droites-seconde.js *(géométrie)*
 - [x] informations-chiffrees-seconde.js
 - [x] statistiques-descriptives-seconde.js
-- [ ] probabilites-echantillonnage-seconde.js
-- [ ] exercices-fin-annee-seconde.js
+- [x] probabilites-echantillonnage-seconde.js
+- [x] exercices-fin-annee-seconde.js (délibérément SANS Cours — chapitre de
+      synthèse transversale confirmé par son propre commentaire d'en-tête :
+      "Dernier chapitre du niveau 2nde : synthèse transversale mêlant les
+      grands thèmes de l'année... dans l'esprit des « Exercices
+      transversaux » du manuel" ; recombine les 12 autres chapitres 2nde
+      sans notion nouvelle, même raisonnement que
+      `exercices-fin-annee-quatrieme.js` en 4e)
+
+**La 2nde est intégralement terminée** (12 chapitres avec `meta.cours.mindMap`
++ 1 chapitre de synthèse délibérément sans Cours).
 
 ### Première non spé (premiere-non-spe)
 
@@ -331,12 +343,13 @@ initiale de Romain.
 
 ## Total
 
-49 / 135 chapitres principaux faits (hors `reviser-les-bases-*` et
-`automatismes-*`, 114 non comptés ici, à traiter plus tard ; et hors
-`exercices-fin-annee-quatrieme.js` et `dossier-brevet-troisieme.js`,
-délibérément sans Cours) — **la 6e, la 5e, la 4e ET la 3e sont
-intégralement terminées.** Prochaine étape : niveaux suivants (2nde,
-1ère, Terminale...).
+61 / 148 chapitres principaux faits (hors `reviser-les-bases-*` et
+`automatismes-*`, à traiter plus tard ; et hors les chapitres de synthèse
+délibérément sans Cours : `exercices-fin-annee-quatrieme.js`,
+`dossier-brevet-troisieme.js`, `exercices-fin-annee-seconde.js`) — **le
+collège (6e/5e/4e/3e) ET la 2nde sont intégralement terminés.** Prochaine
+étape : Première non spé, puis Première Spé, Première techno, Terminale
+Spé, Terminale techno.
 
 ---
 

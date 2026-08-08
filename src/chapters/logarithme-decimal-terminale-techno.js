@@ -218,6 +218,45 @@ export default {
     pourquoi: "Le logarithme décimal sert à mesurer des échelles qui varient énormément : le pH, l'intensité sonore (décibels), la magnitude d'un séisme.",
     level: "terminale-techno",
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Fonction logarithme décimal",
+        branches: [
+          {
+            title: "Définition",
+            items: [
+              "\\(\\log(x)\\) est l'exposant y tel que \\(10^y = x\\) (défini seulement pour x > 0).",
+              "\\(\\log(1)=0\\), \\(\\log(10)=1\\), \\(\\log(100)=2\\)...",
+            ],
+          },
+          {
+            title: "Propriétés algébriques",
+            items: [
+              "Transforme un produit en somme, une puissance en produit — même logique que le ln.",
+            ],
+            formula: "\\(\\log(ab)=\\log a+\\log b,\\quad \\log(a^n)=n\\log a\\)",
+          },
+          {
+            title: "Sens de variation",
+            items: [
+              "log est strictement croissante sur \\(]0 ; +\\infty[\\) : \\(\\log a < \\log b \\iff a<b\\).",
+            ],
+          },
+          {
+            title: "Résoudre une équation",
+            items: [
+              "\\(10^x = b \\iff x = \\log b\\). Pour \\(a^x=b\\) (a>0), passer au log des deux côtés.",
+            ],
+          },
+          {
+            title: "Ordre de grandeur",
+            items: [
+              "La partie entière de \\(\\log(N)+1\\) donne le nombre de chiffres de l'entier N.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

@@ -17,7 +17,18 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**Prochain fichier à traiter : `statistiques-probabilites.js` (5e).**
+**Prochain fichier à traiter : `proportionnalite-cinquieme.js` (5e).**
+
+`statistiques-probabilites.js` (5e) relu intégralement : piège classique
+ajouté à la branche "Calculer une probabilité" (pour comparer qui a le
+plus de chances entre plusieurs sacs, on compare les proportions/fractions,
+pas les nombres bruts de billes favorables — testé par
+`genComparerProbabilitesSacsQCM` mais absent du cours avant cette
+relecture). Reste déjà au niveau attendu (effectifs/fréquences, moyenne
+déjà claires et concrètes, piège classique valeurs extrêmes déjà présent,
+vocabulaire des probabilités déjà clair). Prompts d'exercices vérifiés,
+aucun candidat clair à `texTable()` (listes d'effectifs/probabilités
+restent courtes et compactes), aucun symbole € présent dans le fichier.
 
 `triangles.js` (5e) relu intégralement : petite correction ciblée. Piège
 classique ajouté à la branche "Médiatrices, hauteurs, médianes" pour
@@ -325,7 +336,7 @@ vérifiés pour débordement.)
 - [x] geometrie-espace.js *(item perspective cavalière éclaté en 2 puces, item unifiant Volume=aire base×hauteur ajouté, piège classique facteur 1000 ajouté)*
 - [x] symetrie-centrale-parallelogrammes.js *(item centres de symétrie des figures usuelles ajouté, item angles parallèles reformulé en équivalence, item perpendiculaires-à-même-droite ajouté, piège diagonales ajouté ; candidat texTable du grep vérifié = faux positif)*
 - [x] triangles.js *(piège classique désambiguïsant médiatrice/hauteur/médiane ajouté, sinon déjà bon)*
-- [ ] statistiques-probabilites.js
+- [x] statistiques-probabilites.js *(piège classique ajouté à « Calculer une probabilité » — comparer les proportions entre sacs, pas les nombres bruts de billes favorables ; sinon déjà bon, aucun candidat texTable, aucun €)*
 - [ ] proportionnalite-cinquieme.js
 - [ ] fonctions.js
 - [ ] algorithmique-cinquieme.js

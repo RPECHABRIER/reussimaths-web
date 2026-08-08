@@ -266,6 +266,39 @@ export default {
     pourquoi: "La loi binomiale et l'espérance permettent de prévoir le résultat moyen d'une répétition d'expériences identiques.",
     level: "terminale-techno",
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Variables aléatoires et loi binomiale",
+        branches: [
+          {
+            title: "Espérance d'une variable aléatoire discrète",
+            items: [
+              "Moyenne théorique, pondérée par les probabilités de chaque valeur.",
+            ],
+            formula: "\\(E(X) = \\sum_i p_i x_i\\)",
+          },
+          {
+            title: "Identifier une loi binomiale",
+            items: [
+              "n répétitions identiques et indépendantes d'une épreuve à deux issues (succès/échec) ; X compte le nombre de succès.",
+            ],
+          },
+          {
+            title: "Coefficients binomiaux",
+            items: [
+              "\\(\\binom{n}{k}\\) compte le nombre de façons d'obtenir k succès parmi n répétitions ; se lit dans le triangle de Pascal.",
+            ],
+          },
+          {
+            title: "Calculer avec B(n,p)",
+            items: [
+              "Piège classique : ne pas oublier le coefficient binomial dans le calcul, sinon on ne compte qu'un seul chemin sur tous les possibles.",
+            ],
+            formula: "\\(P(X=k) = \\dbinom{n}{k}p^k(1-p)^{n-k},\\quad E(X)=np\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

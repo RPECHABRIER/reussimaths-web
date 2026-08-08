@@ -379,8 +379,8 @@ export default {
           {
             title: "Tester une solution",
             items: [
-              "Une solution vérifie l'égalité : on remplace x par la valeur proposée dans les deux membres et on compare.",
-              "Si les deux membres sont égaux, c'est une solution ; sinon, ce n'en est pas une.",
+              "On remplace x par la valeur proposée dans les deux membres de l'équation, puis on calcule chaque membre séparément.",
+              "Si les deux résultats sont égaux, la valeur est solution ; sinon, ce n'en est pas une.",
             ],
           },
           {

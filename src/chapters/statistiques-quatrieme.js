@@ -415,6 +415,44 @@ export default {
     level: "quatrieme",
     free: false,
     order: 8,
+    cours: {
+      mindMap: {
+        title: "Statistiques",
+        branches: [
+          {
+            title: "Vocabulaire",
+            items: [
+              "La population est l'ensemble des individus étudiés ; le caractère est la donnée observée sur chacun.",
+              "La fréquence d'une catégorie = effectif de la catégorie ÷ effectif total.",
+            ],
+          },
+          {
+            title: "Moyenne pondérée",
+            items: [
+              "Moyenne = (somme des valeurs × leurs effectifs ou coefficients) ÷ (somme des effectifs ou coefficients).",
+              "Piège classique : diviser par le nombre de valeurs différentes au lieu de l'effectif total (ou de la somme des coefficients).",
+            ],
+            formula: "\\(\\overline{x} = \\dfrac{\\sum v_i \\times e_i}{\\sum e_i}\\)",
+          },
+          {
+            title: "Médiane",
+            items: [
+              "On range d'abord la série dans l'ordre croissant.",
+              "Effectif impair : la médiane est la valeur centrale. Effectif pair : c'est la moyenne des deux valeurs centrales.",
+              "La médiane partage la série en deux groupes de même effectif — ce n'est pas la même chose que la moyenne.",
+            ],
+          },
+          {
+            title: "Diagrammes circulaires",
+            items: [
+              "Angle du secteur = (effectif de la catégorie ÷ effectif total) × 360° (ou × 180° pour un demi-cercle).",
+              "La somme de tous les angles d'un diagramme circulaire vaut toujours 360°.",
+            ],
+            formula: "\\(\\text{angle} = \\dfrac{\\text{effectif}}{\\text{total}} \\times 360°\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

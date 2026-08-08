@@ -18,7 +18,22 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : fonctions-affines-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : proportionnalite-troisieme.js (3e).**
+
+`fonctions-affines-troisieme.js` (3e) relu intégralement : piège classique
+ajouté à "Identifier a et b" (pour f(x)=(px+q)/d, il faut diviser CHAQUE
+terme du numérateur par d, pas seulement le terme en x — testé par
+`genMettreSousFormeFractionNumeric` mais absent du cours, même famille
+d'erreur que celle déjà signalée dans calcul-litteral-troisieme.js/
+equations-troisieme.js cette session) ; item de "Droites et coefficients"
+enrichi pour couvrir la taxonomie complète linéaire/affine/constante
+(b=0 ⇒ linéaire, a=0 ⇒ constante), testée par le QCM à 3 réponses
+`genFonctionLineaireVsAffineQCM` mais dont seul le cas linéaire était
+mentionné avant cette relecture (le cas constante n'apparaissait nulle
+part). Branches "Déterminer une fonction affine" et "Comparer deux
+tarifs" laissées inchangées (déjà au niveau attendu). Fichier purement
+algébrique, aucune figure. 3 prompts avec € restent en prose courte,
+aucun candidat texTable.
 
 `notion-fonction-troisieme.js` (3e) relu intégralement : notation
 \\(x \\mapsto 10^x\\) de la branche "Cas particuliers" remplacée par
@@ -654,7 +669,7 @@ vérifiés pour débordement.)
 - [x] calcul-litteral-troisieme.js *(branche « Programmes de calcul, problèmes » scindée en 2 ; item + piège classique ajoutés à « Problèmes de périmètre et d'aire » ; item ajouté à « Programmes de calcul » ; distributivité simple + piège classique ajoutés à « Développer » ; piège classique + formule ajoutés à « Factoriser »)*
 - [x] equations-troisieme.js *(piège classique ajouté à « Équation du premier degré » — multiplier TOUS les termes par le dénominateur ; piège classique ajouté à « Équation produit » — x=-b/a, signe ; branche « Modéliser un problème » renommée « …, programmes de calcul » + item ajouté, thème absent du cours avant)*
 - [x] notion-fonction-troisieme.js *(notation x↦10^x remplacée par m(x)=10^x pour cohérence avec f(x) partout ailleurs ; genLectureTableauImageNumeric/genLectureTableauAntecedentNumeric convertis en texTable(), même bug déjà vu sur notion-fonctions.js 4e)*
-- [ ] fonctions-affines-troisieme.js
+- [x] fonctions-affines-troisieme.js *(piège classique ajouté à « Identifier a et b » — diviser CHAQUE terme du numérateur par d ; item « Droites et coefficients » enrichi pour couvrir aussi le cas constante a=0, absent avant alors que testé par un QCM à 3 réponses)*
 - [ ] proportionnalite-troisieme.js
 - [ ] statistiques-troisieme.js
 - [ ] probabilites-troisieme.js

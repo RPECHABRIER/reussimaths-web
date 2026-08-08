@@ -462,6 +462,44 @@ export default {
     level: "troisieme",
     free: false,
     order: 9,
+    cours: {
+      mindMap: {
+        title: "Statistiques",
+        branches: [
+          {
+            title: "Moyenne, médiane, étendue",
+            items: [
+              "Moyenne = somme des valeurs ÷ effectif total (ou moyenne pondérée avec des effectifs différents).",
+              "Médiane : on range les valeurs, puis on prend la valeur centrale (effectif impair) ou la moyenne des deux valeurs centrales (effectif pair).",
+              "Étendue = valeur maximale - valeur minimale : elle mesure la dispersion d'une série.",
+            ],
+          },
+          {
+            title: "Comparer deux séries",
+            items: [
+              "On compare les moyennes pour savoir qui a les meilleurs résultats en moyenne.",
+              "On compare les étendues pour savoir qui est le plus régulier (étendue faible = résultats homogènes).",
+              "Piège classique : la moyenne est très sensible à une valeur extrême, contrairement à la médiane.",
+            ],
+          },
+          {
+            title: "Tableau à classes",
+            items: [
+              "Toutes les classes d'un regroupement doivent avoir la même amplitude pour être comparables.",
+              "Pour calculer une moyenne à partir de classes, on utilise la valeur centrale de chaque classe.",
+            ],
+          },
+          {
+            title: "Diagramme circulaire",
+            items: [
+              "Angle du secteur = (effectif de la catégorie ÷ effectif total) × 360°.",
+              "La fréquence en pourcentage se calcule par (effectif ÷ effectif total) × 100.",
+            ],
+            formula: "\\(\\text{angle} = \\dfrac{\\text{effectif}}{\\text{total}} \\times 360°\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

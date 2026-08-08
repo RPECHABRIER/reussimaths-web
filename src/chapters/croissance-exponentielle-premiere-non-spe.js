@@ -384,6 +384,49 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 5,
+    cours: {
+      mindMap: {
+        title: "Croissance exponentielle",
+        branches: [
+          {
+            title: "Suite géométrique : la raison",
+            items: [
+              "On passe d'un terme au suivant en multipliant toujours par le même nombre q (la raison).",
+              "Piège classique : contrairement à une suite arithmétique, la raison se calcule par un quotient, pas une différence.",
+            ],
+            formula: "\\(u_{n+1} = q \\times u_n\\)",
+          },
+          {
+            title: "Expression explicite",
+            items: [
+              "Permet de calculer directement un terme de rang élevé.",
+            ],
+            formula: "\\(u_n = u_0 \\times q^n\\)",
+          },
+          {
+            title: "Sens de variation",
+            items: [
+              "Pour \\(u_0 > 0\\) : q > 1 ⟹ croissante ; 0 < q < 1 ⟹ décroissante ; q = 1 ⟹ constante.",
+              "Piège classique : q < 0 donne une suite qui alterne de signe, ni croissante ni décroissante.",
+            ],
+          },
+          {
+            title: "Évolutions en pourcentage constant",
+            items: [
+              "Une évolution de t % à chaque étape se modélise par une suite géométrique de raison \\(q=1+\\frac{t}{100}\\).",
+              "Coefficient multiplicateur global d'évolutions successives = produit des coefficients (pas leur somme).",
+            ],
+          },
+          {
+            title: "Taux d'évolution moyen par période",
+            items: [
+              "À partir du coefficient multiplicateur global sur n périodes, le taux moyen par période utilise la racine n-ième.",
+            ],
+            formula: "\\(q_{\\text{moyen}} = \\sqrt[n]{CM_{\\text{global}}}\\)",
+          },
+        ],
+      },
+    },
   },
   generate,
 };

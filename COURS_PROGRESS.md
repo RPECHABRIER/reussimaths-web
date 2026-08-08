@@ -35,6 +35,25 @@ en contournant le lock). Un script prêt à l'emploi a été laissé dans
 `/tmp/gcommit.sh` côté sandbox (peut ne pas persister entre sessions — le
 recréer si besoin, il est court : voir modèle ci-dessus).
 
+**Piège découvert et corrigé pendant cette session** : la première version
+de ce contournement copiait `.git/index` (l'index réel, jamais mis à jour
+par ces commits en plumbing) à chaque nouveau commit — du coup chaque commit
+« écrasait » silencieusement les fichiers ajoutés par les commits
+précédents (l'objet commit restait valide et consultable individuellement
+via `git show <sha>:<fichier>`, mais son arbre ne cumulait pas les
+changements). Résultat : 11 des 12 cartes mentales 5e avaient disparu de
+HEAD avant d'être détectées et réparées en fin de session (commit
+`f531a420`, qui restaure le contenu exact déjà rédigé — rien n'a été
+réécrit). **Fix obligatoire pour la suite : ne JAMAIS copier `.git/index`
+tel quel. Toujours partir de l'arbre du dernier commit** :
+`IDX=$(mktemp); GIT_INDEX_FILE=$IDX git read-tree HEAD; GIT_INDEX_FILE=$IDX
+git add <fichier(s)>; TREE=$(GIT_INDEX_FILE=$IDX git write-tree); ...` (le
+`git read-tree HEAD` remplace le `cp .git/index ...` de l'ancienne version).
+**Après CHAQUE commit en plumbing, vérifier avec `git diff HEAD --stat`
+(doit être vide) avant de passer au fichier suivant** — c'est le seul moyen
+fiable de détecter ce genre de régression silencieuse tout de suite plutôt
+qu'en fin de session.
+
 Dernière mise à jour : 2026-08-08 — 6e ET 5e terminées. Les 12 chapitres 5e
 faits pendant cette session : `calcul-numerique.js` (commit `47455ab`),
 `divisibilite-fractions.js` (commit `c16f70a`), `puissances.js` (commit

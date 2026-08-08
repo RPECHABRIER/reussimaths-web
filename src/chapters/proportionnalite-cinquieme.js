@@ -449,52 +449,6 @@ export default {
     level: "cinquieme",
     free: false,
     order: 11,
-    cours: {
-      mindMap: {
-        title: "Proportionnalité",
-        branches: [
-          {
-            title: "Identifier une situation",
-            items: [
-              "Un tableau est proportionnel si les quotients (2e ligne ÷ 1re ligne) sont tous égaux.",
-              "Graphiquement : les points sont alignés sur une droite qui passe par l'origine.",
-              "Piège classique : un tarif avec abonnement fixe (montant fixe + prix par unité) n'est PAS proportionnel.",
-            ],
-          },
-          {
-            title: "Coefficient et valeur manquante",
-            items: [
-              "Le coefficient de proportionnalité = valeur de la 2e ligne ÷ valeur correspondante de la 1re ligne.",
-              "Pour trouver une valeur manquante : on multiplie par le coefficient (ou on utilise un produit en croix).",
-            ],
-            formula: "\\(k = \\dfrac{\\text{2e ligne}}{\\text{1re ligne}}\\)",
-          },
-          {
-            title: "Pourcentages",
-            items: [
-              "Calculer p % d'une quantité, c'est la multiplier par \\(\\dfrac{p}{100}\\).",
-              "Remise : nouveau prix = prix initial − remise. Majoration (TVA) : prix TTC = prix HT + taxe.",
-            ],
-            formula: "\\(p\\% \\text{ de } N = N \\times \\dfrac{p}{100}\\)",
-          },
-          {
-            title: "Échelles",
-            items: [
-              "Échelle 1/N : 1 cm sur le plan représente N cm dans la réalité.",
-              "Distance réelle = distance sur le plan × N (attention aux unités !).",
-            ],
-          },
-          {
-            title: "Vitesse",
-            items: [
-              "Vitesse = distance ÷ temps.",
-              "Distance = vitesse × temps. Temps = distance ÷ vitesse.",
-            ],
-            formula: "\\(v = \\dfrac{d}{t}\\)",
-          },
-        ],
-      },
-    },
   },
   generate,
 };

@@ -18,7 +18,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e et la 3e sont intégralement terminées. Prochain fichier :
-variations-fonctions-seconde.js (2nde) — 3e fichier de la 2nde.**
+fonctions-affines-seconde.js (2nde) — 4e fichier de la 2nde.**
+
+`variations-fonctions-seconde.js` (2nde) relu intégralement : item ajouté
+à « Comparer ou encadrer des images » sur l'encadrement d'une image
+intermédiaire (si x est compris entre les bornes a et b d'un morceau
+monotone, f(x) est strictement compris entre f(a) et f(b), quel que soit
+le sens de variation), testé par `genEncadrerImageQCM` mais absent — les
+2 items existants ne couvraient que la comparaison directe f(a) vs f(b),
+pas l'encadrement d'un point intermédiaire. Reste déjà au niveau attendu
+(branches « Lire un tableau de variations », « Maximum et minimum » —
+piège local/global déjà présent —, « Nombre de solutions de f(x)=k »
+déjà claires, 15 générateurs bien couverts). Fichier purement textuel,
+aucune figure, aucun symbole €, aucun candidat texTable.
 
 `generalites-fonctions-seconde.js` (2nde) relu intégralement : item ajouté
 à « Vocabulaire : image et antécédent » sur les 4 modes de représentation
@@ -873,7 +885,7 @@ vérifiés pour débordement.)
 ### 2nde
 - [x] nombres-calculs-seconde.js *(branche Intervalles enrichie — transformation d'encadrement/piège négatif ; règle |X|=b ajoutée ; branche Racines carrées et puissances scindée en 2 + piège √(a²)=|a| + nouvelle branche Puissances ; heuristique rapport/différence ajoutée)*
 - [x] generalites-fonctions-seconde.js *(item modes de représentation ajouté ; item résolution équation quotient=constante ajouté ; 3 prompts tableau-en-prose convertis en texTable)*
-- [ ] variations-fonctions-seconde.js
+- [x] variations-fonctions-seconde.js *(item encadrement d'une image intermédiaire ajouté, testé par genEncadrerImageQCM mais absent ; sinon déjà bon)*
 - [ ] fonctions-affines-seconde.js
 - [ ] fonctions-reference-seconde.js
 - [ ] reperage-configurations-seconde.js

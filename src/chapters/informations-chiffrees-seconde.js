@@ -559,6 +559,50 @@ export default {
     level: "seconde",
     free: false,
     order: 11,
+    cours: {
+      mindMap: {
+        title: "Informations chiffrées",
+        branches: [
+          {
+            title: "Proportions et pourcentages",
+            items: [
+              "Proportion = partie / total ; retrouver la partie ou le total en réorganisant cette égalité.",
+              "Proportion d'une proportion : multiplier les deux proportions entre elles.",
+            ],
+            formula: "\\(\\text{proportion} = \\dfrac{\\text{partie}}{\\text{total}}\\)",
+          },
+          {
+            title: "Coefficient multiplicateur",
+            items: [
+              "Hausse de t % : coefficient \\(1+\\frac{t}{100}\\). Baisse de t % : coefficient \\(1-\\frac{t}{100}\\).",
+              "Piège classique : un coefficient inférieur à 1 signifie une baisse, même s'il reste positif.",
+            ],
+            formula: "\\(\\text{valeur finale} = \\text{valeur initiale} \\times CM\\)",
+          },
+          {
+            title: "Évolutions successives",
+            items: [
+              "Le coefficient multiplicateur global est le produit des coefficients de chaque étape (pas leur somme).",
+              "Piège classique : deux hausses de 10 % ne donnent pas une hausse de 20 %, mais de 21 % (\\(1{,}1 \\times 1{,}1 = 1{,}21\\)).",
+            ],
+          },
+          {
+            title: "Variation absolue et relative",
+            items: [
+              "Variation absolue : la différence (valeur finale − valeur initiale), exprimée dans l'unité de la grandeur.",
+              "Variation relative (taux d'évolution) : la variation absolue divisée par la valeur initiale, en pourcentage.",
+            ],
+          },
+          {
+            title: "Tableau croisé de deux variables",
+            items: [
+              "Fréquence marginale : effectif d'une ligne ou colonne, divisé par le total général.",
+              "Fréquence conditionnelle : effectif d'une case, divisé par le total de sa ligne ou colonne (pas le total général).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

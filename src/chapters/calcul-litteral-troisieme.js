@@ -487,8 +487,10 @@ export default {
           {
             title: "Développer",
             items: [
+              "Distributivité simple : \\(k(ax+b) = kax+kb\\), chaque terme entre parenthèses est multiplié par k.",
               "Double distributivité : chaque terme du premier facteur multiplie chaque terme du second.",
               "Un « - » devant une parenthèse change le signe de tous les termes qu'elle contient.",
+              "Piège classique : quand on soustrait une parenthèse à deux termes, il faut changer le signe des DEUX termes, pas d'un seul.",
             ],
             formula: "\\((ax+b)(cx+d) = acx^2 + (ad+bc)x + bd\\)",
           },
@@ -505,15 +507,25 @@ export default {
             title: "Factoriser",
             items: [
               "Factoriser, c'est l'opération inverse de développer : on fait apparaître un facteur commun (numérique, en x, ou binomial).",
-              "On vise toujours le plus grand facteur commun possible pour une factorisation complète.",
+              "Piège classique : on vise toujours le PLUS GRAND facteur commun possible — une factorisation avec un facteur commun trop petit reste incomplète.",
             ],
+            formula: "\\(ax+bx = x(a+b)\\)",
           },
           {
-            title: "Programmes de calcul, problèmes",
+            title: "Programmes de calcul",
             items: [
               "Pour retrouver un nombre de départ, on traduit le programme en équation et on la résout.",
               "Pour démontrer qu'un résultat est toujours un multiple d'un entier, on factorise l'expression littérale correspondante.",
+              "Pour démontrer qu'un résultat est toujours égal à une expression donnée (ex. toujours le carré du nombre choisi), on développe puis on simplifie jusqu'à cette expression.",
             ],
+          },
+          {
+            title: "Problèmes de périmètre et d'aire",
+            items: [
+              "On exprime la grandeur (périmètre, aire) en fonction de x à l'aide du calcul littéral, puis on remplace x par la valeur donnée pour calculer.",
+              "Piège classique : le périmètre d'un carré est \\(4 \\times \\text{côté}\\), celui d'un rectangle est \\(2 \\times (\\text{longueur}+\\text{largeur})\\) — ne pas confondre les deux formules.",
+            ],
+            formula: "\\(\\text{Périmètre rectangle} = 2(L+\\ell)\\ ;\\ \\text{Aire rectangle} = L \\times \\ell\\)",
           },
         ],
       },

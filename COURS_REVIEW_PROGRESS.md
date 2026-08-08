@@ -18,8 +18,16 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). `nombres-relatifs-quatrieme.js`,
-`addition-soustraction-rationnels.js` et `multiplication-division-rationnels.js`
-(4e) sont faits. Prochain fichier : `puissances-quatrieme.js` (4e).**
+`addition-soustraction-rationnels.js`, `multiplication-division-rationnels.js`
+et `puissances-quatrieme.js` (4e) sont faits. Prochain fichier :
+`calcul-litteral-quatrieme.js` (4e, dernier du lot confié).**
+
+`puissances-quatrieme.js` (4e) relu intégralement : **RAS, aucun
+changement**. Cours déjà exemplaire (4 branches : Règles de calcul, Signe
+d'une puissance, Notation scientifique, Racine carrée), formules déjà
+présentes et utiles partout où pertinent, pièges classiques déjà bien
+ciblés et cohérents avec les exercices. Aucun € dans le fichier, aucun
+candidat `texTable()` (prompts déjà courts, max 171 caractères).
 
 `multiplication-division-rationnels.js` (4e) relu intégralement : formule
 ajoutée à la branche "Opposé et inverse" (opposé de 2/3 = -2/3 ; inverse de
@@ -426,7 +434,7 @@ vérifiés pour débordement.)
 - [x] nombres-relatifs-quatrieme.js *(branche "Signe inconnu" renommée pour inclure les programmes de calcul ; piège classique priorités reformulé pour coller aux exercices ; formules ajoutées à 3 branches)*
 - [x] addition-soustraction-rationnels.js *(exemples numériques ajoutés à 2 items sans exemple ; formule PPCM ajoutée à une branche qui n'en avait pas)*
 - [x] multiplication-division-rationnels.js *(formule opposé/inverse ajoutée à une branche qui n'en avait aucune, aligne avec son piège classique)*
-- [ ] puissances-quatrieme.js
+- [x] puissances-quatrieme.js *(déjà bon, RAS — cours exemplaire, formules et pièges déjà bien ciblés)*
 - [ ] calcul-litteral-quatrieme.js
 - [ ] resolution-equations.js
 - [ ] statistiques-quatrieme.js

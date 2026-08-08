@@ -17,11 +17,17 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). Les 5 fichiers de 4e confiés
-dans cette session sont terminés (nombres-relatifs-quatrieme,
-addition-soustraction-rationnels, multiplication-division-rationnels,
-puissances-quatrieme, calcul-litteral-quatrieme). Prochain fichier :
-`resolution-equations.js` (4e).**
+**La 5e est intégralement terminée (12/12). `resolution-equations.js` (4e)
+vient d'être relu. Prochain fichier : `statistiques-quatrieme.js` (4e).**
+
+`resolution-equations.js` (4e) relu intégralement : branche "Tester une
+solution" reformulée pour partir du concret (remplacer x puis calculer
+chaque membre) plutôt que de la définition abstraite ("une solution
+vérifie l'égalité"). Reste déjà au niveau attendu : formule utile dans
+"Résoudre pas à pas", piège classique déjà présent et pertinent dans
+"Traduire un problème" (relire la solution dans le contexte : âge/prix ne
+peut pas être négatif), 3 branches concises. Aucun candidat texTable
+(prompts déjà courts et narratifs).
 
 `calcul-litteral-quatrieme.js` (4e) relu intégralement : formules ajoutées
 aux branches "Exprimer, évaluer", "Réduire" et "Factoriser" (aucune des
@@ -452,7 +458,7 @@ vérifiés pour débordement.)
 - [x] multiplication-division-rationnels.js *(formule opposé/inverse ajoutée à une branche qui n'en avait aucune, aligne avec son piège classique)*
 - [x] puissances-quatrieme.js *(déjà bon, RAS — cours exemplaire, formules et pièges déjà bien ciblés)*
 - [x] calcul-litteral-quatrieme.js *(formules ajoutées à 3 branches sans formule ; candidat texTable du grep mécanique vérifié = faux positif)*
-- [ ] resolution-equations.js
+- [x] resolution-equations.js
 - [ ] statistiques-quatrieme.js
 - [ ] probabilites-quatrieme.js
 - [ ] notion-fonctions.js

@@ -399,6 +399,44 @@ export default {
     level: "quatrieme",
     free: false,
     order: 6,
+    cours: {
+      mindMap: {
+        title: "Calcul littéral",
+        branches: [
+          {
+            title: "Exprimer, évaluer",
+            items: [
+              "Une expression littérale traduit un énoncé ou un programme de calcul avec une lettre.",
+              "Évaluer, c'est remplacer la lettre par sa valeur et calculer, en respectant les priorités opératoires.",
+              "Piège classique : \\((-x)^2\\) et \\(-x^2\\) donnent des résultats différents pour une même valeur négative de x.",
+            ],
+          },
+          {
+            title: "Réduire",
+            items: [
+              "On regroupe entre eux les termes de même nature (les x² ensemble, les x ensemble, les constantes ensemble).",
+              "Chaque terme garde le signe qui le précède quand on le déplace.",
+            ],
+          },
+          {
+            title: "Développer",
+            items: [
+              "Simple distributivité : on multiplie chaque terme de la parenthèse par le facteur extérieur.",
+              "Double distributivité : chaque terme du premier facteur multiplie chaque terme du second.",
+              "Piège classique : un « - » devant une parenthèse change le signe de TOUS les termes qu'elle contient.",
+            ],
+            formula: "\\(k(a+b) = ka+kb\\ ;\\ (x+a)(x+b) = x^2+(a+b)x+ab\\)",
+          },
+          {
+            title: "Factoriser",
+            items: [
+              "Factoriser, c'est l'opération inverse de développer : on fait apparaître un facteur commun.",
+              "On vérifie toujours une factorisation en la redéveloppant : on doit retrouver l'expression de départ.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

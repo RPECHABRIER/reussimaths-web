@@ -535,31 +535,34 @@ export default {
           {
             title: "Additionner, soustraire",
             items: [
-              "Même signe : on garde le signe commun et on ajoute les distances à 0.",
-              "Signes différents : le résultat a le signe du nombre le plus « loin » de 0, et on soustrait les distances.",
-              "Soustraire un nombre revient à ajouter son opposé : \\(a - b = a + (-b)\\).",
+              "Même signe : on garde le signe commun et on ajoute les distances à 0. Exemple : \\((-3) + (-5) = -8\\).",
+              "Signes différents : le résultat a le signe du nombre le plus « loin » de 0, et on soustrait les distances. Exemple : \\((-3) + 5 = +2\\) (5 est plus loin de 0 que 3).",
+              "Soustraire un nombre revient à ajouter son opposé : \\(7 - (+3) = 7 + (-3) = 4\\).",
             ],
+            formula: "\\((-3) + (-5) = -8 \\quad ; \\quad (-3) + 5 = +2\\)",
           },
           {
             title: "Multiplier, diviser",
             items: [
-              "Même signe → résultat positif ; signes différents → résultat négatif.",
+              "Même signe → résultat positif ; signes différents → résultat négatif. Exemple : \\((-4) \\times (-3) = +12\\) mais \\((-4) \\times 3 = -12\\).",
               "Avec plusieurs facteurs : le produit est positif si le nombre de facteurs négatifs est pair, négatif s'il est impair.",
               "Piège classique : un carré \\((-n)^2\\) est toujours positif, ce n'est pas le cas de \\(-n^2\\).",
             ],
+            formula: "\\((-4) \\times (-3) = 12 \\quad ; \\quad (-4) \\times 3 = -12\\)",
           },
           {
             title: "Priorités opératoires",
             items: [
-              "On calcule d'abord les parenthèses, puis les multiplications/divisions, puis les additions/soustractions.",
-              "Piège classique : oublier de distribuer un signe « - » devant une parenthèse à tous ses termes.",
+              "On calcule d'abord les parenthèses, puis les multiplications/divisions, puis les additions/soustractions — même si l'addition ou la soustraction est écrite en premier.",
+              "Piège classique : quand un nombre multiplie une parenthèse à plusieurs termes, il faut d'abord calculer toute la parenthèse (pas seulement multiplier le premier terme).",
             ],
+            formula: "\\(5 - 2 \\times (3 + 4) = 5 - 2 \\times 7 = -9\\)",
           },
           {
-            title: "Signe inconnu (produit, quotient)",
+            title: "Signe inconnu, programmes de calcul",
             items: [
-              "Pour trouver le signe d'un facteur inconnu, on part du signe voulu pour le résultat et on « remonte » la règle des signes.",
-              "Un programme de calcul se résout en appliquant les opérations inverses dans l'ordre inverse.",
+              "Pour trouver le signe d'un facteur ou d'un diviseur inconnu, on part du signe voulu pour le résultat, puis on « remonte » la règle des signes.",
+              "Un programme de calcul (une suite d'opérations) se résout à l'envers : on part du résultat et on applique les opérations inverses, dans l'ordre inverse.",
             ],
           },
         ],

@@ -284,6 +284,45 @@ export default {
     level: "quatrieme",
     free: false,
     order: 12,
+    cours: {
+      mindMap: {
+        title: "Théorème de Thalès",
+        branches: [
+          {
+            title: "La configuration de Thalès",
+            items: [
+              "M sur [AB], N sur [AC], avec les droites (MN) et (BC) parallèles : c'est la configuration triangulaire de Thalès.",
+              "Le sommet commun (ici A) est le point de départ de tous les rapports.",
+            ],
+            figure: buildThalesFigure(0.55),
+          },
+          {
+            title: "Calculer une longueur",
+            items: [
+              "Les trois rapports sont égaux : côtés issus de A, et côté parallèle sur côté complet.",
+              "Piège classique : ne pas se tromper d'ordre — c'est \\(\\frac{AM}{AB}\\), pas \\(\\frac{AB}{AM}\\).",
+            ],
+            formula: "\\(\\dfrac{AM}{AB} = \\dfrac{AN}{AC} = \\dfrac{MN}{BC}\\)",
+            figure: buildThalesFigure(0.4),
+          },
+          {
+            title: "Réciproque : prouver un parallélisme",
+            items: [
+              "Si M sur [AB], N sur [AC], et \\(\\frac{AM}{AB} = \\frac{AN}{AC}\\), alors (MN) et (BC) sont parallèles.",
+              "Si les deux quotients sont différents, les droites ne sont pas parallèles.",
+            ],
+            figure: buildThalesFigure(0.65),
+          },
+          {
+            title: "Problèmes, agrandissement/réduction",
+            items: [
+              "Le rapport \\(\\frac{AM}{AB}\\) donne aussi le rapport d'agrandissement/réduction entre les deux triangles.",
+              "Piège classique : vérifier que les points sont bien alignés (M sur (AB), N sur (AC)) avant d'appliquer le théorème.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

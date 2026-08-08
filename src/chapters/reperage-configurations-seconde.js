@@ -554,7 +554,8 @@ export default {
             title: "Coordonnées d'un point",
             items: [
               "Dans un repère \\((O ; I, J)\\), un point A a des coordonnées \\((x_A ; y_A)\\) uniques.",
-              "Repère orthonormé : axes perpendiculaires et même unité — indispensable pour utiliser la formule de distance.",
+              "Orthogonal : axes perpendiculaires (unités pas forcément égales). Orthonormé : orthogonal ET mêmes unités sur les deux axes — indispensable pour utiliser la formule de distance.",
+              "Le symétrique d'un point \\((x ; y)\\) par rapport à l'origine O est \\((-x ; -y)\\).",
             ],
             figure: buildCoursRepereFigure([{ id: "A", x: 3, y: 2 }]),
           },
@@ -562,6 +563,7 @@ export default {
             title: "Milieu d'un segment",
             items: [
               "Les coordonnées du milieu sont la moyenne des coordonnées des extrémités, pas leur somme.",
+              "Pour retrouver B connaissant A et le milieu M : \\(x_B = 2x_M - x_A\\) (et de même pour y).",
             ],
             formula: "\\(I\\left(\\dfrac{x_A+x_B}{2} ; \\dfrac{y_A+y_B}{2}\\right)\\)",
             figure: buildCoursRepereFigure(
@@ -578,6 +580,7 @@ export default {
             items: [
               "C'est Pythagore appliqué au triangle rectangle formé par les écarts en x et en y.",
               "Piège classique : ne pas oublier la racine carrée à la fin du calcul.",
+              "Cas particulier : si deux points ont la même abscisse (ou la même ordonnée), la droite qui les joint est parallèle à un axe et la distance se lit directement, sans Pythagore.",
             ],
             formula: "\\(AB = \\sqrt{(x_B-x_A)^2 + (y_B-y_A)^2}\\)",
             figure: buildCoursRepereFigure(
@@ -607,7 +610,6 @@ export default {
             title: "Parallélogramme : milieu commun",
             items: [
               "ABCD est un parallélogramme ⟺ [AC] et [BD] ont le même milieu (les diagonales se coupent en leur milieu).",
-              "Le centre de gravité (isobarycentre) d'un triangle a pour coordonnées la moyenne des trois sommets.",
             ],
             figure: buildCoursRepereFigure(
               [
@@ -617,6 +619,38 @@ export default {
                 { id: "D", x: 1, y: 3, dx: -12, dy: -8 },
               ],
               [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "D" }, { from: "D", to: "A" }, { from: "A", to: "C", dashed: true }, { from: "B", to: "D", dashed: true }]
+            ),
+          },
+          {
+            title: "Centre de gravité d'un triangle",
+            items: [
+              "Le centre de gravité (isobarycentre) d'un triangle a pour coordonnées la moyenne des coordonnées des trois sommets.",
+            ],
+            formula: "\\(G\\left(\\dfrac{x_A+x_B+x_C}{3} ; \\dfrac{y_A+y_B+y_C}{3}\\right)\\)",
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 0, y: 0, dx: -10, dy: 10 },
+                { id: "B", x: 6, y: 0, dy: 12 },
+                { id: "C", x: 3, y: 6, dy: -10 },
+                { id: "G", x: 3, y: 2, dx: 8, dy: -4 },
+              ],
+              [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "A" }]
+            ),
+          },
+          {
+            title: "Réciproque du théorème de Pythagore",
+            items: [
+              "Si, dans un triangle, le carré du plus grand côté est égal à la somme des carrés des deux autres, alors le triangle est rectangle (angle droit opposé au plus grand côté).",
+              "Cette réciproque fonctionne pour n'importe quel triangle, pas seulement ceux dont les côtés sont parallèles aux axes.",
+            ],
+            formula: "\\(BC^2 = AB^2 + AC^2 \\Rightarrow \\text{triangle rectangle en } A\\)",
+            figure: buildCoursRepereFigure(
+              [
+                { id: "A", x: 1, y: 1, dx: -14, dy: 10 },
+                { id: "B", x: 5, y: 2, dx: 8, dy: 6 },
+                { id: "C", x: 0, y: 5, dx: -6, dy: -10 },
+              ],
+              [{ from: "A", to: "B" }, { from: "B", to: "C" }, { from: "C", to: "A" }]
             ),
           },
         ],

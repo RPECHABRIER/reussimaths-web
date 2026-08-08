@@ -666,6 +666,37 @@ const DIFFICULTY = {
   genProblemeArgentSuffisant: "expert",
 };
 
+// ---------- Figure Cours : droite graduée entre deux repères entiers ----------
+// Illustre la branche "Droite graduée" du Cours : deux repères connus (3 et
+// 4), la droite partagée en 10 graduations égales (le pas), et un point M
+// repéré à la 4e graduation (3,4) — cohérent avec la formule déjà donnée
+// dans le texte (3 + 4 × 0,1 = 3,4).
+function buildCoursDroiteGradueeFigure() {
+  const scale = 24;
+  const y = 40;
+  const points = [
+    { id: "Lo", x: 0, y, hideDot: true, hideLabel: true },
+    { id: "Hi", x: 10 * scale, y, hideDot: true, hideLabel: true },
+  ];
+  const segments = [];
+  for (let i = 0; i <= 10; i++) {
+    const x = i * scale;
+    points.push({ id: `t${i}a`, x, y: y - 6, hideDot: true, hideLabel: true });
+    points.push({ id: `t${i}b`, x, y: y + 6, hideDot: true, hideLabel: true });
+    segments.push({ from: `t${i}a`, to: `t${i}b` });
+  }
+  points.push({ id: "M", x: 4 * scale, y, dy: -12, label: "3,4" });
+  return {
+    points,
+    lines: [{ from: "Lo", to: "Hi", extend: 12 }],
+    segments,
+    freeLabels: [
+      { x: 0, y: y + 22, text: "3" },
+      { x: 10 * scale, y: y + 22, text: "4" },
+    ],
+  };
+}
+
 function generate(difficulty) {
   if (difficulty) {
     const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
@@ -723,6 +754,7 @@ export default {
               "Pour lire un point : compte son nombre de graduations depuis le repère de gauche, multiplie par le pas, puis ajoute au repère.",
             ],
             formula: "\\(3 + 4 \\times 0,1 = 3,4\\)",
+            figure: buildCoursDroiteGradueeFigure(),
           },
         ],
       },

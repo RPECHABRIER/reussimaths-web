@@ -18,7 +18,31 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e est intégralement terminée (12/12). La 4e est intégralement
-terminée (14/14). Prochain fichier : calcul-litteral-troisieme.js (3e).**
+terminée (14/14). Prochain fichier : equations-troisieme.js (3e).**
+
+`calcul-litteral-troisieme.js` (3e) relu intégralement : branche
+"Programmes de calcul, problèmes" scindée en deux branches distinctes
+("Programmes de calcul" et "Problèmes de périmètre et d'aire") : le titre
+promettait deux thèmes mais aucun item ne couvrait les problèmes de
+périmètre/aire testés par `genAireRectangleDifferenceCarresNumeric` et
+`genPerimetreCarreEgalRectangleNumeric` ; item ajouté sur la traduction
+grandeur→expression en x puis substitution, piège classique ajouté
+(périmètre carré 4×côté vs rectangle 2×(L+l)). Branche "Programmes de
+calcul" : item ajouté sur la démonstration par développement/
+simplification jusqu'à une expression donnée (testé par
+`genProgrammeCarreToujoursNumeric` mais absent, seule la technique par
+factorisation pour un multiple était couverte). Branche "Développer" :
+item de distributivité simple k(ax+b)=kax+kb ajouté avant la double
+distributivité (testée en premier par
+`genDevelopperSimpleDistributiviteGeneraleNumeric` mais absente du cours) ;
+piège classique ajouté sur la soustraction d'une parenthèse à deux termes
+(testé par `genCorrigerErreurEleveQCM`). Branche "Factoriser" : item
+requalifié en piège classique explicite (plus grand facteur commun vs
+factorisation partielle, testé par `genFactoriserPlusGrandFacteurCommunQCM`)
+et formule ajoutée (ax+bx=x(a+b)), qui n'en avait aucune. Branche
+"Identités remarquables" laissée inchangée (déjà au niveau attendu). Fichier
+purement algébrique, aucune figure, aucun €, aucun candidat texTable
+(prompts = courtes expressions LaTeX).
 
 `calcul-numerique-troisieme.js` (3e) relu intégralement : piège classique
 ajouté à la branche "Opérations sur les fractions" (dans une expression
@@ -596,7 +620,7 @@ vérifiés pour débordement.)
 ### 3e
 - [x] nombres-entiers-troisieme.js *(branche "Divisibilité, nombres premiers" scindée en 2 + critères de divisibilité ajoutés, absents avant ; piège conjecture/contre-exemple ajouté ; piège parité ajouté ; formule nombre de diviseurs ajoutée ; exemple concret ajouté à division euclidienne)*
 - [x] calcul-numerique-troisieme.js *(piège classique ajouté à « Opérations sur les fractions » — priorité × avant + / − ; piège classique ajouté à « Puissances » — priorité puissance avant + / ×, (a+b)² ≠ a²+b² ; sinon déjà bon, « Racines carrées »/« Écriture scientifique » déjà claires)*
-- [ ] calcul-litteral-troisieme.js
+- [x] calcul-litteral-troisieme.js *(branche « Programmes de calcul, problèmes » scindée en 2 ; item + piège classique ajoutés à « Problèmes de périmètre et d'aire » ; item ajouté à « Programmes de calcul » ; distributivité simple + piège classique ajoutés à « Développer » ; piège classique + formule ajoutés à « Factoriser »)*
 - [ ] equations-troisieme.js
 - [ ] notion-fonction-troisieme.js
 - [ ] fonctions-affines-troisieme.js

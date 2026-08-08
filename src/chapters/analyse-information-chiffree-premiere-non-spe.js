@@ -441,6 +441,46 @@ export default {
     level: "premiere-non-spe",
     free: false,
     order: 2,
+    cours: {
+      mindMap: {
+        title: "Analyse de l'information chiffrée",
+        branches: [
+          {
+            title: "Tableaux croisés d'effectifs",
+            items: [
+              "Une case manquante se retrouve à partir des totaux de sa ligne ou de sa colonne (par différence).",
+              "Total marginal = somme d'une ligne ou d'une colonne, le total général = somme de tous les totaux marginaux.",
+            ],
+          },
+          {
+            title: "Proportions et proportions conditionnelles",
+            items: [
+              "Proportion simple : effectif d'une case / effectif total. Proportion conditionnelle : effectif d'une case / total de sa ligne ou colonne.",
+            ],
+          },
+          {
+            title: "Pourcentage d'évolution vs point de pourcentage",
+            items: [
+              "Un taux qui passe de 20 % à 25 % gagne 5 points de pourcentage, mais évolue de +25 % (\\(\\frac{25-20}{20}\\)).",
+              "Piège classique très fréquent : confondre les deux, surtout dans les articles de presse.",
+            ],
+          },
+          {
+            title: "Lecture critique de diagrammes",
+            items: [
+              "Diagramme en bâtons à échelle tronquée (ne partant pas de 0) : exagère visuellement les écarts.",
+              "Diagramme circulaire : l'angle d'un secteur doit être proportionnel au pourcentage annoncé — vérifier que ce n'est pas trompeur.",
+            ],
+          },
+          {
+            title: "Corrélation entre deux variables",
+            items: [
+              "Une corrélation observée entre deux variables ne prouve pas qu'une cause l'autre (piège classique : corrélation ≠ causalité).",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

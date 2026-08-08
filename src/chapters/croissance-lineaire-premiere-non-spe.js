@@ -424,6 +424,7 @@ export default {
             items: [
               "On passe d'un terme au suivant en ajoutant toujours le même nombre r (la raison).",
               "r > 0 : suite croissante ; r < 0 : suite décroissante ; r = 0 : suite constante.",
+              "Entre deux termes non consécutifs de rangs p et q, la raison se retrouve en divisant la variation totale par le nombre de « pas » : \\(r = \\dfrac{u_q - u_p}{q - p}\\) (cas particulier consécutif : q = p+1).",
             ],
             formula: "\\(u_{n+1} = u_n + r\\)",
           },
@@ -439,8 +440,24 @@ export default {
             title: "Résoudre \\(u_n \\geqslant k\\)",
             items: [
               "Remplacer \\(u_n\\) par son expression explicite, puis résoudre l'inéquation en n comme une inéquation affine classique.",
+              "Piège classique : si r est négatif, diviser par r inverse le sens de l'inégalité (comme pour toute inéquation).",
               "Le résultat est un rang (nombre entier) : arrondir à l'entier qui convient selon le sens du problème.",
             ],
+          },
+          {
+            title: "Modéliser une situation par une suite arithmétique",
+            items: [
+              "La raison r est l'augmentation (ou diminution) constante à chaque étape ; le premier terme \\(u_0\\) est la quantité de départ, avant toute évolution.",
+              "Une fois r et \\(u_0\\) identifiés, on retombe sur les mêmes techniques que pour une suite arithmétique abstraite (calcul d'un terme, résolution d'une inéquation pour un seuil).",
+            ],
+          },
+          {
+            title: "Fonctions affines et croissance continue",
+            items: [
+              "Une fonction affine s'écrit \\(f(x) = mx + p\\) : m est le coefficient directeur (la croissance par unité de x), p est l'image de 0.",
+              "Coefficient directeur depuis deux points A et B de la droite : \\(m = \\dfrac{y_B - y_A}{x_B - x_A}\\).",
+            ],
+            formula: "\\(m = \\dfrac{y_B - y_A}{x_B - x_A}\\)",
           },
           {
             title: "Modèle discret vs modèle continu",

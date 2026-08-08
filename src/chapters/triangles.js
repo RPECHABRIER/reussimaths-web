@@ -483,6 +483,7 @@ export default {
               "Tout point de la médiatrice d'un segment est équidistant de ses deux extrémités.",
               "Une médiane relie un sommet au milieu du côté opposé, et partage le triangle en deux triangles de même aire.",
               "Les trois médiatrices (comme les trois hauteurs, comme les trois médianes) d'un triangle sont concourantes.",
+              "Piège classique : ne pas confondre médiatrice (perpendiculaire à un côté en son milieu, ne passe pas forcément par le sommet opposé), hauteur (passe par le sommet, perpendiculaire au côté opposé) et médiane (passe par le sommet et le milieu du côté opposé).",
             ],
             figure: buildTriangleFigure(90, 50, 40, { rightAngleAt: "A" }),
           },

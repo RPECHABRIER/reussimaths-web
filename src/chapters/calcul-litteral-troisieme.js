@@ -480,6 +480,44 @@ export default {
     level: "troisieme",
     free: false,
     order: 4,
+    cours: {
+      mindMap: {
+        title: "Calcul littéral",
+        branches: [
+          {
+            title: "Développer",
+            items: [
+              "Double distributivité : chaque terme du premier facteur multiplie chaque terme du second.",
+              "Un « - » devant une parenthèse change le signe de tous les termes qu'elle contient.",
+            ],
+            formula: "\\((ax+b)(cx+d) = acx^2 + (ad+bc)x + bd\\)",
+          },
+          {
+            title: "Identités remarquables",
+            items: [
+              "Le carré d'une somme se développe en trois termes : carré, double produit, carré.",
+              "Une différence de deux carrés se factorise toujours en un produit somme × différence.",
+              "Piège classique : \\((a+b)^2 \\neq a^2+b^2\\) — ne pas oublier le double produit.",
+            ],
+            formula: "\\((a+b)^2 = a^2+2ab+b^2\\ ;\\ a^2-b^2 = (a+b)(a-b)\\)",
+          },
+          {
+            title: "Factoriser",
+            items: [
+              "Factoriser, c'est l'opération inverse de développer : on fait apparaître un facteur commun (numérique, en x, ou binomial).",
+              "On vise toujours le plus grand facteur commun possible pour une factorisation complète.",
+            ],
+          },
+          {
+            title: "Programmes de calcul, problèmes",
+            items: [
+              "Pour retrouver un nombre de départ, on traduit le programme en équation et on la résout.",
+              "Pour démontrer qu'un résultat est toujours un multiple d'un entier, on factorise l'expression littérale correspondante.",
+            ],
+          },
+        ],
+      },
+    },
   },
   generate,
 };

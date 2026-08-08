@@ -18,17 +18,27 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-maintenant la Première techno sont intégralement terminées (8/8 pour la
-Première techno). Prochain fichier :
-combinatoire-denombrement-terminale-spe.js (Terminale Spé, 1er des 14
-fichiers de ce niveau — la checklist montre aussi
-vecteurs-droites-plans-espace-terminale-spe.js et
-orthogonalite-distances-espace-terminale-spe.js comme non cochés dans
-CE fichier de suivi malgré des commits antérieurs de carte mentale
-existants : vérification faite, ces commits appartiennent au chantier
-de RÉDACTION initial (COURS_PROGRESS.md), pas à ce chantier de RELECTURE
-qualité — ils seront donc traités normalement dans l'ordre, comme tout
-autre fichier).**
+la Première techno sont intégralement terminées. 1 des 14 fichiers de
+Terminale Spé est relu (combinatoire-denombrement-terminale-spe.js).
+Prochain fichier : vecteurs-droites-plans-espace-terminale-spe.js
+(Terminale Spé). Note : ce fichier et le suivant
+(orthogonalite-distances-espace-terminale-spe.js) sont traités
+normalement dans l'ordre malgré une consigne reçue disant qu'ils
+seraient déjà cochés — vérification faite, les commits antérieurs
+existants pour ces 2 fichiers appartiennent au chantier de RÉDACTION
+initial (COURS_PROGRESS.md, création de la carte mentale + figures 3D),
+pas à ce chantier-ci de RELECTURE qualité (COURS_REVIEW_PROGRESS.md) ;
+ils n'avaient jamais été relus sous cet angle.**
+
+`combinatoire-denombrement-terminale-spe.js` (Terminale Spé, 1er des 14
+fichiers de ce niveau) relu intégralement : 5 branches inchangées en
+nombre mais enrichies. Branche « Coefficients binomiaux » enrichie de 3
+éléments testés mais absents : formule de base \binom{n}{k}=n!/(k!(n-k)!)
+ajoutée ; cas particuliers \binom{n}{0}=\binom{n}{n}=1 et \binom{n}{1}=n
+ajoutés (testés par genCasParticuliersBinomialNumeric, difficulté
+facile, totalement absents avant) ; relation A(n,k)=\binom{n}{k}×k!
+entre arrangements et combinaisons ajoutée. Aucun €, aucun candidat
+texTable, fichier sans figure.
 
 `algorithmique-python-premiere-techno.js` (Première techno) relu
 intégralement : 5 branches (4 avant), dernier fichier de ce niveau qui
@@ -1457,7 +1467,7 @@ vérifiés pour débordement.)
 - [x] algorithmique-python-premiere-techno.js *(range(a,b) et compréhension de liste ajoutés, nouvelle branche Vocabulaire Python de base — len/parité/import random, bug KaTeX % non échappé corrigé — Première techno terminée 8/8)*
 
 ### Terminale Spé
-- [ ] combinatoire-denombrement-terminale-spe.js
+- [x] combinatoire-denombrement-terminale-spe.js *(formule de base des coefficients binomiaux, cas particuliers binom(n,0)/binom(n,n)/binom(n,1), relation arrangement-combinaison A(n,k)=binom(n,k)×k! ajoutés)*
 - [ ] vecteurs-droites-plans-espace-terminale-spe.js
 - [ ] orthogonalite-distances-espace-terminale-spe.js
 - [ ] suites-terminale-spe.js

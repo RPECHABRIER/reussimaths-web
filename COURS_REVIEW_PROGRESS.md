@@ -17,9 +17,19 @@ après CHAQUE fichier revu, jamais en fin de session.**
 
 ## Reprise ici
 
-**La 5e est intégralement terminée (12/12). `resolution-equations.js` et
-`statistiques-quatrieme.js` (4e) viennent d'être relus. Prochain fichier :
-`probabilites-quatrieme.js` (4e).**
+**La 5e est intégralement terminée (12/12). `resolution-equations.js`,
+`statistiques-quatrieme.js` et `probabilites-quatrieme.js` (4e) viennent
+d'être relus. Prochain fichier : `notion-fonctions.js` (4e).**
+
+`probabilites-quatrieme.js` (4e) relu intégralement : branches
+« Équiprobabilité » et « Calculer une probabilité » inversées (l'ancienne
+1ère branche utilisait le terme « équiprobabilité » dans sa formule avant
+que la 2e branche ne le définisse). Reste déjà bon (4 branches, formules
+utiles, pièges classiques déjà bien ciblés : couleurs vs boules dans une
+urne, somme des probabilités = 1). Exercices : 2 prompts convertis en
+`texTable()` (vérification d'une répartition de probabilités jusqu'à 5
+valeurs en prose ; tableau de probabilités à compléter qui se disait déjà
+« tableau » mais s'affichait en énumération prose).
 
 `statistiques-quatrieme.js` (4e) relu intégralement : formule de la moyenne
 pondérée réécrite sans notation Σ/indices (non enseignée au collège,
@@ -472,7 +482,7 @@ vérifiés pour débordement.)
 - [x] calcul-litteral-quatrieme.js *(formules ajoutées à 3 branches sans formule ; candidat texTable du grep mécanique vérifié = faux positif)*
 - [x] resolution-equations.js
 - [x] statistiques-quatrieme.js
-- [ ] probabilites-quatrieme.js
+- [x] probabilites-quatrieme.js
 - [ ] notion-fonctions.js
 - [ ] proportionnalite-quatrieme.js
 - [ ] theoreme-thales.js

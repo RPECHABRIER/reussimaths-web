@@ -18,13 +18,25 @@ après CHAQUE fichier revu, jamais en fin de session.**
 ## Reprise ici
 
 **La 5e, la 4e, la 3e, la 2nde, la Première non spé, la Première Spé et
-la Première techno sont intégralement terminées. 6 des 14 fichiers de
+la Première techno sont intégralement terminées. 7 des 14 fichiers de
 Terminale Spé sont relus (combinatoire-denombrement-terminale-spe.js,
 vecteurs-droites-plans-espace-terminale-spe.js,
 orthogonalite-distances-espace-terminale-spe.js,
 suites-terminale-spe.js, limites-fonctions-terminale-spe.js,
-continuite-terminale-spe.js). Prochain fichier :
-complements-derivation-terminale-spe.js (Terminale Spé).**
+continuite-terminale-spe.js, complements-derivation-terminale-spe.js).
+Prochain fichier : logarithme-neperien-terminale-spe.js (Terminale
+Spé).**
+
+`complements-derivation-terminale-spe.js` (Terminale Spé) relu
+intégralement : 4 branches inchangées en nombre mais fortement
+enrichies. Branche « Dérivée de fonctions composées » enrichie :
+formule du produit (uv)'=u'v+uv' ajoutée (chapter dédié, absente) ;
+domaine de dérivabilité de racine(u) précisé (u strictement positive).
+Branche « Dérivée seconde » enrichie : lien explicite f''>0 ⟹ f'
+croissante / f''<0 ⟹ f' décroissante ajouté (chapter dédié, absent).
+Branche « Convexité » enrichie : cas particulier de la fonction affine
+(à la fois convexe et concave) ajouté. Aucun €, aucun candidat
+texTable, fichier sans figure.
 
 `continuite-terminale-spe.js` (Terminale Spé) relu intégralement : 7
 branches (4 avant). Trois thèmes entiers testés mais absents comblés :
@@ -1531,7 +1543,7 @@ vérifiés pour débordement.)
 - [x] suites-terminale-spe.js *(nouvelle branche « Suites monotones, bornées et convergence » — théorème de convergence monotone absent avant, corollaire produit vers 0, formule de conclusion arithmético-géométrique)*
 - [x] limites-fonctions-terminale-spe.js *(nouvelle branche « Opérations sur les limites » cas déterminés, règle des signes près d'une asymptote verticale, cas produit fonction bornée×0 ajoutés)*
 - [x] continuite-terminale-spe.js *(3 branches entières ajoutées — continuité des fonctions usuelles, opérations sur les fonctions continues, suites récurrentes et point fixe)*
-- [ ] complements-derivation-terminale-spe.js
+- [x] complements-derivation-terminale-spe.js *(formule du produit ajoutée, lien f''/monotonie de f' explicité, domaine de dérivabilité de racine(u), cas de la fonction affine convexe et concave)*
 - [ ] logarithme-neperien-terminale-spe.js
 - [ ] fonctions-trigonometriques-terminale-spe.js
 - [ ] primitives-equations-differentielles-terminale-spe.js

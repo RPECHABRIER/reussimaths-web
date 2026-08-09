@@ -1,5 +1,9 @@
 import { getChapter, getChaptersByLevel } from "./chapters/registry";
 import { getLevel } from "./levels";
+import { CM2_DIAGNOSTIC_CHAPTERS } from "./diagnostics/cm2";
+import { CM2_REMEDIATION, getPreviousLevelId, LEVEL_FOUNDATIONS, selectPrerequisiteChapters } from "./lib/prerequisites";
+import { getDiagnosticRemediationIds } from "./lib/diagnosticProfile";
+import { getStudyProgramme, hasConfiguredStudyProgramme } from "./lib/studyProgramme";
 
 // ---------------------------------------------------------------------------
 // Parcours — AUTO-DÉRIVÉS du registre de chapitres, comme plannedChapters.js
@@ -37,6 +41,16 @@ export const TIERS = [
 
 const SESSION_LENGTH = 8;
 
+function stableProgressIndex(chapterId) {
+  let hash = 0;
+  for (let i = 0; i < chapterId.length; i++) hash = (hash * 31 + chapterId.charCodeAt(i)) & 0x7fffffff;
+  return hash;
+}
+
+function stepForChapter(chapter) {
+  return { chapterId: chapter.meta.id, title: chapter.meta.title, progressIndex: stableProgressIndex(chapter.meta.id) };
+}
+
 function levelChapters(levelId) {
   // Les chapitres "Réviser les bases" / Automatismes (gratuits ou freemium)
   // ne sont pas de vraies étapes de progression — on ne garde que les
@@ -47,28 +61,24 @@ function levelChapters(levelId) {
     .sort((a, b) => (a.meta.order ?? 999) - (b.meta.order ?? 999));
 }
 
-const PREVIOUS_LEVEL = {
-  cinquieme: "sixieme",
-  quatrieme: "cinquieme",
-  troisieme: "quatrieme",
-  seconde: "troisieme",
-  "premiere-spe": "seconde",
-  "premiere-non-spe": "seconde",
-  "premiere-techno": "seconde",
-  "terminale-spe": "premiere-spe",
-  "terminale-techno": "premiere-techno",
-};
-
-export function getPreviousLevelId(levelId) {
-  return PREVIOUS_LEVEL[levelId] ?? null;
-}
+export { getPreviousLevelId } from "./lib/prerequisites";
 
 function tierParcoursId(levelId, tierId) {
   return `${levelId}-${tierId}`;
 }
 
 function buildTierParcours(levelId, tier) {
-  const chapters = levelChapters(levelId);
+  const allCurrentChapters = levelChapters(levelId);
+  let chapters = allCurrentChapters;
+  if (hasConfiguredStudyProgramme(levelId)) {
+    const selectedIds = new Set(Object.keys(getStudyProgramme(levelId)));
+    const selected = allCurrentChapters.filter((chapter) => selectedIds.has(chapter.meta.id));
+    const remediationIds = getDiagnosticRemediationIds(levelId);
+    const fallbackIds = levelId === "sixieme" ? Object.values(CM2_REMEDIATION) : (LEVEL_FOUNDATIONS[levelId] ?? []);
+    const priorityIds = remediationIds.length || selected.length ? remediationIds : fallbackIds;
+    const remediation = priorityIds.map(getChapter).filter(Boolean);
+    chapters = [...new Map([...remediation, ...selected].map((chapter) => [chapter.meta.id, chapter])).values()];
+  }
   if (chapters.length === 0) return null;
   const level = getLevel(levelId);
   return {
@@ -83,7 +93,7 @@ function buildTierParcours(levelId, tier) {
     difficulty: tier.difficulty,
     sessionLength: SESSION_LENGTH,
     free: false,
-    steps: chapters.map((c) => ({ chapterId: c.meta.id, title: c.meta.title })),
+    steps: chapters.map(stepForChapter),
   };
 }
 
@@ -124,7 +134,7 @@ export function getTrialParcours(levelId) {
     difficulty: "facile",
     sessionLength: 5,
     free: true,
-    steps: [{ chapterId: chapter.meta.id, title: chapter.meta.title }],
+    steps: [stepForChapter(chapter)],
   };
 }
 
@@ -133,7 +143,7 @@ function decouverteSteps() {
     const chapters = levelChapters(levelId);
     if (chapters.length === 0) return null;
     const level = getLevel(levelId);
-    return { chapterId: chapters[0].meta.id, title: chapters[0].meta.title, levelLabel: level?.label ?? levelId };
+    return { ...stepForChapter(chapters[0]), levelLabel: level?.label ?? levelId };
   }).filter(Boolean);
 }
 
@@ -179,11 +189,12 @@ export function getDiagnosticChapters(levelId, selectedChapterIds = []) {
   const selectedSet = new Set(selectedChapterIds);
   const selectedCurrent = currentChapters.filter((chapter) => selectedSet.has(chapter.meta.id));
   const previousLevelId = getPreviousLevelId(levelId);
-  // En 6e, le début du programme sert de socle d'entrée CM2/6e tant que des
-  // générateurs CM2 dédiés ne sont pas disponibles.
-  const prerequisites = previousLevelId ? levelChapters(previousLevelId) : currentChapters.slice(0, DIAGNOSTIC_QUESTIONS);
+  const previousChapters = previousLevelId ? levelChapters(previousLevelId) : CM2_DIAGNOSTIC_CHAPTERS;
   const currentCount = selectedCurrent.length ? Math.min(2, selectedCurrent.length) : 0;
   const prerequisiteCount = DIAGNOSTIC_QUESTIONS - currentCount;
+  const prerequisites = previousLevelId
+    ? selectPrerequisiteChapters(levelId, selectedCurrent, previousChapters, prerequisiteCount)
+    : previousChapters;
   const picked = [...sampleAcross(prerequisites, prerequisiteCount), ...sampleAcross(selectedCurrent, currentCount)];
   const unique = [...new Map(picked.map((chapter) => [chapter.meta.id, chapter])).values()];
   if (unique.length < DIAGNOSTIC_QUESTIONS) {

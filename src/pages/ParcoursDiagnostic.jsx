@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Check, X, Sparkles, ArrowRight, Clock3, Target, ShieldCheck, RotateCcw } from "lucide-react";
 import { getDiagnosticChapters, getPreviousLevelId, recommendTier, TIERS } from "../parcours";
 import { getLevel } from "../levels";
 import { getSelectedStudyChapterIds } from "../lib/studyProgramme";
+import { setDiagnosticProfile } from "../lib/diagnosticProfile";
+import { CM2_REMEDIATION } from "../lib/prerequisites";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabaseClient";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -19,6 +23,7 @@ import { trackProductEvent } from "../lib/productAnalytics";
 // src/parcours.js, getDiagnosticChapters / recommendTier).
 export default function ParcoursDiagnostic() {
   const { levelId } = useParams();
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const trial = searchParams.get("objectif") === "essai";
   const level = getLevel(levelId);
@@ -35,6 +40,22 @@ export default function ParcoursDiagnostic() {
   const [done, setDone] = useState(false);
   const [started, setStarted] = useState(false);
   const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    if (!done) return;
+    setDiagnosticProfile(levelId, results);
+    if (user?.id) {
+      const storedResults = results.map(({ chapterId, correct }) => ({ chapterId, correct }));
+      supabase.from("student_diagnostic_profiles").upsert({
+        user_id: user.id,
+        level_id: levelId,
+        results: storedResults,
+        completed_at: new Date().toISOString(),
+      }, { onConflict: "user_id,level_id" }).then(({ error }) => {
+        if (error) console.error("[ParcoursDiagnostic] sauvegarde :", error.message);
+      });
+    }
+  }, [done, levelId, results, user?.id]);
 
   if (!level || chapters.length === 0) {
     return (
@@ -133,7 +154,8 @@ export default function ParcoursDiagnostic() {
     const strengths = results.filter((item) => item.correct).slice(0, 3);
     const confidence = total >= 6 && Math.abs(ratio - 0.4) > 0.1 && Math.abs(ratio - 0.75) > 0.1 ? "bonne" : "indicative";
     if (trial) {
-      const targetedChapterId = priorities[0]?.chapterId ?? results[0]?.chapterId;
+      const rawTargetedChapterId = priorities[0]?.chapterId ?? results[0]?.chapterId;
+      const targetedChapterId = CM2_REMEDIATION[rawTargetedChapterId] ?? rawTargetedChapterId;
       if (targetedChapterId) sessionStorage.setItem(`reussimaths_trial_chapter_${levelId}`, targetedChapterId);
     }
     return (

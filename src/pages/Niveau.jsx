@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowRight, Lock, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Lock, Sparkles } from "lucide-react";
 import { getChaptersByLevel } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { getPlannedChapters } from "../plannedChapters";
@@ -74,9 +74,10 @@ export default function Niveau() {
         </div>
 
         {parcoursList.length > 0 && (
-          <Link to={`/parcours/niveau/${levelId}`} className="block max-w-2xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto mb-8">
+          <Link to={`/parcours/niveau/${levelId}`} className="block">
             <div
-              className="rounded-3xl px-5 py-5 flex items-center gap-3 mb-8 transition-transform hover:-translate-y-1 active:scale-[0.98]"
+              className="h-full rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1 active:scale-[0.98]"
               style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cc.accent}` }}
             >
               <div
@@ -96,6 +97,14 @@ export default function Niveau() {
               <ArrowRight size={18} color={cc.accent} />
             </div>
           </Link>
+          <Link to={`/parcours/niveau/${levelId}/programme`} className="block">
+            <div className="h-full rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1 active:scale-[0.98]" style={{ backgroundColor: `${cc.accent}0d`, border: `1px solid ${cc.accent}35` }}>
+              <div className="flex items-center justify-center rounded-2xl flex-shrink-0" style={{ width: 44, height: 44, backgroundColor: colors.card }}><BookOpenCheck size={20} color={cc.accent} /></div>
+              <div className="flex-1"><p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>Ce que je fais en classe</p><p className="text-xs mt-0.5" style={{ color: colors.slate }}>Mettre à jour les chapitres et le diagnostic</p></div>
+              <ArrowRight size={18} color={cc.accent} />
+            </div>
+          </Link>
+          </div>
         )}
 
         <div className="grid md:grid-cols-2 gap-4">

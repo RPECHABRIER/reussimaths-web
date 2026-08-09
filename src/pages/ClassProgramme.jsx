@@ -6,6 +6,7 @@ import { getLevel } from "../levels";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import { getStudyProgramme, setStudyProgramme, STUDY_STATUSES } from "../lib/studyProgramme";
+import { setDiagnosticProfile } from "../lib/diagnosticProfile";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 
@@ -27,17 +28,18 @@ export default function ClassProgramme() {
   useEffect(() => {
     if (!user?.id || !levelId) return;
     let cancelled = false;
-    supabase
-      .from("student_study_topics")
-      .select("chapter_id,status")
-      .eq("user_id", user.id)
-      .eq("level_id", levelId)
-      .then(({ data, error }) => {
-        if (cancelled || error || !data?.length) return;
-        const remote = Object.fromEntries(data.map((row) => [row.chapter_id, row.status]));
+    Promise.all([
+      supabase.from("student_study_topics").select("chapter_id,status").eq("user_id", user.id).eq("level_id", levelId),
+      supabase.from("student_diagnostic_profiles").select("results").eq("user_id", user.id).eq("level_id", levelId).maybeSingle(),
+    ]).then(([topics, diagnostic]) => {
+      if (cancelled) return;
+      if (!topics.error && topics.data?.length) {
+        const remote = Object.fromEntries(topics.data.map((row) => [row.chapter_id, row.status]));
         setSelections(remote);
         setStudyProgramme(levelId, remote);
-      });
+      }
+      if (!diagnostic.error && diagnostic.data?.results) setDiagnosticProfile(levelId, diagnostic.data.results);
+    });
     return () => { cancelled = true; };
   }, [user?.id, levelId]);
 

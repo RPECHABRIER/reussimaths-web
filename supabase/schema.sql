@@ -149,6 +149,14 @@ create table if not exists public.student_study_topics (
   primary key (user_id, level_id, chapter_id)
 );
 
+create table if not exists public.student_diagnostic_profiles (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  level_id text not null check (char_length(level_id) between 1 and 80),
+  results jsonb not null default '[]'::jsonb check (jsonb_typeof(results) = 'array'),
+  completed_at timestamptz not null default now(),
+  primary key (user_id, level_id)
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -162,8 +170,12 @@ alter table public.challenges enable row level security;
 alter table public.automatismes_best_times enable row level security;
 alter table public.parcours_progress enable row level security;
 alter table public.student_study_topics enable row level security;
+alter table public.student_diagnostic_profiles enable row level security;
 
 create policy "student_study_topics: self read/write" on public.student_study_topics
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+create policy "student_diagnostic_profiles: self read/write" on public.student_diagnostic_profiles
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create policy "automatismes_best_times: self read/write" on public.automatismes_best_times

@@ -40,13 +40,13 @@ export default function ParcoursSelect() {
             Choisis ton rythme en {level.label}
           </h1>
           <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            Les trois parcours suivent le même programme. Seul le niveau d’accompagnement et d’exigence change.
+            Les trois parcours suivent tes priorités de classe et tes prérequis fragiles. Seul le niveau d’accompagnement et d’exigence change.
           </p>
         </div>
 
         <Link to={`/parcours/niveau/${levelId}/programme`} className="max-w-2xl mx-auto rounded-3xl p-5 flex items-center gap-4" style={{ display: "flex", backgroundColor: `${accent}10`, border: `1px solid ${accent}35` }}>
           <div className="flex items-center justify-center rounded-2xl shrink-0" style={{ width: 48, height: 48, backgroundColor: colors.card }}><Target size={22} color={accent} /></div>
-          <div className="flex-1"><p className="font-black" style={{ color: colors.ink }}>Tu hésites ? Fais le diagnostic</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Quelques questions, sans note, pour recevoir une recommandation.</p></div>
+          <div className="flex-1"><p className="font-black" style={{ color: colors.ink }}>Actualiser mon programme et mon diagnostic</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Indique ce que tu fais en classe et vérifie les prérequis qui pourraient te freiner.</p></div>
           <ArrowRight size={17} color={accent} />
         </Link>
 
@@ -65,8 +65,9 @@ function TierCard({ parcours, userId, accent, index }) {
   const icons = [ShieldCheck, Gauge, Rocket];
   const Icon = icons[index] ?? Gauge;
   const labels = ["Confiance", "Niveau attendu", "Challenge"];
-  const { completedSteps, loading } = useParcoursProgress(userId, parcours.id);
+  const { stepByIndex, loading } = useParcoursProgress(userId, parcours.id);
   const total = parcours.steps.length;
+  const completedSteps = parcours.steps.filter((step) => stepByIndex.get(step.progressIndex)?.completed).length;
   const percent = total > 0 ? Math.round((completedSteps / total) * 100) : 0;
 
   return (

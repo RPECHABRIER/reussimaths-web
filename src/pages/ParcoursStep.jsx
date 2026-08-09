@@ -111,7 +111,7 @@ export default function ParcoursStep() {
       sessionLength={parcours.sessionLength}
       backTo={`/parcours/${parcours.id}`}
       onSessionComplete={async ({ correct, total }) => {
-        await recordStep(idx, { correct, total });
+        await recordStep(step.progressIndex, { correct, total });
         navigate(hasNext ? `/parcours/${parcours.id}/etape/${nextIndex}` : `/parcours/${parcours.id}`);
       }}
     />

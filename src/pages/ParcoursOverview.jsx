@@ -22,7 +22,7 @@ export default function ParcoursOverview() {
   const { subscription: rawSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
-  const { stepByIndex, completedSteps, loading } = useParcoursProgress(user?.id, parcoursId);
+  const { stepByIndex, loading } = useParcoursProgress(user?.id, parcoursId);
 
   if (!parcours) {
     return (
@@ -36,8 +36,9 @@ export default function ParcoursOverview() {
   }
 
   const total = parcours.steps.length;
+  const completedSteps = parcours.steps.filter((step) => stepByIndex.get(step.progressIndex)?.completed).length;
   const percent = total > 0 ? Math.round((completedSteps / total) * 100) : 0;
-  const nextIndex = parcours.steps.findIndex((_, i) => !stepByIndex.get(i)?.completed);
+  const nextIndex = parcours.steps.findIndex((step) => !stepByIndex.get(step.progressIndex)?.completed);
   const nextStepIndex = nextIndex === -1 ? 0 : nextIndex;
   const finished = completedSteps >= total && total > 0;
   const backTo = parcours.kind === "decouverte" ? "/" : parcours.kind === "trial" ? "/niveaux?objectif=essai" : `/parcours/niveau/${parcours.levelId}`;
@@ -97,7 +98,7 @@ export default function ParcoursOverview() {
           {parcours.steps.map((step, i) => {
             const chapter = getChapter(step.chapterId);
             const locked = !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
-            const done = !!stepByIndex.get(i)?.completed;
+            const done = !!stepByIndex.get(step.progressIndex)?.completed;
             const isNext = i === nextStepIndex && !done;
 
             const row = (

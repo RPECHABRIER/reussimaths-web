@@ -72,8 +72,12 @@ export default function ParcoursStep() {
         <p className="text-sm" style={{ color: colors.slate }}>
           {chapter.meta.unlockHint ?? "Abonne-toi pour continuer ce parcours."}
         </p>
-        <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-          Gérer mon abonnement
+        <Link
+          to="/compte"
+          className="py-2.5 px-6 rounded-full text-sm font-semibold"
+          style={{ backgroundColor: colors.ink, color: colors.bg }}
+        >
+          Voir les offres
         </Link>
         <Link to={`/parcours/${parcours.id}`} className="text-sm font-medium" style={{ color: colors.slate }}>
           ← Retour au parcours

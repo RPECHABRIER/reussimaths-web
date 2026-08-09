@@ -54,8 +54,15 @@ export default function ChapterPage() {
         <p className="text-sm" style={{ color: colors.slate }}>
           {chapter.meta.unlockHint ?? "Abonne-toi, ou débloque-le en parrainant 5 amis (voir Mon compte)."}
         </p>
-        <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-          Gérer mon abonnement
+        <Link
+          to="/compte"
+          className="py-2.5 px-6 rounded-full text-sm font-semibold"
+          style={{ backgroundColor: colors.ink, color: colors.bg }}
+        >
+          Voir les offres
+        </Link>
+        <Link to={`/niveau/${chapter.meta.level}`} className="text-sm font-medium" style={{ color: colors.slate }}>
+          ← Continuer gratuitement
         </Link>
       </div>
     );

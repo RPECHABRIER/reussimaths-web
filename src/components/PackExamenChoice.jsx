@@ -72,8 +72,7 @@ export default function PackExamenChoice({ onDone }) {
       </p>
       <p className="text-xs" style={{ color: colors.slate }}>
         Pour le niveau que tu choisis, le Pack Examen débloque : le chapitre de préparation à l'examen (Brevet, EAM ou
-        Bac selon le niveau), les Automatismes en illimité, et les 2 chapitres bonus ci-dessous (au choix, n'importe où
-        dans le catalogue).
+        Bac selon le niveau), les Automatismes en illimité, et 2 chapitres bonus de ce même niveau.
       </p>
       <p className="text-xs" style={{ color: colors.slate }}>
         Ce choix est définitif (non modifiable ensuite) : abonne-toi en complet pour tout débloquer.

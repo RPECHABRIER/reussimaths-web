@@ -142,7 +142,17 @@ export default function Account() {
       </Link>
 
       {!user ? (
-        <div className="flex flex-col gap-3 w-full max-w-xs rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+        <div className="flex flex-col gap-4 w-full max-w-sm">
+          <div className="text-center px-3">
+            <p style={{ fontFamily: fonts.display, fontWeight: 800, color: colors.ink, fontSize: "1.35rem" }}>
+              Commence gratuitement, progresse à ton rythme
+            </p>
+            <p className="text-sm mt-1" style={{ color: colors.slate }}>
+              Connecte-toi pour sauvegarder ta progression. Tu pourras ensuite choisir de rester en accès gratuit ou de
+              débloquer davantage d'entraînement.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
           <Mascot size={72} className="mx-auto" />
           <p className="text-center text-sm" style={{ color: colors.slate }}>
             Connexion simplifiée, aucun nom réel n'est affiché dans l'app : tu choisis un pseudo après connexion.
@@ -153,6 +163,35 @@ export default function Account() {
           <button onClick={signInWithApple} className="py-2.5 rounded-full font-semibold" style={{ backgroundColor: colors.ink, color: colors.bg }}>
             Continuer avec Apple
           </button>
+          </div>
+
+          <div className="grid gap-3">
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.card, border: `2px solid ${colors.gold}` }}>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm font-bold" style={{ color: colors.ink }}>Accès complet</p>
+                <p className="text-base font-bold whitespace-nowrap" style={{ color: colors.ink }}>
+                  4,99 € <span className="text-xs font-medium" style={{ color: colors.slate }}>/mois</span>
+                </p>
+              </div>
+              <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                Tous les niveaux et chapitres, entraînement illimité et bilan de progression. Renouvellement mensuel,
+                résiliable à tout moment.
+              </p>
+            </div>
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm font-bold" style={{ color: colors.ink }}>Pack Examen</p>
+                <p className="text-base font-bold whitespace-nowrap" style={{ color: colors.ink }}>9 €</p>
+              </div>
+              <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                Paiement unique pour 3 mois sur un niveau : préparation à l'examen, Automatismes illimités et 2 chapitres
+                bonus. Sans renouvellement automatique.
+              </p>
+            </div>
+          </div>
+          <p className="text-[11px] text-center px-3" style={{ color: colors.slate }}>
+            La connexion est nécessaire avant le paiement pour rattacher l'accès au bon compte.
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full max-w-xs text-center rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
@@ -460,7 +499,7 @@ export default function Account() {
                 className="py-3 rounded-full font-bold"
                 style={{ backgroundColor: colors.gold, color: colors.ink }}
               >
-                S'abonner — 4,99 €/mois
+                {checkoutLoading ? "Ouverture du paiement…" : "S'abonner — 4,99 €/mois"}
               </button>
               {checkoutError && (
                 <p className="text-xs text-center -mt-2" style={{ color: colors.red }}>
@@ -468,7 +507,7 @@ export default function Account() {
                 </p>
               )}
               <p className="text-[11px] text-center -mt-2" style={{ color: colors.slate }}>
-                Rejoins les élèves qui progressent déjà avec la méthode.
+                Renouvellement mensuel. Résiliation possible à tout moment depuis cette page.
               </p>
 
               <div className="rounded-2xl p-3.5 text-left" style={{ backgroundColor: colors.bg, border: `1px solid ${colors.hairline}` }}>
@@ -477,7 +516,7 @@ export default function Account() {
                     Pack Examen
                   </p>
                   <p className="text-sm font-bold" style={{ color: colors.ink }}>
-                    9 € <span className="text-[10px] font-medium" style={{ color: colors.slate }}>/3 mois</span>
+                    9 € <span className="text-[10px] font-medium" style={{ color: colors.slate }}>paiement unique</span>
                   </p>
                 </div>
                 <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
@@ -490,7 +529,7 @@ export default function Account() {
                   className="text-xs font-semibold mt-2"
                   style={{ color: colors.gold }}
                 >
-                  Choisir le Pack Examen →
+                  {checkoutLoading ? "Ouverture du paiement…" : "Choisir le Pack Examen →"}
                 </button>
               </div>
             </div>

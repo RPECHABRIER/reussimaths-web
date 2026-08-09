@@ -1,4 +1,4 @@
-import { getChaptersByLevel } from "./chapters/registry";
+import { getChapter, getChaptersByLevel } from "./chapters/registry";
 import { getLevel } from "./levels";
 
 // ---------------------------------------------------------------------------
@@ -47,6 +47,22 @@ function levelChapters(levelId) {
     .sort((a, b) => (a.meta.order ?? 999) - (b.meta.order ?? 999));
 }
 
+const PREVIOUS_LEVEL = {
+  cinquieme: "sixieme",
+  quatrieme: "cinquieme",
+  troisieme: "quatrieme",
+  seconde: "troisieme",
+  "premiere-spe": "seconde",
+  "premiere-non-spe": "seconde",
+  "premiere-techno": "seconde",
+  "terminale-spe": "premiere-spe",
+  "terminale-techno": "premiere-techno",
+};
+
+export function getPreviousLevelId(levelId) {
+  return PREVIOUS_LEVEL[levelId] ?? null;
+}
+
 function tierParcoursId(levelId, tierId) {
   return `${levelId}-${tierId}`;
 }
@@ -93,7 +109,9 @@ export function getTrialParcours(levelId) {
   const level = getLevel(levelId);
   let selectedChapterId = null;
   try { selectedChapterId = sessionStorage.getItem(`reussimaths_trial_chapter_${levelId}`); } catch { /* rendu hors navigateur */ }
-  const chapter = chapters.find((item) => item.meta.id === selectedChapterId) ?? chapters[0];
+  const selectedChapter = selectedChapterId ? getChapter(selectedChapterId) : null;
+  const allowedLevels = [levelId, getPreviousLevelId(levelId)].filter(Boolean);
+  const chapter = selectedChapter && allowedLevels.includes(selectedChapter.meta.level) ? selectedChapter : chapters[0];
   return {
     id: `essai-${levelId}`,
     kind: "trial",
@@ -146,14 +164,33 @@ export function getDecouverteParcours() {
 // n'est enregistré en base pour le diagnostic lui-même.
 const DIAGNOSTIC_QUESTIONS = 6;
 
-export function getDiagnosticChapters(levelId) {
-  const chapters = levelChapters(levelId);
-  if (chapters.length === 0) return [];
-  const n = Math.min(DIAGNOSTIC_QUESTIONS, chapters.length);
+function sampleAcross(chapters, count) {
+  const n = Math.min(count, chapters.length);
+  if (n === 0) return [];
   const step = chapters.length / n;
   const picked = [];
   for (let i = 0; i < n; i++) picked.push(chapters[Math.floor(i * step)]);
   return picked;
+}
+
+export function getDiagnosticChapters(levelId, selectedChapterIds = []) {
+  const currentChapters = levelChapters(levelId);
+  if (currentChapters.length === 0) return [];
+  const selectedSet = new Set(selectedChapterIds);
+  const selectedCurrent = currentChapters.filter((chapter) => selectedSet.has(chapter.meta.id));
+  const previousLevelId = getPreviousLevelId(levelId);
+  // En 6e, le début du programme sert de socle d'entrée CM2/6e tant que des
+  // générateurs CM2 dédiés ne sont pas disponibles.
+  const prerequisites = previousLevelId ? levelChapters(previousLevelId) : currentChapters.slice(0, DIAGNOSTIC_QUESTIONS);
+  const currentCount = selectedCurrent.length ? Math.min(2, selectedCurrent.length) : 0;
+  const prerequisiteCount = DIAGNOSTIC_QUESTIONS - currentCount;
+  const picked = [...sampleAcross(prerequisites, prerequisiteCount), ...sampleAcross(selectedCurrent, currentCount)];
+  const unique = [...new Map(picked.map((chapter) => [chapter.meta.id, chapter])).values()];
+  if (unique.length < DIAGNOSTIC_QUESTIONS) {
+    const fillers = [...prerequisites, ...selectedCurrent, ...currentChapters].filter((chapter) => !unique.some((item) => item.meta.id === chapter.meta.id));
+    unique.push(...fillers.slice(0, DIAGNOSTIC_QUESTIONS - unique.length));
+  }
+  return unique.slice(0, DIAGNOSTIC_QUESTIONS);
 }
 
 // Score (0 à 1) -> palier suggéré. Seuils volontairement larges : mieux vaut

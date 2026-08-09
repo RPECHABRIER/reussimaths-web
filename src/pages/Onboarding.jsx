@@ -55,7 +55,7 @@ export default function Onboarding() {
     // profil fraîchement créé depuis la base — sinon l'état en mémoire (encore
     // "pas de profil") renvoyait aussitôt ici en boucle.
     setPreferredLevel(levelId);
-    window.location.href = `/parcours/niveau/${levelId}/diagnostic`;
+    window.location.href = `/parcours/niveau/${levelId}/programme`;
   };
 
   if (loading || !user) {

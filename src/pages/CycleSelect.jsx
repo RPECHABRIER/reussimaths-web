@@ -48,7 +48,7 @@ export default function CycleSelect() {
     : dueCount > 0
     ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
     : preferredLevel
-    ? { to: `/parcours/niveau/${preferredLevel.id}/diagnostic`, title: `Continuer en ${preferredLevel.label}`, detail: "Un diagnostic rapide pour choisir le bon entraînement" }
+    ? { to: `/parcours/niveau/${preferredLevel.id}/programme`, title: `Continuer en ${preferredLevel.label}`, detail: "Indique ce que tu fais en classe, puis vérifie tes prérequis" }
     : { to: "/niveaux?objectif=essai", title: "Choisir mon niveau", detail: "Un diagnostic court puis une série adaptée" };
 
   return (

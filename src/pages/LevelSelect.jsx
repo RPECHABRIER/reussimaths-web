@@ -4,6 +4,7 @@ import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
+import { setPreferredLevel } from "../lib/preferences";
 
 export default function LevelSelect() {
   const [searchParams] = useSearchParams();
@@ -42,7 +43,7 @@ export default function LevelSelect() {
           {LEVELS.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
             return (
-              <Link key={level.id} onClick={() => trackProductEvent("level_selected", { levelId: level.id, trial })} to={trial ? `/parcours/niveau/${level.id}/diagnostic?objectif=essai` : `/niveau/${level.id}`}>
+              <Link key={level.id} onClick={() => { setPreferredLevel(level.id); trackProductEvent("level_selected", { levelId: level.id, trial }); }} to={trial ? `/parcours/niveau/${level.id}/programme?objectif=essai` : `/niveau/${level.id}`}>
                 <div
                   className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}

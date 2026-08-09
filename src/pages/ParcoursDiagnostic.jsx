@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Check, X, Sparkles, ArrowRight, Clock3, Target, ShieldCheck, RotateCcw } from "lucide-react";
-import { getDiagnosticChapters, recommendTier, TIERS } from "../parcours";
+import { getDiagnosticChapters, getPreviousLevelId, recommendTier, TIERS } from "../parcours";
 import { getLevel } from "../levels";
+import { getSelectedStudyChapterIds } from "../lib/studyProgramme";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -21,7 +22,9 @@ export default function ParcoursDiagnostic() {
   const [searchParams] = useSearchParams();
   const trial = searchParams.get("objectif") === "essai";
   const level = getLevel(levelId);
-  const [chapters] = useState(() => getDiagnosticChapters(levelId));
+  const previousLevel = getLevel(getPreviousLevelId(levelId));
+  const [selectedStudyChapterIds] = useState(() => getSelectedStudyChapterIds(levelId));
+  const [chapters] = useState(() => getDiagnosticChapters(levelId, selectedStudyChapterIds));
   const [index, setIndex] = useState(0);
   const [exercise, setExercise] = useState(() => chapters[0]?.generate());
   const [input, setInput] = useState("");
@@ -51,12 +54,16 @@ export default function ParcoursDiagnostic() {
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
         <div className="max-w-2xl w-full rounded-[2rem] p-6 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
-          <Link to={trial ? "/niveaux?objectif=essai" : `/parcours/niveau/${levelId}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← {trial ? "Changer de niveau" : "Voir les parcours"}</Link>
+          <Link to={`/parcours/niveau/${levelId}/programme${trial ? "?objectif=essai" : ""}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← Modifier les chapitres étudiés</Link>
           <div className="mt-7 text-center">
             <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${cycleColor}18` }}><Target size={26} color={cycleColor} /></div>
             <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Diagnostic {level.label}</p>
             <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05 }}>Trouve ton bon point de départ</h1>
-            <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>Quelques questions réparties dans le programme suffisent pour te conseiller un parcours adapté.</p>
+            <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>
+              {previousLevel
+                ? `Nous vérifions d’abord les acquis essentiels de ${previousLevel.label}, puis les chapitres de ${level.label} que tu as déjà abordés.`
+                : "Nous vérifions les acquis fondamentaux de l’école primaire et les premiers repères utiles pour la 6e."}
+            </p>
           </div>
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-7">
             {[
@@ -162,8 +169,8 @@ export default function ParcoursDiagnostic() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="w-full max-w-md">
-        <Link to={trial ? "/niveaux?objectif=essai" : `/parcours/niveau/${levelId}`} className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: colors.slate }}>
-          ← {trial ? "Changer de niveau" : "Passer le diagnostic"}
+        <Link to={`/parcours/niveau/${levelId}/programme${trial ? "?objectif=essai" : ""}`} className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: colors.slate }}>
+          ← Modifier les chapitres étudiés
         </Link>
 
         <div className="text-center mb-5">

@@ -137,6 +137,18 @@ create table if not exists public.parcours_progress (
   primary key (user_id, parcours_id, step_index)
 );
 
+-- Chapitres que l'élève déclare être en train d'étudier ou avoir déjà vus
+-- en classe. Cette information borne le diagnostic et évite de proposer
+-- automatiquement une notion qui n'a pas encore été enseignée.
+create table if not exists public.student_study_topics (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  level_id text not null check (char_length(level_id) between 1 and 80),
+  chapter_id text not null check (char_length(chapter_id) between 1 and 160),
+  status text not null check (status in ('current', 'completed')),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, level_id, chapter_id)
+);
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security : chacun ne voit / modifie que ses propres données.
 -- ---------------------------------------------------------------------------
@@ -149,6 +161,10 @@ alter table public.referrals enable row level security;
 alter table public.challenges enable row level security;
 alter table public.automatismes_best_times enable row level security;
 alter table public.parcours_progress enable row level security;
+alter table public.student_study_topics enable row level security;
+
+create policy "student_study_topics: self read/write" on public.student_study_topics
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 create policy "automatismes_best_times: self read/write" on public.automatismes_best_times
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

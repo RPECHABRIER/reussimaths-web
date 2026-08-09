@@ -16,6 +16,7 @@ const CycleSelect = lazy(() => import("./pages/CycleSelect"));
 const CycleLevels = lazy(() => import("./pages/CycleLevels"));
 const Niveau = lazy(() => import("./pages/Niveau"));
 const ParcoursSelect = lazy(() => import("./pages/ParcoursSelect"));
+const ClassProgramme = lazy(() => import("./pages/ClassProgramme"));
 const ParcoursDiagnostic = lazy(() => import("./pages/ParcoursDiagnostic"));
 const ParcoursOverview = lazy(() => import("./pages/ParcoursOverview"));
 const ParcoursStep = lazy(() => import("./pages/ParcoursStep"));
@@ -174,6 +175,7 @@ export default function App() {
         <Route path="/college" element={<CycleLevels />} />
         <Route path="/lycee" element={<CycleLevels />} />
         <Route path="/niveau/:levelId" element={<Niveau />} />
+        <Route path="/parcours/niveau/:levelId/programme" element={<ClassProgramme />} />
         <Route path="/parcours/niveau/:levelId/diagnostic" element={<ParcoursDiagnostic />} />
         <Route path="/parcours/niveau/:levelId" element={<ParcoursSelect />} />
         <Route path="/parcours/:parcoursId/etape/:stepIndex" element={<ParcoursStep />} />

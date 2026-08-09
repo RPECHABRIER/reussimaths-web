@@ -44,7 +44,7 @@ export default function ParcoursSelect() {
           </p>
         </div>
 
-        <Link to={`/parcours/niveau/${levelId}/diagnostic`} className="max-w-2xl mx-auto rounded-3xl p-5 flex items-center gap-4" style={{ display: "flex", backgroundColor: `${accent}10`, border: `1px solid ${accent}35` }}>
+        <Link to={`/parcours/niveau/${levelId}/programme`} className="max-w-2xl mx-auto rounded-3xl p-5 flex items-center gap-4" style={{ display: "flex", backgroundColor: `${accent}10`, border: `1px solid ${accent}35` }}>
           <div className="flex items-center justify-center rounded-2xl shrink-0" style={{ width: 48, height: 48, backgroundColor: colors.card }}><Target size={22} color={accent} /></div>
           <div className="flex-1"><p className="font-black" style={{ color: colors.ink }}>Tu hésites ? Fais le diagnostic</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Quelques questions, sans note, pour recevoir une recommandation.</p></div>
           <ArrowRight size={17} color={accent} />

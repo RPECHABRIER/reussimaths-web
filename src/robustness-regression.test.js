@@ -71,11 +71,13 @@ test("la navigation élève reste disponible sans couvrir les exercices", async 
   assert.match(sound, /bottom-24 sm:bottom-4/);
 });
 
-test("tous les accès à l'essai commencent au niveau choisi et au diagnostic", async () => {
-  const [home, teacher, levels, diagnostic, parcours] = await Promise.all([
+test("tous les accès à l'essai commencent au niveau choisi, au programme puis au diagnostic", async () => {
+  const [app, home, teacher, levels, programme, diagnostic, parcours] = await Promise.all([
+    read("./App.jsx"),
     read("./pages/CycleSelect.jsx"),
     read("./pages/Enseignant.jsx"),
     read("./pages/LevelSelect.jsx"),
+    read("./pages/ClassProgramme.jsx"),
     read("./pages/ParcoursDiagnostic.jsx"),
     read("./parcours.js"),
   ]);
@@ -83,9 +85,15 @@ test("tous les accès à l'essai commencent au niveau choisi et au diagnostic", 
   assert.doesNotMatch(home, /code pilote/);
   assert.doesNotMatch(home, /to="\/parcours\/decouverte"/);
   assert.doesNotMatch(teacher, /to="\/parcours\/decouverte"/);
+  assert.match(app, /ClassProgramme/);
   assert.match(levels, /objectif=essai/);
-  assert.match(levels, /\/diagnostic\?objectif=essai/);
+  assert.match(levels, /\/programme\?objectif=essai/);
+  assert.match(programme, /En cours/);
+  assert.match(programme, /Déjà vu/);
+  assert.match(programme, /tester mes acquis précédents/);
+  assert.match(diagnostic, /getSelectedStudyChapterIds/);
   assert.match(diagnostic, /Faire ma série gratuite/);
+  assert.match(parcours, /PREVIOUS_LEVEL/);
   assert.match(parcours, /getTrialParcours/);
 });
 

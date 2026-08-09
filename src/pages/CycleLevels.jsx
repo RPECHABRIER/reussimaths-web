@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { ArrowRight, GraduationCap, School } from "lucide-react";
 import { getLevelsByCycle, CYCLES } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
@@ -30,38 +31,38 @@ export default function CycleLevels() {
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto">
+      <div className="max-w-5xl mx-auto">
         <Link to="/" className="text-sm font-medium" style={{ color: colors.ink }}>
           ← Collège ou lycée
         </Link>
 
-        <div className="text-center my-7">
+        <div className="text-center my-10 sm:my-14">
           <div
             className="inline-flex items-center justify-center rounded-2xl mb-3"
-            style={{ width: 48, height: 48, backgroundColor: `${c.accent}1f` }}
+            style={{ width: 54, height: 54, backgroundColor: `${c.accent}1f` }}
           >
-            <div style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: c.accent }} />
+            {cycleId === "college" ? <School size={26} color={c.accent} /> : <GraduationCap size={26} color={c.accent} />}
           </div>
-          <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            {cycle.label}
+          <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
+            Ton parcours {cycle.label.toLowerCase()}
           </h1>
-          <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            Choisis ta classe
+          <p className="text-base mt-2 max-w-xl mx-auto" style={{ color: colors.slate }}>
+            Choisis ta classe pour retrouver les chapitres du programme et commencer par le bon entraînement.
           </p>
         </div>
 
-        <ReviserCard className="block mb-4" />
+        <ReviserCard className="block mb-6 max-w-xl mx-auto" />
 
-        <div className="flex flex-col gap-3">
+        <div className="grid sm:grid-cols-2 gap-4">
           {levels.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
             return (
               <Link key={level.id} to={`/niveau/${level.id}`} onClick={() => setPreferredLevel(level.id)}>
                 <div
-                  className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
-                  style={{ backgroundColor: colors.card, boxShadow: shadow.soft, borderLeft: `3px solid ${c.accent}` }}
+                  className="group rounded-3xl px-5 py-5 flex items-center gap-4 transition-transform hover:-translate-y-1 active:scale-[0.98]"
+                  style={{ backgroundColor: colors.card, boxShadow: shadow.soft, borderTop: `3px solid ${c.accent}` }}
                 >
-                  <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>
+                  <p className="flex-1" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.25rem", fontWeight: 800 }}>
                     {level.label}
                   </p>
                   <span
@@ -73,6 +74,7 @@ export default function CycleLevels() {
                   >
                     {available ? "Disponible" : "Bientôt"}
                   </span>
+                  {available && <ArrowRight size={17} color={c.accent} />}
                 </div>
               </Link>
             );

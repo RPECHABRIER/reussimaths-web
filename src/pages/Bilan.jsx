@@ -74,16 +74,16 @@ export default function Bilan() {
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto">
+      <div className="max-w-5xl mx-auto">
         <Link to="/compte" className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
           <ArrowLeft size={14} /> Mon compte
         </Link>
 
-        <div className="text-center mb-7">
+        <div className="text-center mb-10 mt-5">
           <p className="text-xs tracking-widest uppercase mb-1 font-semibold" style={{ color: gold, letterSpacing: "0.12em" }}>
             Suivi de la progression
           </p>
-          <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "clamp(2.1rem, 5vw, 3.3rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
             Bilan de la semaine
           </h1>
           <p className="text-sm mt-2" style={{ color: slate }}>
@@ -117,9 +117,9 @@ export default function Bilan() {
         )}
 
         {user && !loading && !error && summary && (
-          <div className="flex flex-col gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <div
-              className="rounded-3xl p-5"
+              className="rounded-3xl p-6 md:col-span-2"
               style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
             >
               <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: gold }}>
@@ -314,7 +314,7 @@ export default function Bilan() {
               )}
             </div>
 
-            <p className="text-xs text-center mt-2" style={{ color: slate }}>
+            <p className="text-xs text-center mt-2 md:col-span-2" style={{ color: slate }}>
               Ce bilan se met à jour au fil de la pratique — repasse le voir la semaine prochaine.
             </p>
           </div>

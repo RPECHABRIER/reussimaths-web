@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, X, Flame, Trophy, ArrowRight, ArrowLeft, Lock, Square, CheckSquare, Timer, Lightbulb } from "lucide-react";
+import { Check, X, Flame, Trophy, ArrowRight, ArrowLeft, Lock, Square, CheckSquare, Timer, Lightbulb, UserPlus, BarChart3 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useProgress, useSubscription } from "../hooks/useProgress";
 import { useDailyQuota } from "../hooks/useDailyQuota";
@@ -354,6 +354,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
   if (sessionDone) {
     const ratio = sessionLength > 0 ? correctCount / sessionLength : 0;
+    const discoverySignup = isDiscoverySession && !user;
     return (
       <div
         className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
@@ -363,21 +364,46 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           className="max-w-md w-full text-center rounded-3xl p-7"
           style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}
         >
-          <Trophy size={26} color={gold} className="mx-auto mb-3" />
+          <div className="mx-auto mb-4 flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${gold}18` }}>
+            <Trophy size={27} color={gold} />
+          </div>
           <p style={{ fontFamily: fonts.display, color: ink, fontSize: "1.3rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
-            Série terminée !
+            {discoverySignup ? "Première série terminée !" : "Série terminée !"}
           </p>
-          <p className="text-sm mt-2 mb-5" style={{ color: slate }}>
+          <p className="text-sm mt-2" style={{ color: slate }}>
             {correctCount} bonne{correctCount > 1 ? "s" : ""} réponse{correctCount > 1 ? "s" : ""} sur {sessionLength} (
             {Math.round(ratio * 100)} %)
           </p>
-          <button
-            onClick={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}
-            className="inline-block py-2.5 px-6 rounded-full text-sm font-semibold"
-            style={{ backgroundColor: ink, color: paper }}
-          >
-            Terminer
-          </button>
+          {discoverySignup ? (
+            <>
+              <div className="grid grid-cols-2 gap-2 mt-5 text-left">
+                <div className="rounded-2xl p-3" style={{ backgroundColor: paper }}>
+                  <BarChart3 size={17} color={gold} />
+                  <p className="text-xs font-bold mt-2" style={{ color: ink }}>Garde tes progrès</p>
+                  <p className="text-[11px] mt-0.5" style={{ color: slate }}>Retrouve ton bilan et ta prochaine priorité.</p>
+                </div>
+                <div className="rounded-2xl p-3" style={{ backgroundColor: paper }}>
+                  <UserPlus size={17} color={gold} />
+                  <p className="text-xs font-bold mt-2" style={{ color: ink }}>Espace gratuit</p>
+                  <p className="text-[11px] mt-0.5" style={{ color: slate }}>Crée un pseudo, sans afficher ton nom.</p>
+                </div>
+              </div>
+              <Link to="/compte" className="w-full mt-4 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2" style={{ backgroundColor: ink, color: paper }}>
+                Créer mon espace gratuit <ArrowRight size={15} />
+              </Link>
+              <button onClick={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })} className="mt-3 text-xs font-semibold" style={{ color: slate }}>
+                Continuer sans compte
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}
+              className="inline-block mt-5 py-2.5 px-6 rounded-full text-sm font-semibold"
+              style={{ backgroundColor: ink, color: paper }}
+            >
+              Terminer
+            </button>
+          )}
         </div>
       </div>
     );

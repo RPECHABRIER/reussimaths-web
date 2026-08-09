@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Check, X, Sparkles, ArrowRight } from "lucide-react";
+import { Check, X, Sparkles, ArrowRight, Clock3, Target, ShieldCheck, RotateCcw } from "lucide-react";
 import { getDiagnosticChapters, recommendTier, TIERS } from "../parcours";
 import { getLevel } from "../levels";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
-import { colors, fonts, shadow } from "../theme";
+import { colors, fonts, shadow, cycleColors } from "../theme";
 
 // Mini-diagnostic de démarrage (/parcours/niveau/:levelId/diagnostic) : une
 // poignée de questions réparties sur tout le programme du niveau, à
@@ -27,6 +27,7 @@ export default function ParcoursDiagnostic() {
   const [feedback, setFeedback] = useState(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
+  const [started, setStarted] = useState(false);
 
   if (!level || chapters.length === 0) {
     return (
@@ -40,6 +41,33 @@ export default function ParcoursDiagnostic() {
   }
 
   const total = chapters.length;
+  const cycleColor = cycleColors[level.cycle]?.accent ?? colors.gold;
+
+  if (!started) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
+        <div className="max-w-2xl w-full rounded-[2rem] p-6 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
+          <Link to={`/parcours/niveau/${levelId}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← Voir les parcours</Link>
+          <div className="mt-7 text-center">
+            <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${cycleColor}18` }}><Target size={26} color={cycleColor} /></div>
+            <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Diagnostic {level.label}</p>
+            <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05 }}>Trouve ton bon point de départ</h1>
+            <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>Quelques questions réparties dans le programme suffisent pour te conseiller un parcours adapté.</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-7">
+            {[
+              { icon: Clock3, value: `${total} questions`, label: "Environ 2 minutes" },
+              { icon: ShieldCheck, value: "Sans note", label: "Aucun résultat scolaire" },
+              { icon: RotateCcw, value: "Modifiable", label: "Tu gardes le choix" },
+            ].map(({ icon: Icon, value, label }) => (
+              <div key={value} className="rounded-2xl p-3 sm:p-4 text-center" style={{ backgroundColor: colors.bg }}><Icon size={18} color={cycleColor} className="mx-auto" /><p className="text-xs sm:text-sm font-black mt-2" style={{ color: colors.ink }}>{value}</p><p className="text-[10px] sm:text-xs mt-1 leading-snug" style={{ color: colors.slate }}>{label}</p></div>
+            ))}
+          </div>
+          <button onClick={() => setStarted(true)} className="w-full mt-6 py-3.5 rounded-full font-bold flex items-center justify-center gap-2" style={{ backgroundColor: colors.ink, color: colors.bg }}>Commencer le diagnostic <ArrowRight size={16} /></button>
+        </div>
+      </div>
+    );
+  }
 
   const next = () => {
     const nextIndex = index + 1;
@@ -90,27 +118,19 @@ export default function ParcoursDiagnostic() {
     const tier = TIERS.find((t) => t.id === tierId);
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
-        <div className="max-w-md w-full text-center rounded-3xl p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-          <Sparkles size={26} color={colors.gold} className="mx-auto mb-3" />
-          <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.3rem", fontWeight: 800, letterSpacing: "-0.01em" }}>
-            {correctCount} / {total} bonnes réponses
-          </p>
-          <p className="text-sm mt-2 mb-1" style={{ color: colors.slate }}>
-            On te suggère de commencer par le parcours
-          </p>
-          <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>
-            {tier.label}
-          </p>
-          <p className="text-xs mt-1 mb-5" style={{ color: colors.slate }}>
-            {tier.description}
-          </p>
+        <div className="max-w-lg w-full text-center rounded-[2rem] p-7 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
+          <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${cycleColor}18` }}><Sparkles size={27} color={cycleColor} /></div>
+          <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Notre recommandation</p>
+          <p className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.8rem", fontWeight: 900, letterSpacing: "-0.03em" }}>Parcours {tier.label}</p>
+          <p className="text-sm mt-2" style={{ color: colors.slate }}>{correctCount} réponse{correctCount > 1 ? "s" : ""} correcte{correctCount > 1 ? "s" : ""} sur {total}. {tier.description}</p>
+          <div className="rounded-2xl p-4 text-left mt-5" style={{ backgroundColor: colors.bg }}><p className="text-xs font-bold" style={{ color: colors.ink }}>Ce résultat est un conseil, pas une étiquette.</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Tu peux changer de palier à tout moment si le rythme te paraît trop facile ou trop exigeant.</p></div>
           <div className="flex flex-col gap-2 items-center">
             <Link
               to={`/parcours/${levelId}-${tierId}`}
-              className="inline-block py-2.5 px-7 rounded-full text-sm font-semibold"
+              className="w-full mt-5 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2"
               style={{ backgroundColor: colors.ink, color: colors.bg }}
             >
-              Commencer ce parcours
+              Commencer ce parcours <ArrowRight size={15} />
             </Link>
             <Link to={`/parcours/niveau/${levelId}`} className="text-sm font-medium" style={{ color: colors.slate }}>
               Voir tous les paliers
@@ -136,15 +156,15 @@ export default function ParcoursDiagnostic() {
             Question {index + 1} / {total}
           </h1>
           <div className="h-1.5 rounded-full overflow-hidden mt-3" style={{ backgroundColor: `${colors.ink}0d` }}>
-            <div className="h-full rounded-full transition-all" style={{ width: `${(index / total) * 100}%`, backgroundColor: colors.gold }} />
+            <div className="h-full rounded-full transition-all" style={{ width: `${((index + 1) / total) * 100}%`, backgroundColor: cycleColor }} />
           </div>
         </div>
 
-        <div className="rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-          <p className="text-xs uppercase tracking-wide mb-3" style={{ color: colors.slate }}>
+        <div className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised }}>
+          <p className="text-xs uppercase tracking-wide font-bold mb-3" style={{ color: cycleColor }}>
             {exercise.chapter}
           </p>
-          <MathText as="p" text={exercise.prompt} className="mb-3 leading-relaxed" style={{ fontFamily: fonts.mono, fontSize: "1.05rem", color: colors.ink }} />
+          <MathText as="p" text={exercise.prompt} className="mb-5 leading-relaxed" style={{ fontFamily: fonts.mono, fontSize: "clamp(1.08rem, 3vw, 1.25rem)", fontWeight: 650, color: colors.ink }} />
 
           {exercise.figure && <Figure spec={exercise.figure} />}
 
@@ -243,7 +263,7 @@ export default function ParcoursDiagnostic() {
           {feedback && (
             <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-3" style={{ backgroundColor: feedback.correct ? `${colors.green}18` : `${colors.red}18`, color: feedback.correct ? colors.green : colors.red }}>
               {feedback.correct ? <Check size={16} /> : <X size={16} />}
-              <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+              <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — le diagnostic continue."}</span>
             </div>
           )}
         </div>

@@ -5,9 +5,9 @@ function isoDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function last7Days() {
+function lastNDays(count) {
   const days = [];
-  for (let i = 6; i >= 0; i--) {
+  for (let i = count - 1; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
     days.push(isoDate(d));
@@ -39,8 +39,11 @@ export function useWeeklySummary(userId) {
     setLoading(true);
 
     (async () => {
-      const days = last7Days();
-      const since = days[0];
+      const allDays = lastNDays(14);
+      const previousDays = allDays.slice(0, 7);
+      const days = allDays.slice(7);
+      const since = allDays[0];
+      const currentSince = days[0];
 
       const [timeRes, activityRes, skillsRes] = await Promise.all([
         supabase.from("practice_time").select("practice_date, seconds").eq("user_id", userId).gte("practice_date", since),
@@ -49,7 +52,7 @@ export function useWeeklySummary(userId) {
           .from("skill_mastery")
           .select("skill_id, chapter_id, attempts, correct, last_correct, last_practiced_at")
           .eq("user_id", userId)
-          .gte("last_practiced_at", new Date(since).toISOString()),
+          .gte("last_practiced_at", new Date(currentSince).toISOString()),
       ]);
 
       if (cancelled) return;
@@ -61,17 +64,24 @@ export function useWeeklySummary(userId) {
       const secondsByDay = Object.fromEntries((timeRes.data ?? []).map((r) => [r.practice_date, r.seconds]));
       const activityByDay = Object.fromEntries((activityRes.data ?? []).map((r) => [r.activity_date, r]));
 
-      const dayRows = days.map((date) => ({
+      const rowsFor = (dates) => dates.map((date) => ({
         date,
         seconds: secondsByDay[date] ?? 0,
         attempts: activityByDay[date]?.attempts ?? 0,
         correct: activityByDay[date]?.correct ?? 0,
       }));
+      const dayRows = rowsFor(days);
+      const previousDayRows = rowsFor(previousDays);
 
       const totalSeconds = dayRows.reduce((s, d) => s + d.seconds, 0);
       const totalAttempts = dayRows.reduce((s, d) => s + d.attempts, 0);
       const totalCorrect = dayRows.reduce((s, d) => s + d.correct, 0);
       const successRate = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : null;
+      const activeDays = dayRows.filter((d) => d.attempts > 0 || d.seconds > 0).length;
+      const previousSeconds = previousDayRows.reduce((s, d) => s + d.seconds, 0);
+      const previousAttempts = previousDayRows.reduce((s, d) => s + d.attempts, 0);
+      const previousCorrect = previousDayRows.reduce((s, d) => s + d.correct, 0);
+      const previousSuccessRate = previousAttempts > 0 ? Math.round((previousCorrect / previousAttempts) * 100) : null;
 
       const skillsWorked = skillsRes.data ?? [];
       // Priorités pour la semaine suivante : parmi les compétences
@@ -85,7 +95,19 @@ export function useWeeklySummary(userId) {
         .sort((a, b) => a.rate - b.rate || (a.last_correct === b.last_correct ? 0 : a.last_correct ? 1 : -1))
         .slice(0, 5);
 
-      setSummary({ days: dayRows, totalSeconds, totalAttempts, totalCorrect, successRate, skillsWorked, priorities });
+      setSummary({
+        days: dayRows,
+        totalSeconds,
+        totalAttempts,
+        totalCorrect,
+        successRate,
+        activeDays,
+        previousSeconds,
+        previousAttempts,
+        previousSuccessRate,
+        skillsWorked,
+        priorities,
+      });
       setLoading(false);
     })();
 

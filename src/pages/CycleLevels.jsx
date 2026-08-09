@@ -3,6 +3,7 @@ import { getLevelsByCycle, CYCLES } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow, cycleColors } from "../theme";
+import { setPreferredLevel } from "../lib/preferences";
 
 // Deuxième étape de l'accueil (/college ou /lycee) : la liste des niveaux du
 // cycle choisi (repris de l'ancien LevelSelect.jsx, désormais filtré par
@@ -55,7 +56,7 @@ export default function CycleLevels() {
           {levels.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
             return (
-              <Link key={level.id} to={`/niveau/${level.id}`}>
+              <Link key={level.id} to={`/niveau/${level.id}`} onClick={() => setPreferredLevel(level.id)}>
                 <div
                   className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft, borderLeft: `3px solid ${c.accent}` }}

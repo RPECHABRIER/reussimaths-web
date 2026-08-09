@@ -4,10 +4,10 @@
 // src/pages/AdminPreview.jsx (bouton "Offrir un accès complet gratuit") et
 // supabase/schema.sql (colonne subscriptions.admin_granted).
 //
-// body: { adminUserId, targetEmail, action: "grant" | "revoke" }
+// body: { targetEmail, action: "grant" | "revoke" }
 //
-// Sécurité : l'identité admin est revérifiée ICI, côté serveur, via la clé
-// service_role — on ne fait JAMAIS confiance au seul contrôle client
+// Sécurité : l'identité admin est dérivée du Bearer token Supabase puis
+// revérifiée ICI, côté serveur — on ne fait JAMAIS confiance au contrôle client
 // (isRealAdmin côté React peut être contourné par n'importe qui qui
 // modifierait le JS dans son navigateur). Cet endpoint a le pouvoir d'offrir
 // un accès complet à n'importe quel compte, donc cette vérification est
@@ -17,6 +17,7 @@
 // SUPABASE_SERVICE_ROLE_KEY (mêmes que stripe-webhook.js).
 
 import { createClient } from "@supabase/supabase-js";
+import { requireSupabaseUser } from "./_auth.js";
 
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
 
@@ -52,15 +53,17 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { adminUserId, targetEmail, action } = req.body ?? {};
-  if (!adminUserId || !targetEmail || !["grant", "revoke"].includes(action)) {
-    res.status(400).json({ error: "adminUserId, targetEmail et action (grant | revoke) requis" });
+  const caller = await requireSupabaseUser(req, res, supabaseAdmin);
+  if (!caller) return;
+
+  const { targetEmail, action } = req.body ?? {};
+  if (!targetEmail || !["grant", "revoke"].includes(action)) {
+    res.status(400).json({ error: "targetEmail et action (grant | revoke) requis" });
     return;
   }
 
   try {
-    const { data: adminUser, error: adminError } = await supabaseAdmin.auth.admin.getUserById(adminUserId);
-    if (adminError || adminUser?.user?.email !== ADMIN_EMAIL) {
+    if (caller.email?.toLowerCase() !== ADMIN_EMAIL) {
       res.status(403).json({ error: "Non autorisé" });
       return;
     }

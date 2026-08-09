@@ -22,7 +22,7 @@
 // fr()/frTex() pour utiliser la virgule française — voir fr()/frTex() ci-dessous.
 // ---------------------------------------------------------------------------
 
-import { texTable } from "../utils/texTable";
+import { texTable } from "../utils/texTable.js";
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const nonZero = (min, max) => {

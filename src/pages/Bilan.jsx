@@ -33,6 +33,13 @@ function formatDuration(totalSeconds) {
   return m === 0 ? `${h} h` : `${h} h ${m} min`;
 }
 
+function comparison(current, previous, suffix = "") {
+  if (!previous) return null;
+  const delta = current - previous;
+  if (delta === 0) return `Stable par rapport aux 7 jours précédents${suffix}`;
+  return `${delta > 0 ? "+" : ""}${delta}${suffix} par rapport aux 7 jours précédents`;
+}
+
 export default function Bilan() {
   const { user } = useAuth();
   const { loading, summary } = useWeeklySummary(user?.id);
@@ -95,6 +102,9 @@ export default function Bilan() {
               <p style={{ fontFamily: fonts.display, color: ink, fontSize: "1.6rem", fontWeight: 800 }}>
                 {formatDuration(summary.totalSeconds)}
               </p>
+              <p className="text-xs mt-1" style={{ color: slate }}>
+                {summary.activeDays} jour{summary.activeDays > 1 ? "s" : ""} actif{summary.activeDays > 1 ? "s" : ""} sur 7
+              </p>
               <div className="flex items-end gap-1.5 mt-4" style={{ height: 56 }}>
                 {summary.days.map((d) => {
                   const maxSeconds = Math.max(...summary.days.map((x) => x.seconds), 60);
@@ -134,6 +144,11 @@ export default function Bilan() {
                   <p className="text-xs mt-1" style={{ color: slate }}>
                     {summary.totalCorrect} bonnes réponses sur {summary.totalAttempts} exercices faits.
                   </p>
+                  {comparison(summary.successRate, summary.previousSuccessRate, " points") && (
+                    <p className="text-xs mt-1 font-medium" style={{ color: summary.successRate >= summary.previousSuccessRate ? colors.green : colors.red }}>
+                      {comparison(summary.successRate, summary.previousSuccessRate, " points")}
+                    </p>
+                  )}
                 </>
               )}
             </div>
@@ -143,7 +158,7 @@ export default function Bilan() {
               <div className="flex items-center gap-2 mb-3">
                 <ListChecks size={16} color={ink} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
-                  Notions travaillées
+                  Notions travaillées cette semaine
                 </p>
               </div>
               {summary.skillsWorked.length === 0 ? (
@@ -169,7 +184,7 @@ export default function Bilan() {
                             </p>
                           </div>
                           <p className="text-xs font-semibold shrink-0" style={{ color: colors.green }}>
-                            {Math.round((s.correct / s.attempts) * 100)} %
+                            {Math.round((s.correct / s.attempts) * 100)} % cumulés
                           </p>
                         </div>
                       );
@@ -183,7 +198,7 @@ export default function Bilan() {
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp size={16} color={colors.red} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
-                  À travailler en priorité
+                  Notions fragiles observées
                 </p>
               </div>
               {summary.priorities.length === 0 ? (
@@ -192,6 +207,9 @@ export default function Bilan() {
                 </p>
               ) : (
                 <div className="flex flex-col gap-2.5">
+                  <p className="text-xs" style={{ color: slate }}>
+                    Classement fondé sur toutes les réponses enregistrées pour les notions pratiquées cette semaine.
+                  </p>
                   {summary.priorities.map((s) => {
                     const chapter = getChapter(s.chapter_id);
                     return (

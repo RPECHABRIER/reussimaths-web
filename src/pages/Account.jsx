@@ -24,6 +24,7 @@ import Mascot from "../components/Mascot";
 import { getChapter } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
+import { authenticatedFetch } from "../lib/api";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
@@ -36,6 +37,7 @@ export default function Account() {
   const { count: referralCount } = useReferrals(user?.id);
   const { chapterId: referralBonusChapterId, reload: reloadReferralBonus } = useReferralBonus(user?.id);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState(null);
   const [confirmingCancel, setConfirmingCancel] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState(null);
@@ -64,14 +66,18 @@ export default function Account() {
 
   const startCheckout = async (plan) => {
     setCheckoutLoading(true);
+    setCheckoutError(null);
     try {
-      const res = await fetch("/api/create-checkout-session", {
+      const res = await authenticatedFetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, plan }),
+        body: JSON.stringify({ plan }),
       });
-      const { url } = await res.json();
-      if (url) window.location.href = url;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Impossible d'ouvrir le paiement.");
+      if (data.url) window.location.href = data.url;
+    } catch (err) {
+      setCheckoutError(err.message);
     } finally {
       setCheckoutLoading(false);
     }
@@ -85,10 +91,10 @@ export default function Account() {
     setCancelLoading(true);
     setCancelError(null);
     try {
-      const res = await fetch("/api/cancel-subscription", {
+      const res = await authenticatedFetch("/api/cancel-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, action }),
+        body: JSON.stringify({ action }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Une erreur est survenue.");
@@ -456,6 +462,11 @@ export default function Account() {
               >
                 S'abonner — 4,99 €/mois
               </button>
+              {checkoutError && (
+                <p className="text-xs text-center -mt-2" style={{ color: colors.red }}>
+                  {checkoutError}
+                </p>
+              )}
               <p className="text-[11px] text-center -mt-2" style={{ color: colors.slate }}>
                 Rejoins les élèves qui progressent déjà avec la méthode.
               </p>

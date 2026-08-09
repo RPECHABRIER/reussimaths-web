@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import { colors, fonts, shadow } from "../theme";
+import { LEVELS } from "../levels";
+import { setPreferredLevel } from "../lib/preferences";
 
 // Écran "choisis ton pseudo", affiché une seule fois après la première
 // connexion (voir la redirection dans src/pages/Account.jsx). Le pseudo est
@@ -11,6 +13,7 @@ export default function Onboarding() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [pseudo, setPseudo] = useState("");
+  const [levelId, setLevelId] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
@@ -23,6 +26,10 @@ export default function Onboarding() {
     const trimmed = pseudo.trim();
     if (trimmed.length < 3) {
       setError("Choisis un pseudo d'au moins 3 caractères.");
+      return;
+    }
+    if (!levelId) {
+      setError("Choisis ta classe pour recevoir un entraînement adapté.");
       return;
     }
     setSaving(true);
@@ -54,7 +61,8 @@ export default function Onboarding() {
     // Rechargement complet (plutôt que navigate) pour que l'app relise le
     // profil fraîchement créé depuis la base — sinon l'état en mémoire (encore
     // "pas de profil") renvoyait aussitôt ici en boucle.
-    window.location.href = "/";
+    setPreferredLevel(levelId);
+    window.location.href = `/parcours/niveau/${levelId}/diagnostic`;
   };
 
   if (loading || !user) {
@@ -75,7 +83,7 @@ export default function Onboarding() {
           Choisis ton pseudo
         </h1>
         <p className="text-sm mt-2 mb-5" style={{ color: colors.slate }}>
-          Ce pseudo sera visible par tes amis lors des défis. Aucun nom réel n'est affiché dans l'app.
+          Ton pseudo protège ton identité. Indique ensuite ta classe pour commencer par un diagnostic rapide.
         </p>
         <form onSubmit={submit} className="flex flex-col gap-3">
           <input
@@ -86,6 +94,17 @@ export default function Onboarding() {
             className="rounded-xl px-4 py-2.5 text-center"
             style={{ backgroundColor: colors.bg, color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
           />
+          <select
+            value={levelId}
+            onChange={(e) => setLevelId(e.target.value)}
+            className="rounded-xl px-4 py-2.5 text-center text-sm"
+            style={{ backgroundColor: colors.bg, color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
+          >
+            <option value="">Ta classe</option>
+            {LEVELS.map((level) => (
+              <option key={level.id} value={level.id}>{level.label}</option>
+            ))}
+          </select>
           {error && (
             <p className="text-xs" style={{ color: colors.red }}>
               {error}
@@ -97,7 +116,7 @@ export default function Onboarding() {
             className="py-2.5 rounded-full font-semibold"
             style={{ backgroundColor: colors.ink, color: colors.bg }}
           >
-            {saving ? "Enregistrement…" : "Valider"}
+            {saving ? "Enregistrement…" : "Commencer mon diagnostic"}
           </button>
         </form>
       </div>

@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabaseClient";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
+import { authenticatedFetch } from "../lib/api";
 
 // ---------------------------------------------------------------------------
 // Panneau admin (/admin, réservé à romainpechabrier@gmail.com) — voir
@@ -87,10 +88,10 @@ function GrantAccessTool() {
     setLoading(true);
     setMessage(null);
     try {
-      const res = await fetch("/api/admin-grant-access", {
+      const res = await authenticatedFetch("/api/admin-grant-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminUserId: user.id, targetEmail: email.trim(), action }),
+        body: JSON.stringify({ targetEmail: email.trim(), action }),
       });
       const data = await res.json();
       if (!res.ok) {

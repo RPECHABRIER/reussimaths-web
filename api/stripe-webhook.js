@@ -26,6 +26,48 @@ async function buffer(readable) {
   return Buffer.concat(chunks);
 }
 
+async function claimEvent(eventId) {
+  const { error } = await supabaseAdmin.from("stripe_webhook_events").insert({ event_id: eventId });
+  if (!error) return true;
+  if (error.code === "23505") return false;
+  throw error;
+}
+
+async function releaseEvent(eventId) {
+  await supabaseAdmin.from("stripe_webhook_events").delete().eq("event_id", eventId);
+}
+
+async function saveCheckoutSession(session) {
+  const userId = session.client_reference_id;
+  const plan = session.metadata?.plan;
+  const validShape =
+    (plan === "mensuel" && session.mode === "subscription") ||
+    (plan === "special_examen" && session.mode === "payment");
+  const paymentConfirmed = ["paid", "no_payment_required"].includes(session.payment_status);
+
+  if (!userId || !validShape || !paymentConfirmed) return;
+
+  const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
+  if (authError || !authUser?.user) throw new Error("Utilisateur Supabase du paiement introuvable");
+
+  const row = {
+    user_id: userId,
+    stripe_customer_id: session.customer,
+    status: "active",
+    plan,
+    updated_at: new Date().toISOString(),
+  };
+  if (session.mode === "payment") {
+    const threeMonthsLater = new Date();
+    threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+    row.current_period_end = threeMonthsLater.toISOString();
+  }
+
+  const { error } = await supabaseAdmin.from("subscriptions").upsert(row);
+  if (error) throw error;
+  await grantReferralFreeMonthIfEligible(userId);
+}
+
 // Récompense de parrainage : si l'utilisateur qui vient de payer (referredUserId)
 // a été parrainé (table `referrals`) et que son parrain a un abonnement
 // complet ("mensuel") actif, on crédite un mois gratuit au parrain — voir
@@ -99,34 +141,18 @@ export default async function handler(req, res) {
     return;
   }
 
+  let claimed = false;
   try {
+    claimed = await claimEvent(event.id);
+    if (!claimed) {
+      res.status(200).json({ received: true, duplicate: true });
+      return;
+    }
+
     switch (event.type) {
-      case "checkout.session.completed": {
-        const session = event.data.object;
-        const userId = session.client_reference_id ?? session.metadata?.supabase_user_id;
-        const plan = session.metadata?.plan ?? null;
-        if (userId) {
-          const row = {
-            user_id: userId,
-            stripe_customer_id: session.customer,
-            status: "active",
-            plan,
-            updated_at: new Date().toISOString(),
-          };
-          // "special_examen" est un paiement UNIQUE (mode "payment", voir
-          // create-checkout-session.js), volontairement non reconductible :
-          // pas d'abonnement Stripe derrière, donc pas de renouvellement
-          // possible. On fixe nous-mêmes la fin d'accès à +3 mois.
-          if (session.mode === "payment" && plan === "special_examen") {
-            const threeMonthsLater = new Date();
-            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
-            row.current_period_end = threeMonthsLater.toISOString();
-          }
-          await supabaseAdmin.from("subscriptions").upsert(row);
-          // Ce filleul vient de payer (mensuel ou special_examen) : son
-          // éventuel parrain abonné complet reçoit un mois gratuit.
-          await grantReferralFreeMonthIfEligible(userId);
-        }
+      case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded": {
+        await saveCheckoutSession(event.data.object);
         break;
       }
       case "customer.subscription.updated":
@@ -137,7 +163,7 @@ export default async function handler(req, res) {
         // api/cancel-subscription.js) pour rester cohérent même si
         // l'abonnement est résilié/réactivé directement dans le dashboard
         // Stripe plutôt que depuis l'app.
-        await supabaseAdmin
+        const { error } = await supabaseAdmin
           .from("subscriptions")
           .update({
             status: sub.status, // active | trialing | canceled | past_due ...
@@ -146,6 +172,7 @@ export default async function handler(req, res) {
             updated_at: new Date().toISOString(),
           })
           .eq("stripe_customer_id", sub.customer);
+        if (error) throw error;
         break;
       }
       default:
@@ -153,6 +180,7 @@ export default async function handler(req, res) {
     }
     res.status(200).json({ received: true });
   } catch (err) {
+    if (claimed) await releaseEvent(event.id);
     console.error("[stripe-webhook] erreur de traitement:", err);
     res.status(500).json({ error: "internal error" });
   }

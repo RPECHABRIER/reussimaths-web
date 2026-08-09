@@ -1,5 +1,8 @@
 node_modules/
 dist/
-dist-verify*/
-vite.config.js.timestamp-*.mjs
 .env
+.env.*
+!.env.example
+vite.config.js.timestamp-*.mjs
+.DS_Store
+*.log

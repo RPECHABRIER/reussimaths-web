@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Lock, Sparkles } from "lucide-react";
 import { getChaptersByLevel } from "../chapters/registry";
@@ -10,6 +11,7 @@ import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import ComingSoon from "./ComingSoon";
+import { setPreferredLevel } from "../lib/preferences";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId), en mélangeant les
 // chapitres réels (avec du contenu, voir chapters/registry.js) et les
@@ -28,6 +30,10 @@ export default function Niveau() {
   const { subscription: rawSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
+
+  useEffect(() => {
+    if (level) setPreferredLevel(level.id);
+  }, [level]);
 
   if (!level) {
     return (

@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { GraduationCap, School, Sparkles, Brain, Gamepad2, Flame, Presentation } from "lucide-react";
 import { CYCLES } from "../levels";
-import ReviserCard from "../components/ReviserCard";
 import Mascot from "../components/Mascot";
 import { useAuth } from "../hooks/useAuth";
 import { useDailyStreak } from "../hooks/useDailyStreak";
+import { useDueSkillsCount } from "../hooks/useDueSkillsCount";
+import { getLevel } from "../levels";
+import { getPreferredLevel } from "../lib/preferences";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 
 // Nouvelle page d'accueil (/) : premier choix, avant même les niveaux —
@@ -23,7 +25,14 @@ const ICONS = { college: School, lycee: GraduationCap };
 export default function CycleSelect() {
   const { user } = useAuth();
   const { streak } = useDailyStreak(user?.id);
+  const dueCount = useDueSkillsCount(user?.id);
+  const preferredLevel = getLevel(getPreferredLevel());
   const hasStreak = streak?.current_streak > 0;
+  const nextAction = dueCount > 0
+    ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
+    : preferredLevel
+    ? { to: `/parcours/niveau/${preferredLevel.id}/diagnostic`, title: `Continuer en ${preferredLevel.label}`, detail: "Un diagnostic rapide pour choisir le bon entraînement" }
+    : { to: "/parcours/decouverte/etape/0", title: "Essayer maintenant", detail: "5 questions guidées pour découvrir Reussimaths" };
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -45,7 +54,7 @@ export default function CycleSelect() {
             Reussimaths
           </h1>
           <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            Tu es en collège ou au lycée ?
+            Entraîne-toi jusqu'à la maîtrise
           </p>
 
           <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
@@ -76,6 +85,18 @@ export default function CycleSelect() {
           </p>
         </div>
 
+        <Link to={nextAction.to} className="block mb-6">
+          <div
+            className="rounded-3xl px-6 py-5 transition-transform active:scale-[0.98]"
+            style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
+          >
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: colors.gold }}>À faire maintenant</p>
+            <p style={{ fontFamily: fonts.display, fontSize: "1.2rem", fontWeight: 800 }}>{nextAction.title}</p>
+            <p className="text-xs mt-1" style={{ color: "#d7dce6" }}>{nextAction.detail}</p>
+          </div>
+        </Link>
+
+        <p className="text-xs uppercase tracking-widest font-semibold mb-3" style={{ color: colors.slate }}>Ou choisis ta classe</p>
         <div className="flex flex-col gap-4">
           {CYCLES.map((cycle) => {
             const Icon = ICONS[cycle.id];
@@ -105,30 +126,7 @@ export default function CycleSelect() {
             );
           })}
 
-          <Link to="/jeux">
-            <div
-              className="rounded-3xl px-6 py-7 flex items-center gap-4 transition-transform active:scale-[0.98]"
-              style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${colors.gold}` }}
-            >
-              <div
-                className="flex items-center justify-center rounded-2xl"
-                style={{ width: 52, height: 52, backgroundColor: `${colors.gold}1f`, flexShrink: 0 }}
-              >
-                <Gamepad2 size={26} color={colors.gold} />
-              </div>
-              <div>
-                <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.3rem", fontWeight: 800 }}>
-                  Jeux
-                </p>
-                <p className="text-sm mt-0.5" style={{ color: colors.slate }}>
-                  Travailler les maths autrement, en s'amusant
-                </p>
-              </div>
-            </div>
-          </Link>
         </div>
-
-        <ReviserCard className="block mt-6" />
 
         <Link to="/parcours/decouverte">
           <div
@@ -150,6 +148,10 @@ export default function CycleSelect() {
               </p>
             </div>
           </div>
+        </Link>
+
+        <Link to="/jeux" className="flex items-center justify-center gap-2 mt-5 text-sm font-medium" style={{ color: colors.slate }}>
+          <Gamepad2 size={16} /> Jeux mathématiques
         </Link>
 
         <div className="text-center mt-10 flex items-center justify-center gap-5">

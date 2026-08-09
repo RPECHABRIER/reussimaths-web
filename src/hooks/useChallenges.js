@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { authenticatedFetch } from "../lib/api";
 
 // Défis asynchrones entre amis : celui qui défie joue 5 questions sur un
 // chapitre et enregistre son score, l'ami joue les 5 mêmes à son tour (des
@@ -34,24 +35,28 @@ export function useChallenges(userId) {
 
   const createChallenge = useCallback(
     async (toUserId, chapterId, score, durationMs, themeId, topicLabel) => {
-      const { error } = await supabase.from("challenges").insert({
-        from_user: userId,
-        to_user: toUserId,
-        chapter_id: chapterId,
-        theme_id: themeId ?? null,
-        from_score: score,
-        from_duration_ms: durationMs ?? null,
-        from_played_at: new Date().toISOString(),
-      });
+      const { data: challenge, error } = await supabase
+        .from("challenges")
+        .insert({
+          from_user: userId,
+          to_user: toUserId,
+          chapter_id: chapterId,
+          theme_id: themeId ?? null,
+          from_score: score,
+          from_duration_ms: durationMs ?? null,
+          from_played_at: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
       if (!error) {
         await load();
         // Best-effort : l'échec de l'email ne doit jamais faire échouer la
         // création du défi (déjà enregistré en base à ce stade). Voir
         // api/notify-challenge.js.
-        fetch("/api/notify-challenge", {
+        authenticatedFetch("/api/notify-challenge", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fromUserId: userId, toUserId, topicLabel }),
+          body: JSON.stringify({ challengeId: challenge.id }),
         }).catch((e) => console.error("[useChallenges] notification email:", e.message));
       }
       return { error };

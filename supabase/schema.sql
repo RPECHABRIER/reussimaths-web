@@ -104,6 +104,7 @@ alter table public.challenges add column if not exists to_duration_ms integer;
 -- le même sujet au lieu d'un mélange aléatoire indépendant de chaque côté.
 -- NULL pour un défi sur un chapitre classique (un seul sujet, pas d'ambiguïté).
 alter table public.challenges add column if not exists theme_id text;
+alter table public.challenges add column if not exists notified_at timestamptz;
 
 -- Meilleur temps d'un abonné sur une série de 5 questions d'Automatismes, par
 -- thème (un id de thème par chapitre du manuel, + "mix" pour le mélange de
@@ -633,12 +634,9 @@ $$;
 
 grant execute on function public.redeem_class_access_code(text) to authenticated;
 
--- Code distribué aux élèves de Terminale technologique de Romain. D'autres
--- lignes peuvent être ajoutées plus tard (autre classe/niveau/année) sans
--- toucher au code de l'app.
-insert into public.class_access_codes (code, level, label)
-values ('soleil', 'terminale-techno', 'Terminale technologique — classe de Romain')
-on conflict (code) do nothing;
+-- Les codes sont créés et renouvelés directement dans Supabase. Ne jamais
+-- versionner leur valeur dans ce fichier : un code de classe est un secret
+-- d'accès partagé, même s'il ne donne accès qu'à un niveau.
 
 -- ---------------------------------------------------------------------------
 -- Accès complet offert par l'admin (voir /admin, api/admin-grant-access.js) :
@@ -651,3 +649,11 @@ on conflict (code) do nothing;
 -- Stripe réel derrière).
 -- ---------------------------------------------------------------------------
 alter table public.subscriptions add column if not exists admin_granted boolean not null default false;
+
+-- Journal interne d'idempotence des webhooks Stripe. RLS sans policy : seul
+-- le service_role des fonctions serveur peut lire ou écrire ces identifiants.
+create table if not exists public.stripe_webhook_events (
+  event_id text primary key,
+  received_at timestamptz not null default now()
+);
+alter table public.stripe_webhook_events enable row level security;

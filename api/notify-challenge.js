@@ -22,6 +22,7 @@
 
 import nodemailer from "nodemailer";
 import { createClient } from "@supabase/supabase-js";
+import { requireSupabaseUser } from "./_auth.js";
 
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
 
@@ -35,22 +36,63 @@ function buildTransport() {
   });
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[char]);
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
 
-  const { fromUserId, toUserId, topicLabel } = req.body ?? {};
-  if (!fromUserId || !toUserId) {
-    res.status(400).json({ error: "fromUserId et toUserId requis" });
+  const caller = await requireSupabaseUser(req, res, supabaseAdmin);
+  if (!caller) return;
+
+  const { challengeId } = req.body ?? {};
+  if (!challengeId) {
+    res.status(400).json({ error: "challengeId requis" });
     return;
   }
 
   try {
+    const { data: challenge, error: challengeError } = await supabaseAdmin
+      .from("challenges")
+      .select("id, from_user, to_user, chapter_id, notified_at")
+      .eq("id", challengeId)
+      .eq("from_user", caller.id)
+      .maybeSingle();
+
+    if (challengeError || !challenge) {
+      res.status(403).json({ error: "Défi introuvable ou non autorisé" });
+      return;
+    }
+    if (challenge.notified_at) {
+      res.status(200).json({ sent: false, reason: "already_sent" });
+      return;
+    }
+
+    const { data: claimed } = await supabaseAdmin
+      .from("challenges")
+      .update({ notified_at: new Date().toISOString() })
+      .eq("id", challenge.id)
+      .is("notified_at", null)
+      .select("id")
+      .maybeSingle();
+    if (!claimed) {
+      res.status(200).json({ sent: false, reason: "already_sent" });
+      return;
+    }
+
     const [{ data: toUser, error: toUserError }, { data: fromProfile }] = await Promise.all([
-      supabaseAdmin.auth.admin.getUserById(toUserId),
-      supabaseAdmin.from("profiles").select("pseudo").eq("user_id", fromUserId).maybeSingle(),
+      supabaseAdmin.auth.admin.getUserById(challenge.to_user),
+      supabaseAdmin.from("profiles").select("pseudo").eq("user_id", caller.id).maybeSingle(),
     ]);
 
     if (toUserError || !toUser?.user?.email) {
@@ -60,8 +102,9 @@ export default async function handler(req, res) {
     }
 
     const fromPseudo = fromProfile?.pseudo ?? "Un ami";
+    const safeFromPseudo = escapeHtml(fromPseudo);
     const appUrl = process.env.PUBLIC_APP_URL ?? "https://reussimaths.fr";
-    const sujet = topicLabel ? ` sur « ${topicLabel} »` : "";
+    const sujet = challenge.chapter_id ? ` sur le chapitre ${challenge.chapter_id}` : "";
 
     const transport = buildTransport();
     await transport.sendMail({
@@ -70,7 +113,7 @@ export default async function handler(req, res) {
       subject: `${fromPseudo} te défie${sujet} !`,
       text: `${fromPseudo} vient de te lancer un défi${sujet} sur Reussimaths.\n\nRelève le défi ici : ${appUrl}/amis\n\n— L'équipe Reussimaths`,
       html: `
-        <p>${fromPseudo} vient de te lancer un défi${sujet} sur Reussimaths.</p>
+        <p>${safeFromPseudo} vient de te lancer un défi${sujet} sur Reussimaths.</p>
         <p><a href="${appUrl}/amis">Relever le défi</a></p>
         <p style="color:#6E7787;font-size:12px;">— L'équipe Reussimaths</p>
       `,

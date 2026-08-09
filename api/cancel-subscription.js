@@ -4,7 +4,8 @@
 // paiement unique déjà non reconductible (voir create-checkout-session.js),
 // rien à résilier côté Stripe pour ce plan-là.
 //
-// body: { userId, action: "cancel" | "reactivate" }
+// body: { action: "cancel" | "reactivate" } — l'utilisateur est dérivé du
+// Bearer token Supabase, jamais du body.
 // "cancel"     -> cancel_at_period_end: true  (accès conservé jusqu'à la fin
 //                 de la période déjà payée, comme demandé par Romain)
 // "reactivate" -> cancel_at_period_end: false (annule une résiliation prévue,
@@ -17,6 +18,7 @@
 
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { requireSupabaseUser } from "./_auth.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -27,9 +29,12 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { userId, action } = req.body ?? {};
-  if (!userId || !["cancel", "reactivate"].includes(action)) {
-    res.status(400).json({ error: "userId et action (cancel | reactivate) requis" });
+  const user = await requireSupabaseUser(req, res, supabaseAdmin);
+  if (!user) return;
+
+  const { action } = req.body ?? {};
+  if (!["cancel", "reactivate"].includes(action)) {
+    res.status(400).json({ error: "action (cancel | reactivate) requise" });
     return;
   }
 
@@ -37,7 +42,7 @@ export default async function handler(req, res) {
     const { data: subRow, error: subError } = await supabaseAdmin
       .from("subscriptions")
       .select("plan, status, stripe_customer_id")
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .maybeSingle();
     if (subError) throw subError;
 
@@ -73,7 +78,7 @@ export default async function handler(req, res) {
         current_period_end: new Date(updated.current_period_end * 1000).toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq("user_id", userId);
+      .eq("user_id", user.id);
     if (updateError) throw updateError;
 
     res.status(200).json({

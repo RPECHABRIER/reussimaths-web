@@ -67,153 +67,84 @@ export default function AdminPreview() {
 
         <PreviewSwitcher />
         <GrantAccessTool />
-        <ClassCodesTool />
+        <ClassInvitationsTool />
         <SubscribersDashboard />
       </div>
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Pilote codes classe
-// ---------------------------------------------------------------------------
-function ClassCodesTool() {
+// Codes d'invitation exceptionnels : cet outil n'est rendu que dans la page
+// admin et l'API vérifie à nouveau l'adresse de l'administrateur côté serveur.
+function ClassInvitationsTool() {
   const [level, setLevel] = useState("sixieme");
   const [label, setLabel] = useState("");
   const [maxRedemptions, setMaxRedemptions] = useState(35);
-  const [expiresInDays, setExpiresInDays] = useState(30);
+  const [expiresInDays, setExpiresInDays] = useState(7);
   const [codes, setCodes] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
   const loadCodes = async () => {
-    setError(null);
     try {
       const response = await authenticatedFetch("/api/admin-class-codes");
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Impossible de charger les codes.");
+      if (!response.ok) throw new Error(data.error ?? "Impossible de charger les invitations.");
       setCodes(data.codes ?? []);
     } catch (loadError) {
       setError(loadError.message);
     }
   };
 
-  useEffect(() => {
-    loadCodes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => { loadCodes(); }, []);
 
   const createCode = async () => {
-    if (loading) return;
-    setLoading(true);
-    setError(null);
-    setMessage(null);
+    setLoading(true); setError(null); setMessage(null);
     try {
       const response = await authenticatedFetch("/api/admin-class-codes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "create", level, label, maxRedemptions, expiresInDays }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Impossible de créer le code.");
-      setMessage(`Code créé : ${data.code}`);
-      setLabel("");
-      await loadCodes();
-    } catch (createError) {
-      setError(createError.message);
-    } finally {
-      setLoading(false);
-    }
+      if (!response.ok) throw new Error(data.error ?? "Impossible de créer l'invitation.");
+      setMessage(`Invitation créée : ${data.code}`); setLabel(""); await loadCodes();
+    } catch (createError) { setError(createError.message); }
+    finally { setLoading(false); }
   };
 
   const deactivate = async (code) => {
-    if (loading || !window.confirm(`Désactiver le code ${code} ?`)) return;
-    setLoading(true);
-    setError(null);
+    if (!window.confirm(`Désactiver le code ${code} ?`)) return;
+    setLoading(true); setError(null);
     try {
       const response = await authenticatedFetch("/api/admin-class-codes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "deactivate", code }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Impossible de désactiver le code.");
+      if (!response.ok) throw new Error("Impossible de désactiver l'invitation.");
       await loadCodes();
-    } catch (deactivateError) {
-      setError(deactivateError.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (deactivateError) { setError(deactivateError.message); }
+    finally { setLoading(false); }
   };
 
   return (
     <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-      <div>
-        <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
-          Codes classe — pilote
-        </p>
-        <p className="text-xs mt-1" style={{ color: colors.slate }}>
-          Crée un code temporaire à remettre au professeur. Chaque élève connecté débloque gratuitement le niveau choisi.
-        </p>
-      </div>
-
-      <select value={level} onChange={(event) => setLevel(event.target.value)} className="text-xs rounded-lg px-2.5 py-2"
-        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}>
+      <div><p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>Invitations classe — admin uniquement</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Toi seul peux créer ces accès exceptionnels. Ils ne sont pas proposés dans l’espace enseignant public.</p></div>
+      <select value={level} onChange={(event) => setLevel(event.target.value)} className="text-xs rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}>
         {LEVELS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
       </select>
-      <input value={label} onChange={(event) => setLabel(event.target.value)} maxLength={100}
-        placeholder="Classe ou professeur (ex. 4e B — Mme Martin)" className="text-xs rounded-lg px-2.5 py-2"
-        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }} />
+      <input value={label} onChange={(event) => setLabel(event.target.value)} maxLength={100} placeholder="Classe ou destinataire" className="text-xs rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }} />
       <div className="grid grid-cols-2 gap-2">
-        <label className="text-xs" style={{ color: colors.slate }}>
-          Élèves maximum
-          <input type="number" min="1" max="500" value={maxRedemptions}
-            onChange={(event) => setMaxRedemptions(Number(event.target.value))}
-            className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} />
-        </label>
-        <label className="text-xs" style={{ color: colors.slate }}>
-          Validité (jours)
-          <input type="number" min="1" max="365" value={expiresInDays}
-            onChange={(event) => setExpiresInDays(Number(event.target.value))}
-            className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} />
-        </label>
+        <label className="text-xs" style={{ color: colors.slate }}>Utilisateurs maximum<input type="number" min="1" max="500" value={maxRedemptions} onChange={(event) => setMaxRedemptions(Number(event.target.value))} className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} /></label>
+        <label className="text-xs" style={{ color: colors.slate }}>Validité (7 jours max.)<input type="number" min="1" max="7" value={expiresInDays} onChange={(event) => setExpiresInDays(Number(event.target.value))} className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} /></label>
       </div>
-      <button onClick={createCode} disabled={loading} className="py-2.5 rounded-full font-semibold text-xs"
-        style={{ backgroundColor: colors.gold, color: colors.ink, opacity: loading ? 0.6 : 1 }}>
-        {loading ? "Traitement…" : "Créer un code classe"}
-      </button>
-
+      <button onClick={createCode} disabled={loading} className="py-2.5 rounded-full font-semibold text-xs" style={{ backgroundColor: colors.gold, color: colors.ink, opacity: loading ? 0.6 : 1 }}>{loading ? "Traitement…" : "Créer une invitation"}</button>
       {message && <p className="text-xs font-semibold" style={{ color: colors.green }}>{message}</p>}
       {error && <p role="alert" className="text-xs font-semibold" style={{ color: colors.red }}>{error}</p>}
-
-      {codes === null && !error && <p className="text-xs" style={{ color: colors.slate }}>Chargement…</p>}
-      {codes && codes.length === 0 && <p className="text-xs" style={{ color: colors.slate }}>Aucun code créé.</p>}
-      {codes && codes.length > 0 && (
-        <div className="flex flex-col gap-2 mt-1">
-          {codes.map((item) => {
-            const levelLabel = LEVELS.find((entry) => entry.id === item.level)?.label ?? item.level;
-            const expired = item.expires_at && new Date(item.expires_at) <= new Date();
-            return (
-              <div key={item.code} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg, opacity: item.active && !expired ? 1 : 0.6 }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold" style={{ color: colors.ink, fontFamily: fonts.mono }}>{item.code}</p>
-                    <p className="text-xs truncate" style={{ color: colors.slate }}>{item.label || "Sans libellé"} — {levelLabel}</p>
-                    <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                      {item.redemption_count}/{item.max_redemptions ?? "∞"} élève(s) · jusqu'au {item.expires_at ? new Date(item.expires_at).toLocaleDateString("fr-FR") : "sans limite"}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1.5 shrink-0">
-                    <button onClick={() => navigator.clipboard.writeText(item.code)} className="text-xs font-semibold" style={{ color: colors.gold }}>Copier</button>
-                    {item.active && !expired && <button onClick={() => deactivate(item.code)} className="text-xs font-semibold" style={{ color: colors.red }}>Désactiver</button>}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {codes?.map((item) => {
+        const expired = item.expires_at && new Date(item.expires_at) <= new Date();
+        return <div key={item.code} className="rounded-2xl p-3 flex items-start justify-between gap-3" style={{ backgroundColor: colors.bg, opacity: item.active && !expired ? 1 : 0.55 }}><div><p className="text-sm font-bold" style={{ color: colors.ink, fontFamily: fonts.mono }}>{item.code}</p><p className="text-xs" style={{ color: colors.slate }}>{item.label || "Sans libellé"} · {item.redemption_count}/{item.max_redemptions ?? "∞"}</p></div><div className="flex flex-col items-end gap-1"><button onClick={() => navigator.clipboard.writeText(item.code)} className="text-xs font-semibold" style={{ color: colors.gold }}>Copier</button>{item.active && !expired && <button onClick={() => deactivate(item.code)} className="text-xs" style={{ color: colors.red }}>Désactiver</button>}</div></div>;
+      })}
     </div>
   );
 }
@@ -433,12 +364,9 @@ function PreviewSwitcher() {
 // Tableau de bord abonnés
 // ---------------------------------------------------------------------------
 function paletteForSub(sub) {
-  // Accès classe (voir supabase/schema.sql, redeem_class_access_code) :
-  // indépendant de plan/status, affiché en priorité même si l'élève n'a par
-  // ailleurs aucun abonnement Stripe.
-  if (sub?.class_access_level) {
-    const levelLabel = LEVELS.find((l) => l.id === sub.class_access_level)?.label ?? sub.class_access_level;
-    return `Accès classe (${levelLabel})`;
+  if (sub?.class_access_level && sub?.class_access_expires_at && new Date(sub.class_access_expires_at) > new Date()) {
+    const levelLabel = LEVELS.find((item) => item.id === sub.class_access_level)?.label ?? sub.class_access_level;
+    return `Invitation classe (${levelLabel})`;
   }
   const isActive = sub?.status === "active" || sub?.status === "trialing";
   if (!isActive) return "Gratuit";
@@ -455,7 +383,7 @@ function SubscribersDashboard() {
     let cancelled = false;
     Promise.all([
       supabase.from("profiles").select("user_id, pseudo, created_at"),
-      supabase.from("subscriptions").select("user_id, plan, status, current_period_end, class_access_level, admin_granted"),
+      supabase.from("subscriptions").select("user_id, plan, status, current_period_end, class_access_level, class_access_expires_at, admin_granted"),
       supabase.from("user_login_stats").select("user_id, login_count, last_login_at"),
     ]).then(([profilesRes, subsRes, statsRes]) => {
       if (cancelled) return;
@@ -479,6 +407,7 @@ function SubscribersDashboard() {
           status: sub?.status ?? "none",
           current_period_end: sub?.current_period_end ?? null,
           class_access_level: sub?.class_access_level ?? null,
+          class_access_expires_at: sub?.class_access_expires_at ?? null,
           login_count: stats?.login_count ?? 0,
           last_login_at: stats?.last_login_at ?? null,
         };

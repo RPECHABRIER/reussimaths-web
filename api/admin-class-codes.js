@@ -32,54 +32,32 @@ async function listCodes(res) {
 export default async function handler(req, res) {
   const caller = await requireAdmin(req, res);
   if (!caller) return;
-
   try {
-    if (req.method === "GET") {
-      await listCodes(res);
-      return;
-    }
-    if (req.method !== "POST") {
-      res.status(405).json({ error: "Method not allowed" });
-      return;
-    }
-
+    if (req.method === "GET") return await listCodes(res);
+    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
     const { action, level, label, expiresInDays, maxRedemptions, code } = req.body ?? {};
     if (action === "deactivate") {
-      if (!code) {
-        res.status(400).json({ error: "Code requis" });
-        return;
-      }
+      if (!code) return res.status(400).json({ error: "Code requis" });
       const { error } = await supabaseAdmin.from("class_access_codes").update({ active: false }).eq("code", code);
       if (error) throw error;
-      res.status(200).json({ ok: true });
-      return;
+      return res.status(200).json({ ok: true });
     }
-
-    if (action !== "create" || !LEVELS.has(level)) {
-      res.status(400).json({ error: "Action ou niveau invalide" });
-      return;
-    }
+    if (action !== "create" || !LEVELS.has(level)) return res.status(400).json({ error: "Action ou niveau invalide" });
     const days = Number(expiresInDays);
     const maximum = Number(maxRedemptions);
-    if (!Number.isInteger(days) || days < 1 || days > 365 || !Number.isInteger(maximum) || maximum < 1 || maximum > 500) {
-      res.status(400).json({ error: "Durée ou nombre d'élèves invalide" });
-      return;
+    if (!Number.isInteger(days) || days < 1 || days > 7 || !Number.isInteger(maximum) || maximum < 1 || maximum > 500) {
+      return res.status(400).json({ error: "Durée ou nombre d'élèves invalide" });
     }
     const generatedCode = `RM-${crypto.randomBytes(5).toString("hex").toUpperCase()}`;
     const expiresAt = new Date(Date.now() + days * 86400000).toISOString();
     const { error } = await supabaseAdmin.from("class_access_codes").insert({
-      code: generatedCode,
-      level,
-      label: String(label ?? "").trim().slice(0, 100) || null,
-      active: true,
-      expires_at: expiresAt,
-      max_redemptions: maximum,
-      created_by: caller.id,
+      code: generatedCode, level, label: String(label ?? "").trim().slice(0, 100) || null,
+      active: true, expires_at: expiresAt, max_redemptions: maximum, created_by: caller.id,
     });
     if (error) throw error;
-    res.status(201).json({ code: generatedCode });
+    return res.status(201).json({ code: generatedCode });
   } catch (error) {
     console.error("[admin-class-codes]", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    return res.status(500).json({ error: "Erreur serveur" });
   }
 }

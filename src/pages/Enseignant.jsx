@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, KeyRound } from "lucide-react";
+import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2 } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -138,15 +138,11 @@ export default function Enseignant() {
               </button>
               <p className="text-xs mt-3" style={{ color: slate }}>Aucune préparation et aucun compte élève nécessaires.</p>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-3 mt-7">
+              <div className="mt-7">
                 <Link to="/parcours/decouverte" className="py-3 px-4 rounded-2xl flex items-center justify-between gap-3" style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}>
                   <div><p className="text-sm font-semibold">Voir l’expérience élève</p><p className="text-xs mt-0.5" style={{ color: slate }}>Parcours gratuit, sans compte</p></div>
                   <CheckCircle2 size={18} color={gold} />
                 </Link>
-                <div className="rounded-2xl p-4 flex items-start gap-3" style={{ backgroundColor: `${gold}10`, border: `1px solid ${gold}33` }}>
-                  <KeyRound size={18} color={gold} className="shrink-0 mt-0.5" />
-                  <div><p className="text-sm font-semibold" style={{ color: ink }}>Pilote accès classe</p><p className="text-xs mt-1 leading-relaxed" style={{ color: slate }}>Un code temporaire débloque un niveau et conserve la progression individuelle de chaque élève.</p></div>
-                </div>
               </div>
             </section>
 

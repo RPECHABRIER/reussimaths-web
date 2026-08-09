@@ -789,6 +789,7 @@ alter table public.class_access_redemptions enable row level security;
 -- qui redeem aussi ce code (improbable mais inoffensif) garde tout son accès
 -- sans rien perdre — voir isClassAccessSubscription() dans src/lib/access.js.
 alter table public.subscriptions add column if not exists class_access_level text;
+alter table public.subscriptions add column if not exists class_access_expires_at timestamptz;
 
 create or replace function public.redeem_class_access_code(p_code text)
 returns text
@@ -808,7 +809,7 @@ begin
   perform pg_advisory_xact_lock(hashtext(upper(trim(p_code))));
   select * into v_code from public.class_access_codes
    where upper(code) = upper(trim(p_code)) for update;
-  if v_code.code is null or not v_code.active or (v_code.expires_at is not null and v_code.expires_at <= now()) then
+  if v_code.code is null or not v_code.active or v_code.expires_at is null or v_code.expires_at <= now() then
     raise exception 'Code invalide ou expiré';
   end if;
 
@@ -822,10 +823,12 @@ begin
   insert into public.class_access_redemptions (code, user_id)
   values (v_code.code, v_user_id) on conflict (code, user_id) do nothing;
 
-  insert into public.subscriptions (user_id, class_access_level, updated_at)
-  values (v_user_id, v_code.level, now())
+  insert into public.subscriptions (user_id, class_access_level, class_access_expires_at, updated_at)
+  values (v_user_id, v_code.level, least(v_code.expires_at, now() + interval '7 days'), now())
   on conflict (user_id) do update
-    set class_access_level = v_code.level, updated_at = now();
+    set class_access_level = excluded.class_access_level,
+        class_access_expires_at = excluded.class_access_expires_at,
+        updated_at = now();
 
   return v_code.level;
 end;

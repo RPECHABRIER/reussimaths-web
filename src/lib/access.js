@@ -22,11 +22,8 @@
 //   - Abonnement      : plan "mensuel". Accès complet à tous les niveaux,
 //     complet            sans restriction (voir schema anti-partage :
 //                       1 seule session active, src/hooks/useSingleSession.js).
-//   - Accès classe    : accès gratuit et complet à UN niveau
-//                       (subscription.class_access_level), offert via un
-//                       code distribué en classe (voir redeem_class_access_code
-//                       dans schema.sql, saisi depuis src/pages/Account.jsx).
-//                       Aucun abonnement Stripe derrière.
+//   - Accès classe    : accès exceptionnel à un niveau, créé uniquement par
+//                       l'admin et activé par un code d'invitation.
 //   - Admin           : le compte de Romain (ADMIN_EMAIL) bypass tout, sans
 //                       abonnement.
 //
@@ -141,13 +138,10 @@ export function isPackExamenSubscription(subscription) {
   return subscription?.plan === "special_examen" && planIsCurrentlyValid(subscription);
 }
 
-// Accès classe (voir supabase/schema.sql, redeem_class_access_code) : accès
-// gratuit et complet à UN niveau (subscription.class_access_level), offert
-// via un code distribué en classe par Romain — indépendant de plan/status
-// (pas d'abonnement Stripe derrière), donc pas de date d'expiration à
-// vérifier ici.
 export function isClassAccessSubscription(subscription) {
-  return !!subscription?.class_access_level;
+  return !!subscription?.class_access_level
+    && !!subscription?.class_access_expires_at
+    && new Date(subscription.class_access_expires_at) > new Date();
 }
 
 // Un chapitre est-il accessible pour cet utilisateur ? ctx = { user,

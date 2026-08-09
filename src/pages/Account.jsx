@@ -47,10 +47,10 @@ export default function Account() {
   const [confirmingCancel, setConfirmingCancel] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState(null);
-  const [showClassCodeForm, setShowClassCodeForm] = useState(false);
-  const [classCode, setClassCode] = useState("");
-  const [classCodeLoading, setClassCodeLoading] = useState(false);
-  const [classCodeError, setClassCodeError] = useState(null);
+  const [showInvitationCodeForm, setShowInvitationCodeForm] = useState(false);
+  const [invitationCode, setInvitationCode] = useState("");
+  const [invitationCodeLoading, setInvitationCodeLoading] = useState(false);
+  const [invitationCodeError, setInvitationCodeError] = useState(null);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -113,30 +113,20 @@ export default function Account() {
     }
   };
 
-  // Code d'accès classe (voir supabase/schema.sql, redeem_class_access_code)
-  // : accès gratuit et complet à un niveau, distribué par un professeur à
-  // ses élèves. Fonction RPC SECURITY DEFINER, pas de ligne Stripe derrière.
-  const handleRedeemClassCode = async (e) => {
-    e.preventDefault();
-    setClassCodeLoading(true);
-    setClassCodeError(null);
+  const handleRedeemInvitationCode = async (event) => {
+    event.preventDefault();
+    setInvitationCodeLoading(true);
+    setInvitationCodeError(null);
     try {
-      const { error } = await supabase.rpc("redeem_class_access_code", { p_code: classCode.trim() });
+      const { error } = await supabase.rpc("redeem_class_access_code", { p_code: invitationCode.trim() });
       if (error) throw error;
-      setClassCode("");
-      setShowClassCodeForm(false);
+      setInvitationCode("");
+      setShowInvitationCodeForm(false);
       reloadSubscription();
-    } catch (err) {
-      const message = err.message ?? "";
-      setClassCodeError(
-        message.includes("Code complet")
-          ? "Ce code a atteint son nombre maximal d'élèves."
-          : message.includes("Code invalide") || message.includes("expiré")
-          ? "Code invalide ou expiré."
-          : "Une erreur est survenue."
-      );
+    } catch {
+      setInvitationCodeError("Code invalide, expiré ou arrivé à sa limite d'utilisateurs.");
     } finally {
-      setClassCodeLoading(false);
+      setInvitationCodeLoading(false);
     }
   };
 
@@ -229,7 +219,7 @@ export default function Account() {
 
           {classAccess && (
             <p className="text-xs" style={{ color: colors.gold }}>
-              Accès classe — {classAccessLevelLabel} (offert par ton professeur)
+              Accès sur invitation — {classAccessLevelLabel}
             </p>
           )}
 
@@ -350,42 +340,20 @@ export default function Account() {
 
           {!classAccess && (
             <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
-              {!showClassCodeForm ? (
-                <button
-                  onClick={() => setShowClassCodeForm(true)}
-                  className="text-xs font-medium"
-                  style={{ color: colors.slate }}
-                >
-                  Code d'accès professeur
+              {!showInvitationCodeForm ? (
+                <button onClick={() => setShowInvitationCodeForm(true)} className="text-xs font-medium" style={{ color: colors.slate }}>
+                  J’ai reçu un code d’invitation
                 </button>
               ) : (
-                <form onSubmit={handleRedeemClassCode} className="flex flex-col gap-2">
-                  <p className="text-xs" style={{ color: colors.slate }}>
-                    Ton professeur t'a donné un code ? Il débloque gratuitement tout un niveau.
-                  </p>
+                <form onSubmit={handleRedeemInvitationCode} className="flex flex-col gap-2">
+                  <p className="text-xs" style={{ color: colors.slate }}>Saisis ici uniquement un code transmis dans le cadre d’un accès autorisé par Reussimaths.</p>
                   <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={classCode}
-                      onChange={(e) => setClassCode(e.target.value)}
-                      placeholder="Code d'accès"
-                      className="flex-1 text-sm rounded-lg px-3 py-2"
-                      style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }}
-                    />
-                    <button
-                      type="submit"
-                      disabled={classCodeLoading || !classCode.trim()}
-                      className="text-xs font-semibold py-2 px-3 rounded-full"
-                      style={{ backgroundColor: colors.gold, color: colors.ink }}
-                    >
-                      {classCodeLoading ? "…" : "Valider"}
+                    <input type="text" value={invitationCode} onChange={(event) => setInvitationCode(event.target.value)} placeholder="Code d’invitation" className="flex-1 text-sm rounded-lg px-3 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }} />
+                    <button type="submit" disabled={invitationCodeLoading || !invitationCode.trim()} className="text-xs font-semibold py-2 px-3 rounded-full" style={{ backgroundColor: colors.gold, color: colors.ink }}>
+                      {invitationCodeLoading ? "…" : "Valider"}
                     </button>
                   </div>
-                  {classCodeError && (
-                    <p className="text-xs" style={{ color: colors.red }}>
-                      {classCodeError}
-                    </p>
-                  )}
+                  {invitationCodeError && <p className="text-xs" style={{ color: colors.red }}>{invitationCodeError}</p>}
                 </form>
               )}
             </div>

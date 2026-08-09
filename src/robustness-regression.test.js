@@ -24,3 +24,21 @@ test("une erreur d'abonnement ne présente pas l'utilisateur comme gratuit", asy
   assert.match(account, /!isActive && !admin && !subscriptionLoading && !subscriptionError/);
   assert.match(chapter, /Impossible de vérifier ton accès à ce chapitre/);
 });
+
+test("les compteurs d'apprentissage utilisent des opérations atomiques", async () => {
+  const [migration, tracking, practice, streak] = await Promise.all([
+    read("../supabase/atomic-learning-migration-2026-08-09.sql"),
+    read("./hooks/useSkillTracking.js"),
+    read("./hooks/usePracticeTime.js"),
+    read("./hooks/useDailyStreak.js"),
+  ]);
+  assert.match(tracking, /rpc\("record_learning_attempt"/);
+  assert.match(practice, /rpc\("add_practice_seconds"/);
+  assert.match(streak, /rpc\("mark_daily_practice"/);
+  assert.match(migration, /attempts = sm\.attempts \+ 1/);
+  assert.match(migration, /seconds = pt\.seconds \+ excluded\.seconds/);
+  assert.doesNotMatch(migration, /create policy "skill_mastery: self read\/write"/);
+  assert.match(migration, /create policy "skill_mastery: self read"/);
+  assert.match(migration, /revoke all on function public\.record_learning_attempt[^;]+ from public/);
+  assert.match(migration, /grant execute on function public\.record_learning_attempt[^;]+ to authenticated/);
+});

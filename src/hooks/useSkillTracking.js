@@ -1,20 +1,6 @@
 import { useCallback } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-// Intervalles de répétition espacée (en jours), indexés par interval_stage.
-// Stage 0 = à revoir immédiatement (dernière tentative ratée). Stage max
-// (4) = +4 semaines, palier atteint une fois la compétence bien ancrée.
-// Voir supabase/schema.sql (table skill_mastery) pour le raisonnement complet
-// (base neuroscientifique : répétition espacée à intervalles croissants).
-const INTERVAL_DAYS = [0, 2, 7, 14, 28];
-const MAX_STAGE = INTERVAL_DAYS.length - 1;
-
-function addDays(date, days) {
-  const d = new Date(date);
-  d.setDate(d.getDate() + days);
-  return d;
-}
-
 function todayISO() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -32,67 +18,13 @@ export function useSkillTracking(userId) {
   const recordAttempt = useCallback(
     async ({ skillId, chapterId, correct }) => {
       if (!userId || !skillId || !chapterId) return;
-      const { data: existing, error: readError } = await supabase
-        .from("skill_mastery")
-        .select("attempts, correct, interval_stage")
-        .eq("user_id", userId)
-        .eq("skill_id", skillId)
-        .maybeSingle();
-      if (readError) {
-        console.error("[useSkillTracking] read error:", readError.message);
-        return;
-      }
-      const prevStage = existing?.interval_stage ?? 0;
-      const nextStage = correct ? Math.min(prevStage + 1, MAX_STAGE) : 0;
-      const now = new Date();
-      // Une bonne réponse repousse la prochaine révision selon le palier
-      // atteint ; une erreur remet la compétence "à réviser" dès maintenant
-      // (elle réapparaîtra dans l'onglet Réviser).
-      const nextReviewAt = correct ? addDays(now, INTERVAL_DAYS[nextStage]) : now;
-
-      const { error } = await supabase.from("skill_mastery").upsert(
-        {
-          user_id: userId,
-          skill_id: skillId,
-          chapter_id: chapterId,
-          attempts: (existing?.attempts ?? 0) + 1,
-          correct: (existing?.correct ?? 0) + (correct ? 1 : 0),
-          interval_stage: nextStage,
-          last_correct: correct,
-          last_practiced_at: now.toISOString(),
-          next_review_at: nextReviewAt.toISOString(),
-          updated_at: now.toISOString(),
-        },
-        { onConflict: "user_id,skill_id" }
-      );
+      const { error } = await supabase.rpc("record_learning_attempt", {
+        p_skill_id: skillId,
+        p_chapter_id: chapterId,
+        p_correct: !!correct,
+        p_activity_date: todayISO(),
+      });
       if (error) console.error("[useSkillTracking] save error:", error.message);
-
-      // Activité quotidienne agrégée (voir supabase/schema.sql, table
-      // daily_activity) — nécessaire au bilan hebdomadaire (% de réussite
-      // "cette semaine", impossible à obtenir depuis skill_mastery qui ne
-      // garde que des compteurs cumulatifs). Échec silencieux si ça rate :
-      // ça ne doit jamais bloquer l'expérience de l'exercice en cours.
-      const { data: existingDay, error: dayReadError } = await supabase
-        .from("daily_activity")
-        .select("attempts, correct")
-        .eq("user_id", userId)
-        .eq("activity_date", todayISO())
-        .maybeSingle();
-      if (dayReadError) {
-        console.error("[useSkillTracking] daily_activity read error:", dayReadError.message);
-        return;
-      }
-      const { error: dayError } = await supabase.from("daily_activity").upsert(
-        {
-          user_id: userId,
-          activity_date: todayISO(),
-          attempts: (existingDay?.attempts ?? 0) + 1,
-          correct: (existingDay?.correct ?? 0) + (correct ? 1 : 0),
-          updated_at: now.toISOString(),
-        },
-        { onConflict: "user_id,activity_date" }
-      );
-      if (dayError) console.error("[useSkillTracking] daily_activity save error:", dayError.message);
     },
     [userId]
   );

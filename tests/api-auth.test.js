@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { requireSupabaseUser } from "./_auth.js";
+import { requireSupabaseUser } from "../api/_auth.js";
 
 function responseRecorder() {
   return {

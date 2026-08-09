@@ -15,16 +15,16 @@ const API_FILES = [
 
 test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", async () => {
   for (const file of API_FILES) {
-    const source = await readFile(new URL(file, import.meta.url), "utf8");
+    const source = await readFile(new URL(`../api/${file}`, import.meta.url), "utf8");
     assert.match(source, /requireSupabaseUser\(req, res, supabaseAdmin\)/, file);
   }
 });
 
 test("le paiement évite les doublons et conserve la preuve du consentement", async () => {
   const [checkout, status, portal, migration] = await Promise.all([
-    readFile(new URL("create-checkout-session.js", import.meta.url), "utf8"),
-    readFile(new URL("checkout-status.js", import.meta.url), "utf8"),
-    readFile(new URL("create-customer-portal.js", import.meta.url), "utf8"),
+    readFile(new URL("../api/create-checkout-session.js", import.meta.url), "utf8"),
+    readFile(new URL("../api/checkout-status.js", import.meta.url), "utf8"),
+    readFile(new URL("../api/create-customer-portal.js", import.meta.url), "utf8"),
     readFile(new URL("../supabase/prelaunch-conversion-learning-2026-08-09.sql", import.meta.url), "utf8"),
   ]);
   assert.match(checkout, /Un accès équivalent est déjà actif/);
@@ -39,7 +39,7 @@ test("le paiement évite les doublons et conserve la preuve du consentement", as
 test("les invitations classe suivent la durée choisie et restent réservées à l'admin", async () => {
   const [migration, endpoint] = await Promise.all([
     readFile(new URL("../supabase/class-invitations-admin-duration-migration-2026-08-09.sql", import.meta.url), "utf8"),
-    readFile(new URL("admin-class-codes.js", import.meta.url), "utf8"),
+    readFile(new URL("../api/admin-class-codes.js", import.meta.url), "utf8"),
   ]);
   assert.match(migration, /class_access_redemptions/);
   assert.match(migration, /v_code\.expires_at/);
@@ -53,7 +53,7 @@ test("les invitations classe suivent la durée choisie et restent réservées à
 
 test("aucun endpoint sensible ne récupère l'identité de l'appelant dans le body", async () => {
   for (const file of API_FILES) {
-    const source = await readFile(new URL(file, import.meta.url), "utf8");
+    const source = await readFile(new URL(`../api/${file}`, import.meta.url), "utf8");
     assert.doesNotMatch(source, /const\s*\{[^}]*\b(?:userId|adminUserId|fromUserId)\b[^}]*\}\s*=\s*req\.body/, file);
   }
 });

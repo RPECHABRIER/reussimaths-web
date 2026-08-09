@@ -12,10 +12,13 @@ export default function MentionsLegales() {
     <LegalLayout title="Mentions légales">
       <p>
         Reussimaths est actuellement en <strong>phase de test</strong>. L'éditeur du site n'a, à ce stade, pas encore
-        finalisé son immatriculation professionnelle (auto-entrepreneur). Conformément à la loi n°2004-575 du 21 juin
-        2004 pour la confiance dans l'économie numérique (LCEN), l'identité complète de l'éditeur est communiquée à
-        l'hébergeur du site et pourra être demandée par toute autorité compétente.
+        finalisé son immatriculation professionnelle (auto-entrepreneur). Cette page doit donc rester considérée comme
+        provisoire et sera complétée avant toute ouverture commerciale réelle.
       </p>
+      <div className="legal-callout">
+        <strong>Ouverture commerciale bloquée tant que ces informations ne sont pas publiées :</strong>
+        <ul><li>nom, prénom, statut et adresse professionnelle de l’éditeur ;</li><li>SIRET et inscription au registre national des entreprises ;</li><li>adresse e-mail et numéro de téléphone professionnels ;</li><li>coordonnées du médiateur de la consommation choisi.</li></ul>
+      </div>
       <p>
         <strong>[À compléter dès l'immatriculation]</strong> — avant toute ouverture commerciale réelle
         (abonnements payants hors mode test), cette page sera mise à jour avec : nom et prénom de l'éditeur, statut
@@ -24,7 +27,7 @@ export default function MentionsLegales() {
 
       <h2>Hébergement</h2>
       <p>
-        Le site est hébergé par Vercel Inc. Informations légales de l'hébergeur disponibles sur{" "}
+        Le site est hébergé par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Informations légales de l'hébergeur disponibles sur{" "}
         <a href="https://vercel.com/legal" target="_blank" rel="noreferrer">
           vercel.com/legal
         </a>
@@ -58,6 +61,9 @@ export default function MentionsLegales() {
         de l'éditeur. En attendant, voir les <Link to="/cgu">CGU</Link> et la{" "}
         <Link to="/confidentialite">politique de confidentialité</Link>.
       </p>
+
+      <h2>Médiation de la consommation</h2>
+      <p><strong>[À compléter avant la première vente]</strong> — les coordonnées et le site internet du médiateur de la consommation auquel l’éditeur aura adhéré seront publiés dans cette section.</p>
     </LegalLayout>
   );
 }

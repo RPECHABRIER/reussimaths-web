@@ -29,9 +29,9 @@ export default function CGU() {
       <h2>3. Abonnements et paiement</h2>
       <p>Deux formules sont proposées à ce jour :</p>
       <ul>
-        <li>un abonnement mensuel reconductible automatiquement, résiliable à tout moment depuis l'espace « Mon compte » ;</li>
+        <li>un abonnement mensuel à 4,99 € TTC, reconductible automatiquement, résiliable à tout moment depuis l'espace « Mon compte » ;</li>
         <li>
-          une offre ponctuelle (« spécial examen », 3 mois d'accès) : paiement unique, non reconductible, qui n'est
+          une offre ponctuelle (« Pack Examen », 3 mois d'accès pour un niveau) à 9 € TTC : paiement unique, non reconductible, qui n'est
           jamais débité à nouveau automatiquement.
         </li>
       </ul>
@@ -87,6 +87,9 @@ export default function CGU() {
 
       <h2>10. Droit applicable</h2>
       <p>Les présentes CGU sont soumises au droit français.</p>
+
+      <h2>11. Réclamation et médiation</h2>
+      <p>En cas de difficulté, l’utilisateur doit d’abord contacter l’éditeur afin de rechercher une solution amiable. <strong>[À compléter avant la première vente]</strong> — les coordonnées du médiateur de la consommation choisi par l’éditeur seront ajoutées ici et dans les mentions légales.</p>
     </LegalLayout>
   );
 }

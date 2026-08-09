@@ -51,6 +51,7 @@ export default function Account() {
   const [invitationCode, setInvitationCode] = useState("");
   const [invitationCodeLoading, setInvitationCodeLoading] = useState(false);
   const [invitationCodeError, setInvitationCodeError] = useState(null);
+  const [acceptImmediateAccess, setAcceptImmediateAccess] = useState(false);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -71,6 +72,10 @@ export default function Account() {
     : null;
 
   const startCheckout = async (plan) => {
+    if (!acceptImmediateAccess) {
+      setCheckoutError("Confirme d’abord la demande d’accès immédiat et l’acceptation des CGU.");
+      return;
+    }
     setCheckoutLoading(true);
     setCheckoutError(null);
     try {
@@ -485,11 +490,16 @@ export default function Account() {
                 </div>
               </div>
 
+              <label className="rounded-2xl p-3.5 text-left flex items-start gap-3 cursor-pointer" style={{ backgroundColor: colors.bg, border: `1px solid ${acceptImmediateAccess ? colors.gold : colors.hairline}` }}>
+                <input type="checkbox" checked={acceptImmediateAccess} onChange={(event) => { setAcceptImmediateAccess(event.target.checked); setCheckoutError(null); }} className="mt-0.5 shrink-0" style={{ minHeight: 0, accentColor: colors.gold }} />
+                <span className="text-[11px] leading-relaxed" style={{ color: colors.slate }}>Je demande l’accès immédiat au contenu numérique et reconnais qu’une fois cet accès commencé, je renonce à mon droit de rétractation. J’accepte les <Link to="/cgu" className="underline font-semibold" style={{ color: colors.ink }}>CGU/CGV</Link>.</span>
+              </label>
+
               <button
-                disabled={checkoutLoading}
+                disabled={checkoutLoading || !acceptImmediateAccess}
                 onClick={() => startCheckout("mensuel")}
                 className="py-3 rounded-full font-bold"
-                style={{ backgroundColor: colors.gold, color: colors.ink }}
+                style={{ backgroundColor: colors.gold, color: colors.ink, opacity: acceptImmediateAccess ? 1 : 0.5 }}
               >
                 {checkoutLoading ? "Ouverture du paiement…" : "S'abonner — 4,99 €/mois"}
               </button>
@@ -516,10 +526,10 @@ export default function Account() {
                   chapitres bonus. Offre non reconductible.
                 </p>
                 <button
-                  disabled={checkoutLoading}
+                  disabled={checkoutLoading || !acceptImmediateAccess}
                   onClick={() => startCheckout("special_examen")}
                   className="text-xs font-semibold mt-2"
-                  style={{ color: colors.gold }}
+                  style={{ color: colors.gold, opacity: acceptImmediateAccess ? 1 : 0.45 }}
                 >
                   {checkoutLoading ? "Ouverture du paiement…" : "Choisir le Pack Examen →"}
                 </button>

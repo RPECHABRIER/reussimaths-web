@@ -8,6 +8,7 @@ import { isRealAdmin, isFullAccessSubscription, getEffectiveSubscription } from 
 import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
+import StudentDock from "./components/StudentDock";
 
 const LevelSelect = lazy(() => import("./pages/LevelSelect"));
 const CycleSelect = lazy(() => import("./pages/CycleSelect"));
@@ -58,6 +59,11 @@ export default function App() {
   const [evictedMessage, setEvictedMessage] = useState(false);
   const preview = isRealAdmin(user) ? getAdminPreview() : null;
   const previewing = !!preview?.mode && preview.mode !== "admin";
+  const dockExcluded = ["/enseignant", "/admin", "/pseudo", "/mentions-legales", "/cgu", "/confidentialite"].some((prefix) => location.pathname.startsWith(prefix))
+    || location.pathname.includes("/etape/")
+    || location.pathname.startsWith("/chapitre/")
+    || /^\/jeux\/.+/.test(location.pathname);
+  const showStudentDock = !!user && !dockExcluded;
 
   // Anti-partage : un abonnement complet ne peut être utilisé que sur un seul
   // appareil à la fois (voir src/hooks/useSingleSession.js) — l'admin
@@ -158,7 +164,7 @@ export default function App() {
           </button>
         </div>
       )}
-      <Suspense fallback={<PageLoader />}>
+      <div className={showStudentDock ? "pb-20 sm:pb-0" : ""}><Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<CycleSelect />} />
         <Route path="/niveaux" element={<LevelSelect />} />
@@ -188,7 +194,8 @@ export default function App() {
         <Route path="/cgu" element={<CGU />} />
         <Route path="/confidentialite" element={<Confidentialite />} />
       </Routes>
-      </Suspense>
+      </Suspense></div>
+      {showStudentDock && <StudentDock />}
     </>
   );
 }

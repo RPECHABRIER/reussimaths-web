@@ -39,7 +39,13 @@ export default function Confidentialite() {
         Service.
       </p>
 
-      <h2>3. Sous-traitants et destinataires</h2>
+      <h2>3. Bases juridiques</h2>
+      <ul><li>exécution du service demandé : compte, progression, accès et abonnement ;</li><li>obligations légales : conservation des justificatifs liés aux paiements ;</li><li>intérêt légitime de Reussimaths : sécurité, prévention des abus et diagnostic des erreurs techniques ;</li><li>consentement lorsqu’il est juridiquement nécessaire pour une fonctionnalité facultative.</li></ul>
+
+      <h2>4. Utilisateurs mineurs</h2>
+      <p>Reussimaths est destiné notamment à des élèves mineurs. Pour un traitement facultatif fondé sur le consentement, un utilisateur âgé de moins de 15 ans doit être accompagné par le titulaire de l’autorité parentale selon les règles applicables. Les fonctionnalités essentielles sont conçues pour limiter les données demandées : le nom réel n’est pas affiché et un pseudo peut être utilisé.</p>
+
+      <h2>5. Sous-traitants et destinataires</h2>
       <ul>
         <li>Supabase (hébergement de la base de données et authentification)</li>
         <li>Stripe (traitement des paiements)</li>
@@ -48,14 +54,14 @@ export default function Confidentialite() {
       </ul>
       <p>Aucune donnée n'est vendue à des tiers à des fins publicitaires.</p>
 
-      <h2>4. Durée de conservation</h2>
+      <h2>6. Durée de conservation</h2>
       <p>
         Les données sont conservées tant que le compte est actif. En cas de suppression du compte, les données
         personnelles associées sont supprimées dans un délai raisonnable, sous réserve des obligations légales de
         conservation (notamment comptables, liées aux paiements).
       </p>
 
-      <h2>5. Droits de l'utilisateur</h2>
+      <h2>7. Droits de l'utilisateur</h2>
       <p>
         Conformément au RGPD, l'utilisateur dispose d'un droit d'accès, de rectification, d'effacement, de limitation
         et de portabilité de ses données, ainsi que d'un droit d'opposition. Ces droits peuvent être exercés en
@@ -63,14 +69,15 @@ export default function Confidentialite() {
         <a href="/mentions-legales">mentions légales</a> dès finalisation du statut de l'éditeur).
       </p>
 
-      <h2>6. Sécurité</h2>
+      <h2>8. Sécurité et diagnostic technique</h2>
       <p>
         L'accès aux données est protégé par des règles de sécurité au niveau de la base de données (Row Level
         Security) : chaque utilisateur ne peut consulter que ses propres données de progression et d'abonnement. Les
         mots de passe ne sont jamais gérés directement par Reussimaths (connexion déléguée à Google/Apple).
       </p>
+      <p>Lorsqu’une erreur technique bloque une page, un diagnostic limité peut être transmis aux journaux de l’hébergeur : message technique, emplacement dans l’application, trace logicielle et date. Le contenu des réponses scolaires, l’adresse e-mail et les informations bancaires ne sont pas inclus dans ce signalement.</p>
 
-      <h2>7. Cookies</h2>
+      <h2>9. Cookies et stockage local</h2>
       <p>
         Le Service utilise le stockage local du navigateur (localStorage) pour retenir certaines préférences
         techniques (par exemple le quota quotidien de questions gratuites, ou un identifiant de parrainage temporaire)

@@ -42,3 +42,28 @@ test("les compteurs d'apprentissage utilisent des opérations atomiques", async 
   assert.match(migration, /revoke all on function public\.record_learning_attempt[^;]+ from public/);
   assert.match(migration, /grant execute on function public\.record_learning_attempt[^;]+ to authenticated/);
 });
+
+test("une erreur client affiche un secours et remonte dans les journaux", async () => {
+  const [main, boundary, reporter, endpoint] = await Promise.all([
+    read("./main.jsx"),
+    read("./components/AppErrorBoundary.jsx"),
+    read("./lib/errorReporting.js"),
+    read("../api/client-error.js"),
+  ]);
+  assert.match(main, /AppErrorBoundary/);
+  assert.match(main, /installGlobalErrorReporting/);
+  assert.match(boundary, /Ta progression reste enregistrée/);
+  assert.match(reporter, /unhandledrejection/);
+  assert.match(endpoint, /\[client-error\]/);
+  assert.match(endpoint, /MAX_BODY_BYTES/);
+});
+
+test("la navigation élève reste disponible sans couvrir les exercices", async () => {
+  const [app, dock] = await Promise.all([read("./App.jsx"), read("./components/StudentDock.jsx")]);
+  assert.match(app, /showStudentDock/);
+  assert.match(app, /\/etape\//);
+  assert.match(app, /\/chapitre\//);
+  assert.match(dock, /Navigation élève/);
+  assert.match(dock, /Réviser/);
+  assert.match(dock, /Bilan/);
+});

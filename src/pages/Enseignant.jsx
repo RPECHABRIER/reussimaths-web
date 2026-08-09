@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2 } from "lucide-react";
 import { chapters } from "../chapters/registry";
@@ -27,6 +27,7 @@ function shuffle(arr) {
 }
 
 function formatAnswer(answer) {
+  if (Array.isArray(answer)) return answer.join(" · ");
   return typeof answer === "number" ? String(answer).replace(".", ",") : String(answer);
 }
 
@@ -101,6 +102,19 @@ export default function Enseignant() {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen?.();
   };
+
+  useEffect(() => {
+    if (view !== "diaporama") return undefined;
+    const handleKey = (event) => {
+      if (event.key === "ArrowRight" || event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        next();
+      }
+      if (event.key.toLowerCase() === "f") toggleFullscreen();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [view, index, exercises.length]);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -254,6 +268,8 @@ export default function Enseignant() {
           </button>
         </div>
 
+        <div className="max-w-3xl w-full mx-auto h-1.5 rounded-full overflow-hidden -mt-5 mb-5" style={{ backgroundColor: `${ink}0d` }}><div className="h-full rounded-full transition-all" style={{ width: `${((index + 1) / exercises.length) * 100}%`, backgroundColor: gold }} /></div>
+
         <div className="flex-1 flex flex-col items-center justify-center max-w-3xl w-full mx-auto text-center">
           <p className="text-sm uppercase tracking-wide font-semibold mb-4" style={{ color: slate }}>
             {exercise.chapter}
@@ -276,11 +292,11 @@ export default function Enseignant() {
           )}
 
           {exercise.type === "qcm" && Array.isArray(exercise.options) && (
-            <div className="flex flex-col gap-2.5 mt-8 w-full max-w-lg">
+            <div className="grid sm:grid-cols-2 gap-3 mt-8 w-full max-w-2xl">
               {exercise.options.map((opt, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl px-5 py-3 text-lg"
+                  className="rounded-2xl px-5 py-4 text-lg flex items-center justify-center min-h-16"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft, color: ink }}
                 >
                   <MathText text={typeof opt === "string" ? opt : String(opt)} />
@@ -299,6 +315,7 @@ export default function Enseignant() {
             {isLast ? "Voir les corrections" : "Suivant"}
             <ArrowRight size={20} />
           </button>
+          <p className="hidden sm:block text-center text-[11px] mt-3" style={{ color: slate }}>Flèche droite, Entrée ou Espace pour avancer · F pour le plein écran</p>
         </div>
       </div>
     );

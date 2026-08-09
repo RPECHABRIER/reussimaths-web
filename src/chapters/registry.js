@@ -24,11 +24,21 @@
 // second-degre.js.
 // ---------------------------------------------------------------------------
 
+import { normalizeExercise } from "../lib/exercise";
+
 const modules = import.meta.glob("./*.js", { eager: true });
+
+function normalizeChapter(chapter) {
+  if (!chapter || typeof chapter.generate !== "function") return chapter;
+  return {
+    ...chapter,
+    generate: (...args) => normalizeExercise(chapter.generate(...args)),
+  };
+}
 
 export const chapters = Object.entries(modules)
   .filter(([path]) => !path.endsWith("registry.js"))
-  .map(([, mod]) => mod.default)
+  .map(([, mod]) => normalizeChapter(mod.default))
   .filter(Boolean)
   .sort((a, b) => (a.meta.order ?? 999) - (b.meta.order ?? 999));
 

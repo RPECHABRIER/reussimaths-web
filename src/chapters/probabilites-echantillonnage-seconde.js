@@ -380,7 +380,7 @@ function genDistinguerPAvBQCM() {
       A: "être malade",
       B: "être testé positif",
       question: "la probabilité qu'un patient testé positif soit réellement malade (risque de faux positif)",
-      reponse: "\\(P_B(A)\\)",
+      reponse: "P_B(A)",
       explication: `\\text{On se restreint aux patients } \\textbf{testés positifs} \\text{ (événement B déjà réalisé) et on regarde la proportion de malades parmi eux : c'est } P_B(A), \\text{ pas } P_A(B).`,
     },
     {
@@ -388,7 +388,7 @@ function genDistinguerPAvBQCM() {
       A: "être malade",
       B: "être testé positif",
       question: "la probabilité qu'un patient malade soit détecté par le test (sensibilité du test)",
-      reponse: "\\(P_A(B)\\)",
+      reponse: "P_A(B)",
       explication: `\\text{On se restreint aux patients } \\textbf{malades} \\text{ (événement A déjà réalisé) et on regarde la proportion de tests positifs parmi eux : c'est } P_A(B), \\text{ pas } P_B(A).`,
     },
     {
@@ -396,7 +396,7 @@ function genDistinguerPAvBQCM() {
       A: "être un spam",
       B: "contenir le mot « gratuit »",
       question: "la probabilité qu'un email contenant le mot « gratuit » soit un spam",
-      reponse: "\\(P_B(A)\\)",
+      reponse: "P_B(A)",
       explication: `\\text{On se restreint aux emails } \\textbf{contenant le mot « gratuit »} \\text{ (événement B déjà réalisé) et on regarde la proportion de spams parmi eux : c'est } P_B(A), \\text{ pas } P_A(B).`,
     },
     {
@@ -404,7 +404,7 @@ function genDistinguerPAvBQCM() {
       A: "être un spam",
       B: "contenir le mot « gratuit »",
       question: "la probabilité qu'un spam contienne le mot « gratuit »",
-      reponse: "\\(P_A(B)\\)",
+      reponse: "P_A(B)",
       explication: `\\text{On se restreint aux emails } \\textbf{qui sont des spams} \\text{ (événement A déjà réalisé) et on regarde la proportion de ceux contenant « gratuit » parmi eux : c'est } P_A(B), \\text{ pas } P_B(A).`,
     },
   ]);

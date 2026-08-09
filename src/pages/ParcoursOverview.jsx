@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { Check, Lock, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, Check, Clock3, Lock, Sparkles, Trophy } from "lucide-react";
 import { getParcours } from "../parcours";
 import { getChapter } from "../chapters/registry";
 import { useAuth } from "../hooks/useAuth";
@@ -41,6 +41,10 @@ export default function ParcoursOverview() {
   const nextStepIndex = nextIndex === -1 ? 0 : nextIndex;
   const finished = completedSteps >= total && total > 0;
   const backTo = parcours.kind === "decouverte" ? "/" : `/parcours/niveau/${parcours.levelId}`;
+  const nextStep = parcours.steps[nextStepIndex];
+  const nextChapter = nextStep ? getChapter(nextStep.chapterId) : null;
+  const nextLocked = !parcours.free && nextChapter && !canAccessChapter(nextChapter, { user, subscription, referralBonusChapterId });
+  const primaryTo = nextLocked ? "/compte" : `/parcours/${parcours.id}/etape/${finished ? 0 : nextStepIndex}`;
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -72,6 +76,20 @@ export default function ParcoursOverview() {
             <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${colors.ink}0d` }}>
               <div className="h-full rounded-full transition-all" style={{ width: `${percent}%`, backgroundColor: colors.green }} />
             </div>
+          </div>
+        )}
+
+        {total > 0 && !finished && (
+          <div className="rounded-3xl p-5 mb-6" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${colors.gold}` }}>
+            <p className="text-[11px] uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Ta prochaine étape</p>
+            <p className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>{nextStep?.title}</p>
+            <div className="flex items-center gap-4 mt-3 text-xs" style={{ color: colors.slate }}>
+              <span className="inline-flex items-center gap-1.5"><Clock3 size={14} /> Environ {Math.max(4, Math.round(parcours.sessionLength * 0.75))} min</span>
+              <span>{parcours.sessionLength} questions</span>
+            </div>
+            <Link to={primaryTo} className="mt-4 w-full py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2" style={{ backgroundColor: colors.ink, color: colors.bg }}>
+              {nextLocked ? "Débloquer le parcours" : completedSteps > 0 ? "Reprendre maintenant" : "Faire ma première série"} <ArrowRight size={15} />
+            </Link>
           </div>
         )}
 
@@ -129,11 +147,11 @@ export default function ParcoursOverview() {
         {total > 0 && (
           <div className="text-center mt-8">
             <Link
-              to={`/parcours/${parcours.id}/etape/${finished ? 0 : nextStepIndex}`}
+              to={primaryTo}
               className="inline-block py-2.5 px-7 rounded-full text-sm font-semibold"
               style={{ backgroundColor: colors.ink, color: colors.bg }}
             >
-              {finished ? "Recommencer" : completedSteps > 0 ? "Continuer" : "Commencer"}
+              {finished ? "Recommencer" : nextLocked ? "Voir les offres" : completedSteps > 0 ? "Continuer" : "Commencer"}
             </Link>
           </div>
         )}

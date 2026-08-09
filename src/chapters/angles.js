@@ -50,28 +50,36 @@ function buildAngleFigure(angleDeg, startAngleDeg) {
   const S = { id: "S", x: 0, y: 0, dx: -14, dy: 12 };
   const A = { id: "A", x: rayLen * Math.cos(toRad(startAngleDeg)), y: rayLen * Math.sin(toRad(startAngleDeg)), dy: -8 };
   const B = { id: "B", x: rayLen * Math.cos(toRad(startAngleDeg + angleDeg)), y: rayLen * Math.sin(toRad(startAngleDeg + angleDeg)), dy: -8 };
-  return { points: [S, A, B], segments: [{ from: "S", to: "A" }, { from: "S", to: "B" }] };
+  return { points: [S, A, B], segments: [{ from: "S", to: "A" }, { from: "S", to: "B" }], angleArcs: [{ at: "S", from: "A", to: "B" }] };
 }
 
 // Plusieurs demi-droites tracées depuis un même point S — utilisé pour toutes
 // les configurations d'angles autour d'un sommet (supplémentaires, opposés
 // par le sommet, adjacents, bissectrice...). `rays` : [{ id, angleDeg,
 // dashed? }] — angleDeg est absolu (mesuré depuis l'axe horizontal).
-function buildRaysFromVertexFigure(rays) {
-  const rayLen = 60;
+function buildRaysFromVertexFigure(rays, highlightedPairs) {
+  const rayLen = 72;
   const toRad = (deg) => (deg * Math.PI) / 180;
   const points = [{ id: "S", x: 0, y: 0, dx: -14, dy: 14 }];
   const segments = [];
   rays.forEach((r) => {
+    const angle = toRad(r.angleDeg);
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
     points.push({
       id: r.id,
-      x: rayLen * Math.cos(toRad(r.angleDeg)),
-      y: rayLen * Math.sin(toRad(r.angleDeg)),
-      dy: -8,
+      x: rayLen * cos,
+      y: rayLen * sin,
+      dx: cos * 10,
+      dy: sin * 10 + 4,
+      anchor: cos > 0.25 ? "start" : cos < -0.25 ? "end" : "middle",
     });
     segments.push({ from: "S", to: r.id, dashed: !!r.dashed });
   });
-  return { points, segments };
+  const ordered = [...rays].sort((a, b) => a.angleDeg - b.angleDeg);
+  const pairs = highlightedPairs ?? ordered.slice(0, -1).map((ray, index) => [ray.id, ordered[index + 1].id]);
+  const angleArcs = pairs.map(([from, to], index) => ({ at: "S", from, to, radius: 15 + (index % 2) * 3 }));
+  return { points, segments, angleArcs };
 }
 
 // Triangle construit à partir de ses 3 angles (en degrés, somme = 180) via la
@@ -254,7 +262,7 @@ function genAnglesOpposesParSommet() {
     { id: "B", angleDeg: theta + 180 },
     { id: "C", angleDeg: theta + a },
     { id: "D", angleDeg: theta + a + 180 },
-  ]);
+  ], [["A", "C"], ["B", "D"]]);
   return {
     type: "numeric",
     chapter: "Angles — Angles opposés par le sommet",
@@ -590,7 +598,7 @@ export default {
               { id: "C", angleDeg: 70 },
               { id: "B", angleDeg: 180 },
               { id: "D", angleDeg: 250 },
-            ]),
+            ], [["A", "C"], ["B", "D"]]),
           },
           {
             title: "Bissectrice",

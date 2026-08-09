@@ -278,7 +278,7 @@ function genSymetriqueReciproque() {
 
 // ---------- 12. Lire un codage de segments égaux (figure) ----------
 function genFigureCodageSegmentsEgaux() {
-  const O = { id: "O", x: 0, y: 0 };
+  const O = { id: "O", x: 0, y: 0, dx: -10, dy: 4, anchor: "end" };
   const LA = 45;
   const LB = 30;
   const anglesA = [20, 160];
@@ -289,12 +289,14 @@ function genFigureCodageSegmentsEgaux() {
   const segments = [];
   anglesA.forEach((ang, i) => {
     const rad = (ang * Math.PI) / 180;
-    points.push({ id: labelsA[i], x: LA * Math.cos(rad), y: LA * Math.sin(rad), dy: -8 });
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    points.push({ id: labelsA[i], x: LA * cos, y: LA * sin, dx: cos * 10, dy: sin * 10 + 4, anchor: cos > 0.25 ? "start" : cos < -0.25 ? "end" : "middle" });
     segments.push({ from: "O", to: labelsA[i], ticks: 1 });
   });
   anglesB.forEach((ang, i) => {
     const rad = (ang * Math.PI) / 180;
-    points.push({ id: labelsB[i], x: LB * Math.cos(rad), y: LB * Math.sin(rad), dy: -8 });
+    const cos = Math.cos(rad), sin = Math.sin(rad);
+    points.push({ id: labelsB[i], x: LB * cos, y: LB * sin, dx: cos * 10, dy: sin * 10 + 4, anchor: cos > 0.25 ? "start" : cos < -0.25 ? "end" : "middle" });
     segments.push({ from: "O", to: labelsB[i], ticks: 2 });
   });
   const figure = { points, segments };
@@ -515,9 +517,9 @@ export default {
               ],
               circles: [{ center: "O", radius: 40 }],
               freeLabels: [
-                { x: 40 * Math.cos((40 * Math.PI) / 180), y: 40 * Math.sin((40 * Math.PI) / 180) + 14, text: "sur le cercle" },
-                { x: 20 * Math.cos((200 * Math.PI) / 180), y: 20 * Math.sin((200 * Math.PI) / 180) + 14, text: "dans le disque" },
-                { x: 58 * Math.cos((300 * Math.PI) / 180), y: 58 * Math.sin((300 * Math.PI) / 180) + 14, text: "hors du disque" },
+                { x: 38, y: 50, text: "sur le cercle", anchor: "start" },
+                { x: -25, y: 18, text: "dans le disque", anchor: "end" },
+                { x: 24, y: -66, text: "hors du disque", anchor: "start" },
               ],
             },
           },

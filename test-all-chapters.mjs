@@ -67,6 +67,11 @@ function inspectFigure(figure, file, difficulty) {
       if (scale > 0 && Math.abs(ux * vx + uy * vy) / scale > 1e-6) report(file, difficulty, "codage d'angle droit sur un angle non perpendiculaire");
     }
   }
+  for (const angle of figure.angleArcs ?? []) {
+    requirePoint(angle.at, "arc d'angle"); requirePoint(angle.from, "arc d'angle"); requirePoint(angle.to, "arc d'angle");
+    ensureDistinct(angle.at, angle.from, "arc d'angle"); ensureDistinct(angle.at, angle.to, "arc d'angle");
+    if (angle.radius != null && (!Number.isFinite(angle.radius) || angle.radius <= 0)) report(file, difficulty, "rayon d'arc d'angle invalide");
+  }
   if (figure.numberLine) {
     requirePoint(figure.numberLine.from, "droite graduée");
     requirePoint(figure.numberLine.to, "droite graduée");

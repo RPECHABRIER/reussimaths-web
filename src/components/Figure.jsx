@@ -28,6 +28,7 @@
 //   circles      : [{ center, radius? , through? }]  — radius calculé depuis
 //                  `through` (point par lequel passe le cercle) si absent
 //   rightAngles  : [{ at, from, to, size? }]         — petit carré d'angle droit
+//   angleArcs    : [{ at, from, to, radius? }]       — arc qui matérialise un angle
 //   freeLabels   : [{ x, y, text, anchor? }]         — texte libre (ex : nom
 //                  d'une droite, indication)
 //   numberLine   : { from, to, tickCount, arrowStart?, arrowEnd?, tickSize? }
@@ -55,6 +56,17 @@ export default function Figure({ spec }) {
   const byId = Object.fromEntries(spec.points.map((p) => [p.id, p]));
   const xs = spec.points.map((p) => p.x);
   const ys = spec.points.map((p) => p.y);
+  for (const circle of spec.circles ?? []) {
+    const center = byId[circle.center];
+    if (!center) continue;
+    const radius = circle.radius ?? (circle.through && byId[circle.through] ? dist(center, byId[circle.through]) : 30);
+    xs.push(center.x - radius, center.x + radius);
+    ys.push(center.y - radius, center.y + radius);
+  }
+  for (const label of spec.freeLabels ?? []) {
+    xs.push(label.x - 42, label.x + 42);
+    ys.push(label.y - 9, label.y + 9);
+  }
   const pad = 26;
   const minX = Math.min(...xs) - pad;
   const minY = Math.min(...ys) - pad;
@@ -255,12 +267,25 @@ export default function Figure({ spec }) {
           );
         })}
 
+        {(spec.angleArcs || []).map((angle, i) => {
+          const at = byId[angle.at];
+          const from = byId[angle.from];
+          const to = byId[angle.to];
+          const radius = angle.radius ?? 16;
+          const u1 = normalize(from.x - at.x, from.y - at.y);
+          const u2 = normalize(to.x - at.x, to.y - at.y);
+          const start = { x: at.x + u1.x * radius, y: at.y + u1.y * radius };
+          const end = { x: at.x + u2.x * radius, y: at.y + u2.y * radius };
+          const cross = u1.x * u2.y - u1.y * u2.x;
+          return <path key={`a${i}`} d={`M ${start.x} ${start.y} A ${radius} ${radius} 0 0 ${cross >= 0 ? 1 : 0} ${end.x} ${end.y}`} fill="none" stroke={slate} strokeWidth="1.2" />;
+        })}
+
         {!spec.hidePointLabels &&
           spec.points.map((p) => (
             <g key={p.id}>
               {!p.hideDot && <circle cx={p.x} cy={p.y} r={p.numberLinePoint ? "3.4" : "2.2"} fill={ink} />}
               {!p.hideLabel && (
-                <text x={p.labelAbove ? p.x : p.x + (p.dx ?? 8)} y={p.labelAbove ? p.y - 16 : p.y + (p.dy ?? -8)} fontSize={p.labelAbove ? "13" : "12"} fontWeight="700" fill={ink} textAnchor={p.labelAbove ? "middle" : undefined}>
+                <text x={p.labelAbove ? p.x : p.x + (p.dx ?? 8)} y={p.labelAbove ? p.y - 16 : p.y + (p.dy ?? -8)} fontSize={p.labelAbove ? "13" : "12"} fontWeight="700" fill={ink} textAnchor={p.labelAbove ? "middle" : p.anchor}>
                   {p.label ?? p.id}
                 </text>
               )}

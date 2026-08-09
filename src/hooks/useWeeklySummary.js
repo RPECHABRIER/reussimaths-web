@@ -28,15 +28,19 @@ function lastNDays(count) {
 export function useWeeklySummary(userId) {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
+  const [error, setError] = useState(null);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
     if (!userId) {
       setSummary(null);
+      setError(null);
       setLoading(false);
       return;
     }
     let cancelled = false;
     setLoading(true);
+    setError(null);
 
     (async () => {
       const allDays = lastNDays(14);
@@ -60,6 +64,13 @@ export function useWeeklySummary(userId) {
       if (timeRes.error) console.error("[useWeeklySummary] practice_time error:", timeRes.error.message);
       if (activityRes.error) console.error("[useWeeklySummary] daily_activity error:", activityRes.error.message);
       if (skillsRes.error) console.error("[useWeeklySummary] skill_mastery error:", skillsRes.error.message);
+      const loadError = timeRes.error || activityRes.error || skillsRes.error;
+      if (loadError) {
+        setSummary(null);
+        setError(loadError);
+        setLoading(false);
+        return;
+      }
 
       const secondsByDay = Object.fromEntries((timeRes.data ?? []).map((r) => [r.practice_date, r.seconds]));
       const activityByDay = Object.fromEntries((activityRes.data ?? []).map((r) => [r.activity_date, r]));
@@ -123,7 +134,7 @@ export function useWeeklySummary(userId) {
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, retryNonce]);
 
-  return { loading, summary };
+  return { loading, summary, error, reload: () => setRetryNonce((value) => value + 1) };
 }

@@ -61,17 +61,24 @@ export function useProgress(userId, chapterId) {
 export function useSubscription(userId) {
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const load = useCallback(async () => {
     if (!userId) {
       setSubscription(null);
+      setError(null);
       setLoading(false);
       return;
     }
     setLoading(true);
-    const { data, error } = await supabase.from("subscriptions").select("*").eq("user_id", userId).maybeSingle();
-    if (error) console.error("[useSubscription] load error:", error.message);
-    setSubscription(data ?? null);
+    setError(null);
+    const { data, error: loadError } = await supabase.from("subscriptions").select("*").eq("user_id", userId).maybeSingle();
+    if (loadError) {
+      console.error("[useSubscription] load error:", loadError.message);
+      setError(loadError);
+    } else {
+      setSubscription(data ?? null);
+    }
     setLoading(false);
   }, [userId]);
 
@@ -86,5 +93,5 @@ export function useSubscription(userId) {
   // "canceled" tout seul, contrairement à un abonnement classique).
   const notExpired = !subscription?.current_period_end || new Date(subscription.current_period_end) > new Date();
   const isActive = (subscription?.status === "active" || subscription?.status === "trialing") && notExpired;
-  return { subscription, isActive, loading, reload: load };
+  return { subscription, isActive, loading, error, reload: load };
 }

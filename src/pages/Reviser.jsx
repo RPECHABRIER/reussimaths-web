@@ -6,6 +6,7 @@ import { useSkillTracking } from "../hooks/useSkillTracking";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
+import LoadError from "../components/LoadError";
 
 // ---------------------------------------------------------------------------
 // Onglet "Réviser" : liste, TOUS NIVEAUX ET CHAPITRES CONFONDUS, les
@@ -20,21 +21,33 @@ export default function Reviser() {
   const { user } = useAuth();
   const { getDueSkills } = useSkillTracking(user?.id);
   const [dueSkills, setDueSkills] = useState(null); // null = chargement
+  const [loadError, setLoadError] = useState(null);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
     if (!user) {
       setDueSkills([]);
+      setLoadError(null);
       return;
     }
     let cancelled = false;
-    getDueSkills().then((rows) => {
-      if (!cancelled) setDueSkills(rows);
-    });
+    setDueSkills(null);
+    setLoadError(null);
+    getDueSkills()
+      .then((rows) => {
+        if (!cancelled) setDueSkills(rows);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.error("[Reviser] load error:", error.message);
+        setLoadError(error);
+        setDueSkills([]);
+      });
     return () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, retryNonce]);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -81,7 +94,11 @@ export default function Reviser() {
           </p>
         )}
 
-        {user && dueSkills !== null && dueSkills.length === 0 && (
+        {user && dueSkills !== null && loadError && (
+          <LoadError message="Les révisions du jour n'ont pas pu être chargées." onRetry={() => setRetryNonce((value) => value + 1)} />
+        )}
+
+        {user && dueSkills !== null && !loadError && dueSkills.length === 0 && (
           <div className="text-center rounded-3xl p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <CheckCircle2 size={26} color={colors.green} className="mx-auto mb-3" />
             <p style={{ fontFamily: fonts.display, color: ink, fontSize: "1.1rem", fontWeight: 800 }}>
@@ -93,7 +110,7 @@ export default function Reviser() {
           </div>
         )}
 
-        {user && dueSkills !== null && dueSkills.length > 0 && (
+        {user && dueSkills !== null && !loadError && dueSkills.length > 0 && (
           <div className="flex flex-col gap-2.5">
             {dueSkills.map((row) => {
               const chapter = getChapter(row.chapter_id);

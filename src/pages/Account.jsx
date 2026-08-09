@@ -25,13 +25,19 @@ import { getChapter } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
+import LoadError from "../components/LoadError";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
 // d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
   const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
-  const { subscription: rawSubscription, reload: reloadSubscription } = useSubscription(user?.id);
+  const {
+    subscription: rawSubscription,
+    loading: subscriptionLoading,
+    error: subscriptionError,
+    reload: reloadSubscription,
+  } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const { profile } = useProfile(user?.id);
   const { count: referralCount } = useReferrals(user?.id);
@@ -200,8 +206,12 @@ export default function Account() {
             {profile?.pseudo ?? "Connecté"}
           </p>
           <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {admin ? "accès complet (admin)" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
+            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
+
+          {subscriptionError && (
+            <LoadError message="Le statut de ton abonnement n'a pas pu être vérifié." onRetry={reloadSubscription} />
+          )}
 
           {classAccess && (
             <p className="text-xs" style={{ color: colors.gold }}>
@@ -433,7 +443,7 @@ export default function Account() {
             </div>
           )}
 
-          {!isActive && !admin && (
+          {!isActive && !admin && !subscriptionLoading && !subscriptionError && (
             <div className="flex flex-col gap-4 -mx-6 px-6 pt-2" style={{ borderTop: `1px solid ${colors.hairline}` }}>
               <div>
                 <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>

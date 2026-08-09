@@ -5,6 +5,7 @@ import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
+import LoadError from "../components/LoadError";
 
 // ---------------------------------------------------------------------------
 // Page "Bilan de la semaine" (/bilan) : pensée pour être consultée par un
@@ -64,7 +65,7 @@ function parentSummary(summary) {
 
 export default function Bilan() {
   const { user } = useAuth();
-  const { loading, summary } = useWeeklySummary(user?.id);
+  const { loading, summary, error, reload } = useWeeklySummary(user?.id);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -111,7 +112,11 @@ export default function Bilan() {
           </p>
         )}
 
-        {user && !loading && summary && (
+        {user && !loading && error && (
+          <LoadError message="Le bilan n'a pas pu être chargé." onRetry={reload} />
+        )}
+
+        {user && !loading && !error && summary && (
           <div className="flex flex-col gap-4">
             <div
               className="rounded-3xl p-5"

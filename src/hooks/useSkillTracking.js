@@ -112,7 +112,7 @@ export function useSkillTracking(userId) {
         .limit(limit);
       if (error) {
         console.error("[useSkillTracking] getDueSkills error:", error.message);
-        return [];
+        throw error;
       }
       return data ?? [];
     },

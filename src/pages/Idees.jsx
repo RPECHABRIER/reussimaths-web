@@ -5,6 +5,7 @@ import { useSubscription } from "../hooks/useProgress";
 import { isAdminUser, isFullAccessSubscription, getEffectiveSubscription } from "../lib/access";
 import { supabase } from "../lib/supabaseClient";
 import { colors, fonts, shadow } from "../theme";
+import LoadError from "../components/LoadError";
 
 // ---------------------------------------------------------------------------
 // Onglet "Idées d'amélioration" (/idees) — réservé à l'abonnement complet
@@ -17,7 +18,12 @@ import { colors, fonts, shadow } from "../theme";
 // ---------------------------------------------------------------------------
 export default function Idees() {
   const { user, loading } = useAuth();
-  const { subscription: rawSubscription, loading: subLoading } = useSubscription(user?.id);
+  const {
+    subscription: rawSubscription,
+    loading: subLoading,
+    error: subscriptionError,
+    reload: reloadSubscription,
+  } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -71,6 +77,14 @@ export default function Idees() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
         Chargement…
+      </div>
+    );
+  }
+
+  if (subscriptionError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: colors.bg }}>
+        <LoadError message="Impossible de vérifier ton accès à cet espace." onRetry={reloadSubscription} />
       </div>
     );
   }

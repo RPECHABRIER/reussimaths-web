@@ -8,6 +8,7 @@ import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
+import LoadError from "../components/LoadError";
 
 // Une étape de parcours (/parcours/:parcoursId/etape/:stepIndex) : le chapitre
 // de cette étape, joué en série notée de `parcours.sessionLength` questions à
@@ -21,7 +22,12 @@ export default function ParcoursStep() {
   const idx = Number(stepIndex);
   const parcours = getParcours(parcoursId);
   const { user } = useAuth();
-  const { subscription: rawSubscription, loading: subLoading } = useSubscription(user?.id);
+  const {
+    subscription: rawSubscription,
+    loading: subLoading,
+    error: subscriptionError,
+    reload: reloadSubscription,
+  } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
@@ -56,6 +62,15 @@ export default function ParcoursStep() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
         Chargement…
+      </div>
+    );
+  }
+
+
+  if (subscriptionError && !parcours.free && !chapter.meta.free && !freemium) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: colors.bg }}>
+        <LoadError message="Impossible de vérifier ton accès à ce parcours." onRetry={reloadSubscription} />
       </div>
     );
   }

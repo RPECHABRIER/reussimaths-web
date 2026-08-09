@@ -7,6 +7,7 @@ import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
+import LoadError from "../components/LoadError";
 
 export default function ChapterPage() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function ChapterPage() {
   const focusSkill = searchParams.get("competence") || undefined;
   const chapter = getChapter(id);
   const { user } = useAuth();
-  const { subscription: rawSubscription, loading } = useSubscription(user?.id);
+  const { subscription: rawSubscription, loading, error: subscriptionError, reload: reloadSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
 
@@ -38,6 +39,14 @@ export default function ChapterPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
         Chargement…
+      </div>
+    );
+  }
+
+  if (subscriptionError && !chapter.meta.free && !freemium) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: colors.bg }}>
+        <LoadError message="Impossible de vérifier ton accès à ce chapitre." onRetry={reloadSubscription} />
       </div>
     );
   }

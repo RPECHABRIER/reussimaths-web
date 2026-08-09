@@ -153,8 +153,8 @@ export default function Enseignant() {
               <p className="text-xs mt-3" style={{ color: slate }}>Aucune préparation et aucun compte élève nécessaires.</p>
 
               <div className="mt-7">
-                <Link to="/parcours/decouverte" className="py-3 px-4 rounded-2xl flex items-center justify-between gap-3" style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}>
-                  <div><p className="text-sm font-semibold">Voir l’expérience élève</p><p className="text-xs mt-0.5" style={{ color: slate }}>Parcours gratuit, sans compte</p></div>
+                <Link to="/niveaux?objectif=essai" className="py-3 px-4 rounded-2xl flex items-center justify-between gap-3" style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}>
+                  <div><p className="text-sm font-semibold">Voir l’expérience élève</p><p className="text-xs mt-0.5" style={{ color: slate }}>Choix du niveau, diagnostic puis série gratuite</p></div>
                   <CheckCircle2 size={18} color={gold} />
                 </Link>
               </div>

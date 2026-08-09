@@ -71,11 +71,21 @@ test("la navigation élève reste disponible sans couvrir les exercices", async 
   assert.match(sound, /bottom-24 sm:bottom-4/);
 });
 
-test("l'essai commence au niveau choisi et ne promet plus de code enseignant", async () => {
-  const [home, levels, parcours] = await Promise.all([read("./pages/CycleSelect.jsx"), read("./pages/LevelSelect.jsx"), read("./parcours.js")]);
+test("tous les accès à l'essai commencent au niveau choisi et au diagnostic", async () => {
+  const [home, teacher, levels, diagnostic, parcours] = await Promise.all([
+    read("./pages/CycleSelect.jsx"),
+    read("./pages/Enseignant.jsx"),
+    read("./pages/LevelSelect.jsx"),
+    read("./pages/ParcoursDiagnostic.jsx"),
+    read("./parcours.js"),
+  ]);
   assert.match(home, /Commencer gratuitement/);
   assert.doesNotMatch(home, /code pilote/);
+  assert.doesNotMatch(home, /to="\/parcours\/decouverte"/);
+  assert.doesNotMatch(teacher, /to="\/parcours\/decouverte"/);
   assert.match(levels, /objectif=essai/);
+  assert.match(levels, /\/diagnostic\?objectif=essai/);
+  assert.match(diagnostic, /Faire ma série gratuite/);
   assert.match(parcours, /getTrialParcours/);
 });
 

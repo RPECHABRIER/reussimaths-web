@@ -240,7 +240,7 @@ export default function CycleSelect() {
           </section>
 
           <div className="flex items-center justify-center gap-5 mt-8 text-sm">
-            <Link to="/parcours/decouverte" style={{ color: colors.ink }}>Parcours découverte</Link>
+            <Link to="/niveaux?objectif=essai" style={{ color: colors.ink }}>Faire l’essai gratuit</Link>
             <Link to="/jeux" className="inline-flex items-center gap-1.5" style={{ color: colors.slate }}><Gamepad2 size={15} /> Jeux</Link>
           </div>
 

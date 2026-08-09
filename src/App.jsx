@@ -142,7 +142,7 @@ export default function App() {
 
   return (
     <>
-      <SoundManager />
+      <SoundManager avoidStudentDock={showStudentDock} />
       {previewing && (
         <div
           className="w-full flex items-center justify-center gap-3 py-2 px-4 text-xs font-semibold text-center"

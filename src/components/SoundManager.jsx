@@ -25,7 +25,7 @@ import { colors, fonts, shadow } from "../theme";
 const FADE_MS = 500;
 const FADE_STEP_MS = 40;
 
-export default function SoundManager() {
+export default function SoundManager({ avoidStudentDock = false }) {
   const location = useLocation();
   const audioRef = useRef(null);
   const fadeTimerRef = useRef(null);
@@ -171,7 +171,7 @@ export default function SoundManager() {
       onClick={() => setMuted((m) => !m)}
       aria-label={muted ? "Activer le son" : "Couper le son"}
       title={muted ? "Activer le son" : "Couper le son"}
-      className="fixed bottom-4 right-4 z-50 flex items-center justify-center rounded-full"
+      className={`fixed right-4 z-50 flex items-center justify-center rounded-full ${avoidStudentDock ? "bottom-24 sm:bottom-4" : "bottom-4"}`}
       style={{
         width: 44,
         height: 44,

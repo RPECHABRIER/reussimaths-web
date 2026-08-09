@@ -71,7 +71,7 @@ test("la navigation élève reste disponible sans couvrir les exercices", async 
 
 test("l'essai commence au niveau choisi et ne promet plus de code enseignant", async () => {
   const [home, levels, parcours] = await Promise.all([read("./pages/CycleSelect.jsx"), read("./pages/LevelSelect.jsx"), read("./parcours.js")]);
-  assert.match(home, /Essayer à mon niveau/);
+  assert.match(home, /Commencer gratuitement/);
   assert.doesNotMatch(home, /code pilote/);
   assert.match(levels, /objectif=essai/);
   assert.match(parcours, /getTrialParcours/);

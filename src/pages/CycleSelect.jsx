@@ -13,6 +13,7 @@ import {
   RotateCcw,
   BarChart3,
   KeyRound,
+  UserRound,
 } from "lucide-react";
 import { CYCLES } from "../levels";
 import Mascot from "../components/Mascot";
@@ -43,7 +44,7 @@ export default function CycleSelect() {
   const preferredLevel = getLevel(getPreferredLevel());
   const hasStreak = streak?.current_streak > 0;
   const nextAction = !user
-    ? { to: "/niveaux?objectif=essai", title: "Essayer à mon niveau", detail: "Un diagnostic court puis une série adaptée" }
+    ? { to: "/niveaux?objectif=essai", title: "Commencer gratuitement", detail: "Choisis ton niveau, puis fais un diagnostic court et une série adaptée" }
     : dueCount > 0
     ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
     : preferredLevel
@@ -60,20 +61,9 @@ export default function CycleSelect() {
               Reussimaths
             </span>
           </Link>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link to="/compte" className="hidden sm:inline text-sm font-semibold" style={{ color: colors.slate }}>
-              Mon compte
-            </Link>
-            <Link
-              to="/enseignant"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform active:scale-[0.97]"
-              style={{ backgroundColor: colors.card, boxShadow: shadow.soft, color: colors.ink }}
-            >
-              <Presentation size={13} />
-              <span className="hidden sm:inline">Espace enseignant</span>
-              <span className="sm:hidden">Enseignant</span>
-            </Link>
-          </div>
+          <Link to="/compte" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, color: colors.ink }}>
+            <UserRound size={14} /> {user ? "Mon compte" : "Se connecter"}
+          </Link>
         </header>
 
         <main>
@@ -102,20 +92,21 @@ export default function CycleSelect() {
                 correction détaillée et révisions au bon moment.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mt-7 max-w-lg mx-auto lg:mx-0">
+              <div className="mt-7 max-w-lg mx-auto lg:mx-0">
                 <Link
                   to={nextAction.to}
-                  className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-full font-bold transition-transform active:scale-[0.98]"
+                  className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full text-base font-black transition-transform active:scale-[0.98]"
                   style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
                 >
                   {nextAction.title} <ArrowRight size={17} />
                 </Link>
+                <p className="text-xs mt-2.5 text-center" style={{ color: colors.slate }}>{nextAction.detail}</p>
                 <Link
                   to="/enseignant"
-                  className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-full font-bold"
-                  style={{ backgroundColor: colors.card, color: colors.ink, border: `1px solid ${colors.hairline}` }}
+                  className="inline-flex items-center justify-center gap-1.5 mt-4 text-sm font-bold"
+                  style={{ color: colors.ink }}
                 >
-                  <Presentation size={17} /> Je suis enseignant
+                  <Presentation size={16} /> Enseignant ? Ouvrir le rituel gratuit
                 </Link>
               </div>
               <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mt-4 text-xs" style={{ color: colors.slate }}>
@@ -172,9 +163,9 @@ export default function CycleSelect() {
 
           <section className="mt-16 sm:mt-24">
             <div className="text-center max-w-2xl mx-auto">
-              <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Commencer simplement</p>
+              <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Explorer les programmes</p>
               <h2 className="text-2xl sm:text-3xl font-black mt-2" style={{ color: colors.ink, letterSpacing: "-0.025em" }}>
-                Choisis ton niveau, Reussimaths organise la suite
+                Ou accéder directement au collège ou au lycée
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4 mt-8 max-w-4xl mx-auto">

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2 } from "lucide-react";
+import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2 } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -24,6 +24,10 @@ import { colors, fonts, shadow } from "../theme";
 
 function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function formatAnswer(answer) {
+  return typeof answer === "number" ? String(answer).replace(".", ",") : String(answer);
 }
 
 const levelOrder = new Map(LEVELS.map((level, index) => [level.id, index]));
@@ -62,6 +66,18 @@ export default function Enseignant() {
     if (!chapter || total !== 5) return;
     const drawn = Object.entries(counts).flatMap(([themeId, n]) => Array.from({ length: n }, () => chapter.generate(themeId)));
     setExercises(shuffle(drawn));
+    setIndex(0);
+    setView("diaporama");
+  };
+
+  const launchDemo = () => {
+    const demoChapter = AUTOMATISMES_CHAPTERS[0];
+    if (!demoChapter) return;
+    const demoThemes = demoChapter.themes.slice(0, 5);
+    const demoExercises = demoThemes.map((theme) => demoChapter.generate(theme.id));
+    setLevelId(demoChapter.meta.level);
+    setCounts(Object.fromEntries(demoThemes.map((theme) => [theme.id, 1])));
+    setExercises(shuffle(demoExercises));
     setIndex(0);
     setView("diaporama");
   };
@@ -108,15 +124,43 @@ export default function Enseignant() {
               Espace enseignant
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              5 questions d'Automatismes en diaporama, sans réponse visible, pour une correction collective en classe.
+              Crée en moins d'une minute un rituel de 5 questions à projeter, puis affiche les corrections détaillées.
             </p>
           </div>
 
-          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-            <p className="text-xs uppercase tracking-wide font-semibold mb-2" style={{ color: slate }}>
-              1. Niveau
+          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: `${gold}12`, border: `1px solid ${gold}33` }}>
+            <div className="grid grid-cols-3 gap-2 text-center">
+              {["Choisis", "Projette", "Corrige"].map((label, i) => (
+                <div key={label}>
+                  <div
+                    className="mx-auto mb-1.5 flex items-center justify-center rounded-full text-xs font-bold"
+                    style={{ width: 28, height: 28, backgroundColor: colors.card, color: gold }}
+                  >
+                    {i + 1}
+                  </div>
+                  <p className="text-xs font-semibold" style={{ color: ink }}>{label}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-center mt-3" style={{ color: slate }}>
+              Aucun compte élève nécessaire pour utiliser le diaporama en classe.
             </p>
+            <button
+              type="button"
+              onClick={launchDemo}
+              className="w-full mt-3 py-2.5 rounded-full font-semibold text-sm flex items-center justify-center gap-2"
+              style={{ backgroundColor: ink, color: paper }}
+            >
+              <Play size={15} /> Tester une démonstration
+            </button>
+          </div>
+
+          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <label htmlFor="teacher-level" className="block text-xs uppercase tracking-wide font-semibold mb-2" style={{ color: slate }}>
+              1. Niveau
+            </label>
             <select
+              id="teacher-level"
               value={levelId}
               onChange={(e) => selectLevel(e.target.value)}
               className="w-full text-sm rounded-xl px-3 py-2.5"
@@ -141,6 +185,7 @@ export default function Enseignant() {
                   2. Répartis 5 questions par thème
                 </p>
                 <p
+                  aria-live="polite"
                   className="text-xs font-bold px-2.5 py-1 rounded-full"
                   style={{
                     color: total === 5 ? colors.green : gold,
@@ -189,6 +234,7 @@ export default function Enseignant() {
           )}
 
           <button
+            type="button"
             disabled={total !== 5}
             onClick={launch}
             className="w-full py-3 rounded-full font-semibold"
@@ -196,6 +242,18 @@ export default function Enseignant() {
           >
             Lancer le diaporama
           </button>
+
+          <Link
+            to="/parcours/decouverte"
+            className="mt-4 py-3 px-4 rounded-2xl flex items-center justify-between gap-3"
+            style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}
+          >
+            <div className="text-left">
+              <p className="text-sm font-semibold">Voir l'expérience côté élève</p>
+              <p className="text-xs mt-0.5" style={{ color: slate }}>Parcours découverte gratuit, sans compte</p>
+            </div>
+            <CheckCircle2 size={18} color={gold} className="shrink-0" />
+          </Link>
         </div>
       </div>
     );
@@ -295,7 +353,7 @@ export default function Enseignant() {
                 <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: colors.green }}>
                   Réponse
                 </p>
-                <MathText text={typeof ex.answer === "string" ? ex.answer : String(ex.answer)} style={{ color: ink, fontWeight: 700 }} />
+                <MathText text={formatAnswer(ex.answer)} style={{ color: ink, fontWeight: 700 }} />
               </div>
               {Array.isArray(ex.steps) && ex.steps.length > 0 && <StepsList steps={ex.steps} dark={false} />}
             </div>

@@ -17,16 +17,17 @@ test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", a
   }
 });
 
-test("les invitations classe sont temporaires et administrées exclusivement par l'admin", async () => {
+test("les invitations classe suivent la durée choisie et restent réservées à l'admin", async () => {
   const [migration, endpoint] = await Promise.all([
-    readFile(new URL("../supabase/class-invitations-expiry-migration-2026-08-09.sql", import.meta.url), "utf8"),
+    readFile(new URL("../supabase/class-invitations-admin-duration-migration-2026-08-09.sql", import.meta.url), "utf8"),
     readFile(new URL("admin-class-codes.js", import.meta.url), "utf8"),
   ]);
   assert.match(migration, /class_access_redemptions/);
   assert.match(migration, /v_code\.expires_at/);
   assert.match(migration, /v_code\.max_redemptions/);
   assert.match(migration, /class_access_expires_at/);
-  assert.match(migration, /interval '7 days'/);
+  assert.match(migration, /v_code\.expires_at/);
+  assert.doesNotMatch(migration, /least\s*\([^)]*interval '7 days'/s);
   assert.match(endpoint, /caller\.email\?\.toLowerCase\(\) !== ADMIN_EMAIL/);
   assert.match(endpoint, /crypto\.randomBytes/);
 });

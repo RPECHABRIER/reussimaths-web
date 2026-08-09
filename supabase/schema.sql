@@ -824,7 +824,7 @@ begin
   values (v_code.code, v_user_id) on conflict (code, user_id) do nothing;
 
   insert into public.subscriptions (user_id, class_access_level, class_access_expires_at, updated_at)
-  values (v_user_id, v_code.level, least(v_code.expires_at, now() + interval '7 days'), now())
+  values (v_user_id, v_code.level, v_code.expires_at, now())
   on conflict (user_id) do update
     set class_access_level = excluded.class_access_level,
         class_access_expires_at = excluded.class_access_expires_at,

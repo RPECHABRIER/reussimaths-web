@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     if (action !== "create" || !LEVELS.has(level)) return res.status(400).json({ error: "Action ou niveau invalide" });
     const days = Number(expiresInDays);
     const maximum = Number(maxRedemptions);
-    if (!Number.isInteger(days) || days < 1 || days > 7 || !Number.isInteger(maximum) || maximum < 1 || maximum > 500) {
+    if (!Number.isInteger(days) || days < 1 || days > 365 || !Number.isInteger(maximum) || maximum < 1 || maximum > 500) {
       return res.status(400).json({ error: "Durée ou nombre d'élèves invalide" });
     }
     const generatedCode = `RM-${crypto.randomBytes(5).toString("hex").toUpperCase()}`;

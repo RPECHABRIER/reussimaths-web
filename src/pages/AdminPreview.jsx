@@ -136,7 +136,7 @@ function ClassInvitationsTool() {
       <input value={label} onChange={(event) => setLabel(event.target.value)} maxLength={100} placeholder="Classe ou destinataire" className="text-xs rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }} />
       <div className="grid grid-cols-2 gap-2">
         <label className="text-xs" style={{ color: colors.slate }}>Utilisateurs maximum<input type="number" min="1" max="500" value={maxRedemptions} onChange={(event) => setMaxRedemptions(Number(event.target.value))} className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} /></label>
-        <label className="text-xs" style={{ color: colors.slate }}>Validité (7 jours max.)<input type="number" min="1" max="7" value={expiresInDays} onChange={(event) => setExpiresInDays(Number(event.target.value))} className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} /></label>
+        <label className="text-xs" style={{ color: colors.slate }}>Durée choisie (jours)<input type="number" min="1" max="365" value={expiresInDays} onChange={(event) => setExpiresInDays(Number(event.target.value))} className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} /></label>
       </div>
       <button onClick={createCode} disabled={loading} className="py-2.5 rounded-full font-semibold text-xs" style={{ backgroundColor: colors.gold, color: colors.ink, opacity: loading ? 0.6 : 1 }}>{loading ? "Traitement…" : "Créer une invitation"}</button>
       {message && <p className="text-xs font-semibold" style={{ color: colors.green }}>{message}</p>}

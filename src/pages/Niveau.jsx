@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Lock, Sparkles } from "lucide-react";
+import { ArrowRight, Lock, Sparkles } from "lucide-react";
 import { getChaptersByLevel } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { getPlannedChapters } from "../plannedChapters";
@@ -59,23 +59,25 @@ export default function Niveau() {
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto">
+      <div className="max-w-5xl mx-auto">
         <Link to={level.cycle ? `/${level.cycle}` : "/"} className="text-sm font-medium" style={{ color: colors.ink }}>
           ← Changer de niveau
         </Link>
 
-        <div className="text-center my-7">
+        <div className="text-center my-10 sm:my-14">
           <div className="inline-block mb-2 rounded-full" style={{ width: 36, height: 3, backgroundColor: cc.accent }} />
-          <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            {level.label}
+          <p className="text-xs uppercase tracking-widest font-bold" style={{ color: cc.accent }}>Programme 2026</p>
+          <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2.3rem, 5vw, 3.6rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
+            Maths · {level.label}
           </h1>
+          <p className="text-base mt-2" style={{ color: colors.slate }}>Choisis un parcours guidé ou travaille directement un chapitre.</p>
         </div>
 
         {parcoursList.length > 0 && (
-          <Link to={`/parcours/niveau/${levelId}`}>
+          <Link to={`/parcours/niveau/${levelId}`} className="block max-w-2xl mx-auto">
             <div
-              className="rounded-3xl px-5 py-4 flex items-center gap-3 mb-5 transition-transform active:scale-[0.98]"
-              style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderLeft: `3px solid ${cc.accent}` }}
+              className="rounded-3xl px-5 py-5 flex items-center gap-3 mb-8 transition-transform hover:-translate-y-1 active:scale-[0.98]"
+              style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cc.accent}` }}
             >
               <div
                 className="flex items-center justify-center rounded-2xl flex-shrink-0"
@@ -83,7 +85,7 @@ export default function Niveau() {
               >
                 <Sparkles size={20} color={cc.accent} />
               </div>
-              <div>
+              <div className="flex-1">
                 <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>
                   Suivre un parcours
                 </p>
@@ -91,18 +93,19 @@ export default function Niveau() {
                   Débutant, avancé, expert — avec ta progression en %
                 </p>
               </div>
+              <ArrowRight size={18} color={cc.accent} />
             </div>
           </Link>
         )}
 
-        <div className="flex flex-col gap-3">
+        <div className="grid md:grid-cols-2 gap-4">
           {rows.map((row) => {
             if (row.kind === "planned") {
               const p = row.chapter;
               return (
                 <div
                   key={p.id}
-                  className="rounded-3xl px-5 py-4 flex items-center justify-between"
+                  className="rounded-3xl px-5 py-5 flex items-center justify-between"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft, opacity: 0.65 }}
                 >
                   <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.05rem", fontWeight: 700 }}>
@@ -123,7 +126,7 @@ export default function Niveau() {
             const locked = !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
             const content = (
               <div
-                className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
+                className="rounded-3xl px-5 py-5 flex items-center justify-between gap-4 transition-transform hover:-translate-y-1 active:scale-[0.98]"
                 style={{
                   backgroundColor: colors.card,
                   boxShadow: shadow.soft,
@@ -131,7 +134,7 @@ export default function Niveau() {
                   borderLeft: `3px solid ${locked ? colors.hairline : cc.accent}`,
                 }}
               >
-                <div>
+                <div className="min-w-0 flex-1">
                   <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.05rem", fontWeight: 700 }}>
                     {chapter.meta.title}
                   </p>
@@ -143,7 +146,7 @@ export default function Niveau() {
                       : chapter.meta.description}
                   </p>
                 </div>
-                {locked && <Lock size={18} color={colors.slate} />}
+                {locked ? <Lock size={18} color={colors.slate} /> : <ArrowRight size={17} color={cc.accent} />}
               </div>
             );
             return locked ? (

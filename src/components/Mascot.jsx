@@ -46,7 +46,7 @@ export default function Mascot({ size = 84, className, style }) {
   return (
     <img
       src={MASCOTS[key]}
-      alt="Reussimaths"
+      alt="RéussiMaths"
       width={size}
       height={size}
       className={className}

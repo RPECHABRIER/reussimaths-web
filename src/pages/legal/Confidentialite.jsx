@@ -6,7 +6,7 @@ export default function Confidentialite() {
   return (
     <LegalLayout title="Politique de confidentialité">
       <p>
-        Cette politique explique quelles données sont collectées par Reussimaths, pourquoi, et comment elles sont
+        Cette politique explique quelles données sont collectées par RéussiMaths, pourquoi, et comment elles sont
         protégées, conformément au Règlement Général sur la Protection des Données (RGPD).
       </p>
 
@@ -43,10 +43,10 @@ export default function Confidentialite() {
       </p>
 
       <h2>3. Bases juridiques</h2>
-      <ul><li>exécution du service demandé : compte, progression, accès et abonnement ;</li><li>obligations légales : conservation des justificatifs liés aux paiements ;</li><li>intérêt légitime de Reussimaths : sécurité, prévention des abus et diagnostic des erreurs techniques ;</li><li>consentement lorsqu’il est juridiquement nécessaire pour une fonctionnalité facultative.</li></ul>
+      <ul><li>exécution du service demandé : compte, progression, accès et abonnement ;</li><li>obligations légales : conservation des justificatifs liés aux paiements ;</li><li>intérêt légitime de RéussiMaths : sécurité, prévention des abus et diagnostic des erreurs techniques ;</li><li>consentement lorsqu’il est juridiquement nécessaire pour une fonctionnalité facultative.</li></ul>
 
       <h2>4. Utilisateurs mineurs</h2>
-      <p>Reussimaths est destiné notamment à des élèves mineurs. Pour un traitement facultatif fondé sur le consentement, un utilisateur âgé de moins de 15 ans doit être accompagné par le titulaire de l’autorité parentale selon les règles applicables. Les fonctionnalités essentielles sont conçues pour limiter les données demandées : le nom réel n’est pas affiché et un pseudo peut être utilisé.</p>
+      <p>RéussiMaths est destiné notamment à des élèves mineurs. Pour un traitement facultatif fondé sur le consentement, un utilisateur âgé de moins de 15 ans doit être accompagné par le titulaire de l’autorité parentale selon les règles applicables. Les fonctionnalités essentielles sont conçues pour limiter les données demandées : le nom réel n’est pas affiché et un pseudo peut être utilisé.</p>
 
       <h2>5. Sous-traitants et destinataires</h2>
       <ul>
@@ -76,7 +76,7 @@ export default function Confidentialite() {
       <p>
         L'accès aux données est protégé par des règles de sécurité au niveau de la base de données (Row Level
         Security) : chaque utilisateur ne peut consulter que ses propres données de progression et d'abonnement. Les
-        mots de passe ne sont jamais gérés directement par Reussimaths (connexion déléguée à Google/Apple).
+        mots de passe ne sont jamais gérés directement par RéussiMaths (connexion déléguée à Google/Apple).
       </p>
       <p>Lorsqu’une erreur technique bloque une page, un diagnostic limité peut être transmis aux journaux de l’hébergeur : message technique, emplacement dans l’application, trace logicielle et date. Le contenu des réponses scolaires, l’adresse e-mail et les informations bancaires ne sont pas inclus dans ce signalement.</p>
 

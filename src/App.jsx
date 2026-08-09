@@ -47,7 +47,7 @@ function PageLoader() {
         <div className="absolute inset-0 rounded-full" style={{ border: `3px solid ${colors.gold}2b` }} />
         <div className="absolute inset-0 rounded-full animate-spin" style={{ border: "3px solid transparent", borderTopColor: colors.gold }} />
       </div>
-      <p className="text-xs font-semibold tracking-wide">Reussimaths prépare la suite…</p>
+      <p className="text-xs font-semibold tracking-wide">RéussiMaths prépare la suite…</p>
     </div>
   );
 }

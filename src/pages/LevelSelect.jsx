@@ -14,7 +14,7 @@ export default function LevelSelect() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-10 pt-4">
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            Reussimaths
+            RéussiMaths
           </h1>
           <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
             {trial ? "Quel est ton niveau actuel ?" : "Choisis ton niveau"}

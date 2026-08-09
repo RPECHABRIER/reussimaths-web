@@ -221,7 +221,7 @@ export default function Account() {
               Des progrès visibles, semaine après semaine.
             </h1>
             <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed" style={{ color: colors.slate }}>
-              Reussimaths repère les notions fragiles, propose la bonne série et programme les révisions. L’élève sait quoi faire ; le parent sait ce qui avance.
+              RéussiMaths repère les notions fragiles, propose la bonne série et programme les révisions. L’élève sait quoi faire ; le parent sait ce qui avance.
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-7">
               {[
@@ -425,7 +425,7 @@ export default function Account() {
                 </button>
               ) : (
                 <form onSubmit={handleRedeemInvitationCode} className="flex flex-col gap-2">
-                  <p className="text-xs" style={{ color: colors.slate }}>Saisis ici uniquement un code transmis dans le cadre d’un accès autorisé par Reussimaths.</p>
+                  <p className="text-xs" style={{ color: colors.slate }}>Saisis ici uniquement un code transmis dans le cadre d’un accès autorisé par RéussiMaths.</p>
                   <div className="flex gap-2">
                     <input type="text" value={invitationCode} onChange={(event) => setInvitationCode(event.target.value)} placeholder="Code d’invitation" className="flex-1 text-sm rounded-lg px-3 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.card }} />
                     <button type="submit" disabled={invitationCodeLoading || !invitationCode.trim()} className="text-xs font-semibold py-2 px-3 rounded-full" style={{ backgroundColor: colors.gold, color: colors.ink }}>
@@ -447,7 +447,7 @@ export default function Account() {
           <ReviserCard />
 
           <Link to="/retour-pilote" className="rounded-2xl p-3 text-sm font-bold" style={{ backgroundColor: `${colors.green}10`, color: colors.green }}>
-            Donner mon retour sur Reussimaths
+            Donner mon retour sur RéussiMaths
           </Link>
 
           <Link to="/bilan">
@@ -512,7 +512,7 @@ export default function Account() {
             <div className="flex flex-col gap-4 -mx-6 px-6 pt-2" style={{ borderTop: `1px solid ${colors.hairline}` }}>
               <div>
                 <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>
-                  Débloque tout Reussimaths
+                  Débloque tout RéussiMaths
                 </p>
                 <p className="text-xs mt-1" style={{ color: colors.slate }}>
                   Tous les chapitres, tous les niveaux, corrections détaillées illimitées.

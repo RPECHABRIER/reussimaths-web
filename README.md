@@ -1,4 +1,4 @@
-# Reussimaths — web app
+# RéussiMaths — web app
 
 **Site en production :** https://reussimaths-web.vercel.app/
 

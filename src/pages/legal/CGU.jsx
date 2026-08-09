@@ -7,13 +7,13 @@ export default function CGU() {
     <LegalLayout title="Conditions Générales d'Utilisation et de Vente">
       <p>
         Les présentes Conditions Générales d'Utilisation et de Vente (« CGU ») régissent l'accès et l'utilisation de
-        l'application Reussimaths (le « Service »), destinée à la révision des mathématiques du collège et du lycée.
+        l'application RéussiMaths (le « Service »), destinée à la révision des mathématiques du collège et du lycée.
         En créant un compte ou en utilisant le Service, l'utilisateur accepte les présentes CGU.
       </p>
 
       <h2>1. Description du Service</h2>
       <p>
-        Reussimaths propose des exercices de mathématiques générés ou issus d'une banque d'exercices, organisés par
+        RéussiMaths propose des exercices de mathématiques générés ou issus d'une banque d'exercices, organisés par
         niveau scolaire (de la 6e à la terminale). Certains contenus sont accessibles gratuitement (avec ou sans
         limite quotidienne), d'autres nécessitent un abonnement payant.
       </p>
@@ -36,7 +36,7 @@ export default function CGU() {
         </li>
       </ul>
       <p>
-        Les paiements sont traités par Stripe, prestataire de paiement tiers. Reussimaths n'a à aucun moment accès
+        Les paiements sont traités par Stripe, prestataire de paiement tiers. RéussiMaths n'a à aucun moment accès
         aux coordonnées bancaires complètes de l'utilisateur. Les tarifs sont indiqués toutes taxes comprises le cas
         échéant.
       </p>
@@ -59,7 +59,7 @@ export default function CGU() {
       <h2>6. Parrainage</h2>
       <p>
         Un utilisateur peut inviter d'autres personnes via son lien de parrainage personnel. Certains contenus
-        peuvent être débloqués en fonction du nombre de filleuls inscrits. Reussimaths se réserve le droit
+        peuvent être débloqués en fonction du nombre de filleuls inscrits. RéussiMaths se réserve le droit
         d'invalider un parrainage en cas d'usage frauduleux manifeste (comptes multiples créés dans le seul but de
         débloquer du contenu).
       </p>
@@ -73,7 +73,7 @@ export default function CGU() {
 
       <h2>8. Responsabilité</h2>
       <p>
-        Le Service est fourni « en l'état ». Reussimaths met tout en œuvre pour assurer l'exactitude des contenus
+        Le Service est fourni « en l'état ». RéussiMaths met tout en œuvre pour assurer l'exactitude des contenus
         pédagogiques mais ne garantit pas l'absence totale d'erreur. Le Service ne remplace pas un enseignement
         structuré et ne saurait engager la responsabilité de l'éditeur quant aux résultats scolaires de
         l'utilisateur.

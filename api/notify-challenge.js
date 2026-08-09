@@ -108,14 +108,14 @@ export default async function handler(req, res) {
 
     const transport = buildTransport();
     await transport.sendMail({
-      from: `Reussimaths <${process.env.GMAIL_USER}>`,
+      from: `RéussiMaths <${process.env.GMAIL_USER}>`,
       to: toUser.user.email,
       subject: `${fromPseudo} te défie${sujet} !`,
-      text: `${fromPseudo} vient de te lancer un défi${sujet} sur Reussimaths.\n\nRelève le défi ici : ${appUrl}/amis\n\n— L'équipe Reussimaths`,
+      text: `${fromPseudo} vient de te lancer un défi${sujet} sur RéussiMaths.\n\nRelève le défi ici : ${appUrl}/amis\n\n— L'équipe RéussiMaths`,
       html: `
-        <p>${safeFromPseudo} vient de te lancer un défi${sujet} sur Reussimaths.</p>
+        <p>${safeFromPseudo} vient de te lancer un défi${sujet} sur RéussiMaths.</p>
         <p><a href="${appUrl}/amis">Relever le défi</a></p>
-        <p style="color:#6E7787;font-size:12px;">— L'équipe Reussimaths</p>
+        <p style="color:#6E7787;font-size:12px;">— L'équipe RéussiMaths</p>
       `,
     });
 

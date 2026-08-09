@@ -1,4 +1,4 @@
-# Automation log — Reussimaths content pipeline
+# Automation log — RéussiMaths content pipeline
 
 ## 2026-08-07 — Phase 1 (suite) : audit programme 2026 (cycle 3, arrêté du 10-4-2025) — organisation-gestion-donnees.js et proportionnalite.js (6e)
 

@@ -11,7 +11,7 @@ export default function MentionsLegales() {
   return (
     <LegalLayout title="Mentions légales">
       <p>
-        Reussimaths est actuellement en <strong>phase de test</strong>. L'éditeur du site n'a, à ce stade, pas encore
+        RéussiMaths est actuellement en <strong>phase de test</strong>. L'éditeur du site n'a, à ce stade, pas encore
         finalisé son immatriculation professionnelle (auto-entrepreneur). Cette page doit donc rester considérée comme
         provisoire et sera complétée avant toute ouverture commerciale réelle.
       </p>
@@ -51,7 +51,7 @@ export default function MentionsLegales() {
       <h2>Propriété intellectuelle</h2>
       <p>
         L'ensemble des contenus pédagogiques (exercices, corrections, méthodes), la charte graphique et le code de
-        l'application Reussimaths sont la propriété de l'éditeur, sauf mention contraire. Toute reproduction ou
+        l'application RéussiMaths sont la propriété de l'éditeur, sauf mention contraire. Toute reproduction ou
         représentation, totale ou partielle, sans autorisation est interdite.
       </p>
 

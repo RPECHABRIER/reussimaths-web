@@ -58,7 +58,7 @@ export default function CycleSelect() {
           <Link to="/" className="flex items-center gap-2.5">
             <Mascot size={42} style={{ boxShadow: shadow.soft }} />
             <span style={{ fontFamily: fonts.display, color: colors.ink, fontWeight: 850, fontSize: "1.05rem" }}>
-              Reussimaths
+              RéussiMaths
             </span>
           </Link>
           <Link to="/compte" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, color: colors.ink }}>
@@ -88,7 +88,7 @@ export default function CycleSelect() {
                 Travaille ce qu’il faut. <span style={{ color: colors.gold }}>Vois tes progrès.</span>
               </h1>
               <p className="text-base sm:text-lg mt-5 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: colors.slate }}>
-                Reussimaths transforme 15 minutes d’entraînement en prochaine action claire : diagnostic, exercices ciblés,
+                RéussiMaths transforme 15 minutes d’entraînement en prochaine action claire : diagnostic, exercices ciblés,
                 correction détaillée et révisions au bon moment.
               </p>
 
@@ -230,7 +230,7 @@ export default function CycleSelect() {
             style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
             <div>
               <p className="text-sm font-bold" style={{ color: colors.gold }}>Accès complet</p>
-              <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Tout Reussimaths pour 4,99 €/mois</p>
+              <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Tout RéussiMaths pour 4,99 €/mois</p>
               <p className="text-sm mt-1" style={{ color: colors.slate }}>Tous les niveaux, entraînement illimité et bilan de progression. Sans engagement.</p>
             </div>
             <Link to="/compte" className="inline-flex items-center gap-2 py-3 px-5 rounded-full font-bold text-sm shrink-0"

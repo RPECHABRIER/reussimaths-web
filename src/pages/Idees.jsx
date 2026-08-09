@@ -120,7 +120,7 @@ export default function Idees() {
             Idées d'amélioration
           </h1>
           <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            {admin ? "Toutes les idées envoyées par les abonnés." : "Une idée pour améliorer Reussimaths ? Dis-nous tout."}
+            {admin ? "Toutes les idées envoyées par les abonnés." : "Une idée pour améliorer RéussiMaths ? Dis-nous tout."}
           </p>
         </div>
 

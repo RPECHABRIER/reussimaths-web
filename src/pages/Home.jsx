@@ -13,7 +13,7 @@ export default function Home() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
           <h1 style={{ fontFamily: "Fraunces, serif", color: "#1B2A4A", fontSize: "2rem", fontWeight: 600 }}>
-            Reussimaths
+            RéussiMaths
           </h1>
           <p className="text-sm mt-1" style={{ color: "#5C6B7A" }}>
             Première Spécialité

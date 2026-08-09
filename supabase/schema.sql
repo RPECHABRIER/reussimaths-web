@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- Schéma Reussimaths — à exécuter dans l'éditeur SQL de ton projet Supabase.
+-- Schéma RéussiMaths — à exécuter dans l'éditeur SQL de ton projet Supabase.
 -- Comptes individualisés : auth.users (géré par Supabase) + 3 tables perso.
 -- ---------------------------------------------------------------------------
 

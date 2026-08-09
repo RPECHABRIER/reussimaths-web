@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Liste des niveaux proposés par Reussimaths, du collège à la terminale.
+// Liste des niveaux proposés par RéussiMaths, du collège à la terminale.
 // Un niveau "apparaît" avec du contenu dès qu'au moins un chapitre (voir
 // src/chapters/*.js) déclare `meta.level` égal à son `id`. Sans chapitre, le
 // niveau s'affiche automatiquement en "Bientôt disponible" avec un vote

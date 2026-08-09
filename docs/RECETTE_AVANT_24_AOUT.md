@@ -1,4 +1,4 @@
-# Recette ReussiMaths avant le 24 août 2026
+# Recette RéussiMaths avant le 24 août 2026
 
 Cette liste couvre uniquement les vérifications qui nécessitent le site déployé, de vrais comptes ou le matériel du pilote. Noter pour chaque ligne : date, appareil, compte utilisé et résultat.
 
@@ -16,7 +16,7 @@ Cette liste couvre uniquement les vérifications qui nécessitent le site déplo
 - [ ] Se déconnecter et se reconnecter : niveau, progression et accès sont conservés.
 - [ ] Tester Google dans une fenêtre privée.
 - [ ] Tester Apple dans une fenêtre privée si Apple est proposé publiquement.
-- [ ] Tester un abandon ou un refus du fournisseur externe : retour propre sur ReussiMaths.
+- [ ] Tester un abandon ou un refus du fournisseur externe : retour propre sur RéussiMaths.
 - [ ] Vérifier qu'un utilisateur non connecté ne voit aucune donnée d'un autre compte.
 
 ## 3. Boucle pédagogique

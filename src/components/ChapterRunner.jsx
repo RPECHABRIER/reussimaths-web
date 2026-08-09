@@ -15,6 +15,8 @@ import Graph from "./Graph";
 import CoursPanel from "./CoursPanel";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
+import { classifyLearningError } from "../lib/learningError";
+import { trackProductEvent } from "../lib/productAnalytics";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -108,7 +110,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const quotaApplies = !!dailyLimit && !hasUnlimitedQuota(chapter, { user, subscription });
   const quotaExhausted = quotaApplies && quota.exhausted;
   const isSession = Number.isFinite(sessionLength) && sessionLength > 0;
-  const isDiscoverySession = backTo === "/parcours/decouverte";
+  const isDiscoverySession = backTo === "/parcours/decouverte" || backTo?.startsWith("/parcours/essai-");
+  const isPersonalizedTrial = backTo?.startsWith("/parcours/essai-");
   const hasCours = !!chapter.meta.cours;
   const MODES = hasCours ? [COURS_MODE, ...EXERCISE_MODES] : EXERCISE_MODES;
 
@@ -140,6 +143,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [elapsed, setElapsed] = useState(0);
   const [revealResult, setRevealResult] = useState(false);
   const defiStartRef = useRef(Date.now());
+  const exerciseStartRef = useRef(Date.now());
+  const completionTrackedRef = useRef(false);
+  const assistanceUsedRef = useRef(false);
 
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
@@ -171,8 +177,21 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   // si déjà comptabilisé aujourd'hui ou si non connecté).
   useEffect(() => {
     dailyStreak.markPracticed();
+    if (isPersonalizedTrial) trackProductEvent("trial_started", { levelId: chapter.meta.level, chapterId: chapter.meta.id });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!sessionDone || completionTrackedRef.current) return;
+    completionTrackedRef.current = true;
+    trackProductEvent(isPersonalizedTrial ? "trial_completed" : "session_completed", {
+      levelId: chapter.meta.level,
+      chapterId: chapter.meta.id,
+      correct: correctCount,
+      total: sessionLength ?? answeredCount,
+      subscribed: !!subscription,
+    });
+  }, [sessionDone, isPersonalizedTrial, chapter.meta.level, chapter.meta.id, correctCount, sessionLength, answeredCount, subscription]);
 
   // Chronomètre du mode Défi, remis à zéro à chaque entrée dans ce mode.
   useEffect(() => {
@@ -244,6 +263,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
+    assistanceUsedRef.current = false;
+    exerciseStartRef.current = Date.now();
   }, [chapter, effectiveDifficulty, isSession, answeredCount, sessionLength, redrillQueue, focusSkill]);
 
   const retry = () => {
@@ -254,7 +275,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setShowHelp(false);
   };
 
-  const registerResult = (correct) => {
+  const registerResult = (correct, response) => {
     setFeedback({ correct });
     if (quotaApplies) quota.consume();
     if (isSession) {
@@ -263,7 +284,14 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     }
     adjustDifficulty(correct);
     if (!correct) queueRedrill(exercise.chapter);
-    skillTracking.recordAttempt({ skillId: exercise.chapter, chapterId: chapter.meta.id, correct });
+    skillTracking.recordAttempt({
+      skillId: exercise.chapter,
+      chapterId: chapter.meta.id,
+      correct,
+      errorCode: correct ? null : classifyLearningError(exercise, response),
+      responseTimeMs: Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000),
+      assisted: isDecouverte || assistanceUsedRef.current,
+    });
     if (correct) {
       const newStreak = streak + 1;
       const bonus = newStreak % 5 === 0 ? 20 : 0;
@@ -286,18 +314,18 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
+    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
   };
 
   const submitQCM = (option) => {
     if (feedback) return;
     setSelectedOption(option);
-    registerResult(option === exercise.answer);
+    registerResult(option === exercise.answer, option);
   };
 
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    registerResult(matchesText(input, exercise.answer));
+    registerResult(matchesText(input, exercise.answer), input);
   };
 
   const toggleMulti = (i) => {
@@ -307,7 +335,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
   const submitMulti = () => {
     if (feedback) return;
-    registerResult(matchesMulti(selectedMulti, exercise.answer));
+    registerResult(matchesMulti(selectedMulti, exercise.answer), selectedMulti);
   };
 
   const ink = colors.ink;
@@ -564,7 +592,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 </p>
                 {hasSteps && (
                   <button
-                    onClick={() => setRevealResult((v) => !v)}
+                    onClick={() => { assistanceUsedRef.current = true; setRevealResult((v) => !v); }}
                     className="text-xs font-semibold py-1 px-3 rounded-full shrink-0"
                     style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ink}` }}
                   >
@@ -803,7 +831,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   </button>
                   {!isDefi && !isDecouverte && (
                     <button
-                      onClick={() => setShowHelp((s) => !s)}
+                      onClick={() => { assistanceUsedRef.current = true; setShowHelp((s) => !s); }}
                       className="flex-1 py-2 rounded-full text-xs font-semibold"
                       style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ink}` }}
                     >

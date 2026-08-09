@@ -40,7 +40,7 @@ export default function ParcoursOverview() {
   const nextIndex = parcours.steps.findIndex((_, i) => !stepByIndex.get(i)?.completed);
   const nextStepIndex = nextIndex === -1 ? 0 : nextIndex;
   const finished = completedSteps >= total && total > 0;
-  const backTo = parcours.kind === "decouverte" ? "/" : `/parcours/niveau/${parcours.levelId}`;
+  const backTo = parcours.kind === "decouverte" ? "/" : parcours.kind === "trial" ? "/niveaux?objectif=essai" : `/parcours/niveau/${parcours.levelId}`;
   const nextStep = parcours.steps[nextStepIndex];
   const nextChapter = nextStep ? getChapter(nextStep.chapterId) : null;
   const nextLocked = !parcours.free && nextChapter && !canAccessChapter(nextChapter, { user, subscription, referralBonusChapterId });
@@ -50,7 +50,7 @@ export default function ParcoursOverview() {
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
         <Link to={backTo} className="text-sm font-medium" style={{ color: colors.ink }}>
-          ← {parcours.kind === "decouverte" ? "Accueil" : "Changer de palier"}
+          ← {parcours.kind === "decouverte" ? "Accueil" : parcours.kind === "trial" ? "Changer de niveau" : "Changer de palier"}
         </Link>
 
         <div className="text-center my-7">

@@ -78,11 +78,71 @@ export default function AdminPreview() {
           <PreviewSwitcher />
           <GrantAccessTool />
           <div className="lg:col-span-2"><ClassInvitationsTool /></div>
+          <div className="lg:col-span-2"><ProductMetrics /></div>
           <div className="lg:col-span-2"><SubscribersDashboard /></div>
         </div>
       </div>
     </div>
   );
+}
+
+function ProductMetrics() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const since = new Date(Date.now() - 31 * 86400000).toISOString();
+    Promise.all([
+      supabase.from("product_events").select("event_name, anonymous_id, occurred_at").gte("occurred_at", since).order("occurred_at"),
+      supabase.from("pilot_feedback").select("role, usefulness, ease, would_recommend, comment, created_at").order("created_at", { ascending: false }).limit(20),
+      supabase.from("subscriptions").select("plan, status, admin_granted, current_period_end"),
+      supabase.from("learning_attempts").select("error_code").not("error_code", "is", null).gte("attempted_at", since),
+    ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult]) => {
+      const firstError = eventsResult.error || feedbackResult.error || subscriptionsResult.error || attemptsResult.error;
+      if (firstError) { setError(firstError.message); return; }
+      const events = eventsResult.data ?? [];
+      const uniqueByEvent = (name) => new Set(events.filter((item) => item.event_name === name).map((item) => item.anonymous_id)).size;
+      const firstSeen = new Map(); const daysSeen = new Map();
+      events.forEach((item) => {
+        const day = item.occurred_at.slice(0, 10);
+        if (!firstSeen.has(item.anonymous_id)) firstSeen.set(item.anonymous_id, day);
+        if (!daysSeen.has(item.anonymous_id)) daysSeen.set(item.anonymous_id, new Set());
+        daysSeen.get(item.anonymous_id).add(day);
+      });
+      const retention = (target) => {
+        let eligible = 0; let retained = 0;
+        for (const [id, first] of firstSeen) {
+          const age = Math.floor((Date.now() - new Date(`${first}T00:00:00`).getTime()) / 86400000);
+          if (age < target) continue;
+          eligible += 1;
+          const targetTime = new Date(`${first}T00:00:00`).getTime() + target * 86400000;
+          if ([...daysSeen.get(id)].some((day) => Math.abs(new Date(`${day}T00:00:00`).getTime() - targetTime) <= 86400000)) retained += 1;
+        }
+        return eligible ? Math.round(retained / eligible * 100) : null;
+      };
+      const paid = (subscriptionsResult.data ?? []).filter((item) => item.plan === "mensuel" && !item.admin_granted && ["active", "trialing"].includes(item.status));
+      const errorCounts = (attemptsResult.data ?? []).reduce((map, item) => map.set(item.error_code, (map.get(item.error_code) ?? 0) + 1), new Map());
+      setData({
+        funnel: [
+          ["Visiteurs", uniqueByEvent("page_view")], ["Diagnostics", uniqueByEvent("diagnostic_completed")],
+          ["Essais terminés", uniqueByEvent("trial_completed")], ["Checkout", uniqueByEvent("checkout_started")],
+          ["Paiements activés", uniqueByEvent("payment_activated")],
+        ],
+        retention7: retention(7), retention30: retention(30), mrr: paid.length * 4.99,
+        feedback: feedbackResult.data ?? [],
+        errorTypes: [...errorCounts.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
+      });
+    });
+  }, []);
+  const average = (key) => data?.feedback.length ? (data.feedback.reduce((sum, item) => sum + item[key], 0) / data.feedback.length).toFixed(1) : "—";
+  return <div className="rounded-[1.75rem] p-5 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}><div className="flex items-center gap-3"><Users size={19} color={colors.gold} /><div><p className="font-black" style={{ color: colors.ink }}>Conversion et valeur produit</p><p className="text-xs" style={{ color: colors.slate }}>30 derniers jours · visiteurs pseudonymes uniques</p></div></div>
+    {error && <p className="text-xs mt-4" style={{ color: colors.red }}>{error}</p>}
+    {!data && !error && <p className="text-xs mt-4" style={{ color: colors.slate }}>Chargement…</p>}
+    {data && <><div className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-5">{data.funnel.map(([label,value], index) => { const previous = data.funnel[index - 1]?.[1]; const rate = index > 0 && previous ? Math.round(value / previous * 100) : null; return <div key={label} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}><p className="text-xl font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}{rate != null ? ` · ${rate} % de l’étape précédente` : ""}</p></div>; })}</div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">{[["Rétention J+7",data.retention7 == null ? "—" : `${data.retention7} %`],["Rétention J+30",data.retention30 == null ? "—" : `${data.retention30} %`],["MRR estimé",`${data.mrr.toFixed(2)} €`],["Retours pilote",data.feedback.length]].map(([label,value]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor:`${colors.gold}0d` }}><p className="font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p></div>)}</div>
+      <p className="text-xs mt-4" style={{ color: colors.slate }}>Retours : utilité {average("usefulness")}/5 · simplicité {average("ease")}/5 · recommandation {data.feedback.length ? Math.round(data.feedback.filter((item) => item.would_recommend).length / data.feedback.length * 100) : 0} %</p>
+      {data.errorTypes.length > 0 && <p className="text-xs mt-2" style={{ color: colors.slate }}>Erreurs fréquentes : {data.errorTypes.map(([name,count]) => `${name} (${count})`).join(" · ")}</p>}
+      <div className="flex flex-col gap-2 mt-3">{data.feedback.filter((item) => item.comment).slice(0,5).map((item,index) => <div key={`${item.created_at}-${index}`} className="rounded-xl p-3 text-xs" style={{ backgroundColor: colors.bg, color: colors.ink }}><strong>{item.role}</strong> — {item.comment}</div>)}</div></>}
+  </div>;
 }
 
 // Codes d'invitation exceptionnels : cet outil n'est rendu que dans la page

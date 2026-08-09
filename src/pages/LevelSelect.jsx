@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { LEVELS } from "../levels";
 import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
+import { trackProductEvent } from "../lib/productAnalytics";
 
 export default function LevelSelect() {
+  const [searchParams] = useSearchParams();
+  const trial = searchParams.get("objectif") === "essai";
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
@@ -13,7 +16,7 @@ export default function LevelSelect() {
             Reussimaths
           </h1>
           <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            Choisis ton niveau
+            {trial ? "Quel est ton niveau actuel ?" : "Choisis ton niveau"}
           </p>
           <div
             className="inline-flex items-center gap-1.5 mt-4 px-3.5 py-1.5 rounded-full"
@@ -33,13 +36,13 @@ export default function LevelSelect() {
           </div>
         </div>
 
-        <ReviserCard className="block mb-4" />
+        {!trial && <ReviserCard className="block mb-4" />}
 
         <div className="flex flex-col gap-3">
           {LEVELS.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
             return (
-              <Link key={level.id} to={`/niveau/${level.id}`}>
+              <Link key={level.id} onClick={() => trackProductEvent("level_selected", { levelId: level.id, trial })} to={trial ? `/parcours/niveau/${level.id}/diagnostic?objectif=essai` : `/niveau/${level.id}`}>
                 <div
                   className="rounded-3xl px-5 py-4 flex items-center justify-between transition-transform active:scale-[0.98]"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}

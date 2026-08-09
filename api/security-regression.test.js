@@ -8,6 +8,9 @@ const API_FILES = [
   "admin-grant-access.js",
   "admin-class-codes.js",
   "notify-challenge.js",
+  "checkout-status.js",
+  "create-customer-portal.js",
+  "pilot-feedback.js",
 ];
 
 test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", async () => {
@@ -15,6 +18,22 @@ test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", a
     const source = await readFile(new URL(file, import.meta.url), "utf8");
     assert.match(source, /requireSupabaseUser\(req, res, supabaseAdmin\)/, file);
   }
+});
+
+test("le paiement évite les doublons et conserve la preuve du consentement", async () => {
+  const [checkout, status, portal, migration] = await Promise.all([
+    readFile(new URL("create-checkout-session.js", import.meta.url), "utf8"),
+    readFile(new URL("checkout-status.js", import.meta.url), "utf8"),
+    readFile(new URL("create-customer-portal.js", import.meta.url), "utf8"),
+    readFile(new URL("../supabase/prelaunch-conversion-learning-2026-08-09.sql", import.meta.url), "utf8"),
+  ]);
+  assert.match(checkout, /Un accès équivalent est déjà actif/);
+  assert.match(checkout, /idempotencyKey/);
+  assert.match(checkout, /purchase_consents/);
+  assert.match(checkout, /CHECKOUT_SESSION_ID/);
+  assert.match(status, /session\.client_reference_id !== user\.id/);
+  assert.match(portal, /billingPortal\.sessions\.create/);
+  assert.match(migration, /immediate_access_accepted boolean not null check/);
 });
 
 test("les invitations classe suivent la durée choisie et restent réservées à l'admin", async () => {

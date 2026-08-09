@@ -42,11 +42,13 @@ export default function CycleSelect() {
   const dueCount = useDueSkillsCount(user?.id);
   const preferredLevel = getLevel(getPreferredLevel());
   const hasStreak = streak?.current_streak > 0;
-  const nextAction = dueCount > 0
+  const nextAction = !user
+    ? { to: "/niveaux?objectif=essai", title: "Essayer à mon niveau", detail: "Un diagnostic court puis une série adaptée" }
+    : dueCount > 0
     ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
     : preferredLevel
     ? { to: `/parcours/niveau/${preferredLevel.id}/diagnostic`, title: `Continuer en ${preferredLevel.label}`, detail: "Un diagnostic rapide pour choisir le bon entraînement" }
-    : { to: "/parcours/decouverte/etape/0", title: "Essayer maintenant", detail: "5 questions guidées pour découvrir Reussimaths" };
+    : { to: "/niveaux?objectif=essai", title: "Choisir mon niveau", detail: "Un diagnostic court puis une série adaptée" };
 
   return (
     <div className="min-h-screen w-full" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -223,7 +225,7 @@ export default function CycleSelect() {
               <div>
                 <p className="text-xl font-black" style={{ color: colors.bg }}>Vous enseignez les mathématiques ?</p>
                 <p className="text-sm mt-1 max-w-xl" style={{ color: "#d7dce6" }}>
-                  Projetez un rituel gratuit en classe et testez un accès niveau complet avec un code pilote.
+                  Projetez gratuitement un rituel en classe, sans compte élève ni préparation supplémentaire.
                 </p>
               </div>
             </div>

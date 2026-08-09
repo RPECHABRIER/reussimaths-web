@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
@@ -26,6 +26,9 @@ import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
 import LoadError from "../components/LoadError";
+import { trackProductEvent } from "../lib/productAnalytics";
+
+const TERMS_VERSION = "2026-08-09";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
@@ -52,6 +55,8 @@ export default function Account() {
   const [invitationCodeLoading, setInvitationCodeLoading] = useState(false);
   const [invitationCodeError, setInvitationCodeError] = useState(null);
   const [acceptImmediateAccess, setAcceptImmediateAccess] = useState(false);
+  const [checkoutReturn, setCheckoutReturn] = useState(null);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -67,6 +72,8 @@ export default function Account() {
   const isActive = fullAccess || packExamen;
   const previewing = isRealAdmin(user) && !!getAdminPreview()?.mode && getAdminPreview()?.mode !== "admin";
 
+  useEffect(() => { trackProductEvent("offer_viewed", { authenticated: !!user }); }, []);
+
   const referralLink = profile?.referral_code
     ? `${window.location.origin}/?ref=${profile.referral_code}`
     : null;
@@ -79,10 +86,12 @@ export default function Account() {
     setCheckoutLoading(true);
     setCheckoutError(null);
     try {
+      const purchaseAttemptId = crypto.randomUUID();
+      trackProductEvent("checkout_started", { plan });
       const res = await authenticatedFetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, purchaseAttemptId, termsVersion: TERMS_VERSION, immediateAccessAccepted: true }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Impossible d'ouvrir le paiement.");
@@ -91,6 +100,58 @@ export default function Account() {
       setCheckoutError(err.message);
     } finally {
       setCheckoutLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    const params = new URLSearchParams(window.location.search);
+    const checkout = params.get("checkout");
+    const sessionId = params.get("session_id");
+    if (checkout === "cancel") {
+      setCheckoutReturn({ type: "cancel", message: "Paiement interrompu : rien n’a été débité et aucun accès n’a été créé." });
+      trackProductEvent("checkout_returned", { result: "cancel" });
+      return;
+    }
+    if (checkout !== "success" || !sessionId) return;
+    let cancelled = false;
+    setCheckoutReturn({ type: "pending", message: "Paiement reçu. Nous activons ton accès…" });
+    trackProductEvent("checkout_returned", { result: "success" });
+    const verify = async () => {
+      for (let attempt = 0; attempt < 8 && !cancelled; attempt += 1) {
+        try {
+          const response = await authenticatedFetch(`/api/checkout-status?session_id=${encodeURIComponent(sessionId)}`);
+          const data = await response.json();
+          if (response.ok && data.activated) {
+            reloadSubscription();
+            setCheckoutReturn({ type: "success", message: "Ton accès est actif. Tu peux commencer ta première séance." });
+            trackProductEvent("payment_activated", { plan: data.plan });
+            window.history.replaceState({}, "", "/compte");
+            return;
+          }
+        } catch {
+          // nouvelle tentative : le webhook peut arriver quelques secondes après Checkout
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+      if (!cancelled) setCheckoutReturn({ type: "pending", message: "Le paiement est confirmé, mais l’activation prend plus de temps que prévu. Recharge cette page dans un instant ; aucun nouveau paiement n’est nécessaire." });
+    };
+    verify();
+    return () => { cancelled = true; };
+  }, [user?.id, reloadSubscription]);
+
+  const openCustomerPortal = async () => {
+    setPortalLoading(true);
+    setCancelError(null);
+    try {
+      const response = await authenticatedFetch("/api/create-customer-portal", { method: "POST" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Impossible d'ouvrir l'espace de facturation.");
+      trackProductEvent("portal_opened");
+      window.location.href = data.url;
+    } catch (error) {
+      setCancelError(error.message);
+      setPortalLoading(false);
     }
   };
 
@@ -175,8 +236,8 @@ export default function Account() {
                 </div>
               ))}
             </div>
-            <Link to="/parcours/decouverte/etape/0" className="inline-flex items-center gap-2 mt-6 text-sm font-bold" style={{ color: colors.ink }}>
-              Essayer une série avant de choisir <ArrowRight size={15} />
+            <Link to="/niveaux?objectif=essai" className="inline-flex items-center gap-2 mt-6 text-sm font-bold" style={{ color: colors.ink }}>
+              Essayer à son niveau avant de choisir <ArrowRight size={15} />
             </Link>
           </section>
 
@@ -197,8 +258,8 @@ export default function Account() {
               <p className="text-xs font-bold" style={{ color: colors.ink }}>Crée d’abord ton espace personnel</p>
               <p className="text-xs mt-1" style={{ color: colors.slate }}>La connexion sauvegarde la progression et rattache l’abonnement au bon élève.</p>
               <div className="grid sm:grid-cols-2 gap-2 mt-3">
-                <button onClick={signInWithGoogle} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
-                <button onClick={signInWithApple} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
+                <button onClick={() => { trackProductEvent("signup_started", { provider: "google" }); signInWithGoogle(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
+                <button onClick={() => { trackProductEvent("signup_started", { provider: "apple" }); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
               </div>
               <p className="flex items-center justify-center gap-1.5 text-[11px] mt-3" style={{ color: colors.slate }}><ShieldCheck size={13} color={colors.green} />L’élève choisit un pseudo ; son nom n’est pas affiché.</p>
             </div>
@@ -220,6 +281,19 @@ export default function Account() {
 
           {subscriptionError && (
             <LoadError message="Le statut de ton abonnement n'a pas pu être vérifié." onRetry={reloadSubscription} />
+          )}
+
+          {checkoutReturn && (
+            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: checkoutReturn.type === "success" ? `${colors.green}12` : `${colors.gold}12`, color: colors.ink }}>
+              <p className="text-sm font-bold">{checkoutReturn.type === "success" ? "Accès activé" : checkoutReturn.type === "cancel" ? "Paiement annulé" : "Activation en cours"}</p>
+              <p className="text-xs mt-1" style={{ color: colors.slate }}>{checkoutReturn.message}</p>
+            </div>
+          )}
+
+          {isActive && !admin && (
+            <button onClick={openCustomerPortal} disabled={portalLoading} className="text-xs font-medium" style={{ color: colors.slate }}>
+              {portalLoading ? "Ouverture…" : "Factures et moyen de paiement"}
+            </button>
           )}
 
           {classAccess && (
@@ -371,6 +445,10 @@ export default function Account() {
           )}
 
           <ReviserCard />
+
+          <Link to="/retour-pilote" className="rounded-2xl p-3 text-sm font-bold" style={{ backgroundColor: `${colors.green}10`, color: colors.green }}>
+            Donner mon retour sur Reussimaths
+          </Link>
 
           <Link to="/bilan">
             <div

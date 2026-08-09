@@ -9,6 +9,7 @@ import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 import StudentDock from "./components/StudentDock";
+import { trackProductEvent } from "./lib/productAnalytics";
 
 const LevelSelect = lazy(() => import("./pages/LevelSelect"));
 const CycleSelect = lazy(() => import("./pages/CycleSelect"));
@@ -36,6 +37,7 @@ const AdminPreview = lazy(() => import("./pages/AdminPreview"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const CGU = lazy(() => import("./pages/legal/CGU"));
 const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
+const PilotFeedback = lazy(() => import("./pages/PilotFeedback"));
 
 function PageLoader() {
   return (
@@ -79,6 +81,7 @@ export default function App() {
 
   useEffect(() => {
     pathRef.current = location.pathname;
+    trackProductEvent("page_view");
   }, [location.pathname]);
 
   // Capture un éventuel lien de parrainage (?ref=code), quelle que soit la
@@ -193,6 +196,7 @@ export default function App() {
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/cgu" element={<CGU />} />
         <Route path="/confidentialite" element={<Confidentialite />} />
+        <Route path="/retour-pilote" element={<PilotFeedback />} />
       </Routes>
       </Suspense></div>
       {showStudentDock && <StudentDock />}

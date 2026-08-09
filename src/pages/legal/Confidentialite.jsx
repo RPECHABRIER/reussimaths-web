@@ -23,6 +23,7 @@ export default function Confidentialite() {
         <li>
           <strong>Progression</strong> : scores, séries de bonnes réponses, chapitres pratiqués.
         </li>
+        <li><strong>Données d’apprentissage</strong> : compétence travaillée, réussite ou erreur, catégorie générale de l’erreur, durée de réponse et utilisation éventuelle d’une aide. La réponse brute saisie n’est pas conservée dans ce suivi.</li>
         <li>
           <strong>Abonnement</strong> : statut d'abonnement et identifiant client Stripe (pas les coordonnées
           bancaires, gérées exclusivement par Stripe).
@@ -30,13 +31,15 @@ export default function Confidentialite() {
         <li>
           <strong>Parrainage</strong> : lien entre un compte parrain et les comptes parrainés.
         </li>
+        <li><strong>Mesure d’usage</strong> : identifiant aléatoire du navigateur, pages principales et étapes du parcours commercial, sans nom ni adresse e-mail.</li>
+        <li><strong>Retours facultatifs</strong> : notes d’utilité et de simplicité, rôle déclaré et commentaire transmis volontairement.</li>
       </ul>
 
       <h2>2. Finalités</h2>
       <p>
         Ces données sont utilisées pour : permettre la connexion et la sauvegarde de la progression, gérer les
-        abonnements payants, faire fonctionner les fonctionnalités sociales (défis, parrainage), et améliorer le
-        Service.
+        abonnements payants, faire fonctionner les fonctionnalités sociales (défis, parrainage), adapter les révisions,
+        mesurer la conversion et la rétention de manière pseudonyme, et améliorer le Service.
       </p>
 
       <h2>3. Bases juridiques</h2>
@@ -80,7 +83,8 @@ export default function Confidentialite() {
       <h2>9. Cookies et stockage local</h2>
       <p>
         Le Service utilise le stockage local du navigateur (localStorage) pour retenir certaines préférences
-        techniques (par exemple le quota quotidien de questions gratuites, ou un identifiant de parrainage temporaire)
+        techniques (par exemple le quota quotidien de questions gratuites, un identifiant de parrainage temporaire ou
+        un identifiant aléatoire servant à mesurer les étapes d’utilisation)
         et la session de connexion. Aucun cookie publicitaire tiers n'est utilisé.
       </p>
     </LegalLayout>

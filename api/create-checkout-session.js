@@ -28,11 +28,15 @@ export default async function handler(req, res) {
   const user = await requireSupabaseUser(req, res, supabaseAdmin);
   if (!user) return;
 
-  const { plan } = req.body ?? {};
+  const { plan, purchaseAttemptId, termsVersion, immediateAccessAccepted } = req.body ?? {};
   const price = PRICE_BY_PLAN[plan];
 
   if (!price) {
     res.status(400).json({ error: "plan (mensuel | special_examen) requis" });
+    return;
+  }
+  if (!/^[0-9a-f-]{36}$/i.test(purchaseAttemptId ?? "") || !termsVersion || immediateAccessAccepted !== true) {
+    res.status(400).json({ error: "Consentement commercial incomplet." });
     return;
   }
 
@@ -44,16 +48,46 @@ export default async function handler(req, res) {
   const mode = plan === "special_examen" ? "payment" : "subscription";
 
   try {
+    const { data: existing, error: existingError } = await supabaseAdmin
+      .from("subscriptions")
+      .select("plan, status, current_period_end, stripe_customer_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (existingError) throw existingError;
+    const notExpired = !existing?.current_period_end || new Date(existing.current_period_end) > new Date();
+    const active = ["active", "trialing"].includes(existing?.status) && notExpired;
+    if (active && (existing.plan === "mensuel" || existing.plan === plan)) {
+      res.status(409).json({ error: "Un accès équivalent est déjà actif sur ce compte." });
+      return;
+    }
+
+    const consentedAt = new Date().toISOString();
+    const customer = existing?.stripe_customer_id?.startsWith("cus_") ? existing.stripe_customer_id : undefined;
     const session = await stripe.checkout.sessions.create({
       mode,
       line_items: [{ price, quantity: 1 }],
       // On passe l'id Supabase en metadata pour que le webhook sache à quel
       // compte rattacher l'abonnement (voir stripe-webhook.js).
       client_reference_id: user.id,
-      metadata: { supabase_user_id: user.id, plan },
-      success_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=success`,
+      metadata: { supabase_user_id: user.id, plan, purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt },
+      ...(customer ? { customer } : { customer_email: user.email }),
+      success_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=cancel`,
+    }, { idempotencyKey: `checkout_${user.id}_${purchaseAttemptId}` });
+
+    const { error: consentError } = await supabaseAdmin.from("purchase_consents").insert({
+      user_id: user.id,
+      stripe_checkout_session_id: session.id,
+      purchase_attempt_id: purchaseAttemptId,
+      plan,
+      terms_version: termsVersion,
+      immediate_access_accepted: true,
+      consented_at: consentedAt,
     });
+    if (consentError) {
+      if (session.status === "open") await stripe.checkout.sessions.expire(session.id).catch(() => {});
+      throw consentError;
+    }
     res.status(200).json({ url: session.url });
   } catch (err) {
     console.error("[create-checkout-session]", err);

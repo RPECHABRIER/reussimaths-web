@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { classifyLearningError } from "./lib/learningError.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -66,4 +67,27 @@ test("la navigation élève reste disponible sans couvrir les exercices", async 
   assert.match(dock, /Navigation élève/);
   assert.match(dock, /Réviser/);
   assert.match(dock, /Bilan/);
+});
+
+test("l'essai commence au niveau choisi et ne promet plus de code enseignant", async () => {
+  const [home, levels, parcours] = await Promise.all([read("./pages/CycleSelect.jsx"), read("./pages/LevelSelect.jsx"), read("./parcours.js")]);
+  assert.match(home, /Essayer à mon niveau/);
+  assert.doesNotMatch(home, /code pilote/);
+  assert.match(levels, /objectif=essai/);
+  assert.match(parcours, /getTrialParcours/);
+});
+
+test("les erreurs numériques sont catégorisées sans conserver la réponse brute", () => {
+  const exercise = { type: "numeric", answer: 12 };
+  assert.equal(classifyLearningError(exercise, "-12"), "sign_error");
+  assert.equal(classifyLearningError(exercise, "120"), "place_value_error");
+  assert.equal(classifyLearningError(exercise, "12,05"), "rounding_error");
+});
+
+test("la mesure produit et les retours restent minimaux", async () => {
+  const [analytics, endpoint, feedback] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js")]);
+  assert.match(analytics, /anonymousId/);
+  assert.doesNotMatch(analytics, /user\.email|email:/);
+  assert.match(endpoint, /ALLOWED_EVENTS/);
+  assert.match(feedback, /slice\(0, 2000\)/);
 });

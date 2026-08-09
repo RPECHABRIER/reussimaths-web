@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Check, X, Sparkles, ArrowRight, Clock3, Target, ShieldCheck, RotateCcw } from "lucide-react";
 import { getDiagnosticChapters, recommendTier, TIERS } from "../parcours";
 import { getLevel } from "../levels";
@@ -7,6 +7,7 @@ import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow, cycleColors } from "../theme";
+import { trackProductEvent } from "../lib/productAnalytics";
 
 // Mini-diagnostic de démarrage (/parcours/niveau/:levelId/diagnostic) : une
 // poignée de questions réparties sur tout le programme du niveau, à
@@ -17,6 +18,8 @@ import { colors, fonts, shadow, cycleColors } from "../theme";
 // src/parcours.js, getDiagnosticChapters / recommendTier).
 export default function ParcoursDiagnostic() {
   const { levelId } = useParams();
+  const [searchParams] = useSearchParams();
+  const trial = searchParams.get("objectif") === "essai";
   const level = getLevel(levelId);
   const [chapters] = useState(() => getDiagnosticChapters(levelId));
   const [index, setIndex] = useState(0);
@@ -28,6 +31,7 @@ export default function ParcoursDiagnostic() {
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
   const [started, setStarted] = useState(false);
+  const [results, setResults] = useState([]);
 
   if (!level || chapters.length === 0) {
     return (
@@ -47,7 +51,7 @@ export default function ParcoursDiagnostic() {
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
         <div className="max-w-2xl w-full rounded-[2rem] p-6 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
-          <Link to={`/parcours/niveau/${levelId}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← Voir les parcours</Link>
+          <Link to={trial ? "/niveaux?objectif=essai" : `/parcours/niveau/${levelId}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← {trial ? "Changer de niveau" : "Voir les parcours"}</Link>
           <div className="mt-7 text-center">
             <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${cycleColor}18` }}><Target size={26} color={cycleColor} /></div>
             <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Diagnostic {level.label}</p>
@@ -63,7 +67,7 @@ export default function ParcoursDiagnostic() {
               <div key={value} className="rounded-2xl p-3 sm:p-4 text-center" style={{ backgroundColor: colors.bg }}><Icon size={18} color={cycleColor} className="mx-auto" /><p className="text-xs sm:text-sm font-black mt-2" style={{ color: colors.ink }}>{value}</p><p className="text-[10px] sm:text-xs mt-1 leading-snug" style={{ color: colors.slate }}>{label}</p></div>
             ))}
           </div>
-          <button onClick={() => setStarted(true)} className="w-full mt-6 py-3.5 rounded-full font-bold flex items-center justify-center gap-2" style={{ backgroundColor: colors.ink, color: colors.bg }}>Commencer le diagnostic <ArrowRight size={16} /></button>
+          <button onClick={() => { setStarted(true); trackProductEvent("diagnostic_started", { levelId, trial }); }} className="w-full mt-6 py-3.5 rounded-full font-bold flex items-center justify-center gap-2" style={{ backgroundColor: colors.ink, color: colors.bg }}>Commencer le diagnostic <ArrowRight size={16} /></button>
         </div>
       </div>
     );
@@ -72,6 +76,7 @@ export default function ParcoursDiagnostic() {
   const next = () => {
     const nextIndex = index + 1;
     if (nextIndex >= total) {
+      trackProductEvent("diagnostic_completed", { levelId, correct: correctCount, total, tier: recommendTier(total ? correctCount / total : 0), trial });
       setDone(true);
       return;
     }
@@ -85,6 +90,7 @@ export default function ParcoursDiagnostic() {
 
   const registerResult = (correct) => {
     if (correct) setCorrectCount((c) => c + 1);
+    setResults((previous) => [...previous, { chapterId: chapters[index].meta.id, chapterTitle: chapters[index].meta.title, skill: exercise.chapter, correct }]);
     setFeedback({ correct });
   };
 
@@ -116,6 +122,13 @@ export default function ParcoursDiagnostic() {
     const ratio = total > 0 ? correctCount / total : 0;
     const tierId = recommendTier(ratio);
     const tier = TIERS.find((t) => t.id === tierId);
+    const priorities = results.filter((item) => !item.correct).slice(0, 3);
+    const strengths = results.filter((item) => item.correct).slice(0, 3);
+    const confidence = total >= 6 && Math.abs(ratio - 0.4) > 0.1 && Math.abs(ratio - 0.75) > 0.1 ? "bonne" : "indicative";
+    if (trial) {
+      const targetedChapterId = priorities[0]?.chapterId ?? results[0]?.chapterId;
+      if (targetedChapterId) sessionStorage.setItem(`reussimaths_trial_chapter_${levelId}`, targetedChapterId);
+    }
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
         <div className="max-w-lg w-full text-center rounded-[2rem] p-7 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
@@ -123,14 +136,19 @@ export default function ParcoursDiagnostic() {
           <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Notre recommandation</p>
           <p className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.8rem", fontWeight: 900, letterSpacing: "-0.03em" }}>Parcours {tier.label}</p>
           <p className="text-sm mt-2" style={{ color: colors.slate }}>{correctCount} réponse{correctCount > 1 ? "s" : ""} correcte{correctCount > 1 ? "s" : ""} sur {total}. {tier.description}</p>
+          <p className="text-[11px] mt-2" style={{ color: colors.slate }}>Confiance {confidence} : ce diagnostic court oriente le départ, puis les prochaines séances affineront la recommandation.</p>
+          <div className="grid sm:grid-cols-2 gap-2 mt-5 text-left">
+            <div className="rounded-2xl p-3" style={{ backgroundColor: `${colors.green}10` }}><p className="text-xs font-black" style={{ color: colors.green }}>Points d’appui</p><p className="text-xs mt-1" style={{ color: colors.slate }}>{strengths.length ? strengths.map((item) => item.chapterTitle).join(" · ") : "Ils seront précisés pendant la première série."}</p></div>
+            <div className="rounded-2xl p-3" style={{ backgroundColor: `${colors.gold}12` }}><p className="text-xs font-black" style={{ color: colors.gold }}>Priorités possibles</p><p className="text-xs mt-1" style={{ color: colors.slate }}>{priorities.length ? priorities.map((item) => item.chapterTitle).join(" · ") : "Aucune fragilité nette dans ce court échantillon."}</p></div>
+          </div>
           <div className="rounded-2xl p-4 text-left mt-5" style={{ backgroundColor: colors.bg }}><p className="text-xs font-bold" style={{ color: colors.ink }}>Ce résultat est un conseil, pas une étiquette.</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Tu peux changer de palier à tout moment si le rythme te paraît trop facile ou trop exigeant.</p></div>
           <div className="flex flex-col gap-2 items-center">
             <Link
-              to={`/parcours/${levelId}-${tierId}`}
+              to={trial ? `/parcours/essai-${levelId}` : `/parcours/${levelId}-${tierId}`}
               className="w-full mt-5 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2"
               style={{ backgroundColor: colors.ink, color: colors.bg }}
             >
-              Commencer ce parcours <ArrowRight size={15} />
+              {trial ? "Faire ma série gratuite" : "Commencer ce parcours"} <ArrowRight size={15} />
             </Link>
             <Link to={`/parcours/niveau/${levelId}`} className="text-sm font-medium" style={{ color: colors.slate }}>
               Voir tous les paliers
@@ -144,8 +162,8 @@ export default function ParcoursDiagnostic() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="w-full max-w-md">
-        <Link to={`/parcours/niveau/${levelId}`} className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: colors.slate }}>
-          ← Passer le diagnostic
+        <Link to={trial ? "/niveaux?objectif=essai" : `/parcours/niveau/${levelId}`} className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: colors.slate }}>
+          ← {trial ? "Changer de niveau" : "Passer le diagnostic"}
         </Link>
 
         <div className="text-center mb-5">

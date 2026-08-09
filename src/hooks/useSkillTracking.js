@@ -16,13 +16,16 @@ function todayISO() {
 // de sauvegarde, juste l'expérience de session en cours, sans erreur.
 export function useSkillTracking(userId) {
   const recordAttempt = useCallback(
-    async ({ skillId, chapterId, correct }) => {
+    async ({ skillId, chapterId, correct, errorCode = null, responseTimeMs = null, assisted = false }) => {
       if (!userId || !skillId || !chapterId) return;
       const { error } = await supabase.rpc("record_learning_attempt", {
         p_skill_id: skillId,
         p_chapter_id: chapterId,
         p_correct: !!correct,
         p_activity_date: todayISO(),
+        p_error_code: errorCode,
+        p_response_time_ms: responseTimeMs,
+        p_assisted: !!assisted,
       });
       if (error) console.error("[useSkillTracking] save error:", error.message);
     },

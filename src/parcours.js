@@ -84,6 +84,32 @@ export function getParcoursForLevel(levelId) {
 const DECOUVERTE_LEVEL_IDS = ["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe"];
 export const DECOUVERTE_ID = "decouverte";
 
+// Une première série cohérente avec le niveau choisi. Elle reste volontairement
+// courte et ne débloque qu'un chapitre : l'essai démontre la personnalisation
+// sans transformer le catalogue payant en accès gratuit contournable.
+export function getTrialParcours(levelId) {
+  const chapters = levelChapters(levelId);
+  if (chapters.length === 0) return null;
+  const level = getLevel(levelId);
+  let selectedChapterId = null;
+  try { selectedChapterId = sessionStorage.getItem(`reussimaths_trial_chapter_${levelId}`); } catch { /* rendu hors navigateur */ }
+  const chapter = chapters.find((item) => item.meta.id === selectedChapterId) ?? chapters[0];
+  return {
+    id: `essai-${levelId}`,
+    kind: "trial",
+    levelId,
+    tierId: "essai",
+    title: `Première série — ${level?.label ?? levelId}`,
+    tierLabel: "Essai personnalisé",
+    levelLabel: level?.label ?? levelId,
+    description: "Une courte série à ton niveau pour découvrir la méthode Reussimaths.",
+    difficulty: "facile",
+    sessionLength: 5,
+    free: true,
+    steps: [{ chapterId: chapter.meta.id, title: chapter.meta.title }],
+  };
+}
+
 function decouverteSteps() {
   return DECOUVERTE_LEVEL_IDS.map((levelId) => {
     const chapters = levelChapters(levelId);
@@ -143,6 +169,7 @@ export function recommendTier(ratio) {
 // définition complète.
 export function getParcours(parcoursId) {
   if (parcoursId === DECOUVERTE_ID) return getDecouverteParcours();
+  if (parcoursId.startsWith("essai-")) return getTrialParcours(parcoursId.slice(6));
   const tier = TIERS.find((t) => parcoursId.endsWith(`-${t.id}`));
   if (!tier) return null;
   const levelId = parcoursId.slice(0, parcoursId.length - tier.id.length - 1);

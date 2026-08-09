@@ -13,6 +13,8 @@ const errors = [];
 const latexSegments = new Set();
 const chapterIds = new Map();
 let generated = 0;
+let figuresChecked = 0;
+let graphsChecked = 0;
 
 function report(file, difficulty, problem) {
   if (errors.length < 40) errors.push(`${file} [${difficulty ?? "défaut"}] : ${problem}`);
@@ -28,6 +30,48 @@ function collectLatex(value) {
   } else if (value && typeof value === "object") {
     Object.values(value).forEach(collectLatex);
   }
+}
+
+function inspectFigure(figure, file, difficulty) {
+  if (!figure || typeof figure !== "object") return report(file, difficulty, "figure invalide");
+  const points = Array.isArray(figure.points) ? figure.points : [];
+  const ids = new Set(points.map((point) => point?.id).filter(Boolean));
+  if (!points.length) report(file, difficulty, "figure sans point");
+  if (ids.size !== points.length) report(file, difficulty, "identifiants de points absents ou dupliqués");
+  const requirePoint = (id, context) => {
+    if (!ids.has(id)) report(file, difficulty, `${context}: point introuvable ${id}`);
+  };
+  for (const segment of figure.segments ?? []) { requirePoint(segment.from, "segment"); requirePoint(segment.to, "segment"); }
+  for (const line of figure.lines ?? []) { requirePoint(line.from, "droite"); requirePoint(line.to, "droite"); }
+  for (const circle of figure.circles ?? []) { requirePoint(circle.center, "cercle"); if (circle.through) requirePoint(circle.through, "cercle"); }
+  for (const angle of figure.rightAngles ?? []) { requirePoint(angle.at, "angle droit"); requirePoint(angle.from, "angle droit"); requirePoint(angle.to, "angle droit"); }
+  if (figure.numberLine) {
+    requirePoint(figure.numberLine.from, "droite graduée");
+    requirePoint(figure.numberLine.to, "droite graduée");
+    if (!Number.isInteger(figure.numberLine.tickCount) || figure.numberLine.tickCount < 2) report(file, difficulty, "droite graduée sans graduations valides");
+    if (figure.numberLine.arrowEnd === false && !figure.numberLine.arrowStart) report(file, difficulty, "droite graduée sans sens");
+  }
+  if (figure.coordinatePlane) {
+    const plane = figure.coordinatePlane;
+    [plane.xFrom, plane.xTo, plane.yFrom, plane.yTo].forEach((id) => requirePoint(id, "repère"));
+    if (![plane.xTickCount, plane.yTickCount].every((count) => Number.isInteger(count) && count >= 2)) report(file, difficulty, "repère sans graduations valides");
+    if (![plane.xMin, plane.xMax, plane.yMin, plane.yMax].every(Number.isFinite)) report(file, difficulty, "repère sans bornes numériques");
+  }
+  figuresChecked += 1;
+}
+
+function inspectGraph(graph, file, difficulty) {
+  if (![graph?.xMin, graph?.xMax, graph?.yMin, graph?.yMax].every(Number.isFinite)) return report(file, difficulty, "graphique sans bornes valides");
+  if (!(graph.xMin < graph.xMax && graph.yMin < graph.yMax)) report(file, difficulty, "bornes de graphique incohérentes");
+  if ((graph.xStep ?? 1) <= 0 || (graph.yStep ?? 1) <= 0) report(file, difficulty, "graduation de graphique non positive");
+  graphsChecked += 1;
+}
+
+function inspectCourseVisuals(value, file) {
+  if (!value || typeof value !== "object") return;
+  if (value.figure) inspectFigure(value.figure, file, "cours");
+  if (value.graph) inspectGraph(value.graph, file, "cours");
+  for (const nested of Object.values(value)) inspectCourseVisuals(nested, file);
 }
 
 function inspect(exercise, file, difficulty) {
@@ -55,6 +99,11 @@ function inspect(exercise, file, difficulty) {
     if (!Array.isArray(exercise.answer)) report(file, difficulty, "réponse multiple invalide");
     else if (Array.isArray(exercise.options) && exercise.answer.some((index) => !Number.isInteger(index) || index < 0 || index >= exercise.options.length)) report(file, difficulty, "indice de réponse hors limites");
   }
+  if (/gradu[ée]e?[^.]{0,80}ci-dessous|ci-dessous[^.]{0,80}gradu[ée]e?/i.test(exercise.prompt) && !exercise.figure?.numberLine) {
+    report(file, difficulty, "énoncé de droite graduée sans primitive numberLine");
+  }
+  if (exercise.figure) inspectFigure(exercise.figure, file, difficulty);
+  if (exercise.graph) inspectGraph(exercise.graph, file, difficulty);
   collectLatex(exercise);
 }
 
@@ -72,6 +121,7 @@ for (const file of files) {
   }
   if (chapterIds.has(chapter.meta.id)) report(file, null, `identifiant déjà utilisé dans ${chapterIds.get(chapter.meta.id)}`);
   chapterIds.set(chapter.meta.id, file);
+  inspectCourseVisuals(chapter.meta?.cours, file);
 
   for (const difficulty of difficulties) {
     for (let iteration = 0; iteration < iterations; iteration += 1) {
@@ -93,7 +143,7 @@ for (const segment of latexSegments) {
   }
 }
 
-console.log(`${files.length} chapitres, ${generated} exercices et ${latexSegments.size} expressions mathématiques contrôlés.`);
+console.log(`${files.length} chapitres, ${generated} exercices, ${figuresChecked} figures, ${graphsChecked} graphiques et ${latexSegments.size} expressions mathématiques contrôlés.`);
 if (errors.length) {
   console.error(errors.join("\n"));
   process.exitCode = 1;

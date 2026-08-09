@@ -40,19 +40,16 @@ function buildRepereImageFigure() {
   const range = 4;
   const toX = (v) => v * scale;
   const toY = (v) => -v * scale;
-  const OX1 = { id: "OX1", x: toX(-range - 0.5), y: toY(0), hideDot: true, hideLabel: true };
-  const OX2 = { id: "OX2", x: toX(range + 0.5), y: toY(0), hideDot: true, hideLabel: true };
-  const OY1 = { id: "OY1", x: toX(0), y: toY(-range - 0.5), hideDot: true, hideLabel: true };
-  const OY2 = { id: "OY2", x: toX(0), y: toY(range + 0.5), hideDot: true, hideLabel: true };
+  const OX1 = { id: "OX1", x: toX(-range), y: toY(0), hideDot: true, hideLabel: true };
+  const OX2 = { id: "OX2", x: toX(range), y: toY(0), hideDot: true, hideLabel: true };
+  const OY1 = { id: "OY1", x: toX(0), y: toY(-range), hideDot: true, hideLabel: true };
+  const OY2 = { id: "OY2", x: toX(0), y: toY(range), hideDot: true, hideLabel: true };
   const O = { id: "O", x: toX(0), y: toY(0), dx: -16, dy: 16 };
   const M = { id: "M", x: toX(3), y: toY(2), dx: 8, dy: -8 };
   const Mp = { id: "Mp", label: "M'", x: toX(-3), y: toY(-2), dx: -20, dy: 14 };
   return {
     points: [OX1, OX2, OY1, OY2, O, M, Mp],
-    lines: [
-      { from: "OX1", to: "OX2", arrowEnd: true },
-      { from: "OY1", to: "OY2", arrowEnd: true },
-    ],
+    coordinatePlane: { xFrom: "OX1", xTo: "OX2", yFrom: "OY1", yTo: "OY2", xTickCount: 2 * range + 1, yTickCount: 2 * range + 1, xMin: -range, xMax: range, yMin: -range, yMax: range },
     segments: [{ from: "M", to: "Mp", dashed: true }],
   };
 }

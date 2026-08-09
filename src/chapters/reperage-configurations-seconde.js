@@ -525,10 +525,7 @@ function buildCoursRepereFigure(pts, segs = [], range = 6) {
   }));
   return {
     points: [...axes, ...points],
-    lines: [
-      { from: "OX1", to: "OX2", arrowEnd: true },
-      { from: "OY1", to: "OY2", arrowEnd: true },
-    ],
+    coordinatePlane: { xFrom: "OX1", xTo: "OX2", yFrom: "OY1", yTo: "OY2", xTickCount: range + 2, yTickCount: range + 2, xMin: -1, xMax: range, yMin: -1, yMax: range },
     segments: segs,
     freeLabels: [
       { x: toX(range) + 10, y: toY(0) + 4, text: "x" },

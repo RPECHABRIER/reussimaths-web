@@ -109,6 +109,9 @@ export default function Graph({ spec }) {
           <clipPath id={clipId}>
             <rect x={PAD_LEFT} y={PAD_TOP} width={PLOT_W} height={PLOT_H} />
           </clipPath>
+          <marker id={`${clipId}-axis-arrow`} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill={slate} />
+          </marker>
         </defs>
 
         {/* Cadre du repère */}
@@ -146,8 +149,16 @@ export default function Graph({ spec }) {
         {/* Axes (si l'origine est visible) */}
         {originVisible && (
           <>
-            <line x1={PAD_LEFT} y1={xAxisY} x2={PAD_LEFT + PLOT_W} y2={xAxisY} stroke={slate} strokeWidth="1.3" />
-            <line x1={yAxisX} y1={PAD_TOP} x2={yAxisX} y2={PAD_TOP + PLOT_H} stroke={slate} strokeWidth="1.3" />
+            <line x1={PAD_LEFT} y1={xAxisY} x2={PAD_LEFT + PLOT_W} y2={xAxisY} stroke={slate} strokeWidth="1.5" markerEnd={`url(#${clipId}-axis-arrow)`} />
+            <line x1={yAxisX} y1={PAD_TOP + PLOT_H} x2={yAxisX} y2={PAD_TOP} stroke={slate} strokeWidth="1.5" markerEnd={`url(#${clipId}-axis-arrow)`} />
+            {xTicks.map((v, i) => {
+              const { px } = toPx(v, 0);
+              return <line key={`xt${i}`} x1={px} y1={xAxisY - 4} x2={px} y2={xAxisY + 4} stroke={slate} strokeWidth="1" />;
+            })}
+            {yTicks.map((v, i) => {
+              const { py } = toPx(0, v);
+              return <line key={`yt${i}`} x1={yAxisX - 4} y1={py} x2={yAxisX + 4} y2={py} stroke={slate} strokeWidth="1" />;
+            })}
             <text x={PAD_LEFT + PLOT_W - 2} y={xAxisY - 5} fontSize="10" fill={slate} textAnchor="end">
               x
             </text>

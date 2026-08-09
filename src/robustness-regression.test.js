@@ -89,6 +89,28 @@ test("les droites graduées affichent toujours graduations, sens et point au-des
   }
 });
 
+test("les repères cartésiens affichent toujours axes, flèches, graduations et coordonnées", async () => {
+  const [figure, graph, relatives, transformations, reperage, equations] = await Promise.all([
+    read("./components/Figure.jsx"),
+    read("./components/Graph.jsx"),
+    read("./chapters/nombres-relatifs.js"),
+    read("./chapters/transformations-plan-troisieme.js"),
+    read("./chapters/reperage-configurations-seconde.js"),
+    read("./chapters/equations-droites-seconde.js"),
+  ]);
+  assert.match(figure, /spec\.coordinatePlane/);
+  assert.match(figure, /Repère cartésien gradué/);
+  assert.match(figure, /xTickCount/);
+  assert.match(figure, /yTickCount/);
+  assert.match(graph, /axis-arrow/);
+  assert.match(graph, /markerEnd/);
+  assert.match(graph, /xTicks\.map/);
+  assert.match(graph, /yTicks\.map/);
+  for (const source of [relatives, transformations, reperage, equations]) {
+    assert.match(source, /coordinatePlane:/);
+  }
+});
+
 test("tous les accès à l'essai commencent au niveau choisi, au programme puis au diagnostic", async () => {
   const [app, home, teacher, levels, programme, diagnostic, prerequisites, parcours] = await Promise.all([
     read("./App.jsx"),

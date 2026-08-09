@@ -478,12 +478,6 @@ function buildCoursDroiteFigure(pts, lines = [], vectors = [], opts = {}) {
         { id: "OY2", x: toX(0), y: toY(range), hideDot: true, hideLabel: true },
       ]
     : [];
-  const axesLines = opts.axes
-    ? [
-        { from: "OX1", to: "OX2", arrowEnd: true },
-        { from: "OY1", to: "OY2", arrowEnd: true },
-      ]
-    : [];
   const points = pts.map((p) => ({
     id: p.id,
     x: toX(p.x),
@@ -496,7 +490,11 @@ function buildCoursDroiteFigure(pts, lines = [], vectors = [], opts = {}) {
   }));
   const droiteLines = lines.map((l) => ({ from: l.from, to: l.to }));
   const vecLines = vectors.map((v) => ({ from: v.from, to: v.to, extend: 0, arrowEnd: true }));
-  return { points: [...axesPts, ...points], lines: [...axesLines, ...droiteLines, ...vecLines] };
+  return {
+    points: [...axesPts, ...points],
+    lines: [...droiteLines, ...vecLines],
+    coordinatePlane: opts.axes ? { xFrom: "OX1", xTo: "OX2", yFrom: "OY1", yTo: "OY2", xTickCount: 2 * range + 1, yTickCount: 2 * range + 1, xMin: -range, xMax: range, yMin: -range, yMax: range } : undefined,
+  };
 }
 
 export default {

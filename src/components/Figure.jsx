@@ -32,6 +32,8 @@
 //                  d'une droite, indication)
 //   numberLine   : { from, to, tickCount, arrowStart?, arrowEnd?, tickSize? }
 //                  — droite graduée : graduations et sens toujours visibles
+//   coordinatePlane : { xFrom, xTo, yFrom, yTo, xTickCount, yTickCount }
+//                  — repère cartésien avec axes orientés et gradués
 //   hidePointLabels : bool — n'affiche pas les points/étiquettes de `points`
 // ---------------------------------------------------------------------------
 
@@ -97,6 +99,60 @@ export default function Figure({ spec }) {
               })}
               {line.arrowStart && <polygon points={arrowPoints(x1, y1, -ux, -uy)} fill={ink} />}
               {(line.arrowEnd ?? true) && <polygon points={arrowPoints(x2, y2, ux, uy)} fill={ink} />}
+            </g>
+          );
+        })()}
+
+        {spec.coordinatePlane && (() => {
+          const plane = spec.coordinatePlane;
+          const xA = byId[plane.xFrom];
+          const xB = byId[plane.xTo];
+          const yA = byId[plane.yFrom];
+          const yB = byId[plane.yTo];
+          const extension = plane.extend ?? 8;
+          const arrowSize = 8;
+          const renderAxis = (a, b, count, key) => {
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const length = Math.hypot(dx, dy) || 1;
+            const ux = dx / length;
+            const uy = dy / length;
+            const nx = -uy;
+            const ny = ux;
+            const x2 = b.x + ux * extension;
+            const y2 = b.y + uy * extension;
+            const backx = x2 - ux * arrowSize;
+            const backy = y2 - uy * arrowSize;
+            const arrow = `${x2},${y2} ${backx + nx * arrowSize * 0.55},${backy + ny * arrowSize * 0.55} ${backx - nx * arrowSize * 0.55},${backy - ny * arrowSize * 0.55}`;
+            const minValue = key === "axis-x" ? plane.xMin : plane.yMin;
+            const maxValue = key === "axis-x" ? plane.xMax : plane.yMax;
+            return (
+              <g key={key}>
+                <line x1={a.x} y1={a.y} x2={x2} y2={y2} stroke={ink} strokeWidth="1.7" />
+                {Array.from({ length: Math.max(2, count) }).map((_, index) => {
+                  const ratio = index / (Math.max(2, count) - 1);
+                  const x = a.x + dx * ratio;
+                  const y = a.y + dy * ratio;
+                  const value = minValue + (maxValue - minValue) * ratio;
+                  const label = String(Math.round(value * 100) / 100).replace(".", ",");
+                  const showLabel = Number.isFinite(value) && (key === "axis-x" || Math.abs(value) > 1e-9);
+                  return (
+                    <g key={`${key}-${index}`}>
+                      <line x1={x - nx * 4} y1={y - ny * 4} x2={x + nx * 4} y2={y + ny * 4} stroke={ink} strokeWidth="1.2" />
+                      {showLabel && <text x={key === "axis-x" ? x : x - 7} y={key === "axis-x" ? y + 15 : y + 4} fontSize="9" fill={slate} textAnchor={key === "axis-x" ? "middle" : "end"}>{label}</text>}
+                    </g>
+                  );
+                })}
+                <polygon points={arrow} fill={ink} />
+              </g>
+            );
+          };
+          return (
+            <g aria-label="Repère cartésien gradué">
+              {renderAxis(xA, xB, plane.xTickCount, "axis-x")}
+              {renderAxis(yA, yB, plane.yTickCount, "axis-y")}
+              <text x={xB.x + 14} y={xB.y - 6} fontSize="11" fontWeight="700" fill={ink}>x</text>
+              <text x={yB.x + 7} y={yB.y - 13} fontSize="11" fontWeight="700" fill={ink}>y</text>
             </g>
           );
         })()}

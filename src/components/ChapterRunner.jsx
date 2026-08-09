@@ -392,7 +392,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         fontFamily: fonts.body,
       }}
     >
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <Link
           to={backTo ?? `/niveau/${chapter.meta.level}`}
           className="inline-flex items-center gap-1 text-xs font-semibold mb-4"
@@ -400,6 +400,17 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         >
           <ArrowLeft size={14} /> {backTo ? "Retour au parcours" : "Retour aux chapitres"}
         </Link>
+        {isSession && (
+          <div className="mb-5 rounded-2xl px-4 py-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="flex items-center justify-between gap-3 text-xs font-bold" style={{ color: ink }}>
+              <span>{isDiscoverySession ? "Ta série découverte" : "Ta série en cours"}</span>
+              <span style={{ color: gold }}>{Math.min(answeredCount + 1, sessionLength)} / {sessionLength}</span>
+            </div>
+            <div className="h-1.5 rounded-full overflow-hidden mt-2" style={{ backgroundColor: `${ink}10` }}>
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min((answeredCount / sessionLength) * 100, 100)}%`, backgroundColor: gold }} />
+            </div>
+          </div>
+        )}
         <div className="text-center mb-6">
           <p
             className="text-xs tracking-widest uppercase mb-1 font-semibold"
@@ -424,7 +435,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
             style={{
               fontFamily: fonts.display,
               color: isDefi ? "#FFFFFF" : ink,
-              fontSize: "1.85rem",
+              fontSize: isSession ? "1.55rem" : "1.85rem",
               fontWeight: 800,
               letterSpacing: "-0.02em",
             }}
@@ -494,20 +505,23 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         )}
 
         <div
-          className="rounded-3xl p-6 transition-all duration-500"
+          className="rounded-[2rem] p-5 sm:p-7 transition-all duration-500"
           style={{
             backgroundColor: isDefi ? "#16233f" : colors.card,
             boxShadow: isDefi ? `0 0 40px -8px ${gold}2e, inset 0 0 0 1px #ffffff0d` : shadow.soft,
           }}
         >
-          <p className="text-xs uppercase tracking-wide mb-3" style={{ color: isDefi ? "#8b9ec4" : slate }}>
+          <div className="flex items-center justify-between gap-3 mb-4">
+          <p className="text-xs uppercase tracking-wide font-bold" style={{ color: isDefi ? "#8b9ec4" : gold }}>
             {exercise.chapter}
           </p>
+          {isDiscoverySession && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: colors.green, backgroundColor: `${colors.green}15` }}>Série gratuite</span>}
+          </div>
           <MathText
             as="p"
             text={exercise.prompt}
-            className="mb-3 leading-relaxed"
-            style={{ fontFamily: fonts.mono, fontSize: "1.05rem", color: isDefi ? "#FFFFFF" : ink }}
+            className="mb-5 leading-relaxed"
+            style={{ fontFamily: fonts.mono, fontSize: "clamp(1.08rem, 3vw, 1.28rem)", fontWeight: 650, color: isDefi ? "#FFFFFF" : ink }}
           />
 
           {exercise.figure && <Figure spec={exercise.figure} />}
@@ -749,7 +763,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
               >
                 {feedback.correct ? <Check size={16} /> : <X size={16} />}
-                <span>{feedback.correct ? "Correct !" : "Pas tout à fait."}</span>
+                <span className="font-semibold">{feedback.correct ? "Bien joué ! Cette notion progresse." : "Pas encore — réessaie ou utilise la méthode."}</span>
               </div>
 
               {!feedback.correct && (

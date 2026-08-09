@@ -111,51 +111,51 @@ export default function Enseignant() {
   if (view === "setup") {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-        <div className="max-w-md mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Link to="/" className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
             <ArrowLeft size={14} /> Accueil
           </Link>
 
-          <div className="text-center mb-7">
-            <p className="text-xs tracking-widest uppercase mb-1 font-semibold" style={{ color: gold, letterSpacing: "0.12em" }}>
-              Gratuit — sans compte
-            </p>
-            <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-              Espace enseignant
-            </h1>
-            <p className="text-sm mt-2" style={{ color: slate }}>
-              Crée en moins d'une minute un rituel de 5 questions à projeter, puis affiche les corrections détaillées.
-            </p>
-          </div>
-
-          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: `${gold}12`, border: `1px solid ${gold}33` }}>
-            <div className="grid grid-cols-3 gap-2 text-center">
-              {["Choisis", "Projette", "Corrige"].map((label, i) => (
-                <div key={label}>
-                  <div
-                    className="mx-auto mb-1.5 flex items-center justify-center rounded-full text-xs font-bold"
-                    style={{ width: 28, height: 28, backgroundColor: colors.card, color: gold }}
-                  >
-                    {i + 1}
+          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12 items-start py-5 lg:py-10">
+            <section className="lg:sticky lg:top-8">
+              <p className="text-xs tracking-widest uppercase font-bold" style={{ color: gold, letterSpacing: "0.12em" }}>Gratuit · sans compte</p>
+              <h1 className="mt-3" style={{ fontFamily: fonts.display, color: ink, fontSize: "clamp(2.4rem, 5vw, 4rem)", lineHeight: 1.03, fontWeight: 900, letterSpacing: "-0.04em" }}>
+                Votre rituel de maths, prêt à projeter.
+              </h1>
+              <p className="text-base mt-5 max-w-lg leading-relaxed" style={{ color: slate }}>
+                Composez 5 automatismes en moins d’une minute. Les questions s’affichent sans réponse, puis toutes les corrections détaillées arrivent ensemble.
+              </p>
+              <div className="grid grid-cols-3 gap-2 mt-7">
+                {["Choisissez", "Projetez", "Corrigez"].map((label, i) => (
+                  <div key={label} className="rounded-2xl p-3 text-center" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+                    <p className="text-lg font-black" style={{ color: gold }}>{i + 1}</p>
+                    <p className="text-xs font-semibold mt-1" style={{ color: ink }}>{label}</p>
                   </div>
-                  <p className="text-xs font-semibold" style={{ color: ink }}>{label}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-center mt-3" style={{ color: slate }}>
-              Aucun compte élève nécessaire pour utiliser le diaporama en classe.
-            </p>
-            <button
-              type="button"
-              onClick={launchDemo}
-              className="w-full mt-3 py-2.5 rounded-full font-semibold text-sm flex items-center justify-center gap-2"
-              style={{ backgroundColor: ink, color: paper }}
-            >
-              <Play size={15} /> Tester une démonstration
-            </button>
-          </div>
+                ))}
+              </div>
+              <button type="button" onClick={launchDemo} className="w-full sm:w-auto mt-5 py-3.5 px-6 rounded-full font-bold flex items-center justify-center gap-2" style={{ backgroundColor: ink, color: paper, boxShadow: shadow.raised }}>
+                <Play size={16} /> Lancer la démo en un clic
+              </button>
+              <p className="text-xs mt-3" style={{ color: slate }}>Aucune préparation et aucun compte élève nécessaires.</p>
 
-          <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-3 mt-7">
+                <Link to="/parcours/decouverte" className="py-3 px-4 rounded-2xl flex items-center justify-between gap-3" style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}>
+                  <div><p className="text-sm font-semibold">Voir l’expérience élève</p><p className="text-xs mt-0.5" style={{ color: slate }}>Parcours gratuit, sans compte</p></div>
+                  <CheckCircle2 size={18} color={gold} />
+                </Link>
+                <div className="rounded-2xl p-4 flex items-start gap-3" style={{ backgroundColor: `${gold}10`, border: `1px solid ${gold}33` }}>
+                  <KeyRound size={18} color={gold} className="shrink-0 mt-0.5" />
+                  <div><p className="text-sm font-semibold" style={{ color: ink }}>Pilote accès classe</p><p className="text-xs mt-1 leading-relaxed" style={{ color: slate }}>Un code temporaire débloque un niveau et conserve la progression individuelle de chaque élève.</p></div>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div><p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Créer une séance</p><h2 className="text-2xl font-black mt-1" style={{ color: ink }}>5 questions, vos thèmes</h2></div>
+                <p aria-live="polite" className="text-sm font-black px-3 py-1.5 rounded-full" style={{ color: total === 5 ? colors.green : gold, backgroundColor: total === 5 ? `${colors.green}18` : `${gold}18` }}>{total} / 5</p>
+              </div>
+
             <label htmlFor="teacher-level" className="block text-xs uppercase tracking-wide font-semibold mb-2" style={{ color: slate }}>
               1. Niveau
             </label>
@@ -176,30 +176,20 @@ export default function Enseignant() {
                 );
               })}
             </select>
-          </div>
+              <div className="my-5" style={{ height: 1, backgroundColor: colors.hairline }} />
 
           {chapter && (
-            <div className="rounded-3xl p-5 mb-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
                   2. Répartis 5 questions par thème
-                </p>
-                <p
-                  aria-live="polite"
-                  className="text-xs font-bold px-2.5 py-1 rounded-full"
-                  style={{
-                    color: total === 5 ? colors.green : gold,
-                    backgroundColor: total === 5 ? `${colors.green}18` : `${gold}18`,
-                  }}
-                >
-                  {total} / 5
                 </p>
               </div>
               <div className="flex flex-col gap-2.5">
                 {chapter.themes.map((t) => {
                   const count = counts[t.id] ?? 0;
                   return (
-                    <div key={t.id} className="flex items-center justify-between gap-3">
+                    <div key={t.id} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2" style={{ backgroundColor: colors.bg }}>
                       <p className="text-sm flex-1 min-w-0 truncate" style={{ color: ink }}>
                         {t.title}
                       </p>
@@ -209,7 +199,7 @@ export default function Enseignant() {
                           onClick={() => adjustCount(t.id, -1)}
                           disabled={count === 0}
                           className="flex items-center justify-center rounded-full"
-                          style={{ width: 28, height: 28, backgroundColor: colors.bg, color: ink, opacity: count === 0 ? 0.35 : 1 }}
+                          style={{ width: 30, height: 30, backgroundColor: colors.card, color: ink, opacity: count === 0 ? 0.35 : 1 }}
                         >
                           <Minus size={14} />
                         </button>
@@ -221,7 +211,7 @@ export default function Enseignant() {
                           onClick={() => adjustCount(t.id, 1)}
                           disabled={total >= 5}
                           className="flex items-center justify-center rounded-full"
-                          style={{ width: 28, height: 28, backgroundColor: colors.bg, color: ink, opacity: total >= 5 ? 0.35 : 1 }}
+                          style={{ width: 30, height: 30, backgroundColor: colors.card, color: ink, opacity: total >= 5 ? 0.35 : 1 }}
                         >
                           <Plus size={14} />
                         </button>
@@ -233,39 +223,17 @@ export default function Enseignant() {
             </div>
           )}
 
-          <button
+              <button
             type="button"
             disabled={total !== 5}
             onClick={launch}
-            className="w-full py-3 rounded-full font-semibold"
-            style={{ backgroundColor: total === 5 ? gold : colors.hairline, color: total === 5 ? ink : slate }}
+            className="w-full mt-5 py-3.5 rounded-full font-bold flex items-center justify-center gap-2"
+            style={{ backgroundColor: total === 5 ? gold : colors.hairline, color: total === 5 ? ink : slate, opacity: total === 5 ? 1 : 0.75, display: chapter ? undefined : "none" }}
           >
-            Lancer le diaporama
+            <Play size={16} /> Lancer le diaporama
           </button>
-
-          <Link
-            to="/parcours/decouverte"
-            className="mt-4 py-3 px-4 rounded-2xl flex items-center justify-between gap-3"
-            style={{ backgroundColor: colors.card, color: ink, border: `1px solid ${colors.hairline}` }}
-          >
-            <div className="text-left">
-              <p className="text-sm font-semibold">Voir l'expérience côté élève</p>
-              <p className="text-xs mt-0.5" style={{ color: slate }}>Parcours découverte gratuit, sans compte</p>
-            </div>
-            <CheckCircle2 size={18} color={gold} className="shrink-0" />
-          </Link>
-
-          <div className="mt-4 rounded-3xl p-5" style={{ backgroundColor: `${gold}10`, border: `1px solid ${gold}33` }}>
-            <div className="flex items-start gap-3">
-              <KeyRound size={18} color={gold} className="shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold" style={{ color: ink }}>Pilote accès classe</p>
-                <p className="text-xs mt-1 leading-relaxed" style={{ color: slate }}>
-                  Un code temporaire peut débloquer gratuitement un niveau pour une classe test. Les élèves créent leur
-                  compte, saisissent le code dans « Mon compte », puis conservent leur progression individuelle.
-                </p>
-              </div>
-            </div>
+              {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher ses thèmes.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez répartir exactement cinq questions.</p></div>}
+            </section>
           </div>
         </div>
       </div>

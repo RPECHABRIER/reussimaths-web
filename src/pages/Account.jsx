@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BarChart3, Check } from "lucide-react";
+import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
@@ -149,62 +149,69 @@ export default function Account() {
   }
 
   return (
-    <div className="min-h-screen w-full p-6 flex flex-col items-center justify-center gap-4" style={{ background: colors.bg, fontFamily: fonts.body }}>
-      <Link to="/" className="text-sm font-medium self-start" style={{ color: colors.ink }}>
+    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
+      <div className="max-w-6xl mx-auto">
+      <Link to="/" className="inline-flex text-sm font-medium" style={{ color: colors.ink }}>
         ← Accueil
       </Link>
 
       {!user ? (
-        <div className="flex flex-col gap-4 w-full max-w-sm">
-          <div className="text-center px-3">
-            <p style={{ fontFamily: fonts.display, fontWeight: 800, color: colors.ink, fontSize: "1.35rem" }}>
-              Commence gratuitement, progresse à ton rythme
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-14 items-center py-10 lg:py-20">
+          <section>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold" style={{ backgroundColor: `${colors.gold}18`, color: colors.gold }}>
+              <Sparkles size={13} /> Un parcours clair, pas des exercices au hasard
+            </div>
+            <h1 className="mt-5" style={{ fontFamily: fonts.display, fontWeight: 900, color: colors.ink, fontSize: "clamp(2.35rem, 5vw, 4rem)", lineHeight: 1.04, letterSpacing: "-0.04em" }}>
+              Des progrès visibles, semaine après semaine.
+            </h1>
+            <p className="text-base sm:text-lg mt-5 max-w-xl leading-relaxed" style={{ color: colors.slate }}>
+              Reussimaths repère les notions fragiles, propose la bonne série et programme les révisions. L’élève sait quoi faire ; le parent sait ce qui avance.
             </p>
-            <p className="text-sm mt-1" style={{ color: colors.slate }}>
-              Connecte-toi pour sauvegarder ta progression. Tu pourras ensuite choisir de rester en accès gratuit ou de
-              débloquer davantage d'entraînement.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-          <Mascot size={72} className="mx-auto" />
-          <p className="text-center text-sm" style={{ color: colors.slate }}>
-            Connexion simplifiée, aucun nom réel n'est affiché dans l'app : tu choisis un pseudo après connexion.
-          </p>
-          <button onClick={signInWithGoogle} className="py-2.5 rounded-full font-semibold" style={{ backgroundColor: colors.ink, color: colors.bg }}>
-            Continuer avec Google
-          </button>
-          <button onClick={signInWithApple} className="py-2.5 rounded-full font-semibold" style={{ backgroundColor: colors.ink, color: colors.bg }}>
-            Continuer avec Apple
-          </button>
-          </div>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-7">
+              {[
+                { icon: Target, title: "Ciblé", text: "Selon le niveau réel" },
+                { icon: RotateCcw, title: "Mémorisé", text: "Révisions au bon moment" },
+                { icon: BarChart3, title: "Mesuré", text: "Bilan de progression" },
+              ].map(({ icon: Icon, title, text }) => (
+                <div key={title} className="rounded-2xl p-3 sm:p-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+                  <Icon size={18} color={colors.gold} />
+                  <p className="text-sm font-black mt-2" style={{ color: colors.ink }}>{title}</p>
+                  <p className="text-[10px] sm:text-xs mt-0.5 leading-snug" style={{ color: colors.slate }}>{text}</p>
+                </div>
+              ))}
+            </div>
+            <Link to="/parcours/decouverte/etape/0" className="inline-flex items-center gap-2 mt-6 text-sm font-bold" style={{ color: colors.ink }}>
+              Essayer une série avant de choisir <ArrowRight size={15} />
+            </Link>
+          </section>
 
-          <div className="grid gap-3">
-            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.card, border: `2px solid ${colors.gold}` }}>
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-sm font-bold" style={{ color: colors.ink }}>Accès complet</p>
-                <p className="text-base font-bold whitespace-nowrap" style={{ color: colors.ink }}>
-                  4,99 € <span className="text-xs font-medium" style={{ color: colors.slate }}>/mois</span>
-                </p>
+          <section className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Accès complet</p>
+                <p className="text-3xl font-black mt-1" style={{ color: colors.ink }}>4,99 € <span className="text-sm font-semibold" style={{ color: colors.slate }}>/ mois</span></p>
               </div>
-              <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                Tous les niveaux et chapitres, entraînement illimité et bilan de progression. Renouvellement mensuel,
-                résiliable à tout moment.
-              </p>
+              <Mascot size={62} />
             </div>
-            <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-sm font-bold" style={{ color: colors.ink }}>Pack Examen</p>
-                <p className="text-base font-bold whitespace-nowrap" style={{ color: colors.ink }}>9 €</p>
+            <div className="flex flex-col gap-2.5 mt-5">
+              {["Tous les niveaux, de la 6e à la Terminale", "Entraînement et corrections détaillées illimités", "Révisions espacées et bilan hebdomadaire", "Résiliation à tout moment depuis le compte"].map((feature) => (
+                <p key={feature} className="flex items-start gap-2 text-sm" style={{ color: colors.ink }}><Check size={16} color={colors.green} className="shrink-0 mt-0.5" />{feature}</p>
+              ))}
+            </div>
+            <div className="rounded-2xl p-4 mt-6" style={{ backgroundColor: colors.bg }}>
+              <p className="text-xs font-bold" style={{ color: colors.ink }}>Crée d’abord ton espace personnel</p>
+              <p className="text-xs mt-1" style={{ color: colors.slate }}>La connexion sauvegarde la progression et rattache l’abonnement au bon élève.</p>
+              <div className="grid sm:grid-cols-2 gap-2 mt-3">
+                <button onClick={signInWithGoogle} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
+                <button onClick={signInWithApple} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
               </div>
-              <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                Paiement unique pour 3 mois sur un niveau : préparation à l'examen, Automatismes illimités et 2 chapitres
-                bonus. Sans renouvellement automatique.
-              </p>
+              <p className="flex items-center justify-center gap-1.5 text-[11px] mt-3" style={{ color: colors.slate }}><ShieldCheck size={13} color={colors.green} />L’élève choisit un pseudo ; son nom n’est pas affiché.</p>
             </div>
-          </div>
-          <p className="text-[11px] text-center px-3" style={{ color: colors.slate }}>
-            La connexion est nécessaire avant le paiement pour rattacher l'accès au bon compte.
-          </p>
+            <div className="flex items-baseline justify-between gap-3 mt-5 pt-4" style={{ borderTop: `1px solid ${colors.hairline}` }}>
+              <div><p className="text-sm font-bold" style={{ color: colors.ink }}>Pack Examen</p><p className="text-xs" style={{ color: colors.slate }}>3 mois · un niveau · sans renouvellement</p></div>
+              <p className="text-lg font-black whitespace-nowrap" style={{ color: colors.ink }}>9 €</p>
+            </div>
+          </section>
         </div>
       ) : (
         <div className="flex flex-col gap-3 w-full max-w-xs text-center rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
@@ -556,6 +563,7 @@ export default function Account() {
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 }

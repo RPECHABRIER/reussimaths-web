@@ -47,14 +47,7 @@ export default function Onboarding() {
     // (une seule fois — la clé est supprimée du navigateur juste après).
     const refCode = localStorage.getItem("reussimaths_ref_code");
     if (refCode) {
-      const { data: referrer } = await supabase
-        .from("profiles")
-        .select("user_id")
-        .eq("referral_code", refCode)
-        .maybeSingle();
-      if (referrer && referrer.user_id !== user.id) {
-        await supabase.from("referrals").insert({ referrer_id: referrer.user_id, referred_id: user.id });
-      }
+      await supabase.rpc("register_referral", { p_referral_code: refCode });
       localStorage.removeItem("reussimaths_ref_code");
     }
 

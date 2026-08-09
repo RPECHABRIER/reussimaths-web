@@ -1,32 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import LevelSelect from "./pages/LevelSelect";
-import CycleSelect from "./pages/CycleSelect";
-import CycleLevels from "./pages/CycleLevels";
-import Niveau from "./pages/Niveau";
-import ParcoursSelect from "./pages/ParcoursSelect";
-import ParcoursDiagnostic from "./pages/ParcoursDiagnostic";
-import ParcoursOverview from "./pages/ParcoursOverview";
-import ParcoursStep from "./pages/ParcoursStep";
-import ChapterPage from "./pages/ChapterPage";
-import Account from "./pages/Account";
-import Onboarding from "./pages/Onboarding";
-import Amis from "./pages/Amis";
-import Reviser from "./pages/Reviser";
-import Bilan from "./pages/Bilan";
-import Enseignant from "./pages/Enseignant";
-import Jeux from "./pages/Jeux";
-import CourseTables from "./pages/CourseTables";
-import EstimationExpress from "./pages/EstimationExpress";
-import MemoryMaths from "./pages/MemoryMaths";
-import MemoryCpCe1 from "./pages/MemoryCpCe1";
-import CourseAdditionsCpCe1 from "./pages/CourseAdditionsCpCe1";
-import Idees from "./pages/Idees";
-import AdminPreview from "./pages/AdminPreview";
 import SoundManager from "./components/SoundManager";
-import MentionsLegales from "./pages/legal/MentionsLegales";
-import CGU from "./pages/legal/CGU";
-import Confidentialite from "./pages/legal/Confidentialite";
 import { useAuth } from "./hooks/useAuth";
 import { useSubscription } from "./hooks/useProgress";
 import { useSingleSession } from "./hooks/useSingleSession";
@@ -34,6 +8,41 @@ import { isRealAdmin, isFullAccessSubscription, getEffectiveSubscription } from 
 import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
+
+const LevelSelect = lazy(() => import("./pages/LevelSelect"));
+const CycleSelect = lazy(() => import("./pages/CycleSelect"));
+const CycleLevels = lazy(() => import("./pages/CycleLevels"));
+const Niveau = lazy(() => import("./pages/Niveau"));
+const ParcoursSelect = lazy(() => import("./pages/ParcoursSelect"));
+const ParcoursDiagnostic = lazy(() => import("./pages/ParcoursDiagnostic"));
+const ParcoursOverview = lazy(() => import("./pages/ParcoursOverview"));
+const ParcoursStep = lazy(() => import("./pages/ParcoursStep"));
+const ChapterPage = lazy(() => import("./pages/ChapterPage"));
+const Account = lazy(() => import("./pages/Account"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const Amis = lazy(() => import("./pages/Amis"));
+const Reviser = lazy(() => import("./pages/Reviser"));
+const Bilan = lazy(() => import("./pages/Bilan"));
+const Enseignant = lazy(() => import("./pages/Enseignant"));
+const Jeux = lazy(() => import("./pages/Jeux"));
+const CourseTables = lazy(() => import("./pages/CourseTables"));
+const EstimationExpress = lazy(() => import("./pages/EstimationExpress"));
+const MemoryMaths = lazy(() => import("./pages/MemoryMaths"));
+const MemoryCpCe1 = lazy(() => import("./pages/MemoryCpCe1"));
+const CourseAdditionsCpCe1 = lazy(() => import("./pages/CourseAdditionsCpCe1"));
+const Idees = lazy(() => import("./pages/Idees"));
+const AdminPreview = lazy(() => import("./pages/AdminPreview"));
+const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
+const CGU = lazy(() => import("./pages/legal/CGU"));
+const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
+
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
+      Chargement…
+    </div>
+  );
+}
 
 export default function App() {
   const { user, loading, signOut } = useAuth();
@@ -145,6 +154,7 @@ export default function App() {
           </button>
         </div>
       )}
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<CycleSelect />} />
         <Route path="/niveaux" element={<LevelSelect />} />
@@ -174,6 +184,7 @@ export default function App() {
         <Route path="/cgu" element={<CGU />} />
         <Route path="/confidentialite" element={<Confidentialite />} />
       </Routes>
+      </Suspense>
     </>
   );
 }

@@ -66,10 +66,11 @@ export function useChallenges(userId) {
 
   const submitResponse = useCallback(
     async (challengeId, score, durationMs) => {
-      const { error } = await supabase
-        .from("challenges")
-        .update({ to_score: score, to_duration_ms: durationMs ?? null, to_played_at: new Date().toISOString() })
-        .eq("id", challengeId);
+      const { error } = await supabase.rpc("submit_challenge_response", {
+        p_challenge_id: challengeId,
+        p_score: score,
+        p_duration_ms: durationMs ?? null,
+      });
       if (!error) await load();
       return { error };
     },

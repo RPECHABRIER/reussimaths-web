@@ -9,8 +9,7 @@
 // ---------------------------------------------------------------------------
 
 import { getLevel } from "../levels";
-import { getChapter } from "../chapters/registry";
-import { getParcours } from "../parcours";
+import { getPreferredLevel } from "./preferences";
 
 export const TRACKS = {
   college: "/audio/college.mp3",
@@ -105,25 +104,14 @@ export function getZoneForPath(pathname) {
   // Étape ou aperçu d'un parcours : /parcours/:parcoursId(/etape/:stepIndex)
   const parcoursMatch = pathname.match(/^\/parcours\/([^/]+)/);
   if (parcoursMatch) {
-    try {
-      const parcours = getParcours(parcoursMatch[1]);
-      if (parcours?.levelId) return cycleForLevelId(parcours.levelId);
-    } catch {
-      // parcours introuvable : on retombe sur le silence plus bas
-    }
+    const parcoursId = parcoursMatch[1];
+    const levelId = parcoursId.replace(/-(debutant|avance|expert)$/, "");
+    if (levelId !== parcoursId) return cycleForLevelId(levelId);
   }
 
-  // Une fiche de chapitre : /chapitre/:id — on retrouve son niveau, donc son
-  // cycle, via le registre des chapitres.
-  const chapitreMatch = pathname.match(/^\/chapitre\/([^/]+)/);
-  if (chapitreMatch) {
-    try {
-      const chapter = getChapter(chapitreMatch[1]);
-      if (chapter?.meta?.level) return cycleForLevelId(chapter.meta.level);
-    } catch {
-      // chapitre introuvable : silence
-    }
-  }
+  // Une fiche de chapitre reprend le dernier niveau choisi. Cela évite de
+  // charger tout le catalogue uniquement pour sélectionner une ambiance.
+  if (pathname.startsWith("/chapitre/")) return cycleForLevelId(getPreferredLevel());
 
   // Accueil, /niveaux, /compte, /pseudo, /amis, /bilan, /enseignant, /idees,
   // /admin, pages légales... : pas de musique.

@@ -26,7 +26,10 @@ function shuffle(arr) {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-const AUTOMATISMES_CHAPTERS = chapters.filter((c) => c.meta.isAutomatismes);
+const levelOrder = new Map(LEVELS.map((level, index) => [level.id, index]));
+const AUTOMATISMES_CHAPTERS = chapters
+  .filter((c) => c.meta.isAutomatismes)
+  .sort((a, b) => (levelOrder.get(a.meta.level) ?? 999) - (levelOrder.get(b.meta.level) ?? 999));
 
 export default function Enseignant() {
   const [view, setView] = useState("setup");
@@ -157,6 +160,7 @@ export default function Enseignant() {
                       </p>
                       <div className="flex items-center gap-2 shrink-0">
                         <button
+                          aria-label={`Retirer une question pour ${t.title}`}
                           onClick={() => adjustCount(t.id, -1)}
                           disabled={count === 0}
                           className="flex items-center justify-center rounded-full"
@@ -168,6 +172,7 @@ export default function Enseignant() {
                           {count}
                         </p>
                         <button
+                          aria-label={`Ajouter une question pour ${t.title}`}
                           onClick={() => adjustCount(t.id, 1)}
                           disabled={total >= 5}
                           className="flex items-center justify-center rounded-full"

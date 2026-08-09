@@ -75,7 +75,7 @@ export function useFriends(userId) {
   const respond = useCallback(
     async (fromUserId, accept) => {
       if (accept) {
-        await supabase.from("friendships").update({ status: "accepted" }).eq("user_id", fromUserId).eq("friend_id", userId);
+        await supabase.rpc("accept_friend_request", { p_from_user: fromUserId });
       } else {
         await supabase.from("friendships").delete().eq("user_id", fromUserId).eq("friend_id", userId);
       }

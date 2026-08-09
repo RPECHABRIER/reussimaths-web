@@ -108,6 +108,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const quotaApplies = !!dailyLimit && !hasUnlimitedQuota(chapter, { user, subscription });
   const quotaExhausted = quotaApplies && quota.exhausted;
   const isSession = Number.isFinite(sessionLength) && sessionLength > 0;
+  const isDiscoverySession = backTo === "/parcours/decouverte";
   const hasCours = !!chapter.meta.cours;
   const MODES = hasCours ? [COURS_MODE, ...EXERCISE_MODES] : EXERCISE_MODES;
 
@@ -397,14 +398,20 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           className="inline-flex items-center gap-1 text-xs font-semibold mb-4"
           style={{ color: isDefi ? "#8b9ec4" : slate }}
         >
-          <ArrowLeft size={14} /> Retour aux chapitres
+          <ArrowLeft size={14} /> {backTo ? "Retour au parcours" : "Retour aux chapitres"}
         </Link>
         <div className="text-center mb-6">
           <p
             className="text-xs tracking-widest uppercase mb-1 font-semibold"
             style={{ color: isDefi ? "#8b9ec4" : gold, letterSpacing: "0.12em" }}
           >
-            {quotaApplies ? "Gratuit — accès limité" : chapter.meta.free ? "Chapitre gratuit" : "Chapitre abonnement"} —{" "}
+            {isDiscoverySession
+              ? "Parcours découverte"
+              : quotaApplies
+              ? "Gratuit — accès limité"
+              : chapter.meta.free
+              ? "Chapitre gratuit"
+              : "Chapitre abonnement"} —{" "}
             {chapter.meta.title}
           </p>
           {quotaApplies && (

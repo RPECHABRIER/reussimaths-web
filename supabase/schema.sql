@@ -159,11 +159,11 @@ create policy "parcours_progress: self read/write" on public.parcours_progress
 create policy "profiles: self read/write" on public.profiles
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
--- Le pseudo (et le code de parrainage) sont l'identité PUBLIQUE dans l'app
--- (défis entre amis, résolution d'un lien de parrainage) : lecture ouverte
--- à tous, écriture toujours restreinte à soi-même (policy ci-dessus).
-create policy "profiles: public read" on public.profiles
-  for select using (true);
+-- Les profils sont consultables uniquement par les comptes connectés. Le
+-- parrainage par code passe par register_referral(), ce qui évite d'exposer
+-- les UUID et codes de tous les élèves aux visiteurs anonymes.
+create policy "profiles: authenticated read" on public.profiles
+  for select using (auth.uid() is not null);
 
 -- Les abonnements ne sont modifiables que par le service_role (webhook
 -- Stripe côté serveur) ; le client peut seulement lire sa propre ligne.
@@ -173,15 +173,39 @@ create policy "subscriptions: self read" on public.subscriptions
 create policy "chapter_progress: self read/write" on public.chapter_progress
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
-create policy "friendships: self read/write" on public.friendships
-  for all using (auth.uid() = user_id or auth.uid() = friend_id)
-  with check (auth.uid() = user_id);
+create policy "friendships: participants read" on public.friendships
+  for select using (auth.uid() = user_id or auth.uid() = friend_id);
 
--- Le destinataire d'une demande (friend_id) doit aussi pouvoir l'accepter :
--- la policy ci-dessus ne l'autorise qu'en lecture et à supprimer (refuser),
--- pas à faire passer le statut à "accepted".
-create policy "friendships: friend can accept" on public.friendships
-  for update using (auth.uid() = friend_id) with check (auth.uid() = friend_id);
+create policy "friendships: requester creates pending" on public.friendships
+  for insert with check (
+    auth.uid() = user_id
+    and friend_id <> auth.uid()
+    and status = 'pending'
+  );
+
+create policy "friendships: participants delete" on public.friendships
+  for delete using (auth.uid() = user_id or auth.uid() = friend_id);
+
+create or replace function public.accept_friend_request(p_from_user uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then raise exception 'Non authentifié'; end if;
+
+  update public.friendships
+     set status = 'accepted'
+   where user_id = p_from_user
+     and friend_id = auth.uid()
+     and status = 'pending';
+
+  if not found then raise exception 'Demande introuvable'; end if;
+end;
+$$;
+revoke all on function public.accept_friend_request(uuid) from public;
+grant execute on function public.accept_friend_request(uuid) to authenticated;
 
 -- Les votes de niveau sont publics en lecture (pour afficher le compteur) et
 -- ouverts en écriture (insert) à tous, y compris sans compte ; la clé
@@ -198,8 +222,30 @@ create policy "level_votes: anyone can vote once" on public.level_votes
 create policy "referrals: referrer can read own" on public.referrals
   for select using (auth.uid() = referrer_id);
 
-create policy "referrals: referred user creates own row" on public.referrals
-  for insert with check (auth.uid() = referred_id);
+create or replace function public.register_referral(p_referral_code text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_referrer_id uuid;
+begin
+  if auth.uid() is null then raise exception 'Non authentifié'; end if;
+
+  select user_id into v_referrer_id
+    from public.profiles
+   where referral_code = lower(trim(p_referral_code));
+
+  if v_referrer_id is null or v_referrer_id = auth.uid() then return; end if;
+
+  insert into public.referrals (referrer_id, referred_id)
+  values (v_referrer_id, auth.uid())
+  on conflict (referred_id) do nothing;
+end;
+$$;
+revoke all on function public.register_referral(text) from public;
+grant execute on function public.register_referral(text) to authenticated;
 
 -- Défis : chaque participant (celui qui défie ou celui qui répond) voit et
 -- peut créer/mettre à jour les défis auxquels il participe.
@@ -207,11 +253,49 @@ create policy "challenges: participants read" on public.challenges
   for select using (auth.uid() = from_user or auth.uid() = to_user);
 
 create policy "challenges: from_user creates" on public.challenges
-  for insert with check (auth.uid() = from_user);
+  for insert with check (
+    auth.uid() = from_user
+    and to_user <> auth.uid()
+    and from_score between 0 and 5
+    and (from_duration_ms is null or from_duration_ms between 0 and 3600000)
+    and exists (
+      select 1 from public.friendships f
+       where f.status = 'accepted'
+         and ((f.user_id = auth.uid() and f.friend_id = to_user)
+           or (f.friend_id = auth.uid() and f.user_id = to_user))
+    )
+  );
 
-create policy "challenges: participants update" on public.challenges
-  for update using (auth.uid() = from_user or auth.uid() = to_user)
-  with check (auth.uid() = from_user or auth.uid() = to_user);
+create or replace function public.submit_challenge_response(
+  p_challenge_id uuid,
+  p_score integer,
+  p_duration_ms integer default null
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if auth.uid() is null then raise exception 'Non authentifié'; end if;
+  if p_score not between 0 and 5 then raise exception 'Score invalide'; end if;
+  if p_duration_ms is not null and p_duration_ms not between 0 and 3600000 then
+    raise exception 'Durée invalide';
+  end if;
+
+  update public.challenges
+     set to_score = p_score,
+         to_duration_ms = p_duration_ms,
+         to_played_at = now()
+   where id = p_challenge_id
+     and to_user = auth.uid()
+     and to_played_at is null;
+
+  if not found then raise exception 'Défi introuvable ou déjà joué'; end if;
+end;
+$$;
+revoke all on function public.submit_challenge_response(uuid, integer, integer) from public;
+grant execute on function public.submit_challenge_response(uuid, integer, integer) to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Paliers d'accès (2026-08-03) : Pack Examen restreint (niveau choisi + 2

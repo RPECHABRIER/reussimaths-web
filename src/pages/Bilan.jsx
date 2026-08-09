@@ -73,8 +73,8 @@ export default function Bilan() {
   const gold = colors.gold;
 
   return (
-    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden p-3 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
+      <div className="w-full min-w-0 max-w-5xl mx-auto">
         <Link to="/compte" className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
           <ArrowLeft size={14} /> Mon compte
         </Link>
@@ -117,9 +117,9 @@ export default function Bilan() {
         )}
 
         {user && !loading && !error && summary && (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             <div
-              className="rounded-3xl p-6 md:col-span-2"
+              className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2"
               style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
             >
               <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: gold }}>
@@ -131,7 +131,7 @@ export default function Bilan() {
               {summary.priorities.length > 0 && (
                 <Link
                   to={`/chapitre/${summary.priorities[0].chapter_id}?competence=${encodeURIComponent(summary.priorities[0].skill_id)}`}
-                  className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold"
+                  className="inline-flex max-w-full items-center gap-1.5 mt-3 text-xs font-semibold break-words"
                   style={{ color: gold }}
                 >
                   Travailler la priorité n°1 <ArrowRight size={13} />
@@ -140,7 +140,7 @@ export default function Bilan() {
             </div>
 
             {/* Temps passé */}
-            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Clock size={16} color={gold} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -178,7 +178,7 @@ export default function Bilan() {
             </div>
 
             {/* Taux de réussite */}
-            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Target size={16} color={colors.green} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -212,7 +212,7 @@ export default function Bilan() {
             </div>
 
             {/* Notions consolidées */}
-            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Award size={16} color={gold} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -226,9 +226,9 @@ export default function Bilan() {
               ) : (
                 <div className="flex flex-col gap-2">
                   {summary.consolidatedSkills.slice(0, 5).map((s) => (
-                    <div key={`${s.chapter_id}-${s.skill_id}`} className="flex items-center gap-2">
+                    <div key={`${s.chapter_id}-${s.skill_id}`} className="flex min-w-0 items-start gap-2">
                       <Award size={13} color={colors.green} className="shrink-0" />
-                      <p className="text-sm" style={{ color: ink }}>{s.skill_id}</p>
+                      <p className="min-w-0 text-sm break-words" style={{ color: ink, overflowWrap: "anywhere" }}>{s.skill_id}</p>
                     </div>
                   ))}
                 </div>
@@ -236,7 +236,7 @@ export default function Bilan() {
             </div>
 
             {/* Notions travaillées */}
-            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <ListChecks size={16} color={ink} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -255,12 +255,12 @@ export default function Bilan() {
                       const chapter = getChapter(s.chapter_id);
                       const level = chapter ? getLevel(chapter.meta.level) : null;
                       return (
-                        <div key={`${s.chapter_id}-${s.skill_id}`} className="flex items-center justify-between gap-3">
+                        <div key={`${s.chapter_id}-${s.skill_id}`} className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium truncate" style={{ color: ink }}>
+                            <p className="text-sm font-medium break-words" style={{ color: ink, overflowWrap: "anywhere" }}>
                               {s.skill_id}
                             </p>
-                            <p className="text-xs truncate" style={{ color: slate }}>
+                            <p className="text-xs break-words" style={{ color: slate, overflowWrap: "anywhere" }}>
                               {level?.label ?? ""}
                               {chapter ? ` — ${chapter.meta.title}` : ""}
                             </p>
@@ -276,7 +276,7 @@ export default function Bilan() {
             </div>
 
             {/* Priorités pour la semaine suivante */}
-            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp size={16} color={colors.red} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -298,10 +298,10 @@ export default function Bilan() {
                       <Link
                         key={`${s.chapter_id}-${s.skill_id}`}
                         to={chapter ? `/chapitre/${s.chapter_id}?competence=${encodeURIComponent(s.skill_id)}` : "#"}
-                        className="rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition-transform active:scale-[0.98]"
+                        className="min-w-0 rounded-2xl px-3 sm:px-4 py-3 flex items-start justify-between gap-2 sm:gap-3 transition-transform active:scale-[0.98]"
                         style={{ backgroundColor: `${colors.red}0d`, opacity: chapter ? 1 : 0.5 }}
                       >
-                        <p className="text-sm font-medium truncate" style={{ color: ink }}>
+                        <p className="min-w-0 text-sm font-medium break-words" style={{ color: ink, overflowWrap: "anywhere" }}>
                           {s.skill_id}
                         </p>
                         <p className="text-xs font-semibold shrink-0" style={{ color: colors.red }}>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, KeyRound } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -254,6 +254,19 @@ export default function Enseignant() {
             </div>
             <CheckCircle2 size={18} color={gold} className="shrink-0" />
           </Link>
+
+          <div className="mt-4 rounded-3xl p-5" style={{ backgroundColor: `${gold}10`, border: `1px solid ${gold}33` }}>
+            <div className="flex items-start gap-3">
+              <KeyRound size={18} color={gold} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold" style={{ color: ink }}>Pilote accès classe</p>
+                <p className="text-xs mt-1 leading-relaxed" style={{ color: slate }}>
+                  Un code temporaire peut débloquer gratuitement un niveau pour une classe test. Les élèves créent leur
+                  compte, saisissent le code dans « Mon compte », puis conservent leur progression individuelle.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

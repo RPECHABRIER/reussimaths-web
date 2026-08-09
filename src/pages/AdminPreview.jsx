@@ -67,8 +67,153 @@ export default function AdminPreview() {
 
         <PreviewSwitcher />
         <GrantAccessTool />
+        <ClassCodesTool />
         <SubscribersDashboard />
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Pilote codes classe
+// ---------------------------------------------------------------------------
+function ClassCodesTool() {
+  const [level, setLevel] = useState("sixieme");
+  const [label, setLabel] = useState("");
+  const [maxRedemptions, setMaxRedemptions] = useState(35);
+  const [expiresInDays, setExpiresInDays] = useState(30);
+  const [codes, setCodes] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
+
+  const loadCodes = async () => {
+    setError(null);
+    try {
+      const response = await authenticatedFetch("/api/admin-class-codes");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Impossible de charger les codes.");
+      setCodes(data.codes ?? []);
+    } catch (loadError) {
+      setError(loadError.message);
+    }
+  };
+
+  useEffect(() => {
+    loadCodes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const createCode = async () => {
+    if (loading) return;
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await authenticatedFetch("/api/admin-class-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "create", level, label, maxRedemptions, expiresInDays }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Impossible de créer le code.");
+      setMessage(`Code créé : ${data.code}`);
+      setLabel("");
+      await loadCodes();
+    } catch (createError) {
+      setError(createError.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deactivate = async (code) => {
+    if (loading || !window.confirm(`Désactiver le code ${code} ?`)) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await authenticatedFetch("/api/admin-class-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "deactivate", code }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Impossible de désactiver le code.");
+      await loadCodes();
+    } catch (deactivateError) {
+      setError(deactivateError.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+      <div>
+        <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
+          Codes classe — pilote
+        </p>
+        <p className="text-xs mt-1" style={{ color: colors.slate }}>
+          Crée un code temporaire à remettre au professeur. Chaque élève connecté débloque gratuitement le niveau choisi.
+        </p>
+      </div>
+
+      <select value={level} onChange={(event) => setLevel(event.target.value)} className="text-xs rounded-lg px-2.5 py-2"
+        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}>
+        {LEVELS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+      </select>
+      <input value={label} onChange={(event) => setLabel(event.target.value)} maxLength={100}
+        placeholder="Classe ou professeur (ex. 4e B — Mme Martin)" className="text-xs rounded-lg px-2.5 py-2"
+        style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }} />
+      <div className="grid grid-cols-2 gap-2">
+        <label className="text-xs" style={{ color: colors.slate }}>
+          Élèves maximum
+          <input type="number" min="1" max="500" value={maxRedemptions}
+            onChange={(event) => setMaxRedemptions(Number(event.target.value))}
+            className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} />
+        </label>
+        <label className="text-xs" style={{ color: colors.slate }}>
+          Validité (jours)
+          <input type="number" min="1" max="365" value={expiresInDays}
+            onChange={(event) => setExpiresInDays(Number(event.target.value))}
+            className="mt-1 w-full rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }} />
+        </label>
+      </div>
+      <button onClick={createCode} disabled={loading} className="py-2.5 rounded-full font-semibold text-xs"
+        style={{ backgroundColor: colors.gold, color: colors.ink, opacity: loading ? 0.6 : 1 }}>
+        {loading ? "Traitement…" : "Créer un code classe"}
+      </button>
+
+      {message && <p className="text-xs font-semibold" style={{ color: colors.green }}>{message}</p>}
+      {error && <p role="alert" className="text-xs font-semibold" style={{ color: colors.red }}>{error}</p>}
+
+      {codes === null && !error && <p className="text-xs" style={{ color: colors.slate }}>Chargement…</p>}
+      {codes && codes.length === 0 && <p className="text-xs" style={{ color: colors.slate }}>Aucun code créé.</p>}
+      {codes && codes.length > 0 && (
+        <div className="flex flex-col gap-2 mt-1">
+          {codes.map((item) => {
+            const levelLabel = LEVELS.find((entry) => entry.id === item.level)?.label ?? item.level;
+            const expired = item.expires_at && new Date(item.expires_at) <= new Date();
+            return (
+              <div key={item.code} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg, opacity: item.active && !expired ? 1 : 0.6 }}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold" style={{ color: colors.ink, fontFamily: fonts.mono }}>{item.code}</p>
+                    <p className="text-xs truncate" style={{ color: colors.slate }}>{item.label || "Sans libellé"} — {levelLabel}</p>
+                    <p className="text-xs mt-1" style={{ color: colors.slate }}>
+                      {item.redemption_count}/{item.max_redemptions ?? "∞"} élève(s) · jusqu'au {item.expires_at ? new Date(item.expires_at).toLocaleDateString("fr-FR") : "sans limite"}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0">
+                    <button onClick={() => navigator.clipboard.writeText(item.code)} className="text-xs font-semibold" style={{ color: colors.gold }}>Copier</button>
+                    {item.active && !expired && <button onClick={() => deactivate(item.code)} className="text-xs font-semibold" style={{ color: colors.red }}>Désactiver</button>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

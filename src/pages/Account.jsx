@@ -127,7 +127,14 @@ export default function Account() {
       setShowClassCodeForm(false);
       reloadSubscription();
     } catch (err) {
-      setClassCodeError(err.message?.includes("Code invalide") ? "Code invalide." : "Une erreur est survenue.");
+      const message = err.message ?? "";
+      setClassCodeError(
+        message.includes("Code complet")
+          ? "Ce code a atteint son nombre maximal d'élèves."
+          : message.includes("Code invalide") || message.includes("expiré")
+          ? "Code invalide ou expiré."
+          : "Une erreur est survenue."
+      );
     } finally {
       setClassCodeLoading(false);
     }

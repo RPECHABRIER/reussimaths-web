@@ -6,6 +6,7 @@ const API_FILES = [
   "create-checkout-session.js",
   "cancel-subscription.js",
   "admin-grant-access.js",
+  "admin-class-codes.js",
   "notify-challenge.js",
 ];
 
@@ -14,6 +15,19 @@ test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", a
     const source = await readFile(new URL(file, import.meta.url), "utf8");
     assert.match(source, /requireSupabaseUser\(req, res, supabaseAdmin\)/, file);
   }
+});
+
+test("le pilote classe contrôle expiration, capacité et administration", async () => {
+  const [migration, endpoint] = await Promise.all([
+    readFile(new URL("../supabase/class-codes-pilot-migration-2026-08-09.sql", import.meta.url), "utf8"),
+    readFile(new URL("admin-class-codes.js", import.meta.url), "utf8"),
+  ]);
+  assert.match(migration, /class_access_redemptions/);
+  assert.match(migration, /v_code\.expires_at/);
+  assert.match(migration, /v_code\.max_redemptions/);
+  assert.match(migration, /pg_advisory_xact_lock/);
+  assert.match(endpoint, /caller\.email\?\.toLowerCase\(\) !== ADMIN_EMAIL/);
+  assert.match(endpoint, /crypto\.randomBytes/);
 });
 
 test("aucun endpoint sensible ne récupère l'identité de l'appelant dans le body", async () => {

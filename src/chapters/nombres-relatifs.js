@@ -57,7 +57,7 @@ function buildGraduatedLineFigure(markedValue, min, max, letter = "M") {
   const toX = (v) => (v - min) * scale;
   const Lo = { id: "Lo", x: toX(min), y, hideDot: true, hideLabel: true };
   const Hi = { id: "Hi", x: toX(max), y, hideDot: true, hideLabel: true };
-  const Mk = { id: letter, x: toX(markedValue), y, dy: -10 };
+  const Mk = { id: letter, x: toX(markedValue), y, numberLinePoint: true, labelAbove: true };
   const freeLabels = [];
   for (let v = min; v <= max; v++) {
     freeLabels.push({ x: toX(v), y: y + 16, text: `${v}` });
@@ -66,7 +66,7 @@ function buildGraduatedLineFigure(markedValue, min, max, letter = "M") {
     points: [Lo, Hi, Mk],
     // Ligne des relatifs : négatifs à gauche, positifs à droite, se prolonge
     // à l'infini dans les deux sens — flèche aux deux extrémités.
-    lines: [{ from: "Lo", to: "Hi", arrowStart: true, arrowEnd: true }],
+    numberLine: { from: "Lo", to: "Hi", tickCount: max - min + 1, arrowStart: true, arrowEnd: true },
     freeLabels,
   };
 }

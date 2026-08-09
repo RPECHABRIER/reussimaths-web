@@ -397,16 +397,16 @@ function genAvecSansParenthesesPuissanceMental() {
   };
 }
 
-function buildFractionOnLineFigure(value, max) {
+function buildFractionOnLineFigure(value, max, subdivisions = 1) {
   const scale = 60;
   const y = 40;
   const toX = (v) => 20 + v * scale;
   const Lo = { id: "Lo", x: toX(0), y, hideDot: true, hideLabel: true };
   const Hi = { id: "Hi", x: toX(max), y, hideDot: true, hideLabel: true };
-  const M = { id: "M", x: toX(value), y, dy: -10 };
+  const M = { id: "M", x: toX(value), y, numberLinePoint: true, labelAbove: true };
   const freeLabels = [];
   for (let v = 0; v <= max; v++) freeLabels.push({ x: toX(v), y: y + 16, text: `${v}` });
-  return { points: [Lo, Hi, M], lines: [{ from: "Lo", to: "Hi" }], freeLabels };
+  return { points: [Lo, Hi, M], numberLine: { from: "Lo", to: "Hi", tickCount: max * subdivisions + 1, arrowEnd: true }, freeLabels };
 }
 
 // ---------- 21. Abscisse d'un point sur une demi-droite graduée (fraction) ----------
@@ -417,7 +417,7 @@ function genAbscisseDemiDroiteGradueeFraction() {
     type: "numeric",
     chapter: "Automatismes — Droite graduée",
     prompt: `Chaque unité de la demi-droite ci-dessous est partagée en quarts égaux. Quelle est l'écriture décimale de l'abscisse du point M ?`,
-    figure: buildFractionOnLineFigure(value, 3),
+    figure: buildFractionOnLineFigure(value, 3, 4),
     answer: value,
     tolerance: 0.01,
     steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${fr(value)}.` }],
@@ -625,7 +625,7 @@ function genLireAbscissePointDemiDroiteFigure() {
     type: "numeric",
     chapter: "Automatismes — Droite graduée",
     prompt: `Quelle est l'abscisse du point M sur la demi-droite graduée ci-dessous ?`,
-    figure: buildFractionOnLineFigure(value, max),
+    figure: buildFractionOnLineFigure(value, max, 1),
     answer: value,
     steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${value}.` }],
   };
@@ -638,7 +638,7 @@ function genAbscissePointDecimalUniteFigure() {
     type: "numeric",
     chapter: "Automatismes — Droite graduée",
     prompt: `L'unité de cette demi-droite graduée est partagée en dixièmes égaux. Quelle est l'écriture décimale de l'abscisse du point M ?`,
-    figure: buildFractionOnLineFigure(value, 1),
+    figure: buildFractionOnLineFigure(value, 1, 10),
     answer: value,
     tolerance: 0.01,
     steps: [{ type: "donnee", text: `Le point M est placé sur la graduation ${fr(value)}.` }],

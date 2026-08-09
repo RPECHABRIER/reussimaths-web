@@ -30,6 +30,8 @@
 //   rightAngles  : [{ at, from, to, size? }]         — petit carré d'angle droit
 //   freeLabels   : [{ x, y, text, anchor? }]         — texte libre (ex : nom
 //                  d'une droite, indication)
+//   numberLine   : { from, to, tickCount, arrowStart?, arrowEnd?, tickSize? }
+//                  — droite graduée : graduations et sens toujours visibles
 //   hidePointLabels : bool — n'affiche pas les points/étiquettes de `points`
 // ---------------------------------------------------------------------------
 
@@ -60,6 +62,45 @@ export default function Figure({ spec }) {
   return (
     <div className="w-full flex justify-center mb-4">
       <svg viewBox={`${minX} ${minY} ${w} ${h}`} style={{ width: "100%", maxWidth: 300, maxHeight: 220 }}>
+        {spec.numberLine && (() => {
+          const line = spec.numberLine;
+          const a = byId[line.from];
+          const b = byId[line.to];
+          const count = Math.max(2, line.tickCount ?? 2);
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const length = Math.hypot(dx, dy) || 1;
+          const ux = dx / length;
+          const uy = dy / length;
+          const nx = -uy;
+          const ny = ux;
+          const extension = line.extend ?? 7;
+          const x1 = a.x - ux * extension;
+          const y1 = a.y - uy * extension;
+          const x2 = b.x + ux * extension;
+          const y2 = b.y + uy * extension;
+          const arrowSize = 8;
+          const tickSize = line.tickSize ?? 7;
+          const arrowPoints = (px, py, dirx, diry) => {
+            const backx = px - dirx * arrowSize;
+            const backy = py - diry * arrowSize;
+            return `${px},${py} ${backx + nx * arrowSize * 0.55},${backy + ny * arrowSize * 0.55} ${backx - nx * arrowSize * 0.55},${backy - ny * arrowSize * 0.55}`;
+          };
+          return (
+            <g aria-label="Droite graduée orientée">
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={ink} strokeWidth="1.8" />
+              {Array.from({ length: count }).map((_, index) => {
+                const ratio = index / (count - 1);
+                const x = a.x + dx * ratio;
+                const y = a.y + dy * ratio;
+                return <line key={`nl-tick-${index}`} x1={x - nx * tickSize} y1={y - ny * tickSize} x2={x + nx * tickSize} y2={y + ny * tickSize} stroke={ink} strokeWidth="1.5" />;
+              })}
+              {line.arrowStart && <polygon points={arrowPoints(x1, y1, -ux, -uy)} fill={ink} />}
+              {(line.arrowEnd ?? true) && <polygon points={arrowPoints(x2, y2, ux, uy)} fill={ink} />}
+            </g>
+          );
+        })()}
+
         {(spec.circles || []).map((c, i) => {
           const center = byId[c.center];
           const r = c.radius ?? (c.through ? dist(center, byId[c.through]) : 30);
@@ -161,9 +202,9 @@ export default function Figure({ spec }) {
         {!spec.hidePointLabels &&
           spec.points.map((p) => (
             <g key={p.id}>
-              {!p.hideDot && <circle cx={p.x} cy={p.y} r="2.2" fill={ink} />}
+              {!p.hideDot && <circle cx={p.x} cy={p.y} r={p.numberLinePoint ? "3.4" : "2.2"} fill={ink} />}
               {!p.hideLabel && (
-                <text x={p.x + (p.dx ?? 8)} y={p.y + (p.dy ?? -8)} fontSize="12" fontWeight="600" fill={ink}>
+                <text x={p.labelAbove ? p.x : p.x + (p.dx ?? 8)} y={p.labelAbove ? p.y - 16 : p.y + (p.dy ?? -8)} fontSize={p.labelAbove ? "13" : "12"} fontWeight="700" fill={ink} textAnchor={p.labelAbove ? "middle" : undefined}>
                   {p.label ?? p.id}
                 </text>
               )}

@@ -1654,27 +1654,19 @@ function genFractionVersDecimaleSimpleAuto() {
 function buildAxeGradueFigure(nTicks, step, startValue, targetIndex) {
   const dx = 24;
   const points = [];
-  const segments = [];
   const freeLabels = [];
   for (let i = 0; i < nTicks; i++) {
     const x = i * dx;
     const isTarget = i === targetIndex;
-    points.push({ id: `b${i}`, x, y: 0, hideDot: true, hideLabel: true });
-    points.push({ id: `t${i}`, x, y: -8, hideDot: !isTarget, hideLabel: true });
-    segments.push({ from: `b${i}`, to: `t${i}` });
-    if (isTarget) {
-      freeLabels.push({ x, y: -16, text: "D" });
-    }
+    points.push({ id: `b${i}`, x, y: 0, hideDot: !isTarget, hideLabel: !isTarget, label: "D", numberLinePoint: isTarget, labelAbove: isTarget });
     if (i === 0 || i === nTicks - 1) {
       freeLabels.push({ x, y: 16, text: String(startValue + i * step) });
     }
   }
   return {
     points,
-    segments,
-    // Trait principal de l'axe en `lines` (pas `segments`) pour pouvoir
-    // porter une flèche de sens à droite, comme toute droite graduée.
-    lines: [{ from: "b0", to: `b${nTicks - 1}`, extend: 0, arrowEnd: true }],
+    // La primitive commune garantit graduations visibles et flèche de sens.
+    numberLine: { from: "b0", to: `b${nTicks - 1}`, tickCount: nTicks, extend: 8, arrowEnd: true },
     freeLabels,
   };
 }

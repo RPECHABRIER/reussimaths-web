@@ -71,6 +71,24 @@ test("la navigation élève reste disponible sans couvrir les exercices", async 
   assert.match(sound, /bottom-24 sm:bottom-4/);
 });
 
+test("les droites graduées affichent toujours graduations, sens et point au-dessus", async () => {
+  const [figure, decimals, fractions, relatives, auto6, auto5] = await Promise.all([
+    read("./components/Figure.jsx"),
+    read("./chapters/nombres-decimaux.js"),
+    read("./chapters/fractions.js"),
+    read("./chapters/nombres-relatifs.js"),
+    read("./chapters/automatismes-sixieme.js"),
+    read("./chapters/automatismes-cinquieme.js"),
+  ]);
+  assert.match(figure, /spec\.numberLine/);
+  assert.match(figure, /tickCount/);
+  assert.match(figure, /arrowEnd \?\? true/);
+  assert.match(figure, /labelAbove/);
+  for (const source of [decimals, fractions, relatives, auto6, auto5]) {
+    assert.match(source, /numberLine:/);
+  }
+});
+
 test("tous les accès à l'essai commencent au niveau choisi, au programme puis au diagnostic", async () => {
   const [app, home, teacher, levels, programme, diagnostic, prerequisites, parcours] = await Promise.all([
     read("./App.jsx"),

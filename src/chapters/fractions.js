@@ -108,9 +108,9 @@ function genLireAbscisseFraction() {
     points: [
       { id: "endL", x: x0, y, hideDot: true, hideLabel: true },
       { id: "endR", x: x1, y, hideDot: true, hideLabel: true },
-      { id: letter, x: px, y, dy: -14 },
+      { id: letter, x: px, y, numberLinePoint: true, labelAbove: true },
     ],
-    lines: [{ from: "endL", to: "endR", extend: 6, arrowEnd: true }],
+    numberLine: { from: "endL", to: "endR", tickCount: maxEntier * den + 1, arrowEnd: true },
     freeLabels: [
       { x: x0, y: y + 20, text: "0" },
       { x: x1, y: y + 20, text: String(maxEntier) },

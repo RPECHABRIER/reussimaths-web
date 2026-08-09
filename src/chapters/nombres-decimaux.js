@@ -166,9 +166,9 @@ function genLireAbscisseDecimale() {
     points: [
       { id: "endL", x: x0, y, hideDot: true, hideLabel: true },
       { id: "endR", x: x1, y, hideDot: true, hideLabel: true },
-      { id: letter, x: px, y, dy: -14 },
+      { id: letter, x: px, y, numberLinePoint: true, labelAbove: true },
     ],
-    lines: [{ from: "endL", to: "endR", extend: 6 }],
+    numberLine: { from: "endL", to: "endR", tickCount: 11, arrowEnd: true },
     freeLabels: [
       { x: x0, y: y + 20, text: fr(left) },
       { x: x1, y: y + 20, text: fr(right) },
@@ -206,14 +206,14 @@ function genPlacerPointQCM() {
   letters.forEach((letter, i) => {
     const idx = indices[i];
     const px = x0 + (idx / 10) * (x1 - x0);
-    points.push({ id: letter, x: px, y, dy: -14 });
+    points.push({ id: letter, x: px, y, numberLinePoint: true, labelAbove: true });
     values[letter] = roundTo(left + idx * step, decimals);
   });
   const targetLetter = pick(letters);
   const targetValue = values[targetLetter];
   const figure = {
     points,
-    lines: [{ from: "endL", to: "endR", extend: 6 }],
+    numberLine: { from: "endL", to: "endR", tickCount: 11, arrowEnd: true },
     freeLabels: [
       { x: x0, y: y + 20, text: fr(left) },
       { x: x1, y: y + 20, text: fr(right) },
@@ -686,18 +686,10 @@ function buildCoursDroiteGradueeFigure() {
     { id: "Lo", x: 0, y, hideDot: true, hideLabel: true },
     { id: "Hi", x: 10 * scale, y, hideDot: true, hideLabel: true },
   ];
-  const segments = [];
-  for (let i = 0; i <= 10; i++) {
-    const x = i * scale;
-    points.push({ id: `t${i}a`, x, y: y - 6, hideDot: true, hideLabel: true });
-    points.push({ id: `t${i}b`, x, y: y + 6, hideDot: true, hideLabel: true });
-    segments.push({ from: `t${i}a`, to: `t${i}b` });
-  }
-  points.push({ id: "M", x: 4 * scale, y, dy: -12, label: "3,4" });
+  points.push({ id: "M", x: 4 * scale, y, label: "M : 3,4", numberLinePoint: true, labelAbove: true });
   return {
     points,
-    lines: [{ from: "Lo", to: "Hi", extend: 12, arrowEnd: true }],
-    segments,
+    numberLine: { from: "Lo", to: "Hi", tickCount: 11, extend: 12, arrowEnd: true },
     freeLabels: [
       { x: 0, y: y + 22, text: "3" },
       { x: 10 * scale, y: y + 22, text: "4" },

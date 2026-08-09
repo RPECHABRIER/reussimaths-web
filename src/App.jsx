@@ -38,8 +38,12 @@ const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
 
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
-      Chargement…
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: colors.bg, color: colors.slate }}>
+      <div className="relative" style={{ width: 44, height: 44 }}>
+        <div className="absolute inset-0 rounded-full" style={{ border: `3px solid ${colors.gold}2b` }} />
+        <div className="absolute inset-0 rounded-full animate-spin" style={{ border: "3px solid transparent", borderTopColor: colors.gold }} />
+      </div>
+      <p className="text-xs font-semibold tracking-wide">Reussimaths prépare la suite…</p>
     </div>
   );
 }

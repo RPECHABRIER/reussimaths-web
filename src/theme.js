@@ -20,6 +20,7 @@ export const colors = {
 export const shadow = {
   soft: "0 1px 2px rgba(16,24,40,0.04), 0 14px 32px -16px rgba(16,24,40,0.14)",
   raised: "0 2px 6px rgba(16,24,40,0.06), 0 26px 52px -20px rgba(16,24,40,0.20)",
+  floating: "0 10px 28px -16px rgba(27,42,74,0.28), 0 30px 70px -34px rgba(27,42,74,0.32)",
 };
 
 // Couleurs de cycle — donnent une identité visuelle distincte au collège et

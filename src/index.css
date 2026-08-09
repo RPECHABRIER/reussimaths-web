@@ -9,11 +9,65 @@ html {
 }
 
 body {
-  background-color: #F5F5F7;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  color: #1B2A4A;
+  background:
+    radial-gradient(circle at 8% -10%, rgba(217, 164, 65, 0.08), transparent 30rem),
+    radial-gradient(circle at 96% 18%, rgba(23, 137, 160, 0.055), transparent 34rem),
+    #F5F5F7;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #1B2A4A;
+  background: rgba(217, 164, 65, 0.28);
+}
+
+a, button, input, select, textarea {
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease, opacity 160ms ease;
+}
+
+button:not(:disabled), a[href] {
+  cursor: pointer;
+}
+
+button:not(:disabled):active, a[href]:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(217, 164, 65, 0.32);
+  outline-offset: 3px;
+}
+
+input, select, textarea {
+  min-height: 42px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(217, 164, 65, 0.72) !important;
+  box-shadow: 0 0 0 4px rgba(217, 164, 65, 0.10);
+}
+
+@media (hover: hover) {
+  a[href]:hover, button:not(:disabled):hover {
+    filter: brightness(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* KaTeX en mode bloc (\[ ... \], notamment les tableaux via texTable()) :

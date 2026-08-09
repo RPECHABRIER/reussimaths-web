@@ -8,6 +8,7 @@ import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
+import { Eye, KeyRound, ShieldCheck, Sparkles, Users } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Panneau admin (/admin, réservé à romainpechabrier@gmail.com) — voir
@@ -52,23 +53,33 @@ export default function AdminPreview() {
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
-      <div className="max-w-2xl mx-auto flex flex-col gap-8">
-        <div>
+      <div className="max-w-6xl mx-auto flex flex-col gap-7">
+        <div className="rounded-[2rem] p-6 sm:p-8 relative overflow-hidden" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}>
+          <div className="absolute rounded-full" style={{ width: 260, height: 260, right: -80, top: -130, backgroundColor: `${colors.gold}24` }} />
           <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-            ← Mon compte
+            <span style={{ color: "rgba(255,255,255,.72)" }}>← Mon compte</span>
           </Link>
+          <div className="relative mt-7 flex items-start justify-between gap-5">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] font-bold" style={{ color: colors.gold }}>Pilotage sécurisé</p>
           <h1
-            className="mt-4"
-            style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.6rem", fontWeight: 800, letterSpacing: "-0.02em" }}
+                className="mt-2"
+                style={{ fontFamily: fonts.display, color: "#fff", fontSize: "clamp(2rem, 4vw, 3.25rem)", fontWeight: 900, letterSpacing: "-0.04em" }}
           >
             Panneau admin
           </h1>
+              <p className="text-sm mt-3 max-w-2xl leading-relaxed" style={{ color: "rgba(255,255,255,.68)" }}>Prévisualise chaque offre, accorde les accès exceptionnels et suis l’adoption depuis un espace réservé à l’administration.</p>
+            </div>
+            <div className="hidden sm:flex items-center justify-center rounded-2xl shrink-0" style={{ width: 58, height: 58, backgroundColor: `${colors.gold}20`, border: `1px solid ${colors.gold}45` }}><ShieldCheck size={27} color={colors.gold} /></div>
+          </div>
         </div>
 
-        <PreviewSwitcher />
-        <GrantAccessTool />
-        <ClassInvitationsTool />
-        <SubscribersDashboard />
+        <div className="grid lg:grid-cols-2 gap-5 items-start">
+          <PreviewSwitcher />
+          <GrantAccessTool />
+          <div className="lg:col-span-2"><ClassInvitationsTool /></div>
+          <div className="lg:col-span-2"><SubscribersDashboard /></div>
+        </div>
       </div>
     </div>
   );
@@ -128,8 +139,8 @@ function ClassInvitationsTool() {
   };
 
   return (
-    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-      <div><p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>Invitations classe — admin uniquement</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Toi seul peux créer ces accès exceptionnels. Ils ne sont pas proposés dans l’espace enseignant public.</p></div>
+    <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
+      <div className="flex items-start gap-3"><div className="rounded-xl flex items-center justify-center shrink-0" style={{ width: 40, height: 40, backgroundColor: `${colors.gold}18` }}><KeyRound size={19} color={colors.gold} /></div><div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Invitations classe</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Accès exceptionnels créés uniquement par l’administration, invisibles dans l’espace enseignant public.</p></div></div>
       <select value={level} onChange={(event) => setLevel(event.target.value)} className="text-xs rounded-lg px-2.5 py-2" style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}>
         {LEVELS.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
       </select>
@@ -188,10 +199,8 @@ function GrantAccessTool() {
   };
 
   return (
-    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-      <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
-        Offrir un accès complet gratuit
-      </p>
+    <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-3 h-full" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
+      <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.green}16` }}><Sparkles size={19} color={colors.green} /></div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Offrir un accès complet</p></div>
       <p className="text-xs" style={{ color: colors.slate }}>
         Donne gratuitement l'accès complet (tous niveaux, comme l'abonnement) à un compte de ton choix, à partir de
         son email. La personne doit déjà avoir créé son compte sur l'app.
@@ -276,10 +285,8 @@ function PreviewSwitcher() {
   const currentlyPreviewing = !!stored?.mode && stored.mode !== "admin";
 
   return (
-    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-      <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
-        Prévisualiser un palier
-      </p>
+    <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-3 h-full" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
+      <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.gold}18` }}><Eye size={19} color={colors.gold} /></div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Prévisualiser une offre</p></div>
       <p className="text-xs" style={{ color: colors.slate }}>
         Voir l'app comme un compte gratuit / Pack Examen / abonnement complet, sans créer de vrai compte de test.
         {currentlyPreviewing && " Une prévisualisation est actuellement active (bandeau en haut de l'app)."}
@@ -433,10 +440,8 @@ function SubscribersDashboard() {
   }, [rows]);
 
   return (
-    <div className="rounded-3xl p-5 flex flex-col gap-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
-      <p style={{ fontFamily: fonts.display, fontSize: "1rem", fontWeight: 700, color: colors.ink }}>
-        Utilisateurs
-      </p>
+    <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
+      <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.ink}0c` }}><Users size={19} color={colors.ink} /></div><div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Utilisateurs</p><p className="text-xs mt-0.5" style={{ color: colors.slate }}>Adoption, accès et activité récente.</p></div></div>
 
       {error && (
         <p className="text-xs" style={{ color: colors.red }}>

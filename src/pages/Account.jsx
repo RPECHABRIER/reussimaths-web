@@ -204,7 +204,7 @@ export default function Account() {
           </section>
         </div>
       ) : (
-        <div className="flex flex-col gap-3 w-full max-w-xs text-center rounded-3xl p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+        <div className="flex flex-col gap-4 w-full max-w-3xl mx-auto text-center rounded-[2rem] p-5 sm:p-8 lg:p-10 my-8" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
           <Mascot size={84} className="mx-auto" />
           <p style={{ fontFamily: fonts.display, fontWeight: 700, color: colors.ink, fontSize: "1.1rem" }}>
             {profile?.pseudo ?? "Connecté"}

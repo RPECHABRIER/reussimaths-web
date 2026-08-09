@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock, Target, TrendingUp, ListChecks } from "lucide-react";
+import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { getChapter } from "../chapters/registry";
@@ -34,10 +34,32 @@ function formatDuration(totalSeconds) {
 }
 
 function comparison(current, previous, suffix = "") {
-  if (!previous) return null;
+  if (previous === null || previous === undefined || previous === 0) return null;
   const delta = current - previous;
   if (delta === 0) return `Stable par rapport aux 7 jours précédents${suffix}`;
   return `${delta > 0 ? "+" : ""}${delta}${suffix} par rapport aux 7 jours précédents`;
+}
+
+function durationComparison(current, previous) {
+  if (!previous) return null;
+  const delta = current - previous;
+  if (Math.abs(delta) < 30) return "Temps de travail stable par rapport aux 7 jours précédents";
+  return `${delta > 0 ? "+" : "−"}${formatDuration(Math.abs(delta))} par rapport aux 7 jours précédents`;
+}
+
+function parentSummary(summary) {
+  if (summary.totalAttempts === 0 && summary.totalSeconds === 0) {
+    return "Aucune activité enregistrée ces 7 derniers jours. Une courte séance permet de relancer la progression.";
+  }
+  if (summary.previousSuccessRate !== null && summary.successRate !== null) {
+    const delta = summary.successRate - summary.previousSuccessRate;
+    if (delta >= 5) return `La réussite progresse de ${delta} points. Le travail de la semaine porte ses fruits.`;
+    if (delta <= -5) return `La réussite baisse de ${Math.abs(delta)} points. Les notions fragiles ci-dessous sont à revoir en priorité.`;
+  }
+  if (summary.consolidatedSkills.length > 0) {
+    return `${summary.consolidatedSkills.length} notion${summary.consolidatedSkills.length > 1 ? "s ont" : " a"} atteint un palier de consolidation cette semaine.`;
+  }
+  return `${summary.totalAttempts} exercice${summary.totalAttempts > 1 ? "s" : ""} réalisé${summary.totalAttempts > 1 ? "s" : ""} sur ${summary.activeDays} jour${summary.activeDays > 1 ? "s" : ""}. La régularité aidera à consolider les acquis.`;
 }
 
 export default function Bilan() {
@@ -91,6 +113,27 @@ export default function Bilan() {
 
         {user && !loading && summary && (
           <div className="flex flex-col gap-4">
+            <div
+              className="rounded-3xl p-5"
+              style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
+            >
+              <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: gold }}>
+                L'essentiel pour le parent
+              </p>
+              <p className="text-sm mt-2 leading-relaxed" style={{ color: colors.bg }}>
+                {parentSummary(summary)}
+              </p>
+              {summary.priorities.length > 0 && (
+                <Link
+                  to={`/chapitre/${summary.priorities[0].chapter_id}?competence=${encodeURIComponent(summary.priorities[0].skill_id)}`}
+                  className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold"
+                  style={{ color: gold }}
+                >
+                  Travailler la priorité n°1 <ArrowRight size={13} />
+                </Link>
+              )}
+            </div>
+
             {/* Temps passé */}
             <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
@@ -105,6 +148,11 @@ export default function Bilan() {
               <p className="text-xs mt-1" style={{ color: slate }}>
                 {summary.activeDays} jour{summary.activeDays > 1 ? "s" : ""} actif{summary.activeDays > 1 ? "s" : ""} sur 7
               </p>
+              {durationComparison(summary.totalSeconds, summary.previousSeconds) && (
+                <p className="text-xs mt-1 font-medium" style={{ color: summary.totalSeconds >= summary.previousSeconds ? colors.green : colors.red }}>
+                  {durationComparison(summary.totalSeconds, summary.previousSeconds)}
+                </p>
+              )}
               <div className="flex items-end gap-1.5 mt-4" style={{ height: 56 }}>
                 {summary.days.map((d) => {
                   const maxSeconds = Math.max(...summary.days.map((x) => x.seconds), 60);
@@ -144,12 +192,41 @@ export default function Bilan() {
                   <p className="text-xs mt-1" style={{ color: slate }}>
                     {summary.totalCorrect} bonnes réponses sur {summary.totalAttempts} exercices faits.
                   </p>
+                  {comparison(summary.totalAttempts, summary.previousAttempts, " exercices") && (
+                    <p className="text-xs mt-1" style={{ color: slate }}>
+                      {comparison(summary.totalAttempts, summary.previousAttempts, " exercices")}
+                    </p>
+                  )}
                   {comparison(summary.successRate, summary.previousSuccessRate, " points") && (
                     <p className="text-xs mt-1 font-medium" style={{ color: summary.successRate >= summary.previousSuccessRate ? colors.green : colors.red }}>
                       {comparison(summary.successRate, summary.previousSuccessRate, " points")}
                     </p>
                   )}
                 </>
+              )}
+            </div>
+
+            {/* Notions consolidées */}
+            <div className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Award size={16} color={gold} />
+                <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
+                  Notions en cours de consolidation
+                </p>
+              </div>
+              {summary.consolidatedSkills.length === 0 ? (
+                <p className="text-sm" style={{ color: slate }}>
+                  Aucune notion n'a encore atteint ce palier cette semaine. Plusieurs réussites sont nécessaires.
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {summary.consolidatedSkills.slice(0, 5).map((s) => (
+                    <div key={`${s.chapter_id}-${s.skill_id}`} className="flex items-center gap-2">
+                      <Award size={13} color={colors.green} className="shrink-0" />
+                      <p className="text-sm" style={{ color: ink }}>{s.skill_id}</p>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
@@ -173,7 +250,7 @@ export default function Bilan() {
                       const chapter = getChapter(s.chapter_id);
                       const level = chapter ? getLevel(chapter.meta.level) : null;
                       return (
-                        <div key={s.skill_id} className="flex items-center justify-between gap-3">
+                        <div key={`${s.chapter_id}-${s.skill_id}`} className="flex items-center justify-between gap-3">
                           <div className="min-w-0">
                             <p className="text-sm font-medium truncate" style={{ color: ink }}>
                               {s.skill_id}
@@ -214,7 +291,7 @@ export default function Bilan() {
                     const chapter = getChapter(s.chapter_id);
                     return (
                       <Link
-                        key={s.skill_id}
+                        key={`${s.chapter_id}-${s.skill_id}`}
                         to={chapter ? `/chapitre/${s.chapter_id}?competence=${encodeURIComponent(s.skill_id)}` : "#"}
                         className="rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition-transform active:scale-[0.98]"
                         style={{ backgroundColor: `${colors.red}0d`, opacity: chapter ? 1 : 0.5 }}

@@ -50,7 +50,7 @@ export function useWeeklySummary(userId) {
         supabase.from("daily_activity").select("activity_date, attempts, correct").eq("user_id", userId).gte("activity_date", since),
         supabase
           .from("skill_mastery")
-          .select("skill_id, chapter_id, attempts, correct, last_correct, last_practiced_at")
+          .select("skill_id, chapter_id, attempts, correct, interval_stage, last_correct, last_practiced_at")
           .eq("user_id", userId)
           .gte("last_practiced_at", new Date(currentSince).toISOString()),
       ]);
@@ -92,8 +92,16 @@ export function useWeeklySummary(userId) {
       const priorities = [...skillsWorked]
         .filter((s) => s.attempts >= 2)
         .map((s) => ({ ...s, rate: s.correct / s.attempts }))
+        .filter((s) => s.rate < 0.75 || !s.last_correct)
         .sort((a, b) => a.rate - b.rate || (a.last_correct === b.last_correct ? 0 : a.last_correct ? 1 : -1))
         .slice(0, 5);
+
+      // Une notion entre dans le palier de consolidation avec plusieurs
+      // essais, au moins 75 % de réussite cumulée, une dernière réponse
+      // correcte et une prochaine révision repoussée d'au moins 7 jours.
+      const consolidatedSkills = [...skillsWorked]
+        .filter((s) => s.attempts >= 3 && s.correct / s.attempts >= 0.75 && s.last_correct && s.interval_stage >= 2)
+        .sort((a, b) => new Date(b.last_practiced_at) - new Date(a.last_practiced_at));
 
       setSummary({
         days: dayRows,
@@ -107,6 +115,7 @@ export function useWeeklySummary(userId) {
         previousSuccessRate,
         skillsWorked,
         priorities,
+        consolidatedSkills,
       });
       setLoading(false);
     })();

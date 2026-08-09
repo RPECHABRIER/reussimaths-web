@@ -185,6 +185,8 @@ function genPointsAlignesOrigineQCM() {
   const k = roundTo(randInt(1, 10) / pick([1, 2]), 2);
   const xs = [randInt(1, 5), randInt(6, 10), randInt(11, 15)];
   const ys = isAligned ? xs.map((x) => roundTo(x * k, 2)) : xs.map((x, i) => (i === 2 ? roundTo(x * k + randInt(1, 4), 2) : roundTo(x * k, 2)));
+  const yMax = Math.max(...ys) + 2;
+  const yStep = [1, 2, 5, 10, 20].find((step) => yMax / step <= 12) ?? 20;
   return {
     type: "qcm",
     chapter: "Proportionnalité — Représentation graphique",
@@ -196,7 +198,9 @@ function genPointsAlignesOrigineQCM() {
       xMin: 0,
       xMax: Math.max(...xs) + 2,
       yMin: 0,
-      yMax: Math.max(...ys) + 2,
+      yMax,
+      xStep: 2,
+      yStep,
       points: [
         { x: xs[0], y: ys[0], label: "A" },
         { x: xs[1], y: ys[1], label: "B" },

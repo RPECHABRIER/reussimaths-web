@@ -20,11 +20,12 @@ test("tous les endpoints sensibles exigent un utilisateur Supabase vérifié", a
   }
 });
 
-test("le paiement évite les doublons et conserve la preuve du consentement", async () => {
-  const [checkout, status, portal, migration] = await Promise.all([
+test("le paiement évite les doublons, conserve le consentement et synchronise précisément l'accès", async () => {
+  const [checkout, status, portal, webhook, migration] = await Promise.all([
     readFile(new URL("../api/create-checkout-session.js", import.meta.url), "utf8"),
     readFile(new URL("../api/checkout-status.js", import.meta.url), "utf8"),
     readFile(new URL("../api/create-customer-portal.js", import.meta.url), "utf8"),
+    readFile(new URL("../api/stripe-webhook.js", import.meta.url), "utf8"),
     readFile(new URL("../supabase/prelaunch-conversion-learning-2026-08-09.sql", import.meta.url), "utf8"),
   ]);
   assert.match(checkout, /Un accès équivalent est déjà actif/);
@@ -32,7 +33,12 @@ test("le paiement évite les doublons et conserve la preuve du consentement", as
   assert.match(checkout, /purchase_consents/);
   assert.match(checkout, /CHECKOUT_SESSION_ID/);
   assert.match(status, /session\.client_reference_id !== user\.id/);
+  assert.match(status, /subscription\?\.plan === expectedPlan/);
+  assert.match(status, /new Date\(subscription\.current_period_end\) > new Date\(\)/);
   assert.match(portal, /billingPortal\.sessions\.create/);
+  assert.match(webhook, /stripe\.subscriptions\.retrieve\(subscriptionId\)/);
+  assert.match(webhook, /row\.current_period_end/);
+  assert.match(webhook, /row\.cancel_at_period_end/);
   assert.match(migration, /immediate_access_accepted boolean not null check/);
 });
 

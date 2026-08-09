@@ -519,7 +519,7 @@ function buildCoursTriangleTrigFigure() {
       { id: "C", x: 60, y: -45, dx: 8, dy: -6 },
     ],
     segments: [{ from: "A", to: "B" }, { from: "A", to: "C" }, { from: "B", to: "C" }],
-    rightAngles: [{ at: "A", from: "B", to: "C" }],
+    rightAngles: [{ at: "B", from: "A", to: "C" }],
     freeLabels: [{ x: 42, y: -10, text: "θ" }],
   };
 }

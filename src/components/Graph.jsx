@@ -47,6 +47,15 @@ function niceNum(n) {
   return String(r).replace(".", ",");
 }
 
+function automaticTickStep(min, max) {
+  const raw = Math.abs(max - min) / 10;
+  if (!Number.isFinite(raw) || raw <= 1) return 1;
+  const magnitude = 10 ** Math.floor(Math.log10(raw));
+  const normalized = raw / magnitude;
+  const nice = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  return nice * magnitude;
+}
+
 // Découpe le segment de droite y = a*x + b (sur x ∈ [xMin, xMax]) à la
 // fenêtre [xMin, xMax] x [yMin, yMax] pour ne tracer que la partie visible.
 function clipAffineLine(a, b, xMin, xMax, yMin, yMax) {
@@ -84,8 +93,8 @@ export default function Graph({ spec }) {
     return null;
   }
   const { xMin, xMax, yMin, yMax } = spec;
-  const xStep = spec.xStep ?? 1;
-  const yStep = spec.yStep ?? 1;
+  const xStep = spec.xStep ?? automaticTickStep(xMin, xMax);
+  const yStep = spec.yStep ?? automaticTickStep(yMin, yMax);
   const clipId = `graph-clip-${Math.round(xMin * 7 + yMin * 13 + xMax * 3 + yMax)}-${Math.random().toString(36).slice(2, 7)}`;
 
   const toPx = (x, y) => ({

@@ -57,7 +57,14 @@ async function saveCheckoutSession(session) {
     plan,
     updated_at: new Date().toISOString(),
   };
-  if (session.mode === "payment") {
+  if (session.mode === "subscription") {
+    const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
+    if (!subscriptionId) throw new Error("Abonnement Stripe absent de la session Checkout");
+    const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+    row.status = stripeSubscription.status;
+    row.current_period_end = new Date(stripeSubscription.current_period_end * 1000).toISOString();
+    row.cancel_at_period_end = !!stripeSubscription.cancel_at_period_end;
+  } else {
     const threeMonthsLater = new Date();
     threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
     row.current_period_end = threeMonthsLater.toISOString();

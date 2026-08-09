@@ -35,16 +35,38 @@ function collectLatex(value) {
 function inspectFigure(figure, file, difficulty) {
   if (!figure || typeof figure !== "object") return report(file, difficulty, "figure invalide");
   const points = Array.isArray(figure.points) ? figure.points : [];
+  if (points.some((point) => !Number.isFinite(point?.x) || !Number.isFinite(point?.y))) report(file, difficulty, "coordonnées de point invalides");
   const ids = new Set(points.map((point) => point?.id).filter(Boolean));
   if (!points.length) report(file, difficulty, "figure sans point");
   if (ids.size !== points.length) report(file, difficulty, "identifiants de points absents ou dupliqués");
   const requirePoint = (id, context) => {
     if (!ids.has(id)) report(file, difficulty, `${context}: point introuvable ${id}`);
   };
-  for (const segment of figure.segments ?? []) { requirePoint(segment.from, "segment"); requirePoint(segment.to, "segment"); }
-  for (const line of figure.lines ?? []) { requirePoint(line.from, "droite"); requirePoint(line.to, "droite"); }
-  for (const circle of figure.circles ?? []) { requirePoint(circle.center, "cercle"); if (circle.through) requirePoint(circle.through, "cercle"); }
-  for (const angle of figure.rightAngles ?? []) { requirePoint(angle.at, "angle droit"); requirePoint(angle.from, "angle droit"); requirePoint(angle.to, "angle droit"); }
+  const ensureDistinct = (from, to, context) => {
+    if (from === to) report(file, difficulty, `${context}: deux extrémités identiques`);
+  };
+  for (const segment of figure.segments ?? []) {
+    requirePoint(segment.from, "segment"); requirePoint(segment.to, "segment"); ensureDistinct(segment.from, segment.to, "segment");
+    if (segment.ticks != null && (!Number.isInteger(segment.ticks) || segment.ticks < 0 || segment.ticks > 3)) report(file, difficulty, "codage de longueur invalide");
+  }
+  for (const line of figure.lines ?? []) { requirePoint(line.from, "droite"); requirePoint(line.to, "droite"); ensureDistinct(line.from, line.to, "droite"); }
+  for (const circle of figure.circles ?? []) {
+    requirePoint(circle.center, "cercle");
+    if (circle.through) { requirePoint(circle.through, "cercle"); ensureDistinct(circle.center, circle.through, "cercle"); }
+    if (circle.radius != null && (!Number.isFinite(circle.radius) || circle.radius <= 0)) report(file, difficulty, "rayon de cercle invalide");
+  }
+  for (const angle of figure.rightAngles ?? []) {
+    requirePoint(angle.at, "angle droit"); requirePoint(angle.from, "angle droit"); requirePoint(angle.to, "angle droit");
+    ensureDistinct(angle.at, angle.from, "angle droit"); ensureDistinct(angle.at, angle.to, "angle droit");
+    const at = points.find((point) => point.id === angle.at);
+    const from = points.find((point) => point.id === angle.from);
+    const to = points.find((point) => point.id === angle.to);
+    if (at && from && to) {
+      const ux = from.x - at.x, uy = from.y - at.y, vx = to.x - at.x, vy = to.y - at.y;
+      const scale = Math.hypot(ux, uy) * Math.hypot(vx, vy);
+      if (scale > 0 && Math.abs(ux * vx + uy * vy) / scale > 1e-6) report(file, difficulty, "codage d'angle droit sur un angle non perpendiculaire");
+    }
+  }
   if (figure.numberLine) {
     requirePoint(figure.numberLine.from, "droite graduée");
     requirePoint(figure.numberLine.to, "droite graduée");
@@ -63,7 +85,23 @@ function inspectFigure(figure, file, difficulty) {
 function inspectGraph(graph, file, difficulty) {
   if (![graph?.xMin, graph?.xMax, graph?.yMin, graph?.yMax].every(Number.isFinite)) return report(file, difficulty, "graphique sans bornes valides");
   if (!(graph.xMin < graph.xMax && graph.yMin < graph.yMax)) report(file, difficulty, "bornes de graphique incohérentes");
-  if ((graph.xStep ?? 1) <= 0 || (graph.yStep ?? 1) <= 0) report(file, difficulty, "graduation de graphique non positive");
+  const automaticStep = (min, max) => {
+    const raw = Math.abs(max - min) / 10;
+    if (!Number.isFinite(raw) || raw <= 1) return 1;
+    const magnitude = 10 ** Math.floor(Math.log10(raw));
+    const normalized = raw / magnitude;
+    return (normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10) * magnitude;
+  };
+  const xStep = graph.xStep ?? automaticStep(graph.xMin, graph.xMax);
+  const yStep = graph.yStep ?? automaticStep(graph.yMin, graph.yMax);
+  if (xStep <= 0 || yStep <= 0) report(file, difficulty, "graduation de graphique non positive");
+  const xTickCount = (graph.xMax - graph.xMin) / xStep;
+  const yTickCount = (graph.yMax - graph.yMin) / yStep;
+  if (xTickCount > 100 || yTickCount > 100) report(file, difficulty, "graphique avec trop de graduations");
+  for (const point of graph.points ?? []) if (![point.x, point.y].every(Number.isFinite)) report(file, difficulty, "point de graphique invalide");
+  for (const line of graph.lines ?? []) if (![line.a, line.b].every(Number.isFinite)) report(file, difficulty, "droite affine invalide");
+  for (const shade of graph.shade ?? []) if (![shade.from, shade.to].every(Number.isFinite) || shade.from > shade.to) report(file, difficulty, "intervalle surligné invalide");
+  for (const curve of graph.curves ?? []) if (typeof curve.fn !== "function") report(file, difficulty, "courbe sans fonction");
   graphsChecked += 1;
 }
 

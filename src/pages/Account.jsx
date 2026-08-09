@@ -600,7 +600,7 @@ export default function Account() {
                   </p>
                 </div>
                 <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
-                  Pour UN niveau au choix : préparation à l'examen (Brevet, EAM ou Bac), Automatismes illimités et 2
+                  Pour UN niveau au choix : préparation à l'examen (Brevet, épreuve anticipée ou Bac), Automatismes illimités et 2
                   chapitres bonus. Offre non reconductible.
                 </p>
                 <button

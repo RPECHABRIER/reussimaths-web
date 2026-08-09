@@ -1,5 +1,19 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, School, Sparkles, Brain, Gamepad2, Flame, Presentation } from "lucide-react";
+import {
+  GraduationCap,
+  School,
+  Sparkles,
+  Brain,
+  Gamepad2,
+  Flame,
+  Presentation,
+  ArrowRight,
+  CheckCircle2,
+  Target,
+  RotateCcw,
+  BarChart3,
+  KeyRound,
+} from "lucide-react";
 import { CYCLES } from "../levels";
 import Mascot from "../components/Mascot";
 import { useAuth } from "../hooks/useAuth";
@@ -35,139 +49,214 @@ export default function CycleSelect() {
     : { to: "/parcours/decouverte/etape/0", title: "Essayer maintenant", detail: "5 questions guidées pour découvrir Reussimaths" };
 
   return (
-    <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto">
-        <div className="flex justify-end">
-          <Link
-            to="/enseignant"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform active:scale-[0.97]"
-            style={{ border: `1px solid ${colors.ink}22`, color: colors.ink }}
-          >
-            <Presentation size={13} />
-            Espace enseignant
-          </Link>
-        </div>
-
-        <div className="text-center mb-10 mt-2">
-          <Mascot size={96} className="mx-auto mb-3" style={{ boxShadow: shadow.raised }} />
-          <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            Reussimaths
-          </h1>
-          <p className="text-sm mt-1.5" style={{ color: colors.slate }}>
-            Entraîne-toi jusqu'à la maîtrise
-          </p>
-
-          <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full" style={{ backgroundColor: `${colors.gold}18` }}>
-              <p className="text-xs font-semibold" style={{ color: colors.gold }}>
-                Conforme aux nouveaux programmes 2026
-              </p>
-            </div>
-            {hasStreak && (
-              <div className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full" style={{ backgroundColor: `${colors.red}18` }}>
-                <Flame size={13} color={colors.red} />
-                <p className="text-xs font-semibold" style={{ color: colors.red }}>
-                  {streak.current_streak} jour{streak.current_streak > 1 ? "s" : ""} de suite
-                </p>
-              </div>
-            )}
-          </div>
-
-          <p
-            className="flex items-start justify-center gap-1.5 text-xs mt-3 max-w-[19rem] mx-auto leading-relaxed"
-            style={{ color: colors.slate }}
-          >
-            <Brain size={13} className="flex-shrink-0 mt-0.5" style={{ color: colors.ink }} />
-            <span>
-              Une pédagogie appuyée sur les sciences cognitives : répétition espacée, correction immédiate et méthode
-              visible avant le résultat.
+    <div className="min-h-screen w-full" style={{ background: colors.bg, fontFamily: fonts.body }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-10">
+        <header className="flex items-center justify-between py-4 sm:py-6">
+          <Link to="/" className="flex items-center gap-2.5">
+            <Mascot size={42} style={{ boxShadow: shadow.soft }} />
+            <span style={{ fontFamily: fonts.display, color: colors.ink, fontWeight: 850, fontSize: "1.05rem" }}>
+              Reussimaths
             </span>
-          </p>
-        </div>
-
-        <Link to={nextAction.to} className="block mb-6">
-          <div
-            className="rounded-3xl px-6 py-5 transition-transform active:scale-[0.98]"
-            style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
-          >
-            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: colors.gold }}>À faire maintenant</p>
-            <p style={{ fontFamily: fonts.display, fontSize: "1.2rem", fontWeight: 800 }}>{nextAction.title}</p>
-            <p className="text-xs mt-1" style={{ color: "#d7dce6" }}>{nextAction.detail}</p>
+          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link to="/compte" className="hidden sm:inline text-sm font-semibold" style={{ color: colors.slate }}>
+              Mon compte
+            </Link>
+            <Link
+              to="/enseignant"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-transform active:scale-[0.97]"
+              style={{ backgroundColor: colors.card, boxShadow: shadow.soft, color: colors.ink }}
+            >
+              <Presentation size={13} />
+              <span className="hidden sm:inline">Espace enseignant</span>
+              <span className="sm:hidden">Enseignant</span>
+            </Link>
           </div>
-        </Link>
+        </header>
 
-        <p className="text-xs uppercase tracking-widest font-semibold mb-3" style={{ color: colors.slate }}>Ou choisis ta classe</p>
-        <div className="flex flex-col gap-4">
-          {CYCLES.map((cycle) => {
-            const Icon = ICONS[cycle.id];
-            const c = cycleColors[cycle.id];
-            return (
-              <Link key={cycle.id} to={`/${cycle.id}`}>
-                <div
-                  className="rounded-3xl px-6 py-7 flex items-center gap-4 transition-transform active:scale-[0.98]"
-                  style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${c.accent}` }}
+        <main>
+          <section className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-14 items-center pt-6 sm:pt-10 lg:pt-16">
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full" style={{ backgroundColor: `${colors.gold}18` }}>
+                <Sparkles size={13} color={colors.gold} />
+                <p className="text-xs font-bold" style={{ color: colors.gold }}>Maths collège & lycée · Programmes 2026</p>
+              </div>
+
+              <h1
+                className="mt-5 mx-auto lg:mx-0 max-w-2xl"
+                style={{
+                  fontFamily: fonts.display,
+                  color: colors.ink,
+                  fontSize: "clamp(2.35rem, 6vw, 4.4rem)",
+                  lineHeight: 1.02,
+                  fontWeight: 900,
+                  letterSpacing: "-0.045em",
+                }}
+              >
+                Travaille ce qu’il faut. <span style={{ color: colors.gold }}>Vois tes progrès.</span>
+              </h1>
+              <p className="text-base sm:text-lg mt-5 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: colors.slate }}>
+                Reussimaths transforme 15 minutes d’entraînement en prochaine action claire : diagnostic, exercices ciblés,
+                correction détaillée et révisions au bon moment.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 mt-7 max-w-lg mx-auto lg:mx-0">
+                <Link
+                  to={nextAction.to}
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-full font-bold transition-transform active:scale-[0.98]"
+                  style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
                 >
-                  <div
-                    className="flex items-center justify-center rounded-2xl"
-                    style={{ width: 52, height: 52, backgroundColor: `${c.accent}1f`, flexShrink: 0 }}
-                  >
-                    <Icon size={26} color={c.accent} />
-                  </div>
+                  {nextAction.title} <ArrowRight size={17} />
+                </Link>
+                <Link
+                  to="/enseignant"
+                  className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-full font-bold"
+                  style={{ backgroundColor: colors.card, color: colors.ink, border: `1px solid ${colors.hairline}` }}
+                >
+                  <Presentation size={17} /> Je suis enseignant
+                </Link>
+              </div>
+              <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mt-4 text-xs" style={{ color: colors.slate }}>
+                {["Première série gratuite", "Sans carte bancaire", "Corrections détaillées"].map((item) => (
+                  <span key={item} className="inline-flex items-center gap-1.5"><CheckCircle2 size={13} color={colors.green} />{item}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative max-w-lg w-full mx-auto">
+              <div className="absolute -inset-5 rounded-[2.5rem] blur-2xl" style={{ background: `linear-gradient(135deg, ${colors.gold}25, ${cycleColors.college.accent}18)` }} />
+              <div className="relative rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+                <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.3rem", fontWeight: 800 }}>
-                      {cycle.label}
-                    </p>
-                    <p className="text-sm mt-0.5" style={{ color: colors.slate }}>
-                      {cycle.description}
-                    </p>
+                    <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Ta séance du jour</p>
+                    <p className="text-xl font-black mt-1" style={{ color: colors.ink }}>15 minutes pour avancer</p>
+                  </div>
+                  <div className="flex items-center justify-center rounded-2xl" style={{ width: 48, height: 48, backgroundColor: `${colors.gold}18` }}>
+                    <Target size={23} color={colors.gold} />
                   </div>
                 </div>
-              </Link>
-            );
-          })}
-
-        </div>
-
-        <Link to="/parcours/decouverte">
-          <div
-            className="rounded-3xl px-5 py-4 flex items-center gap-3 mt-3 transition-transform active:scale-[0.98]"
-            style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}33` }}
-          >
-            <div
-              className="flex items-center justify-center rounded-2xl flex-shrink-0"
-              style={{ width: 44, height: 44, backgroundColor: `${colors.gold}22` }}
-            >
-              <Sparkles size={20} color={colors.gold} />
+                <div className="grid grid-cols-3 gap-2 mt-6">
+                  {[
+                    { icon: Brain, value: "3 min", label: "Diagnostic" },
+                    { icon: Target, value: "8 min", label: "Entraînement" },
+                    { icon: RotateCcw, value: "4 min", label: "Révisions" },
+                  ].map(({ icon: Icon, value, label }) => (
+                    <div key={label} className="rounded-2xl p-3 text-center" style={{ backgroundColor: colors.bg }}>
+                      <Icon size={16} color={colors.ink} className="mx-auto" />
+                      <p className="text-sm font-black mt-1.5" style={{ color: colors.ink }}>{value}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: colors.slate }}>{label}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 rounded-2xl p-4" style={{ backgroundColor: `${cycleColors.college.accent}0d` }}>
+                  <div className="flex items-center justify-between text-xs font-semibold" style={{ color: colors.ink }}>
+                    <span>Fractions · maîtrise</span><span style={{ color: cycleColors.college.accent }}>68 %</span>
+                  </div>
+                  <div className="h-2 rounded-full overflow-hidden mt-2" style={{ backgroundColor: `${colors.ink}10` }}>
+                    <div className="h-full rounded-full" style={{ width: "68%", backgroundColor: cycleColors.college.accent }} />
+                  </div>
+                  <p className="text-xs mt-2" style={{ color: colors.slate }}>Prochaine étape : comparer deux fractions</p>
+                </div>
+                <p className="text-[10px] text-center mt-3" style={{ color: colors.slate }}>Aperçu illustratif d’un parcours élève</p>
+              </div>
             </div>
+          </section>
+
+          {hasStreak && (
+            <div className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: colors.red }}>
+              <Flame size={16} /> {streak.current_streak} jour{streak.current_streak > 1 ? "s" : ""} de suite
+            </div>
+          )}
+
+          <section className="mt-16 sm:mt-24">
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Commencer simplement</p>
+              <h2 className="text-2xl sm:text-3xl font-black mt-2" style={{ color: colors.ink, letterSpacing: "-0.025em" }}>
+                Choisis ton niveau, Reussimaths organise la suite
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4 mt-8 max-w-4xl mx-auto">
+              {CYCLES.map((cycle) => {
+                const Icon = ICONS[cycle.id];
+                const c = cycleColors[cycle.id];
+                return (
+                  <Link key={cycle.id} to={`/${cycle.id}`} className="group">
+                    <div className="h-full rounded-3xl px-6 py-7 flex items-center gap-4 transition-transform group-hover:-translate-y-1 active:scale-[0.98]"
+                      style={{ backgroundColor: colors.card, boxShadow: shadow.soft, borderTop: `3px solid ${c.accent}` }}>
+                      <div className="flex items-center justify-center rounded-2xl" style={{ width: 54, height: 54, backgroundColor: `${c.accent}1f`, flexShrink: 0 }}>
+                        <Icon size={27} color={c.accent} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xl font-black" style={{ color: colors.ink }}>{cycle.label}</p>
+                        <p className="text-sm mt-0.5" style={{ color: colors.slate }}>{cycle.description}</p>
+                      </div>
+                      <ArrowRight size={18} color={c.accent} />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="grid md:grid-cols-3 gap-4 mt-12 max-w-5xl mx-auto">
+            {[
+              { icon: Target, title: "Toujours savoir quoi faire", text: "Un diagnostic court puis une recommandation adaptée au niveau réel." },
+              { icon: RotateCcw, title: "Revoir au bon moment", text: "Les notions fragiles reviennent automatiquement avant d’être oubliées." },
+              { icon: BarChart3, title: "Rendre les progrès visibles", text: "Temps, réussite, notions consolidées et priorité suivante dans un bilan clair." },
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="rounded-3xl p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+                <div className="flex items-center justify-center rounded-2xl" style={{ width: 42, height: 42, backgroundColor: `${colors.gold}18` }}>
+                  <Icon size={20} color={colors.gold} />
+                </div>
+                <h3 className="font-black mt-4" style={{ color: colors.ink }}>{title}</h3>
+                <p className="text-sm mt-1.5 leading-relaxed" style={{ color: colors.slate }}>{text}</p>
+              </div>
+            ))}
+          </section>
+
+          <section className="mt-12 max-w-5xl mx-auto rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+            style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}>
+            <div className="flex items-start gap-4">
+              <div className="flex items-center justify-center rounded-2xl shrink-0" style={{ width: 48, height: 48, backgroundColor: `${colors.gold}20` }}>
+                <KeyRound size={22} color={colors.gold} />
+              </div>
+              <div>
+                <p className="text-xl font-black" style={{ color: colors.bg }}>Vous enseignez les mathématiques ?</p>
+                <p className="text-sm mt-1 max-w-xl" style={{ color: "#d7dce6" }}>
+                  Projetez un rituel gratuit en classe et testez un accès niveau complet avec un code pilote.
+                </p>
+              </div>
+            </div>
+            <Link to="/enseignant" className="inline-flex items-center gap-2 py-3 px-5 rounded-full font-bold text-sm shrink-0"
+              style={{ backgroundColor: colors.gold, color: colors.ink }}>
+              Découvrir l’espace enseignant <ArrowRight size={16} />
+            </Link>
+          </section>
+
+          <section className="mt-6 max-w-5xl mx-auto rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
+            style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
             <div>
-              <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1rem", fontWeight: 700 }}>
-                Parcours découverte
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: colors.slate }}>
-                Un avant-goût gratuit, du collège au lycée
-              </p>
+              <p className="text-sm font-bold" style={{ color: colors.gold }}>Accès complet</p>
+              <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Tout Reussimaths pour 4,99 €/mois</p>
+              <p className="text-sm mt-1" style={{ color: colors.slate }}>Tous les niveaux, entraînement illimité et bilan de progression. Sans engagement.</p>
             </div>
+            <Link to="/compte" className="inline-flex items-center gap-2 py-3 px-5 rounded-full font-bold text-sm shrink-0"
+              style={{ backgroundColor: colors.ink, color: colors.bg }}>
+              Voir les offres <ArrowRight size={16} />
+            </Link>
+          </section>
+
+          <div className="flex items-center justify-center gap-5 mt-8 text-sm">
+            <Link to="/parcours/decouverte" style={{ color: colors.ink }}>Parcours découverte</Link>
+            <Link to="/jeux" className="inline-flex items-center gap-1.5" style={{ color: colors.slate }}><Gamepad2 size={15} /> Jeux</Link>
           </div>
-        </Link>
 
-        <Link to="/jeux" className="flex items-center justify-center gap-2 mt-5 text-sm font-medium" style={{ color: colors.slate }}>
-          <Gamepad2 size={16} /> Jeux mathématiques
-        </Link>
-
-        <div className="text-center mt-10 flex items-center justify-center gap-5">
-          <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-            Mon compte
-          </Link>
-          <Link to="/amis" className="text-sm font-medium" style={{ color: colors.ink }}>
-            Amis & défis
-          </Link>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-4 mt-6 pt-5 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>
-          <Link to="/mentions-legales">Mentions légales</Link>
-          <Link to="/cgu">CGU</Link>
-          <Link to="/confidentialite">Confidentialité</Link>
-        </div>
+          <footer className="flex flex-wrap justify-center gap-4 mt-10 pt-6 text-xs" style={{ borderTop: `1px solid ${colors.hairline}`, color: colors.slate }}>
+            <Link to="/mentions-legales">Mentions légales</Link>
+            <Link to="/cgu">CGU</Link>
+            <Link to="/confidentialite">Confidentialité</Link>
+          </footer>
+        </main>
       </div>
     </div>
   );

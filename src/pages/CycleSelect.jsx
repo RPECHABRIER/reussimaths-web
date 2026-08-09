@@ -52,7 +52,7 @@ export default function CycleSelect() {
     : { to: "/niveaux?objectif=essai", title: "Choisir mon niveau", detail: "Un diagnostic court puis une série adaptée" };
 
   return (
-    <div className="min-h-screen w-full" style={{ background: colors.bg, fontFamily: fonts.body }}>
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-10">
         <header className="flex items-center justify-between py-4 sm:py-6">
           <Link to="/" className="flex items-center gap-2.5">

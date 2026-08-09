@@ -60,13 +60,15 @@ test("une erreur client affiche un secours et remonte dans les journaux", async 
 });
 
 test("la navigation élève reste disponible sans couvrir les exercices", async () => {
-  const [app, dock] = await Promise.all([read("./App.jsx"), read("./components/StudentDock.jsx")]);
+  const [app, dock, sound] = await Promise.all([read("./App.jsx"), read("./components/StudentDock.jsx"), read("./components/SoundManager.jsx")]);
   assert.match(app, /showStudentDock/);
   assert.match(app, /\/etape\//);
   assert.match(app, /\/chapitre\//);
   assert.match(dock, /Navigation élève/);
   assert.match(dock, /Réviser/);
   assert.match(dock, /Bilan/);
+  assert.match(app, /avoidStudentDock=\{showStudentDock\}/);
+  assert.match(sound, /bottom-24 sm:bottom-4/);
 });
 
 test("l'essai commence au niveau choisi et ne promet plus de code enseignant", async () => {

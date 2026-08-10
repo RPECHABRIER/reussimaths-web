@@ -19,7 +19,12 @@ function unitOf(exercise) {
     ? exercise.steps.map((step) => typeof step === "string" ? step : step?.text ?? "").join(" ")
     : "";
   const source = `${stepTexts} ${exercise?.prompt ?? ""}`;
-  const matches = [...source.matchAll(/(?:\\text\{)?(dam|km|hm|dm|cm|mm|daL|kL|hL|dL|cL|mL|m|L)(?:\\text\})?(\^?[23]|[²³])?|(%|€|°)/g)];
+  const matches = [...source.matchAll(/(?<![A-Za-zÀ-ÿ])(?:\\text\{)?(dam|km|hm|dm|cm|mm|daL|kL|hL|dL|cL|mL|m|L)(?:\\text\})?(\^?[23]|[²³])?(?![A-Za-zÀ-ÿ’'])|(%|€|°)/g)]
+    .filter((match) => {
+      if (match[3]) return true;
+      const prefix = source.slice(Math.max(0, match.index - 20), match.index);
+      return /(?:\d|en|de|soit|vaut)\s*$/i.test(prefix);
+    });
   const last = matches.at(-1);
   if (!last) return "";
   if (last[3]) return last[3];
@@ -118,6 +123,188 @@ const FAMILY_FEEDBACK = [
     intro: "Non, le pourcentage d’évolution ne doit pas être ajouté ou retiré comme un nombre ordinaire.",
     meaning: "Une évolution en pourcentage dépend de la valeur initiale. On calcule la part correspondante, puis on l’ajoute lors d’une augmentation ou on la retire lors d’une diminution.",
     rule: "Augmentation de t % : coefficient 1 + t/100. Diminution de t % : coefficient 1 − t/100.",
+  },
+  {
+    id: "function_image",
+    match: /fonctions?.*\bimages?\b(?!.*antécédent)|\bimage de\b|calcul(?:e|er).*f\s*\(/i,
+    intro: "Non, tu as confondu le nombre de départ avec son résultat d’arrivée, ou tu n’as pas remplacé la variable par la valeur donnée.",
+    meaning: "Pour calculer une image, le nombre de départ est connu. On le remplace à la place de x dans l’expression de la fonction, puis on effectue le calcul.",
+    rule: "Image de a : écris f(a), remplace x par a, puis calcule.",
+  },
+  {
+    id: "function_antecedent",
+    match: /fonctions?.*antécédent|antécédent.*fonctions?/i,
+    intro: "Non, tu as donné le résultat d’arrivée au lieu de rechercher le nombre de départ qui produit ce résultat.",
+    meaning: "Chercher un antécédent de b signifie chercher toutes les valeurs de x telles que f(x)=b. Par le calcul, on résout une équation ; sur un graphique, on part de b sur l’axe des ordonnées.",
+    rule: "Antécédent de b : résous f(x)=b et vérifie si plusieurs réponses sont possibles.",
+  },
+  {
+    id: "function_affine_coefficients",
+    match: /fonctions? affines?.*(?:coefficient|identifier a et b|déterminer)|(?:coefficient directeur|ordonnée à l['’]origine).*fonction/i,
+    intro: "Non, le coefficient directeur et l’ordonnée à l’origine ont été confondus ou lus au mauvais endroit.",
+    meaning: "Dans f(x)=ax+b, a mesure la variation de f lorsque x augmente d’une unité, tandis que b=f(0) est l’ordonnée du point où la droite coupe l’axe vertical.",
+    rule: "Repère d’abord b à x=0, puis calcule a comme variation verticale ÷ variation horizontale.",
+  },
+  {
+    id: "function_variations",
+    match: /fonctions?.*(?:sens de variation|variations|croissante|décroissante)|variations.*fonctions?/i,
+    intro: "Non, le sens de variation a été lu dans le mauvais sens ou sur le mauvais intervalle.",
+    meaning: "On parcourt toujours les valeurs de x de gauche à droite. Si les images montent, la fonction est croissante ; si elles descendent, elle est décroissante.",
+    rule: "Lis l’intervalle sur l’axe des abscisses, puis décris l’évolution des images de gauche à droite.",
+  },
+  {
+    id: "function_domain",
+    match: /ensemble de définition|domaine de définition/i,
+    intro: "Non, l’ensemble proposé contient une valeur interdite ou oublie une partie des nombres pour lesquels la fonction existe.",
+    meaning: "L’ensemble de définition regroupe toutes les valeurs de x que l’on peut utiliser. Un dénominateur ne peut pas être nul et une racine carrée réelle ne peut pas porter sur un nombre négatif.",
+    rule: "Cherche les valeurs interdites, puis écris tous les x restants sous forme d’intervalle ou d’ensemble.",
+  },
+  {
+    id: "statistics_mean",
+    match: /statistiques?.*moyenne|\bmoyenne\b.*(?:effectif|série|statistique)/i,
+    intro: "Non, toutes les valeurs n’ont pas été prises en compte avec leur effectif, ou la somme n’a pas été divisée par l’effectif total.",
+    meaning: "La moyenne est la valeur que l’on obtiendrait en répartissant équitablement le total. Avec des effectifs, chaque valeur doit être comptée autant de fois qu’elle apparaît.",
+    rule: "Calcule la somme des produits valeur × effectif, puis divise par l’effectif total.",
+  },
+  {
+    id: "statistics_median",
+    match: /médiane/i,
+    intro: "Non, la série n’a pas été ordonnée ou la position centrale n’a pas été déterminée correctement.",
+    meaning: "La médiane partage une série ordonnée en deux groupes de même effectif. Si l’effectif est impair, on prend la valeur centrale ; s’il est pair, on fait la moyenne des deux valeurs centrales.",
+    rule: "Range d’abord les valeurs, compte l’effectif, puis repère la ou les positions centrales.",
+  },
+  {
+    id: "statistics_quartiles",
+    match: /quartile|diagramme en boîte/i,
+    intro: "Non, la position du quartile n’a pas été repérée dans la série ordonnée.",
+    meaning: "Le premier quartile est la première valeur pour laquelle au moins 25 % des données lui sont inférieures ou égales ; le troisième quartile correspond de même à 75 %.",
+    rule: "Ordonne la série, calcule le rang par excès, puis lis la valeur située à ce rang.",
+  },
+  {
+    id: "statistics_range",
+    match: /\bétendue\b/i,
+    intro: "Non, l’étendue n’est ni la plus grande valeur ni une moyenne.",
+    meaning: "L’étendue mesure l’écart total entre les deux valeurs extrêmes de la série.",
+    rule: "Étendue = valeur maximale − valeur minimale.",
+  },
+  {
+    id: "probability_contrary",
+    match: /événement contraire|complémentaire/i,
+    intro: "Non, l’événement contraire doit regrouper exactement tous les cas où l’événement de départ ne se produit pas.",
+    meaning: "Un événement et son contraire ne peuvent pas se produire ensemble, mais l’un des deux se produit forcément. La somme de leurs probabilités vaut donc 1.",
+    rule: "P(événement contraire)=1−P(événement).",
+  },
+  {
+    id: "probability_conditional",
+    match: /probabilit(?:é|és) conditionnelle|sachant que/i,
+    intro: "Non, la probabilité a été calculée dans l’univers de départ alors que l’information « sachant que » réduit les possibilités.",
+    meaning: "Dans P_A(B), on sait que A est réalisé. A devient donc le nouvel univers et l’on cherche, parmi les cas de A, ceux qui réalisent aussi B.",
+    rule: "P_A(B)=P(A∩B)÷P(A), à condition que P(A) ne soit pas nulle.",
+  },
+  {
+    id: "probability_tree",
+    match: /arbre (?:pondéré|de probabilités)/i,
+    intro: "Non, les probabilités n’ont pas été combinées selon le chemin correspondant à l’événement.",
+    meaning: "Sur un même chemin de l’arbre, on multiplie les probabilités. Pour réunir plusieurs chemins incompatibles conduisant au même événement, on additionne ensuite leurs probabilités.",
+    rule: "Multiplie le long de chaque chemin, puis additionne les chemins qui conviennent.",
+  },
+  {
+    id: "probability_independence",
+    match: /indépendance|indépendants/i,
+    intro: "Non, deux événements ne sont pas indépendants simplement parce qu’ils sont différents ou incompatibles.",
+    meaning: "Deux événements sont indépendants lorsque savoir que l’un est réalisé ne change pas la probabilité de l’autre.",
+    rule: "Vérifie P(A∩B)=P(A)×P(B), ou de façon équivalente P_A(B)=P(B).",
+  },
+  {
+    id: "probability_frequency",
+    match: /fréquence et probabilité|loi des grands nombres|fréquence.*expérience/i,
+    intro: "Non, une fréquence observée et une probabilité théorique ne sont pas exactement le même objet.",
+    meaning: "La fréquence dépend des résultats obtenus pendant l’expérience. Lorsque le nombre d’essais devient grand, elle tend à se rapprocher de la probabilité théorique.",
+    rule: "Fréquence = nombre de réalisations de l’événement ÷ nombre total d’essais.",
+  },
+  {
+    id: "geometry_thales",
+    match: /Thalès|triangles semblables/i,
+    intro: "Non, les longueurs n’ont pas été associées dans le même ordre, ou les conditions du théorème de Thalès ne sont pas vérifiées.",
+    meaning: "Avant tout calcul, vérifie l’alignement des points et le parallélisme des droites. Les côtés correspondants des deux triangles sont alors proportionnels.",
+    rule: "Écris les rapports dans le même ordre, remplace par les longueurs connues, puis résous l’égalité.",
+  },
+  {
+    id: "geometry_trigonometry",
+    match: /trigonométr|sinus|cosinus|tangente.*triangle/i,
+    intro: "Non, le rapport trigonométrique choisi ne relie pas correctement les côtés connus et le côté recherché.",
+    meaning: "Dans un triangle rectangle, commence par repérer l’hypoténuse, le côté opposé et le côté adjacent par rapport à l’angle étudié.",
+    rule: "Cosinus = adjacent/hypoténuse ; sinus = opposé/hypoténuse ; tangente = opposé/adjacent.",
+  },
+  {
+    id: "geometry_circle_measure",
+    match: /(?:périmètre|aire).*(?:cercle|disque)|(?:cercle|disque).*(?:périmètre|aire)/i,
+    intro: "Non, le rayon et le diamètre ont été confondus, ou la formule de l’aire a été utilisée à la place de celle du périmètre.",
+    meaning: "Le périmètre mesure le tour du cercle et utilise 2πr, tandis que l’aire mesure la surface du disque et utilise πr². Le diamètre vaut deux fois le rayon.",
+    rule: "Identifie d’abord rayon ou diamètre, choisis la formule correspondant à la grandeur demandée, puis écris l’unité adaptée.",
+  },
+  {
+    id: "geometry_volume",
+    match: /volume d['’](?:un|une)|volumes? (?:composés?|et capacités)|géométrie dans l'espace.*volumes?/i,
+    intro: "Non, une dimension manque dans le calcul, ou la formule ne correspond pas au solide étudié.",
+    meaning: "Un volume mesure l’espace occupé en trois dimensions. Repère la base du solide, calcule son aire, puis utilise la hauteur perpendiculaire à cette base.",
+    rule: "Prisme ou cylindre : aire de base × hauteur. Pyramide ou cône : aire de base × hauteur ÷ 3.",
+  },
+  {
+    id: "geometry_triangle_angles",
+    match: /angles? d['’]un triangle|troisième angle|triangle isocèle.*angle/i,
+    intro: "Non, la somme des angles du triangle ou la propriété du triangle particulier n’a pas été utilisée correctement.",
+    meaning: "Dans tout triangle, la somme des trois angles vaut 180°. Dans un triangle isocèle, les deux angles à la base sont égaux ; dans un triangle rectangle, un angle vaut 90°.",
+    rule: "Écris 180° moins les angles connus, puis utilise la propriété du triangle particulier si nécessaire.",
+  },
+  {
+    id: "geometry_triangle_existence",
+    match: /existence d['’]un triangle|inégalité triangulaire/i,
+    intro: "Non, les trois longueurs ne permettent pas nécessairement de construire un triangle.",
+    meaning: "Pour qu’un triangle non aplati existe, la plus grande longueur doit être strictement inférieure à la somme des deux autres.",
+    rule: "Repère la plus grande longueur et compare-la à la somme des deux autres.",
+  },
+  {
+    id: "geometry_transformations",
+    match: /géométrie.*(?:symétrie|translation|rotation|homothétie)|distances et symétries|géométrie plane.*translations|exercices.*translations|automatisme.*symétrie|\b(?:rotation|homothétie)\b/i,
+    intro: "Non, la transformation ou l’un de ses éléments caractéristiques n’a pas été identifié correctement.",
+    meaning: "Une symétrie, une translation et une rotation conservent les longueurs et les angles. Une homothétie multiplie les longueurs par son rapport et les aires par le carré de ce rapport.",
+    rule: "Identifie le centre, l’axe, le vecteur, l’angle ou le rapport avant de construire ou de calculer l’image.",
+  },
+  {
+    id: "geometry_polygon_measure",
+    match: /parallélogramme.*(?:aire|périmètre)|automatisme.*aire d['’]un triangle|opérations.*aire et périmètre|grandeurs.*périmètre et aire|périmètre d['’]une figure complexe/i,
+    intro: "Non, la formule utilisée ne correspond pas à la grandeur ou à la figure demandée.",
+    meaning: "Le périmètre mesure le contour et s’exprime avec une unité de longueur. L’aire mesure la surface et s’exprime avec une unité au carré. Une hauteur doit être perpendiculaire à la base choisie.",
+    rule: "Identifie la figure, choisis une base et sa hauteur si nécessaire, puis utilise la formule et l’unité adaptées.",
+  },
+  {
+    id: "geometry_parallelism",
+    match: /droites parallèles|tester le parallélisme|perpendiculaires?/i,
+    intro: "Non, la position des droites ne peut pas être conclue sans utiliser le codage ou une propriété précise.",
+    meaning: "Deux droites parallèles ne se rencontrent pas. Deux droites perpendiculaires forment un angle droit. Des angles correspondants ou alternes-internes permettent aussi d’établir un parallélisme lorsque les conditions sont réunies.",
+    rule: "Nomme la propriété utilisée et vérifie toutes ses conditions avant de conclure.",
+  },
+  {
+    id: "geometry_coordinates",
+    match: /géométrie repérée|repérage|coordonnées?.*(?:point|vecteur|milieu)/i,
+    intro: "Non, les abscisses et les ordonnées ont été inversées ou la formule n’a pas été appliquée coordonnée par coordonnée.",
+    meaning: "Dans les coordonnées (x ; y), x est l’abscisse lue horizontalement et y l’ordonnée lue verticalement. Pour un milieu ou un vecteur, on traite séparément les deux coordonnées.",
+    rule: "Écris d’abord la formule sur x, puis la formule sur y, et conserve l’ordre (abscisse ; ordonnée).",
+  },
+  {
+    id: "geometry_solids_vocabulary",
+    match: /géométrie dans l'espace.*vocabulaire|patrons?|perspective cavalière/i,
+    intro: "Non, l’élément nommé ne correspond pas à sa position ou à son rôle dans le solide.",
+    meaning: "Une face est une surface plane, une arête est un segment commun à deux faces et un sommet est un point où plusieurs arêtes se rencontrent. La hauteur est perpendiculaire à la base.",
+    rule: "Repère l’objet sur la figure avant de choisir son nom et distingue toujours hauteur, arête et génératrice.",
+  },
+  {
+    id: "geometry_vectors",
+    match: /^(?:vecteurs?|colinéarité) —/i,
+    intro: "Non, les coordonnées, la direction ou le sens du vecteur n’ont pas été déterminés correctement.",
+    meaning: "Les coordonnées du vecteur AB s’obtiennent en faisant arrivée moins départ pour chaque coordonnée : xB−xA puis yB−yA.",
+    rule: "Traite séparément abscisses et ordonnées, puis vérifie la direction et le sens du vecteur obtenu.",
   },
   {
     id: "area_conversion",

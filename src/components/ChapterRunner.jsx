@@ -10,6 +10,7 @@ import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import MathText from "./MathText";
 import StepsList from "./StepsList";
+import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import CoursPanel from "./CoursPanel";
@@ -276,7 +277,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   };
 
   const registerResult = (correct, response) => {
-    setFeedback({ correct });
+    setFeedback({ correct, response, errorCode: correct ? null : classifyLearningError(exercise, response) });
     if (quotaApplies) quota.consume();
     if (isSession) {
       setAnsweredCount((c) => c + 1);
@@ -821,6 +822,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
               </div>
 
               {!feedback.correct && (
+                <>
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} /></div>
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={retry}
@@ -839,6 +842,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                     </button>
                   )}
                 </div>
+                </>
               )}
 
               {!feedback.correct && showHelp && !isDefi && !isDecouverte && (

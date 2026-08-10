@@ -10,6 +10,7 @@ import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
+import LearningFeedback from "../components/LearningFeedback";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
@@ -116,26 +117,26 @@ export default function ParcoursDiagnostic() {
     setFeedback(null);
   };
 
-  const registerResult = (correct) => {
+  const registerResult = (correct, response) => {
     if (correct) setCorrectCount((c) => c + 1);
     setResults((previous) => [...previous, { chapterId: chapters[index].meta.id, chapterTitle: chapters[index].meta.title, skill: exercise.chapter, correct }]);
-    setFeedback({ correct });
+    setFeedback({ correct, response });
   };
 
   const submitNumeric = () => {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
+    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
   };
   const submitQCM = (option) => {
     if (feedback) return;
     setSelectedOption(option);
-    registerResult(option === exercise.answer);
+    registerResult(option === exercise.answer, option);
   };
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    registerResult(matchesText(input, exercise.answer));
+    registerResult(matchesText(input, exercise.answer), input);
   };
   const toggleMulti = (i) => {
     if (feedback) return;
@@ -143,7 +144,7 @@ export default function ParcoursDiagnostic() {
   };
   const submitMulti = () => {
     if (feedback) return;
-    registerResult(matchesMulti(selectedMulti, exercise.answer));
+    registerResult(matchesMulti(selectedMulti, exercise.answer), selectedMulti);
   };
 
   if (done) {
@@ -227,16 +228,40 @@ export default function ParcoursDiagnostic() {
             />
           )}
           {exercise.type === "numeric" && (
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={!!feedback}
-              inputMode="decimal"
-              placeholder="Ta réponse"
-              onKeyDown={(e) => e.key === "Enter" && submitNumeric()}
-              className="w-full rounded-xl px-3 py-2.5 mb-3 text-sm text-right"
-              style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
-            />
+            <>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={!!feedback}
+                inputMode="text"
+                aria-label="Réponse numérique"
+                placeholder="Ta réponse"
+                onKeyDown={(e) => e.key === "Enter" && submitNumeric()}
+                className="w-full rounded-xl px-3 py-2.5 mb-3 text-sm text-right"
+                style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
+              />
+              <div className="grid grid-cols-3 gap-2 mb-3" aria-label="Pavé numérique avec signe moins">
+                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "⌫"].map((key) => (
+                  <button
+                    type="button"
+                    key={key}
+                    disabled={!!feedback}
+                    aria-label={key === "±" ? "Ajouter ou retirer le signe moins" : key === "⌫" ? "Effacer" : undefined}
+                    onClick={() => {
+                      if (key === "±") setInput((value) => (value.startsWith("-") ? value.slice(1) : value === "" ? "-" : `-${value}`));
+                      else if (key === "⌫") setInput((value) => value.slice(0, -1));
+                      else if (key === ",") setInput((value) => (value.includes(",") || value.includes("/") ? value : value === "" ? "0," : `${value},`));
+                      else if (key === "/") setInput((value) => (value === "" || value.includes("/") || value.includes(",") ? value : `${value}/`));
+                      else setInput((value) => (value.length < 8 ? `${value}${key}` : value));
+                    }}
+                    className="py-2 rounded-xl text-sm font-semibold"
+                    style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
+                  >
+                    {key}
+                  </button>
+                ))}
+              </div>
+            </>
           )}
 
           {exercise.type === "qcm" && (
@@ -308,10 +333,13 @@ export default function ParcoursDiagnostic() {
           )}
 
           {feedback && (
-            <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-3" style={{ backgroundColor: feedback.correct ? `${colors.green}18` : `${colors.red}18`, color: feedback.correct ? colors.green : colors.red }}>
-              {feedback.correct ? <Check size={16} /> : <X size={16} />}
-              <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — le diagnostic continue."}</span>
-            </div>
+            <>
+              <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-3" style={{ backgroundColor: feedback.correct ? `${colors.green}18` : `${colors.red}18`, color: feedback.correct ? colors.green : colors.red }}>
+                {feedback.correct ? <Check size={16} /> : <X size={16} />}
+                <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
+              </div>
+              {!feedback.correct && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact /></div>}
+            </>
           )}
         </div>
       </div>

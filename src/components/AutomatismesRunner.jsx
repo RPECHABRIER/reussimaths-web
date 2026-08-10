@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Check, X, Timer, ArrowLeft, ArrowRight, Trophy, Lock, Square, CheckSquare, Shuffle } from "lucide-react";
 import MathText from "./MathText";
 import StepsList from "./StepsList";
+import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -130,8 +131,8 @@ export default function AutomatismesRunner({ chapter }) {
   // rester consultable avant de passer à la suite (voir bouton "Suivant"
   // manuel plus bas), ce qui n'était pas possible avec l'ancien
   // enchaînement automatique après 500 ms quelle que soit la réponse.
-  const registerAnswer = (correct) => {
-    setFeedback({ correct });
+  const registerAnswer = (correct, response) => {
+    setFeedback({ correct, response });
     skillTracking.recordAttempt({ skillId: exercise.chapter, chapterId: chapter.meta.id, correct });
     if (correct) setTimeout(() => next(true), 500);
   };
@@ -140,18 +141,18 @@ export default function AutomatismesRunner({ chapter }) {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
   };
 
   const submitQCM = (opt) => {
     if (feedback) return;
     setSelectedOption(opt);
-    registerAnswer(opt === exercise.answer);
+    registerAnswer(opt === exercise.answer, opt);
   };
 
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    registerAnswer(matchesText(input, exercise.answer));
+    registerAnswer(matchesText(input, exercise.answer), input);
   };
 
   const toggleMulti = (i) => {
@@ -161,7 +162,7 @@ export default function AutomatismesRunner({ chapter }) {
 
   const submitMulti = () => {
     if (feedback) return;
-    registerAnswer(matchesMulti(selectedMulti, exercise.answer));
+    registerAnswer(matchesMulti(selectedMulti, exercise.answer), selectedMulti);
   };
 
   const ink = colors.ink;
@@ -475,6 +476,8 @@ export default function AutomatismesRunner({ chapter }) {
               </div>
 
               {!feedback.correct && (
+                <>
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact /></div>
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => setShowHelp((s) => !s)}
@@ -491,6 +494,7 @@ export default function AutomatismesRunner({ chapter }) {
                     Suivant <ArrowRight size={13} />
                   </button>
                 </div>
+                </>
               )}
 
               {!feedback.correct && showHelp && (

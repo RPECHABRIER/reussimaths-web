@@ -146,6 +146,25 @@ test("les erreurs numériques sont catégorisées sans conserver la réponse bru
   assert.equal(classifyLearningError(exercise, "12,05"), "rounding_error");
 });
 
+test("tous les parcours numériques permettent les nombres négatifs et expliquent les erreurs", async () => {
+  const [chapter, automatismes, duel, diagnostic, explanation] = await Promise.all([
+    read("./components/ChapterRunner.jsx"),
+    read("./components/AutomatismesRunner.jsx"),
+    read("./components/MiniDuel.jsx"),
+    read("./pages/ParcoursDiagnostic.jsx"),
+    read("./components/LearningFeedback.jsx"),
+  ]);
+  for (const source of [chapter, automatismes, duel, diagnostic]) {
+    assert.match(source, /"±"/);
+    assert.match(source, /LearningFeedback/);
+  }
+  assert.match(diagnostic, /Ajouter ou retirer le signe moins/);
+  assert.match(explanation, /Le calcul semble juste, mais le signe est inversé/);
+  assert.match(explanation, /virgule ou le rang d’un chiffre/);
+  assert.match(explanation, /À vérifier/);
+  assert.match(explanation, /résultat recherché est un nombre négatif/);
+});
+
 test("la mesure produit et les retours restent minimaux", async () => {
   const [analytics, endpoint, feedback] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js")]);
   assert.match(analytics, /anonymousId/);

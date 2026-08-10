@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, X, Timer, Square, CheckSquare, ArrowRight } from "lucide-react";
 import MathText from "./MathText";
 import StepsList from "./StepsList";
+import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -81,8 +82,8 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
   // Sur une bonne réponse, on enchaîne automatiquement (rythme du duel). Sur
   // une erreur, on s'arrête pour laisser la méthode (steps) consultable
   // avant de reprendre manuellement (voir bouton "Suivant").
-  const registerAnswer = (correct) => {
-    setFeedback({ correct });
+  const registerAnswer = (correct, response) => {
+    setFeedback({ correct, response });
     skillTracking.recordAttempt({ skillId: exercise.chapter, chapterId: chapter.meta.id, correct });
     if (correct) setTimeout(() => next(true), 550);
   };
@@ -91,18 +92,18 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
   };
 
   const submitQCM = (opt) => {
     if (feedback) return;
     setSelected(opt);
-    registerAnswer(opt === exercise.answer);
+    registerAnswer(opt === exercise.answer, opt);
   };
 
   const submitText = () => {
     if (input.trim() === "" || feedback) return;
-    registerAnswer(matchesText(input, exercise.answer));
+    registerAnswer(matchesText(input, exercise.answer), input);
   };
 
   const toggleMulti = (i) => {
@@ -112,7 +113,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
 
   const submitMulti = () => {
     if (feedback) return;
-    registerAnswer(matchesMulti(selectedMulti, exercise.answer));
+    registerAnswer(matchesMulti(selectedMulti, exercise.answer), selectedMulti);
   };
 
   return (
@@ -273,6 +274,8 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
           </div>
 
           {!feedback.correct && (
+            <>
+            <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact /></div>
             <div className="flex gap-2 mt-2">
               <button
                 onClick={() => setShowHelp((s) => !s)}
@@ -289,6 +292,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
                 Suivant <ArrowRight size={13} />
               </button>
             </div>
+            </>
           )}
 
           {!feedback.correct && showHelp && (

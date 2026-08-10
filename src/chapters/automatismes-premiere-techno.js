@@ -194,7 +194,15 @@ function genResoudreGraphiquementQCM() {
       yMin: Math.min(-8, a * xMin + b, k) - 1,
       yMax: Math.max(8, a * xMax + b, k) + 1,
       lines: [{ a, b, label: "f" }],
-      points: [{ x: xSol, y: k, label: `(${fr(xSol)} ; ${k})`, project: true }],
+    },
+    feedbackGraph: {
+      xMin,
+      xMax,
+      yMin: Math.min(-8, a * xMin + b, k) - 1,
+      yMax: Math.max(8, a * xMax + b, k) + 1,
+      lines: [{ a, b, label: "f" }],
+      points: [{ x: xSol, y: k, label: `(${fr(xSol)} ; ${k})` }],
+      readingPaths: [{ y: k, xs: [xSol] }],
     },
   };
 }

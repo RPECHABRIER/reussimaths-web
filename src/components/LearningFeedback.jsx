@@ -1,6 +1,7 @@
 import { AlertCircle, Search, Target } from "lucide-react";
 import { classifyLearningError } from "../lib/learningError";
 import { colors, fonts } from "../theme";
+import Graph from "./Graph";
 
 const EXPLANATIONS = {
   sign_error: {
@@ -79,6 +80,12 @@ export default function LearningFeedback({ exercise, response, compact = false }
           <Target size={14} color={colors.gold} className="shrink-0 mt-0.5" />
           Ici, le résultat recherché est un nombre négatif : pense à utiliser la touche ±.
         </p>
+      )}
+      {exercise?.feedbackGraph && (
+        <div className="mt-4 rounded-xl bg-white pt-3" style={{ border: `1px solid ${colors.gold}35` }}>
+          <p className="px-3 text-xs font-bold" style={{ color: colors.ink }}>Le chemin à suivre sur le graphique</p>
+          <Graph spec={exercise.feedbackGraph} />
+        </div>
       )}
     </div>
   );

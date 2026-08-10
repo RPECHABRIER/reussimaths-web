@@ -16,6 +16,7 @@
 //   curves?: [{ fn, color?, label?, dashed?, domain?: [a, b] }],
 //   lines?:  [{ a, b, color?, label?, dashed? }],   // droite y = a*x + b
 //   points?: [{ x, y, label?, color?, project?: bool }],
+//   readingPaths?: [{ y, xs, color? }], // chemin de lecture des antécédents
 //   shade?:  [{ from, to, color? }],                // bande verticale (sur x)
 //   hideGrid?: bool,
 // };
@@ -120,6 +121,9 @@ export default function Graph({ spec }) {
           </clipPath>
           <marker id={`${clipId}-axis-arrow`} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L7,3.5 L0,7 Z" fill={slate} />
+          </marker>
+          <marker id={`${clipId}-reading-arrow`} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill={gold} />
           </marker>
         </defs>
 
@@ -274,6 +278,45 @@ export default function Graph({ spec }) {
                     {p.label}
                   </text>
                 )}
+              </g>
+            );
+          })}
+
+          {/* Chemin de lecture guidé : ordonnée → courbe → abscisses. */}
+          {(spec.readingPaths || []).map((reading, i) => {
+            const color = reading.color ?? gold;
+            const start = toPx(0, reading.y);
+            return (
+              <g key={`reading${i}`}>
+                <circle cx={start.px} cy={start.py} r="7" fill="white" stroke={color} strokeWidth="2" />
+                {(reading.xs || []).map((x, j) => {
+                  const intersection = toPx(x, reading.y);
+                  const axis = toPx(x, 0);
+                  return (
+                    <g key={`reading${i}-${j}`}>
+                      <line
+                        x1={start.px + (x >= 0 ? 8 : -8)}
+                        y1={start.py}
+                        x2={intersection.px + (x >= 0 ? -5 : 5)}
+                        y2={intersection.py}
+                        stroke={color}
+                        strokeWidth="2.5"
+                        markerEnd={`url(#${clipId}-reading-arrow)`}
+                      />
+                      <circle cx={intersection.px} cy={intersection.py} r="5" fill="white" stroke={color} strokeWidth="2.5" />
+                      <line
+                        x1={intersection.px}
+                        y1={intersection.py + (axis.py >= intersection.py ? 7 : -7)}
+                        x2={axis.px}
+                        y2={axis.py + (axis.py >= intersection.py ? -6 : 6)}
+                        stroke={color}
+                        strokeWidth="2.5"
+                        markerEnd={`url(#${clipId}-reading-arrow)`}
+                      />
+                      <circle cx={axis.px} cy={axis.py} r="7" fill="white" stroke={color} strokeWidth="2" />
+                    </g>
+                  );
+                })}
               </g>
             );
           })}

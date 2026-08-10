@@ -279,6 +279,7 @@ function genConvertirUnitesLongueur() {
     chapter: "Grandeurs et mesures — Unités de longueur",
     prompt: `Convertis ${fr(value)} ${UNITES_LONGUEUR[i]} en ${UNITES_LONGUEUR[j]}.`,
     answer: result,
+    conversionTable: { kind: "length", value, fromUnit: UNITES_LONGUEUR[i], toUnit: UNITES_LONGUEUR[j], answer: result },
     steps: [
       { type: "regle", text: `1 ${UNITES_LONGUEUR[i]} = ${facteur} ${UNITES_LONGUEUR[j]}` },
       { type: "resultat", text: `${fr(value)} \\times ${facteur} = ${fr(result)}` },

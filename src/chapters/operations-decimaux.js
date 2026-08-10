@@ -140,6 +140,7 @@ function genConversionLongueurs() {
     chapter: "Opérations sur les décimaux — Puissances de dix",
     prompt: `Convertis ${fr(value)} ${chain.from} en ${chain.to}.`,
     answer: result,
+    conversionTable: { kind: "length", value, fromUnit: chain.from, toUnit: chain.to, answer: result },
     steps: [`1 ${chain.from} = ${chain.factor} ${chain.to}`, `${fr(value)} \\times ${chain.factor} = ${fr(result)}`],
   };
 }

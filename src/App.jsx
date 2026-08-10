@@ -35,6 +35,7 @@ const MemoryCpCe1 = lazy(() => import("./pages/MemoryCpCe1"));
 const CourseAdditionsCpCe1 = lazy(() => import("./pages/CourseAdditionsCpCe1"));
 const Idees = lazy(() => import("./pages/Idees"));
 const AdminPreview = lazy(() => import("./pages/AdminPreview"));
+const CorrectionsLab = lazy(() => import("./pages/CorrectionsLab"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const CGU = lazy(() => import("./pages/legal/CGU"));
 const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
@@ -195,6 +196,7 @@ export default function App() {
         <Route path="/jeux/course-additions-cp-ce1" element={<CourseAdditionsCpCe1 />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
+        <Route path="/admin/corrections" element={<CorrectionsLab />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/cgu" element={<CGU />} />
         <Route path="/confidentialite" element={<Confidentialite />} />

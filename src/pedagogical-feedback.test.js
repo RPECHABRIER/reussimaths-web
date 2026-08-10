@@ -30,3 +30,12 @@ test("la correction reprend les étapes propres à la question", () => {
   assert.deepEqual(feedback.steps, ["étape adaptée"]);
   assert.match(feedback.meaning, /balance/i);
 });
+
+test("les sous-types évitent une méthode inadaptée", () => {
+  const product = buildPedagogicalFeedback(numeric("Nombres relatifs — Produit", "Calcule (-4) × (-3).", 12), "-12");
+  const simplified = buildPedagogicalFeedback({ type: "text", chapter: "Fractions — Simplifier", prompt: "Donne 8/12 sous forme irréductible.", answer: "2/3" }, "4/6");
+  assert.equal(product.family, "relative_product");
+  assert.match(product.meaning, /même signe/i);
+  assert.equal(simplified.family, "fraction_simplification");
+  assert.match(simplified.rule, /diviseur commun/i);
+});

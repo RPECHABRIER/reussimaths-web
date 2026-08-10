@@ -791,6 +791,7 @@ function genConvertirLongueurAuto() {
     chapter: "Automatismes — Convertir des longueurs",
     prompt: `Convertis ${fr(value)} ${UNITES_LONGUEUR_AUTO[i]} en ${UNITES_LONGUEUR_AUTO[j]}.`,
     answer: result,
+    conversionTable: { kind: "length", value, fromUnit: UNITES_LONGUEUR_AUTO[i], toUnit: UNITES_LONGUEUR_AUTO[j], answer: result },
     steps: [{ type: "regle", text: `1 ${UNITES_LONGUEUR_AUTO[i]} = ${facteur} ${UNITES_LONGUEUR_AUTO[j]}` }],
   };
 }
@@ -1165,6 +1166,7 @@ function genConvertirContenancesAuto() {
     chapter: "Automatismes — Convertir des contenances",
     prompt: `Convertis ${fr(value)} ${UNITES_CONTENANCE_AUTO[i]} en ${UNITES_CONTENANCE_AUTO[j]}.`,
     answer: result,
+    conversionTable: { kind: "capacity", value, fromUnit: UNITES_CONTENANCE_AUTO[i], toUnit: UNITES_CONTENANCE_AUTO[j], answer: result },
     steps: [{ type: "regle", text: `1 ${UNITES_CONTENANCE_AUTO[i]} = ${facteur} ${UNITES_CONTENANCE_AUTO[j]}` }],
   };
 }

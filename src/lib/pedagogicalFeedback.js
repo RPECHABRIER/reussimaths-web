@@ -11,6 +11,27 @@ function expectedOf(exercise) {
 
 const FAMILY_FEEDBACK = [
   {
+    id: "relative_product",
+    match: /relatifs?.*(?:produit|multiplier|division)|(?:produit|multiplie|divise).*nombres? (?:négatifs?|relatifs?)/i,
+    intro: "Non, la valeur absolue du calcul est correcte, mais la règle des signes du produit ou du quotient n’a pas été appliquée correctement.",
+    meaning: "Deux nombres de même signe donnent un résultat positif ; deux nombres de signes opposés donnent un résultat négatif. On calcule ensuite avec les distances à zéro.",
+    rule: "Détermine d’abord le signe du résultat, puis multiplie ou divise les distances à zéro.",
+  },
+  {
+    id: "fraction_simplification",
+    match: /fraction.*(?:simplif|irréductible)|(?:simplif|irréductible).*fraction/i,
+    intro: "Non, la fraction obtenue a encore un diviseur commun au numérateur et au dénominateur : elle n’est donc pas encore irréductible.",
+    meaning: "Simplifier une fraction consiste à diviser le nombre du haut et le nombre du bas par un même nombre. Cela ne change pas la valeur de la fraction.",
+    rule: "Cherche un diviseur commun, divise en haut et en bas, puis recommence jusqu’à ce qu’il n’en reste plus.",
+  },
+  {
+    id: "rounding",
+    match: /arrond|valeur approchée/i,
+    intro: "Non, tu as tronqué le nombre ou utilisé le mauvais chiffre pour décider de l’arrondi.",
+    meaning: "Repère d’abord le chiffre situé au rang demandé, puis regarde uniquement le chiffre qui le suit. S’il vaut 5 ou plus, on augmente le chiffre conservé d’une unité.",
+    rule: "Conserve tous les chiffres pendant les calculs et arrondis seulement à la fin, au rang demandé.",
+  },
+  {
     id: "area_conversion",
     match: /convert(?:ir|is).*aire|unités? d['’]aire/i,
     intro: "Non, tu n’as pas utilisé le coefficient correspondant à une aire. Une aire mesure une surface : le coefficient de conversion des longueurs doit donc être élevé au carré.",
@@ -30,6 +51,13 @@ const FAMILY_FEEDBACK = [
     intro: "Non, le déplacement dans les unités de longueur n’est pas le bon. Il faut d’abord repérer l’unité de départ et l’unité d’arrivée.",
     meaning: "Dans le tableau, on place le chiffre des unités du nombre dans son unité, puis on complète jusqu’à l’unité demandée.",
     rule: "Entre deux unités de longueur consécutives, on multiplie ou on divise par 10.",
+  },
+  {
+    id: "capacity_conversion",
+    match: /convert(?:ir|is).*contenance|\b(?:kL|hL|daL|dL|cL|mL)\b/i,
+    intro: "Non, le chiffre des unités n’a pas été placé dans la bonne colonne ou le déplacement entre les unités n’est pas correct.",
+    meaning: "Pour convertir une contenance, place le chiffre des unités du nombre dans son unité de départ, puis complète les colonnes jusqu’à l’unité demandée.",
+    rule: "Entre deux unités de contenance consécutives, on multiplie ou on divise par 10.",
   },
   {
     id: "relative_numbers",
@@ -134,9 +162,19 @@ export function buildPedagogicalFeedback(exercise, response) {
   const family = FAMILY_FEEDBACK.find((item) => item.match.test(label));
   const errorCode = classifyLearningError(exercise, response);
   const answer = expectedOf(exercise);
+  const precision = {
+    sign_error: "La distance à zéro ou la valeur numérique est cohérente, mais le signe final doit être repris.",
+    place_value_error: "Le rapport entre ta réponse et la valeur attendue montre qu’une puissance de 10 a probablement été oubliée ou ajoutée.",
+    rounding_error: "La valeur obtenue est très proche : conserve tous les chiffres pendant le calcul et arrondis seulement à la fin, au rang demandé.",
+    invalid_format: "Utilise uniquement l’écriture demandée et, pour un nombre négatif, la touche ±.",
+    incomplete_reasoning: "Teste chaque proposition indépendamment : chacune doit être vraie à elle seule pour être conservée.",
+  }[errorCode];
+  const intro = errorCode === "invalid_format"
+    ? `${ERROR_INTROS.invalid_format} ${precision}`
+    : `${family?.intro ?? ERROR_INTROS[errorCode] ?? ERROR_INTROS.unknown}${precision ? ` ${precision}` : ""}`;
   return {
     family: family?.id ?? "general",
-    intro: family?.intro ?? ERROR_INTROS[errorCode] ?? ERROR_INTROS.unknown,
+    intro,
     meaning: family?.meaning ?? "Repars des données utiles et relie chacune d’elles à une étape précise de la méthode, sans effectuer plusieurs transformations mentalement en même temps.",
     rule: family?.rule ?? "Écris chaque étape, puis contrôle que le résultat répond exactement à la question.",
     conclusion: answer ? `La réponse attendue est ${answer}. Reprends maintenant les étapes pour comprendre comment on l’obtient.` : "Reprends maintenant les étapes de la méthode.",

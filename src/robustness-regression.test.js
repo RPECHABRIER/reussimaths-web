@@ -147,23 +147,24 @@ test("les erreurs numériques sont catégorisées sans conserver la réponse bru
 });
 
 test("tous les parcours numériques permettent les nombres négatifs et expliquent les erreurs", async () => {
-  const [chapter, automatismes, duel, diagnostic, explanation] = await Promise.all([
+  const [chapter, automatismes, duel, diagnostic, explanation, pedagogy] = await Promise.all([
     read("./components/ChapterRunner.jsx"),
     read("./components/AutomatismesRunner.jsx"),
     read("./components/MiniDuel.jsx"),
     read("./pages/ParcoursDiagnostic.jsx"),
     read("./components/LearningFeedback.jsx"),
+    read("./lib/pedagogicalFeedback.js"),
   ]);
   for (const source of [chapter, automatismes, duel, diagnostic]) {
     assert.match(source, /"±"/);
     assert.match(source, /LearningFeedback/);
   }
   assert.match(diagnostic, /Ajouter ou retirer le signe moins/);
-  assert.match(explanation, /Le calcul semble juste, mais le signe est inversé/);
-  assert.match(explanation, /virgule ou le rang d’un chiffre/);
-  assert.match(explanation, /À vérifier/);
+  assert.match(pedagogy, /son signe est inversé/);
+  assert.match(pedagogy, /décalage de virgule ou de valeur de position/);
+  assert.match(explanation, /Comprendre/);
   assert.match(explanation, /résultat recherché est un nombre négatif/);
-  assert.match(explanation, /Pour cette notion/);
+  assert.match(explanation, /Méthode à retenir/);
 });
 
 test("une erreur déclenche une vérification proche et priorise les erreurs récurrentes", async () => {

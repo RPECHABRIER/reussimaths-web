@@ -300,6 +300,7 @@ function genConvertirUnitesAire() {
     chapter: "Grandeurs et mesures — Unités d'aire",
     prompt: `Convertis ${fr(value)} ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} en ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}.`,
     answer: result,
+    conversionTable: { kind: "area", value, fromUnit: UNITES_AIRE_LABEL[UNITES_AIRE[i]], toUnit: UNITES_AIRE_LABEL[UNITES_AIRE[j]], answer: result },
     steps: [
       { type: "regle", text: `1 ${UNITES_AIRE_LABEL[UNITES_AIRE[i]]} = ${facteur} ${UNITES_AIRE_LABEL[UNITES_AIRE[j]]}` },
       { type: "resultat", text: `${fr(value)} \\times ${facteur} = ${fr(result)}` },

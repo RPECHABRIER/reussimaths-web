@@ -297,6 +297,7 @@ function genConversionUnitesVolumeNumeric() {
     chapter: "Géométrie dans l'espace — Conversions",
     prompt: `Convertis ${fr(valeur)} ${unites[iFrom]} en ${unites[iTo]}.`,
     answer,
+    conversionTable: { kind: "volume", value: valeur, fromUnit: unites[iFrom], toUnit: unites[iTo], answer },
     tolerance: Math.max(0.000001, roundTo(Math.abs(answer) * 0.001, 6)),
     steps: [{ type: "regle", text: `Pour passer de ${unites[iFrom]} à ${unites[iTo]}, on divise par 1000 : ${fr(valeur)} \\div 1000 = ${fr(answer)}` }],
   };

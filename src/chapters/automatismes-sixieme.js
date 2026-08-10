@@ -810,6 +810,7 @@ function genConvertirAireAuto(niveau) {
     chapter: `Automatismes — Convertir des aires (niveau ${niveau})`,
     prompt: `Convertis ${fr(value)} ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]]} en ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]]}.`,
     answer: result,
+    conversionTable: { kind: "area", value, fromUnit: UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]], toUnit: UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]], answer: result },
     steps: [{ type: "regle", text: `1 ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[i]]} = ${facteur} ${UNITES_AIRE_LABEL_AUTO[UNITES_AIRE_AUTO[j]]}` }],
   };
 }

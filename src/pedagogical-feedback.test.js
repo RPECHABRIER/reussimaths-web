@@ -66,6 +66,16 @@ test("la conclusion affiche les réponses multiples lisibles et conserve l’uni
   assert.doesNotMatch(medianWithoutLitres.conclusion, /7 L/);
 });
 
+test("une augmentation en pourcentage conserve l'unité de la valeur initiale", () => {
+  const feedback = buildPedagogicalFeedback(numeric("Pourcentages — Évolution", "Augmente 80 € de 20 %.", 96), "100");
+  assert.equal(feedback.family, "percentage_change");
+  assert.match(feedback.conclusion, /96 €/);
+  assert.doesNotMatch(feedback.conclusion, /96 %/);
+
+  const explicit = buildPedagogicalFeedback({ ...numeric("Pourcentages — Évolution", "Augmente 80 € de 20 %.", 96), answerUnit: "euros" }, "100");
+  assert.match(explicit.conclusion, /96 euros/);
+});
+
 test("fonctions, statistiques et probabilités utilisent le bon geste", () => {
   const image = buildPedagogicalFeedback(numeric("Fonctions — Image et antécédent", "Calcule l’image de 4 par f.", 10), "2");
   const antecedent = buildPedagogicalFeedback(numeric("Fonctions — Image et antécédent", "Détermine un antécédent de 10.", 4), "10");

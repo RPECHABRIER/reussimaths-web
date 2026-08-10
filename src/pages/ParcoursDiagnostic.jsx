@@ -338,7 +338,7 @@ export default function ParcoursDiagnostic() {
                 {feedback.correct ? <Check size={16} /> : <X size={16} />}
                 <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
               </div>
-              {!feedback.correct && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact /></div>}
+              {!feedback.correct && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact remember /></div>}
             </>
           )}
         </div>

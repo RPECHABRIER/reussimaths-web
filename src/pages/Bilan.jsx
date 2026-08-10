@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight } from "lucide-react";
+import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
+import { useLearningReviews } from "../hooks/useLearningReviews";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import LoadError from "../components/LoadError";
+import MathText from "../components/MathText";
+import FeedbackVisual from "../components/FeedbackVisual";
 
 // ---------------------------------------------------------------------------
 // Page "Bilan de la semaine" (/bilan) : pensée pour être consultée par un
@@ -66,6 +69,7 @@ function parentSummary(summary) {
 export default function Bilan() {
   const { user } = useAuth();
   const { loading, summary, error, reload } = useWeeklySummary(user?.id);
+  const learningReviews = useLearningReviews();
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -94,7 +98,7 @@ export default function Bilan() {
         {!user && (
           <div className="text-center rounded-3xl p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <p className="text-sm" style={{ color: slate }}>
-              Connecte-toi (ou connecte-toi avec le compte de ton enfant) pour voir ce bilan.
+              Les explications vues sur cet appareil restent accessibles ci-dessous. Crée un espace gratuit pour conserver aussi la progression de ton enfant.
             </p>
             <Link
               to="/compte"
@@ -104,6 +108,39 @@ export default function Bilan() {
               Se connecter
             </Link>
           </div>
+        )}
+
+        {learningReviews.length > 0 && (
+          <section className="mt-4 rounded-3xl p-4 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 rounded-xl p-2" style={{ backgroundColor: `${gold}18` }}><Sparkles size={18} color={gold} /></div>
+              <div className="min-w-0">
+                <p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Ce que j’ai appris</p>
+                <h2 className="mt-1 text-lg font-black" style={{ color: ink, fontFamily: fonts.display }}>Mes explications de la semaine</h2>
+                <p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>Ouvre une carte pour revoir avec tes parents l’erreur, la méthode et l’animation associée.</p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-col gap-2">
+              {learningReviews.slice(0, 8).map((review, index) => (
+                <details key={review.id} className="group min-w-0 rounded-2xl p-3 sm:p-4" style={{ backgroundColor: colors.bg }} open={index === 0}>
+                  <summary className="cursor-pointer list-none flex min-w-0 items-start gap-2">
+                    <BookOpenCheck size={16} color={colors.green} className="mt-0.5 shrink-0" />
+                    <span className="min-w-0">
+                      <span className="block text-sm font-bold break-words" style={{ color: ink }}>{review.chapter}</span>
+                      <MathText as="span" text={review.prompt} className="block mt-0.5 text-xs break-words" style={{ color: slate }} />
+                    </span>
+                  </summary>
+                  <div className="mt-3 border-t pt-3 text-xs leading-relaxed" style={{ borderColor: colors.hairline, color: slate }}>
+                    <p><strong style={{ color: ink }}>L’idée importante :</strong> <MathText text={review.meaning} /></p>
+                    <p className="mt-2"><strong style={{ color: ink }}>Méthode à retenir :</strong> <MathText text={review.rule} /></p>
+                    {review.steps?.length > 0 && <div className="mt-2 rounded-xl bg-white p-3">{review.steps.map((step, stepIndex) => <MathText key={`${review.id}-${stepIndex}`} as="p" text={`${stepIndex + 1}. ${typeof step === "string" ? step : step?.text ?? ""}`} className={stepIndex ? "mt-1" : ""} />)}</div>}
+                    <FeedbackVisual family={review.family} />
+                    <p className="mt-2 font-bold" style={{ color: ink }}><MathText text={review.conclusion} /></p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
         )}
 
         {user && loading && (

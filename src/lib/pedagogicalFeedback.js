@@ -15,6 +15,7 @@ function expectedOf(exercise) {
 }
 
 function unitOf(exercise) {
+  if (typeof exercise?.answerUnit === "string") return exercise.answerUnit.trim();
   const stepTexts = Array.isArray(exercise?.steps)
     ? exercise.steps.map((step) => typeof step === "string" ? step : step?.text ?? "").join(" ")
     : "";
@@ -25,6 +26,12 @@ function unitOf(exercise) {
       const prefix = source.slice(Math.max(0, match.index - 20), match.index);
       return /(?:\d|en|de|soit|vaut)\s*$/i.test(prefix);
     });
+  // Le pourcentage décrit ici l'évolution, pas l'unité du résultat.
+  // Exemple : augmenter 80 € de 20 % donne encore un prix en euros.
+  if (/augment|diminu|réduction|remise|évolution/i.test(source)) {
+    const currency = matches.find((match) => match[3] === "€");
+    if (currency) return "€";
+  }
   const last = matches.at(-1);
   if (!last) return "";
   if (last[3]) return last[3];
@@ -119,7 +126,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "percentage_change",
-    match: /évolution.*pourcentage|augmentation|diminution|taux d['’]évolution/i,
+    match: /évolution.*pourcentage|pourcentage.*évolution|augment(?:e[rz]?|ation)|diminu(?:e[rz]?|tion)|taux d['’]évolution|remise|réduction/i,
     intro: "Non, le pourcentage d’évolution ne doit pas être ajouté ou retiré comme un nombre ordinaire.",
     meaning: "Une évolution en pourcentage dépend de la valeur initiale. On calcule la part correspondante, puis on l’ajoute lors d’une augmentation ou on la retire lors d’une diminution.",
     rule: "Augmentation de t % : coefficient 1 + t/100. Diminution de t % : coefficient 1 − t/100.",

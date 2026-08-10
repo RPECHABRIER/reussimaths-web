@@ -1,13 +1,19 @@
+import { useEffect } from "react";
 import { AlertCircle, BookOpenCheck, Search, Target } from "lucide-react";
 import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
+import { rememberLearningReview } from "../lib/learningReviewHistory";
 import { colors, fonts } from "../theme";
 import Graph from "./Graph";
 import MathText from "./MathText";
 import StepsList from "./StepsList";
 import UnitConversionTable from "./UnitConversionTable";
+import FeedbackVisual from "./FeedbackVisual";
 
-export default function LearningFeedback({ exercise, response, compact = false }) {
+export default function LearningFeedback({ exercise, response, compact = false, remember = false }) {
   const feedback = buildPedagogicalFeedback(exercise, response);
+  useEffect(() => {
+    if (remember) rememberLearningReview({ exercise, response, feedback });
+  }, [remember, exercise, response, feedback.family, feedback.conclusion]);
   return (
     <div className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
       <p className="flex items-start gap-2 text-sm font-bold leading-relaxed" style={{ color: colors.ink }}>
@@ -49,6 +55,8 @@ export default function LearningFeedback({ exercise, response, compact = false }
       )}
 
       {exercise?.conversionTable && <UnitConversionTable spec={exercise.conversionTable} />}
+
+      <FeedbackVisual family={feedback.family} />
 
       <p className="mt-3 rounded-xl px-3 py-2 text-xs font-semibold leading-relaxed" style={{ backgroundColor: "white", color: colors.ink }}>
         <MathText text={feedback.conclusion} />

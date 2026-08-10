@@ -435,6 +435,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
               <Link to="/compte" className="w-full mt-4 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2" style={{ backgroundColor: ink, color: paper }}>
                 Créer mon espace gratuit <ArrowRight size={15} />
               </Link>
+              <Link to="/bilan" className="mt-3 inline-flex items-center gap-1 text-xs font-bold" style={{ color: gold }}>
+                Montrer ce que j’ai appris à mes parents <ArrowRight size={13} />
+              </Link>
               <button onClick={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })} className="mt-3 text-xs font-semibold" style={{ color: slate }}>
                 Continuer sans compte
               </button>
@@ -850,7 +853,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
               {!feedback.correct && (
                 <>
-                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} /></div>
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember /></div>
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={retry}

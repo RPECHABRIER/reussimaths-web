@@ -54,5 +54,30 @@ export function useSkillTracking(userId) {
     [userId]
   );
 
-  return { recordAttempt, getDueSkills };
+  const getRecurringErrors = useCallback(async (days = 30) => {
+    if (!userId) return [];
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    const { data, error } = await supabase
+      .from("learning_attempts")
+      .select("skill_id,chapter_id,error_code,attempted_at")
+      .eq("user_id", userId)
+      .not("error_code", "is", null)
+      .gte("attempted_at", since)
+      .order("attempted_at", { ascending: false })
+      .limit(500);
+    if (error) {
+      console.error("[useSkillTracking] getRecurringErrors error:", error.message);
+      throw error;
+    }
+    const counts = new Map();
+    for (const attempt of data ?? []) {
+      const key = `${attempt.chapter_id}\u0000${attempt.skill_id}\u0000${attempt.error_code}`;
+      const current = counts.get(key) ?? { ...attempt, count: 0 };
+      current.count += 1;
+      counts.set(key, current);
+    }
+    return [...counts.values()].filter((item) => item.count >= 2).sort((a, b) => b.count - a.count);
+  }, [userId]);
+
+  return { recordAttempt, getDueSkills, getRecurringErrors };
 }

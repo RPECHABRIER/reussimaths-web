@@ -7,6 +7,7 @@ import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import LoadError from "../components/LoadError";
+import { LEARNING_ERROR_LABELS } from "../lib/learningError";
 
 // ---------------------------------------------------------------------------
 // Onglet "Réviser" : liste, TOUS NIVEAUX ET CHAPITRES CONFONDUS, les
@@ -19,8 +20,9 @@ import LoadError from "../components/LoadError";
 // ---------------------------------------------------------------------------
 export default function Reviser() {
   const { user } = useAuth();
-  const { getDueSkills } = useSkillTracking(user?.id);
+  const { getDueSkills, getRecurringErrors } = useSkillTracking(user?.id);
   const [dueSkills, setDueSkills] = useState(null); // null = chargement
+  const [recurringErrors, setRecurringErrors] = useState([]);
   const [loadError, setLoadError] = useState(null);
   const [retryNonce, setRetryNonce] = useState(0);
 
@@ -33,9 +35,21 @@ export default function Reviser() {
     let cancelled = false;
     setDueSkills(null);
     setLoadError(null);
-    getDueSkills()
-      .then((rows) => {
-        if (!cancelled) setDueSkills(rows);
+    Promise.all([getDueSkills(), getRecurringErrors()])
+      .then(([rows, recurring]) => {
+        if (cancelled) return;
+        const bySkill = new Map();
+        for (const item of recurring) {
+          const key = `${item.chapter_id}\u0000${item.skill_id}`;
+          const current = bySkill.get(key);
+          if (!current || item.count > current.count) bySkill.set(key, item);
+        }
+        setRecurringErrors(recurring);
+        setDueSkills([...rows].sort((a, b) => {
+          const aCount = bySkill.get(`${a.chapter_id}\u0000${a.skill_id}`)?.count ?? 0;
+          const bCount = bySkill.get(`${b.chapter_id}\u0000${b.skill_id}`)?.count ?? 0;
+          return bCount - aCount || new Date(a.next_review_at) - new Date(b.next_review_at);
+        }));
       })
       .catch((error) => {
         if (cancelled) return;
@@ -116,10 +130,11 @@ export default function Reviser() {
               const chapter = getChapter(row.chapter_id);
               const level = chapter ? getLevel(chapter.meta.level) : null;
               const overdue = new Date(row.next_review_at).getTime() < Date.now() - 24 * 60 * 60 * 1000;
+              const recurring = recurringErrors.find((item) => item.chapter_id === row.chapter_id && item.skill_id === row.skill_id);
               return (
                 <Link
                   key={row.skill_id}
-                  to={chapter ? `/chapitre/${row.chapter_id}?competence=${encodeURIComponent(row.skill_id)}` : "#"}
+                  to={chapter ? `/chapitre/${row.chapter_id}?competence=${encodeURIComponent(row.skill_id)}${recurring ? `&erreur=${encodeURIComponent(recurring.error_code)}` : ""}` : "#"}
                   className="rounded-3xl px-5 py-4 flex items-center justify-between gap-3 transition-transform active:scale-[0.98]"
                   style={{ backgroundColor: colors.card, boxShadow: shadow.soft, opacity: chapter ? 1 : 0.5 }}
                 >
@@ -134,6 +149,11 @@ export default function Reviser() {
                     {overdue && (
                       <p className="text-xs mt-0.5 font-semibold" style={{ color: colors.red }}>
                         En retard
+                      </p>
+                    )}
+                    {recurring && (
+                      <p className="text-xs mt-0.5 font-semibold" style={{ color: colors.gold }}>
+                        Priorité : {LEARNING_ERROR_LABELS[recurring.error_code] ?? "méthode"} · {recurring.count} erreurs récentes
                       </p>
                     )}
                   </div>

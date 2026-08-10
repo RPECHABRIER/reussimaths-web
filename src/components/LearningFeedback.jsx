@@ -41,6 +41,22 @@ const EXPLANATIONS = {
   },
 };
 
+const NOTION_GUIDANCE = [
+  [/fraction|rationnel/i, "Représente les quantités avec le même dénominateur avant de comparer ou de calculer, puis simplifie seulement à la fin."],
+  [/relatif|nombre négatif|signe/i, "Sur une droite graduée, commence par situer les nombres par rapport à 0 ; dans un calcul, sépare le signe de la valeur absolue."],
+  [/équation|inconnue/i, "Effectue la même opération dans les deux membres et vérifie la solution en la remplaçant dans l’équation de départ."],
+  [/proportion|pourcentage|taux/i, "Identifie d’abord la grandeur de référence et vérifie qu’un même coefficient relie bien les deux grandeurs."],
+  [/fonction|image|antécédent/i, "Distingue bien l’entrée x et la sortie f(x) : une image se calcule, un antécédent se recherche."],
+  [/puissance/i, "Repère séparément la base, l’exposant et le signe éventuel avant d’appliquer une règle sur les puissances."],
+  [/angle|triangle|cercle|symétr|géométr|périmètre|aire|volume/i, "Reporte les données sur la figure, nomme la propriété utilisée et contrôle l’unité du résultat."],
+  [/statistique|probabilit|moyenne|médiane/i, "Identifie l’effectif total et ce que représente chaque valeur avant d’appliquer la formule ou de lire le graphique."],
+];
+
+function notionGuidance(exercise) {
+  const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
+  return NOTION_GUIDANCE.find(([pattern]) => pattern.test(label))?.[1] ?? "Relie chaque donnée de l’énoncé à une étape de la méthode, sans faire plusieurs transformations mentalement en même temps.";
+}
+
 export default function LearningFeedback({ exercise, response, compact = false }) {
   const code = classifyLearningError(exercise, response);
   const explanation = EXPLANATIONS[code] ?? EXPLANATIONS.unknown;
@@ -53,6 +69,10 @@ export default function LearningFeedback({ exercise, response, compact = false }
       <p className="flex items-start gap-2 text-xs mt-2 leading-relaxed" style={{ color: colors.slate }}>
         <Search size={14} className="shrink-0 mt-0.5" />
         <span><strong style={{ color: colors.ink }}>À vérifier :</strong> {explanation.check}</span>
+      </p>
+      <p className="flex items-start gap-2 text-xs mt-2 leading-relaxed" style={{ color: colors.slate }}>
+        <Target size={14} color={colors.gold} className="shrink-0 mt-0.5" />
+        <span><strong style={{ color: colors.ink }}>Pour cette notion :</strong> {notionGuidance(exercise)}</span>
       </p>
       {exercise?.type === "numeric" && Number(exercise.answer) < 0 && (
         <p className="flex items-start gap-2 text-xs mt-2 font-semibold" style={{ color: colors.ink, fontFamily: fonts.mono }}>

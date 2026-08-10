@@ -163,6 +163,24 @@ test("tous les parcours numériques permettent les nombres négatifs et explique
   assert.match(explanation, /virgule ou le rang d’un chiffre/);
   assert.match(explanation, /À vérifier/);
   assert.match(explanation, /résultat recherché est un nombre négatif/);
+  assert.match(explanation, /Pour cette notion/);
+});
+
+test("une erreur déclenche une vérification proche et priorise les erreurs récurrentes", async () => {
+  const [runner, tracking, review, chapterPage] = await Promise.all([
+    read("./components/ChapterRunner.jsx"),
+    read("./hooks/useSkillTracking.js"),
+    read("./pages/Reviser.jsx"),
+    read("./pages/ChapterPage.jsx"),
+  ]);
+  assert.match(runner, /practiceSimilar/);
+  assert.match(runner, /generateMatchingSkill\(chapter, effectiveDifficulty, skill\)/);
+  assert.match(runner, /Question de vérification — même notion, nouvelles données/);
+  assert.match(tracking, /getRecurringErrors/);
+  assert.match(tracking, /item\.count >= 2/);
+  assert.match(review, /Priorité :/);
+  assert.match(review, /recurring\.count/);
+  assert.match(chapterPage, /focusError/);
 });
 
 test("la mesure produit et les retours restent minimaux", async () => {

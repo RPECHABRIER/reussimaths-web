@@ -16,6 +16,7 @@ export default function ChapterPage() {
   // (voir ChapterRunner, prop focusSkill) plutôt qu'un tirage au hasard dans
   // tout le chapitre.
   const focusSkill = searchParams.get("competence") || undefined;
+  const focusError = searchParams.get("erreur") || undefined;
   const chapter = getChapter(id);
   const { user } = useAuth();
   const { subscription: rawSubscription, loading, error: subscriptionError, reload: reloadSubscription } = useSubscription(user?.id);
@@ -81,5 +82,5 @@ export default function ChapterPage() {
     return <AutomatismesRunner chapter={chapter} />;
   }
 
-  return <ChapterRunner chapter={chapter} focusSkill={focusSkill} />;
+  return <ChapterRunner chapter={chapter} focusSkill={focusSkill} focusError={focusError} />;
 }

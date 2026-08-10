@@ -16,7 +16,7 @@ import Graph from "./Graph";
 import CoursPanel from "./CoursPanel";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
-import { classifyLearningError } from "../lib/learningError";
+import { classifyLearningError, LEARNING_ERROR_LABELS } from "../lib/learningError";
 import { trackProductEvent } from "../lib/productAnalytics";
 
 // ---------------------------------------------------------------------------
@@ -98,7 +98,7 @@ function generateMatchingSkill(chapter, difficulty, skillLabel) {
   return chapter.generate(difficulty);
 }
 
-export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill }) {
+export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError }) {
   const { user } = useAuth();
   usePracticeHeartbeat(user?.id);
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
@@ -135,6 +135,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [verificationSkill, setVerificationSkill] = useState(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [best, setBest] = useState(0);
@@ -264,6 +265,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
+    setVerificationSkill(null);
     assistanceUsedRef.current = false;
     exerciseStartRef.current = Date.now();
   }, [chapter, effectiveDifficulty, isSession, answeredCount, sessionLength, redrillQueue, focusSkill]);
@@ -274,6 +276,19 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setSelectedMulti([]);
     setFeedback(null);
     setShowHelp(false);
+  };
+
+  const practiceSimilar = () => {
+    const skill = exercise.chapter;
+    setExercise(generateMatchingSkill(chapter, effectiveDifficulty, skill));
+    setInput("");
+    setSelectedOption(null);
+    setSelectedMulti([]);
+    setFeedback(null);
+    setShowHelp(false);
+    setVerificationSkill(skill);
+    assistanceUsedRef.current = false;
+    exerciseStartRef.current = Date.now();
   };
 
   const registerResult = (correct, response) => {
@@ -579,6 +594,18 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
             style={{ fontFamily: fonts.mono, fontSize: "clamp(1.08rem, 3vw, 1.28rem)", fontWeight: 650, color: isDefi ? "#FFFFFF" : ink }}
           />
 
+          {focusSkill && focusError && (
+            <p className="rounded-xl px-3 py-2 mb-3 text-xs" style={{ backgroundColor: `${gold}12`, color: slate }}>
+              Séance adaptée : nous retravaillons « {focusSkill} », avec une attention particulière aux {LEARNING_ERROR_LABELS[focusError] ?? "étapes de méthode"}.
+            </p>
+          )}
+
+          {verificationSkill && (
+            <p className="rounded-xl px-3 py-2 mb-3 text-xs font-semibold" style={{ backgroundColor: `${gold}14`, color: ink }}>
+              Question de vérification — même notion, nouvelles données. Explique-toi mentalement chaque étape avant de valider.
+            </p>
+          )}
+
           {exercise.figure && <Figure spec={exercise.figure} />}
           {exercise.graph && <Graph spec={exercise.graph} />}
 
@@ -842,6 +869,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                     </button>
                   )}
                 </div>
+                <button
+                  onClick={practiceSimilar}
+                  className="w-full mt-2 py-2 rounded-full text-xs font-bold"
+                  style={{ backgroundColor: `${gold}20`, color: ink, boxShadow: `0 0 0 1px ${gold}55` }}
+                >
+                  Vérifier avec une question très proche
+                </button>
                 </>
               )}
 

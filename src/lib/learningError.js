@@ -1,5 +1,17 @@
 import { parseNumericInput } from "./answerMatch.js";
 
+export const LEARNING_ERROR_LABELS = {
+  sign_error: "signes",
+  place_value_error: "virgule ou valeur de position",
+  rounding_error: "arrondis",
+  invalid_format: "écriture de la réponse",
+  calculation_error: "calcul ou opération",
+  choice_confusion: "choix de propriété",
+  incomplete_reasoning: "raisonnement incomplet",
+  vocabulary_or_reasoning: "vocabulaire ou justification",
+  unknown: "méthode à consolider",
+};
+
 // Catégories volontairement générales : elles servent à adapter la prochaine
 // séance sans enregistrer la réponse brute de l'élève.
 export function classifyLearningError(exercise, response) {

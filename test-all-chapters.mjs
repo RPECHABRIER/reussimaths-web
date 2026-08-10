@@ -15,6 +15,7 @@ const chapterIds = new Map();
 let generated = 0;
 let figuresChecked = 0;
 let graphsChecked = 0;
+let negativeNumericAnswersChecked = 0;
 
 function report(file, difficulty, problem) {
   if (errors.length < 40) errors.push(`${file} [${difficulty ?? "défaut"}] : ${problem}`);
@@ -124,7 +125,10 @@ function inspect(exercise, file, difficulty) {
   if (!Array.isArray(exercise.steps) || exercise.steps.length === 0) report(file, difficulty, "correction absente");
   if (!["numeric", "qcm", "multi", "text"].includes(exercise.type)) report(file, difficulty, `type inconnu ${exercise.type}`);
 
-  if (exercise.type === "numeric" && (typeof exercise.answer !== "number" || !Number.isFinite(exercise.answer))) report(file, difficulty, `réponse numérique invalide ${exercise.answer}`);
+  if (exercise.type === "numeric") {
+    if (typeof exercise.answer !== "number" || !Number.isFinite(exercise.answer)) report(file, difficulty, `réponse numérique invalide ${exercise.answer}`);
+    else if (exercise.answer < 0) negativeNumericAnswersChecked += 1;
+  }
   if (exercise.type === "text") {
     const validString = typeof exercise.answer === "string" && exercise.answer.trim();
     const validAlternatives = Array.isArray(exercise.answer) && exercise.answer.length > 0 && exercise.answer.every((answer) => typeof answer === "string" && answer.trim());
@@ -186,7 +190,7 @@ for (const segment of latexSegments) {
   }
 }
 
-console.log(`${files.length} chapitres, ${generated} exercices, ${figuresChecked} figures, ${graphsChecked} graphiques et ${latexSegments.size} expressions mathématiques contrôlés.`);
+console.log(`${files.length} chapitres, ${generated} exercices, ${figuresChecked} figures, ${graphsChecked} graphiques, ${negativeNumericAnswersChecked} réponses négatives et ${latexSegments.size} expressions mathématiques contrôlés.`);
 if (errors.length) {
   console.error(errors.join("\n"));
   process.exitCode = 1;

@@ -5,8 +5,26 @@ function labelOf(exercise) {
 }
 
 function expectedOf(exercise) {
-  if (Array.isArray(exercise?.answer)) return exercise.answer.join(", ");
+  if (Array.isArray(exercise?.answer)) {
+    if (Array.isArray(exercise?.options)) {
+      return exercise.answer.map((answer) => typeof answer === "number" ? exercise.options[answer] : answer).join(" ; ");
+    }
+    return exercise.answer.join(" ; ");
+  }
   return String(exercise?.answer ?? "");
+}
+
+function unitOf(exercise) {
+  const stepTexts = Array.isArray(exercise?.steps)
+    ? exercise.steps.map((step) => typeof step === "string" ? step : step?.text ?? "").join(" ")
+    : "";
+  const source = `${stepTexts} ${exercise?.prompt ?? ""}`;
+  const matches = [...source.matchAll(/(?:\\text\{)?(dam|km|hm|dm|cm|mm|daL|kL|hL|dL|cL|mL|m|L)(?:\\text\})?(\^?[23]|[²³])?|(%|€|°)/g)];
+  const last = matches.at(-1);
+  if (!last) return "";
+  if (last[3]) return last[3];
+  const exponent = (last[2] ?? "").replace("^2", "²").replace("^3", "³");
+  return `${last[1]}${exponent}`;
 }
 
 const FAMILY_FEEDBACK = [
@@ -30,6 +48,76 @@ const FAMILY_FEEDBACK = [
     intro: "Non, tu as tronqué le nombre ou utilisé le mauvais chiffre pour décider de l’arrondi.",
     meaning: "Repère d’abord le chiffre situé au rang demandé, puis regarde uniquement le chiffre qui le suit. S’il vaut 5 ou plus, on augmente le chiffre conservé d’une unité.",
     rule: "Conserve tous les chiffres pendant les calculs et arrondis seulement à la fin, au rang demandé.",
+  },
+  {
+    id: "fraction_of_number",
+    match: /fraction d['’](?:un nombre|une quantité)|calculer.*fraction.*(?:nombre|quantité)/i,
+    intro: "Non, la fraction n’a pas été appliquée correctement à la quantité de départ.",
+    meaning: "Prendre une fraction d’une quantité, c’est partager d’abord cette quantité selon le dénominateur, le nombre du bas, puis prendre le nombre de parts indiqué par le numérateur.",
+    rule: "Divise la quantité par le dénominateur, puis multiplie le résultat par le numérateur.",
+  },
+  {
+    id: "fraction_equivalence",
+    match: /fractions? égales|fraction équivalente/i,
+    intro: "Non, le numérateur et le dénominateur n’ont pas été transformés par le même nombre.",
+    meaning: "Une fraction conserve sa valeur lorsqu’on multiplie ou lorsqu’on divise son numérateur et son dénominateur par un même nombre non nul.",
+    rule: "Repère le facteur utilisé en bas, puis applique exactement le même facteur en haut.",
+  },
+  {
+    id: "fraction_comparison",
+    match: /fractions?.*(?:comparer|ranger|encadrer)|(?:comparer|ranger|encadrer).*fractions?/i,
+    intro: "Non, les deux fractions ne peuvent pas être comparées directement sous leur forme actuelle.",
+    meaning: "Pour comparer sûrement deux fractions, donne-leur le même dénominateur afin que les parts aient la même taille. Il suffit alors de comparer les numérateurs.",
+    rule: "Obtiens des dénominateurs identiques, puis compare les nombres de parts.",
+  },
+  {
+    id: "fraction_multiplication",
+    match: /fractions?.*multiplier|multiplier.*fractions?/i,
+    intro: "Non, la multiplication de fractions n’utilise pas la méthode de l’addition.",
+    meaning: "Pour multiplier deux fractions, on multiplie les numérateurs entre eux et les dénominateurs entre eux. Il n’est pas nécessaire d’obtenir un dénominateur commun.",
+    rule: "Simplifie en priorité si c’est possible, puis multiplie en haut et en bas.",
+  },
+  {
+    id: "equation_test",
+    match: /équation.*tester|tester.*(?:égalité|solution|équation)/i,
+    intro: "Non, la valeur proposée ne donne pas le même résultat dans les deux membres de l’équation.",
+    meaning: "Tester une solution signifie remplacer l’inconnue par la valeur proposée, calculer séparément le membre de gauche et le membre de droite, puis comparer les deux résultats.",
+    rule: "La valeur est solution si, et seulement si, les deux membres deviennent égaux.",
+  },
+  {
+    id: "equation_product_zero",
+    match: /produit nul/i,
+    intro: "Non, la règle du produit nul n’a pas été appliquée à chacun des facteurs.",
+    meaning: "Un produit est nul si, et seulement si, au moins l’un de ses facteurs est nul. Il faut donc résoudre séparément chaque équation obtenue.",
+    rule: "A × B = 0 signifie A = 0 ou B = 0 : pense à chercher toutes les solutions.",
+  },
+  {
+    id: "equation_square",
+    match: /x²\s*=|x\^2\s*=|carré.*équation/i,
+    intro: "Non, une équation de la forme x² = a peut avoir deux solutions, une seule ou aucune selon la valeur de a.",
+    meaning: "Si a est strictement positif, les deux nombres opposés √a et −√a ont le même carré. Si a = 0, la seule solution est 0 ; si a est négatif, il n’existe aucune solution réelle.",
+    rule: "Étudie d’abord le signe de a, puis n’oublie pas les deux solutions opposées lorsque a est positif.",
+  },
+  {
+    id: "percentage_conversion",
+    match: /(?:fraction|décimal).*vers pourcentage|convert(?:ir|is).*(?:probabilité|fraction|décimal).*pourcentage/i,
+    intro: "Non, l’écriture obtenue ne représente pas la même proportion que le nombre de départ.",
+    meaning: "Un pourcentage est une fraction sur 100. Pour passer d’un nombre décimal à un pourcentage, on le multiplie par 100 ; dans l’autre sens, on le divise par 100.",
+    rule: "Contrôle que la proportion garde la même valeur avant et après l’ajout du symbole %.",
+  },
+  {
+    id: "percentage_from_counts",
+    match: /pourcentage.*effectif|effectifs?.*pourcentage|pourcentage depuis/i,
+    intro: "Non, l’effectif favorable n’a pas été comparé à l’effectif total.",
+    meaning: "Le pourcentage indique la proportion d’individus concernés parmi l’ensemble. On divise donc l’effectif favorable par l’effectif total.",
+    rule: "Calcule effectif favorable ÷ effectif total, puis multiplie par 100.",
+  },
+  {
+    id: "percentage_change",
+    match: /évolution.*pourcentage|augmentation|diminution|taux d['’]évolution/i,
+    intro: "Non, le pourcentage d’évolution ne doit pas être ajouté ou retiré comme un nombre ordinaire.",
+    meaning: "Une évolution en pourcentage dépend de la valeur initiale. On calcule la part correspondante, puis on l’ajoute lors d’une augmentation ou on la retire lors d’une diminution.",
+    rule: "Augmentation de t % : coefficient 1 + t/100. Diminution de t % : coefficient 1 − t/100.",
   },
   {
     id: "area_conversion",
@@ -162,6 +250,7 @@ export function buildPedagogicalFeedback(exercise, response) {
   const family = FAMILY_FEEDBACK.find((item) => item.match.test(label));
   const errorCode = classifyLearningError(exercise, response);
   const answer = expectedOf(exercise);
+  const unit = exercise?.type === "numeric" ? unitOf(exercise) : "";
   const precision = {
     sign_error: "La distance à zéro ou la valeur numérique est cohérente, mais le signe final doit être repris.",
     place_value_error: "Le rapport entre ta réponse et la valeur attendue montre qu’une puissance de 10 a probablement été oubliée ou ajoutée.",
@@ -177,7 +266,7 @@ export function buildPedagogicalFeedback(exercise, response) {
     intro,
     meaning: family?.meaning ?? "Repars des données utiles et relie chacune d’elles à une étape précise de la méthode, sans effectuer plusieurs transformations mentalement en même temps.",
     rule: family?.rule ?? "Écris chaque étape, puis contrôle que le résultat répond exactement à la question.",
-    conclusion: answer ? `La réponse attendue est ${answer}. Reprends maintenant les étapes pour comprendre comment on l’obtient.` : "Reprends maintenant les étapes de la méthode.",
+    conclusion: answer ? `On obtient donc ${answer}${unit ? ` ${unit}` : ""}. Reprends maintenant les étapes pour comprendre comment on l’obtient.` : "Reprends maintenant les étapes de la méthode.",
     steps: Array.isArray(exercise?.steps) ? exercise.steps.slice(0, 4) : [],
   };
 }

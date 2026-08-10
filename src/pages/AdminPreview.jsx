@@ -8,7 +8,7 @@ import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
-import { Eye, KeyRound, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Eye, KeyRound, ShieldCheck, Sparkles, Users } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Panneau admin (/admin, réservé à romainpechabrier@gmail.com) — voir
@@ -75,6 +75,13 @@ export default function AdminPreview() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-5 items-start">
+          <Link to="/admin/corrections" className="lg:col-span-2 rounded-[1.5rem] p-4 sm:p-5 flex items-center justify-between gap-4 transition-transform hover:-translate-y-0.5" style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}45`, color: colors.ink }}>
+            <span className="flex items-center gap-3 min-w-0">
+              <span className="rounded-xl flex items-center justify-center shrink-0" style={{ width: 40, height: 40, backgroundColor: colors.card }}><BookOpenCheck size={19} color={colors.gold} /></span>
+              <span className="min-w-0"><strong className="block text-sm">Laboratoire des corrections</strong><span className="block text-xs mt-0.5" style={{ color: colors.slate }}>Contrôler les explications pédagogiques sur ordinateur et mobile.</span></span>
+            </span>
+            <ArrowRight size={18} className="shrink-0" />
+          </Link>
           <PreviewSwitcher />
           <GrantAccessTool />
           <div className="lg:col-span-2"><ClassInvitationsTool /></div>

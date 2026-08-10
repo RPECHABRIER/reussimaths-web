@@ -39,3 +39,24 @@ test("les sous-types évitent une méthode inadaptée", () => {
   assert.equal(simplified.family, "fraction_simplification");
   assert.match(simplified.rule, /diviseur commun/i);
 });
+
+test("fractions, équations et pourcentages distinguent leurs méthodes", () => {
+  const fractionProduct = buildPedagogicalFeedback({ type: "numeric", chapter: "Fractions — Multiplier", prompt: "Calcule 2/3 × 5/7.", answer: "10/21" }, "7/10");
+  const fractionPart = buildPedagogicalFeedback(numeric("Fractions — Fraction d'un nombre", "Calcule les 3/4 de 20.", 15), "17");
+  const productZero = buildPedagogicalFeedback({ type: "multi", chapter: "Équations — Produit nul", prompt: "Résous (x-2)(x+3)=0.", answer: [2, -3] }, [2]);
+  const percentageCounts = buildPedagogicalFeedback(numeric("Proportionnalité — Pourcentage depuis des effectifs", "18 élèves sur 30.", 60), "40");
+  const percentageChange = buildPedagogicalFeedback(numeric("Proportionnalité — Évolutions en pourcentage", "Augmente 80 de 20 %.", 96), "100");
+  assert.equal(fractionProduct.family, "fraction_multiplication");
+  assert.equal(fractionPart.family, "fraction_of_number");
+  assert.equal(productZero.family, "equation_product_zero");
+  assert.equal(percentageCounts.family, "percentage_from_counts");
+  assert.equal(percentageChange.family, "percentage_change");
+});
+
+test("la conclusion affiche les réponses multiples lisibles et conserve l’unité", () => {
+  const multi = buildPedagogicalFeedback({ type: "multi", chapter: "Raisonnement", prompt: "Choisis.", answer: [0, 2], options: ["A", "B", "C"] }, [0]);
+  const length = buildPedagogicalFeedback(numeric("Géométrie — Pythagore", "Calcule BC en cm.", 10), "14");
+  assert.match(multi.conclusion, /A ; C/);
+  assert.doesNotMatch(multi.conclusion, /0 ; 2/);
+  assert.match(length.conclusion, /10 cm/);
+});

@@ -11,6 +11,7 @@ function expectedOf(exercise) {
     }
     return exercise.answer.join(" ; ");
   }
+  if (typeof exercise?.answer === "number") return String(exercise.answer).replace(".", ",");
   return String(exercise?.answer ?? "");
 }
 
@@ -40,6 +41,13 @@ function unitOf(exercise) {
 }
 
 const FAMILY_FEEDBACK = [
+  {
+    id: "decimal_place_value",
+    match: /numération décimale|dixièmes?|centièmes?|millièmes?|valeur de position/i,
+    intro: "Non, la valeur de chaque chiffre n’a pas été prise en compte correctement : un dixième vaut 0,1, un centième vaut 0,01 et un millième vaut 0,001.",
+    meaning: "Dans un nombre décimal, la position du chiffre indique sa valeur. Pour additionner, transforme si nécessaire les dixièmes ou les centièmes en écriture décimale, puis place les virgules l’une sous l’autre.",
+    rule: "Écris les nombres avec leurs virgules alignées, complète les positions manquantes par des zéros si besoin, puis calcule colonne par colonne.",
+  },
   {
     id: "relative_product",
     match: /relatifs?.*(?:produit|multiplier|division)|(?:produit|multiplie|divise).*nombres? (?:négatifs?|relatifs?)/i,
@@ -189,7 +197,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "statistics_range",
-    match: /\bétendue\b/i,
+    match: /étendue/i,
     intro: "Non, l’étendue n’est ni la plus grande valeur ni une moyenne.",
     meaning: "L’étendue mesure l’écart total entre les deux valeurs extrêmes de la série.",
     rule: "Étendue = valeur maximale − valeur minimale.",
@@ -203,7 +211,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "probability_conditional",
-    match: /probabilit(?:é|és) conditionnelle|sachant que/i,
+    match: /^(?!.*(?:arbre|indépendance|indépendants)).*(?:probabilit(?:é|és) conditionnelle|sachant que)/i,
     intro: "Non, la probabilité a été calculée dans l’univers de départ alors que l’information « sachant que » réduit les possibilités.",
     meaning: "Dans P_A(B), on sait que A est réalisé. A devient donc le nouvel univers et l’on cherche, parmi les cas de A, ceux qui réalisent aussi B.",
     rule: "P_A(B)=P(A∩B)÷P(A), à condition que P(A) ne soit pas nulle.",
@@ -314,6 +322,27 @@ const FAMILY_FEEDBACK = [
     rule: "Traite séparément abscisses et ordonnées, puis vérifie la direction et le sens du vecteur obtenu.",
   },
   {
+    id: "probability_basic",
+    match: /issues? favorables?|boules?.*(?:rouge|bleue)|probabilit(?:é|és).*(?:dé|sac|urne)/i,
+    intro: "Non, tu as comparé les issues favorables à une partie des autres issues, au lieu de les comparer à toutes les issues possibles.",
+    meaning: "Dans une situation équiprobable, le numérateur compte les issues qui réalisent l’événement et le dénominateur compte toutes les issues possibles.",
+    rule: "Probabilité = nombre d’issues favorables ÷ nombre total d’issues possibles. Vérifie ensuite que le résultat est compris entre 0 et 1.",
+  },
+  {
+    id: "geometry_measure_unit",
+    match: /quelle unité.*(?:aire|volume|longueur)|unité convient.*(?:aire|volume|longueur)|unité d['’](?:aire|un volume|une longueur)/i,
+    intro: "Non, l’unité choisie ne correspond pas à la grandeur mesurée.",
+    meaning: "Une longueur mesure une dimension et utilise une unité simple. Une aire mesure une surface en deux dimensions et utilise une unité au carré. Un volume mesure l’espace en trois dimensions et utilise une unité au cube.",
+    rule: "Longueur : unité simple ; aire : unité² ; volume : unité³.",
+  },
+  {
+    id: "multiple_choice_reasoning",
+    match: /plusieurs réponses|sélectionne toutes|affirmations vraies/i,
+    intro: "Non, au moins une affirmation vraie manque ou une affirmation fausse a été conservée.",
+    meaning: "Dans une question à plusieurs réponses, chaque affirmation doit être testée séparément. Le fait d’en avoir trouvé une vraie ne permet pas de s’arrêter.",
+    rule: "Teste toutes les propositions, élimine chacune de celles qui est fausse, puis vérifie que tu n’as oublié aucune proposition vraie.",
+  },
+  {
     id: "area_conversion",
     match: /convert(?:ir|is).*aire|unités? d['’]aire/i,
     intro: "Non, tu n’as pas utilisé le coefficient correspondant à une aire. Une aire mesure une surface : le coefficient de conversion des longueurs doit donc être élevé au carré.",
@@ -407,8 +436,8 @@ const FAMILY_FEEDBACK = [
   {
     id: "pythagoras",
     match: /Pythagore|hypoténuse|triangle rectangle/i,
-    intro: "Non, les longueurs d’un triangle rectangle ne s’additionnent pas directement pour trouver l’hypoténuse.",
-    meaning: "Repère d’abord l’angle droit : le côté opposé est l’hypoténuse. Le théorème de Pythagore porte sur les carrés des longueurs.",
+    intro: "Non, on ne peut pas trouver la longueur de l’hypoténuse en additionnant directement les deux autres côtés.",
+    meaning: "Repère d’abord l’angle droit : le côté opposé est l’hypoténuse. Le théorème de Pythagore relie les carrés des longueurs. La valeur proposée doit aussi respecter l’inégalité triangulaire : un côté est strictement plus court que la somme des deux autres.",
     rule: "Après avoir calculé le carré de la longueur recherchée, n’oublie pas de prendre la racine carrée et de conclure avec l’unité.",
   },
   {

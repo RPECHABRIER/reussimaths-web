@@ -191,3 +191,14 @@ test("la mesure produit et les retours restent minimaux", async () => {
   assert.match(endpoint, /ALLOWED_EVENTS/);
   assert.match(feedback, /slice\(0, 2000\)/);
 });
+
+test("le cahier pédagogique se synchronise sans réponse brute et avec isolation par compte", async () => {
+  const history = await read("./lib/learningReviewHistory.js");
+  const feedback = await read("./components/LearningFeedback.jsx");
+  const migration = await read("../supabase/learning-review-cards-migration-2026-08-11.sql");
+  assert.match(history, /response:\s*_response/);
+  assert.match(feedback, /learning_review_cards/);
+  assert.match(migration, /auth\.uid\(\) = user_id/g);
+  assert.match(migration, /enable row level security/i);
+  assert.match(migration, /revoke all on table public\.learning_review_cards from anon/i);
+});

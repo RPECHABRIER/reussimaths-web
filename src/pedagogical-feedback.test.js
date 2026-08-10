@@ -51,6 +51,7 @@ test("fractions, équations et pourcentages distinguent leurs méthodes", () => 
   assert.equal(productZero.family, "equation_product_zero");
   assert.equal(percentageCounts.family, "percentage_from_counts");
   assert.equal(percentageChange.family, "percentage_change");
+  assert.doesNotMatch(fractionProduct.intro, /format|écriture demandée/i);
 });
 
 test("la conclusion affiche les réponses multiples lisibles et conserve l’unité", () => {
@@ -76,6 +77,14 @@ test("une augmentation en pourcentage conserve l'unité de la valeur initiale", 
   assert.match(explicit.conclusion, /96 euros/);
 });
 
+test("les décimaux utilisent la virgule française et une explication de position", () => {
+  const feedback = buildPedagogicalFeedback(numeric("Numération décimale", "Ajoute 7 dixièmes à 12,4.", 13.1), "99");
+  assert.equal(feedback.family, "decimal_place_value");
+  assert.match(feedback.meaning, /virgules.*l’une sous l’autre/i);
+  assert.match(feedback.conclusion, /13,1/);
+  assert.doesNotMatch(feedback.conclusion, /13\.1/);
+});
+
 test("fonctions, statistiques et probabilités utilisent le bon geste", () => {
   const image = buildPedagogicalFeedback(numeric("Fonctions — Image et antécédent", "Calcule l’image de 4 par f.", 10), "2");
   const antecedent = buildPedagogicalFeedback(numeric("Fonctions — Image et antécédent", "Détermine un antécédent de 10.", 4), "10");
@@ -87,6 +96,19 @@ test("fonctions, statistiques et probabilités utilisent le bon geste", () => {
   assert.equal(median.family, "statistics_median");
   assert.equal(contrary.family, "probability_contrary");
   assert.equal(conditional.family, "probability_conditional");
+});
+
+test("les sous-types proches ne se capturent pas entre eux", () => {
+  const tree = buildPedagogicalFeedback(numeric("Probabilités conditionnelles — Arbre pondéré", "Calcule la probabilité d'un chemin.", 0.24), "1");
+  const independence = buildPedagogicalFeedback({ type: "text", chapter: "Probabilités conditionnelles — Indépendance", prompt: "Vérifie l’indépendance.", answer: "oui" }, "non");
+  const range = buildPedagogicalFeedback(numeric("Statistiques descriptives — Étendue", "Calcule l’étendue.", 15), "19");
+  const unit = buildPedagogicalFeedback({ type: "text", chapter: "Géométrie — Aire", prompt: "Quelle unité convient pour une aire ?", answer: "cm²" }, "cm");
+  const multiple = buildPedagogicalFeedback({ type: "multi", chapter: "Raisonnement — Plusieurs réponses", prompt: "Sélectionne toutes les affirmations vraies.", answer: [0, 2] }, [0]);
+  assert.equal(tree.family, "probability_tree");
+  assert.equal(independence.family, "probability_independence");
+  assert.equal(range.family, "statistics_range");
+  assert.equal(unit.family, "geometry_measure_unit");
+  assert.equal(multiple.family, "multiple_choice_reasoning");
 });
 
 test("la géométrie distingue ses conditions d’application", () => {

@@ -69,7 +69,7 @@ function parentSummary(summary) {
 export default function Bilan() {
   const { user } = useAuth();
   const { loading, summary, error, reload } = useWeeklySummary(user?.id);
-  const learningReviews = useLearningReviews();
+  const learningReviews = useLearningReviews(user?.id);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -88,10 +88,10 @@ export default function Bilan() {
             Suivi de la progression
           </p>
           <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "clamp(2.1rem, 5vw, 3.3rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
-            Bilan de la semaine
+            Une semaine de progrès
           </h1>
           <p className="text-sm mt-2" style={{ color: slate }}>
-            Les 7 derniers jours — utile pour suivre la progression avec ton enfant.
+            Un bilan clair à regarder ensemble : travail effectué, acquis et prochaine étape.
           </p>
         </div>
 
@@ -165,6 +165,13 @@ export default function Bilan() {
               <p className="text-sm mt-2 leading-relaxed" style={{ color: colors.bg }}>
                 {parentSummary(summary)}
               </p>
+              <div className="grid grid-cols-3 gap-2 mt-4">
+                {[
+                  [`${summary.activeDays}/7`, "jours actifs"],
+                  [summary.totalAttempts, "exercices"],
+                  [summary.consolidatedSkills.length, "acquis consolidés"],
+                ].map(([value, label]) => <div key={label} className="min-w-0 rounded-2xl p-2.5 text-center" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}><p className="text-base font-black" style={{ color: gold }}>{value}</p><p className="text-[9px] leading-tight mt-0.5" style={{ color: colors.bg }}>{label}</p></div>)}
+              </div>
               {summary.priorities.length > 0 && (
                 <Link
                   to={`/chapitre/${summary.priorities[0].chapter_id}?competence=${encodeURIComponent(summary.priorities[0].skill_id)}`}
@@ -352,7 +359,7 @@ export default function Bilan() {
             </div>
 
             <p className="text-xs text-center mt-2 md:col-span-2" style={{ color: slate }}>
-              Ce bilan se met à jour au fil de la pratique — repasse le voir la semaine prochaine.
+              Chaque séance enrichit ce bilan. Relisez ensemble une correction, puis choisissez une seule priorité pour la prochaine séance.
             </p>
           </div>
         )}

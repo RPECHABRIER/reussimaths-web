@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { AlertCircle, BookOpenCheck, Search, Target } from "lucide-react";
 import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
 import { rememberLearningReview } from "../lib/learningReviewHistory";
+import { toRemoteLearningReview } from "../lib/learningReviewHistory";
+import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../hooks/useAuth";
 import { colors, fonts } from "../theme";
 import Graph from "./Graph";
 import MathText from "./MathText";
@@ -11,11 +14,24 @@ import FeedbackVisual from "./FeedbackVisual";
 
 export default function LearningFeedback({ exercise, response, compact = false, remember = false }) {
   const feedback = buildPedagogicalFeedback(exercise, response);
+  const { user } = useAuth();
   useEffect(() => {
-    if (remember) rememberLearningReview({ exercise, response, feedback });
-  }, [remember, exercise, response, feedback.family, feedback.conclusion]);
+    if (!remember) return;
+    const review = rememberLearningReview({ exercise, response, feedback });
+    const remote = toRemoteLearningReview(review);
+    if (user?.id && remote) {
+      supabase.from("learning_review_cards").upsert({
+        user_id: user.id,
+        review_key: remote.reviewKey,
+        payload: remote.payload,
+        reviewed_at: new Date().toISOString(),
+      }, { onConflict: "user_id,review_key" }).then(({ error }) => {
+        if (error && error.code !== "42P01") console.error("[LearningFeedback] synchronisation du cahier :", error.message);
+      });
+    }
+  }, [remember, exercise, response, feedback.family, feedback.conclusion, user?.id]);
   return (
-    <div className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
+    <div data-feedback-family={feedback.family} className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
       <p className="flex items-start gap-2 text-sm font-bold leading-relaxed" style={{ color: colors.ink }}>
         <AlertCircle size={16} color={colors.gold} className="shrink-0 mt-0.5" />
         <MathText text={feedback.intro} />

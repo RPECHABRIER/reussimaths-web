@@ -18,7 +18,7 @@ export function classifyLearningError(exercise, response) {
   if (!exercise) return "unknown";
   if (exercise.type === "numeric") {
     const actual = parseNumericInput(response);
-    const expected = Number(exercise.answer);
+    const expected = parseNumericInput(exercise.answer);
     if (!Number.isFinite(actual) || !Number.isFinite(expected)) return "invalid_format";
     if (Math.abs(actual + expected) < 0.001) return "sign_error";
     if (expected !== 0) {

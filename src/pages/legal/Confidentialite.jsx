@@ -9,6 +9,7 @@ export default function Confidentialite() {
         Cette politique explique quelles données sont collectées par RéussiMaths, pourquoi, et comment elles sont
         protégées, conformément au Règlement Général sur la Protection des Données (RGPD).
       </p>
+      <p><strong>Responsable du traitement :</strong> <strong>[à compléter avant la première vente]</strong> — Mme [nom et prénom], entrepreneur individuel, SIRET [numéro], coordonnées publiées dans les mentions légales.</p>
 
       <h2>1. Données collectées</h2>
       <ul>

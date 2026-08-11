@@ -21,8 +21,9 @@ export default function MentionsLegales() {
       </div>
       <p>
         <strong>[À compléter dès l'immatriculation]</strong> — avant toute ouverture commerciale réelle
-        (abonnements payants hors mode test), cette page sera mise à jour avec : nom et prénom de l'éditeur, statut
-        (entrepreneur individuel), numéro SIRET, adresse du siège, adresse e-mail de contact.
+        (abonnements payants hors mode test), cette page sera mise à jour avec : nom et prénom de l'exploitante,
+        statut (entrepreneur individuel), numéro SIRET, adresse du siège, adresse e-mail et numéro de téléphone
+        professionnels. L'entreprise individuelle ainsi désignée sera l'éditrice et l'exploitante de RéussiMaths.
       </p>
 
       <h2>Hébergement</h2>
@@ -50,9 +51,10 @@ export default function MentionsLegales() {
 
       <h2>Propriété intellectuelle</h2>
       <p>
-        L'ensemble des contenus pédagogiques (exercices, corrections, méthodes), la charte graphique et le code de
-        l'application RéussiMaths sont la propriété de l'éditeur, sauf mention contraire. Toute reproduction ou
-        représentation, totale ou partielle, sans autorisation est interdite.
+        Les contenus pédagogiques (exercices, corrections, méthodes), la charte graphique et le code de
+        l'application RéussiMaths sont exploités par l'éditeur en vertu des droits qu'il détient ou des autorisations
+        qui lui ont été accordées. Toute reproduction ou représentation, totale ou partielle, sans autorisation est
+        interdite.
       </p>
 
       <h2>Contact</h2>

@@ -10,6 +10,7 @@ export default function CGU() {
         l'application RéussiMaths (le « Service »), destinée à la révision des mathématiques du collège et du lycée.
         En créant un compte ou en utilisant le Service, l'utilisateur accepte les présentes CGU.
       </p>
+      <p><strong>Vendeur et éditeur :</strong> <strong>[à compléter avant la première vente]</strong> — Mme [nom et prénom], entrepreneur individuel, SIRET [numéro], adresse et coordonnées professionnelles publiées dans les mentions légales.</p>
 
       <h2>1. Description du Service</h2>
       <p>

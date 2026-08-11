@@ -331,7 +331,7 @@ test("chaque abonné reçoit une série quotidienne de calcul mental chronométr
   assert.match(generator, /for\(let i=0;i<2;i\+=1\)/);
   assert.match(level, /Ton calcul mental du jour/);
   assert.match(app, /calcul-mental\/:levelId/);
-  assert.match(badge, /Calcul mental/);
+  assert.match(badge, /Sans calculatrice/);
   assert.match(badge, /Calculatrice autorisée/);
   assert.match(migration, /auth\.uid\(\) = user_id/g);
   assert.match(migration, /revoke all on table public\.daily_mental_sessions from anon/);

@@ -586,10 +586,10 @@ export default {
           {
             title: "Évolution réciproque",
             items: [
-              "Pour revenir à la valeur de départ après une évolution, on multiplie par l'inverse du coefficient multiplicateur : \\(CM_{réciproque} = \\dfrac{1}{CM}\\).",
+              "Pour revenir à la valeur de départ après une évolution, on multiplie par l'inverse du coefficient multiplicateur : \\(CM_{\\text{réciproque}} = \\dfrac{1}{CM}\\).",
               "Piège classique : la réciproque d'une baisse de 20 % n'est PAS une hausse de 20 %, mais une hausse de 25 % (\\(\\frac{1}{0{,}8} = 1{,}25\\)).",
             ],
-            formula: "\\(CM_{réciproque} = \\dfrac{1}{CM}\\)",
+            formula: "\\(CM_{\\text{réciproque}} = \\dfrac{1}{CM}\\)",
           },
           {
             title: "Évolutions successives",

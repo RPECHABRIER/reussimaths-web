@@ -382,7 +382,10 @@ export default {
           },
           {
             title: "Dérivée",
-            items: [],
+            items: [
+              "Avant de dériver \\(\\ln(u(x))\\), on détermine l’intervalle où \\(u(x)>0\\). La dérivée est ensuite le quotient de la dérivée de l’intérieur par l’intérieur lui-même.",
+              "Attention à ne pas écrire seulement \\(1/u\\) : le facteur \\(u'\\) est indispensable dès que l’expression placée dans le logarithme n’est pas simplement x.",
+            ],
             formula: "\\((\\ln x)' = \\dfrac{1}{x}\\), \\((\\ln u)' = \\dfrac{u'}{u}\\)",
           },
           {

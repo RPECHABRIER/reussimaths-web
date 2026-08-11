@@ -120,6 +120,10 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - Les corrections insistent sur les confusions fréquentes : image et pente, termes et rangs, produit le long d’un chemin, signe de la dérivée et signe de la fonction, probabilité conditionnelle et intersection.
 - Les vitrines mobilisent les animations spécialisées sur l’exponentielle et le logarithme, la dérivation, les suites, les arbres pondérés, la géométrie dans l’espace et les statistiques.
 - La banque monolithique de chapitres a été découpée à la compilation en lots collège, seconde, première et terminale afin d’éviter un unique fichier de contenus de près de 1,9 Mo et d’améliorer la mise en cache.
+- Les 25 chapitres de Terminale ont été audités sur leurs cours et fiches méthodes : 20 cours notionnels, 98 rubriques, 188 explications et 276 expressions mathématiques contrôlées. Les chapitres d’automatismes, de révision et d’exercices transversaux restent volontairement sans onglet de cours autonome.
+- Une rubrique vide sur la dérivée du logarithme népérien a été complétée avec la condition de domaine et le rôle indispensable de la dérivée intérieure.
+- La version Vercel publiée a été vérifiée sur les parcours Terminale spécialité et technologique, sur ordinateur et mobile.
+- Mesure HTTP de référence depuis l’environnement de recette : premier octet entre 44 et 57 ms pour la page publique, document HTML de 932 octets. Les banques compilées restent toutes sous 500 ko avant compression ; Terminale pèse environ 302 ko, soit 70 ko gzip.
 - Sur les 8 640 exercices contrôlés, aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
 - Les quinze vitrines ont ensuite été relues et réécrites manuellement : discriminant, dérivation, suites, probabilités conditionnelles, produit scalaire, évolutions, fonctions, statistiques et algorithmique.
 - Chaque correction distingue désormais donnée, règle, calcul et résultat, avec un contrôle final lorsque celui-ci donne du sens au résultat.

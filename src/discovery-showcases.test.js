@@ -104,4 +104,24 @@ test("équations, Pythagore, statistiques et vitesses ont un visuel contextualis
   assert.match(visual, /Les carrés des deux côtés construisent celui de l’hypoténuse/);
   assert.match(visual, /elle doit rester entre la plus petite et la plus grande valeur/);
   assert.match(visual, /Pour trouver la vitesse, on partage la distance par la durée/);
+  assert.match(visual, /Déterminer le signe avant de calculer/);
+});
+
+test("la vitrine 3e distingue méthode, résultat et contrôle", () => {
+  const exercises = getDiscoveryShowcase("troisieme").showcaseExercises;
+  const corrections = exercises.map((exercise) => exercise.steps.map((step) => step.text).join(" ")).join(" ");
+  assert.match(corrections, /même proportion/);
+  assert.match(corrections, /deux solutions, −3 et 2/);
+  assert.match(corrections, /Chercher un antécédent conduirait au contraire à résoudre une équation/);
+  assert.match(corrections, /80 × 1,20 = 96/);
+  assert.match(corrections, /0,3 \+ 0,7 = 1/);
+});
+
+test("Thalès, fonctions, probabilités et distributivité ont un visuel contextualisé", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
+  assert.match(visual, /Conserver l’ordre des côtés correspondants/);
+  assert.match(visual, /Le nombre de départ est connu/);
+  assert.match(visual, /P\(non A\) =/);
+  assert.match(visual, /Aucun terme placé dans la parenthèse ne doit être oublié/);
 });

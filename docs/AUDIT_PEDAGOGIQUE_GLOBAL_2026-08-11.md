@@ -81,6 +81,17 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - La moyenne est contrôlée entre la plus petite et la plus grande valeur ; l’unité km/h est explicitée comme kilomètres parcourus en une heure.
 - Les animations d’équation, de Pythagore, de statistiques et de vitesse reprennent maintenant l’énoncé ou le résultat de l’exercice courant.
 
+## Relecture approfondie de la 3e
+
+- Les 17 chapitres du niveau ont été soumis à 240 générations chacun, soit 4 080 exercices audités.
+- Aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
+- Les cinq vitrines ont été réécrites manuellement : Thalès, produit nul, image d’une fonction, évolution en pourcentage et événement contraire.
+- Thalès conserve explicitement l’ordre des côtés et se termine par une vérification des rapports.
+- Le produit nul recherche séparément les deux solutions avant de sélectionner la solution positive demandée.
+- La fonction distingue clairement image et antécédent ; le pourcentage propose les méthodes par 10 % et par coefficient multiplicateur.
+- L’événement contraire est contrôlé en vérifiant que les deux probabilités totalisent 1.
+- Les animations de Thalès, fonctions, événement contraire et distributivité utilisent désormais les données de l’exercice courant.
+
 ## Recette de la version publiée
 
 - La page d’accueil Vercel est accessible et présente clairement l’essai gratuit, le rituel enseignant et l’offre complète.
@@ -89,6 +100,8 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - Le bouton sonore, le pavé numérique avec touche ±, la correction détaillée et la navigation vers la question suivante restent opérationnels.
 - Le parcours découverte de 5e publié a également été testé avec une réponse erronée à −7 + 12.
 - La correction publiée reprend bien les quatre étapes typées, l’image du nombre le plus « fort » et les « points de vie », ainsi que la droite graduée animée.
+- Le parcours découverte de 4e publié a été testé avec une réponse erronée au produit (−4) × (−3).
+- Ce contrôle a conduit à remplacer, pour les produits de relatifs, la droite graduée par une animation spécialisée de la règle des signes.
 
 ## Suite de l’audit
 

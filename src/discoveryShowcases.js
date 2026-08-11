@@ -119,11 +119,36 @@ const SHOWCASES = {
     ]),
   ],
   troisieme: [
-    n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, x/6 = 4/3. Calcule x.", 8, ["Les côtés correspondants sont écrits dans le même ordre.", "x = 6 × 4 ÷ 3.", "x = 8."]),
-    n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, ["Un produit est nul si l’un de ses facteurs est nul.", "x − 2 = 0 donne x = 2 ; x + 3 = 0 donne x = −3.", "La solution positive est 2."]),
-    n("Fonctions — Image", "Pour f(x) = 3x − 2, calcule l’image de 4.", 10, ["On remplace x par 4 : f(4) = 3 × 4 − 2.", "3 × 4 − 2 = 12 − 2.", "f(4) = 10."]),
-    n("Pourcentages — Évolution", "Un article coûte 80 €. Son prix augmente de 20 %. Quel est le nouveau prix ?", 96, ["20 % de 80 vaut 16.", "On ajoute l’augmentation au prix initial : 80 + 16.", "Le nouveau prix est 96 €."], "€"),
-    n("Probabilités — Événement contraire", "On sait que P(A) = 0,3. Calcule P(non A).", 0.7, ["A et son contraire couvrent tous les cas.", "P(non A) = 1 − P(A).", "1 − 0,3 = 0,7."]),
+    n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, x/6 = 4/3. Calcule x.", 8, [
+      { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion x/6 = 4/3. L’ordre des côtés est déjà indiqué par l’égalité." },
+      { type: "regle", text: "Dans une configuration de Thalès, les rapports de longueurs des côtés correspondants sont égaux. On conserve exactement le même ordre dans chaque quotient." },
+      { type: "calcul", text: "Pour isoler x, on multiplie 6 par 4/3 : x = 6 × 4 ÷ 3. On peut simplifier 6 ÷ 3 = 2, puis calculer 2 × 4 = 8." },
+      { type: "resultat", text: "Ainsi, x = 8. Vérification : 8/6 et 4/3 représentent bien la même proportion." },
+    ]),
+    n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [
+      { type: "donnee", text: "Le membre de gauche est un produit de deux facteurs, (x − 2) et (x + 3), et ce produit est égal à zéro." },
+      { type: "regle", text: "Un produit est nul si, et seulement si, au moins l’un de ses facteurs est nul." },
+      { type: "calcul", text: "On résout séparément x − 2 = 0, ce qui donne x = 2, puis x + 3 = 0, ce qui donne x = −3." },
+      { type: "resultat", text: "L’équation possède deux solutions, −3 et 2. La solution positive demandée est donc 2." },
+    ]),
+    n("Fonctions — Image", "Pour f(x) = 3x − 2, calcule l’image de 4.", 10, [
+      { type: "donnee", text: "On demande l’image de 4 : le nombre de départ est donc connu et vaut 4." },
+      { type: "regle", text: "Pour calculer une image, on remplace x par le nombre de départ dans l’expression de la fonction. Chercher un antécédent conduirait au contraire à résoudre une équation." },
+      { type: "calcul", text: "On écrit f(4) = 3 × 4 − 2, puis on effectue le calcul : 12 − 2 = 10." },
+      { type: "resultat", text: "Ainsi, l’image de 4 par la fonction f est 10." },
+    ]),
+    n("Pourcentages — Évolution", "Un article coûte 80 €. Son prix augmente de 20 %. Quel est le nouveau prix ?", 96, [
+      { type: "donnee", text: "Le prix initial est 80 € et il augmente de 20 %. Attention : 20 % et le nombre 20 ne représentent pas la même quantité." },
+      { type: "regle", text: "On peut calculer d’abord 10 %, le dixième du prix, puis doubler ce résultat. On peut aussi multiplier directement le prix initial par 1,20." },
+      { type: "calcul", text: "Dix pour cent de 80 vaut 8, donc 20 % vaut 16. On ajoute cette augmentation au prix initial : 80 + 16 = 96." },
+      { type: "resultat", text: "Le nouveau prix est 96 €. Vérification directe : 80 × 1,20 = 96." },
+    ], "€"),
+    n("Probabilités — Événement contraire", "On sait que P(A) = 0,3. Calcule P(non A).", 0.7, [
+      { type: "donnee", text: "L’événement A a une probabilité de 0,3. On cherche la probabilité que A ne se réalise pas." },
+      { type: "regle", text: "Un événement et son événement contraire regroupent tous les cas possibles. La somme de leurs probabilités est donc égale à 1." },
+      { type: "calcul", text: "On calcule P(non A) = 1 − P(A) = 1 − 0,3 = 0,7." },
+      { type: "resultat", text: "Ainsi, P(non A) = 0,7. On vérifie que 0,3 + 0,7 = 1." },
+    ]),
   ],
   seconde: [
     n("Fonctions — Antécédent", "Pour f(x) = 2x + 1, cherche l’antécédent de 9.", 4, ["Chercher un antécédent signifie résoudre f(x) = 9.", "2x + 1 = 9, donc 2x = 8.", "x = 4."]),

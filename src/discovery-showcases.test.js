@@ -173,3 +173,25 @@ test("les notions vitrines de Première disposent de visuels spécialisés", asy
   assert.match(visual, /Passer d’un terme au suivant/);
   assert.match(visual, /Suivre une branche à la fois/);
 });
+
+test("les dix vitrines de Terminale ont été relues manuellement", () => {
+  for (const levelId of ["terminale-spe", "terminale-techno"]) {
+    const showcase = getDiscoveryShowcase(levelId);
+    for (const exercise of showcase.showcaseExercises) {
+      assert.deepEqual(exercise.steps.map((step) => step.type), ["donnee", "regle", "calcul", "resultat"], `${levelId}: ${exercise.chapter}`);
+      assert.ok(exercise.steps.map((step) => step.text).join(" ").length >= 250, `${levelId}: correction trop brève`);
+      const feedback = buildPedagogicalFeedback(exercise, exercise.type === "numeric" ? "999999" : "réponse erronée");
+      assert.notEqual(feedback.family, "general", `${levelId}: ${exercise.chapter}`);
+    }
+  }
+});
+
+test("les notions vitrines de Terminale disposent de visuels spécialisés", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
+  assert.match(visual, /Deux opérations réciproques/);
+  assert.match(visual, /La dérivée donne la pente/);
+  assert.match(visual, /Passer d’un terme au suivant/);
+  assert.match(visual, /Suivre une branche à la fois/);
+  assert.match(visual, /Trois coordonnées dans l’espace/);
+});

@@ -110,6 +110,16 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - Première spécialité : 14 chapitres et 3 360 exercices audités.
 - Première sans spécialité : 11 chapitres et 2 640 exercices audités.
 - Première technologique : 11 chapitres et 2 640 exercices audités.
+- Les 36 chapitres de Première ont ensuite été contrôlés chapitre par chapitre sur les trois difficultés : 8 640 générations, aucun retour générique et aucune correction affichée trop courte.
+- Les quinze questions vitrines de Première ont été réécrites manuellement et associées à des visuels spécialisés.
+
+## Relecture approfondie de la Terminale
+
+- Les cinq questions vitrines de Terminale spécialité et les cinq questions vitrines de Terminale technologique ont été réécrites manuellement.
+- Chaque correction distingue les données, la règle, l’application et le contrôle du résultat.
+- Les corrections insistent sur les confusions fréquentes : image et pente, termes et rangs, produit le long d’un chemin, signe de la dérivée et signe de la fonction, probabilité conditionnelle et intersection.
+- Les vitrines mobilisent les animations spécialisées sur l’exponentielle et le logarithme, la dérivation, les suites, les arbres pondérés, la géométrie dans l’espace et les statistiques.
+- La banque monolithique de chapitres a été découpée à la compilation en lots collège, seconde, première et terminale afin d’éviter un unique fichier de contenus de près de 1,9 Mo et d’améliorer la mise en cache.
 - Sur les 8 640 exercices contrôlés, aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
 - Les quinze vitrines ont ensuite été relues et réécrites manuellement : discriminant, dérivation, suites, probabilités conditionnelles, produit scalaire, évolutions, fonctions, statistiques et algorithmique.
 - Chaque correction distingue désormais donnée, règle, calcul et résultat, avec un contrôle final lorsque celui-ci donne du sens au résultat.

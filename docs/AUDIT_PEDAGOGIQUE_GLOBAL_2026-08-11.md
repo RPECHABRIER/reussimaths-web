@@ -15,6 +15,7 @@
 - qualité minimale des explications « Comprendre » et « Méthode à retenir » ;
 - diversité des énoncés générés ;
 - repérage indicatif des corrections sources trop courtes et des réponses dévoilées trop tôt ;
+- mesure de la correction réellement affichée, en réunissant l’explication, la méthode, l’application et la conclusion ;
 - audit complémentaire des figures, graphiques, graduations et expressions KaTeX par `test-all-chapters.mjs`.
 
 ## Résultat de ce lot
@@ -41,8 +42,25 @@ Après ajout des familles pédagogiques et des animations correspondantes, le m�
 
 ## Prévention des régressions
 
-La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test échoue si une nouvelle question retombe sur le retour pédagogique générique.
+La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test échoue si une nouvelle question retombe sur le retour pédagogique générique ou si la correction complète présentée à l’élève devient trop courte.
+
+## Relecture approfondie de la 6e
+
+- Les 11 chapitres du niveau ont été soumis à 240 générations chacun, soit 2 640 exercices de 6e relus automatiquement.
+- Aucune correction affichée n’est générique ou insuffisamment développée après assemblage de « Comprendre », « Méthode à retenir », de l’application et de la conclusion.
+- Les cinq questions du parcours découverte ont désormais quatre étapes identifiées : donnée, règle, calcul et résultat.
+- Le diagnostic de 6e a été parcouru intégralement dans l’interface, en provoquant une erreur à chacune des cinq questions.
+- La conversion de 2,5 m en centimètres affiche bien la méthode attendue et le tableau de conversion des longueurs.
+- Les animations de numération utilisent maintenant les chiffres de l’exercice courant. Elles n’affichent plus un exemple fixe sans rapport avec la question.
+
+## Audit des parcours gratuits
+
+- Dix niveaux possèdent chacun cinq questions vitrines, soit 50 questions contrôlées.
+- Les 50 énoncés sont uniques, complets et reliés à une famille pédagogique spécialisée.
+- Le diagnostic et la première série gratuite d’un même niveau ne reprennent jamais le même énoncé.
+- Les erreurs comme les réussites donnent accès à l’explication détaillée et au support visuel.
+- Le chemin public vérifié est : accueil → choix du niveau → programme étudié → diagnostic → recommandation → série gratuite.
 
 ## Suite de l’audit
 
-Le contrôle automatique garantit désormais la structure et la spécificité du retour. Une seconde phase éditoriale doit encore relire les corrections sources les plus courtes, chapitre par chapitre, afin d’améliorer leur formulation mathématique au-delà du socle transversal fourni par RéussiMaths.
+Le contrôle automatique garantit désormais la structure, la longueur et la spécificité du retour réellement montré. La phase éditoriale peut continuer niveau par niveau afin d’affiner encore le ton et les exemples, même lorsque le seuil qualitatif est déjà satisfait.

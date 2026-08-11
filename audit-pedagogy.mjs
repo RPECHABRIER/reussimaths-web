@@ -29,6 +29,7 @@ for (const file of files) {
   const families = new Set();
   let generated = 0;
   let shortCorrections = 0;
+  let shortRenderedCorrections = 0;
   let genericFeedback = 0;
   let answerLeaks = 0;
 
@@ -41,10 +42,14 @@ for (const file of files) {
       const correctionLength = steps.join(" ").length;
       if (steps.length < 2 || correctionLength < 55) {
         shortCorrections += 1;
-        if (shortCorrections <= 2) add(file, "correction_courte", `${steps.length} étape(s), ${correctionLength} caractères`, exercise);
       }
 
       const feedback = buildPedagogicalFeedback(exercise, wrongResponse(exercise));
+      const renderedCorrectionLength = feedback.intro.length + feedback.meaning.length + feedback.rule.length + feedback.conclusion.length + correctionLength;
+      if (renderedCorrectionLength < 300) {
+        shortRenderedCorrections += 1;
+        if (shortRenderedCorrections <= 2) add(file, "correction_affichee_trop_courte", `${renderedCorrectionLength} caractères`, exercise);
+      }
       families.add(feedback.family);
       familyCounts.set(feedback.family, (familyCounts.get(feedback.family) ?? 0) + 1);
       if (feedback.family === "general") {
@@ -72,14 +77,15 @@ for (const file of files) {
     uniquePrompts: prompts.size,
     families: [...families],
     shortCorrections,
+    shortRenderedCorrections,
     genericFeedback,
     answerLeaks,
   });
 }
 
 const priority = summaries
-  .filter((summary) => summary.shortCorrections || summary.genericFeedback || summary.answerLeaks)
-  .sort((a, b) => (b.genericFeedback - a.genericFeedback) || (b.shortCorrections - a.shortCorrections) || (b.answerLeaks - a.answerLeaks));
+  .filter((summary) => summary.shortRenderedCorrections || summary.genericFeedback || summary.answerLeaks)
+  .sort((a, b) => (b.genericFeedback - a.genericFeedback) || (b.shortRenderedCorrections - a.shortRenderedCorrections) || (b.answerLeaks - a.answerLeaks));
 
 const report = {
   chapters: files.length,
@@ -92,8 +98,9 @@ const report = {
 
 if (process.argv.includes("--check")) {
   const genericCount = familyCounts.get("general") ?? 0;
-  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s).`);
-  if (genericCount > 0) process.exitCode = 1;
+  const shortRenderedCount = summaries.reduce((sum, item) => sum + item.shortRenderedCorrections, 0);
+  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s), ${shortRenderedCount} correction(s) affichée(s) trop courte(s).`);
+  if (genericCount > 0 || shortRenderedCount > 0) process.exitCode = 1;
 } else {
   console.log(JSON.stringify(report, null, 2));
 }

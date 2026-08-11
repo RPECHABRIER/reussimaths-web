@@ -4,11 +4,36 @@ const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", chapter, 
 
 const SHOWCASES = {
   sixieme: [
-    n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, ["7 dixièmes s’écrit 0,7.", "On aligne les virgules : 12,4 + 0,7.", "12,4 + 0,7 = 13,1."]),
-    n("Fractions — Partage", "Une unité est partagée en 4 parts égales et on en prend 3. Quelle fraction est coloriée ?", 0.75, ["Le dénominateur indique 4 parts égales.", "Le numérateur indique les 3 parts prises.", "La fraction coloriée est donc 3/4."], null, "3/4"),
-    n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, ["Prix d’un cahier : 10 ÷ 4 = 2,50 €. C’est le retour à l’unité.", "Prix de 6 cahiers : 6 × 2,50.", "6 cahiers coûtent 15 €."], "€"),
-    n("Grandeurs et mesures — Aire d'un rectangle", "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, ["L’aire mesure la surface du rectangle.", "Aire = longueur × largeur = 7 × 4.", "L’aire est égale à 28 cm²."], "cm²"),
-    t("Géométrie repérée — Coordonnées", "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", ["L’abscisse s’écrit en premier.", "L’ordonnée s’écrit en second.", "A a pour coordonnées (3 ; −2)."]),
+    n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
+      { type: "donnee", text: "Sept dixièmes s’écrit 0,7 : le chiffre 7 occupe la colonne des dixièmes." },
+      { type: "regle", text: "Pour additionner des nombres décimaux, on place les unités sous les unités et les virgules l’une sous l’autre." },
+      { type: "calcul", text: "On calcule donc 12,4 + 0,7. Quatre dixièmes et sept dixièmes donnent onze dixièmes, c’est-à-dire une unité et un dixième." },
+      { type: "resultat", text: "On obtient finalement 13,1." },
+    ]),
+    n("Fractions — Partage", "Une unité est partagée en 4 parts égales et on en prend 3. Quelle fraction est coloriée ?", 0.75, [
+      { type: "donnee", text: "L’unité est découpée en quatre parts de même taille : le dénominateur est donc 4." },
+      { type: "regle", text: "Le numérateur, le nombre du haut, indique combien de parts sont prises." },
+      { type: "calcul", text: "Trois parts sont coloriées parmi les quatre parts égales : la fraction est donc 3/4." },
+      { type: "resultat", text: "La partie coloriée représente 3/4 de l’unité." },
+    ], null, "3/4"),
+    n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
+      { type: "donnee", text: "Quatre cahiers identiques coûtent 10 € et on cherche le prix de six cahiers." },
+      { type: "regle", text: "On commence par chercher le prix d’un cahier : c’est la méthode du retour à l’unité." },
+      { type: "calcul", text: "Un cahier coûte 10 ÷ 4 = 2,50 €. Quatre cahiers coûtent 10 €, puis deux cahiers supplémentaires coûtent 2 × 2,50 = 5 €." },
+      { type: "resultat", text: "Six cahiers coûtent donc 10 + 5 = 15 €." },
+    ], "€"),
+    n("Grandeurs et mesures — Aire d'un rectangle", "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, [
+      { type: "donnee", text: "Le rectangle a une longueur de 7 cm et une largeur de 4 cm." },
+      { type: "regle", text: "L’aire mesure la surface occupée. Pour un rectangle, on multiplie la longueur par la largeur." },
+      { type: "calcul", text: "Aire = longueur × largeur = 7 × 4 = 28." },
+      { type: "resultat", text: "L’aire du rectangle est donc égale à 28 cm². L’unité est le centimètre carré, car on mesure une surface." },
+    ], "cm²"),
+    t("Géométrie repérée — Coordonnées", "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", [
+      { type: "donnee", text: "L’abscisse du point A vaut 3 et son ordonnée vaut −2." },
+      { type: "regle", text: "Dans les coordonnées d’un point, on écrit toujours d’abord le déplacement horizontal, puis le déplacement vertical : (abscisse ; ordonnée)." },
+      { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position." },
+      { type: "resultat", text: "Le point A a pour coordonnées (3 ; −2)." },
+    ]),
   ],
   cinquieme: [
     n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, ["Les signes sont opposés : 12 a la plus grande distance à zéro.", "12 donne son signe positif puis perd 7 points : 12 − 7.", "−7 + 12 = 5."]),

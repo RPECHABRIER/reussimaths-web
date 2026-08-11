@@ -21,7 +21,7 @@ test("les cinquante questions sont complètes, uniques et corrigées spécifique
       assert.ok(exercise.prompt?.length >= 12, `${showcase.meta.level}: énoncé`);
       assert.ok(exercise.answer !== null && exercise.answer !== undefined && exercise.answer !== "", `${showcase.meta.level}: réponse`);
       assert.ok(Array.isArray(exercise.steps) && exercise.steps.length >= 3, `${showcase.meta.level}: étapes`);
-      assert.ok(exercise.steps.every((step) => String(step).trim().endsWith(".")), `${showcase.meta.level}: ponctuation`);
+      assert.ok(exercise.steps.every((step) => String(typeof step === "string" ? step : step?.text ?? "").trim().endsWith(".")), `${showcase.meta.level}: ponctuation`);
       assert.ok(!prompts.has(exercise.prompt), `doublon: ${exercise.prompt}`);
       prompts.add(exercise.prompt);
       const wrongResponse = exercise.type === "numeric" ? "999999" : exercise.type === "qcm" ? exercise.options.find((option) => option !== exercise.answer) : "réponse erronée";
@@ -65,5 +65,15 @@ test("le diagnostic et la série découverte d’un même niveau ne répètent a
     const diagnosticPrompts = new Set(getDiagnosticShowcaseExercises(levelId).map((exercise) => exercise.prompt));
     const discoveryPrompts = getDiscoveryShowcase(levelId).showcaseExercises.map((exercise) => exercise.prompt);
     assert.equal(discoveryPrompts.some((prompt) => diagnosticPrompts.has(prompt)), false, levelId);
+  }
+});
+
+test("la vitrine 6e propose des applications réellement explicatives", () => {
+  const showcase = getDiscoveryShowcase("sixieme");
+  for (const exercise of showcase.showcaseExercises) {
+    const texts = exercise.steps.map((step) => typeof step === "string" ? step : step.text);
+    assert.equal(exercise.steps.length, 4, exercise.chapter);
+    assert.ok(texts.join(" ").length >= 210, `${exercise.chapter}: correction trop brève`);
+    assert.deepEqual(exercise.steps.map((step) => step.type), ["donnee", "regle", "calcul", "resultat"], exercise.chapter);
   }
 });

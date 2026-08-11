@@ -1,12 +1,7 @@
 import { Brain, Calculator } from "lucide-react";
 import { colors } from "../theme";
-
-export function getCalculationMode(exercise) {
-  if (exercise?.calculationMode === "mental" || exercise?.calculationMode === "calculator") return exercise.calculationMode;
-  const text=`${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
-  if (/sans calculatrice|calcul mental|automatismes/i.test(text)) return "mental";
-  return "calculator";
-}
+import { getCalculationMode } from "../lib/calculationMode";
+export { getCalculationMode } from "../lib/calculationMode";
 
 export default function CalculationModeBadge({ exercise, large = false }) {
   const mental=getCalculationMode(exercise)==="mental";

@@ -1,4 +1,4 @@
-const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay) => ({ type: "numeric", chapter, prompt, answer, steps, ...(answerUnit ? { answerUnit } : {}), ...(answerDisplay ? { answerDisplay } : {}) });
+const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay, calculationMode) => ({ type: "numeric", chapter, prompt, answer, steps, ...(answerUnit ? { answerUnit } : {}), ...(answerDisplay ? { answerDisplay } : {}), ...(calculationMode ? { calculationMode } : {}) });
 const t = (chapter, prompt, answer, steps) => ({ type: "text", chapter, prompt, answer, steps });
 const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", chapter, prompt, answer, options, steps });
 const s = (donnee, regle, calcul, resultat) => [
@@ -128,7 +128,7 @@ const SHOWCASES = {
       { type: "regle", text: "Les droites parallèles forment deux triangles semblables : ils ont les mêmes angles et leurs longueurs correspondantes sont proportionnelles. On conserve exactement le même ordre dans chaque quotient." },
       { type: "calcul", text: "Pour isoler \\(x\\), on écrit \\(x=6\\times\\dfrac{4}{3}\\). On peut simplifier \\(6\\div3=2\\), puis calculer \\(2\\times4=8\\)." },
       { type: "resultat", text: "Ainsi, \\(x=8\\). Vérification : \\(\\dfrac{8}{6}=\\dfrac{4}{3}\\)." },
-    ]),
+    ], undefined, undefined, "mental"),
     n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [
       { type: "donnee", text: "Le membre de gauche est un produit de deux facteurs, (x − 2) et (x + 3), et ce produit est égal à zéro." },
       { type: "regle", text: "Un produit est nul si, et seulement si, au moins l’un de ses facteurs est nul." },

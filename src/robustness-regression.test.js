@@ -329,6 +329,13 @@ test("chaque abonné reçoit une série quotidienne de calcul mental chronométr
   assert.match(badge, /Calculatrice autorisée/);
   assert.match(migration, /auth\.uid\(\) = user_id/g);
   assert.match(migration, /revoke all on table public\.daily_mental_sessions from anon/);
+  assert.match(page, /7 derniers jours/);
+  assert.match(page, /30 derniers jours/);
+  assert.match(page, /Mon objectif quotidien/);
+  assert.match(page, /recommendedAdjustment/);
+  assert.match(page, /bestScore/);
+  assert.match(generator, /average>=8/);
+  assert.match(migration, /attempts integer not null default 1/);
 });
 
 test("le parcours découverte affiche les égalités de fractions en LaTeX", async () => {

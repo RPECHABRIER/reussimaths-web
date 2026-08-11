@@ -8,8 +8,8 @@ function format(value){return String(Math.round(value*100)/100).replace(".",",")
 export function localDateKey(date=new Date()){const year=date.getFullYear();const month=String(date.getMonth()+1).padStart(2,"0");const day=String(date.getDate()).padStart(2,"0");return `${year}-${month}-${day}`;}
 export function dailyMentalKey(levelId,date=new Date()){return `${levelId}:${localDateKey(date)}`;}
 
-export function buildDailyMentalQuestions(levelId,date=new Date()){
-  const tier=LEVEL_INDEX[levelId]??0;const rng=random(hash(dailyMentalKey(levelId,date)));const questions=[];
+export function buildDailyMentalQuestions(levelId,date=new Date(),difficultyAdjustment=0){
+  const tier=Math.max(0,Math.min(7,(LEVEL_INDEX[levelId]??0)+difficultyAdjustment));const rng=random(hash(`${dailyMentalKey(levelId,date)}:${difficultyAdjustment}`));const questions=[];
   const limit=tier<2?60:tier<4?120:250;
   const add=()=>{const a=integer(rng,8,limit),b=integer(rng,5,limit);questions.push({prompt:`${a} + ${b} = ?`,answer:a+b,method:`${a} + ${b} = ${a+b}`});};
   const subtract=()=>{let a=integer(rng,15,limit*2),b=integer(rng,4,a);if(tier>=2&&rng()<.35)[a,b]=[b,a];questions.push({prompt:`${a} − ${b} = ?`,answer:a-b,method:`${a} − ${b} = ${a-b}`});};
@@ -19,4 +19,13 @@ export function buildDailyMentalQuestions(levelId,date=new Date()){
   const rates=tier<2?[10,25,50]:[5,10,15,20,25,50];
   for(let i=0;i<2;i+=1){const rate=rates[integer(rng,0,rates.length-1)];const base=integer(rng,2,tier<3?12:20)*20;const answer=base*rate/100;questions.push({prompt:`${rate} % de ${base} = ?`,answer,method:`10 % de ${base} vaut ${format(base/10)}. On adapte ensuite pour obtenir ${rate} %, soit ${format(answer)}.`});}
   return questions.map((question,index)=>({...question,id:`${dailyMentalKey(levelId,date)}:${index}`,chapter:"Calcul mental du jour",calculationMode:"mental"}));
+}
+
+export function recommendedAdjustment(sessions){
+  const recent=sessions.filter((item)=>item.session_date<localDateKey()).slice(0,7);
+  if(recent.length<3)return 0;
+  const average=recent.reduce((sum,item)=>sum+item.score,0)/recent.length;
+  if(average>=8)return 1;
+  if(average<=4)return -1;
+  return 0;
 }

@@ -7,9 +7,12 @@ create table if not exists public.daily_mental_sessions (
   score integer not null check (score between 0 and 10),
   total integer not null default 10 check (total = 10),
   duration_ms integer not null check (duration_ms between 0 and 3600000),
+  attempts integer not null default 1 check (attempts between 1 and 10000),
   completed_at timestamptz not null default now(),
   primary key (user_id, session_date, level_id)
 );
+
+alter table public.daily_mental_sessions add column if not exists attempts integer not null default 1;
 
 alter table public.daily_mental_sessions enable row level security;
 

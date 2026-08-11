@@ -94,6 +94,8 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 
 ## Relecture approfondie de la 2nde
 
+- La recette effectuée sur la version publiée Vercel confirme l’affichage de la correction détaillée sur les antécédents, de l’animation spécialisée et du pavé autorisant les nombres négatifs.
+
 - Les 15 chapitres du niveau ont été soumis à 240 générations chacun, soit 3 600 exercices audités.
 - Aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
 - Les cinq vitrines ont été réécrites manuellement : antécédent, coefficient directeur, médiane, coordonnées d’un vecteur et événement contraire.
@@ -109,7 +111,17 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - Première sans spécialité : 11 chapitres et 2 640 exercices audités.
 - Première technologique : 11 chapitres et 2 640 exercices audités.
 - Sur les 8 640 exercices contrôlés, aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
-- Cette validation structurelle prépare la relecture éditoriale manuelle des quinze vitrines de Première lors du prochain lot.
+- Les quinze vitrines ont ensuite été relues et réécrites manuellement : discriminant, dérivation, suites, probabilités conditionnelles, produit scalaire, évolutions, fonctions, statistiques et algorithmique.
+- Chaque correction distingue désormais donnée, règle, calcul et résultat, avec un contrôle final lorsque celui-ci donne du sens au résultat.
+- Des visuels spécialisés complètent notamment le produit scalaire nul, l’étendue statistique, les suites et les probabilités conditionnelles.
+
+## Lien Thalès, triangles semblables et proportionnalité
+
+- Toutes les corrections relevant de Thalès expliquent désormais que l’alignement et le parallélisme produisent deux triangles semblables.
+- Les triangles ont alors les mêmes angles et l’un est un agrandissement ou une réduction de l’autre.
+- C’est cette similitude qui justifie la proportionnalité des longueurs correspondantes et l’égalité des rapports.
+- La méthode demande d’identifier les triangles, d’associer leurs sommets et leurs côtés, puis de conserver le même ordre dans les rapports.
+- L’animation montre simultanément le petit triangle, le grand triangle semblable et les côtés correspondants.
 
 ## Recette de la version publiée
 

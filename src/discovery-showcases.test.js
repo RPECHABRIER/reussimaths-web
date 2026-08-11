@@ -102,7 +102,7 @@ test("équations, Pythagore, statistiques et vitesses ont un visuel contextualis
   const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
   assert.match(visual, /On conserve l’équilibre jusqu’à isoler x/);
   assert.match(visual, /Les carrés des deux côtés construisent celui de l’hypoténuse/);
-  assert.match(visual, /elle doit rester entre la plus petite et la plus grande valeur/);
+  assert.match(visual, /Pour une moyenne, il doit rester entre la plus petite et la plus grande valeur/);
   assert.match(visual, /Pour trouver la vitesse, on partage la distance par la durée/);
   assert.match(visual, /Déterminer le signe avant de calculer/);
 });
@@ -120,7 +120,7 @@ test("la vitrine 3e distingue méthode, résultat et contrôle", () => {
 test("Thalès, fonctions, probabilités et distributivité ont un visuel contextualisé", async () => {
   const { readFile } = await import("node:fs/promises");
   const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
-  assert.match(visual, /Conserver l’ordre des côtés correspondants/);
+  assert.match(visual, /Triangles semblables, donc longueurs proportionnelles/);
   assert.match(visual, /Le nombre de départ est connu/);
   assert.match(visual, /P\(non A\) =/);
   assert.match(visual, /Aucun terme placé dans la parenthèse ne doit être oublié/);
@@ -142,4 +142,34 @@ test("coefficient directeur, médiane et vecteurs ont un visuel spécialisé", a
   assert.match(visual, /Comparer la montée et l’avancée/);
   assert.match(visual, /Ranger puis viser le centre/);
   assert.match(visual, /Arrivée moins départ/);
+});
+
+test("Thalès relie explicitement parallélisme, triangles semblables et proportionnalité", async () => {
+  const thales = buildPedagogicalFeedback(getDiscoveryShowcase("troisieme").showcaseExercises[0], "1");
+  assert.match(thales.meaning, /deux triangles semblables/);
+  assert.match(thales.meaning, /longueurs correspondantes sont donc proportionnelles/);
+  assert.match(thales.rule, /associe les sommets et les côtés correspondants/);
+  const { readFile } = await import("node:fs/promises");
+  const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
+  assert.match(visual, /Triangles semblables, donc longueurs proportionnelles/);
+});
+
+test("les quinze vitrines de Première ont été relues manuellement", () => {
+  for (const levelId of ["premiere-spe", "premiere-non-spe", "premiere-techno"]) {
+    const showcase = getDiscoveryShowcase(levelId);
+    for (const exercise of showcase.showcaseExercises) {
+      assert.equal(exercise.steps.length, 4, `${levelId}: ${exercise.chapter}`);
+      assert.ok(exercise.steps.every((step) => step && typeof step === "object" && step.type && step.text), `${levelId}: étapes typées`);
+      assert.ok(exercise.steps.map((step) => step.text).join(" ").length >= 200, `${levelId}: correction trop brève`);
+    }
+  }
+});
+
+test("les notions vitrines de Première disposent de visuels spécialisés", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
+  assert.match(visual, /Produit scalaire nul : angle droit/);
+  assert.match(visual, /Mesurer l’écart entre les deux extrêmes/);
+  assert.match(visual, /Passer d’un terme au suivant/);
+  assert.match(visual, /Suivre une branche à la fois/);
 });

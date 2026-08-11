@@ -1,6 +1,10 @@
 const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay) => ({ type: "numeric", chapter, prompt, answer, steps, ...(answerUnit ? { answerUnit } : {}), ...(answerDisplay ? { answerDisplay } : {}) });
 const t = (chapter, prompt, answer, steps) => ({ type: "text", chapter, prompt, answer, steps });
 const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", chapter, prompt, answer, options, steps });
+const s = (donnee, regle, calcul, resultat) => [
+  { type: "donnee", text: donnee }, { type: "regle", text: regle },
+  { type: "calcul", text: calcul }, { type: "resultat", text: resultat },
+];
 
 function structureShowcaseExercise(exercise) {
   if (!Array.isArray(exercise.steps) || exercise.steps.length === 0) return exercise;
@@ -121,7 +125,7 @@ const SHOWCASES = {
   troisieme: [
     n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, x/6 = 4/3. Calcule x.", 8, [
       { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion x/6 = 4/3. L’ordre des côtés est déjà indiqué par l’égalité." },
-      { type: "regle", text: "Dans une configuration de Thalès, les rapports de longueurs des côtés correspondants sont égaux. On conserve exactement le même ordre dans chaque quotient." },
+      { type: "regle", text: "Les droites parallèles forment deux triangles semblables : ils ont les mêmes angles et leurs longueurs correspondantes sont proportionnelles. On conserve exactement le même ordre dans chaque quotient." },
       { type: "calcul", text: "Pour isoler x, on multiplie 6 par 4/3 : x = 6 × 4 ÷ 3. On peut simplifier 6 ÷ 3 = 2, puis calculer 2 × 4 = 8." },
       { type: "resultat", text: "Ainsi, x = 8. Vérification : 8/6 et 4/3 représentent bien la même proportion." },
     ]),
@@ -183,25 +187,25 @@ const SHOWCASES = {
     ]),
   ],
   "premiere-spe": [
-    n("Second degré — Discriminant", "Pour x² − 5x + 6 = 0, calcule le discriminant Δ.", 1, ["a = 1, b = −5 et c = 6.", "Δ = b² − 4ac = (−5)² − 4 × 1 × 6.", "Δ = 25 − 24 = 1."]),
-    n("Dérivation — Nombre dérivé", "Pour f(x) = x², calcule f′(3).", 6, ["La dérivée de x² est f′(x) = 2x.", "On remplace x par 3 : f′(3) = 2 × 3.", "f′(3) = 6."]),
-    n("Suites arithmétiques — Terme général", "Une suite arithmétique vérifie u₀ = 4 et a pour raison 3. Calcule u₅.", 19, ["uₙ = u₀ + n × r.", "u₅ = 4 + 5 × 3.", "u₅ = 19."]),
-    n("Probabilités conditionnelles — Probabilité conditionnelle", "P(A∩B) = 0,2 et P(A) = 0,5. Calcule P_A(B).", 0.4, ["P_A(B) = P(A∩B) ÷ P(A).", "0,2 ÷ 0,5 = 0,4.", "P_A(B) = 0,4."]),
-    t("Produit scalaire — Orthogonalité", "Deux vecteurs ont un produit scalaire nul. Que peut-on conclure ?", "ils sont orthogonaux", ["Le produit scalaire mesure notamment l’orthogonalité.", "Un produit scalaire nul caractérise deux vecteurs orthogonaux.", "Les deux vecteurs sont orthogonaux."]),
+    n("Second degré — Discriminant", "Pour x² − 5x + 6 = 0, calcule le discriminant Δ.", 1, s("L’équation est écrite sous la forme ax² + bx + c = 0.", "On relève les coefficients avec leurs signes, puis on utilise Δ = b² − 4ac.", "Ici a = 1, b = −5 et c = 6, donc Δ = (−5)² − 4 × 1 × 6 = 25 − 24.", "On obtient Δ = 1. Le signe positif indique que l’équation possède deux solutions réelles.")),
+    n("Dérivation — Nombre dérivé", "Pour f(x) = x², calcule f′(3).", 6, s("On cherche le nombre dérivé de f au point d’abscisse 3.", "La fonction x ↦ x² a pour dérivée x ↦ 2x. Le nombre dérivé f′(3) est le coefficient directeur de la tangente au point d’abscisse 3.", "On remplace x par 3 dans f′(x) = 2x : f′(3) = 2 × 3.", "Ainsi f′(3) = 6 : la tangente a pour pente 6.")),
+    n("Suites arithmétiques — Terme général", "Une suite arithmétique vérifie u₀ = 4 et a pour raison 3. Calcule u₅.", 19, s("La suite commence à u₀ = 4 et augmente de 3 à chaque nouveau terme.", "Pour une suite arithmétique indexée à partir de 0, uₙ = u₀ + n × r.", "Entre u₀ et u₅, on effectue cinq pas de raison 3 : u₅ = 4 + 5 × 3 = 4 + 15.", "On obtient u₅ = 19. On peut vérifier en énumérant 4, 7, 10, 13, 16, 19.")),
+    n("Probabilités conditionnelles — Probabilité conditionnelle", "P(A∩B) = 0,2 et P(A) = 0,5. Calcule P_A(B).", 0.4, s("On connaît la probabilité de A et B simultanément ainsi que celle de A.", "Conditionner par A signifie que l’on se place uniquement parmi les cas où A est réalisé : P_A(B) = P(A∩B) ÷ P(A).", "On calcule 0,2 ÷ 0,5 = 0,4.", "Ainsi P_A(B) = 0,4. Cette probabilité est bien comprise entre 0 et 1.")),
+    t("Produit scalaire — Orthogonalité", "Deux vecteurs ont un produit scalaire nul. Que peut-on conclure ?", "ils sont orthogonaux", s("Le produit scalaire des deux vecteurs est égal à zéro.", "Pour deux vecteurs non nuls, un produit scalaire nul caractérise l’orthogonalité.", "Il n’y a pas de calcul supplémentaire : on applique directement la caractérisation réciproque.", "Les deux vecteurs sont orthogonaux ; leurs directions forment un angle droit.")),
   ],
   "premiere-non-spe": [
-    n("Pourcentages — Évolution", "Une quantité de 250 augmente de 8 %. Quelle est sa nouvelle valeur ?", 270, ["8 % de 250 vaut 20.", "250 + 20 = 270.", "La nouvelle valeur est 270."]),
-    n("Fonctions affines — Image", "Pour f(x) = −2x + 7, calcule f(3).", 1, ["f(3) = −2 × 3 + 7.", "−6 + 7 = 1.", "f(3) = 1."]),
-    n("Statistiques — Étendue", "Une série statistique va de 12 à 47. Calcule son étendue.", 35, ["Étendue = maximum − minimum.", "47 − 12 = 35.", "L’étendue est 35."]),
-    n("Probabilités — Issues favorables", "Une urne contient 4 jetons gagnants sur 10. Quelle est la probabilité de gagner ?", 2/5, ["La probabilité est d’abord 4/10.", "On simplifie en divisant par 2.", "La probabilité vaut 2/5."], null, "2/5"),
-    n("Algorithmique — Affectations", "On exécute x ← 4 puis x ← 3x + 2. Quelle est la valeur finale de x ?", 14, ["Après la première affectation, x vaut 4.", "On remplace x par 4 dans 3x + 2.", "3 × 4 + 2 = 14."]),
+    n("Pourcentages — Évolution", "Une quantité de 250 augmente de 8 %. Quelle est sa nouvelle valeur ?", 270, s("La valeur initiale est 250 et l’évolution est une hausse de 8 %.", "Une hausse de 8 % correspond au coefficient multiplicateur 1 + 8/100 = 1,08.", "On calcule directement 250 × 1,08 = 270. On peut aussi calculer 8 % de 250, soit 20, puis ajouter 20.", "La nouvelle valeur est 270.")),
+    n("Fonctions affines — Image", "Pour f(x) = −2x + 7, calcule f(3).", 1, s("On cherche l’image de 3 : le nombre de départ est connu.", "Pour calculer une image, on remplace x par la valeur donnée en conservant les parenthèses et les signes.", "f(3) = −2 × 3 + 7 = −6 + 7.", "Ainsi f(3) = 1.")),
+    n("Statistiques — Étendue", "Une série statistique va de 12 à 47. Calcule son étendue.", 35, s("La valeur minimale est 12 et la valeur maximale est 47 : ce sont les deux valeurs extrêmes de la série.", "L’étendue mesure l’écart entre ces deux extrêmes. On soustrait toujours la plus petite valeur à la plus grande : étendue = maximum − minimum.", "On calcule donc 47 − 12 = 35. Le résultat est positif, ce qui est cohérent puisqu’il représente une distance entre deux valeurs.", "L’étendue de la série est 35 : les données se répartissent sur un intervalle de largeur 35.")),
+    n("Probabilités — Issues favorables", "Une urne contient 4 jetons gagnants sur 10. Quelle est la probabilité de gagner ?", 2/5, s("Il y a 4 issues favorables parmi 10 issues possibles équiprobables.", "Une probabilité se calcule par nombre d’issues favorables ÷ nombre total d’issues.", "La probabilité vaut d’abord 4/10. On simplifie le numérateur et le dénominateur par 2.", "La probabilité de gagner est 2/5, un nombre bien compris entre 0 et 1."), null, "2/5"),
+    n("Algorithmique — Affectations", "On exécute x ← 4 puis x ← 3x + 2. Quelle est la valeur finale de x ?", 14, s("La première instruction affecte la valeur 4 à la variable x.", "Les instructions s’exécutent dans l’ordre ; à chaque nouvelle affectation, on utilise la valeur actuelle de la variable.", "Après x ← 4, on remplace x par 4 dans 3x + 2 : 3 × 4 + 2 = 12 + 2.", "La valeur finale de x est 14.")),
   ],
   "premiere-techno": [
-    n("Pourcentages — Coefficient multiplicateur", "Quel coefficient multiplicateur correspond à une hausse de 15 % ?", 1.15, ["Après une hausse de 15 %, on passe de 100 % à 115 %.", "115 % = 115 ÷ 100.", "Le coefficient est 1,15."]),
-    n("Fonctions affines — Antécédent", "Pour f(x) = 5x − 3, cherche l’antécédent de 17.", 4, ["On résout 5x − 3 = 17.", "5x = 20.", "x = 4."]),
-    n("Second degré — Image", "Pour f(x) = x² − 4x + 1, calcule f(2).", -3, ["f(2) = 2² − 4 × 2 + 1.", "4 − 8 + 1 = −3.", "f(2) = −3."]),
-    n("Statistiques — Moyenne pondérée", "Une note 10 a coefficient 1 et une note 16 coefficient 2. Calcule la moyenne.", 14, ["Somme pondérée : 10 × 1 + 16 × 2 = 42.", "Somme des coefficients : 1 + 2 = 3.", "42 ÷ 3 = 14."]),
-    n("Algorithmique — Boucle", "Une boucle ajoute 3 à x quatre fois. Si x vaut 2 au départ, combien vaut-il à la fin ?", 14, ["Quatre ajouts de 3 représentent 4 × 3 = 12.", "On ajoute 12 à la valeur initiale 2.", "x vaut finalement 14."]),
+    n("Pourcentages — Coefficient multiplicateur", "Quel coefficient multiplicateur correspond à une hausse de 15 % ?", 1.15, s("La valeur initiale représente 100 % et elle augmente de 15 %.", "Après une hausse de t %, le coefficient multiplicateur est 1 + t/100.", "On passe de 100 % à 115 %, puis 115 % = 115 ÷ 100 = 1,15.", "Le coefficient multiplicateur est 1,15. Il est supérieur à 1, ce qui est cohérent pour une hausse.")),
+    n("Fonctions affines — Antécédent", "Pour f(x) = 5x − 3, cherche l’antécédent de 17.", 4, s("On connaît l’image 17 et on cherche le nombre de départ.", "Chercher un antécédent de 17 signifie résoudre f(x) = 17.", "On résout 5x − 3 = 17 : on ajoute 3 dans les deux membres, donc 5x = 20, puis on divise par 5.", "L’antécédent de 17 est 4. Vérification : 5 × 4 − 3 = 17.")),
+    n("Second degré — Image", "Pour f(x) = x² − 4x + 1, calcule f(2).", -3, s("On cherche l’image de 2 par une fonction du second degré.", "On remplace chaque x par 2, en utilisant des parenthèses pour conserver correctement les signes et les puissances.", "f(2) = 2² − 4 × 2 + 1 = 4 − 8 + 1.", "Ainsi f(2) = −3. Le résultat négatif est possible : une image n’est pas nécessairement positive.")),
+    n("Statistiques — Moyenne pondérée", "Une note 10 a coefficient 1 et une note 16 coefficient 2. Calcule la moyenne.", 14, s("La note 10 compte une fois et la note 16 compte deux fois.", "Pour une moyenne pondérée, on multiplie chaque valeur par son coefficient, puis on divise par la somme des coefficients.", "Somme pondérée : 10 × 1 + 16 × 2 = 42. Somme des coefficients : 1 + 2 = 3. On calcule 42 ÷ 3.", "La moyenne est 14, bien comprise entre 10 et 16.")),
+    n("Algorithmique — Boucle", "Une boucle ajoute 3 à x quatre fois. Si x vaut 2 au départ, combien vaut-il à la fin ?", 14, s("La variable x vaut 2 au départ et la boucle répète quatre fois l’instruction ajouter 3.", "Une boucle applique exactement la même transformation autant de fois que l’indique son compteur.", "Quatre ajouts de 3 représentent 4 × 3 = 12. On ajoute cette variation à la valeur initiale : 2 + 12.", "À la fin de la boucle, x vaut 14. Une exécution pas à pas donne 2, 5, 8, 11, 14.")),
   ],
   "terminale-spe": [
     n("Fonction exponentielle — Équation", "Résous eˣ = e³.", 3, ["La fonction exponentielle est strictement croissante.", "Deux exponentielles sont égales lorsque leurs exposants sont égaux.", "x = 3."]),

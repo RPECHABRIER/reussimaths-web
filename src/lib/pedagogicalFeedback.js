@@ -347,8 +347,8 @@ const FAMILY_FEEDBACK = [
     id: "geometry_thales",
     match: /Thalès|triangles semblables/i,
     intro: "Non, les longueurs n’ont pas été associées dans le même ordre, ou les conditions du théorème de Thalès ne sont pas vérifiées.",
-    meaning: "Avant tout calcul, vérifie l’alignement des points et le parallélisme des droites. Les côtés correspondants des deux triangles sont alors proportionnels.",
-    rule: "Écris les rapports dans le même ordre, remplace par les longueurs connues, puis résous l’égalité.",
+    meaning: "Avant tout calcul, vérifie l’alignement des points et le parallélisme des droites. Cette configuration forme deux triangles semblables : ils ont les mêmes angles et l’un est un agrandissement ou une réduction de l’autre. Leurs longueurs correspondantes sont donc proportionnelles.",
+    rule: "Identifie les deux triangles semblables, associe les sommets et les côtés correspondants, puis écris les rapports de proportionnalité dans le même ordre avant de résoudre l’égalité.",
   },
   {
     id: "geometry_trigonometry",

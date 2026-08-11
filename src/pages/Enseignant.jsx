@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Minus, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -13,18 +13,14 @@ import { colors, fonts, shadow } from "../theme";
 // Mode Automatismes spécial enseignant (/enseignant) : gratuit, public, sans
 // connexion — pensé pour une projection en classe. Réutilise TEL QUEL les
 // chapitres Automatismes existants (aucun contenu dupliqué) : l'enseignant
-// choisit un niveau, répartit 5 questions entre les thèmes de ce niveau
-// (ex : 2 en multiplication, 1 en géométrie, 2 en pourcentages), puis lance
+// choisit un niveau, examine plusieurs questions proposées dans chaque thème,
+// en sélectionne exactement 5, puis lance
 // un diaporama SANS réponse visible (l'enseignant avance à la main avec
 // "Suivant") ; à la fin, un écran unique affiche toutes les corrections.
 //
 // Trois écrans internes (state `view`) : "setup" → "diaporama" → "corrections".
 // Pas de score, pas de sauvegarde, pas de compte — usage éphémère en classe.
 // ---------------------------------------------------------------------------
-
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
 
 function formatAnswer(answer) {
   if (Array.isArray(answer)) return answer.join(" · ");
@@ -36,37 +32,87 @@ const AUTOMATISMES_CHAPTERS = chapters
   .filter((c) => c.meta.isAutomatismes)
   .sort((a, b) => (levelOrder.get(a.meta.level) ?? 999) - (levelOrder.get(b.meta.level) ?? 999));
 
+function buildThemeProposals(chapter, themeId, count = 3) {
+  const proposals = [];
+  const prompts = new Set();
+  for (let attempt = 0; proposals.length < count && attempt < count * 8; attempt += 1) {
+    const exercise = chapter.generate(themeId);
+    if (!exercise || prompts.has(exercise.prompt)) continue;
+    prompts.add(exercise.prompt);
+    proposals.push({ id: `${themeId}-${Date.now()}-${attempt}-${Math.random().toString(36).slice(2, 7)}`, themeId, exercise });
+  }
+  return proposals;
+}
+
+function buildChapterProposals(chapter) {
+  return Object.fromEntries(chapter.themes.map((theme) => [theme.id, buildThemeProposals(chapter, theme.id)]));
+}
+
 export default function Enseignant() {
   const [view, setView] = useState("setup");
   const [levelId, setLevelId] = useState("");
-  const [counts, setCounts] = useState({}); // { [themeId]: nombre de questions }
+  const [proposals, setProposals] = useState({});
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editDraft, setEditDraft] = useState({ prompt: "", answer: "" });
   const [exercises, setExercises] = useState([]);
   const [index, setIndex] = useState(0);
 
   const chapter = useMemo(() => AUTOMATISMES_CHAPTERS.find((c) => c.meta.level === levelId) ?? null, [levelId]);
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const total = selectedQuestions.length;
 
   const selectLevel = (id) => {
     setLevelId(id);
-    setCounts({});
+    const selectedChapter = AUTOMATISMES_CHAPTERS.find((item) => item.meta.level === id);
+    setProposals(selectedChapter ? buildChapterProposals(selectedChapter) : {});
+    setSelectedQuestions([]);
+    setEditingId(null);
   };
 
-  const adjustCount = (themeId, delta) => {
-    setCounts((prev) => {
-      const current = prev[themeId] ?? 0;
-      const next = Math.max(0, Math.min(5, current + delta));
-      if (next === 0) {
-        const { [themeId]: _drop, ...rest } = prev;
-        return rest;
-      }
-      return { ...prev, [themeId]: next };
+  const toggleQuestion = (proposal) => {
+    setSelectedQuestions((current) => {
+      if (current.some((item) => item.id === proposal.id)) return current.filter((item) => item.id !== proposal.id);
+      if (current.length >= 5) return current;
+      return [...current, proposal];
     });
+  };
+
+  const refreshTheme = (themeId) => {
+    if (!chapter) return;
+    const removedIds = new Set((proposals[themeId] ?? []).map((item) => item.id));
+    setSelectedQuestions((current) => current.filter((item) => !removedIds.has(item.id)));
+    setProposals((current) => ({ ...current, [themeId]: buildThemeProposals(chapter, themeId) }));
+  };
+
+  const startEditing = (proposal) => {
+    setEditingId(proposal.id);
+    setEditDraft({ prompt: proposal.exercise.prompt, answer: formatAnswer(proposal.exercise.answer) });
+  };
+
+  const saveCustomization = (proposal) => {
+    const prompt = editDraft.prompt.trim();
+    const rawAnswer = editDraft.answer.trim();
+    if (!prompt || !rawAnswer) return;
+    const parsed = Number(rawAnswer.replace(",", "."));
+    const answer = typeof proposal.exercise.answer === "number" && Number.isFinite(parsed) ? parsed : rawAnswer;
+    const updated = {
+      ...proposal,
+      exercise: {
+        ...proposal.exercise,
+        prompt,
+        answer,
+        steps: [{ type: "resultat", text: `Réponse attendue : ${formatAnswer(answer)}` }],
+        teacherCustomized: true,
+      },
+    };
+    setProposals((current) => ({ ...current, [proposal.themeId]: (current[proposal.themeId] ?? []).map((item) => item.id === proposal.id ? updated : item) }));
+    setSelectedQuestions((current) => current.map((item) => item.id === proposal.id ? updated : item));
+    setEditingId(null);
   };
 
   const launch = () => {
     if (!chapter || total !== 5) return;
-    const drawn = Object.entries(counts).flatMap(([themeId, n]) => Array.from({ length: n }, () => chapter.generate(themeId)));
-    setExercises(shuffle(drawn));
+    setExercises(selectedQuestions.map((item) => item.exercise));
     setIndex(0);
     setView("diaporama");
   };
@@ -77,8 +123,9 @@ export default function Enseignant() {
     const demoThemes = demoChapter.themes.slice(0, 5);
     const demoExercises = demoThemes.map((theme) => demoChapter.generate(theme.id));
     setLevelId(demoChapter.meta.level);
-    setCounts(Object.fromEntries(demoThemes.map((theme) => [theme.id, 1])));
-    setExercises(shuffle(demoExercises));
+    setProposals(buildChapterProposals(demoChapter));
+    setSelectedQuestions([]);
+    setExercises(demoExercises);
     setIndex(0);
     setView("diaporama");
   };
@@ -162,7 +209,7 @@ export default function Enseignant() {
 
             <section className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
               <div className="flex items-start justify-between gap-3 mb-6">
-                <div><p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Créer une séance</p><h2 className="text-2xl font-black mt-1" style={{ color: ink }}>5 questions, vos thèmes</h2></div>
+                <div><p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Créer une séance</p><h2 className="text-2xl font-black mt-1" style={{ color: ink }}>Choisissez vos 5 questions</h2></div>
                 <p aria-live="polite" className="text-sm font-black px-3 py-1.5 rounded-full" style={{ color: total === 5 ? colors.green : gold, backgroundColor: total === 5 ? `${colors.green}18` : `${gold}18` }}>{total} / 5</p>
               </div>
 
@@ -192,39 +239,22 @@ export default function Enseignant() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
-                  2. Répartis 5 questions par thème
+                  2. Sélectionnez précisément les questions
                 </p>
               </div>
-              <div className="flex flex-col gap-2.5">
+              <p className="text-xs mb-4" style={{color:slate}}>Trois propositions sont affichées par thème. Cochez celles qui correspondent exactement à votre séance ; leur ordre de sélection sera conservé.</p>
+              <div className="flex flex-col gap-4">
                 {chapter.themes.map((t) => {
-                  const count = counts[t.id] ?? 0;
                   return (
-                    <div key={t.id} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2" style={{ backgroundColor: colors.bg }}>
-                      <p className="text-sm flex-1 min-w-0 truncate" style={{ color: ink }}>
-                        {t.title}
-                      </p>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          aria-label={`Retirer une question pour ${t.title}`}
-                          onClick={() => adjustCount(t.id, -1)}
-                          disabled={count === 0}
-                          className="flex items-center justify-center rounded-full"
-                          style={{ width: 30, height: 30, backgroundColor: colors.card, color: ink, opacity: count === 0 ? 0.35 : 1 }}
-                        >
-                          <Minus size={14} />
-                        </button>
-                        <p className="text-sm font-bold w-4 text-center" style={{ color: ink }}>
-                          {count}
-                        </p>
-                        <button
-                          aria-label={`Ajouter une question pour ${t.title}`}
-                          onClick={() => adjustCount(t.id, 1)}
-                          disabled={total >= 5}
-                          className="flex items-center justify-center rounded-full"
-                          style={{ width: 30, height: 30, backgroundColor: colors.card, color: ink, opacity: total >= 5 ? 0.35 : 1 }}
-                        >
-                          <Plus size={14} />
-                        </button>
+                    <div key={t.id} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}>
+                      <div className="flex items-center justify-between gap-3"><p className="text-sm font-black" style={{ color: ink }}>{t.title}</p><button type="button" onClick={()=>refreshTheme(t.id)} className="inline-flex items-center gap-1 text-[10px] font-bold" style={{color:gold}}><RefreshCw size={12}/> Autres questions</button></div>
+                      <div className="mt-2 grid gap-2">
+                        {(proposals[t.id] ?? []).map((proposal) => {
+                          const selectedIndex = selectedQuestions.findIndex((item)=>item.id===proposal.id);
+                          const selected = selectedIndex >= 0;
+                          const editable = ["numeric", "text"].includes(proposal.exercise.type) && !proposal.exercise.figure && !proposal.exercise.graph && !Array.isArray(proposal.exercise.answer);
+                          return <div key={proposal.id} className="rounded-xl p-3" style={{backgroundColor:selected?`${colors.green}12`:colors.card,border:`1px solid ${selected?colors.green:colors.hairline}`,opacity:!selected&&total>=5?.55:1}}>{editingId===proposal.id?<div><label className="block text-[10px] font-bold" style={{color:slate}}>Énoncé personnalisé<textarea rows={3} value={editDraft.prompt} onChange={(event)=>setEditDraft((current)=>({...current,prompt:event.target.value}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:ink}}/></label><label className="block mt-2 text-[10px] font-bold" style={{color:slate}}>Réponse attendue<input value={editDraft.answer} onChange={(event)=>setEditDraft((current)=>({...current,answer:event.target.value}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:ink}}/></label><p className="mt-2 text-[10px]" style={{color:slate}}>Après modification, la correction affiche cette réponse attendue afin de ne pas conserver des calculs liés aux anciennes valeurs.</p><div className="mt-2 flex gap-2"><button type="button" onClick={()=>saveCustomization(proposal)} className="rounded-full px-3 py-1.5 text-[10px] font-black" style={{backgroundColor:gold,color:ink}}>Enregistrer</button><button type="button" onClick={()=>setEditingId(null)} className="inline-flex items-center gap-1 px-2 text-[10px] font-bold" style={{color:slate}}><X size={11}/> Annuler</button></div></div>:<div className="flex items-start gap-2"><button type="button" onClick={()=>toggleQuestion(proposal)} disabled={!selected&&total>=5} className="min-w-0 flex-1 text-left flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-[10px] font-black" style={{width:24,height:24,backgroundColor:selected?colors.green:`${ink}0d`,color:selected?"white":slate}}>{selected?selectedIndex+1:"+"}</span><span className="min-w-0"><MathText as="span" text={proposal.exercise.prompt} className="text-xs leading-relaxed" style={{color:ink}}/>{proposal.exercise.teacherCustomized&&<span className="block mt-1 text-[9px] font-black uppercase tracking-wide" style={{color:gold}}>Question personnalisée</span>}</span></button>{editable&&<button type="button" onClick={()=>startEditing(proposal)} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold" style={{backgroundColor:colors.bg,color:slate}}><Pencil size={10}/> Modifier</button>}</div>}</div>;
+                        })}
                       </div>
                     </div>
                   );
@@ -242,7 +272,7 @@ export default function Enseignant() {
           >
             <Play size={16} /> Lancer le diaporama
           </button>
-              {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher ses thèmes.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez répartir exactement cinq questions.</p></div>}
+              {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher les propositions.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez examiner puis sélectionner exactement cinq questions.</p></div>}
             </section>
           </div>
         </div>
@@ -360,7 +390,7 @@ export default function Enseignant() {
             className="w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2"
             style={{ backgroundColor: gold, color: ink }}
           >
-            <RotateCcw size={16} /> Nouveau diaporama (mêmes réglages)
+            <RotateCcw size={16} /> Rejouer ces 5 questions
           </button>
           <button onClick={backToSetup} className="w-full py-2.5 rounded-full text-sm font-medium" style={{ color: slate }}>
             Modifier les réglages

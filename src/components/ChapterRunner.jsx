@@ -612,7 +612,14 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           </p>
           {isDiscoverySession && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: colors.green, backgroundColor: `${colors.green}15` }}>Série gratuite</span>}
           </div>
-          <div className="mb-4"><CalculationModeBadge exercise={exercise}/></div>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <CalculationModeBadge exercise={exercise}/>
+            {exercise.examCompetency && (
+              <span className="rounded-full px-2.5 py-1 text-[10px] font-bold" style={{ color: ink, backgroundColor: `${gold}20` }}>
+                Compétence DNB : {exercise.examCompetency}
+              </span>
+            )}
+          </div>
           <MathText
             as="p"
             text={exercise.prompt}

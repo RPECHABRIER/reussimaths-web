@@ -3,8 +3,39 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { classifyLearningError } from "./lib/learningError.js";
 import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
+import brevetChapter from "./chapters/dossier-brevet-troisieme.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
+
+test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
+  assert.equal(brevetChapter.auditGenerators.length, 15);
+  const competencies = new Set();
+  for (const item of brevetChapter.auditGenerators) {
+    const exercise = item.generate();
+    competencies.add(exercise.examCompetency);
+    assert.equal(exercise.examFormat, "DNB", item.name);
+    assert.ok(exercise.prompt.length >= 25, item.name);
+    assert.ok(exercise.steps.length >= 1, item.name);
+    const feedback = buildPedagogicalFeedback(exercise, exercise.type === "numeric" ? "999999" : "réponse erronée");
+    assert.notEqual(feedback.family, "general", item.name);
+  }
+  assert.deepEqual([...competencies].sort(), ["Calculer", "Chercher", "Communiquer", "Modéliser", "Raisonner", "Représenter"]);
+  const runner = await read("./components/ChapterRunner.jsx");
+  assert.match(runner, /Compétence DNB/);
+});
+
+test("un multiple de vecteur ne reçoit pas une correction de divisibilité", () => {
+  const feedback = buildPedagogicalFeedback({ chapter: "Vecteurs — Colinéarité", prompt: "Le vecteur u est-il un multiple du vecteur v ?", answer: "oui", steps: ["On compare les coordonnées.", "Le même coefficient convient."] }, "non");
+  assert.notEqual(feedback.family, "number_theory");
+  assert.equal(feedback.family, "geometry_vectors");
+});
+
+test("le parcours découverte rend ses bénéfices immédiatement visibles", async () => {
+  const overview = await read("./pages/ParcoursOverview.jsx");
+  assert.match(overview, /Méthode expliquée/);
+  assert.match(overview, /Animation utile/);
+  assert.match(overview, /Résultat vérifié/);
+});
 
 test("une erreur de révisions ne devient pas un faux état vide", async () => {
   const [tracking, page] = await Promise.all([

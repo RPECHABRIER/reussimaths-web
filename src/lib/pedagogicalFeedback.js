@@ -58,7 +58,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "number_theory",
-    match: /nombres? entiers?|division euclidienne|divisib|multiple|diviseur|nombre premier|PGCD|facteurs premiers|parité/i,
+    match: /nombres? entiers?|division euclidienne|divisib|multiples?(?:\s+communs?)?\s+d['’e]|diviseur|nombre premier|PGCD|facteurs premiers|parité/i,
     intro: "Non, la propriété des nombres entiers utilisée ne correspond pas encore à la question posée.",
     meaning: "Les questions de divisibilité s’appuient sur des relations exactes entre entiers : un diviseur ne laisse aucun reste, une décomposition en facteurs premiers ne contient que des nombres premiers et le PGCD rassemble les facteurs communs.",
     rule: "Identifie d’abord s’il faut diviser, tester un reste, décomposer ou chercher un diviseur commun, puis vérifie le résultat par une multiplication.",

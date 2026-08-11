@@ -65,6 +65,17 @@ export default function ParcoursOverview() {
           </p>
         </div>
 
+        {parcours.kind === "trial" && (
+          <div className="mb-6 grid grid-cols-3 gap-2" aria-label="Ce que montre le parcours découverte">
+            {["Méthode expliquée", "Animation utile", "Résultat vérifié"].map((benefit) => (
+              <div key={benefit} className="rounded-2xl bg-white px-2 py-3 text-center text-[11px] font-bold leading-tight" style={{ color: colors.ink, boxShadow: shadow.soft }}>
+                <Check size={15} color={colors.green} className="mx-auto mb-1.5" />
+                {benefit}
+              </div>
+            ))}
+          </div>
+        )}
+
         {user && !loading && total > 0 && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-1.5">

@@ -352,6 +352,24 @@ const GENERATORS = [
   genVraiFauxCalculQCM,
 ];
 
+const EXAM_COMPETENCIES = new Map([
+  [genProgrammeCalculNumeric, "Calculer"],
+  [genProgrammeLitteralNumeric, "Calculer"],
+  [genEcritureScientifiqueQCM, "Calculer"],
+  [genIdentiteRemarquableNumeric, "Raisonner"],
+  [genAireComposeeEquationNumeric, "Modéliser"],
+  [genCompararTarifsEgaliteNumeric, "Modéliser"],
+  [genCompararTarifsBudgetNumeric, "Chercher"],
+  [genFonctionAffineImageAntecedentNumeric, "Représenter"],
+  [genMoyennePondereeBrevetNumeric, "Calculer"],
+  [genProbabiliteBrevetNumeric, "Raisonner"],
+  [genPythagoreTrigoBrevetNumeric, "Raisonner"],
+  [genVolumeConeNumeric, "Calculer"],
+  [genEquationParenthesesNumeric, "Calculer"],
+  [genPourcentageEvolutionBrevetNumeric, "Modéliser"],
+  [genVraiFauxCalculQCM, "Communiquer"],
+]);
+
 const DIFFICULTY = {
   genEcritureScientifiqueQCM: "facile",
   genVolumeConeNumeric: "facile",
@@ -373,9 +391,13 @@ const DIFFICULTY = {
 function generate(difficulty) {
   if (difficulty) {
     const pool = GENERATORS.filter((fn) => (DIFFICULTY[fn.name] ?? "standard") === difficulty);
-    if (pool.length) return pick(pool)();
+    if (pool.length) {
+      const generator = pick(pool);
+      return { ...generator(), examCompetency: EXAM_COMPETENCIES.get(generator), examFormat: "DNB" };
+    }
   }
-  return pick(GENERATORS)();
+  const generator = pick(GENERATORS);
+  return { ...generator(), examCompetency: EXAM_COMPETENCIES.get(generator), examFormat: "DNB" };
 }
 
 export default {
@@ -389,4 +411,9 @@ export default {
     order: 16,
   },
   generate,
+  auditGenerators: GENERATORS.map((generator) => ({
+    name: generator.name,
+    competency: EXAM_COMPETENCIES.get(generator),
+    generate: () => ({ ...generator(), examCompetency: EXAM_COMPETENCIES.get(generator), examFormat: "DNB" }),
+  })),
 };

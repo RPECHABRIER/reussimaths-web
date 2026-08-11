@@ -18,6 +18,7 @@ const ADVANCED_FAMILIES = new Set(["sequence_convergence", "integral_calculus", 
 const EXPECTED_LEVEL_FAMILIES = {
   quatrieme: new Set(["relative_numbers", "fractions", "powers", "distributivity", "equations", "proportionality", "statistics_mean", "probability_basic", "pythagoras", "geometry_thales"]),
   troisieme: new Set(["number_theory", "distributivity", "equations", "function_image", "function_antecedent", "function_affine_coefficients", "proportionality", "statistics_mean", "probability_basic", "geometry_thales", "geometry_trigonometry"]),
+  seconde: new Set(["real_number_sets", "powers", "equations", "geometry_vectors", "geometry_coordinates", "function_domain", "function_image", "function_antecedent", "function_affine_coefficients", "function_variations", "percentage_change", "statistics_mean", "statistics_median", "statistics_quartiles", "probability_basic"]),
 };
 
 const stepText = (step) => typeof step === "string" ? step : step?.text ?? "";

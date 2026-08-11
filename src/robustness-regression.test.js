@@ -202,3 +202,11 @@ test("le cahier pédagogique se synchronise sans réponse brute et avec isolatio
   assert.match(migration, /enable row level security/i);
   assert.match(migration, /revoke all on table public\.learning_review_cards from anon/i);
 });
+
+test("chaque correction possède désormais un support visuel, même hors familles illustrées", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /Le chemin de la méthode/);
+  assert.match(visual, /family\.startsWith\("geometry"\)/);
+  assert.match(visual, /calculus_derivative/);
+  assert.match(visual, /exponential_logarithm/);
+});

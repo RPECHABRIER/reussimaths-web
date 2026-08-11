@@ -12,8 +12,9 @@ import StepsList from "./StepsList";
 import UnitConversionTable from "./UnitConversionTable";
 import FeedbackVisual from "./FeedbackVisual";
 
-export default function LearningFeedback({ exercise, response, compact = false, remember = false }) {
-  const feedback = buildPedagogicalFeedback(exercise, response);
+export default function LearningFeedback({ exercise, response, compact = false, remember = false, correct = false }) {
+  const builtFeedback = buildPedagogicalFeedback(exercise, response);
+  const feedback = correct ? { ...builtFeedback, intro: "Oui, cette réponse est correcte. Voici pourquoi la méthode fonctionne et ce qu’il faut retenir." } : builtFeedback;
   const { user } = useAuth();
   useEffect(() => {
     if (!remember) return;
@@ -31,9 +32,9 @@ export default function LearningFeedback({ exercise, response, compact = false, 
     }
   }, [remember, exercise, response, feedback.family, feedback.conclusion, user?.id]);
   return (
-    <div data-feedback-family={feedback.family} className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
+    <div data-feedback-family={feedback.family} className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: correct ? `${colors.green}0d` : `${colors.gold}12`, border: `1px solid ${correct ? colors.green : colors.gold}35` }}>
       <p className="flex items-start gap-2 text-sm font-bold leading-relaxed" style={{ color: colors.ink }}>
-        <AlertCircle size={16} color={colors.gold} className="shrink-0 mt-0.5" />
+        <AlertCircle size={16} color={correct ? colors.green : colors.gold} className="shrink-0 mt-0.5" />
         <MathText text={feedback.intro} />
       </p>
 

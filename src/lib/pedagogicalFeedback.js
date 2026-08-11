@@ -5,6 +5,7 @@ function labelOf(exercise) {
 }
 
 function expectedOf(exercise) {
+  if (exercise?.answerDisplay != null) return String(exercise.answerDisplay);
   if (Array.isArray(exercise?.answer)) {
     if (Array.isArray(exercise?.options)) {
       return exercise.answer.map((answer) => typeof answer === "number" ? exercise.options[answer] : answer).join(" ; ");
@@ -140,6 +141,20 @@ const FAMILY_FEEDBACK = [
     rule: "Augmentation de t % : coefficient 1 + t/100. Diminution de t % : coefficient 1 − t/100.",
   },
   {
+    id: "percentage_of_number",
+    match: /calcule.*\d+(?:[,.]\d+)?\s*%\s+de|pourcentages?.*(?:calculer une proportion|proportion d['’]une quantité)/i,
+    intro: "Non, le pourcentage a été utilisé comme un nombre ordinaire au lieu d’être appliqué à la quantité de référence.",
+    meaning: "Un pourcentage représente une fraction sur 100 de la quantité de référence. On peut souvent calculer d’abord 10 %, puis obtenir le pourcentage demandé par multiplication ou addition.",
+    rule: "t % d’une quantité = quantité × t ÷ 100.",
+  },
+  {
+    id: "percentage_coefficient",
+    match: /coefficient multiplicateur.*(?:hausse|baisse|pourcentage)|pourcentages?.*coefficient multiplicateur/i,
+    intro: "Non, le taux en pourcentage et le coefficient multiplicateur ont été confondus.",
+    meaning: "Le coefficient multiplicateur représente directement la proportion finale. Après une hausse de t %, la valeur finale représente 100+t % de la valeur initiale ; après une baisse, elle en représente 100−t %.",
+    rule: "Hausse de t % : coefficient 1+t/100. Baisse de t % : coefficient 1−t/100.",
+  },
+  {
     id: "function_image",
     match: /fonctions?.*\bimages?\b(?!.*antécédent)|\bimage de\b|calcul(?:e|er).*f\s*\(/i,
     intro: "Non, tu as confondu le nombre de départ avec son résultat d’arrivée, ou tu n’as pas remplacé la variable par la valeur donnée.",
@@ -199,7 +214,7 @@ const FAMILY_FEEDBACK = [
     id: "statistics_range",
     match: /étendue/i,
     intro: "Non, l’étendue n’est ni la plus grande valeur ni une moyenne.",
-    meaning: "L’étendue mesure l’écart total entre les deux valeurs extrêmes de la série.",
+    meaning: "L’étendue mesure l’écart total entre les deux valeurs extrêmes de la série. Elle indique sur quelle largeur les données sont dispersées, sans tenir compte des valeurs intermédiaires.",
     rule: "Étendue = valeur maximale − valeur minimale.",
   },
   {
@@ -316,7 +331,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "geometry_vectors",
-    match: /^(?:vecteurs?|colinéarité) —/i,
+    match: /^(?:vecteurs?|colinéarité) —|géométrie dans l'espace.*vecteurs?/i,
     intro: "Non, les coordonnées, la direction ou le sens du vecteur n’ont pas été déterminés correctement.",
     meaning: "Les coordonnées du vecteur AB s’obtiennent en faisant arrivée moins départ pour chaque coordonnée : xB−xA puis yB−yA.",
     rule: "Traite séparément abscisses et ordonnées, puis vérifie la direction et le sens du vecteur obtenu.",
@@ -341,6 +356,55 @@ const FAMILY_FEEDBACK = [
     intro: "Non, au moins une affirmation vraie manque ou une affirmation fausse a été conservée.",
     meaning: "Dans une question à plusieurs réponses, chaque affirmation doit être testée séparément. Le fait d’en avoir trouvé une vraie ne permet pas de s’arrêter.",
     rule: "Teste toutes les propositions, élimine chacune de celles qui est fausse, puis vérifie que tu n’as oublié aucune proposition vraie.",
+  },
+  {
+    id: "algebra_second_degree",
+    match: /second degré|discriminant|trinôme/i,
+    intro: "Non, les coefficients ou la formule du second degré n’ont pas été appliqués correctement.",
+    meaning: "Dans ax²+bx+c, commence par identifier a, b et c avec leurs signes. Le discriminant Δ=b²−4ac indique ensuite le nombre de solutions réelles.",
+    rule: "Identifie a, b et c ; calcule Δ ; puis choisis la formule adaptée au signe de Δ.",
+  },
+  {
+    id: "calculus_derivative",
+    match: /dériv|nombre dérivé|tangente/i,
+    intro: "Non, la fonction dérivée ou la valeur où elle doit être calculée n’a pas été utilisée correctement.",
+    meaning: "Le nombre dérivé f′(a) est le coefficient directeur de la tangente à la courbe au point d’abscisse a. Son signe indique localement si la fonction monte ou descend.",
+    rule: "Détermine d’abord f′(x), puis remplace x par la valeur demandée ou étudie son signe.",
+  },
+  {
+    id: "sequences",
+    match: /suites? (?:arithmétiques?|géométriques?)|terme général.*suite|raison.*suite/i,
+    intro: "Non, la formule du terme général ou le nombre d’étapes depuis le terme initial a été mal identifié.",
+    meaning: "Une suite arithmétique ajoute toujours la même raison ; une suite géométrique multiplie toujours par la même raison. L’indice compte le nombre de passages depuis le terme initial.",
+    rule: "Arithmétique : uₙ=u₀+n×r. Géométrique : uₙ=u₀×qⁿ.",
+  },
+  {
+    id: "exponential_logarithm",
+    match: /exponentielle|logarithme|\blog\s*\(|eˣ/i,
+    intro: "Non, la relation entre l’exponentielle, le logarithme et leur exposant n’a pas été utilisée correctement.",
+    meaning: "L’exponentielle et le logarithme permettent de retrouver un exposant. Avec le logarithme décimal, log(x)=a signifie x=10ᵃ.",
+    rule: "Réécris les deux membres avec la même fonction, puis compare les exposants ou utilise la fonction réciproque.",
+  },
+  {
+    id: "algorithm_assignments",
+    match: /algorithm|affectation|boucle.*(?:ajoute|répète)/i,
+    intro: "Non, les instructions n’ont pas été exécutées dans l’ordre ou la nouvelle valeur de la variable n’a pas remplacé l’ancienne.",
+    meaning: "Une affectation remplace la valeur précédente de la variable. Dans une boucle, la même instruction est répétée exactement le nombre de fois indiqué.",
+    rule: "Crée une ligne par instruction ou par tour de boucle et mets à jour la variable après chaque ligne.",
+  },
+  {
+    id: "geometry_dot_product",
+    match: /produit scalaire|vecteurs?.*orthogonaux/i,
+    intro: "Non, le produit scalaire n’a pas été relié correctement à l’angle ou à l’orthogonalité des vecteurs.",
+    meaning: "Le produit scalaire de deux vecteurs orthogonaux est nul. Réciproquement, pour deux vecteurs non nuls, un produit scalaire nul permet de conclure qu’ils sont orthogonaux.",
+    rule: "Calcule le produit scalaire, puis utilise son signe ou sa nullité pour interpréter la géométrie.",
+  },
+  {
+    id: "geometry_rectangle_measure",
+    match: /aire d['’]un rectangle|rectangle.*(?:aire|périmètre)/i,
+    intro: "Non, le périmètre et l’aire du rectangle ont été confondus ou une dimension n’a pas été utilisée correctement.",
+    meaning: "Le périmètre mesure le contour du rectangle, tandis que l’aire mesure sa surface. L’aire est le produit de la longueur par la largeur.",
+    rule: "Aire du rectangle = longueur × largeur, avec une unité au carré.",
   },
   {
     id: "area_conversion",

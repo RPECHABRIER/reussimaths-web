@@ -8,6 +8,7 @@ import { useReferralBonus } from "../hooks/useReferralBonus";
 import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
+import { getDiscoveryShowcase } from "../discoveryShowcases";
 
 // Détail d'un parcours (/parcours/:parcoursId) : la liste de ses étapes avec
 // leur statut (terminée / suivante / à venir), le pourcentage global, et un
@@ -43,7 +44,7 @@ export default function ParcoursOverview() {
   const finished = completedSteps >= total && total > 0;
   const backTo = parcours.kind === "decouverte" ? "/" : parcours.kind === "trial" ? "/niveaux?objectif=essai" : `/parcours/niveau/${parcours.levelId}`;
   const nextStep = parcours.steps[nextStepIndex];
-  const nextChapter = nextStep ? getChapter(nextStep.chapterId) : null;
+  const nextChapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : nextStep ? getChapter(nextStep.chapterId) : null;
   const nextLocked = !parcours.free && nextChapter && !canAccessChapter(nextChapter, { user, subscription, referralBonusChapterId });
   const primaryTo = nextLocked ? "/compte" : `/parcours/${parcours.id}/etape/${finished ? 0 : nextStepIndex}`;
 
@@ -96,7 +97,7 @@ export default function ParcoursOverview() {
 
         <div className="flex flex-col gap-2.5">
           {parcours.steps.map((step, i) => {
-            const chapter = getChapter(step.chapterId);
+            const chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
             const locked = !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralBonusChapterId });
             const done = !!stepByIndex.get(step.progressIndex)?.completed;
             const isNext = i === nextStepIndex && !done;

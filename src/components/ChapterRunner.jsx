@@ -98,6 +98,13 @@ function generateMatchingSkill(chapter, difficulty, skillLabel) {
   return chapter.generate(difficulty);
 }
 
+function generateExercise(chapter, difficulty, index = 0) {
+  if (Array.isArray(chapter.showcaseExercises) && chapter.showcaseExercises.length > 0) {
+    return chapter.showcaseExercises[index % chapter.showcaseExercises.length];
+  }
+  return chapter.generate(difficulty);
+}
+
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError }) {
   const { user } = useAuth();
   usePracticeHeartbeat(user?.id);
@@ -127,7 +134,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   // commentaire d'en-tête) ; sinon comportement historique inchangé.
   const [mode, setMode] = useState(() => (isSession ? "entrainement" : hasCours ? "cours" : "decouverte"));
   const [exercise, setExercise] = useState(() =>
-    focusSkill ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill) : chapter.generate(effectiveDifficulty)
+    focusSkill ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill) : generateExercise(chapter, effectiveDifficulty, 0)
   );
   const [redrillQueue, setRedrillQueue] = useState([]); // [{ skill, in }] — voir queueRedrill
   const [input, setInput] = useState("");
@@ -246,7 +253,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       setSessionDone(true);
       return;
     }
-    const decremented = redrillQueue.map((r) => ({ ...r, in: r.in - 1 }));
+    const showcase = Array.isArray(chapter.showcaseExercises);
+    const decremented = showcase ? [] : redrillQueue.map((r) => ({ ...r, in: r.in - 1 }));
     const dueIndex = decremented.findIndex((r) => r.in <= 0);
     let nextEx;
     if (dueIndex >= 0) {
@@ -256,7 +264,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       nextEx = generateMatchingSkill(chapter, effectiveDifficulty, focusSkill);
       setRedrillQueue(decremented);
     } else {
-      nextEx = chapter.generate(effectiveDifficulty);
+      nextEx = generateExercise(chapter, effectiveDifficulty, answeredCount);
       setRedrillQueue(decremented);
     }
     setExercise(nextEx);
@@ -477,7 +485,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           <div className="mb-5 rounded-2xl px-4 py-3" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <div className="flex items-center justify-between gap-3 text-xs font-bold" style={{ color: ink }}>
               <span>{isDiscoverySession ? "Ta série découverte" : "Ta série en cours"}</span>
-              <span style={{ color: gold }}>{Math.min(answeredCount + 1, sessionLength)} / {sessionLength}</span>
+              <span style={{ color: gold }}>{Math.min(answeredCount + (feedback ? 0 : 1), sessionLength)} / {sessionLength}</span>
             </div>
             <div className="h-1.5 rounded-full overflow-hidden mt-2" style={{ backgroundColor: `${ink}10` }}>
               <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min((answeredCount / sessionLength) * 100, 100)}%`, backgroundColor: gold }} />
@@ -880,6 +888,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   Vérifier avec une question très proche
                 </button>
                 </>
+              )}
+              {feedback.correct && isDiscoverySession && (
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} correct remember /></div>
               )}
 
               {!feedback.correct && showHelp && !isDefi && !isDecouverte && (

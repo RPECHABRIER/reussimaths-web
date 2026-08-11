@@ -6,6 +6,7 @@ import MathText from "../components/MathText";
 import { useAuth } from "../hooks/useAuth";
 import { isRealAdmin } from "../lib/access";
 import { colors, fonts } from "../theme";
+import { getAllDiscoveryShowcases } from "../discoveryShowcases";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -53,13 +54,27 @@ const SAMPLES = [
   ["Géométrie — vecteur", { type: "text", chapter: "Vecteurs — Coordonnées", prompt: "A(1 ; 2) et B(4 ; 6). Donne les coordonnées de \\(\\overrightarrow{AB}\\).", answer: "(3 ; 4)", steps: ["\\(x_B-x_A=4-1=3\\)", "\\(y_B-y_A=6-2=4\\)"] }, "(5 ; 8)"],
 ];
 
+const DISCOVERY_SAMPLES = getAllDiscoveryShowcases().flatMap((showcase) =>
+  showcase.showcaseExercises.map((exercise, index) => [
+    `Découverte ${showcase.meta.level} — question ${index + 1}`,
+    exercise,
+    exercise.type === "numeric"
+      ? "999999"
+      : exercise.type === "qcm"
+        ? exercise.options.find((option) => option !== exercise.answer)
+        : "réponse erronée",
+  ])
+);
+
+const ALL_SAMPLES = [...SAMPLES, ...DISCOVERY_SAMPLES];
+
 export default function CorrectionsLab() {
   const { user, loading } = useAuth();
   const [index, setIndex] = useState(0);
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
-  const [title, exercise, response] = SAMPLES[index];
+  const [title, exercise, response] = ALL_SAMPLES[index];
   return (
     <main className="min-h-screen px-4 py-6 sm:px-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-3xl mx-auto">
@@ -69,7 +84,7 @@ export default function CorrectionsLab() {
         <label className="block mt-5 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>
-            {SAMPLES.map(([sampleTitle], sampleIndex) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
+            {ALL_SAMPLES.map(([sampleTitle], sampleIndex) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
           </select>
         </label>
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm">

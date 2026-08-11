@@ -9,6 +9,7 @@ import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 import LoadError from "../components/LoadError";
+import { getDiscoveryShowcase } from "../discoveryShowcases";
 
 // Une étape de parcours (/parcours/:parcoursId/etape/:stepIndex) : le chapitre
 // de cette étape, joué en série notée de `parcours.sessionLength` questions à
@@ -45,7 +46,7 @@ export default function ParcoursStep() {
   }
 
   const step = parcours.steps[idx];
-  const chapter = getChapter(step.chapterId);
+  const chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
 
   if (!chapter) {
     return (

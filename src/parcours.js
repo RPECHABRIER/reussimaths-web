@@ -4,6 +4,7 @@ import { CM2_DIAGNOSTIC_CHAPTERS } from "./diagnostics/cm2";
 import { CM2_REMEDIATION, getPreviousLevelId, LEVEL_FOUNDATIONS, selectPrerequisiteChapters } from "./lib/prerequisites";
 import { getDiagnosticRemediationIds } from "./lib/diagnosticProfile";
 import { getStudyProgramme, hasConfiguredStudyProgramme } from "./lib/studyProgramme";
+import { getDiscoveryShowcase } from "./discoveryShowcases";
 
 // ---------------------------------------------------------------------------
 // Parcours — AUTO-DÉRIVÉS du registre de chapitres, comme plannedChapters.js
@@ -114,14 +115,9 @@ export const DECOUVERTE_ID = "decouverte";
 // courte et ne débloque qu'un chapitre : l'essai démontre la personnalisation
 // sans transformer le catalogue payant en accès gratuit contournable.
 export function getTrialParcours(levelId) {
-  const chapters = levelChapters(levelId);
-  if (chapters.length === 0) return null;
+  const showcase = getDiscoveryShowcase(levelId);
+  if (!showcase) return null;
   const level = getLevel(levelId);
-  let selectedChapterId = null;
-  try { selectedChapterId = sessionStorage.getItem(`reussimaths_trial_chapter_${levelId}`); } catch { /* rendu hors navigateur */ }
-  const selectedChapter = selectedChapterId ? getChapter(selectedChapterId) : null;
-  const allowedLevels = [levelId, getPreviousLevelId(levelId)].filter(Boolean);
-  const chapter = selectedChapter && allowedLevels.includes(selectedChapter.meta.level) ? selectedChapter : chapters[0];
   return {
     id: `essai-${levelId}`,
     kind: "trial",
@@ -130,11 +126,11 @@ export function getTrialParcours(levelId) {
     title: `Première série — ${level?.label ?? levelId}`,
     tierLabel: "Essai personnalisé",
     levelLabel: level?.label ?? levelId,
-    description: "Une courte série à ton niveau pour découvrir la méthode RéussiMaths.",
+    description: "Cinq questions choisies à ton niveau pour découvrir les explications et les animations RéussiMaths.",
     difficulty: "facile",
     sessionLength: 5,
     free: true,
-    steps: [stepForChapter(chapter)],
+    steps: [stepForChapter(showcase)],
   };
 }
 

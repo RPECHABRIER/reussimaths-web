@@ -155,6 +155,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const exerciseStartRef = useRef(Date.now());
   const completionTrackedRef = useRef(false);
   const assistanceUsedRef = useRef(false);
+  const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
 
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
@@ -267,6 +268,18 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       nextEx = generateExercise(chapter, effectiveDifficulty, answeredCount);
       setRedrillQueue(decremented);
     }
+    if (!showcase && seenPromptsRef.current.has(nextEx?.prompt)) {
+      for (let attempt = 0; attempt < 12; attempt++) {
+        const candidate = focusSkill
+          ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill)
+          : chapter.generate(effectiveDifficulty);
+        if (!seenPromptsRef.current.has(candidate?.prompt)) {
+          nextEx = candidate;
+          break;
+        }
+      }
+    }
+    if (nextEx?.prompt) seenPromptsRef.current.add(nextEx.prompt);
     setExercise(nextEx);
     setInput("");
     setSelectedOption(null);

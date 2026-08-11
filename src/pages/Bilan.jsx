@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { useLearningReviews } from "../hooks/useLearningReviews";
@@ -51,6 +51,12 @@ function durationComparison(current, previous) {
   return `${delta > 0 ? "+" : "−"}${formatDuration(Math.abs(delta))} par rapport aux 7 jours précédents`;
 }
 
+function formatWeekRange(days = []) {
+  if (!days.length) return "Les 7 derniers jours";
+  const format = (value) => new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" }).format(new Date(`${value}T12:00:00`));
+  return `Du ${format(days[0].date)} au ${format(days[days.length - 1].date)}`;
+}
+
 function parentSummary(summary) {
   if (summary.totalAttempts === 0 && summary.totalSeconds === 0) {
     return "Aucune activité enregistrée ces 7 derniers jours. Une courte séance permet de relancer la progression.";
@@ -93,6 +99,10 @@ export default function Bilan() {
           <p className="text-sm mt-2" style={{ color: slate }}>
             Un bilan clair à regarder ensemble : travail effectué, acquis et prochaine étape.
           </p>
+          {summary?.days?.length > 0 && <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold" style={{color:gold}}><CalendarDays size={14}/>{formatWeekRange(summary.days)}</p>}
+          <div className="mt-4 print:hidden">
+            <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold" style={{backgroundColor:colors.card,color:ink,boxShadow:shadow.soft}}><Printer size={14}/> Imprimer ou enregistrer en PDF</button>
+          </div>
         </div>
 
         {!user && (
@@ -181,6 +191,24 @@ export default function Bilan() {
                   Travailler la priorité n°1 <ArrowRight size={13} />
                 </Link>
               )}
+            </div>
+
+            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2" style={{backgroundColor:colors.card,boxShadow:shadow.soft,border:`1px solid ${colors.green}25`}}>
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 rounded-xl p-2" style={{backgroundColor:`${colors.green}15`}}><HeartHandshake size={19} color={colors.green}/></div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs uppercase tracking-widest font-bold" style={{color:colors.green}}>Le petit plan familial</p>
+                  <h2 className="mt-1 text-lg font-black" style={{color:ink,fontFamily:fonts.display}}>Une priorité, trois séances courtes</h2>
+                  <p className="mt-1 text-xs leading-relaxed" style={{color:slate}}>L’objectif n’est pas de tout reprendre : trois séances de 10 à 15 minutes, espacées dans la semaine, suffisent pour vérifier que la méthode revient sans aide.</p>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {["1. Relire une correction", "2. Refaire une question proche", "3. Vérifier quelques jours après"].map((label,index)=><div key={label} className="rounded-2xl p-3 text-xs font-bold" style={{backgroundColor:index===2?`${colors.green}12`:paper,color:ink}}>{label}</div>)}
+              </div>
+              <div className="mt-4 rounded-2xl p-3" style={{backgroundColor:paper}}>
+                <p className="text-xs font-black" style={{color:ink}}>Deux questions simples à poser à votre enfant</p>
+                <p className="mt-1 text-xs leading-relaxed" style={{color:slate}}>« Peux-tu m’expliquer l’erreur que tu faisais ? » puis « Quelle méthode utiliseras-tu la prochaine fois ? » Expliquer à voix haute aide à stabiliser l’apprentissage.</p>
+              </div>
             </div>
 
             {/* Temps passé */}

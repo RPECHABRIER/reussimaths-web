@@ -232,3 +232,46 @@ test("la conversion CM2 de 2,5 m affiche le tableau de longueurs et une méthode
     assert.match(source, /chiffre des unités, ici 2/);
   }
 });
+
+test("les conversions de longueurs, aires et volumes utilisent toutes leur tableau spécialisé", async () => {
+  const sources = await Promise.all([
+    read("./chapters/grandeurs-mesures.js"),
+    read("./chapters/automatismes-sixieme.js"),
+    read("./chapters/operations-decimaux.js"),
+    read("./chapters/geometrie-espace.js"),
+    read("./diagnostics/cm2.js"),
+    read("./discoveryShowcases.js"),
+  ]);
+  const joined = sources.join("\n");
+  assert.match(joined, /kind: "length"/);
+  assert.match(joined, /kind: "area"/);
+  assert.match(joined, /kind: "volume"/);
+  for (const source of sources.filter((text) => /UNITES_(?:LONGUEUR|AIRE)|Convertis 2,5 m|unites\[iFrom\]/.test(text))) {
+    assert.match(source, /conversionTable:/);
+  }
+});
+
+test("deux séries gratuites successives changent de banque et évitent les doublons internes", async () => {
+  const [step, runner] = await Promise.all([read("./pages/ParcoursStep.jsx"), read("./components/ChapterRunner.jsx")]);
+  assert.match(step, /reussimaths_trial_runs_/);
+  assert.match(step, /reussimaths_trial_chapter_/);
+  assert.match(step, /trialRun > 0/);
+  assert.match(runner, /seenPromptsRef/);
+  assert.match(runner, /for \(let attempt = 0; attempt < 12; attempt\+\+\)/);
+});
+
+test("les familles non géométriques prioritaires possèdent une animation spécialisée", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  for (const family of ["fraction_of_number", "whole_number_place_value", "arithmetic_order", "function_affine_coefficients", "distributivity"]) {
+    assert.match(visual, new RegExp(family));
+  }
+});
+
+test("le bilan parental propose une période, un plan familial et une version imprimable", async () => {
+  const bilan = await read("./pages/Bilan.jsx");
+  assert.match(bilan, /formatWeekRange/);
+  assert.match(bilan, /Imprimer ou enregistrer en PDF/);
+  assert.match(bilan, /Le petit plan familial/);
+  assert.match(bilan, /Une priorité, trois séances courtes/);
+  assert.match(bilan, /Deux questions simples à poser à votre enfant/);
+});

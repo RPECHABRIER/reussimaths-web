@@ -17,6 +17,15 @@ export default function FeedbackVisual({ family, exercise }) {
       </div>
     );
   }
+  if (["fraction_of_number", "fraction_multiplication"].includes(family)) {
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Partager, puis prendre le nombre de parts</p><div className="mt-3 grid grid-cols-4 gap-1">{Array.from({length:8},(_,index)=><span key={index} className="h-8 rounded-md" style={{background:index<6?`${colors.gold}65`:`${colors.ink}10`,animation:`pulse 1.8s ${index*80}ms infinite`}} />)}</div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>Le dénominateur partage la quantité ; le numérateur indique combien de parts on prend.</p></div>;
+  }
+  if (["whole_number_place_value", "decimal_place_value", "rounding"].includes(family)) {
+    return <div className="mt-4 rounded-xl bg-white p-3 overflow-x-auto" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Chaque chiffre a une place</p><div className="mt-3 grid min-w-[310px] grid-cols-5 text-center text-[10px] font-bold" style={{color:colors.ink}}>{["centaines","dizaines","unités","dixièmes","centièmes"].map((label,index)=><div key={label} className="border px-1 py-2" style={{borderColor:`${colors.ink}30`,background:index===2?`${colors.gold}35`:colors.bg}}><span>{label}</span><span className="mt-1 block text-base" style={{color:index===2?colors.gold:colors.ink}}>{["1","2","3","4","5"][index]}</span></div>)}</div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>On repère d’abord la colonne demandée avant de lire, calculer ou arrondir.</p></div>;
+  }
+  if (family === "arithmetic_order") {
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Respecter l’ordre des opérations</p><div className="mt-3 flex items-center justify-center gap-2 text-[10px] font-black" style={{color:colors.ink}}>{["Parenthèses","× et ÷","+ et −"].map((label,index)=><div key={label} className="flex items-center"><span className="rounded-lg px-2 py-2" style={{background:index===0?`${colors.gold}30`:`${colors.ink}0d`}}>{label}</span>{index<2&&<ArrowRight size={13} color={colors.gold}/>}</div>)}</div></div>;
+  }
   if (["relative_numbers", "relative_product"].includes(family)) {
     return (
       <div className="mt-4 rounded-xl bg-white p-3" style={{ border: `1px solid ${colors.gold}35` }}>
@@ -84,6 +93,12 @@ export default function FeedbackVisual({ family, exercise }) {
         <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-bold" style={{color:colors.ink}}><span className="rounded-lg px-3 py-2" style={{background:`${colors.gold}18`}}>nombre de départ</span><ArrowRight size={17} color={colors.gold}/><span className="rounded-lg px-3 py-2 animate-pulse" style={{background:`${colors.ink}12`}}>fonction</span><ArrowRight size={17} color={colors.gold}/><span className="rounded-lg px-3 py-2" style={{background:`${colors.green}18`}}>image</span></div>
       </div>
     );
+  }
+  if (["function_affine_coefficients", "function_variations", "function_domain"].includes(family)) {
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Lire les informations dans le bon ordre</p><svg viewBox="0 0 240 95" className="mt-2 w-full"><line x1="18" y1="76" x2="225" y2="76" stroke={colors.ink} strokeWidth="2"/><line x1="38" y1="88" x2="38" y2="10" stroke={colors.ink} strokeWidth="2"/><path d="M38 68 L92 48 L145 57 L211 20" fill="none" stroke={colors.gold} strokeWidth="4" strokeDasharray="8 5"><animate attributeName="stroke-dashoffset" values="26;0" dur="1.6s" repeatCount="indefinite"/></path><circle cx="92" cy="48" r="5" fill={colors.green}/><circle cx="145" cy="57" r="5" fill={colors.green}/></svg><p className="text-[11px] text-center" style={{color:colors.slate}}>Domaine, variations et coefficients ne répondent pas à la même question : on identifie d’abord ce qui est demandé.</p></div>;
+  }
+  if (family === "distributivity") {
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Le facteur multiplie tous les termes</p><div className="mt-3 flex items-center justify-center gap-2 text-sm font-black" style={{color:colors.ink}}><span className="rounded-lg p-2" style={{background:`${colors.gold}30`}}>3</span><span>×</span><span className="rounded-lg p-2" style={{background:`${colors.ink}0d`}}>( x + 4 )</span></div><div className="mt-2 flex justify-center gap-8 text-xs font-bold" style={{color:colors.green}}><span className="animate-pulse">↘ 3 × x</span><span className="animate-pulse">↙ 3 × 4</span></div></div>;
   }
   if (family.startsWith("probability" ) || family === "probabilities") {
     return (

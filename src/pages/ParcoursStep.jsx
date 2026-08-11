@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { getParcours } from "../parcours";
 import { getChapter } from "../chapters/registry";
@@ -33,6 +34,11 @@ export default function ParcoursStep() {
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
   const navigate = useNavigate();
+  const [trialRun] = useState(() => {
+    if (parcours?.kind !== "trial") return 0;
+    try { return Number(localStorage.getItem(`reussimaths_trial_runs_${parcours.levelId}`) ?? 0); }
+    catch { return 0; }
+  });
 
   if (!parcours || !parcours.steps[idx]) {
     return (
@@ -46,7 +52,13 @@ export default function ParcoursStep() {
   }
 
   const step = parcours.steps[idx];
-  const chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
+  let chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
+  if (parcours.kind === "trial" && trialRun > 0) {
+    try {
+      const targetedId = sessionStorage.getItem(`reussimaths_trial_chapter_${parcours.levelId}`);
+      chapter = getChapter(targetedId) ?? chapter;
+    } catch { /* stockage indisponible : la série vitrine reste utilisable */ }
+  }
 
   if (!chapter) {
     return (
@@ -112,6 +124,10 @@ export default function ParcoursStep() {
       sessionLength={parcours.sessionLength}
       backTo={`/parcours/${parcours.id}`}
       onSessionComplete={async ({ correct, total }) => {
+        if (parcours.kind === "trial") {
+          try { localStorage.setItem(`reussimaths_trial_runs_${parcours.levelId}`, String(trialRun + 1)); }
+          catch { /* stockage indisponible */ }
+        }
         await recordStep(step.progressIndex, { correct, total });
         navigate(hasNext ? `/parcours/${parcours.id}/etape/${nextIndex}` : `/parcours/${parcours.id}`);
       }}

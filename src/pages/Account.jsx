@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles } from "lucide-react";
+import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles, Mail } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
@@ -34,7 +34,7 @@ const TERMS_VERSION = "2026-08-09";
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
 // d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
-  const { user, loading, signInWithGoogle, signInWithApple, signOut } = useAuth();
+  const { user, loading, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, signOut } = useAuth();
   const {
     subscription: rawSubscription,
     loading: subscriptionLoading,
@@ -57,6 +57,11 @@ export default function Account() {
   const [acceptImmediateAccess, setAcceptImmediateAccess] = useState(false);
   const [checkoutReturn, setCheckoutReturn] = useState(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [emailMode, setEmailMode] = useState("signup");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [emailPassword, setEmailPassword] = useState("");
+  const [emailAuthLoading, setEmailAuthLoading] = useState(false);
+  const [emailAuthMessage, setEmailAuthMessage] = useState(null);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -196,6 +201,40 @@ export default function Account() {
     }
   };
 
+  const handleEmailAuth = async (event) => {
+    event.preventDefault();
+    const email = emailAddress.trim().toLowerCase();
+    setEmailAuthMessage(null);
+    if (!email || emailPassword.length < 8) {
+      setEmailAuthMessage({ type: "error", text: "Saisis une adresse e-mail valide et un mot de passe d’au moins 8 caractères." });
+      return;
+    }
+    setEmailAuthLoading(true);
+    try {
+      if (emailMode === "signup") {
+        markSignupStarted("email");
+        const { data, error } = await signUpWithEmail(email, emailPassword);
+        if (error) throw error;
+        if (!data.session) {
+          setEmailPassword("");
+          setEmailAuthMessage({ type: "success", text: "Compte créé. Consulte ta boîte e-mail pour confirmer ton adresse, puis reviens te connecter." });
+        }
+      } else {
+        const { error } = await signInWithEmail(email, emailPassword);
+        if (error) throw error;
+      }
+    } catch (authError) {
+      const knownMessage = authError.message?.toLowerCase().includes("invalid login")
+        ? "Adresse e-mail ou mot de passe incorrect."
+        : authError.message?.toLowerCase().includes("already registered")
+          ? "Un compte existe déjà avec cette adresse. Choisis « Se connecter » ci-dessous."
+          : "Impossible de poursuivre pour le moment. Vérifie les informations puis réessaie.";
+      setEmailAuthMessage({ type: "error", text: knownMessage });
+    } finally {
+      setEmailAuthLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
@@ -261,6 +300,16 @@ export default function Account() {
                 <button onClick={() => { markSignupStarted("google"); signInWithGoogle(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
                 <button onClick={() => { markSignupStarted("apple"); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
               </div>
+              <div className="flex items-center gap-3 my-4"><span className="h-px flex-1" style={{ backgroundColor: colors.hairline }} /><span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: colors.slate }}>ou par e-mail</span><span className="h-px flex-1" style={{ backgroundColor: colors.hairline }} /></div>
+              <form onSubmit={handleEmailAuth} className="flex flex-col gap-2.5">
+                <label className="text-[11px] font-bold" style={{ color: colors.ink }} htmlFor="account-email">Adresse e-mail</label>
+                <input id="account-email" type="email" required autoComplete="email" value={emailAddress} onChange={(event) => setEmailAddress(event.target.value)} placeholder="prenom@exemple.fr" className="rounded-xl px-3 py-2.5 text-sm" style={{ color: colors.ink, backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }} />
+                <label className="text-[11px] font-bold" style={{ color: colors.ink }} htmlFor="account-password">Mot de passe</label>
+                <input id="account-password" type="password" required minLength={8} autoComplete={emailMode === "signup" ? "new-password" : "current-password"} value={emailPassword} onChange={(event) => setEmailPassword(event.target.value)} placeholder="8 caractères minimum" className="rounded-xl px-3 py-2.5 text-sm" style={{ color: colors.ink, backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }} />
+                <button type="submit" disabled={emailAuthLoading} className="inline-flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.gold, color: colors.ink, opacity: emailAuthLoading ? 0.65 : 1 }}><Mail size={15} />{emailAuthLoading ? "Patiente…" : emailMode === "signup" ? "Créer mon compte avec mon e-mail" : "Se connecter avec mon e-mail"}</button>
+                {emailAuthMessage && <p role="status" className="text-xs leading-relaxed" style={{ color: emailAuthMessage.type === "error" ? colors.red : colors.green }}>{emailAuthMessage.text}</p>}
+                <button type="button" onClick={() => { setEmailMode((mode) => mode === "signup" ? "signin" : "signup"); setEmailAuthMessage(null); }} className="text-xs font-semibold underline" style={{ color: colors.slate }}>{emailMode === "signup" ? "J’ai déjà un compte : me connecter" : "Je n’ai pas encore de compte : m’inscrire"}</button>
+              </form>
               <p className="flex items-center justify-center gap-1.5 text-[11px] mt-3" style={{ color: colors.slate }}><ShieldCheck size={13} color={colors.green} />L’élève choisit un pseudo ; son nom n’est pas affiché.</p>
             </div>
             <div className="flex items-baseline justify-between gap-3 mt-5 pt-4" style={{ borderTop: `1px solid ${colors.hairline}` }}>

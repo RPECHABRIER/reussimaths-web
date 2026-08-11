@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-// Compte individualisé : chaque utilisateur se connecte via Google ou Apple
-// (Supabase Auth gère le flux OAuth), mais son identité publique dans l'app
+// Compte individualisé : chaque utilisateur se connecte via Google, Apple ou
+// une adresse e-mail (Supabase Auth gère OAuth et les identifiants), mais son identité publique dans l'app
 // (pseudo, avatar) est un profil séparé stocké dans la table `profiles` —
 // jamais le nom réel ni l'email de connexion. Voir supabase/schema.sql.
 export function useAuth() {
@@ -41,7 +41,15 @@ export function useAuth() {
     return supabase.auth.signInWithOAuth({ provider: "apple" });
   }, []);
 
+  const signUpWithEmail = useCallback((email, password) => {
+    return supabase.auth.signUp({ email, password });
+  }, []);
+
+  const signInWithEmail = useCallback((email, password) => {
+    return supabase.auth.signInWithPassword({ email, password });
+  }, []);
+
   const signOut = useCallback(() => supabase.auth.signOut(), []);
 
-  return { user, loading, signInWithGoogle, signInWithApple, signOut };
+  return { user, loading, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, signOut };
 }

@@ -21,7 +21,7 @@ export default function CGU() {
 
       <h2>2. Compte utilisateur</h2>
       <p>
-        La création d'un compte se fait via connexion Google (ou Apple, lorsque disponible). Aucun nom réel ni
+        La création d'un compte se fait via une adresse e-mail ou une connexion Google ou Apple. Aucun nom réel ni
         adresse e-mail de connexion n'est affiché publiquement dans l'application : l'utilisateur choisit un pseudo
         après sa première connexion, qui constitue son identité publique (visible par ses amis en cas de défi).
         L'utilisateur est responsable de la confidentialité de son moyen de connexion.

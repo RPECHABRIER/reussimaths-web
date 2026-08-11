@@ -14,9 +14,9 @@ export default function Confidentialite() {
       <h2>1. Données collectées</h2>
       <ul>
         <li>
-          <strong>Identité de connexion</strong> : lors de la connexion via Google (ou Apple), un identifiant unique
-          et une adresse e-mail sont transmis par le fournisseur d'identité. Cette adresse n'est jamais affichée
-          publiquement dans l'application.
+          <strong>Identité de connexion</strong> : une adresse e-mail et un identifiant unique sont enregistrés lors
+          de la création du compte, directement ou par l’intermédiaire de Google ou Apple. Cette adresse n'est jamais
+          affichée publiquement dans l'application.
         </li>
         <li>
           <strong>Pseudo</strong> : choisi par l'utilisateur, affiché à ses amis dans le cadre des défis.
@@ -53,7 +53,7 @@ export default function Confidentialite() {
       <ul>
         <li>Supabase (hébergement de la base de données et authentification)</li>
         <li>Stripe (traitement des paiements)</li>
-        <li>Google (et Apple, lorsque disponible) pour l'authentification</li>
+        <li>Google et Apple, uniquement lorsqu’un utilisateur choisit l’un de ces moyens d’authentification</li>
         <li>Vercel (hébergement de l'application)</li>
       </ul>
       <p>Aucune donnée n'est vendue à des tiers à des fins publicitaires.</p>
@@ -77,7 +77,8 @@ export default function Confidentialite() {
       <p>
         L'accès aux données est protégé par des règles de sécurité au niveau de la base de données (Row Level
         Security) : chaque utilisateur ne peut consulter que ses propres données de progression et d'abonnement. Les
-        mots de passe ne sont jamais gérés directement par RéussiMaths (connexion déléguée à Google/Apple).
+        mots de passe sont traités et sécurisés par le service d’authentification Supabase et ne sont jamais lisibles
+        par RéussiMaths.
       </p>
       <p>Lorsqu’une erreur technique bloque une page, un diagnostic limité peut être transmis aux journaux de l’hébergeur : message technique, emplacement dans l’application, trace logicielle et date. Le contenu des réponses scolaires, l’adresse e-mail et les informations bancaires ne sont pas inclus dans ce signalement.</p>
 

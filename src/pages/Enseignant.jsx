@@ -436,7 +436,7 @@ export default function Enseignant() {
 
           {exercise.figure && (
             <div className="mt-6">
-              <Figure spec={exercise.figure} />
+              <Figure spec={exercise.figure} projection />
             </div>
           )}
           {exercise.graph && (

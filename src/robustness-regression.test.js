@@ -84,6 +84,10 @@ test("les droites graduées affichent toujours graduations, sens et point au-des
   assert.match(figure, /tickCount/);
   assert.match(figure, /arrowEnd \?\? true/);
   assert.match(figure, /labelAbove/);
+  assert.match(figure, /projection \? 640 : 360/);
+  assert.match(figure, /spec\.numberLine \? "15" : "11"/);
+  const teacher = await read(".\/pages\/Enseignant.jsx");
+  assert.match(teacher, /<Figure spec=\{exercise\.figure\} projection/);
   for (const source of [decimals, fractions, relatives, auto6, auto5]) {
     assert.match(source, /numberLine:/);
   }

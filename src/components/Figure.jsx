@@ -50,7 +50,7 @@ function normalize(x, y) {
   return { x: x / len, y: y / len };
 }
 
-export default function Figure({ spec }) {
+export default function Figure({ spec, projection = false }) {
   if (!spec || !spec.points || spec.points.length === 0) return null;
 
   const byId = Object.fromEntries(spec.points.map((p) => [p.id, p]));
@@ -75,7 +75,7 @@ export default function Figure({ spec }) {
 
   return (
     <div className="w-full flex justify-center mb-4">
-      <svg viewBox={`${minX} ${minY} ${w} ${h}`} style={{ width: "100%", maxWidth: 300, maxHeight: 220 }}>
+      <svg viewBox={`${minX} ${minY} ${w} ${h}`} style={{ width: "100%", maxWidth: projection ? 640 : 360, maxHeight: projection ? 400 : 260 }}>
         {spec.numberLine && (() => {
           const line = spec.numberLine;
           const a = byId[line.from];
@@ -293,7 +293,7 @@ export default function Figure({ spec }) {
           ))}
 
         {(spec.freeLabels || []).map((l, i) => (
-          <text key={`fl${i}`} x={l.x} y={l.y} fontSize="11" fill={slate} textAnchor={l.anchor ?? "middle"}>
+          <text key={`fl${i}`} x={l.x} y={l.y} fontSize={spec.numberLine ? "15" : "11"} fontWeight={spec.numberLine ? "800" : undefined} fill={spec.numberLine ? ink : slate} textAnchor={l.anchor ?? "middle"}>
             {l.text}
           </text>
         ))}

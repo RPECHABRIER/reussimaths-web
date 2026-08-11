@@ -6,7 +6,7 @@ import MathText from "../components/MathText";
 import { useAuth } from "../hooks/useAuth";
 import { isRealAdmin } from "../lib/access";
 import { colors, fonts } from "../theme";
-import { getAllDiscoveryShowcases } from "../discoveryShowcases";
+import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "../discoveryShowcases";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -67,6 +67,15 @@ const DISCOVERY_SAMPLES = getAllDiscoveryShowcases().flatMap((showcase) =>
 );
 
 const ALL_SAMPLES = [...SAMPLES, ...DISCOVERY_SAMPLES];
+const DIAGNOSTIC_LEVELS = ["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"];
+const DIAGNOSTIC_SAMPLES = DIAGNOSTIC_LEVELS.flatMap((levelId) =>
+  getDiagnosticShowcaseExercises(levelId, 0).map((exercise, index) => [
+    `Diagnostic ${levelId} — question ${index + 1}`,
+    exercise,
+    exercise.type === "numeric" ? "999999" : "réponse erronée",
+  ])
+);
+const LAB_SAMPLES = [...ALL_SAMPLES, ...DIAGNOSTIC_SAMPLES];
 
 export default function CorrectionsLab() {
   const { user, loading } = useAuth();
@@ -74,7 +83,7 @@ export default function CorrectionsLab() {
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
-  const [title, exercise, response] = ALL_SAMPLES[index];
+  const [title, exercise, response] = LAB_SAMPLES[index];
   return (
     <main className="min-h-screen px-4 py-6 sm:px-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-3xl mx-auto">
@@ -84,7 +93,7 @@ export default function CorrectionsLab() {
         <label className="block mt-5 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>
-            {ALL_SAMPLES.map(([sampleTitle], sampleIndex) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
+            {LAB_SAMPLES.map(([sampleTitle], sampleIndex) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
           </select>
         </label>
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm">

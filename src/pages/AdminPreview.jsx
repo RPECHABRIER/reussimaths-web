@@ -102,9 +102,11 @@ function ProductMetrics() {
       supabase.from("product_events").select("event_name, anonymous_id, occurred_at").gte("occurred_at", since).order("occurred_at"),
       supabase.from("pilot_feedback").select("role, usefulness, ease, would_recommend, comment, created_at").order("created_at", { ascending: false }).limit(20),
       supabase.from("subscriptions").select("plan, status, admin_granted, current_period_end"),
-      supabase.from("learning_attempts").select("error_code").not("error_code", "is", null).gte("attempted_at", since),
-    ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult]) => {
-      const firstError = eventsResult.error || feedbackResult.error || subscriptionsResult.error || attemptsResult.error;
+      supabase.from("learning_attempts").select("skill_id,chapter_id,error_code").not("error_code", "is", null).gte("attempted_at", since),
+      supabase.from("learning_review_cards").select("payload,reviewed_at").gte("reviewed_at", since),
+    ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult, reviewsResult]) => {
+      const reviewsError = reviewsResult.error?.code === "42P01" ? null : reviewsResult.error;
+      const firstError = eventsResult.error || feedbackResult.error || subscriptionsResult.error || attemptsResult.error || reviewsError;
       if (firstError) { setError(firstError.message); return; }
       const events = eventsResult.data ?? [];
       const uniqueByEvent = (name) => new Set(events.filter((item) => item.event_name === name).map((item) => item.anonymous_id)).size;
@@ -128,6 +130,12 @@ function ProductMetrics() {
       };
       const paid = (subscriptionsResult.data ?? []).filter((item) => item.plan === "mensuel" && !item.admin_granted && ["active", "trialing"].includes(item.status));
       const errorCounts = (attemptsResult.data ?? []).reduce((map, item) => map.set(item.error_code, (map.get(item.error_code) ?? 0) + 1), new Map());
+      const fragileSkills = (attemptsResult.data ?? []).reduce((map, item) => map.set(item.skill_id, (map.get(item.skill_id) ?? 0) + 1), new Map());
+      const reviewFamilies = (reviewsResult.data ?? []).reduce((map, item) => {
+        const family = item.payload?.family ?? "méthode générale";
+        map.set(family, (map.get(family) ?? 0) + 1);
+        return map;
+      }, new Map());
       setData({
         funnel: [
           ["Visiteurs", uniqueByEvent("page_view")], ["Diagnostics", uniqueByEvent("diagnostic_completed")],
@@ -137,6 +145,9 @@ function ProductMetrics() {
         retention7: retention(7), retention30: retention(30), mrr: paid.length * 4.99,
         feedback: feedbackResult.data ?? [],
         errorTypes: [...errorCounts.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
+        fragileSkills: [...fragileSkills.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
+        reviewFamilies: [...reviewFamilies.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
+        reviewCount: reviewsResult.data?.length ?? 0,
       });
     });
   }, []);
@@ -148,6 +159,11 @@ function ProductMetrics() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">{[["Rétention J+7",data.retention7 == null ? "—" : `${data.retention7} %`],["Rétention J+30",data.retention30 == null ? "—" : `${data.retention30} %`],["MRR estimé",`${data.mrr.toFixed(2)} €`],["Retours pilote",data.feedback.length]].map(([label,value]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor:`${colors.gold}0d` }}><p className="font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p></div>)}</div>
       <p className="text-xs mt-4" style={{ color: colors.slate }}>Retours : utilité {average("usefulness")}/5 · simplicité {average("ease")}/5 · recommandation {data.feedback.length ? Math.round(data.feedback.filter((item) => item.would_recommend).length / data.feedback.length * 100) : 0} %</p>
       {data.errorTypes.length > 0 && <p className="text-xs mt-2" style={{ color: colors.slate }}>Erreurs fréquentes : {data.errorTypes.map(([name,count]) => `${name} (${count})`).join(" · ")}</p>}
+      <div className="grid md:grid-cols-3 gap-2 mt-3">
+        <div className="rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-lg font-black" style={{color:colors.ink}}>{data.reviewCount}</p><p className="text-[10px]" style={{color:colors.slate}}>fiches pédagogiques revues</p></div>
+        <div className="rounded-2xl p-3 md:col-span-2" style={{backgroundColor:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.gold}}>Notions déclenchant le plus d’erreurs</p><p className="text-xs mt-1" style={{color:colors.slate}}>{data.fragileSkills.length ? data.fragileSkills.map(([name,count])=>`${name} (${count})`).join(" · ") : "Pas encore assez de données."}</p></div>
+      </div>
+      {data.reviewFamilies.length > 0 && <p className="text-xs mt-2" style={{color:colors.slate}}>Corrections les plus consultées : {data.reviewFamilies.map(([name,count])=>`${name} (${count})`).join(" · ")}</p>}
       <div className="flex flex-col gap-2 mt-3">{data.feedback.filter((item) => item.comment).slice(0,5).map((item,index) => <div key={`${item.created_at}-${index}`} className="rounded-xl p-3 text-xs" style={{ backgroundColor: colors.bg, color: colors.ink }}><strong>{item.role}</strong> — {item.comment}</div>)}</div></>}
   </div>;
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getAllDiscoveryShowcases } from "./discoveryShowcases.js";
+import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "./discoveryShowcases.js";
 import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
 
 const LEVEL_IDS = ["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"];
@@ -43,4 +43,19 @@ test("le parcours découverte utilise la séquence auditée et explique aussi le
   assert.match(runner, /feedback\.correct && isDiscoverySession/);
   assert.match(runner, /answeredCount \+ \(feedback \? 0 : 1\)/);
   assert.match(feedback, /cette réponse est correcte/);
+});
+
+test("les diagnostics des dix niveaux utilisent cinq questions auditées", () => {
+  for (const levelId of LEVEL_IDS) {
+    for (const currentCount of [0, 2]) {
+      const exercises = getDiagnosticShowcaseExercises(levelId, currentCount);
+      assert.equal(exercises.length, 5, `${levelId}: ${currentCount} chapitre actuel`);
+      exercises.forEach((exercise, index) => {
+        const feedback = buildPedagogicalFeedback(exercise, exercise.type === "numeric" ? "999999" : "réponse erronée");
+        assert.notEqual(feedback.family, "general", `${levelId}, question ${index + 1}`);
+        assert.ok(exercise.steps.length >= 3, `${levelId}, question ${index + 1}: étapes`);
+        assert.ok(feedback.meaning.length >= 75, `${levelId}, question ${index + 1}: explication`);
+      });
+    }
+  }
 });

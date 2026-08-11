@@ -73,7 +73,7 @@ export default function LearningFeedback({ exercise, response, compact = false, 
 
       {exercise?.conversionTable && <UnitConversionTable spec={exercise.conversionTable} />}
 
-      <FeedbackVisual family={feedback.family} />
+      <FeedbackVisual family={feedback.family} exercise={exercise} />
 
       <p className="mt-3 rounded-xl px-3 py-2 text-xs font-semibold leading-relaxed" style={{ backgroundColor: "white", color: colors.ink }}>
         <MathText text={feedback.conclusion} />

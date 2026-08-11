@@ -43,6 +43,20 @@ function unitOf(exercise) {
 
 const FAMILY_FEEDBACK = [
   {
+    id: "whole_number_place_value",
+    match: /numération.*grands nombres|milliers?|centaines?.*dizaines?/i,
+    intro: "Non, la valeur des chiffres n’a pas été reliée correctement à leur position dans le nombre.",
+    meaning: "Dans notre système décimal, chaque rang vaut dix fois le rang situé à sa droite. Un millier vaut 1 000, une centaine vaut 100, une dizaine vaut 10 et une unité vaut 1.",
+    rule: "Décompose chaque rang séparément, puis additionne milliers, centaines, dizaines et unités.",
+  },
+  {
+    id: "arithmetic_order",
+    match: /calcul.*priorités|priorités? opératoires?|calcul.*multiplication.*addition/i,
+    intro: "Non, les opérations ont été effectuées simplement de gauche à droite sans respecter leur priorité.",
+    meaning: "Sans parenthèses, les multiplications et les divisions sont effectuées avant les additions et les soustractions. Les parenthèses, lorsqu’elles existent, passent en premier.",
+    rule: "Parenthèses d’abord ; puis multiplications et divisions ; enfin additions et soustractions.",
+  },
+  {
     id: "decimal_place_value",
     match: /numération décimale|dixièmes?|centièmes?|millièmes?|valeur de position/i,
     intro: "Non, la valeur de chaque chiffre n’a pas été prise en compte correctement : un dixième vaut 0,1, un centième vaut 0,01 et un millième vaut 0,001.",

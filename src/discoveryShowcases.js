@@ -95,3 +95,30 @@ export function getDiscoveryShowcase(levelId) {
 export function getAllDiscoveryShowcases() {
   return Object.entries(SHOWCASES).map(([levelId]) => getDiscoveryShowcase(levelId));
 }
+
+const CM2_FOUNDATIONS = [
+  n("Numération — Grands nombres", "Quel est le nombre formé de 4 milliers, 3 centaines, 2 dizaines et 7 unités ?", 4327, ["4 milliers valent 4 000.", "3 centaines et 2 dizaines valent 300 et 20.", "4 000 + 300 + 20 + 7 = 4 327."]),
+  n("Calcul — Priorités", "Calcule 6 + 4 × 5.", 26, ["La multiplication est prioritaire sur l’addition.", "4 × 5 = 20.", "6 + 20 = 26."]),
+  n("Fractions — Fraction d'une quantité", "Calcule les 3/4 de 20.", 15, ["On partage 20 en 4 parts : 20 ÷ 4 = 5.", "On prend 3 parts : 3 × 5.", "Les 3/4 de 20 valent 15."]),
+  n("Proportionnalité — Retour à l’unité", "5 objets identiques coûtent 15 €. Combien coûtent 2 objets ?", 6, ["Un objet coûte 15 ÷ 5 = 3 €.", "Deux objets coûtent 2 × 3.", "Deux objets coûtent 6 €."], "€"),
+  n("Grandeurs et mesures — Périmètre", "Un rectangle mesure 8 cm sur 3 cm. Calcule son périmètre.", 22, ["Le périmètre est la longueur du contour.", "P = 2 × (8 + 3).", "P = 22 cm."], "cm"),
+];
+
+const PREVIOUS_LEVEL = {
+  cinquieme: "sixieme",
+  quatrieme: "cinquieme",
+  troisieme: "quatrieme",
+  seconde: "troisieme",
+  "premiere-spe": "seconde",
+  "premiere-non-spe": "seconde",
+  "premiere-techno": "seconde",
+  "terminale-spe": "premiere-spe",
+  "terminale-techno": "premiere-techno",
+};
+
+export function getDiagnosticShowcaseExercises(levelId, currentCount = 0) {
+  const current = SHOWCASES[levelId] ?? [];
+  const previous = levelId === "sixieme" ? CM2_FOUNDATIONS : SHOWCASES[PREVIOUS_LEVEL[levelId]] ?? [];
+  const safeCurrentCount = Math.min(Math.max(currentCount, 0), 2);
+  return [...previous.slice(0, 5 - safeCurrentCount), ...current.slice(0, safeCurrentCount)];
+}

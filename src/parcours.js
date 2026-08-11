@@ -4,7 +4,7 @@ import { CM2_DIAGNOSTIC_CHAPTERS } from "./diagnostics/cm2";
 import { CM2_REMEDIATION, getPreviousLevelId, LEVEL_FOUNDATIONS, selectPrerequisiteChapters } from "./lib/prerequisites";
 import { getDiagnosticRemediationIds } from "./lib/diagnosticProfile";
 import { getStudyProgramme, hasConfiguredStudyProgramme } from "./lib/studyProgramme";
-import { getDiscoveryShowcase } from "./discoveryShowcases";
+import { getDiagnosticShowcaseExercises, getDiscoveryShowcase } from "./discoveryShowcases";
 
 // ---------------------------------------------------------------------------
 // Parcours — AUTO-DÉRIVÉS du registre de chapitres, comme plannedChapters.js
@@ -168,7 +168,7 @@ export function getDecouverteParcours() {
 // standard, servant à suggérer un palier de parcours à l'élève. Voir
 // src/pages/ParcoursDiagnostic.jsx — c'est une simple recommandation, rien
 // n'est enregistré en base pour le diagnostic lui-même.
-const DIAGNOSTIC_QUESTIONS = 6;
+const DIAGNOSTIC_QUESTIONS = 5;
 
 function sampleAcross(chapters, count) {
   const n = Math.min(count, chapters.length);
@@ -197,7 +197,12 @@ export function getDiagnosticChapters(levelId, selectedChapterIds = []) {
     const fillers = [...prerequisites, ...selectedCurrent, ...currentChapters].filter((chapter) => !unique.some((item) => item.meta.id === chapter.meta.id));
     unique.push(...fillers.slice(0, DIAGNOSTIC_QUESTIONS - unique.length));
   }
-  return unique.slice(0, DIAGNOSTIC_QUESTIONS);
+  const selected = unique.slice(0, DIAGNOSTIC_QUESTIONS);
+  const auditedExercises = getDiagnosticShowcaseExercises(levelId, currentCount);
+  return selected.map((chapter, index) => ({
+    ...chapter,
+    generate: () => auditedExercises[index] ?? chapter.generate("standard"),
+  }));
 }
 
 // Score (0 à 1) -> palier suggéré. Seuils volontairement larges : mieux vaut

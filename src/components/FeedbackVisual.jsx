@@ -1,7 +1,11 @@
 import { ArrowDown, ArrowRight, Scale } from "lucide-react";
 import { colors } from "../theme";
 
-export default function FeedbackVisual({ family }) {
+function valuesFrom(exercise) {
+  return `${exercise?.prompt ?? ""}`.match(/−?-?\d+(?:[,.]\d+)?(?:\s*(?:km\/h|cm²|cm³|cm|m²|m³|m|°|€|%))?/g)?.slice(0, 4) ?? [];
+}
+
+export default function FeedbackVisual({ family, exercise }) {
   if (["fractions", "fraction_equivalence", "fraction_comparison", "fraction_simplification"].includes(family)) {
     return (
       <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" style={{ border: `1px solid ${colors.gold}35` }}>
@@ -99,6 +103,16 @@ export default function FeedbackVisual({ family }) {
     );
   }
   if (family.startsWith("geometry") || family === "pythagoras") {
+    const values = valuesFrom(exercise);
+    if (family === "geometry_circle_measure") {
+      return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Repérer rayon, diamètre et grandeur demandée</p><svg viewBox="0 0 240 115" className="mt-2 w-full"><circle cx="120" cy="58" r="43" fill={`${colors.gold}12`} stroke={colors.ink} strokeWidth="3"/><line x1="120" y1="58" x2="163" y2="58" stroke={colors.gold} strokeWidth="4"><animate attributeName="stroke-dasharray" values="0 50;50 0" dur="1.4s" repeatCount="indefinite"/></line><circle cx="120" cy="58" r="4" fill={colors.green}/><text x="130" y="50" fontSize="12" fill={colors.ink}>{values[0] ? `r = ${values[0]}` : "rayon"}</text></svg></div>;
+    }
+    if (family === "geometry_coordinates" || family === "geometry_vectors") {
+      return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Lire horizontalement, puis verticalement</p><svg viewBox="0 0 240 120" className="mt-2 w-full"><line x1="20" y1="70" x2="225" y2="70" stroke={colors.ink} strokeWidth="2"/><line x1="95" y1="108" x2="95" y2="12" stroke={colors.ink} strokeWidth="2"/><path d="M95 70 L170 70 L170 30" fill="none" stroke={colors.gold} strokeWidth="3" strokeDasharray="7 4"><animate attributeName="stroke-dashoffset" values="22;0" dur="1.5s" repeatCount="indefinite"/></path><circle cx="170" cy="30" r="5" fill={colors.green}/><text x="176" y="27" fontSize="11" fill={colors.ink}>{values.length ? `(${values.slice(0,2).join(" ; ")})` : "point"}</text></svg></div>;
+    }
+    if (family === "geometry_volume") {
+      return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Voir les trois dimensions</p><svg viewBox="0 0 240 125" className="mt-2 w-full"><path d="M45 45 L155 45 L195 22 L85 22 Z M45 45 L45 100 L155 100 L155 45 M155 100 L195 76 L195 22 M45 100 L85 76 L195 76 M85 76 L85 22" fill={`${colors.gold}09`} stroke={colors.ink} strokeWidth="2"/><path d="M45 108 L155 108" stroke={colors.gold} strokeWidth="3"><animate attributeName="stroke-dasharray" values="0 120;120 0" dur="1.5s" repeatCount="indefinite"/></path><text x="88" y="122" fontSize="11" fill={colors.ink}>{values[0] ?? "base"}</text><text x="202" y="55" fontSize="11" fill={colors.ink}>{values[1] ?? "hauteur"}</text></svg></div>;
+    }
     return (
       <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" style={{ border: `1px solid ${colors.gold}35` }}>
         <p className="text-xs font-bold" style={{ color: colors.ink }}>Lire la figure avant de choisir la propriété</p>
@@ -106,7 +120,7 @@ export default function FeedbackVisual({ family }) {
           <path d="M35 75 L35 18 L200 75 Z" fill={`${colors.gold}12`} stroke={colors.ink} strokeWidth="3" strokeLinejoin="round" />
           <path d="M35 62 L48 62 L48 75" fill="none" stroke={colors.green} strokeWidth="3" />
           <circle cx="35" cy="18" r="5" fill={colors.gold}><animate attributeName="r" values="4;7;4" dur="1.8s" repeatCount="indefinite" /></circle>
-          <text x="22" y="15" fontSize="11" fill={colors.ink}>A</text><text x="20" y="90" fontSize="11" fill={colors.ink}>B</text><text x="204" y="90" fontSize="11" fill={colors.ink}>C</text>
+          <text x="22" y="15" fontSize="11" fill={colors.ink}>A</text><text x="20" y="90" fontSize="11" fill={colors.ink}>B</text><text x="204" y="90" fontSize="11" fill={colors.ink}>C</text><text x="42" y="48" fontSize="11" fill={colors.ink}>{values[0] ?? ""}</text><text x="112" y="89" fontSize="11" fill={colors.ink}>{values[1] ?? ""}</text>
         </svg>
         <p className="text-[11px] text-center" style={{ color: colors.slate }}>Codages, positions et unités indiquent la propriété utile.</p>
       </div>

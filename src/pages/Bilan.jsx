@@ -134,7 +134,7 @@ export default function Bilan() {
                     <p><strong style={{ color: ink }}>L’idée importante :</strong> <MathText text={review.meaning} /></p>
                     <p className="mt-2"><strong style={{ color: ink }}>Méthode à retenir :</strong> <MathText text={review.rule} /></p>
                     {review.steps?.length > 0 && <div className="mt-2 rounded-xl bg-white p-3">{review.steps.map((step, stepIndex) => <MathText key={`${review.id}-${stepIndex}`} as="p" text={`${stepIndex + 1}. ${typeof step === "string" ? step : step?.text ?? ""}`} className={stepIndex ? "mt-1" : ""} />)}</div>}
-                    <FeedbackVisual family={review.family} />
+                    <FeedbackVisual family={review.family} exercise={{ prompt: review.prompt, chapter: review.chapter }} />
                     <p className="mt-2 font-bold" style={{ color: ink }}><MathText text={review.conclusion} /></p>
                   </div>
                 </details>

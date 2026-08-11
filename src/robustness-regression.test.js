@@ -210,3 +210,13 @@ test("chaque correction possède désormais un support visuel, même hors famill
   assert.match(visual, /calculus_derivative/);
   assert.match(visual, /exponential_logarithm/);
 });
+
+test("l’administration classe les notions fragiles et les corrections consultées", async () => {
+  const admin = await read("./pages/AdminPreview.jsx");
+  const migration = await read("../supabase/learning-review-admin-policy-2026-08-11.sql");
+  assert.match(admin, /fragileSkills/);
+  assert.match(admin, /reviewFamilies/);
+  assert.match(admin, /Corrections les plus consultées/);
+  assert.match(migration, /learning_review_cards: admin read/);
+  assert.match(migration, /auth\.jwt\(\).*email/);
+});

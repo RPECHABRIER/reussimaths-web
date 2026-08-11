@@ -777,6 +777,7 @@ create policy "learning_review_cards: self read" on public.learning_review_cards
 create policy "learning_review_cards: self insert" on public.learning_review_cards for insert to authenticated with check (auth.uid() = user_id);
 create policy "learning_review_cards: self update" on public.learning_review_cards for update to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "learning_review_cards: self delete" on public.learning_review_cards for delete to authenticated using (auth.uid() = user_id);
+create policy "learning_review_cards: admin read" on public.learning_review_cards for select to authenticated using ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
 create index if not exists learning_review_cards_user_date_idx on public.learning_review_cards (user_id, reviewed_at desc);
 revoke all on table public.learning_review_cards from anon;
 grant select, insert, update, delete on table public.learning_review_cards to authenticated;

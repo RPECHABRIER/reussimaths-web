@@ -77,3 +77,13 @@ test("la vitrine 6e propose des applications réellement explicatives", () => {
     assert.deepEqual(exercise.steps.map((step) => step.type), ["donnee", "regle", "calcul", "resultat"], exercise.chapter);
   }
 });
+
+test("les cinquante vitrines suivent le même parcours donnée, règle, calcul, résultat", () => {
+  for (const showcase of getAllDiscoveryShowcases()) {
+    for (const exercise of showcase.showcaseExercises) {
+      assert.equal(exercise.steps.length, 4, `${showcase.meta.level}: ${exercise.chapter}`);
+      assert.deepEqual(exercise.steps.map((step) => step.type), ["donnee", "regle", "calcul", "resultat"], `${showcase.meta.level}: ${exercise.chapter}`);
+      assert.ok(exercise.steps.map((step) => step.text).join(" ").length >= 180, `${showcase.meta.level}: correction trop brève`);
+    }
+  }
+});

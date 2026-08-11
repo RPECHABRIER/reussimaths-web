@@ -5,15 +5,24 @@ function valuesFrom(exercise) {
   return `${exercise?.prompt ?? ""}`.match(/−?-?\d+(?:[,.]\d+)?(?:\s*(?:km\/h|cm²|cm³|cm|m²|m³|m|°|€|%))?/g)?.slice(0, 4) ?? [];
 }
 
+function fractionsFrom(exercise) {
+  return [...`${exercise?.prompt ?? ""}`.matchAll(/(\d+)\s*\/\s*(\d+)/g)]
+    .slice(0, 2)
+    .map((match) => ({ numerator: Number(match[1]), denominator: Number(match[2]) }))
+    .filter(({ numerator, denominator }) => denominator > 0 && denominator <= 12 && numerator >= 0);
+}
+
 export default function FeedbackVisual({ family, exercise }) {
   if (["fractions", "fraction_equivalence", "fraction_comparison", "fraction_simplification"].includes(family)) {
+    const parsedFractions = fractionsFrom(exercise);
+    const strips = parsedFractions.length === 2 ? parsedFractions : [{ numerator: 1, denominator: 3 }, { numerator: 1, denominator: 4 }];
     return (
       <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" style={{ border: `1px solid ${colors.gold}35` }}>
         <p className="text-xs font-bold" style={{ color: colors.ink }}>Des parts de même taille</p>
-        <div className="mt-3 flex items-center justify-center gap-2">
-          {[3, 4].map((count) => <div key={count} className="flex h-10 flex-1 rounded-lg overflow-hidden" style={{ border: `1px solid ${colors.ink}25` }}>{Array.from({ length: count }, (_, index) => <span key={index} className="flex-1 border-r last:border-r-0" style={{ background: index === 0 ? `${colors.gold}55` : colors.bg, borderColor: `${colors.ink}25` }} />)}</div>)}
+        <div className="mt-3 grid gap-2">
+          {strips.map(({ numerator, denominator }, stripIndex) => <div key={`${numerator}-${denominator}-${stripIndex}`} className="flex items-center gap-2"><span className="w-9 shrink-0 text-center text-xs font-black" style={{color:colors.ink}}>{numerator}/{denominator}</span><div className="flex h-9 flex-1 rounded-lg overflow-hidden" style={{ border: `1px solid ${colors.ink}25` }}>{Array.from({ length: denominator }, (_, index) => <span key={index} className="flex-1 border-r last:border-r-0" style={{ background: index < numerator ? `${colors.gold}65` : colors.bg, borderColor: `${colors.ink}25`, animation:index<numerator?`pulse 1.8s ${index*90}ms infinite`:undefined }} />)}</div></div>)}
         </div>
-        <p className="mt-2 text-[11px] text-center" style={{ color: colors.slate }}>Avant d’additionner, on découpe les deux unités avec les mêmes parts.</p>
+        <p className="mt-2 text-[11px] text-center" style={{ color: colors.slate }}>Les bandes représentent les fractions de la question. Pour les additionner ou les comparer, on les redécoupe en parts de même taille.</p>
       </div>
     );
   }
@@ -77,10 +86,12 @@ export default function FeedbackVisual({ family, exercise }) {
     );
   }
   if (["proportionality", "percentage_from_counts"].includes(family)) {
+    const values = valuesFrom(exercise);
     return (
       <div className="mt-4 rounded-xl bg-white p-3" style={{ border: `1px solid ${colors.gold}35` }}>
         <p className="text-xs font-bold" style={{ color: colors.ink }}>Le retour à l’unité</p>
-        <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-black" style={{color:colors.ink}}><span className="rounded-lg px-3 py-2" style={{background:`${colors.ink}10`}}>plusieurs objets</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-lg px-3 py-2 animate-pulse" style={{background:`${colors.gold}25`}}>1 objet</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-lg px-3 py-2" style={{background:`${colors.green}18`}}>quantité voulue</span></div>
+        <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-black" style={{color:colors.ink}}><span className="rounded-lg px-3 py-2" style={{background:`${colors.ink}10`}}>{values.slice(0,2).join(" pour ") || "quantité connue"}</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-lg px-3 py-2 animate-pulse" style={{background:`${colors.gold}25`}}>1 unité</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-lg px-3 py-2" style={{background:`${colors.green}18`}}>{exercise?.answerDisplay ?? String(exercise?.answer ?? "résultat")}{exercise?.answerUnit ? ` ${exercise.answerUnit}` : ""}</span></div>
+        <p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>On divise pour revenir à une unité, puis on multiplie pour atteindre la quantité demandée.</p>
       </div>
     );
   }
@@ -166,6 +177,9 @@ export default function FeedbackVisual({ family, exercise }) {
   }
   if (family.startsWith("geometry") || family === "pythagoras") {
     const values = valuesFrom(exercise);
+    if (family === "geometry_rectangle_measure") {
+      return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Voir la surface comme des lignes de carrés</p><svg viewBox="0 0 260 135" className="mt-2 w-full" role="img" aria-label="Rectangle quadrillé avec longueur et largeur"><rect x="42" y="22" width="176" height="82" rx="3" fill={`${colors.gold}12`} stroke={colors.ink} strokeWidth="3"/><g stroke={`${colors.ink}28`} strokeWidth="1">{[1,2,3,4,5,6].map(index=><line key={`v-${index}`} x1={42+index*25.14} y1="22" x2={42+index*25.14} y2="104"/>)}{[1,2,3].map(index=><line key={`h-${index}`} x1="42" y1={22+index*20.5} x2="218" y2={22+index*20.5}/>)}</g><path d="M42 116 H218" stroke={colors.gold} strokeWidth="4" strokeDasharray="8 5"><animate attributeName="stroke-dashoffset" values="26;0" dur="1.5s" repeatCount="indefinite"/></path><path d="M30 22 V104" stroke={colors.green} strokeWidth="4" strokeDasharray="8 5"><animate attributeName="stroke-dashoffset" values="26;0" dur="1.5s" repeatCount="indefinite"/></path><text x="112" y="131" fontSize="11" fill={colors.ink}>{values[0] ?? "longueur"}</text><text x="4" y="67" fontSize="11" fill={colors.ink}>{values[1] ?? "largeur"}</text></svg><p className="text-[11px] text-center" style={{color:colors.slate}}>Chaque ligne contient « longueur » carrés et il y a « largeur » lignes : aire = longueur × largeur.</p></div>;
+    }
     if (family === "geometry_circle_measure") {
       return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Repérer rayon, diamètre et grandeur demandée</p><svg viewBox="0 0 240 115" className="mt-2 w-full"><circle cx="120" cy="58" r="43" fill={`${colors.gold}12`} stroke={colors.ink} strokeWidth="3"/><line x1="120" y1="58" x2="163" y2="58" stroke={colors.gold} strokeWidth="4"><animate attributeName="stroke-dasharray" values="0 50;50 0" dur="1.4s" repeatCount="indefinite"/></line><circle cx="120" cy="58" r="4" fill={colors.green}/><text x="130" y="50" fontSize="12" fill={colors.ink}>{values[0] ? `r = ${values[0]}` : "rayon"}</text></svg></div>;
     }

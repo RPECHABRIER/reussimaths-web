@@ -60,6 +60,23 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - Le diagnostic et la première série gratuite d’un même niveau ne reprennent jamais le même énoncé.
 - Les erreurs comme les réussites donnent accès à l’explication détaillée et au support visuel.
 - Le chemin public vérifié est : accueil → choix du niveau → programme étudié → diagnostic → recommandation → série gratuite.
+- Les 50 vitrines suivent désormais toutes une application en quatre temps : donnée, règle, calcul et résultat.
+- Les supports visuels de fractions reprennent les numérateurs et dénominateurs de la question ; ceux de proportionnalité affichent les valeurs et le résultat attendus ; les aires de rectangles disposent d’un quadrillage animé.
+
+## Relecture approfondie de la 5e
+
+- Les 14 chapitres du niveau ont été soumis à 240 générations chacun, soit 3 360 exercices audités.
+- Aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
+- Les cinq vitrines de 5e ont été réécrites manuellement : addition de relatifs par distance à zéro, fractions et dénominateur commun, calcul de 20 % par le dixième, somme des angles et probabilité favorable sur total.
+- La méthode des relatifs reprend l’image du nombre le plus « fort » qui donne son signe puis perd des « points de vie ».
+- La correction de probabilité se termine par le contrôle indispensable : le résultat doit être compris entre 0 et 1.
+
+## Recette de la version publiée
+
+- La page d’accueil Vercel est accessible et présente clairement l’essai gratuit, le rituel enseignant et l’offre complète.
+- Le diagnostic de 6e publié a été ouvert, commencé et testé avec une réponse erronée.
+- L’animation publiée de numération reprend bien 4 milliers, 3 centaines, 2 dizaines et 7 unités pour la réponse 4 327.
+- Le bouton sonore, le pavé numérique avec touche ±, la correction détaillée et la navigation vers la question suivante restent opérationnels.
 
 ## Suite de l’audit
 

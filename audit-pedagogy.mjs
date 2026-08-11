@@ -7,6 +7,8 @@ const chapterDirectory = new URL("./src/chapters/", import.meta.url);
 const files = (await readdir(chapterDirectory)).filter((name) => name.endsWith(".js") && name !== "registry.js").sort();
 const difficulties = ["facile", "standard", "expert"];
 const samplesPerDifficulty = 80;
+const levelArgument = process.argv.find((argument) => argument.startsWith("--level="));
+const levelFilter = levelArgument?.slice("--level=".length) || null;
 const familyCounts = new Map();
 const genericLabelCounts = new Map();
 const anomalies = [];
@@ -25,6 +27,7 @@ function add(file, kind, detail, exercise) {
 
 for (const file of files) {
   const chapter = (await import(pathToFileURL(new URL(file, chapterDirectory).pathname))).default;
+  if (levelFilter && chapter.meta.level !== levelFilter) continue;
   const prompts = new Set();
   const families = new Set();
   let generated = 0;
@@ -88,7 +91,8 @@ const priority = summaries
   .sort((a, b) => (b.genericFeedback - a.genericFeedback) || (b.shortRenderedCorrections - a.shortRenderedCorrections) || (b.answerLeaks - a.answerLeaks));
 
 const report = {
-  chapters: files.length,
+  level: levelFilter ?? "tous",
+  chapters: summaries.length,
   generated: summaries.reduce((sum, item) => sum + item.generated, 0),
   familyCounts: Object.fromEntries([...familyCounts].sort((a, b) => b[1] - a[1])),
   genericLabels: Object.fromEntries([...genericLabelCounts].sort((a, b) => b[1] - a[1]).slice(0, 120)),

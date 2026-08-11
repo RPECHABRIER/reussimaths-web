@@ -2,6 +2,25 @@ const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay) => ({ type
 const t = (chapter, prompt, answer, steps) => ({ type: "text", chapter, prompt, answer, steps });
 const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", chapter, prompt, answer, options, steps });
 
+function structureShowcaseExercise(exercise) {
+  if (!Array.isArray(exercise.steps) || exercise.steps.length === 0) return exercise;
+  if (exercise.steps.every((step) => step && typeof step === "object" && step.text)) return exercise;
+  const texts = exercise.steps.map((step) => typeof step === "string" ? step : step?.text ?? "").filter(Boolean);
+  const method = texts[0] ?? "On identifie la propriété ou la définition utile.";
+  const result = texts.at(-1) ?? `On obtient ${exercise.answerDisplay ?? exercise.answer}.`;
+  const calculation = texts.length > 2 ? texts.slice(1, -1).join(" ") : method;
+  const given = exercise.prompt.replace(/[.?!]+\s*$/, "");
+  return {
+    ...exercise,
+    steps: [
+      { type: "donnee", text: `On relève précisément les informations utiles : ${given}.` },
+      { type: "regle", text: method },
+      { type: "calcul", text: `On applique cette règle aux valeurs de l’énoncé, sans changer leur ordre ni leur unité : ${calculation}` },
+      { type: "resultat", text: result },
+    ],
+  };
+}
+
 const SHOWCASES = {
   sixieme: [
     n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
@@ -36,11 +55,36 @@ const SHOWCASES = {
     ]),
   ],
   cinquieme: [
-    n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, ["Les signes sont opposés : 12 a la plus grande distance à zéro.", "12 donne son signe positif puis perd 7 points : 12 − 7.", "−7 + 12 = 5."]),
-    n("Fractions — Addition", "Calcule : 2/3 + 1/4.", 11/12, ["On cherche un dénominateur commun : 12.", "2/3 = 8/12 et 1/4 = 3/12.", "8/12 + 3/12 = 11/12."], null, "11/12"),
-    n("Pourcentages — Calculer une proportion", "Calcule 20 % de 80.", 16, ["10 % de 80 est le dixième de 80 : 8.", "20 % est le double de 10 % : 2 × 8.", "20 % de 80 est égal à 16."]),
-    n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, ["La somme des angles d’un triangle vaut 180°.", "180 − 50 − 60 = 70.", "Le troisième angle mesure 70°."], "°"),
-    n("Probabilités — Issues favorables", "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, ["Il y a 3 issues favorables.", "Il y a 3 + 2 = 5 issues possibles.", "La probabilité est 3/5."], null, "3/5"),
+    n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, [
+      { type: "donnee", text: "On additionne deux nombres de signes opposés : −7 est négatif et 12 est positif." },
+      { type: "regle", text: "Le plus « fort », celui qui a la plus grande distance à zéro, donne son signe au résultat, mais il perd les points de l’autre nombre." },
+      { type: "calcul", text: "Douze est plus éloigné de zéro que sept : le résultat sera positif. Il perd ensuite 7 points de vie, donc 12 − 7 = 5." },
+      { type: "resultat", text: "Ainsi, −7 + 12 = 5." },
+    ]),
+    n("Fractions — Addition", "Calcule : 2/3 + 1/4.", 11/12, [
+      { type: "donnee", text: "Les deux fractions n’ont pas le même dénominateur : les parts n’ont donc pas encore la même taille." },
+      { type: "regle", text: "On commence par obtenir un dénominateur commun en multipliant en haut et en bas par un même nombre, ce qui ne change pas la valeur de la fraction." },
+      { type: "calcul", text: "On transforme 2/3 en 8/12 en multipliant par 4, et 1/4 en 3/12 en multipliant par 3. On peut alors additionner les numérateurs : 8 + 3 = 11." },
+      { type: "resultat", text: "On obtient donc 2/3 + 1/4 = 11/12." },
+    ], null, "11/12"),
+    n("Pourcentages — Calculer une proportion", "Calcule 20 % de 80.", 16, [
+      { type: "donnee", text: "On cherche une proportion de la quantité 80 : 20 % ne signifie pas ajouter le nombre 20." },
+      { type: "regle", text: "Le plus simple est de calculer d’abord 10 %, c’est-à-dire le dixième, puis de doubler ce résultat pour obtenir 20 %." },
+      { type: "calcul", text: "Dix pour cent de 80 vaut 80 ÷ 10 = 8. Vingt pour cent est le double de 10 %, donc 2 × 8 = 16." },
+      { type: "resultat", text: "Ainsi, 20 % de 80 est égal à 16." },
+    ]),
+    n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
+      { type: "donnee", text: "Deux angles du triangle mesurent 50° et 60°. On cherche la mesure du troisième angle." },
+      { type: "regle", text: "Dans tous les triangles, la somme des mesures des trois angles est égale à 180°." },
+      { type: "calcul", text: "Les deux angles connus mesurent ensemble 50 + 60 = 110°. Il reste donc 180 − 110 = 70°." },
+      { type: "resultat", text: "Le troisième angle mesure 70°. On vérifie bien que 50 + 60 + 70 = 180." },
+    ], "°"),
+    n("Probabilités — Issues favorables", "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, [
+      { type: "donnee", text: "L’événement recherché est « obtenir une boule rouge ». Il y a 3 boules rouges : ce sont les issues favorables." },
+      { type: "regle", text: "Pour calculer une probabilité dans une situation équiprobable, on compare le nombre d’issues favorables au nombre total d’issues possibles." },
+      { type: "calcul", text: "Le sac contient 3 + 2 = 5 boules au total. La probabilité cherchée est donc nombre de boules rouges ÷ nombre total de boules = 3/5." },
+      { type: "resultat", text: "La probabilité d’obtenir une boule rouge est 3/5. Ce résultat est bien compris entre 0 et 1." },
+    ], null, "3/5"),
   ],
   quatrieme: [
     n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, ["Deux nombres de même signe donnent un produit positif.", "4 × 3 = 12.", "(−4) × (−3) = 12."]),
@@ -101,8 +145,9 @@ const SHOWCASES = {
 };
 
 export function getDiscoveryShowcase(levelId) {
-  const exercises = SHOWCASES[levelId];
-  if (!exercises) return null;
+  const sourceExercises = SHOWCASES[levelId];
+  if (!sourceExercises) return null;
+  const exercises = sourceExercises.map(structureShowcaseExercise);
   return {
     meta: {
       id: `decouverte-${levelId}`,
@@ -150,5 +195,5 @@ const PREVIOUS_LEVEL = {
 
 export function getDiagnosticShowcaseExercises(levelId) {
   const previous = levelId === "sixieme" ? CM2_FOUNDATIONS : SHOWCASES[PREVIOUS_LEVEL[levelId]] ?? [];
-  return previous.slice(0, 5);
+  return previous.slice(0, 5).map(structureShowcaseExercise);
 }

@@ -7,6 +7,7 @@ import MathText from "../components/MathText";
 import StepsList from "../components/StepsList";
 import Figure from "../components/Figure";
 import Graph from "../components/Graph";
+import CalculationModeBadge from "../components/CalculationModeBadge";
 import { colors, fonts, shadow } from "../theme";
 
 // ---------------------------------------------------------------------------
@@ -428,6 +429,7 @@ export default function Enseignant() {
           <p className="text-sm uppercase tracking-wide font-semibold mb-4" style={{ color: slate }}>
             {exercise.chapter}
           </p>
+          <div className="mb-5"><CalculationModeBadge exercise={exercise} large/></div>
           <MathText
             as="p"
             text={exercise.prompt}

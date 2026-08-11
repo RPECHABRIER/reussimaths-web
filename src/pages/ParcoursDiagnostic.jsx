@@ -11,6 +11,7 @@ import { supabase } from "../lib/supabaseClient";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import LearningFeedback from "../components/LearningFeedback";
+import CalculationModeBadge from "../components/CalculationModeBadge";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
@@ -212,6 +213,7 @@ export default function ParcoursDiagnostic() {
           <p className="text-xs uppercase tracking-wide font-bold mb-3" style={{ color: cycleColor }}>
             {exercise.chapter}
           </p>
+          <div className="mb-3"><CalculationModeBadge exercise={exercise}/></div>
           <MathText as="p" text={exercise.prompt} className="mb-5 leading-relaxed" style={{ fontFamily: fonts.mono, fontSize: "clamp(1.08rem, 3vw, 1.25rem)", fontWeight: 650, color: colors.ink }} />
 
           {exercise.figure && <Figure spec={exercise.figure} />}

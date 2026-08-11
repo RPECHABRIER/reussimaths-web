@@ -5,6 +5,7 @@ import StepsList from "./StepsList";
 import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
+import CalculationModeBadge from "./CalculationModeBadge";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { useAuth } from "../hooks/useAuth";
 import { useSkillTracking } from "../hooks/useSkillTracking";
@@ -126,6 +127,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
           <Timer size={13} /> {formatDuration(elapsed)}
         </p>
       </div>
+      <div className="mb-3"><CalculationModeBadge exercise={exercise}/></div>
       <MathText
         as="p"
         text={exercise.prompt}

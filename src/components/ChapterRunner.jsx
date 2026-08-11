@@ -13,6 +13,7 @@ import StepsList from "./StepsList";
 import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
+import CalculationModeBadge from "./CalculationModeBadge";
 import CoursPanel from "./CoursPanel";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow } from "../theme";
@@ -611,6 +612,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           </p>
           {isDiscoverySession && <span className="text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: colors.green, backgroundColor: `${colors.green}15` }}>Série gratuite</span>}
           </div>
+          <div className="mb-4"><CalculationModeBadge exercise={exercise}/></div>
           <MathText
             as="p"
             text={exercise.prompt}

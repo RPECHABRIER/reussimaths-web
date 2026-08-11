@@ -40,6 +40,7 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const CGU = lazy(() => import("./pages/legal/CGU"));
 const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
 const PilotFeedback = lazy(() => import("./pages/PilotFeedback"));
+const DailyMentalMath = lazy(() => import("./pages/DailyMentalMath"));
 
 function PageLoader() {
   return (
@@ -66,7 +67,8 @@ export default function App() {
   const dockExcluded = ["/enseignant", "/admin", "/pseudo", "/mentions-legales", "/cgu", "/confidentialite"].some((prefix) => location.pathname.startsWith(prefix))
     || location.pathname.includes("/etape/")
     || location.pathname.startsWith("/chapitre/")
-    || /^\/jeux\/.+/.test(location.pathname);
+    || /^\/jeux\/.+/.test(location.pathname)
+    || location.pathname.startsWith("/calcul-mental/");
   const showStudentDock = !!user && !dockExcluded;
 
   // Anti-partage : un abonnement complet ne peut être utilisé que sur un seul
@@ -189,6 +191,7 @@ export default function App() {
         <Route path="/amis" element={<Amis />} />
         <Route path="/reviser" element={<Reviser />} />
         <Route path="/bilan" element={<Bilan />} />
+        <Route path="/calcul-mental/:levelId" element={<DailyMentalMath />} />
         <Route path="/enseignant" element={<Enseignant />} />
         <Route path="/jeux" element={<Jeux />} />
         <Route path="/jeux/course-tables" element={<CourseTables />} />

@@ -313,6 +313,24 @@ test("le rituel enseignant permet de composer et partager une séance exacte", a
   assert.match(teacher, /const conversion/);
 });
 
+test("chaque abonné reçoit une série quotidienne de calcul mental chronométrée", async () => {
+  const [page, generator, level, app, badge, migration] = await Promise.all([
+    read("./pages/DailyMentalMath.jsx"), read("./lib/dailyMentalMath.js"), read("./pages/Niveau.jsx"),
+    read("./App.jsx"), read("./components/CalculationModeBadge.jsx"), read("../supabase/daily-mental-math-migration-2026-08-11.sql"),
+  ]);
+  assert.match(page, /QUESTION_SECONDS = 18/);
+  assert.match(page, /Question \{index\+1\} \/ 10/);
+  assert.match(page, /isFullAccessSubscription/);
+  assert.match(generator, /\[add,subtract,multiply,divide,add,subtract,multiply,divide\]/);
+  assert.match(generator, /for\(let i=0;i<2;i\+=1\)/);
+  assert.match(level, /Ton calcul mental du jour/);
+  assert.match(app, /calcul-mental\/:levelId/);
+  assert.match(badge, /Calcul mental/);
+  assert.match(badge, /Calculatrice autorisée/);
+  assert.match(migration, /auth\.uid\(\) = user_id/g);
+  assert.match(migration, /revoke all on table public\.daily_mental_sessions from anon/);
+});
+
 test("le parcours découverte affiche les égalités de fractions en LaTeX", async () => {
   const showcases = await read("./discoveryShowcases.js");
   assert.match(showcases, /\\\\dfrac\{x\}\{6\}=\\\\dfrac\{4\}\{3\}/);

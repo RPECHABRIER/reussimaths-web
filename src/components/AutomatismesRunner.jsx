@@ -6,6 +6,7 @@ import StepsList from "./StepsList";
 import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
+import CalculationModeBadge from "./CalculationModeBadge";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
@@ -328,6 +329,7 @@ export default function AutomatismesRunner({ chapter }) {
           <p className="text-xs uppercase tracking-wide mb-3" style={{ color: slate }}>
             Question {index + 1} / {QUESTIONS_PER_SERIES}
           </p>
+          <div className="mb-3"><CalculationModeBadge exercise={exercise}/></div>
           <MathText
             as="p"
             text={exercise.prompt}

@@ -185,11 +185,19 @@ test("une erreur déclenche une vérification proche et priorise les erreurs ré
 });
 
 test("la mesure produit et les retours restent minimaux", async () => {
-  const [analytics, endpoint, feedback] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js")]);
+  const [analytics, endpoint, feedback, admin, app, account, runner] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js"), read("./pages/AdminPreview.jsx"), read("./App.jsx"), read("./pages/Account.jsx"), read("./components/ChapterRunner.jsx")]);
   assert.match(analytics, /anonymousId/);
   assert.doesNotMatch(analytics, /user\.email|email:/);
   assert.match(endpoint, /ALLOWED_EVENTS/);
   assert.match(feedback, /slice\(0, 2000\)/);
+  assert.match(endpoint, /account_cta_clicked/);
+  assert.match(endpoint, /signup_completed/);
+  assert.match(analytics, /SIGNUP_PENDING_KEY/);
+  assert.match(app, /trackCompletedSignup/);
+  assert.match(account, /markSignupStarted/);
+  assert.match(runner, /account_cta_clicked/);
+  assert.match(admin, /strictFunnel/);
+  assert.match(admin, /Trois abandons prioritaires du tunnel/);
 });
 
 test("le cahier pédagogique se synchronise sans réponse brute et avec isolation par compte", async () => {

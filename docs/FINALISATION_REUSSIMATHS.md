@@ -29,6 +29,7 @@
 
 - [x] Promesse, essai gratuit et prix visibles depuis l'accueil.
 - [x] Différence entre abonnement mensuel et Pack Examen explicitée.
+- [x] Instrumenter chaque étape du tunnel avec un identifiant pseudonyme et afficher les trois abandons prioritaires dans l'administration.
 - [ ] Mesurer les abandons entre niveau, programme, diagnostic, essai, compte et paiement.
 - [ ] Ajuster les textes uniquement à partir des premiers usages réels.
 - [ ] Ajouter les premiers témoignages seulement avec une autorisation explicite.
@@ -44,4 +45,3 @@
 ## Critère de fin
 
 RéussiMaths est prêt lorsque le parcours élève, le paiement et la résiliation fonctionnent de bout en bout sur mobile et ordinateur, que les contenus prioritaires ont été relus, qu'aucune erreur critique n'est ouverte et que la gestion courante tient dans une courte routine hebdomadaire.
-

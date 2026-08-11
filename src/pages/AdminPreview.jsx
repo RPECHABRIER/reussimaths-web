@@ -99,7 +99,7 @@ function ProductMetrics() {
   useEffect(() => {
     const since = new Date(Date.now() - 31 * 86400000).toISOString();
     Promise.all([
-      supabase.from("product_events").select("event_name, anonymous_id, occurred_at").gte("occurred_at", since).order("occurred_at"),
+      supabase.from("product_events").select("event_name, anonymous_id, properties, occurred_at").gte("occurred_at", since).order("occurred_at"),
       supabase.from("pilot_feedback").select("role, usefulness, ease, would_recommend, comment, created_at").order("created_at", { ascending: false }).limit(20),
       supabase.from("subscriptions").select("plan, status, admin_granted, current_period_end"),
       supabase.from("learning_attempts").select("user_id,skill_id,chapter_id,correct,error_code,assisted,attempted_at").gte("attempted_at", since).order("attempted_at"),
@@ -112,6 +112,18 @@ function ProductMetrics() {
       if (firstError) { setError(firstError.message); return; }
       const events = eventsResult.data ?? [];
       const uniqueByEvent = (name) => new Set(events.filter((item) => item.event_name === name).map((item) => item.anonymous_id)).size;
+      const funnelStages = [
+        ["Niveau choisi", "level_selected"], ["Programme configuré", "study_topics_selected"],
+        ["Diagnostic commencé", "diagnostic_started"], ["Diagnostic terminé", "diagnostic_completed"],
+        ["Essai commencé", "trial_started"], ["Essai terminé", "trial_completed"],
+        ["Compte demandé", "account_cta_clicked"], ["Inscription lancée", "signup_started"],
+        ["Compte créé", "signup_completed"], ["Offre consultée", "offer_viewed"],
+        ["Checkout", "checkout_started"], ["Paiement activé", "payment_activated"],
+      ];
+      let continuing = new Set(events.filter((item)=>item.event_name==="page_view").map((item)=>item.anonymous_id));
+      const strictFunnel=[["Visiteurs",continuing.size]];
+      funnelStages.forEach(([label,eventName])=>{const reached=new Set(events.filter((item)=>item.event_name===eventName).map((item)=>item.anonymous_id));continuing=new Set([...continuing].filter((id)=>reached.has(id)));strictFunnel.push([label,continuing.size]);});
+      const dropoffs=strictFunnel.slice(1).map(([label,value],index)=>{const previousLabel=strictFunnel[index][0];const previousValue=strictFunnel[index][1];const lost=Math.max(0,previousValue-value);return {from:previousLabel,to:label,lost,rate:previousValue?Math.round(lost/previousValue*100):0};}).filter((item)=>item.lost>0).sort((a,b)=>b.rate-a.rate||b.lost-a.lost).slice(0,3);
       const firstSeen = new Map(); const daysSeen = new Map();
       events.forEach((item) => {
         const day = item.occurred_at.slice(0, 10);
@@ -150,11 +162,8 @@ function ProductMetrics() {
         return map;
       }, new Map());
       setData({
-        funnel: [
-          ["Visiteurs", uniqueByEvent("page_view")], ["Diagnostics", uniqueByEvent("diagnostic_completed")],
-          ["Essais terminés", uniqueByEvent("trial_completed")], ["Checkout", uniqueByEvent("checkout_started")],
-          ["Paiements activés", uniqueByEvent("payment_activated")],
-        ],
+        funnel: strictFunnel, dropoffs,
+        rawActivation: { diagnostics:uniqueByEvent("diagnostic_completed"),trials:uniqueByEvent("trial_completed"),signups:uniqueByEvent("signup_completed") },
         retention7: retention(7), retention30: retention(30), mrr: paid.length * 4.99,
         feedback: feedbackResult.data ?? [],
         errorTypes: [...errorCounts.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
@@ -173,7 +182,8 @@ function ProductMetrics() {
   return <div className="rounded-[1.75rem] p-5 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}><div className="flex items-center gap-3"><Users size={19} color={colors.gold} /><div><p className="font-black" style={{ color: colors.ink }}>Conversion et valeur produit</p><p className="text-xs" style={{ color: colors.slate }}>30 derniers jours · visiteurs pseudonymes uniques</p></div></div>
     {error && <p className="text-xs mt-4" style={{ color: colors.red }}>{error}</p>}
     {!data && !error && <p className="text-xs mt-4" style={{ color: colors.slate }}>Chargement…</p>}
-    {data && <><div className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-5">{data.funnel.map(([label,value], index) => { const previous = data.funnel[index - 1]?.[1]; const rate = index > 0 && previous ? Math.round(value / previous * 100) : null; return <div key={label} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}><p className="text-xl font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}{rate != null ? ` · ${rate} % de l’étape précédente` : ""}</p></div>; })}</div>
+    {data && <><div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-5">{data.funnel.map(([label,value], index) => { const previous = data.funnel[index - 1]?.[1]; const rate = index > 0 && previous ? Math.round(value / previous * 100) : null; return <div key={label} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}><p className="text-xl font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}{rate != null ? ` · ${rate} % de l’étape précédente` : ""}</p></div>; })}</div>
+      <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:`${colors.red}08`,border:`1px solid ${colors.red}20`}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.red}}>Trois abandons prioritaires du tunnel</p>{data.dropoffs.length?<div className="mt-2 grid gap-2 md:grid-cols-3">{data.dropoffs.map((item)=><div key={`${item.from}-${item.to}`} className="rounded-xl p-3" style={{backgroundColor:colors.card}}><p className="text-lg font-black" style={{color:colors.ink}}>{item.rate} %</p><p className="text-[10px]" style={{color:colors.slate}}>{item.from} → {item.to}<br/>{item.lost} visiteur{item.lost>1?"s":""} perdu{item.lost>1?"s":""}</p></div>)}</div>:<p className="mt-2 text-xs" style={{color:colors.slate}}>Pas encore assez de données séquentielles.</p>}<p className="mt-2 text-[10px]" style={{color:colors.slate}}>Le calcul suit les mêmes visiteurs pseudonymes de l’accueil au paiement et évite de mélanger des populations différentes.</p></div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">{[["Rétention J+7",data.retention7 == null ? "—" : `${data.retention7} %`],["Rétention J+30",data.retention30 == null ? "—" : `${data.retention30} %`],["MRR estimé",`${data.mrr.toFixed(2)} €`],["Retours pilote",data.feedback.length]].map(([label,value]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor:`${colors.gold}0d` }}><p className="font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p></div>)}</div>
       <p className="text-xs mt-4" style={{ color: colors.slate }}>Retours : utilité {average("usefulness")}/5 · simplicité {average("ease")}/5 · recommandation {data.feedback.length ? Math.round(data.feedback.filter((item) => item.would_recommend).length / data.feedback.length * 100) : 0} %</p>
       {data.errorTypes.length > 0 && <p className="text-xs mt-2" style={{ color: colors.slate }}>Erreurs fréquentes : {data.errorTypes.map(([name,count]) => `${name} (${count})`).join(" · ")}</p>}

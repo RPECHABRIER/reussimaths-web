@@ -26,7 +26,7 @@ import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
 import LoadError from "../components/LoadError";
-import { trackProductEvent } from "../lib/productAnalytics";
+import { markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
 
 const TERMS_VERSION = "2026-08-09";
 
@@ -258,8 +258,8 @@ export default function Account() {
               <p className="text-xs font-bold" style={{ color: colors.ink }}>Crée d’abord ton espace personnel</p>
               <p className="text-xs mt-1" style={{ color: colors.slate }}>La connexion sauvegarde la progression et rattache l’abonnement au bon élève.</p>
               <div className="grid sm:grid-cols-2 gap-2 mt-3">
-                <button onClick={() => { trackProductEvent("signup_started", { provider: "google" }); signInWithGoogle(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
-                <button onClick={() => { trackProductEvent("signup_started", { provider: "apple" }); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
+                <button onClick={() => { markSignupStarted("google"); signInWithGoogle(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
+                <button onClick={() => { markSignupStarted("apple"); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
               </div>
               <p className="flex items-center justify-center gap-1.5 text-[11px] mt-3" style={{ color: colors.slate }}><ShieldCheck size={13} color={colors.green} />L’élève choisit un pseudo ; son nom n’est pas affiché.</p>
             </div>

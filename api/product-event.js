@@ -6,6 +6,7 @@ const ALLOWED_EVENTS = new Set([
   "trial_started", "trial_completed", "signup_started", "offer_viewed",
   "checkout_started", "checkout_returned", "payment_activated", "portal_opened",
   "session_completed", "feedback_sent", "study_topics_selected",
+  "account_cta_clicked", "signup_completed",
 ]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 

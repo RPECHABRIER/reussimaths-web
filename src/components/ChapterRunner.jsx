@@ -453,7 +453,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   <p className="text-[11px] mt-0.5" style={{ color: slate }}>Crée un pseudo, sans afficher ton nom.</p>
                 </div>
               </div>
-              <Link to="/compte" className="w-full mt-4 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2" style={{ backgroundColor: ink, color: paper }}>
+              <Link to="/compte" onClick={()=>trackProductEvent("account_cta_clicked",{source:"trial_completed",levelId:chapter.meta.level})} className="w-full mt-4 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2" style={{ backgroundColor: ink, color: paper }}>
                 Créer mon espace gratuit <ArrowRight size={15} />
               </Link>
               <Link to="/bilan" className="mt-3 inline-flex items-center gap-1 text-xs font-bold" style={{ color: gold }}>

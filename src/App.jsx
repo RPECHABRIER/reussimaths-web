@@ -9,7 +9,7 @@ import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 import StudentDock from "./components/StudentDock";
-import { trackProductEvent } from "./lib/productAnalytics";
+import { trackCompletedSignup, trackProductEvent } from "./lib/productAnalytics";
 
 const LevelSelect = lazy(() => import("./pages/LevelSelect"));
 const CycleSelect = lazy(() => import("./pages/CycleSelect"));
@@ -85,6 +85,8 @@ export default function App() {
     pathRef.current = location.pathname;
     trackProductEvent("page_view");
   }, [location.pathname]);
+
+  useEffect(()=>{if(!loading&&user)trackCompletedSignup();},[loading,user?.id]);
 
   // Capture un éventuel lien de parrainage (?ref=code), quelle que soit la
   // page d'arrivée — utilisé à la création du profil (voir Onboarding.jsx).

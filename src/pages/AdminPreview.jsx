@@ -8,7 +8,7 @@ import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
-import { ArrowRight, BookOpenCheck, Eye, KeyRound, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { ArrowRight, BookOpenCheck, CreditCard, Eye, KeyRound, RefreshCw, ShieldCheck, Sparkles, Users } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Panneau admin (/admin, réservé à romainpechabrier@gmail.com) — voir
@@ -86,9 +86,57 @@ export default function AdminPreview() {
           <GrantAccessTool />
           <div className="lg:col-span-2"><ClassInvitationsTool /></div>
           <div className="lg:col-span-2"><ProductMetrics /></div>
+          <div className="lg:col-span-2"><PaymentHealth /></div>
           <div className="lg:col-span-2"><SubscribersDashboard /></div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function PaymentHealth() {
+  const [health, setHealth] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await authenticatedFetch("/api/admin-class-codes?view=payment-health");
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Suivi indisponible");
+      setHealth(payload);
+    } catch (loadError) {
+      setError(loadError.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+  const active = (health?.statusCounts?.active ?? 0) + (health?.statusCounts?.trialing ?? 0);
+  const paymentAlerts = (health?.statusCounts?.past_due ?? 0) + (health?.statusCounts?.unpaid ?? 0);
+  const deliveryWarning = health && health.consentCount > 0 && health.webhookCount === 0;
+  const formatDate = (value) => value ? new Date(value).toLocaleString("fr-FR") : "Aucun";
+
+  return (
+    <div className="rounded-[1.75rem] p-5 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.green}16` }}><CreditCard size={19} color={colors.green} /></div><div><p className="font-black" style={{ color: colors.ink }}>Santé des paiements</p><p className="text-xs" style={{ color: colors.slate }}>Stripe, consentements et droits d’accès · 7 derniers jours</p></div></div>
+        <button type="button" onClick={load} disabled={loading} className="rounded-full p-2" aria-label="Actualiser le suivi des paiements" style={{ color: colors.slate, backgroundColor: colors.bg }}><RefreshCw size={16} className={loading ? "animate-spin" : ""} /></button>
+      </div>
+      {error && <p className="text-xs mt-4" style={{ color: colors.red }}>{error}</p>}
+      {!health && !error && <p className="text-xs mt-4" style={{ color: colors.slate }}>Chargement…</p>}
+      {health && <>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-5">
+          {[["Accès payants actifs", active], ["Consentements", health.consentCount], ["Webhooks reçus", health.webhookCount], ["Paiements à surveiller", paymentAlerts]].map(([label, value]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}><p className="text-xl font-black" style={{ color: label === "Paiements à surveiller" && value ? colors.red : colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p></div>)}
+        </div>
+        <div className="mt-3 rounded-2xl p-3" style={{ backgroundColor: deliveryWarning || health.incompleteSubscriptions ? `${colors.red}0d` : `${colors.green}0c`, border: `1px solid ${deliveryWarning || health.incompleteSubscriptions ? colors.red : colors.green}25` }}>
+          <p className="text-xs font-black" style={{ color: deliveryWarning || health.incompleteSubscriptions ? colors.red : colors.green }}>{deliveryWarning ? "Alerte : des consentements existent, mais aucun webhook n’a été reçu." : health.incompleteSubscriptions ? `${health.incompleteSubscriptions} abonnement(s) actif(s) sans identifiant Stripe complet.` : "Chaîne de paiement cohérente."}</p>
+          <p className="text-[10px] mt-1" style={{ color: colors.slate }}>Dernier consentement : {formatDate(health.lastConsentAt)} · dernier webhook : {formatDate(health.lastWebhookAt)}</p>
+        </div>
+      </>}
     </div>
   );
 }

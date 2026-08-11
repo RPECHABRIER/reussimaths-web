@@ -579,7 +579,7 @@ export default function Account() {
                 className="py-3 rounded-full font-bold"
                 style={{ backgroundColor: colors.gold, color: colors.ink, opacity: acceptImmediateAccess ? 1 : 0.5 }}
               >
-                {checkoutLoading ? "Ouverture du paiement…" : "S'abonner — 4,99 €/mois"}
+                {checkoutLoading ? "Ouverture du paiement…" : "S'abonner avec obligation de paiement — 4,99 €/mois"}
               </button>
               {checkoutError && (
                 <p className="text-xs text-center -mt-2" style={{ color: colors.red }}>
@@ -609,7 +609,7 @@ export default function Account() {
                   className="text-xs font-semibold mt-2"
                   style={{ color: colors.gold, opacity: acceptImmediateAccess ? 1 : 0.45 }}
                 >
-                  {checkoutLoading ? "Ouverture du paiement…" : "Choisir le Pack Examen →"}
+                  {checkoutLoading ? "Ouverture du paiement…" : "Acheter le Pack Examen — 9 € →"}
                 </button>
               </div>
             </div>

@@ -54,10 +54,39 @@ async function listCodes(res) {
   }) });
 }
 
+async function paymentHealth(res) {
+  const since = new Date(Date.now() - 7 * 86400000).toISOString();
+  const [webhooksResult, consentsResult, subscriptionsResult] = await Promise.all([
+    supabaseAdmin.from("stripe_webhook_events").select("event_id, received_at").gte("received_at", since).order("received_at", { ascending: false }).limit(50),
+    supabaseAdmin.from("purchase_consents").select("plan, consented_at, terms_version").gte("consented_at", since).order("consented_at", { ascending: false }).limit(50),
+    supabaseAdmin.from("subscriptions").select("plan, status, admin_granted, stripe_customer_id, stripe_subscription_id, current_period_end, updated_at"),
+  ]);
+  if (webhooksResult.error || consentsResult.error || subscriptionsResult.error) {
+    throw webhooksResult.error || consentsResult.error || subscriptionsResult.error;
+  }
+  const subscriptions = subscriptionsResult.data ?? [];
+  const paid = subscriptions.filter((row) => !row.admin_granted && row.stripe_customer_id);
+  const statusCounts = paid.reduce((counts, row) => {
+    counts[row.status ?? "none"] = (counts[row.status ?? "none"] ?? 0) + 1;
+    return counts;
+  }, {});
+  const incomplete = paid.filter((row) => row.plan === "mensuel" && ["active", "trialing", "past_due", "unpaid"].includes(row.status) && !row.stripe_subscription_id).length;
+  res.status(200).json({
+    periodDays: 7,
+    webhookCount: webhooksResult.data?.length ?? 0,
+    lastWebhookAt: webhooksResult.data?.[0]?.received_at ?? null,
+    consentCount: consentsResult.data?.length ?? 0,
+    lastConsentAt: consentsResult.data?.[0]?.consented_at ?? null,
+    statusCounts,
+    incompleteSubscriptions: incomplete,
+  });
+}
+
 export default async function handler(req, res) {
   const caller = await requireAdmin(req, res);
   if (!caller) return;
   try {
+    if (req.method === "GET" && req.query?.view === "payment-health") return await paymentHealth(res);
     if (req.method === "GET") return await listCodes(res);
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
     const { action, level, label, expiresInDays, maxRedemptions, code } = req.body ?? {};

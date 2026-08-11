@@ -2,6 +2,13 @@
 
 Cette checklist ne doit être cochée qu'avec les clés **Live**. Les essais Stripe restent séparés de la production.
 
+## 0. Feu vert juridique — avant toute clé Live
+
+- [ ] Les mentions légales ne contiennent plus aucun champ `[À compléter]` : identité de l'exploitante, statut, SIRET, adresse, e-mail et téléphone professionnels.
+- [ ] Un médiateur de la consommation a été choisi et ses coordonnées ainsi que son site sont publiés dans les mentions légales et les CGU/CGV.
+- [ ] Les CGU/CGV et la politique de confidentialité ont été relues avec les informations réelles de l'entreprise.
+- [ ] Le bouton de paiement annonce sans ambiguïté l'obligation de paiement et le consentement à l'accès immédiat est conservé dans `purchase_consents`.
+
 ## 1. Entreprise et offre
 
 - [ ] SIRET, nom de l'entreprise, adresse, e-mail de support et coordonnées bancaires validés dans Stripe.
@@ -52,3 +59,11 @@ Cette checklist ne doit être cochée qu'avec les clés **Live**. Les essais Str
 - [ ] En cas d'activation retardée, ne jamais demander un second paiement : vérifier Stripe, le webhook Vercel puis Supabase.
 - [ ] Documenter remboursement, contact support et correction manuelle d'un droit avant l'ouverture au public.
 
+## Liens officiels utiles
+
+- [Stripe — recevoir et tester les webhooks](https://docs.stripe.com/webhooks)
+- [Stripe — configurer le portail client](https://docs.stripe.com/customer-management/configure-portal)
+- [Stripe — passage en production](https://docs.stripe.com/keys#test-live-modes)
+- [DGCCRF — mentions obligatoires d'un site professionnel](https://www.economie.gouv.fr/entreprises/developper-son-entreprise/innover-et-numeriser-son-entreprise/mentions-sur-votre-site-internet-les-obligations-respecter)
+- [DGCCRF — obligations relatives au médiateur de la consommation](https://www.economie.gouv.fr/mediation-conso/vous-etes-un-professionnel/vos-principales-obligations-0)
+- [Service-Public — CGV entre professionnel et particuliers](https://entreprendre.service-public.fr/vosdroits/F33527)

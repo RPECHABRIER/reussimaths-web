@@ -41,6 +41,11 @@ export default function CGU() {
         aux coordonnées bancaires complètes de l'utilisateur. Les tarifs sont indiqués toutes taxes comprises le cas
         échéant.
       </p>
+      <p>
+        Avant de payer, l'utilisateur voit la formule choisie, son prix, sa durée et, pour l'abonnement mensuel, sa
+        reconduction automatique. La validation du bouton portant la mention « avec obligation de paiement » vaut
+        commande ferme. Une confirmation de la transaction est ensuite fournie par voie électronique.
+      </p>
 
       <h2>4. Droit de rétractation</h2>
       <p>

@@ -8,6 +8,8 @@ import { isRealAdmin } from "../lib/access";
 import { colors, fonts } from "../theme";
 import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "../discoveryShowcases";
 import { supabase } from "../lib/supabaseClient";
+import CalculationModeBadge from "../components/CalculationModeBadge";
+import { getCalculationMode } from "../lib/calculationMode";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -22,8 +24,8 @@ const SAMPLES = [
   ["Puissances", { type: "numeric", chapter: "Puissances — Parenthèses", prompt: "Calcule : \\((-3)^2\\)", answer: 9, steps: ["\\((-3)^2=(-3)\\times(-3)\\)", "Le produit de deux nombres négatifs est positif : \\(9\\)."] }, "-9"],
   ["Proportionnalité", { type: "numeric", chapter: "Proportionnalité — Retour à l’unité", prompt: "4 cahiers coûtent 10 €. Prix de 6 cahiers ?", answer: 15, steps: ["Retour à l’unité : \\(10\\div4=2{,}50\\) €.", "\\(6\\times2{,}50=15\\) €."] }, "12"],
   ["Longueurs", { type: "numeric", chapter: "Grandeurs et mesures — Unités de longueur", prompt: "Convertis 2,4 m en cm.", answer: 240, conversionTable: { kind: "length", value: 2.4, fromUnit: "m", toUnit: "cm", answer: 240 }, steps: ["\\(1\\text{ m}=100\\text{ cm}\\)", "\\(2{,}4\\times100=240\\)"] }, "2400"],
-  ["Aires", { type: "numeric", chapter: "Grandeurs et mesures — Unités d'aire", prompt: "Convertis 2,4 m² en cm².", answer: 24000, conversionTable: { kind: "area", value: 2.4, fromUnit: "m²", toUnit: "cm²", answer: 24000 }, steps: ["\\(1\\text{ m}^2=10 000\\text{ cm}^2\\)", "\\(2{,}4\\times10 000=24 000\\)"] }, "240"],
-  ["Volumes", { type: "numeric", chapter: "Géométrie dans l'espace — Conversions", prompt: "Convertis 2,4 m³ en cm³.", answer: 2400000, conversionTable: { kind: "volume", value: 2.4, fromUnit: "m³", toUnit: "cm³", answer: 2400000 }, steps: ["\\(1\\text{ m}^3=1 000 000\\text{ cm}^3\\)", "\\(2{,}4\\times1 000 000=2 400 000\\)"] }, "24000"],
+  ["Aires", { type: "numeric", calculationMode: "calculator", chapter: "Grandeurs et mesures — Unités d'aire", prompt: "Convertis 2,4 m² en cm².", answer: 24000, conversionTable: { kind: "area", value: 2.4, fromUnit: "m²", toUnit: "cm²", answer: 24000 }, steps: ["\\(1\\text{ m}^2=10 000\\text{ cm}^2\\)", "\\(2{,}4\\times10 000=24 000\\)"] }, "240"],
+  ["Volumes", { type: "numeric", calculationMode: "calculator", chapter: "Géométrie dans l'espace — Conversions", prompt: "Convertis 2,4 m³ en cm³.", answer: 2400000, conversionTable: { kind: "volume", value: 2.4, fromUnit: "m³", toUnit: "cm³", answer: 2400000 }, steps: ["\\(1\\text{ m}^3=1 000 000\\text{ cm}^3\\)", "\\(2{,}4\\times1 000 000=2 400 000\\)"] }, "24000"],
   ["Arrondi", { type: "numeric", chapter: "Nombres décimaux — Arrondir", prompt: "Arrondis 3,146 au centième.", answer: 3.15, steps: ["Le chiffre des centièmes est 4 ; le chiffre suivant est 6.", "Comme 6 est supérieur à 5, le chiffre 4 devient 5."] }, "3,14"],
   ["Unité d’aire", { type: "text", chapter: "Géométrie — Aire", prompt: "Quelle unité convient pour une aire mesurée en centimètres ?", answer: "cm²", steps: ["Une aire mesure une surface : l’unité est élevée au carré.", "On écrit donc cm²."] }, "cm"],
   ["Moyenne pondérée", { type: "numeric", chapter: "Statistiques — Moyenne et effectifs", prompt: "Calcule la moyenne de valeurs associées à des effectifs.", answer: 12, steps: ["On multiplie chaque valeur par son effectif.", "On additionne ces produits puis on divise par l’effectif total."] }, "10"],
@@ -37,13 +39,13 @@ const SAMPLES = [
   ["Statistiques — quartile", { type: "numeric", chapter: "Statistiques descriptives — Quartiles", prompt: "Le rang du premier quartile est 3. Quelle valeur faut-il lire ?", answer: 8, steps: ["On lit la valeur placée au troisième rang dans la série ordonnée.", "Cette valeur est 8."] }, "3"],
   ["Statistiques — étendue", { type: "numeric", chapter: "Statistiques descriptives — Étendue", prompt: "Une série va de 4 à 19. Calcule son étendue.", answer: 15, steps: ["Étendue = maximum − minimum.", "\\(19-4=15\\)."] }, "19"],
   ["Probabilité — contraire", { type: "numeric", chapter: "Probabilités — Événement contraire", prompt: "On sait que \\(P(A)=0{,}3\\). Calcule \\(P(\\overline A)\\).", answer: 0.7, steps: ["\\(P(\\overline A)=1-P(A)\\)", "\\(1-0{,}3=0{,}7\\)"] }, "0,3"],
-  ["Probabilité conditionnelle", { type: "numeric", chapter: "Probabilités conditionnelles — Probabilité conditionnelle", prompt: "Calcule \\(P_A(B)\\) sachant \\(P(A\\cap B)=0{,}2\\) et \\(P(A)=0{,}5\\).", answer: 0.4, steps: ["\\(P_A(B)=\\frac{P(A\\cap B)}{P(A)}\\)", "\\(0{,}2\\div0{,}5=0{,}4\\)"] }, "0,1"],
+  ["Probabilité conditionnelle", { type: "numeric", calculationMode: "calculator", chapter: "Probabilités conditionnelles — Probabilité conditionnelle", prompt: "Calcule \\(P_A(B)\\) sachant \\(P(A\\cap B)=0{,}2\\) et \\(P(A)=0{,}5\\).", answer: 0.4, steps: ["\\(P_A(B)=\\frac{P(A\\cap B)}{P(A)}\\)", "\\(0{,}2\\div0{,}5=0{,}4\\)"] }, "0,1"],
   ["Probabilités — arbre", { type: "numeric", chapter: "Probabilités conditionnelles — Arbre pondéré", prompt: "Un chemin porte les probabilités 0,6 puis 0,4. Calcule sa probabilité.", answer: 0.24, steps: ["Sur un même chemin, on multiplie.", "\\(0{,}6\\times0{,}4=0{,}24\\)"] }, "1"],
   ["Probabilités — indépendance", { type: "text", chapter: "Probabilités conditionnelles — Indépendance", prompt: "Comment vérifie-t-on que A et B sont indépendants ?", answer: "P(A∩B)=P(A)×P(B)", steps: ["On calcule les deux membres.", "Ils doivent être égaux."] }, "A et B sont différents"],
   ["Probabilités — fréquence", { type: "numeric", chapter: "Probabilités — Fréquence et probabilité", prompt: "Un événement se produit 30 fois en 50 essais. Calcule sa fréquence.", answer: 0.6, steps: ["Fréquence = réalisations ÷ essais.", "\\(30\\div50=0{,}6\\)"] }, "0,4"],
   ["Géométrie — Thalès", { type: "numeric", chapter: "Automatismes — Théorème de Thalès", prompt: "Deux droites sont parallèles. Les rapports correspondants donnent \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). Calcule \\(x\\).", answer: 8, steps: ["Les côtés correspondants sont écrits dans le même ordre.", "\\(x=6\\times\\dfrac{4}{3}=8\\)."] }, "4,5"],
   ["Géométrie — trigonométrie", { type: "text", chapter: "Automatismes — Trigonométrie", prompt: "On connaît le côté opposé et l’hypoténuse. Quel rapport utilise-t-on ?", answer: "sinus", steps: ["\\(\\sin(angle)=opposé/hypoténuse\\).", "On utilise donc le sinus."] }, "cosinus"],
-  ["Géométrie — cercle", { type: "numeric", chapter: "Grandeurs et mesures — Périmètre d'un cercle", prompt: "Calcule le périmètre d’un cercle de rayon 2 cm, avec \\(\\pi\\approx3{,}14\\).", answer: 12.56, steps: ["\\(P=2\\pi r\\)", "\\(2\\times3{,}14\\times2=12{,}56\\text{ cm}\\)"] }, "6,28"],
+  ["Géométrie — cercle", { type: "numeric", calculationMode: "calculator", chapter: "Grandeurs et mesures — Périmètre d'un cercle", prompt: "Calcule le périmètre d’un cercle de rayon 2 cm, avec \\(\\pi\\approx3{,}14\\).", answer: 12.56, steps: ["\\(P=2\\pi r\\)", "\\(2\\times3{,}14\\times2=12{,}56\\text{ cm}\\)"] }, "6,28"],
   ["Géométrie — volume", { type: "numeric", chapter: "Géométrie dans l'espace — Volumes", prompt: "Calcule le volume d’une pyramide d’aire de base 30 cm² et de hauteur 9 cm.", answer: 90, steps: ["\\(V=aire\\ de\\ base\\times hauteur\\div3\\)", "\\(30\\times9\\div3=90\\text{ cm}^3\\)"] }, "270"],
   ["Géométrie — angles du triangle", { type: "numeric", chapter: "Angles — Angles d'un triangle", prompt: "Un triangle possède deux angles de 50° et 60°. Calcule le troisième.", answer: 70, steps: ["La somme des angles vaut 180°.", "\\(180-50-60=70°\\)."] }, "110"],
   ["Géométrie — existence", { type: "qcm", chapter: "Angles — Existence d'un triangle", prompt: "Peut-on construire un triangle de côtés 3 cm, 4 cm et 8 cm ?", answer: "Non", options: ["Oui", "Non"], steps: ["La plus grande longueur est 8 cm.", "\\(8>3+4\\) : le triangle n’existe pas."] }, "Oui"],
@@ -98,6 +100,7 @@ export default function CorrectionsLab() {
   const [index, setIndex] = useState(0);
   const [audits, setAudits] = useState(loadReviews);
   const [statusFilter, setStatusFilter] = useState("toutes");
+  const [calculationFilter, setCalculationFilter] = useState("tous");
   const [search, setSearch] = useState("");
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   const [title, exercise, response] = LAB_SAMPLES[index];
@@ -120,8 +123,12 @@ export default function CorrectionsLab() {
   const checkedCount = audit.checks.length;
   const filteredSamples = useMemo(() => LAB_SAMPLES.map((sample,sampleIndex)=>({sample,sampleIndex})).filter(({sample})=>{
     const status = audits[sample[0]]?.status ?? "à_revoir";
-    return (statusFilter === "toutes" || status === statusFilter) && sample[0].toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr"));
-  }), [audits, search, statusFilter]);
+    const mode = getCalculationMode(sample[1]) ?? "choix";
+    return (statusFilter === "toutes" || status === statusFilter) && (calculationFilter === "tous" || calculationFilter === mode) && sample[0].toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr"));
+  }), [audits, calculationFilter, search, statusFilter]);
+  useEffect(() => {
+    if (filteredSamples.length > 0 && !filteredSamples.some(({sampleIndex})=>sampleIndex===index)) setIndex(filteredSamples[0].sampleIndex);
+  }, [filteredSamples, index]);
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   return (
@@ -130,7 +137,7 @@ export default function CorrectionsLab() {
         <Link to="/admin" className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: colors.slate }}><ArrowLeft size={14} /> Administration</Link>
         <p className="mt-5 text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: colors.gold }}>Laboratoire pédagogique</p>
         <h1 className="mt-1 text-2xl sm:text-3xl font-black" style={{ color: colors.ink, fontFamily: fonts.display }}>Contrôler les corrections</h1>
-        <div className="mt-5 grid gap-2 sm:grid-cols-2"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select></div>
+        <div className="mt-5 grid gap-2 sm:grid-cols-3"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select><select value={calculationFilter} onChange={(event)=>setCalculationFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="tous">Tous les modes de calcul</option><option value="mental">Sans calculatrice</option><option value="calculator">Calculatrice autorisée</option><option value="choix">Libre choix</option></select></div>
         <label className="block mt-3 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>
@@ -141,6 +148,8 @@ export default function CorrectionsLab() {
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm">
           <p className="text-xs font-bold" style={{ color: colors.slate }}>Erreur simulée : {title}</p>
           <MathText as="p" text={exercise.prompt} className="mt-2 text-sm font-semibold" style={{ color: colors.ink }} />
+          <div className="mt-2"><CalculationModeBadge exercise={exercise} /></div>
+          {!getCalculationMode(exercise) && <p className="mt-2 text-[10px] font-bold" style={{color:colors.slate}}>Libre choix : aucune consigne de calculatrice n’est imposée.</p>}
           <p className="mt-1 text-xs" style={{ color: colors.red }}>Réponse donnée : {Array.isArray(response) ? response.join(", ") : response}</p>
           <div className="mt-4"><LearningFeedback exercise={exercise} response={response} /></div>
         </section>

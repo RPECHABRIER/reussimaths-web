@@ -349,3 +349,13 @@ test("le parcours découverte affiche les égalités de fractions en LaTeX", asy
   assert.match(showcases, /\\\\dfrac\{x\}\{6\}=\\\\dfrac\{4\}\{3\}/);
   assert.doesNotMatch(showcases, /Thalès, x\/6 = 4\/3/);
 });
+
+test("les consignes de calculatrice ont trois états et se contrôlent dans le laboratoire", async () => {
+  const [badge, mode, lab] = await Promise.all([read("./components/CalculationModeBadge.jsx"), read("./lib/calculationMode.js"), read("./pages/CorrectionsLab.jsx")]);
+  assert.match(badge, /if \(!mode\) return null/);
+  assert.match(badge, /Sans calculatrice/);
+  assert.match(mode, /return null/);
+  assert.doesNotMatch(mode, /arrondi\|au centième/);
+  assert.match(lab, /Tous les modes de calcul/);
+  assert.match(lab, /Libre choix/);
+});

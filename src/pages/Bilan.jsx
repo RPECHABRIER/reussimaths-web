@@ -83,9 +83,9 @@ export default function Bilan() {
   const gold = colors.gold;
 
   return (
-    <div className="min-h-screen w-full max-w-full overflow-x-hidden p-3 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
+    <div className="weekly-report min-h-screen w-full max-w-full overflow-x-hidden p-3 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
       <div className="w-full min-w-0 max-w-5xl mx-auto">
-        <Link to="/compte" className="inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
+        <Link to="/compte" className="print-hide inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
           <ArrowLeft size={14} /> Mon compte
         </Link>
 
@@ -100,7 +100,7 @@ export default function Bilan() {
             Un bilan clair à regarder ensemble : travail effectué, acquis et prochaine étape.
           </p>
           {summary?.days?.length > 0 && <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold" style={{color:gold}}><CalendarDays size={14}/>{formatWeekRange(summary.days)}</p>}
-          <div className="mt-4 print:hidden">
+          <div className="print-hide mt-4">
             <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold" style={{backgroundColor:colors.card,color:ink,boxShadow:shadow.soft}}><Printer size={14}/> Imprimer ou enregistrer en PDF</button>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function Bilan() {
         )}
 
         {learningReviews.length > 0 && (
-          <section className="mt-4 rounded-3xl p-4 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+          <section className="report-card report-reviews mt-4 rounded-3xl p-4 sm:p-6" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <div className="flex items-start gap-3">
               <div className="shrink-0 rounded-xl p-2" style={{ backgroundColor: `${gold}18` }}><Sparkles size={18} color={gold} /></div>
               <div className="min-w-0">
@@ -166,7 +166,7 @@ export default function Bilan() {
         {user && !loading && !error && summary && (
           <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             <div
-              className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2"
+              className="report-card report-essential min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2"
               style={{ backgroundColor: colors.ink, color: colors.bg, boxShadow: shadow.raised }}
             >
               <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: gold }}>
@@ -193,7 +193,7 @@ export default function Bilan() {
               )}
             </div>
 
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2" style={{backgroundColor:colors.card,boxShadow:shadow.soft,border:`1px solid ${colors.green}25`}}>
+            <div className="report-card report-plan min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2" style={{backgroundColor:colors.card,boxShadow:shadow.soft,border:`1px solid ${colors.green}25`}}>
               <div className="flex items-start gap-3">
                 <div className="shrink-0 rounded-xl p-2" style={{backgroundColor:`${colors.green}15`}}><HeartHandshake size={19} color={colors.green}/></div>
                 <div className="min-w-0 flex-1">
@@ -212,7 +212,7 @@ export default function Bilan() {
             </div>
 
             {/* Temps passé */}
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Clock size={16} color={gold} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -250,7 +250,7 @@ export default function Bilan() {
             </div>
 
             {/* Taux de réussite */}
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Target size={16} color={colors.green} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -284,7 +284,7 @@ export default function Bilan() {
             </div>
 
             {/* Notions consolidées */}
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <Award size={16} color={gold} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -308,7 +308,7 @@ export default function Bilan() {
             </div>
 
             {/* Notions travaillées */}
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <ListChecks size={16} color={ink} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
@@ -348,7 +348,7 @@ export default function Bilan() {
             </div>
 
             {/* Priorités pour la semaine suivante */}
-            <div className="min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp size={16} color={colors.red} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>

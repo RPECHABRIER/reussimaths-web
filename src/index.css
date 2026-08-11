@@ -138,3 +138,66 @@ input:focus, select:focus, textarea:focus {
     font-size: 0.88em;
   }
 }
+
+@page {
+  size: A4 portrait;
+  margin: 11mm;
+}
+
+@media print {
+  html, body {
+    background: #fff !important;
+  }
+
+  body {
+    color: #1B2A4A;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-hide,
+  .weekly-report button,
+  .weekly-report > button {
+    display: none !important;
+  }
+
+  .weekly-report {
+    min-height: auto !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  .weekly-report > div {
+    max-width: none !important;
+  }
+
+  .weekly-report h1 {
+    font-size: 25pt !important;
+  }
+
+  .weekly-report .report-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #DDE1E8 !important;
+  }
+
+  .weekly-report .report-essential {
+    border: 0 !important;
+  }
+
+  .weekly-report .report-reviews details {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .weekly-report .report-reviews details > :not(summary) {
+    display: block !important;
+  }
+
+  .weekly-report a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

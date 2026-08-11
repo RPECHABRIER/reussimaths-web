@@ -262,7 +262,7 @@ test("deux séries gratuites successives changent de banque et évitent les doub
 
 test("les familles non géométriques prioritaires possèdent une animation spécialisée", async () => {
   const visual = await read("./components/FeedbackVisual.jsx");
-  for (const family of ["fraction_of_number", "whole_number_place_value", "arithmetic_order", "function_affine_coefficients", "distributivity"]) {
+  for (const family of ["fraction_of_number", "whole_number_place_value", "arithmetic_order", "function_affine_coefficients", "distributivity", "percentage_conversion", "probability_contrary", "probability_tree", "probability_independence", "multiple_choice_reasoning", "number_theory", "combinatorics", "random_variables", "decimal_operations", "calculation_strategy", "compound_measures", "duration_calculation", "sequence_convergence", "integral_calculus", "real_number_sets", "space_vectors", "continuity_reasoning"]) {
     assert.match(visual, new RegExp(family));
   }
 });
@@ -274,4 +274,9 @@ test("le bilan parental propose une période, un plan familial et une version im
   assert.match(bilan, /Le petit plan familial/);
   assert.match(bilan, /Une priorité, trois séances courtes/);
   assert.match(bilan, /Deux questions simples à poser à votre enfant/);
+  const css = await read("./index.css");
+  assert.match(css, /@page/);
+  assert.match(css, /A4 portrait/);
+  assert.match(css, /\.weekly-report \.report-card/);
+  assert.match(css, /break-inside: avoid/);
 });

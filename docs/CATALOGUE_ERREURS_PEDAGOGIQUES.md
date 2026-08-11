@@ -24,3 +24,50 @@
 | Raisonnement multiple | réponse incomplète | tester chaque affirmation indépendamment et conclure sur chacune |
 
 Les familles spécialisées sont prioritaires. Le secours général ne doit être utilisé que lorsqu’aucune famille ne correspond de façon fiable.
+
+## Cartographie par étapes scolaires
+
+| Niveau | Erreurs structurantes à surveiller en priorité |
+|---|---|
+| CM2 vers 6e | numération décimale, sens des opérations, fractions simples, proportionnalité intuitive, unités de longueur et lecture de figures |
+| 6e | valeur de position, priorités simples, quotient/fraction, tableaux de conversion, périmètre/aire, lecture d’axe et vocabulaire géométrique |
+| 5e | relatifs, fractions de dénominateurs différents, proportionnalité, angles, symétrie, aires et volumes |
+| 4e | opérations sur relatifs, puissances, calcul littéral, équations, Pythagore, statistiques et probabilités |
+| 3e | développement/factorisation, fonctions, Thalès et triangles semblables, trigonométrie, probabilités et transformations |
+| 2nde | image/antécédent, expressions algébriques, vecteurs, fonctions affines, variations, statistiques et probabilités |
+| 1re | second degré, dérivation, suites, probabilités conditionnelles, produit scalaire et lecture graphique |
+| Terminale | limites, dérivation avancée, exponentielle/logarithme, intégrales, suites, probabilités et géométrie de l’espace |
+
+## Cycle de traitement d’une erreur
+
+Chaque erreur significative doit suivre la même chaîne :
+
+1. **Observer** la réponse sans conserver inutilement sa valeur brute.
+2. **Catégoriser** la stratégie probable, sans affirmer une intention que les données ne permettent pas de connaître.
+3. **Expliquer** le sens de la notion et la méthode correspondant exactement à cette stratégie.
+4. **Illustrer** lorsque la représentation apporte une information que le texte seul ne rend pas claire.
+5. **Vérifier immédiatement** avec une question proche mais non identique.
+6. **Espacer** une nouvelle vérification après quelques jours.
+7. **Mesurer** si l’élève réussit sans aide ; sinon, changer d’explication plutôt que répéter la même.
+
+## Données qui justifient une revue experte
+
+Une correction devient prioritaire lorsqu’au moins un de ces signaux apparaît :
+
+- erreur fréquente sur une question pourtant adaptée au niveau ;
+- même catégorie d’erreur répétée après consultation de la correction ;
+- correction ouverte plusieurs fois sans réussite ultérieure ;
+- abandon juste après l’explication ;
+- forte réussite immédiate mais nouvel échec lors de la révision espacée ;
+- retour qualitatif signalant une formulation incompréhensible ou ambiguë ;
+- réponse correcte obtenue par une procédure qui masque une incompréhension importante.
+
+## Statuts éditoriaux
+
+- **À observer** : données encore insuffisantes.
+- **À revoir** : explication générique ou signal d’incompréhension.
+- **Prioritaire** : erreur fréquente, blocage ou enjeu de prérequis.
+- **Validée par l’expert** : exactitude, sens, étapes, conclusion, contrôle et visuel vérifiés.
+- **Validée par les données** : réussite sur une question proche puis lors d’une révision espacée.
+
+Une validation éditoriale ne prouve pas encore l’efficacité pédagogique. La validation finale repose sur la capacité des élèves à réutiliser la méthode sans aide.

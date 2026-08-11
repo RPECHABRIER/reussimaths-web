@@ -44,4 +44,24 @@ Lorsqu’une correction mentionne un graphique, une figure, une droite graduée 
 
 ## Contrôle qualité
 
-Avant publication, vérifier : exactitude mathématique, adaptation aux valeurs de la question, lisibilité mobile, absence de saut de raisonnement, présence des unités, cohérence du contrôle final et conformité au niveau scolaire.
+Avant publication, vérifier les huit critères du laboratoire : erreur nommée, sens expliqué, étapes complètes, méthode transférable, conclusion avec unité, contrôle de cohérence, visuel utile et question proche de vérification. Une correction n’est publiable que lorsque les huit critères sont cochés et que son statut est « Validée ».
+
+## Validation de l’apprentissage
+
+La qualité apparente d’une explication ne suffit pas. Après la correction :
+
+1. proposer une question proche mais avec d’autres valeurs ou une autre présentation ;
+2. noter la réussite sans aide ;
+3. programmer une vérification espacée ;
+4. si l’erreur réapparaît, proposer une autre représentation ou revenir au prérequis manquant ;
+5. considérer la notion comme consolidée seulement après réutilisation autonome.
+
+## Revue hebdomadaire de l’expert
+
+Limiter la séance à cinq erreurs afin de concentrer l’expertise là où elle produit le plus d’effet :
+
+1. sélectionner les erreurs fréquentes ou persistantes depuis le panneau admin ;
+2. formuler le raisonnement probable de l’élève ;
+3. auditer la correction dans le laboratoire ;
+4. vérifier la question proche et le calendrier de révision ;
+5. comparer les résultats lors de la revue suivante.

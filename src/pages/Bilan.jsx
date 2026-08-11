@@ -130,6 +130,11 @@ export default function Bilan() {
                 <p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>Ouvre une carte pour revoir avec tes parents l’erreur, la méthode et l’animation associée.</p>
               </div>
             </div>
+            <div className="mt-4 rounded-2xl p-4" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}25`}}>
+              <p className="text-[10px] uppercase tracking-widest font-black" style={{color:colors.green}}>L’apprentissage à raconter cette semaine</p>
+              <p className="mt-2 text-sm leading-relaxed" style={{color:ink}}>Une difficulté a été rencontrée en <strong>{learningReviews[0].chapter}</strong>. RéussiMaths a repris l’idée importante et la méthode étape par étape. L’objectif suivant est de réussir une question proche sans aide, puis de vérifier quelques jours plus tard que la méthode revient.</p>
+              <p className="mt-2 text-xs" style={{color:slate}}><strong style={{color:ink}}>À demander à votre enfant :</strong> « Peux-tu m’expliquer avec tes mots ce que tu feras différemment la prochaine fois ? »</p>
+            </div>
             <div className="mt-4 flex flex-col gap-2">
               {learningReviews.slice(0, 8).map((review, index) => (
                 <details key={review.id} className="group min-w-0 rounded-2xl p-3 sm:p-4" style={{ backgroundColor: colors.bg }} open={index === 0}>

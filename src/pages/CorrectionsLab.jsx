@@ -76,14 +76,37 @@ const DIAGNOSTIC_SAMPLES = DIAGNOSTIC_LEVELS.flatMap((levelId) =>
   ])
 );
 const LAB_SAMPLES = [...ALL_SAMPLES, ...DIAGNOSTIC_SAMPLES];
+const QUALITY_CRITERIA = [
+  "L’erreur ou la confusion est nommée précisément.",
+  "Le sens mathématique est expliqué avant la procédure.",
+  "Toutes les étapes utiles sont visibles, sans saut implicite.",
+  "La méthode est réutilisable dans une autre question.",
+  "La conclusion répond avec la valeur et l’unité éventuelle.",
+  "Un contrôle de cohérence est proposé lorsqu’il est accessible.",
+  "Le visuel aide réellement à comprendre et reste lisible sur mobile.",
+  "Une question proche permettrait de vérifier l’apprentissage.",
+];
+
+function loadReviews() {
+  try { return JSON.parse(localStorage.getItem("reussimaths:correction-audits") ?? "{}"); }
+  catch { return {}; }
+}
 
 export default function CorrectionsLab() {
   const { user, loading } = useAuth();
   const [index, setIndex] = useState(0);
+  const [audits, setAudits] = useState(loadReviews);
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   const [title, exercise, response] = LAB_SAMPLES[index];
+  const audit = audits[title] ?? { checks: [], note: "", status: "à_revoir" };
+  const updateAudit = (next) => {
+    const updated = { ...audits, [title]: { ...audit, ...next, updatedAt: new Date().toISOString() } };
+    setAudits(updated);
+    localStorage.setItem("reussimaths:correction-audits", JSON.stringify(updated));
+  };
+  const checkedCount = audit.checks.length;
   return (
     <main className="min-h-screen px-4 py-6 sm:px-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-3xl mx-auto">
@@ -101,6 +124,18 @@ export default function CorrectionsLab() {
           <MathText as="p" text={exercise.prompt} className="mt-2 text-sm font-semibold" style={{ color: colors.ink }} />
           <p className="mt-1 text-xs" style={{ color: colors.red }}>Réponse donnée : {Array.isArray(response) ? response.join(", ") : response}</p>
           <div className="mt-4"><LearningFeedback exercise={exercise} response={response} /></div>
+        </section>
+        <section className="mt-5 rounded-2xl bg-white p-4 sm:p-5 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div><p className="text-[10px] font-black uppercase tracking-[0.15em]" style={{color:colors.gold}}>Validation experte</p><h2 className="mt-1 text-lg font-black" style={{color:colors.ink,fontFamily:fonts.display}}>Grille de qualité pédagogique</h2></div>
+            <span className="rounded-full px-3 py-1 text-xs font-black" style={{backgroundColor:checkedCount===QUALITY_CRITERIA.length?`${colors.green}18`:`${colors.gold}18`,color:checkedCount===QUALITY_CRITERIA.length?colors.green:colors.ink}}>{checkedCount}/{QUALITY_CRITERIA.length}</span>
+          </div>
+          <div className="mt-4 grid gap-2">
+            {QUALITY_CRITERIA.map((criterion, criterionIndex) => <label key={criterion} className="flex items-start gap-2 rounded-xl p-2.5 text-xs cursor-pointer" style={{backgroundColor:colors.bg,color:colors.ink}}><input type="checkbox" className="mt-0.5" checked={audit.checks.includes(criterionIndex)} onChange={() => updateAudit({checks:audit.checks.includes(criterionIndex)?audit.checks.filter((item)=>item!==criterionIndex):[...audit.checks,criterionIndex]})}/><span>{criterion}</span></label>)}
+          </div>
+          <label className="block mt-4 text-xs font-bold" style={{color:colors.slate}}>Décision éditoriale<select value={audit.status} onChange={(event)=>updateAudit({status:event.target.value})} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5" style={{borderColor:colors.hairline,color:colors.ink}}><option value="à_revoir">À revoir</option><option value="validée">Validée</option><option value="prioritaire">Correction prioritaire</option></select></label>
+          <label className="block mt-3 text-xs font-bold" style={{color:colors.slate}}>Note de l’expert<textarea value={audit.note} onChange={(event)=>updateAudit({note:event.target.value})} rows={4} placeholder="Ce qui doit être réécrit, illustré ou vérifié…" className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 font-normal" style={{borderColor:colors.hairline,color:colors.ink}} /></label>
+          <p className="mt-3 text-[10px]" style={{color:colors.slate}}>La validation est conservée sur cet appareil. Une correction n’est considérée publiable qu’avec 8 critères validés et le statut « Validée ».</p>
         </section>
       </div>
     </main>

@@ -40,6 +40,9 @@ export function matchesMulti(selectedIndexes, answerIndexes) {
 // française convertie en point pour parseFloat).
 export function parseNumericInput(str) {
   const s = (str ?? "").toString().trim();
+  const compact = s.replace(/\s+/g, "").toLowerCase();
+  if (["+∞", "∞", "+infinity", "infinity", "+\\infty", "\\infty"].includes(compact)) return Infinity;
+  if (["-∞", "−∞", "-infinity", "-\\infty"].includes(compact)) return -Infinity;
   if (s.includes("/")) {
     const parts = s.split("/");
     if (parts.length !== 2) return NaN;

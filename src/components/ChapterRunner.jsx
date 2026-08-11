@@ -816,12 +816,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "⌫"].map((key) => (
+                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
                   <button
                     key={key}
                     disabled={!!feedback}
                     onClick={() => {
-                      if (key === "±") setInput((v) => (v.startsWith("-") ? v.slice(1) : v === "" ? "-" : "-" + v));
+                      if (key === "+∞" || key === "−∞") setInput(key);
+                      else if (key === "±") setInput((v) => (v.startsWith("-") || v.startsWith("−") ? v.slice(1) : v === "" ? "-" : "-" + v));
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
                       else if (key === ",") setInput((v) => (v.includes(",") || v.includes("/") ? v : v === "" ? "0," : v + ","));
                       else if (key === "/") setInput((v) => (v === "" || v.includes("/") || v.includes(",") ? v : v + "/"));

@@ -243,14 +243,15 @@ export default function ParcoursDiagnostic() {
                 style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
               />
               <div className="grid grid-cols-3 gap-2 mb-3" aria-label="Pavé numérique avec signe moins">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "⌫"].map((key) => (
+                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
                   <button
                     type="button"
                     key={key}
                     disabled={!!feedback}
                     aria-label={key === "±" ? "Ajouter ou retirer le signe moins" : key === "⌫" ? "Effacer" : undefined}
                     onClick={() => {
-                      if (key === "±") setInput((value) => (value.startsWith("-") ? value.slice(1) : value === "" ? "-" : `-${value}`));
+                      if (key === "+∞" || key === "−∞") setInput(key);
+                      else if (key === "±") setInput((value) => (value.startsWith("-") || value.startsWith("−") ? value.slice(1) : value === "" ? "-" : `-${value}`));
                       else if (key === "⌫") setInput((value) => value.slice(0, -1));
                       else if (key === ",") setInput((value) => (value.includes(",") || value.includes("/") ? value : value === "" ? "0," : `${value},`));
                       else if (key === "/") setInput((value) => (value === "" || value.includes("/") || value.includes(",") ? value : `${value}/`));

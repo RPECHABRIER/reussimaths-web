@@ -113,6 +113,34 @@ const FAMILY_FEEDBACK = [
     rule: "Repère le rang demandé, identifie la règle à partir des premiers termes ou du motif, vérifie-la sur deux étapes, puis applique-la au rang recherché. Si on demande un total, additionne tous les rangs concernés.",
   },
   {
+    id: "sequence_squeeze_theorem",
+    match: /théorème des gendarmes[\s\S]*(?:suite|u_n)|(?:suite|u_n)[\s\S]*théorème des gendarmes/i,
+    intro: "Non, l’encadrement n’a pas encore été relié aux limites des deux suites qui entourent la suite étudiée.",
+    meaning: "La suite étudiée est enfermée entre deux suites. Si la borne inférieure et la borne supérieure convergent vers la même limite \\(\\ell\\), la suite encadrée est obligée de converger vers \\(\\ell\\).",
+    rule: "Calcule la limite de chacune des deux bornes. Si elles ont la même limite \\(\\ell\\), conclus directement que la suite encadrée converge elle aussi vers \\(\\ell\\).",
+  },
+  {
+    id: "function_squeeze_theorem",
+    match: /théorème des gendarmes[\s\S]*(?:fonction|f\(x\))|(?:fonction|f\(x\))[\s\S]*théorème des gendarmes/i,
+    intro: "Non, l’encadrement de la fonction n’a pas encore été relié aux limites de ses deux fonctions bornes.",
+    meaning: "La fonction reste entre deux fonctions qui se rapprochent de la même valeur \\(\\ell\\). Elle est donc elle aussi obligée de tendre vers \\(\\ell\\).",
+    rule: "Détermine la limite des deux fonctions qui encadrent. Si elles tendent vers la même valeur, applique le théorème des gendarmes.",
+  },
+  {
+    id: "sequence_limit",
+    match: /(?:suites?[^\n]{0,100}limites?|limites?[^\n]{0,100}(?:suite|u_n)|quand n tend vers)/i,
+    intro: "Non, le comportement des termes lorsque le rang devient très grand n’a pas été déterminé correctement.",
+    meaning: "La limite décrit la valeur dont les termes se rapprochent lorsque \\(n\\) devient arbitrairement grand, ou indique une divergence vers \\(\\pm\\infty\\). Elle ne demande pas de calculer les premiers termes un par un.",
+    rule: "Repère la forme dominante ou la limite de référence, simplifie si nécessaire, puis étudie le comportement lorsque \\(n\\to+\\infty\\).",
+  },
+  {
+    id: "function_limit",
+    match: /limites? de fonctions?|limite[^\n]{0,100}f\(x\)|quand x tend vers/i,
+    intro: "Non, le comportement de la fonction au voisinage de la valeur étudiée n’a pas été déterminé correctement.",
+    meaning: "Une limite décrit le comportement de \\(f(x)\\) lorsque \\(x\\) s’approche d’une valeur ou devient très grand.",
+    rule: "Identifie vers quoi tend \\(x\\), repère le terme dominant ou les signes, puis conclus par une valeur finie ou \\(\\pm\\infty\\).",
+  },
+  {
     id: "sequence_convergence",
     // Les bornes sont indispensables : sans elles, le mot courant « ensuite »
     // était parfois interprété comme le thème des suites numériques.
@@ -446,6 +474,13 @@ const FAMILY_FEEDBACK = [
     intro: "Non, l’élément nommé ne correspond pas à sa position ou à son rôle dans le solide.",
     meaning: "Une face est une surface plane, une arête est un segment commun à deux faces et un sommet est un point où plusieurs arêtes se rencontrent. La hauteur est perpendiculaire à la base.",
     rule: "Repère l’objet sur la figure avant de choisir son nom et distingue toujours hauteur, arête et génératrice.",
+  },
+  {
+    id: "geometry_parallel_vectors",
+    match: /vecteurs? directeurs?[^\n]{0,100}colinéaires?|colinéaires?[^\n]{0,100}(?:droites?|vecteurs? directeurs?)|droites?[^\n]{0,100}vecteurs? directeurs?[^\n]{0,100}parallèles?/i,
+    intro: "Non, la colinéarité des vecteurs directeurs n’a pas été traduite correctement en position relative des droites.",
+    meaning: "Des vecteurs directeurs colinéaires ont la même direction. Les droites qu’ils dirigent ont donc la même direction : elles sont parallèles, éventuellement confondues.",
+    rule: "Vérifie la colinéarité des vecteurs directeurs, par proportionnalité ou déterminant nul, puis conclus que les droites sont parallèles. Un point commun supplémentaire permet de savoir si elles sont confondues.",
   },
   {
     id: "geometry_vectors",

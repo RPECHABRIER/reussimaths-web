@@ -151,11 +151,36 @@ const SHOWCASES = {
     ]),
   ],
   seconde: [
-    n("Fonctions — Antécédent", "Pour f(x) = 2x + 1, cherche l’antécédent de 9.", 4, ["Chercher un antécédent signifie résoudre f(x) = 9.", "2x + 1 = 9, donc 2x = 8.", "x = 4."]),
-    n("Fonctions affines — Coefficient directeur", "Une droite passe par A(1 ; 3) et B(4 ; 9). Calcule son coefficient directeur.", 2, ["Variation verticale : 9 − 3 = 6.", "Variation horizontale : 4 − 1 = 3.", "Coefficient directeur : 6 ÷ 3 = 2."]),
-    n("Statistiques — Médiane", "Détermine la médiane de la série ordonnée : 2 ; 5 ; 7 ; 9 ; 12.", 7, ["L’effectif 5 est impair.", "La valeur centrale est la troisième.", "La médiane est 7."]),
-    t("Vecteurs — Coordonnées", "A(1 ; 2) et B(4 ; 6). Donne les coordonnées du vecteur AB.", "(3 ; 4)", ["Abscisse : 4 − 1 = 3.", "Ordonnée : 6 − 2 = 4.", "Le vecteur AB a pour coordonnées (3 ; 4)."]),
-    n("Probabilités — Événement contraire", "Si P(A) = 0,42, calcule P(non A).", 0.58, ["P(non A) = 1 − P(A).", "1 − 0,42 = 0,58.", "La probabilité cherchée est 0,58."]),
+    n("Fonctions — Antécédent", "Pour f(x) = 2x + 1, cherche l’antécédent de 9.", 4, [
+      { type: "donnee", text: "On connaît le résultat d’arrivée, 9, et on cherche le nombre de départ qui possède cette image." },
+      { type: "regle", text: "Chercher un antécédent de 9 signifie résoudre l’équation f(x) = 9. Il peut parfois y avoir plusieurs antécédents, un seul ou aucun." },
+      { type: "calcul", text: "On résout 2x + 1 = 9. On soustrait 1 dans les deux membres : 2x = 8, puis on divise les deux membres par 2." },
+      { type: "resultat", text: "On obtient x = 4. Vérification : f(4) = 2 × 4 + 1 = 9." },
+    ]),
+    n("Fonctions affines — Coefficient directeur", "Une droite passe par A(1 ; 3) et B(4 ; 9). Calcule son coefficient directeur.", 2, [
+      { type: "donnee", text: "La droite passe par A(1 ; 3) et B(4 ; 9). On connaît donc deux points distincts de la droite." },
+      { type: "regle", text: "Le coefficient directeur mesure la variation verticale lorsque l’abscisse augmente d’une unité : m = (yB − yA) ÷ (xB − xA)." },
+      { type: "calcul", text: "La variation verticale vaut 9 − 3 = 6 et la variation horizontale vaut 4 − 1 = 3. Ainsi, m = 6 ÷ 3." },
+      { type: "resultat", text: "Le coefficient directeur est 2 : lorsque x augmente de 1, l’image augmente de 2." },
+    ]),
+    n("Statistiques — Médiane", "Détermine la médiane de la série ordonnée : 2 ; 5 ; 7 ; 9 ; 12.", 7, [
+      { type: "donnee", text: "La série est déjà rangée dans l’ordre croissant et contient cinq valeurs." },
+      { type: "regle", text: "La médiane partage une série ordonnée en deux groupes de même effectif. Lorsque l’effectif est impair, c’est la valeur située exactement au centre." },
+      { type: "calcul", text: "Avec cinq valeurs, la position centrale est la troisième : deux valeurs se trouvent avant elle et deux valeurs après elle." },
+      { type: "resultat", text: "La troisième valeur est 7. La médiane de la série est donc 7." },
+    ]),
+    t("Vecteurs — Coordonnées", "A(1 ; 2) et B(4 ; 6). Donne les coordonnées du vecteur AB.", "(3 ; 4)", [
+      { type: "donnee", text: "Le vecteur AB décrit le déplacement qui permet d’aller du point A(1 ; 2) au point B(4 ; 6)." },
+      { type: "regle", text: "Pour calculer les coordonnées du vecteur AB, on fait toujours coordonnées de l’arrivée B moins coordonnées du départ A." },
+      { type: "calcul", text: "Horizontalement : 4 − 1 = 3. Verticalement : 6 − 2 = 4." },
+      { type: "resultat", text: "Le vecteur AB a pour coordonnées (3 ; 4). Depuis A, avancer de 3 puis monter de 4 conduit bien à B." },
+    ]),
+    n("Probabilités — Événement contraire", "Si P(A) = 0,42, calcule P(non A).", 0.58, [
+      { type: "donnee", text: "L’événement A a une probabilité de 0,42 et on cherche la probabilité qu’il ne se réalise pas." },
+      { type: "regle", text: "A et son événement contraire couvrent tous les cas possibles : leurs probabilités ont donc pour somme 1." },
+      { type: "calcul", text: "P(non A) = 1 − P(A) = 1 − 0,42 = 0,58." },
+      { type: "resultat", text: "La probabilité cherchée est 0,58. Vérification : 0,42 + 0,58 = 1." },
+    ]),
   ],
   "premiere-spe": [
     n("Second degré — Discriminant", "Pour x² − 5x + 6 = 0, calcule le discriminant Δ.", 1, ["a = 1, b = −5 et c = 6.", "Δ = b² − 4ac = (−5)² − 4 × 1 × 6.", "Δ = 25 − 24 = 1."]),

@@ -92,6 +92,25 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - L’événement contraire est contrôlé en vérifiant que les deux probabilités totalisent 1.
 - Les animations de Thalès, fonctions, événement contraire et distributivité utilisent désormais les données de l’exercice courant.
 
+## Relecture approfondie de la 2nde
+
+- Les 15 chapitres du niveau ont été soumis à 240 générations chacun, soit 3 600 exercices audités.
+- Aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
+- Les cinq vitrines ont été réécrites manuellement : antécédent, coefficient directeur, médiane, coordonnées d’un vecteur et événement contraire.
+- L’antécédent est présenté comme un nombre de départ recherché et la solution est vérifiée par son image.
+- Le coefficient directeur donne le sens de la variation verticale rapportée à une unité horizontale.
+- La médiane partage explicitement la série ordonnée en deux groupes de même effectif.
+- Le vecteur utilise systématiquement « arrivée moins départ » et la probabilité contraire est contrôlée par une somme égale à 1.
+- Des animations spécialisées représentent maintenant la montée et l’avancée, la valeur centrale et le déplacement de A vers B.
+
+## Premier audit des parcours de Première
+
+- Première spécialité : 14 chapitres et 3 360 exercices audités.
+- Première sans spécialité : 11 chapitres et 2 640 exercices audités.
+- Première technologique : 11 chapitres et 2 640 exercices audités.
+- Sur les 8 640 exercices contrôlés, aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
+- Cette validation structurelle prépare la relecture éditoriale manuelle des quinze vitrines de Première lors du prochain lot.
+
 ## Recette de la version publiée
 
 - La page d’accueil Vercel est accessible et présente clairement l’essai gratuit, le rituel enseignant et l’offre complète.
@@ -102,6 +121,7 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - La correction publiée reprend bien les quatre étapes typées, l’image du nombre le plus « fort » et les « points de vie », ainsi que la droite graduée animée.
 - Le parcours découverte de 4e publié a été testé avec une réponse erronée au produit (−4) × (−3).
 - Ce contrôle a conduit à remplacer, pour les produits de relatifs, la droite graduée par une animation spécialisée de la règle des signes.
+- Le parcours découverte de 3e publié a été testé avec une erreur volontaire sur Thalès : les conditions, les rapports ordonnés, la vérification et l’animation sont correctement affichés.
 
 ## Suite de l’audit
 

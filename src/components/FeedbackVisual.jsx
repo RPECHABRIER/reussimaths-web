@@ -2,7 +2,7 @@ import { ArrowDown, ArrowRight, Scale } from "lucide-react";
 import { colors } from "../theme";
 
 function valuesFrom(exercise) {
-  return `${exercise?.prompt ?? ""}`.match(/−?-?\d+(?:[,.]\d+)?(?:\s*(?:km\/h|cm²|cm³|cm|m²|m³|m|°|€|%))?/g)?.slice(0, 4) ?? [];
+  return `${exercise?.prompt ?? ""}`.match(/−?-?\d+(?:[,.]\d+)?(?:\s*(?:km\/h|cm²|cm³|cm|m²|m³|m|°|€|%))?/g)?.slice(0, 8) ?? [];
 }
 
 function fractionsFrom(exercise) {
@@ -161,7 +161,11 @@ export default function FeedbackVisual({ family, exercise }) {
   if (family === "probability_independence") {
     return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Deux événements indépendants</p><div className="mt-3 grid grid-cols-2 gap-2 text-center text-[10px] font-bold" style={{color:colors.ink}}>{["A","non A","B","non B"].map((label,index)=><span key={label} className="rounded-lg py-3" style={{background:index%2?`${colors.ink}0d`:`${colors.gold}25`}}>{label}</span>)}</div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>Connaître le résultat du premier événement ne change pas la probabilité du second.</p></div>;
   }
-  if (["function_affine_coefficients", "function_variations", "function_domain"].includes(family)) {
+  if (family === "function_affine_coefficients") {
+    const values = valuesFrom(exercise);
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Comparer la montée et l’avancée</p><svg viewBox="0 0 250 125" className="mt-2 w-full" role="img" aria-label="Calcul graphique du coefficient directeur"><line x1="20" y1="105" x2="235" y2="105" stroke={colors.ink} strokeWidth="2"/><line x1="35" y1="118" x2="35" y2="10" stroke={colors.ink} strokeWidth="2"/><path d="M60 92 L195 28" stroke={colors.gold} strokeWidth="4"/><path d="M60 92 H195 V28" fill="none" stroke={colors.green} strokeWidth="3" strokeDasharray="8 5"><animate attributeName="stroke-dashoffset" values="26;0" dur="1.5s" repeatCount="indefinite"/></path><circle cx="60" cy="92" r="5" fill={colors.ink}/><circle cx="195" cy="28" r="5" fill={colors.ink}/><text x="74" y="107" fontSize="11" fill={colors.ink}>variation de x : {values[2] && values[0] ? `${values[2]} − ${values[0]}` : "Δx"}</text><text x="199" y="62" fontSize="11" fill={colors.ink}>Δy</text></svg><p className="text-[11px] text-center" style={{color:colors.slate}}>Coefficient directeur = variation verticale ÷ variation horizontale = {exercise?.answerDisplay ?? exercise?.answer ?? "?"}.</p></div>;
+  }
+  if (["function_variations", "function_domain"].includes(family)) {
     return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Lire les informations dans le bon ordre</p><svg viewBox="0 0 240 95" className="mt-2 w-full"><line x1="18" y1="76" x2="225" y2="76" stroke={colors.ink} strokeWidth="2"/><line x1="38" y1="88" x2="38" y2="10" stroke={colors.ink} strokeWidth="2"/><path d="M38 68 L92 48 L145 57 L211 20" fill="none" stroke={colors.gold} strokeWidth="4" strokeDasharray="8 5"><animate attributeName="stroke-dashoffset" values="26;0" dur="1.6s" repeatCount="indefinite"/></path><circle cx="92" cy="48" r="5" fill={colors.green}/><circle cx="145" cy="57" r="5" fill={colors.green}/></svg><p className="text-[11px] text-center" style={{color:colors.slate}}>Domaine, variations et coefficients ne répondent pas à la même question : on identifie d’abord ce qui est demandé.</p></div>;
   }
   if (family === "distributivity") {
@@ -176,6 +180,12 @@ export default function FeedbackVisual({ family, exercise }) {
         <p className="mt-2 text-[11px] text-center" style={{ color: colors.slate }}>On compte les cas favorables, puis on les compare à l’ensemble des cas possibles.</p>
       </div>
     );
+  }
+  if (family === "statistics_median") {
+    const values = valuesFrom(exercise);
+    const displayValues = values.length >= 3 ? values : ["2", "5", "7", "9", "12"];
+    const middle = Math.floor(displayValues.length / 2);
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Ranger puis viser le centre</p><div className="mt-3 flex items-center justify-center gap-1">{displayValues.map((value,index)=><span key={`${value}-${index}`} className="flex h-10 min-w-9 items-center justify-center rounded-lg px-2 text-xs font-black" style={{color:colors.ink,background:index===middle?`${colors.green}30`:`${colors.ink}0d`,animation:index===middle?"pulse 1.6s infinite":undefined}}>{value}</span>)}</div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>La valeur centrale partage la série ordonnée en deux groupes de même effectif : médiane = {exercise?.answerDisplay ?? exercise?.answer ?? "?"}.</p></div>;
   }
   if (family.startsWith("statistics")) {
     const values = valuesFrom(exercise).map((value) => Number(String(value).replace(",", ".").replace(/[^\d.-]/g, ""))).filter(Number.isFinite);
@@ -204,7 +214,10 @@ export default function FeedbackVisual({ family, exercise }) {
     if (family === "geometry_circle_measure") {
       return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Repérer rayon, diamètre et grandeur demandée</p><svg viewBox="0 0 240 115" className="mt-2 w-full"><circle cx="120" cy="58" r="43" fill={`${colors.gold}12`} stroke={colors.ink} strokeWidth="3"/><line x1="120" y1="58" x2="163" y2="58" stroke={colors.gold} strokeWidth="4"><animate attributeName="stroke-dasharray" values="0 50;50 0" dur="1.4s" repeatCount="indefinite"/></line><circle cx="120" cy="58" r="4" fill={colors.green}/><text x="130" y="50" fontSize="12" fill={colors.ink}>{values[0] ? `r = ${values[0]}` : "rayon"}</text></svg></div>;
     }
-    if (family === "geometry_coordinates" || family === "geometry_vectors") {
+    if (family === "geometry_vectors" || (family === "geometry_coordinates" && /vecteur/i.test(`${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`))) {
+      return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Arrivée moins départ</p><svg viewBox="0 0 250 125" className="mt-2 w-full" role="img" aria-label="Vecteur allant du point A au point B"><line x1="20" y1="95" x2="232" y2="95" stroke={colors.ink} strokeWidth="2"/><line x1="55" y1="115" x2="55" y2="12" stroke={colors.ink} strokeWidth="2"/><path d="M80 82 L190 30" stroke={colors.gold} strokeWidth="5" strokeDasharray="9 5"><animate attributeName="stroke-dashoffset" values="28;0" dur="1.5s" repeatCount="indefinite"/></path><circle cx="80" cy="82" r="5" fill={colors.ink}/><circle cx="190" cy="30" r="5" fill={colors.green}/><text x="66" y="78" fontSize="12" fill={colors.ink}>A</text><text x="198" y="28" fontSize="12" fill={colors.ink}>B</text><text x="112" y="48" fontSize="11" fill={colors.ink}>AB = {exercise?.answerDisplay ?? exercise?.answer ?? "?"}</text></svg><p className="text-[11px] text-center" style={{color:colors.slate}}>Coordonnées de AB = coordonnées de B − coordonnées de A, horizontalement puis verticalement.</p></div>;
+    }
+    if (family === "geometry_coordinates") {
       return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Lire horizontalement, puis verticalement</p><svg viewBox="0 0 240 120" className="mt-2 w-full"><line x1="20" y1="70" x2="225" y2="70" stroke={colors.ink} strokeWidth="2"/><line x1="95" y1="108" x2="95" y2="12" stroke={colors.ink} strokeWidth="2"/><path d="M95 70 L170 70 L170 30" fill="none" stroke={colors.gold} strokeWidth="3" strokeDasharray="7 4"><animate attributeName="stroke-dashoffset" values="22;0" dur="1.5s" repeatCount="indefinite"/></path><circle cx="170" cy="30" r="5" fill={colors.green}/><text x="176" y="27" fontSize="11" fill={colors.ink}>{values.length ? `(${values.slice(0,2).join(" ; ")})` : "point"}</text></svg></div>;
     }
     if (family === "geometry_volume") {

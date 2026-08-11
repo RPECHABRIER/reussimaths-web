@@ -226,7 +226,9 @@ const SHOWCASES = {
 export function getDiscoveryShowcase(levelId) {
   const sourceExercises = SHOWCASES[levelId];
   if (!sourceExercises) return null;
-  const exercises = sourceExercises.map(structureShowcaseExercise);
+  // Audit manuel du 11/08/2026 : les 50 questions de découverte utilisent
+  // des valeurs exactes et des raisonnements courts, sans calculatrice.
+  const exercises = sourceExercises.map((exercise) => ({ ...structureShowcaseExercise(exercise), calculationMode: exercise.calculationMode ?? "mental" }));
   return {
     meta: {
       id: `decouverte-${levelId}`,

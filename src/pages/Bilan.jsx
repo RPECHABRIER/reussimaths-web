@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake } from "lucide-react";
+import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake, Brain } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { useLearningReviews } from "../hooks/useLearningReviews";
+import { useDailyMentalSummary } from "../hooks/useDailyMentalSummary";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -76,6 +77,7 @@ export default function Bilan() {
   const { user } = useAuth();
   const { loading, summary, error, reload } = useWeeklySummary(user?.id);
   const learningReviews = useLearningReviews(user?.id);
+  const mentalMath = useDailyMentalSummary(user?.id);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -196,6 +198,28 @@ export default function Bilan() {
                   Travailler la priorité n°1 <ArrowRight size={13} />
                 </Link>
               )}
+            </div>
+
+            <div className="report-card min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${gold}30` }}>
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 rounded-xl p-2" style={{ backgroundColor: `${gold}18` }}><Brain size={19} color={gold} /></div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Calcul mental quotidien</p>
+                  <h2 className="mt-1 text-lg font-black" style={{ color: ink, fontFamily: fonts.display }}>Dix questions, sans calculatrice</h2>
+                  <p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>La régularité compte davantage qu’une performance isolée : la série change chaque jour et entraîne les automatismes essentiels.</p>
+                </div>
+              </div>
+              {mentalMath.loading ? <p className="mt-4 text-xs" style={{ color: slate }}>Chargement de la série quotidienne…</p> : mentalMath.summary?.current.sessions > 0 ? <>
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {[[`${mentalMath.summary.current.days}/7`, "jours pratiqués"], [`${String(mentalMath.summary.current.average).replace(".", ",")}/10`, "score moyen"], [`${mentalMath.summary.current.best}/10`, "meilleur score"]].map(([value, label]) => <div key={label} className="min-w-0 rounded-2xl p-2.5 text-center" style={{ backgroundColor: paper }}><p className="text-base font-black" style={{ color: ink }}>{value}</p><p className="mt-0.5 text-[9px] leading-tight" style={{ color: slate }}>{label}</p></div>)}
+                </div>
+                <div className="mt-4 flex items-end gap-1.5" style={{ height: 62 }} aria-label="Scores de calcul mental des sept derniers jours">
+                  {mentalMath.summary.days.map((day) => <div key={day.date} className="flex flex-1 flex-col items-center gap-1"><div className="flex w-full flex-1 items-end"><div className="w-full rounded-md" style={{ height: day.score === null ? 4 : Math.max(8, day.score * 4.5), backgroundColor: day.score === null ? colors.hairline : gold }} title={day.score === null ? "Pas de série" : `${day.score}/10`} /></div><p className="text-[0.6rem]" style={{ color: slate }}>{dayLabel(day.date)}</p></div>)}
+                </div>
+                <p className="mt-3 text-xs font-semibold" style={{ color: mentalMath.summary.trend === null || mentalMath.summary.trend >= 0 ? colors.green : colors.red }}>
+                  {mentalMath.summary.trend === null ? "Encore quelques séries permettront de mesurer l’évolution." : mentalMath.summary.trend === 0 ? "Score moyen stable par rapport aux 7 jours précédents." : `${mentalMath.summary.trend > 0 ? "+" : "−"}${String(Math.abs(mentalMath.summary.trend)).replace(".", ",")} point${Math.abs(mentalMath.summary.trend) > 1 ? "s" : ""} par rapport aux 7 jours précédents.`}
+                </p>
+              </> : <div className="mt-4 rounded-2xl p-4" style={{ backgroundColor: paper }}><p className="text-sm font-bold" style={{ color: ink }}>Pas encore de série cette semaine.</p><p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>Une première série de dix questions suffira pour faire apparaître ici un repère concret à partager en famille.</p></div>}
             </div>
 
             <div className="report-card report-plan min-w-0 overflow-hidden rounded-3xl p-4 sm:p-6 md:col-span-2" style={{backgroundColor:colors.card,boxShadow:shadow.soft,border:`1px solid ${colors.green}25`}}>

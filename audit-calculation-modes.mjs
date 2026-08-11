@@ -3,6 +3,7 @@ import { pathToFileURL } from "node:url";
 import { getCalculationMode } from "./src/lib/calculationMode.js";
 import { buildDailyMentalQuestions } from "./src/lib/dailyMentalMath.js";
 import { LEVELS } from "./src/levels.js";
+import { getAllDiscoveryShowcases } from "./src/discoveryShowcases.js";
 
 const chapterDirectory=new URL("./src/chapters/",import.meta.url);
 const files=(await readdir(chapterDirectory)).filter((name)=>name.endsWith(".js")&&name!=="registry.js").sort();
@@ -19,4 +20,6 @@ for(const file of files){
   }}
 }
 for(const level of LEVELS){const daily=buildDailyMentalQuestions(level.id);if(daily.length!==10||daily.some((exercise)=>getCalculationMode(exercise)!=="mental"))throw new Error(`Série quotidienne invalide : ${level.id}`);}
-console.log(`${checked} questions auditées : ${mental} calcul mental, ${calculator} calculatrice autorisée. Les 10 niveaux gardent 10/10 questions quotidiennes sans calculatrice.`);
+const showcaseExercises=getAllDiscoveryShowcases().flatMap((showcase)=>showcase.showcaseExercises);
+if(showcaseExercises.length!==50||showcaseExercises.some((exercise)=>getCalculationMode(exercise)!=="mental"))throw new Error("Les 50 questions de découverte doivent rester explicitement sans calculatrice.");
+console.log(`${checked} questions auditées : ${mental} calcul mental, ${calculator} calculatrice autorisée. Les 10 niveaux gardent 10/10 questions quotidiennes sans calculatrice et les 50 questions de découverte ont été validées manuellement sans calculatrice.`);

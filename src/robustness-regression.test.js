@@ -280,12 +280,18 @@ test("les familles non géométriques prioritaires possèdent une animation spé
 });
 
 test("le bilan parental propose une période, un plan familial et une version imprimable", async () => {
-  const bilan = await read("./pages/Bilan.jsx");
+  const [bilan, mentalSummary] = await Promise.all([read("./pages/Bilan.jsx"), read("./hooks/useDailyMentalSummary.js")]);
   assert.match(bilan, /formatWeekRange/);
   assert.match(bilan, /Imprimer ou enregistrer en PDF/);
   assert.match(bilan, /Le petit plan familial/);
   assert.match(bilan, /Une priorité, trois séances courtes/);
   assert.match(bilan, /Deux questions simples à poser à votre enfant/);
+  assert.match(bilan, /Calcul mental quotidien/);
+  assert.match(bilan, /jours pratiqués/);
+  assert.match(bilan, /score moyen/);
+  assert.match(bilan, /meilleur score/);
+  assert.match(mentalSummary, /daily_mental_sessions/);
+  assert.match(mentalSummary, /previousDates/);
   const css = await read("./index.css");
   assert.match(css, /@page/);
   assert.match(css, /A4 portrait/);

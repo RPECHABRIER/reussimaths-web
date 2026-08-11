@@ -13,6 +13,12 @@ function fractionsFrom(exercise) {
 }
 
 export default function FeedbackVisual({ family, exercise }) {
+  if (family === "fraction_decimal_quotient") {
+    const match = `${exercise?.prompt ?? ""}`.match(/\\dfrac\{(\d+)\}\{(\d+)\}/);
+    const numerator = match?.[1] ?? "numérateur";
+    const denominator = match?.[2] ?? "dénominateur";
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>La barre de fraction signifie « divisé par »</p><div className="mt-3 flex items-center justify-center gap-2 text-sm font-black" style={{color:colors.ink}}><span className="rounded-xl px-3 py-2" style={{background:`${colors.gold}22`}}>{numerator}/{denominator}</span><ArrowRight size={16} color={colors.gold}/><span>{numerator} ÷ {denominator}</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-xl px-3 py-2 animate-pulse" style={{background:`${colors.green}20`}}>{String(exercise?.answerDisplay ?? exercise?.answer ?? "résultat").replace(".", ",")}</span></div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>On effectue la division, puis on arrondit seulement si l’énoncé le demande.</p></div>;
+  }
   if (["fractions", "fraction_equivalence", "fraction_comparison", "fraction_simplification"].includes(family)) {
     const parsedFractions = fractionsFrom(exercise);
     const strips = parsedFractions.length === 2 ? parsedFractions : [{ numerator: 1, denominator: 3 }, { numerator: 1, denominator: 4 }];
@@ -259,6 +265,11 @@ export default function FeedbackVisual({ family, exercise }) {
         <svg viewBox="0 0 240 100" className="mt-2 w-full"><path d="M15 85 Q85 88 115 55 T225 15" fill="none" stroke={colors.ink} strokeWidth="3"/><line x1="72" y1="83" x2="165" y2="35" stroke={colors.gold} strokeWidth="3" strokeDasharray="6 4"><animate attributeName="stroke-dashoffset" values="20;0" dur="1.4s" repeatCount="indefinite"/></line><circle cx="115" cy="55" r="5" fill={colors.green}/></svg>
       </div>
     );
+  }
+  if (family === "number_sequence_pattern") {
+    const values = valuesFrom(exercise).slice(0, 3);
+    const shown = values.length >= 3 ? values : ["2", "2,5", "3"];
+    return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Repérer la règle qui se répète</p><div className="mt-4 flex items-center justify-center gap-1 text-xs font-black" style={{color:colors.ink}}>{[...shown, "?"].map((value,index)=><div key={`${value}-${index}`} className="flex items-center"><span className="flex h-10 min-w-10 items-center justify-center rounded-xl px-2" style={{background:index===shown.length?`${colors.green}22`:`${colors.gold}20`,animation:index===shown.length?"pulse 1.6s infinite":undefined}}>{value}</span>{index<shown.length&&<div className="flex flex-col items-center"><ArrowRight size={15} color={colors.gold}/><span className="text-[8px] font-bold" style={{color:colors.slate}}>même règle</span></div>}</div>)}</div><p className="mt-3 text-[11px] text-center" style={{color:colors.slate}}>On vérifie la règle sur deux passages avant de l’appliquer au terme recherché.</p></div>;
   }
   if (["sequences", "sequence_convergence"].includes(family)) {
     return (

@@ -107,16 +107,16 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "number_sequence_pattern",
-    match: /compléter les suites|suite logique/i,
+    match: /automatismes — suites|compléter les suites|suite logique/i,
     intro: "Non, le pas régulier entre les nombres n’a pas encore été repéré correctement.",
-    meaning: "Dans cette suite logique, on passe d’un nombre au suivant en ajoutant ou en retirant toujours la même quantité. Cette quantité s’appelle le pas.",
-    rule: "Calcule l’écart entre les deux premiers nombres, vérifie qu’il est identique entre les deux suivants, puis applique une nouvelle fois ce même pas.",
+    meaning: "Dans une suite logique ou un motif, chaque rang est construit avec une règle précise : ajouter un même pas, utiliser le rang dans une formule, ou cumuler les éléments des rangs précédents.",
+    rule: "Repère le rang demandé, identifie la règle à partir des premiers termes ou du motif, vérifie-la sur deux étapes, puis applique-la au rang recherché. Si on demande un total, additionne tous les rangs concernés.",
   },
   {
     id: "sequence_convergence",
     // Les bornes sont indispensables : sans elles, le mot courant « ensuite »
     // était parfois interprété comme le thème des suites numériques.
-    match: /\bsuites?\b|somme des n premiers entiers/i,
+    match: /suites?\s*(?:—|\()|—\s*suites?|suites? (?:arithmétiques?|géométriques?|numériques?)|suite (?:définie|récurrente|monotone|convergente)|terme.*d['’]une suite|somme des n premiers entiers/i,
     intro: "Non, le type de suite, son mode de définition ou l’argument de convergence n’a pas été identifié correctement.",
     meaning: "Une suite peut être donnée par une formule explicite ou une relation de récurrence. Pour étudier sa limite, on combine son sens de variation, ses bornes et les limites de référence ; une démonstration par récurrence comporte initialisation, hérédité et conclusion.",
     rule: "Repère d’abord comment la suite est définie et ce qui doit être démontré, puis utilise la formule, la récurrence ou le théorème de convergence adapté.",
@@ -143,6 +143,27 @@ const FAMILY_FEEDBACK = [
     rule: "Écris les trois coordonnées, choisis colinéarité ou produit scalaire selon la question, puis interprète le résultat dans la configuration géométrique.",
   },
   {
+    id: "proportionality",
+    match: /proportionnal|échelle/i,
+    intro: "Non, tu as utilisé un raisonnement additif alors que les deux grandeurs sont proportionnelles.",
+    meaning: "On peut commencer par calculer la valeur correspondant à une unité : c’est la méthode du retour à l’unité. On reconstruit ensuite la quantité demandée.",
+    rule: "Si une grandeur est multipliée par un nombre, l’autre doit être multipliée par le même nombre. Effectue l’arrondi seulement à la fin si l’énoncé le demande.",
+  },
+  {
+    id: "fraction_decimal_quotient",
+    match: /fraction quotient|écriture décimale.*\\dfrac/i,
+    intro: "Non, l’écriture décimale ne s’obtient pas en juxtaposant le numérateur et le dénominateur.",
+    meaning: "Une fraction est aussi le quotient de son numérateur par son dénominateur. Ainsi, pour obtenir son écriture décimale, on effectue la division du nombre du haut par le nombre du bas.",
+    rule: "Calcule numérateur ÷ dénominateur, conserve les chiffres pendant la division, puis arrondis seulement à la fin si cela est demandé.",
+  },
+  {
+    id: "rounding",
+    match: /arrond|valeur approchée/i,
+    intro: "Non, tu as tronqué le nombre ou utilisé le mauvais chiffre pour décider de l’arrondi.",
+    meaning: "Repère d’abord le chiffre situé au rang demandé, puis regarde uniquement le chiffre qui le suit. S’il vaut 5 ou plus, on augmente le chiffre conservé d’une unité.",
+    rule: "Conserve tous les chiffres pendant les calculs et arrondis seulement à la fin, au rang demandé.",
+  },
+  {
     id: "decimal_place_value",
     match: /numération décimale|dixièmes?|centièmes?|millièmes?|valeur de position/i,
     intro: "Non, la valeur de chaque chiffre n’a pas été prise en compte correctement : un dixième vaut 0,1, un centième vaut 0,01 et un millième vaut 0,001.",
@@ -164,15 +185,8 @@ const FAMILY_FEEDBACK = [
     rule: "Cherche un diviseur commun, divise en haut et en bas, puis recommence jusqu’à ce qu’il n’en reste plus.",
   },
   {
-    id: "rounding",
-    match: /arrond|valeur approchée/i,
-    intro: "Non, tu as tronqué le nombre ou utilisé le mauvais chiffre pour décider de l’arrondi.",
-    meaning: "Repère d’abord le chiffre situé au rang demandé, puis regarde uniquement le chiffre qui le suit. S’il vaut 5 ou plus, on augmente le chiffre conservé d’une unité.",
-    rule: "Conserve tous les chiffres pendant les calculs et arrondis seulement à la fin, au rang demandé.",
-  },
-  {
     id: "fraction_of_number",
-    match: /fraction d['’](?:un nombre|une quantité)|calculer.*fraction.*(?:nombre|quantité)/i,
+    match: /fraction d['’](?:un nombre|une quantité)|calculer.*fraction.*(?:nombre|quantité)|\\dfrac\{[^}]+\}\{[^}]+\}[^\n]{0,8}\sde\s+\d/i,
     intro: "Non, la fraction n’a pas été appliquée correctement à la quantité de départ.",
     meaning: "Prendre une fraction d’une quantité, c’est partager d’abord cette quantité selon le dénominateur, le nombre du bas, puis prendre le nombre de parts indiqué par le numérateur.",
     rule: "Divise la quantité par le dénominateur, puis multiplie le résultat par le numérateur.",
@@ -529,7 +543,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "capacity_conversion",
-    match: /convert(?:ir|is).*contenance|\b(?:kL|hL|daL|dL|cL|mL)\b/i,
+    match: /convert(?:ir|is).*contenance|unités? de contenance/i,
     intro: "Non, le chiffre des unités n’a pas été placé dans la bonne colonne ou le déplacement entre les unités n’est pas correct.",
     meaning: "Pour convertir une contenance, place le chiffre des unités du nombre dans son unité de départ, puis complète les colonnes jusqu’à l’unité demandée.",
     rule: "Entre deux unités de contenance consécutives, on multiplie ou on divise par 10.",
@@ -620,7 +634,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "proportionality",
-    match: /proportionnal|échelle|coefficient multiplicateur/i,
+    match: /coefficient multiplicateur/i,
     intro: "Non, tu as utilisé un raisonnement additif alors que les deux grandeurs sont proportionnelles.",
     meaning: "On peut commencer par calculer la valeur correspondant à une unité : c’est la méthode du retour à l’unité. On reconstruit ensuite la quantité demandée.",
     rule: "Si une grandeur est multipliée par un nombre, l’autre doit être multipliée par le même nombre.",

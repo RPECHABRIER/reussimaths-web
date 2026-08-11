@@ -275,7 +275,7 @@ test("deux séries gratuites successives changent de banque et évitent les doub
 
 test("les familles non géométriques prioritaires possèdent une animation spécialisée", async () => {
   const visual = await read("./components/FeedbackVisual.jsx");
-  for (const family of ["fraction_of_number", "whole_number_place_value", "arithmetic_order", "function_affine_coefficients", "distributivity", "percentage_conversion", "probability_contrary", "probability_tree", "probability_independence", "multiple_choice_reasoning", "number_theory", "combinatorics", "random_variables", "decimal_operations", "calculation_strategy", "compound_measures", "duration_calculation", "sequence_convergence", "integral_calculus", "real_number_sets", "space_vectors", "continuity_reasoning"]) {
+  for (const family of ["fraction_of_number", "fraction_decimal_quotient", "whole_number_place_value", "arithmetic_order", "function_affine_coefficients", "distributivity", "percentage_conversion", "probability_contrary", "probability_tree", "probability_independence", "multiple_choice_reasoning", "number_theory", "combinatorics", "random_variables", "decimal_operations", "calculation_strategy", "compound_measures", "duration_calculation", "number_sequence_pattern", "sequence_convergence", "integral_calculus", "real_number_sets", "space_vectors", "continuity_reasoning"]) {
     assert.match(visual, new RegExp(family));
   }
 });
@@ -364,11 +364,29 @@ test("les consignes de calculatrice ont trois états et se contrôlent dans le l
 test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {
   const feedback = await read("./lib/pedagogicalFeedback.js");
   assert.match(feedback, /number_sequence_pattern/);
-  assert.match(feedback, /Calcule l’écart entre les deux premiers nombres/);
-  assert.match(feedback, /\\bsuites\?\\b/);
+  assert.match(feedback, /Repère le rang demandé/);
+  assert.match(feedback, /suites\?\\s\*\(\?:—/);
   const elementary = buildPedagogicalFeedback({ chapter: "Automatismes — Compléter les suites", prompt: "Complète la suite logique : 2 ; 2,5 ; 3 ; ...", answer: 3.5, steps: ["On ajoute 0,5.", "Le résultat est 3,5."] }, "4");
   assert.equal(elementary.family, "number_sequence_pattern");
   assert.doesNotMatch(elementary.meaning, /limite|récurrence|convergence/i);
   const ordinary = buildPedagogicalFeedback({ chapter: "Calcul numérique", prompt: "On calcule d’abord, ensuite on vérifie.", answer: 4, steps: ["2 + 2 = 4", "La réponse est 4."] }, "5");
   assert.notEqual(ordinary.family, "sequence_convergence");
+  const translation = buildPedagogicalFeedback({ chapter: "Géométrie — Translation", prompt: "On applique 4 fois de suite la même translation.", answer: 20, steps: ["4 × 5 = 20", "La distance vaut 20 cm."] }, "25");
+  assert.notEqual(translation.family, "sequence_convergence");
+});
+
+test("les corrections privilégient le sens principal avant l’arrondi ou l’unité", () => {
+  const fractionQuantity = buildPedagogicalFeedback({ chapter: "Fractions — Problèmes", prompt: "Lina prend \\(\\dfrac{1}{4}\\) de 44 cL de sirop.", answer: 11, steps: ["44 ÷ 4 = 11", "Lina prend 11 cL."] }, "4");
+  assert.equal(fractionQuantity.family, "fraction_of_number");
+  const fractionDecimal = buildPedagogicalFeedback({ chapter: "Fractions — Fraction quotient", prompt: "Donne l’écriture décimale de \\(\\dfrac{2}{7}\\), arrondie au centième.", answer: 0.29, steps: ["2 ÷ 7", "On arrondit à 0,29."] }, "0,27");
+  assert.equal(fractionDecimal.family, "fraction_decimal_quotient");
+  const scale = buildPedagogicalFeedback({ chapter: "Proportionnalité — Échelles", prompt: "À l’échelle 1/100, calcule la longueur réelle, arrondie au centième.", answer: 12, steps: ["On multiplie par 100.", "On obtient 12 m."] }, "10");
+  assert.equal(scale.family, "proportionality");
+});
+
+test("l’audit refuse les familles de lycée dans les exercices du collège", async () => {
+  const audit = await read("../audit-pedagogy.mjs");
+  assert.match(audit, /ADVANCED_FAMILIES/);
+  assert.match(audit, /famille_hors_niveau/);
+  assert.match(audit, /levelMismatchCount > 0/);
 });

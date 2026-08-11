@@ -13,6 +13,8 @@ const familyCounts = new Map();
 const genericLabelCounts = new Map();
 const anomalies = [];
 const summaries = [];
+const COLLEGE_LEVELS = new Set(["sixieme", "cinquieme", "quatrieme", "troisieme"]);
+const ADVANCED_FAMILIES = new Set(["sequence_convergence", "integral_calculus", "space_vectors", "random_variables", "combinatorics", "calculus_derivative", "exponential_logarithm"]);
 
 const stepText = (step) => typeof step === "string" ? step : step?.text ?? "";
 const wrongResponse = (exercise) => exercise.type === "numeric"
@@ -35,6 +37,7 @@ for (const file of files) {
   let shortRenderedCorrections = 0;
   let genericFeedback = 0;
   let answerLeaks = 0;
+  let levelMismatches = 0;
 
   for (const difficulty of difficulties) {
     for (let index = 0; index < samplesPerDifficulty; index += 1) {
@@ -54,6 +57,10 @@ for (const file of files) {
         if (shortRenderedCorrections <= 2) add(file, "correction_affichee_trop_courte", `${renderedCorrectionLength} caractères`, exercise);
       }
       families.add(feedback.family);
+      if (COLLEGE_LEVELS.has(chapter.meta.level) && ADVANCED_FAMILIES.has(feedback.family)) {
+        levelMismatches += 1;
+        if (levelMismatches <= 2) add(file, "famille_hors_niveau", feedback.family, exercise);
+      }
       familyCounts.set(feedback.family, (familyCounts.get(feedback.family) ?? 0) + 1);
       if (feedback.family === "general") {
         genericFeedback += 1;
@@ -83,11 +90,12 @@ for (const file of files) {
     shortRenderedCorrections,
     genericFeedback,
     answerLeaks,
+    levelMismatches,
   });
 }
 
 const priority = summaries
-  .filter((summary) => summary.shortRenderedCorrections || summary.genericFeedback || summary.answerLeaks)
+  .filter((summary) => summary.shortRenderedCorrections || summary.genericFeedback || summary.answerLeaks || summary.levelMismatches)
   .sort((a, b) => (b.genericFeedback - a.genericFeedback) || (b.shortRenderedCorrections - a.shortRenderedCorrections) || (b.answerLeaks - a.answerLeaks));
 
 const report = {
@@ -103,8 +111,9 @@ const report = {
 if (process.argv.includes("--check")) {
   const genericCount = familyCounts.get("general") ?? 0;
   const shortRenderedCount = summaries.reduce((sum, item) => sum + item.shortRenderedCorrections, 0);
-  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s), ${shortRenderedCount} correction(s) affichée(s) trop courte(s).`);
-  if (genericCount > 0 || shortRenderedCount > 0) process.exitCode = 1;
+  const levelMismatchCount = summaries.reduce((sum, item) => sum + item.levelMismatches, 0);
+  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s), ${shortRenderedCount} correction(s) affichée(s) trop courte(s), ${levelMismatchCount} famille(s) hors niveau.`);
+  if (genericCount > 0 || shortRenderedCount > 0 || levelMismatchCount > 0) process.exitCode = 1;
 } else {
   console.log(JSON.stringify(report, null, 2));
 }

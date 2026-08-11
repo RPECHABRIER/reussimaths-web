@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X, ChevronUp, ChevronDown, Copy, Save } from "lucide-react";
+import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X, ChevronUp, ChevronDown, Copy, Save, Printer, Timer } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -68,6 +68,21 @@ function deriveSimpleNumericQuestion(prompt) {
     const rounded=Math.round(answer*1e9)/1e9;
     return {answer:rounded,steps:[{type:"calcul",text:`Le nombre manquant est ${formatAnswer(rounded)}.`}]};
   }
+  const percentage = normalized.match(/(?:calcule\s+)?(-?\d+(?:[,.]\d+)?)\s*%\s+de\s+(-?\d+(?:[,.]\d+)?)/i);
+  if (percentage) {
+    const rate=frenchNumber(percentage[1]); const value=frenchNumber(percentage[2]); const answer=Math.round(rate*value*1e7)/1e9;
+    return {answer,steps:[{type:"calcul",text:`\\(${formatAnswer(rate)}\\,\\%\\text{ de }${formatAnswer(value)}=\\dfrac{${formatAnswer(rate)}}{100}\\times${formatAnswer(value)}=${formatAnswer(answer)}\\)`}]};
+  }
+  const fraction = normalized.match(/(?:calcule\s+)?(-?\d+)\s*\/\s*(-?\d+)\s+de\s+(-?\d+(?:[,.]\d+)?)/i);
+  if (fraction) {
+    const numerator=Number(fraction[1]);const denominator=Number(fraction[2]);const value=frenchNumber(fraction[3]);if(!denominator)return null;
+    const answer=Math.round(numerator/denominator*value*1e9)/1e9;
+    return {answer,steps:[{type:"calcul",text:`\\(\\dfrac{${numerator}}{${denominator}}\\text{ de }${formatAnswer(value)}=${formatAnswer(value)}\\div${denominator}\\times${numerator}=${formatAnswer(answer)}\\)`}]};
+  }
+  const equation = normalized.match(/(-?\d+(?:[,.]\d+)?)\s*x\s*([+\-])\s*(\d+(?:[,.]\d+)?)\s*=\s*(-?\d+(?:[,.]\d+)?)/i);
+  if(equation){const a=frenchNumber(equation[1]);const b=frenchNumber(equation[3])*(equation[2]==="-"?-1:1);const target=frenchNumber(equation[4]);if(!a)return null;const answer=Math.round((target-b)/a*1e9)/1e9;return {answer,steps:[{type:"calcul",text:`On effectue la même opération dans les deux membres, puis on divise par ${formatAnswer(a)} : \\(x=${formatAnswer(answer)}\\).`}]};}
+  const conversion = normalized.match(/(?:convertis?|conversion de)\s+(-?\d+(?:[,.]\d+)?)\s*(km|hm|dam|m|dm|cm|mm)\s+(?:en|vers)\s*(km|hm|dam|m|dm|cm|mm)/i);
+  if(conversion){const factors={km:1000,hm:100,dam:10,m:1,dm:.1,cm:.01,mm:.001};const value=frenchNumber(conversion[1]);const from=conversion[2].toLowerCase();const to=conversion[3].toLowerCase();const answer=Math.round(value*factors[from]/factors[to]*1e9)/1e9;return {answer,steps:[{type:"calcul",text:`Dans le tableau de conversion des longueurs, on passe de ${from} à ${to} : \\(${formatAnswer(value)}\\ ${from}=${formatAnswer(answer)}\\ ${to}\\).`}]};}
   return null;
 }
 
@@ -88,12 +103,17 @@ function decodeSession(value) {
     const options=Array.isArray(exercise.options)?exercise.options.slice(0,8).map((option)=>String(option).slice(0,300)):undefined;
     return {...exercise,prompt:exercise.prompt,chapter:exercise.chapter,options};
   });
-  return {levelId:typeof parsed.levelId==="string"?parsed.levelId:"",exercises};
+  return {levelId:typeof parsed.levelId==="string"?parsed.levelId:"",title:typeof parsed.title==="string"?parsed.title.slice(0,120):"",date:typeof parsed.date==="string"?parsed.date.slice(0,10):"",timerSeconds:[0,30,60,90,120].includes(parsed.timerSeconds)?parsed.timerSeconds:0,exercises};
 }
 
 function QuestionEditForm({ draft, setDraft, isQcm, onSave, onCancel }) {
   const auto = !isQcm ? deriveSimpleNumericQuestion(draft.prompt) : null;
   return <div><label className="block text-[10px] font-bold" style={{color:colors.slate}}>Énoncé personnalisé<textarea rows={3} value={draft.prompt} onChange={(event)=>{const prompt=event.target.value;const derived=deriveSimpleNumericQuestion(prompt);setDraft((current)=>({...current,prompt,...(derived?{answer:formatAnswer(derived.answer),autoSteps:derived.steps}:{autoSteps:null})}));}} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>{isQcm?<><p className="mt-2 text-[10px] font-bold" style={{color:colors.slate}}>Propositions et bonne réponse</p><div className="mt-1 grid gap-1.5">{draft.options.map((option,optionIndex)=><label key={optionIndex} className="flex items-center gap-2"><input type="radio" name={`correct-${draft.id}`} checked={draft.correctIndex===optionIndex} onChange={()=>setDraft((current)=>({...current,correctIndex:optionIndex}))}/><input value={option} onChange={(event)=>setDraft((current)=>({...current,options:current.options.map((item,index)=>index===optionIndex?event.target.value:item)}))} className="min-w-0 flex-1 rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>)}</div></>:<label className="block mt-2 text-[10px] font-bold" style={{color:colors.slate}}>Réponse attendue<input value={draft.answer} onChange={(event)=>setDraft((current)=>({...current,answer:event.target.value,autoSteps:null}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>}{auto&&<p className="mt-2 text-[10px] font-bold" style={{color:colors.green}}>Réponse recalculée automatiquement pour cette opération simple.</p>}<p className="mt-2 text-[10px]" style={{color:colors.slate}}>La correction sera reconstruite avec la nouvelle réponse afin de ne pas conserver des calculs liés aux anciennes valeurs.</p><div className="mt-2 flex gap-2"><button type="button" onClick={onSave} className="rounded-full px-3 py-1.5 text-[10px] font-black" style={{backgroundColor:colors.gold,color:colors.ink}}>Enregistrer</button><button type="button" onClick={onCancel} className="inline-flex items-center gap-1 px-2 text-[10px] font-bold" style={{color:colors.slate}}><X size={11}/> Annuler</button></div></div>;
+}
+
+function PrintableSession({ title, date, levelId, exercises, withCorrections }) {
+  const level=LEVELS.find((item)=>item.id===levelId)?.label||levelId;
+  return <section className="teacher-print-sheet hidden" aria-hidden="true"><header><p>RéussiMaths · {level}</p><h1>{title||"Rituel de mathématiques"}</h1><p>{date?new Intl.DateTimeFormat("fr-FR",{dateStyle:"long"}).format(new Date(`${date}T12:00:00`)):""}</p></header>{exercises.map((exercise,i)=><article key={i}><h2>Question {i+1}</h2><MathText as="p" text={exercise.prompt}/>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<ul>{exercise.options.map((option,j)=><li key={j}><MathText text={String(option)}/></li>)}</ul>}{withCorrections&&<div className="teacher-print-answer"><strong>Réponse : </strong><MathText text={formatAnswer(exercise.answer)}/>{Array.isArray(exercise.steps)&&exercise.steps.length>0&&<StepsList steps={exercise.steps} dark={false}/>}</div>}</article>)}</section>;
 }
 
 export default function Enseignant() {
@@ -106,6 +126,11 @@ export default function Enseignant() {
   const [exercises, setExercises] = useState([]);
   const [index, setIndex] = useState(0);
   const [shareMessage, setShareMessage] = useState("");
+  const [sessionTitle, setSessionTitle] = useState("Rituel de mathématiques");
+  const [sessionDate, setSessionDate] = useState(()=>new Date().toISOString().slice(0,10));
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [printMode, setPrintMode] = useState("student");
 
   const chapter = useMemo(() => AUTOMATISMES_CHAPTERS.find((c) => c.meta.level === levelId) ?? null, [levelId]);
   const total = selectedQuestions.length;
@@ -215,7 +240,7 @@ export default function Enseignant() {
 
   const copySessionLink = async () => {
     try {
-      const encoded=encodeSession({levelId,exercises});
+      const encoded=encodeSession({levelId,title:sessionTitle,date:sessionDate,timerSeconds,exercises});
       if(encoded.length>40000)throw new Error("Lien trop long");
       const url=`${window.location.origin}/enseignant?seance=${encoded}`;
       await navigator.clipboard.writeText(url);
@@ -229,9 +254,13 @@ export default function Enseignant() {
     try {
       const imported=decodeSession(value);
       if(!imported)throw new Error("Séance invalide");
-      setLevelId(imported.levelId);setExercises(imported.exercises);setIndex(0);setView("review");
+      setLevelId(imported.levelId);setSessionTitle(imported.title||"Rituel de mathématiques");setSessionDate(imported.date||new Date().toISOString().slice(0,10));setTimerSeconds(imported.timerSeconds);setExercises(imported.exercises);setIndex(0);setView("review");
     } catch { setShareMessage("Le lien de séance est invalide ou incomplet."); }
   }, []);
+
+  useEffect(()=>{if(view!=="diaporama"||!timerSeconds)return undefined;setTimeLeft(timerSeconds);const interval=window.setInterval(()=>setTimeLeft((value)=>Math.max(0,value-1)),1000);return()=>window.clearInterval(interval);},[view,index,timerSeconds]);
+
+  const printSession=(mode)=>{setPrintMode(mode);window.setTimeout(()=>window.print(),50);};
 
   useEffect(() => {
     if (view !== "diaporama") return undefined;
@@ -296,6 +325,11 @@ export default function Enseignant() {
                 <p aria-live="polite" className="text-sm font-black px-3 py-1.5 rounded-full" style={{ color: total === 5 ? colors.green : gold, backgroundColor: total === 5 ? `${colors.green}18` : `${gold}18` }}>{total} / 5</p>
               </div>
 
+              <div className="grid gap-3 sm:grid-cols-2 mb-5">
+                <label className="text-xs font-semibold" style={{color:slate}}>Titre de la séance<input value={sessionTitle} maxLength={120} onChange={(event)=>setSessionTitle(event.target.value)} className="mt-1 w-full rounded-xl px-3 py-2.5 text-sm" style={{border:`1px solid ${colors.hairline}`,backgroundColor:colors.bg,color:ink}}/></label>
+                <label className="text-xs font-semibold" style={{color:slate}}>Date<input type="date" value={sessionDate} onChange={(event)=>setSessionDate(event.target.value)} className="mt-1 w-full rounded-xl px-3 py-2.5 text-sm" style={{border:`1px solid ${colors.hairline}`,backgroundColor:colors.bg,color:ink}}/></label>
+              </div>
+
             <label htmlFor="teacher-level" className="block text-xs uppercase tracking-wide font-semibold mb-2" style={{ color: slate }}>
               1. Niveau
             </label>
@@ -316,6 +350,7 @@ export default function Enseignant() {
                 );
               })}
             </select>
+              <label className="block mt-4 text-xs font-semibold" style={{color:slate}}>Minuteur par question (optionnel)<select value={timerSeconds} onChange={(event)=>setTimerSeconds(Number(event.target.value))} className="mt-1 w-full rounded-xl px-3 py-2.5 text-sm" style={{border:`1px solid ${colors.hairline}`,backgroundColor:colors.bg,color:ink}}><option value={0}>Sans minuteur</option><option value={30}>30 secondes</option><option value={60}>1 minute</option><option value={90}>1 min 30</option><option value={120}>2 minutes</option></select></label>
               <div className="my-5" style={{ height: 1, backgroundColor: colors.hairline }} />
 
           {chapter && (
@@ -367,7 +402,7 @@ export default function Enseignant() {
 
   // ------------------------------------------------------------- REVIEW ---
   if (view === "review") {
-    return <div className="min-h-screen w-full p-4 sm:p-8" style={{background:paper,fontFamily:fonts.body}}><div className="mx-auto max-w-3xl"><button type="button" onClick={()=>setView("setup")} className="inline-flex items-center gap-1 text-xs font-semibold" style={{color:slate}}><ArrowLeft size={14}/> Modifier la sélection</button><div className="mt-8 text-center"><p className="text-xs uppercase tracking-widest font-bold" style={{color:gold}}>Dernière vérification</p><h1 className="mt-2 text-3xl font-black" style={{fontFamily:fonts.display,color:ink}}>Votre séance est prête</h1><p className="mt-2 text-sm" style={{color:slate}}>Contrôlez l’ordre, les énoncés et les réponses avant de projeter.</p></div><div className="mt-7 grid gap-3">{exercises.map((exercise,exerciseIndex)=><div key={`${exercise.prompt}-${exerciseIndex}`} className="rounded-2xl p-4" style={{backgroundColor:colors.card,boxShadow:shadow.soft}}><div className="flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-xs font-black" style={{width:28,height:28,backgroundColor:gold,color:ink}}>{exerciseIndex+1}</span><div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-wide font-bold" style={{color:slate}}>{exercise.chapter}</p><MathText as="p" text={exercise.prompt} className="mt-1 text-sm font-bold" style={{color:ink}}/><p className="mt-2 text-xs" style={{color:colors.green}}>Réponse : <MathText text={formatAnswer(exercise.answer)}/></p>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<p className="mt-1 text-[10px]" style={{color:slate}}>Propositions : {exercise.options.map(String).join(" · ")}</p>}</div></div></div>)}</div><div className="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" onClick={()=>{setIndex(0);setView("diaporama");}} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:gold,color:ink}}><Play size={16}/> Lancer la projection</button><button type="button" onClick={copySessionLink} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Copy size={16}/> Copier le lien de cette séance</button></div>{shareMessage&&<p className="mt-3 text-center text-xs font-bold" style={{color:shareMessage.includes("copié")?colors.green:colors.red}}>{shareMessage}</p>}<p className="mt-3 text-center text-[10px]" style={{color:slate}}><Save size={11} className="inline mr-1"/>Le lien contient les cinq questions : aucun compte n’est nécessaire pour le rouvrir.</p></div></div>;
+    return <div className="teacher-session-page min-h-screen w-full p-4 sm:p-8" style={{background:paper,fontFamily:fonts.body}}><div className="mx-auto max-w-3xl"><button type="button" onClick={()=>setView("setup")} className="inline-flex items-center gap-1 text-xs font-semibold" style={{color:slate}}><ArrowLeft size={14}/> Modifier la sélection</button><div className="mt-8 text-center"><p className="text-xs uppercase tracking-widest font-bold" style={{color:gold}}>Dernière vérification</p><h1 className="mt-2 text-3xl font-black" style={{fontFamily:fonts.display,color:ink}}>{sessionTitle||"Votre séance est prête"}</h1><p className="mt-2 text-sm" style={{color:slate}}>{sessionDate&&new Intl.DateTimeFormat("fr-FR",{dateStyle:"long"}).format(new Date(`${sessionDate}T12:00:00`))} · Contrôlez l’ordre, les énoncés et les réponses.</p></div><div className="mt-7 grid gap-3">{exercises.map((exercise,exerciseIndex)=><div key={`${exercise.prompt}-${exerciseIndex}`} className="rounded-2xl p-4" style={{backgroundColor:colors.card,boxShadow:shadow.soft}}><div className="flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-xs font-black" style={{width:28,height:28,backgroundColor:gold,color:ink}}>{exerciseIndex+1}</span><div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-wide font-bold" style={{color:slate}}>{exercise.chapter}</p><MathText as="p" text={exercise.prompt} className="mt-1 text-sm font-bold" style={{color:ink}}/><p className="mt-2 text-xs" style={{color:colors.green}}>Réponse : <MathText text={formatAnswer(exercise.answer)}/></p>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<p className="mt-1 text-[10px]" style={{color:slate}}>Propositions : {exercise.options.map(String).join(" · ")}</p>}</div></div></div>)}</div><div className="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" onClick={()=>{setIndex(0);setView("diaporama");}} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:gold,color:ink}}><Play size={16}/> Lancer la projection</button><button type="button" onClick={copySessionLink} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Copy size={16}/> Copier le lien de cette séance</button><button type="button" onClick={()=>printSession("student")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF des questions</button><button type="button" onClick={()=>printSession("correction")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF du corrigé</button></div>{shareMessage&&<p className="mt-3 text-center text-xs font-bold" style={{color:shareMessage.includes("copié")?colors.green:colors.red}}>{shareMessage}</p>}<p className="mt-3 text-center text-[10px]" style={{color:slate}}><Save size={11} className="inline mr-1"/>Le lien conserve le titre, la date, le minuteur et les cinq questions.</p></div><PrintableSession title={sessionTitle} date={sessionDate} levelId={levelId} exercises={exercises} withCorrections={printMode==="correction"}/></div>;
   }
 
   // ---------------------------------------------------------- DIAPORAMA ---
@@ -380,9 +415,7 @@ export default function Enseignant() {
           <button onClick={backToSetup} className="text-xs font-semibold flex items-center gap-1" style={{ color: slate }}>
             <Settings2 size={14} /> Quitter
           </button>
-          <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: gold, letterSpacing: "0.1em" }}>
-            Question {index + 1} / {exercises.length}
-          </p>
+          <div className="text-center"><p className="text-xs font-semibold uppercase tracking-wide" style={{ color: gold, letterSpacing: "0.1em" }}>Question {index + 1} / {exercises.length}</p>{timerSeconds>0&&<p aria-live="polite" className="mt-1 inline-flex items-center gap-1 text-sm font-black" style={{color:timeLeft===0?colors.red:ink}}><Timer size={14}/>{Math.floor(timeLeft/60)}:{String(timeLeft%60).padStart(2,"0")}</p>}</div>
           <button onClick={toggleFullscreen} className="text-xs font-semibold flex items-center gap-1" style={{ color: slate }}>
             <Maximize size={14} /> Plein écran
           </button>
@@ -391,6 +424,7 @@ export default function Enseignant() {
         <div className="max-w-3xl w-full mx-auto h-1.5 rounded-full overflow-hidden -mt-5 mb-5" style={{ backgroundColor: `${ink}0d` }}><div className="h-full rounded-full transition-all" style={{ width: `${((index + 1) / exercises.length) * 100}%`, backgroundColor: gold }} /></div>
 
         <div className="flex-1 flex flex-col items-center justify-center max-w-3xl w-full mx-auto text-center">
+          <p className="text-xs font-bold mb-2" style={{color:gold}}>{sessionTitle}</p>
           <p className="text-sm uppercase tracking-wide font-semibold mb-4" style={{ color: slate }}>
             {exercise.chapter}
           </p>

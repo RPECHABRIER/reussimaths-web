@@ -291,4 +291,18 @@ test("le rituel enseignant permet de composer et partager une séance exacte", a
   assert.match(teacher, /encodeSession/);
   assert.match(teacher, /decodeSession/);
   assert.match(teacher, /value\.length > 40000/);
+  assert.match(teacher, /Titre de la séance/);
+  assert.match(teacher, /PDF des questions/);
+  assert.match(teacher, /PDF du corrigé/);
+  assert.match(teacher, /Minuteur par question/);
+  assert.match(teacher, /const percentage/);
+  assert.match(teacher, /const fraction/);
+  assert.match(teacher, /const equation/);
+  assert.match(teacher, /const conversion/);
+});
+
+test("le parcours découverte affiche les égalités de fractions en LaTeX", async () => {
+  const showcases = await read("./discoveryShowcases.js");
+  assert.match(showcases, /\\\\dfrac\{x\}\{6\}=\\\\dfrac\{4\}\{3\}/);
+  assert.doesNotMatch(showcases, /Thalès, x\/6 = 4\/3/);
 });

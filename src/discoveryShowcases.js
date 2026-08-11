@@ -123,11 +123,11 @@ const SHOWCASES = {
     ]),
   ],
   troisieme: [
-    n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, x/6 = 4/3. Calcule x.", 8, [
-      { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion x/6 = 4/3. L’ordre des côtés est déjà indiqué par l’égalité." },
+    n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). Calcule \\(x\\).", 8, [
+      { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). L’ordre des côtés est déjà indiqué par l’égalité." },
       { type: "regle", text: "Les droites parallèles forment deux triangles semblables : ils ont les mêmes angles et leurs longueurs correspondantes sont proportionnelles. On conserve exactement le même ordre dans chaque quotient." },
-      { type: "calcul", text: "Pour isoler x, on multiplie 6 par 4/3 : x = 6 × 4 ÷ 3. On peut simplifier 6 ÷ 3 = 2, puis calculer 2 × 4 = 8." },
-      { type: "resultat", text: "Ainsi, x = 8. Vérification : 8/6 et 4/3 représentent bien la même proportion." },
+      { type: "calcul", text: "Pour isoler \\(x\\), on écrit \\(x=6\\times\\dfrac{4}{3}\\). On peut simplifier \\(6\\div3=2\\), puis calculer \\(2\\times4=8\\)." },
+      { type: "resultat", text: "Ainsi, \\(x=8\\). Vérification : \\(\\dfrac{8}{6}=\\dfrac{4}{3}\\)." },
     ]),
     n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [
       { type: "donnee", text: "Le membre de gauche est un produit de deux facteurs, (x − 2) et (x + 3), et ce produit est égal à zéro." },

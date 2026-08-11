@@ -145,6 +145,17 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media print {
+  body:has(.teacher-print-sheet) > #root > * { background: white !important; }
+  .teacher-session-page > div:first-child { display: none !important; }
+  .teacher-print-sheet { display: block !important; color: #172849; font-family: Arial, sans-serif; }
+  .teacher-print-sheet header { border-bottom: 2px solid #e5a62f; margin-bottom: 20px; padding-bottom: 12px; }
+  .teacher-print-sheet header h1 { font-size: 24px; margin: 4px 0; }
+  .teacher-print-sheet header p { margin: 2px 0; font-size: 12px; }
+  .teacher-print-sheet article { break-inside: avoid; border: 1px solid #dce1ea; border-radius: 12px; margin: 0 0 14px; padding: 14px 16px; min-height: 82px; }
+  .teacher-print-sheet article h2 { color: #c68a18; font-size: 12px; margin: 0 0 8px; text-transform: uppercase; }
+  .teacher-print-sheet article p { font-size: 15px; margin: 0; }
+  .teacher-print-sheet article ul { columns: 2; font-size: 13px; margin: 10px 0 0; }
+  .teacher-print-answer { background: #f3faf6; border-left: 3px solid #2fa66a; margin-top: 12px; padding: 9px 11px; }
   html, body {
     background: #fff !important;
   }

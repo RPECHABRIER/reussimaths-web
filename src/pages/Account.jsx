@@ -34,7 +34,7 @@ const TERMS_VERSION = "2026-08-09";
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
 // d'arrivée après connexion, pas seulement /compte).
 export default function Account() {
-  const { user, loading, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, signOut } = useAuth();
+  const { user, loading, passwordRecovery, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, sendPasswordReset, updatePassword, signOut } = useAuth();
   const {
     subscription: rawSubscription,
     loading: subscriptionLoading,
@@ -62,6 +62,9 @@ export default function Account() {
   const [emailPassword, setEmailPassword] = useState("");
   const [emailAuthLoading, setEmailAuthLoading] = useState(false);
   const [emailAuthMessage, setEmailAuthMessage] = useState(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordUpdateLoading, setPasswordUpdateLoading] = useState(false);
+  const [passwordUpdateMessage, setPasswordUpdateMessage] = useState(null);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -235,6 +238,40 @@ export default function Account() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const email = emailAddress.trim().toLowerCase();
+    setEmailAuthMessage(null);
+    if (!email) {
+      setEmailAuthMessage({ type: "error", text: "Saisis d’abord ton adresse e-mail." });
+      return;
+    }
+    setEmailAuthLoading(true);
+    const { error } = await sendPasswordReset(email);
+    setEmailAuthLoading(false);
+    setEmailAuthMessage(error
+      ? { type: "error", text: "Impossible d’envoyer le lien pour le moment. Réessaie dans quelques instants." }
+      : { type: "success", text: "Si un compte correspond à cette adresse, un lien de réinitialisation vient d’être envoyé." });
+  };
+
+  const handlePasswordUpdate = async (event) => {
+    event.preventDefault();
+    setPasswordUpdateMessage(null);
+    if (newPassword.length < 8) {
+      setPasswordUpdateMessage({ type: "error", text: "Le nouveau mot de passe doit contenir au moins 8 caractères." });
+      return;
+    }
+    setPasswordUpdateLoading(true);
+    const { error } = await updatePassword(newPassword);
+    setPasswordUpdateLoading(false);
+    if (error) {
+      setPasswordUpdateMessage({ type: "error", text: "Le mot de passe n’a pas pu être modifié. Demande un nouveau lien." });
+      return;
+    }
+    setNewPassword("");
+    setPasswordUpdateMessage({ type: "success", text: "Ton mot de passe a été modifié." });
+    window.history.replaceState({}, "", "/compte");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: colors.bg, color: colors.slate }}>
@@ -309,6 +346,7 @@ export default function Account() {
                 <button type="submit" disabled={emailAuthLoading} className="inline-flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.gold, color: colors.ink, opacity: emailAuthLoading ? 0.65 : 1 }}><Mail size={15} />{emailAuthLoading ? "Patiente…" : emailMode === "signup" ? "Créer mon compte avec mon e-mail" : "Se connecter avec mon e-mail"}</button>
                 {emailAuthMessage && <p role="status" className="text-xs leading-relaxed" style={{ color: emailAuthMessage.type === "error" ? colors.red : colors.green }}>{emailAuthMessage.text}</p>}
                 <button type="button" onClick={() => { setEmailMode((mode) => mode === "signup" ? "signin" : "signup"); setEmailAuthMessage(null); }} className="text-xs font-semibold underline" style={{ color: colors.slate }}>{emailMode === "signup" ? "J’ai déjà un compte : me connecter" : "Je n’ai pas encore de compte : m’inscrire"}</button>
+                {emailMode === "signin" && <button type="button" disabled={emailAuthLoading} onClick={handleForgotPassword} className="text-xs font-semibold underline" style={{ color: colors.slate }}>Mot de passe oublié ?</button>}
               </form>
               <p className="flex items-center justify-center gap-1.5 text-[11px] mt-3" style={{ color: colors.slate }}><ShieldCheck size={13} color={colors.green} />L’élève choisit un pseudo ; son nom n’est pas affiché.</p>
             </div>
@@ -320,6 +358,14 @@ export default function Account() {
         </div>
       ) : (
         <div className="flex flex-col gap-4 w-full max-w-3xl mx-auto text-center rounded-[2rem] p-5 sm:p-8 lg:p-10 my-8" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+          {(passwordRecovery || new URLSearchParams(window.location.search).get("recovery") === "1") && (
+            <form onSubmit={handlePasswordUpdate} className="rounded-2xl p-4 text-left flex flex-col gap-3" style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
+              <div><p className="text-sm font-black" style={{ color: colors.ink }}>Choisir un nouveau mot de passe</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Utilise au moins 8 caractères et évite un mot de passe déjà employé ailleurs.</p></div>
+              <input type="password" required minLength={8} autoComplete="new-password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} placeholder="Nouveau mot de passe" className="rounded-xl px-3 py-2.5 text-sm" style={{ color: colors.ink, backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }} />
+              <button type="submit" disabled={passwordUpdateLoading} className="py-2.5 rounded-full text-sm font-bold" style={{ backgroundColor: colors.gold, color: colors.ink }}>{passwordUpdateLoading ? "Modification…" : "Enregistrer le nouveau mot de passe"}</button>
+              {passwordUpdateMessage && <p role="status" className="text-xs" style={{ color: passwordUpdateMessage.type === "error" ? colors.red : colors.green }}>{passwordUpdateMessage.text}</p>}
+            </form>
+          )}
           <Mascot size={84} className="mx-auto" />
           <p style={{ fontFamily: fonts.display, fontWeight: 700, color: colors.ink, fontSize: "1.1rem" }}>
             {profile?.pseudo ?? "Connecté"}

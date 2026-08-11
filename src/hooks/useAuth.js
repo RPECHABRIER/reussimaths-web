@@ -8,6 +8,7 @@ import { supabase } from "../lib/supabaseClient";
 export function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [passwordRecovery, setPasswordRecovery] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -17,6 +18,7 @@ export function useAuth() {
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      if (event === "PASSWORD_RECOVERY") setPasswordRecovery(true);
       // Compteur de connexions (voir supabase/schema.sql : table
       // user_login_stats + RPC record_login), utilisé par le tableau de bord
       // admin (/admin, src/pages/AdminPreview.jsx). "SIGNED_IN" ne se
@@ -42,14 +44,24 @@ export function useAuth() {
   }, []);
 
   const signUpWithEmail = useCallback((email, password) => {
-    return supabase.auth.signUp({ email, password });
+    return supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/compte` } });
   }, []);
 
   const signInWithEmail = useCallback((email, password) => {
     return supabase.auth.signInWithPassword({ email, password });
   }, []);
 
+  const sendPasswordReset = useCallback((email) => {
+    return supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/compte?recovery=1` });
+  }, []);
+
+  const updatePassword = useCallback(async (password) => {
+    const result = await supabase.auth.updateUser({ password });
+    if (!result.error) setPasswordRecovery(false);
+    return result;
+  }, []);
+
   const signOut = useCallback(() => supabase.auth.signOut(), []);
 
-  return { user, loading, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, signOut };
+  return { user, loading, passwordRecovery, signInWithGoogle, signInWithApple, signUpWithEmail, signInWithEmail, sendPasswordReset, updatePassword, signOut };
 }

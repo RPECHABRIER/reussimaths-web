@@ -87,3 +87,21 @@ test("les cinquante vitrines suivent le même parcours donnée, règle, calcul, 
     }
   }
 });
+
+test("la vitrine 4e conserve les vérifications mathématiques indispensables", () => {
+  const exercises = getDiscoveryShowcase("quatrieme").showcaseExercises;
+  const corrections = exercises.map((exercise) => exercise.steps.map((step) => step.text).join(" ")).join(" ");
+  assert.match(corrections, /balance à l’équilibre/);
+  assert.match(corrections, /Vérification : 4 × 5 − 7/);
+  assert.match(corrections, /strictement inférieure à 6 \+ 8/);
+  assert.match(corrections, /comprise entre la plus petite valeur 8 et la plus grande valeur 15/);
+});
+
+test("équations, Pythagore, statistiques et vitesses ont un visuel contextualisé", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
+  assert.match(visual, /On conserve l’équilibre jusqu’à isoler x/);
+  assert.match(visual, /Les carrés des deux côtés construisent celui de l’hypoténuse/);
+  assert.match(visual, /elle doit rester entre la plus petite et la plus grande valeur/);
+  assert.match(visual, /Pour trouver la vitesse, on partage la distance par la durée/);
+});

@@ -87,11 +87,36 @@ const SHOWCASES = {
     ], null, "3/5"),
   ],
   quatrieme: [
-    n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, ["Deux nombres de même signe donnent un produit positif.", "4 × 3 = 12.", "(−4) × (−3) = 12."]),
-    n("Équations — Résoudre", "Résous l’équation 4x − 7 = 13.", 5, ["On ajoute 7 dans les deux membres : 4x = 20.", "On divise les deux membres par 4.", "x = 5."]),
-    n("Théorème de Pythagore — Hypoténuse", "ABC est rectangle en A, AB = 6 cm et AC = 8 cm. Calcule BC.", 10, ["BC est l’hypoténuse : BC² = AB² + AC².", "BC² = 6² + 8² = 100.", "BC = √100 = 10 cm."], "cm"),
-    n("Proportionnalité — Vitesse", "Une voiture parcourt 150 km en 2 h à vitesse constante. Quelle est sa vitesse moyenne ?", 75, ["On cherche la distance parcourue en une heure.", "150 ÷ 2 = 75.", "La vitesse est 75 km/h."], "km/h"),
-    n("Statistiques — Moyenne", "Calcule la moyenne de 8, 10 et 15.", 11, ["On additionne les valeurs : 8 + 10 + 15 = 33.", "Il y a 3 valeurs : 33 ÷ 3.", "La moyenne est 11."]),
+    n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, [
+      { type: "donnee", text: "On multiplie deux nombres négatifs : −4 et −3." },
+      { type: "regle", text: "Pour un produit, deux nombres de même signe donnent un résultat positif ; deux nombres de signes opposés donnent un résultat négatif." },
+      { type: "calcul", text: "Les deux facteurs sont négatifs, donc le produit est positif. On multiplie ensuite leurs distances à zéro : 4 × 3 = 12." },
+      { type: "resultat", text: "Ainsi, (−4) × (−3) = 12." },
+    ]),
+    n("Équations — Résoudre", "Résous l’équation 4x − 7 = 13.", 5, [
+      { type: "donnee", text: "L’équation 4x − 7 = 13 signifie que les deux membres ont la même valeur." },
+      { type: "regle", text: "On utilise l’image d’une balance à l’équilibre : chaque opération effectuée dans un membre doit aussi être effectuée dans l’autre." },
+      { type: "calcul", text: "On ajoute 7 dans les deux membres : 4x = 20. Pour isoler x, on divise ensuite les deux membres par 4." },
+      { type: "resultat", text: "On obtient x = 5. Vérification : 4 × 5 − 7 = 20 − 7 = 13." },
+    ]),
+    n("Théorème de Pythagore — Hypoténuse", "ABC est rectangle en A, AB = 6 cm et AC = 8 cm. Calcule BC.", 10, [
+      { type: "donnee", text: "Le triangle ABC est rectangle en A. Le côté opposé à l’angle droit est BC : c’est l’hypoténuse." },
+      { type: "regle", text: "Dans un triangle rectangle, le carré de la longueur de l’hypoténuse est égal à la somme des carrés des deux autres côtés." },
+      { type: "calcul", text: "BC² = AB² + AC² = 6² + 8² = 36 + 64 = 100. On cherche BC, et non BC² : il faut donc prendre la racine carrée." },
+      { type: "resultat", text: "BC = √100 = 10 cm. Cette longueur est bien strictement inférieure à 6 + 8 = 14 cm." },
+    ], "cm"),
+    n("Proportionnalité — Vitesse", "Une voiture parcourt 150 km en 2 h à vitesse constante. Quelle est sa vitesse moyenne ?", 75, [
+      { type: "donnee", text: "La voiture parcourt une distance de 150 km pendant une durée de 2 h." },
+      { type: "regle", text: "Une vitesse moyenne indique la distance parcourue pendant une unité de temps. On calcule vitesse = distance ÷ durée." },
+      { type: "calcul", text: "On cherche la distance parcourue en une heure : 150 ÷ 2 = 75." },
+      { type: "resultat", text: "La vitesse moyenne de la voiture est donc 75 km/h. L’unité signifie bien « kilomètres parcourus en une heure »." },
+    ], "km/h"),
+    n("Statistiques — Moyenne", "Calcule la moyenne de 8, 10 et 15.", 11, [
+      { type: "donnee", text: "La série contient trois valeurs : 8, 10 et 15." },
+      { type: "regle", text: "Pour calculer une moyenne, on additionne toutes les valeurs, puis on partage équitablement cette somme entre le nombre de valeurs." },
+      { type: "calcul", text: "La somme vaut 8 + 10 + 15 = 33. La série contient 3 valeurs, donc on calcule 33 ÷ 3 = 11." },
+      { type: "resultat", text: "La moyenne est 11. Elle est bien comprise entre la plus petite valeur 8 et la plus grande valeur 15." },
+    ]),
   ],
   troisieme: [
     n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, x/6 = 4/3. Calcule x.", 8, ["Les côtés correspondants sont écrits dans le même ordre.", "x = 6 × 4 ÷ 3.", "x = 8."]),

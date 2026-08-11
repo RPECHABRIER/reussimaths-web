@@ -71,12 +71,24 @@ La commande `npm test` exécute désormais `audit-pedagogy.mjs --check`. Le test
 - La méthode des relatifs reprend l’image du nombre le plus « fort » qui donne son signe puis perd des « points de vie ».
 - La correction de probabilité se termine par le contrôle indispensable : le résultat doit être compris entre 0 et 1.
 
+## Relecture approfondie de la 4e
+
+- Les 17 chapitres du niveau ont été soumis à 240 générations chacun, soit 4 080 exercices audités.
+- Aucun retour générique et aucune correction affichée trop courte n’ont été détectés.
+- Les cinq vitrines ont été réécrites manuellement : produit de relatifs, résolution d’équation, théorème de Pythagore, vitesse moyenne et moyenne statistique.
+- L’équation utilise explicitement l’image de la balance et se termine par la vérification de la solution.
+- Pythagore distingue clairement BC de BC², impose la racine carrée et contrôle la cohérence avec l’inégalité triangulaire.
+- La moyenne est contrôlée entre la plus petite et la plus grande valeur ; l’unité km/h est explicitée comme kilomètres parcourus en une heure.
+- Les animations d’équation, de Pythagore, de statistiques et de vitesse reprennent maintenant l’énoncé ou le résultat de l’exercice courant.
+
 ## Recette de la version publiée
 
 - La page d’accueil Vercel est accessible et présente clairement l’essai gratuit, le rituel enseignant et l’offre complète.
 - Le diagnostic de 6e publié a été ouvert, commencé et testé avec une réponse erronée.
 - L’animation publiée de numération reprend bien 4 milliers, 3 centaines, 2 dizaines et 7 unités pour la réponse 4 327.
 - Le bouton sonore, le pavé numérique avec touche ±, la correction détaillée et la navigation vers la question suivante restent opérationnels.
+- Le parcours découverte de 5e publié a également été testé avec une réponse erronée à −7 + 12.
+- La correction publiée reprend bien les quatre étapes typées, l’image du nombre le plus « fort » et les « points de vie », ainsi que la droite graduée animée.
 
 ## Suite de l’audit
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import LearningFeedback from "../components/LearningFeedback";
@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { isRealAdmin } from "../lib/access";
 import { colors, fonts } from "../theme";
 import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "../discoveryShowcases";
+import { supabase } from "../lib/supabaseClient";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -96,29 +97,47 @@ export default function CorrectionsLab() {
   const { user, loading } = useAuth();
   const [index, setIndex] = useState(0);
   const [audits, setAudits] = useState(loadReviews);
+  const [statusFilter, setStatusFilter] = useState("toutes");
+  const [search, setSearch] = useState("");
   const allowed = import.meta.env.DEV || isRealAdmin(user);
-  if (loading) return null;
-  if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   const [title, exercise, response] = LAB_SAMPLES[index];
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase.from("pedagogical_correction_audits").select("sample_key,title,status,checked_criteria,note,updated_at").then(({data,error}) => {
+      if (error) { if (error.code !== "42P01") console.error("[CorrectionsLab] chargement :", error.message); return; }
+      const remote = Object.fromEntries((data ?? []).map((row)=>[row.sample_key,{checks:row.checked_criteria ?? [],note:row.note ?? "",status:row.status,updatedAt:row.updated_at}]));
+      setAudits((local)=>{const merged={...local,...remote};localStorage.setItem("reussimaths:correction-audits",JSON.stringify(merged));return merged;});
+    });
+  }, [user?.id]);
   const audit = audits[title] ?? { checks: [], note: "", status: "à_revoir" };
   const updateAudit = (next) => {
-    const updated = { ...audits, [title]: { ...audit, ...next, updatedAt: new Date().toISOString() } };
+    const value = { ...audit, ...next, updatedAt: new Date().toISOString() };
+    const updated = { ...audits, [title]: value };
     setAudits(updated);
     localStorage.setItem("reussimaths:correction-audits", JSON.stringify(updated));
+    if (user?.id) supabase.from("pedagogical_correction_audits").upsert({sample_key:title,title,status:value.status,checked_criteria:value.checks,note:value.note,updated_at:value.updatedAt}).then(({error})=>{if(error&&error.code!=="42P01")console.error("[CorrectionsLab] sauvegarde :",error.message);});
   };
   const checkedCount = audit.checks.length;
+  const filteredSamples = useMemo(() => LAB_SAMPLES.map((sample,sampleIndex)=>({sample,sampleIndex})).filter(({sample})=>{
+    const status = audits[sample[0]]?.status ?? "à_revoir";
+    return (statusFilter === "toutes" || status === statusFilter) && sample[0].toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr"));
+  }), [audits, search, statusFilter]);
+  if (loading) return null;
+  if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   return (
     <main className="min-h-screen px-4 py-6 sm:px-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-3xl mx-auto">
         <Link to="/admin" className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: colors.slate }}><ArrowLeft size={14} /> Administration</Link>
         <p className="mt-5 text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: colors.gold }}>Laboratoire pédagogique</p>
         <h1 className="mt-1 text-2xl sm:text-3xl font-black" style={{ color: colors.ink, fontFamily: fonts.display }}>Contrôler les corrections</h1>
-        <label className="block mt-5 text-xs font-bold" style={{ color: colors.slate }}>
+        <div className="mt-5 grid gap-2 sm:grid-cols-2"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select></div>
+        <label className="block mt-3 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>
-            {LAB_SAMPLES.map(([sampleTitle], sampleIndex) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
+            {filteredSamples.map(({sample:[sampleTitle],sampleIndex}) => <option key={sampleTitle} value={sampleIndex}>{sampleIndex + 1}. {sampleTitle}</option>)}
           </select>
         </label>
+        {filteredSamples.length === 0 && <p className="mt-2 text-xs" style={{color:colors.red}}>Aucune correction ne correspond à ces filtres.</p>}
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm">
           <p className="text-xs font-bold" style={{ color: colors.slate }}>Erreur simulée : {title}</p>
           <MathText as="p" text={exercise.prompt} className="mt-2 text-sm font-semibold" style={{ color: colors.ink }} />
@@ -135,7 +154,7 @@ export default function CorrectionsLab() {
           </div>
           <label className="block mt-4 text-xs font-bold" style={{color:colors.slate}}>Décision éditoriale<select value={audit.status} onChange={(event)=>updateAudit({status:event.target.value})} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5" style={{borderColor:colors.hairline,color:colors.ink}}><option value="à_revoir">À revoir</option><option value="validée">Validée</option><option value="prioritaire">Correction prioritaire</option></select></label>
           <label className="block mt-3 text-xs font-bold" style={{color:colors.slate}}>Note de l’expert<textarea value={audit.note} onChange={(event)=>updateAudit({note:event.target.value})} rows={4} placeholder="Ce qui doit être réécrit, illustré ou vérifié…" className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 font-normal" style={{borderColor:colors.hairline,color:colors.ink}} /></label>
-          <p className="mt-3 text-[10px]" style={{color:colors.slate}}>La validation est conservée sur cet appareil. Une correction n’est considérée publiable qu’avec 8 critères validés et le statut « Validée ».</p>
+          <p className="mt-3 text-[10px]" style={{color:colors.slate}}>La validation est conservée sur cet appareil et synchronisée avec votre compte administrateur lorsque la migration est installée. Une correction n’est considérée publiable qu’avec 8 critères validés et le statut « Validée ».</p>
         </section>
       </div>
     </main>

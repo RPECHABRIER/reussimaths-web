@@ -102,7 +102,7 @@ function ProductMetrics() {
       supabase.from("product_events").select("event_name, anonymous_id, occurred_at").gte("occurred_at", since).order("occurred_at"),
       supabase.from("pilot_feedback").select("role, usefulness, ease, would_recommend, comment, created_at").order("created_at", { ascending: false }).limit(20),
       supabase.from("subscriptions").select("plan, status, admin_granted, current_period_end"),
-      supabase.from("learning_attempts").select("skill_id,chapter_id,error_code").not("error_code", "is", null).gte("attempted_at", since),
+      supabase.from("learning_attempts").select("user_id,skill_id,chapter_id,correct,error_code,assisted,attempted_at").gte("attempted_at", since).order("attempted_at"),
       supabase.from("learning_review_cards").select("payload,reviewed_at").gte("reviewed_at", since),
       supabase.from("client_errors").select("message,path,source,occurred_at").gte("occurred_at", since).order("occurred_at", { ascending: false }).limit(20),
     ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult, reviewsResult, clientErrorsResult]) => {
@@ -131,8 +131,19 @@ function ProductMetrics() {
         return eligible ? Math.round(retained / eligible * 100) : null;
       };
       const paid = (subscriptionsResult.data ?? []).filter((item) => item.plan === "mensuel" && !item.admin_granted && ["active", "trialing"].includes(item.status));
-      const errorCounts = (attemptsResult.data ?? []).reduce((map, item) => map.set(item.error_code, (map.get(item.error_code) ?? 0) + 1), new Map());
-      const fragileSkills = (attemptsResult.data ?? []).reduce((map, item) => map.set(item.skill_id, (map.get(item.skill_id) ?? 0) + 1), new Map());
+      const attempts = attemptsResult.data ?? [];
+      const failedAttempts = attempts.filter((item)=>!item.correct && item.error_code);
+      const errorCounts = failedAttempts.reduce((map, item) => map.set(item.error_code, (map.get(item.error_code) ?? 0) + 1), new Map());
+      const fragileSkills = failedAttempts.reduce((map, item) => map.set(item.skill_id, (map.get(item.skill_id) ?? 0) + 1), new Map());
+      let immediateEligible = 0; let immediateSuccess = 0; let spacedEligible = 0; let spacedSuccess = 0;
+      failedAttempts.forEach((failure) => {
+        const failedAt = new Date(failure.attempted_at).getTime();
+        const later = attempts.filter((item)=>item.user_id===failure.user_id&&item.skill_id===failure.skill_id&&new Date(item.attempted_at).getTime()>failedAt);
+        const immediate = later.find((item)=>new Date(item.attempted_at).getTime()-failedAt<=86400000);
+        if (immediate) { immediateEligible += 1; if (immediate.correct && !immediate.assisted) immediateSuccess += 1; }
+        const spaced = later.find((item)=>new Date(item.attempted_at).getTime()-failedAt>=2*86400000);
+        if (spaced) { spacedEligible += 1; if (spaced.correct && !spaced.assisted) spacedSuccess += 1; }
+      });
       const reviewFamilies = (reviewsResult.data ?? []).reduce((map, item) => {
         const family = item.payload?.family ?? "méthode générale";
         map.set(family, (map.get(family) ?? 0) + 1);
@@ -150,6 +161,10 @@ function ProductMetrics() {
         fragileSkills: [...fragileSkills.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
         reviewFamilies: [...reviewFamilies.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
         reviewCount: reviewsResult.data?.length ?? 0,
+        correctionEfficacy: {
+          immediateEligible, immediateRate: immediateEligible ? Math.round(immediateSuccess / immediateEligible * 100) : null,
+          spacedEligible, spacedRate: spacedEligible ? Math.round(spacedSuccess / spacedEligible * 100) : null,
+        },
         clientErrors: clientErrorsResult.error?.code === "42P01" ? [] : clientErrorsResult.data ?? [],
       });
     });
@@ -167,6 +182,7 @@ function ProductMetrics() {
         <div className="rounded-2xl p-3 md:col-span-2" style={{backgroundColor:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.gold}}>Notions déclenchant le plus d’erreurs</p><p className="text-xs mt-1" style={{color:colors.slate}}>{data.fragileSkills.length ? data.fragileSkills.map(([name,count])=>`${name} (${count})`).join(" · ") : "Pas encore assez de données."}</p></div>
       </div>
       {data.reviewFamilies.length > 0 && <p className="text-xs mt-2" style={{color:colors.slate}}>Corrections les plus consultées : {data.reviewFamilies.map(([name,count])=>`${name} (${count})`).join(" · ")}</p>}
+      <div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-lg font-black" style={{color:colors.ink}}>{data.correctionEfficacy.immediateRate==null?"—":`${data.correctionEfficacy.immediateRate} %`}</p><p className="text-[10px]" style={{color:colors.slate}}>réussite autonome après correction · {data.correctionEfficacy.immediateEligible} vérifications</p></div><div className="rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-lg font-black" style={{color:colors.ink}}>{data.correctionEfficacy.spacedRate==null?"—":`${data.correctionEfficacy.spacedRate} %`}</p><p className="text-[10px]" style={{color:colors.slate}}>réussite autonome après au moins 2 jours · {data.correctionEfficacy.spacedEligible} vérifications</p></div></div>
       <div className="mt-3 rounded-2xl p-3" style={{backgroundColor:data.clientErrors.length?`${colors.red}0d`:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:data.clientErrors.length?colors.red:colors.green}}>Erreurs techniques sur 30 jours : {data.clientErrors.length}</p>{data.clientErrors.slice(0,3).map((item,index)=><p key={`${item.occurred_at}-${index}`} className="mt-1 text-[10px]" style={{color:colors.slate}}>{new Date(item.occurred_at).toLocaleDateString("fr-FR")} · {item.path || "page inconnue"} · {item.message}</p>)}</div>
       <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:`${colors.green}0c`,border:`1px solid ${colors.green}25`}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.green}}>Revue pédagogique hebdomadaire · 45 minutes</p><div className="mt-2 grid gap-1 md:grid-cols-5">{["1. Choisir 5 erreurs", "2. Identifier le raisonnement", "3. Relire la correction", "4. Vérifier le visuel", "5. Contrôler le réapprentissage"].map((step)=><p key={step} className="rounded-xl p-2 text-[10px] font-bold" style={{backgroundColor:colors.card,color:colors.ink}}>{step}</p>)}</div><p className="mt-2 text-xs" style={{color:colors.slate}}>Priorité actuelle : {data.fragileSkills[0]?.[0] ?? "attendre davantage de réponses"}. Ouvrir le laboratoire pour valider la correction avec la grille experte.</p><Link to="/admin/corrections" className="inline-flex items-center gap-1 mt-2 text-xs font-black" style={{color:colors.green}}>Commencer la revue <ArrowRight size={13}/></Link></div>
       <div className="flex flex-col gap-2 mt-3">{data.feedback.filter((item) => item.comment).slice(0,5).map((item,index) => <div key={`${item.created_at}-${index}`} className="rounded-xl p-3 text-xs" style={{ backgroundColor: colors.bg, color: colors.ink }}><strong>{item.role}</strong> — {item.comment}</div>)}</div></>}

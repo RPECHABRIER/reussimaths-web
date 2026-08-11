@@ -782,6 +782,23 @@ create index if not exists learning_review_cards_user_date_idx on public.learnin
 revoke all on table public.learning_review_cards from anon;
 grant select, insert, update, delete on table public.learning_review_cards to authenticated;
 grant usage, select on sequence public.learning_review_cards_id_seq to authenticated;
+
+-- Validations éditoriales réalisées dans le laboratoire pédagogique admin.
+create table if not exists public.pedagogical_correction_audits (
+  sample_key text primary key check (length(sample_key) between 1 and 240),
+  title text not null check (length(title) between 1 and 240),
+  status text not null default 'à_revoir' check (status in ('à_revoir', 'validée', 'prioritaire')),
+  checked_criteria smallint[] not null default '{}',
+  note text not null default '' check (length(note) <= 5000),
+  updated_at timestamptz not null default now()
+);
+alter table public.pedagogical_correction_audits enable row level security;
+create policy "pedagogical audits: admin read" on public.pedagogical_correction_audits for select to authenticated using ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
+create policy "pedagogical audits: admin insert" on public.pedagogical_correction_audits for insert to authenticated with check ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
+create policy "pedagogical audits: admin update" on public.pedagogical_correction_audits for update to authenticated using ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com') with check ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
+create index if not exists pedagogical_audits_status_idx on public.pedagogical_correction_audits (status, updated_at desc);
+revoke all on table public.pedagogical_correction_audits from anon;
+grant select, insert, update on table public.pedagogical_correction_audits to authenticated;
 grant execute on function public.add_practice_seconds(integer, date) to authenticated;
 grant execute on function public.mark_daily_practice(date) to authenticated;
 

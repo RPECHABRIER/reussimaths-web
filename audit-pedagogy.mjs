@@ -15,6 +15,10 @@ const anomalies = [];
 const summaries = [];
 const COLLEGE_LEVELS = new Set(["sixieme", "cinquieme", "quatrieme", "troisieme"]);
 const ADVANCED_FAMILIES = new Set(["sequence_convergence", "integral_calculus", "space_vectors", "random_variables", "combinatorics", "calculus_derivative", "exponential_logarithm"]);
+const EXPECTED_LEVEL_FAMILIES = {
+  quatrieme: new Set(["relative_numbers", "fractions", "powers", "distributivity", "equations", "proportionality", "statistics_mean", "probability_basic", "pythagoras", "geometry_thales"]),
+  troisieme: new Set(["number_theory", "distributivity", "equations", "function_image", "function_antecedent", "function_affine_coefficients", "proportionality", "statistics_mean", "probability_basic", "geometry_thales", "geometry_trigonometry"]),
+};
 
 const stepText = (step) => typeof step === "string" ? step : step?.text ?? "";
 const wrongResponse = (exercise) => exercise.type === "numeric"
@@ -107,13 +111,15 @@ const report = {
   priority,
   anomalySamples: anomalies.slice(0, 160),
 };
+const expectedFamilies = EXPECTED_LEVEL_FAMILIES[levelFilter];
+report.missingCoreFamilies = expectedFamilies ? [...expectedFamilies].filter((family) => !familyCounts.has(family)) : [];
 
 if (process.argv.includes("--check")) {
   const genericCount = familyCounts.get("general") ?? 0;
   const shortRenderedCount = summaries.reduce((sum, item) => sum + item.shortRenderedCorrections, 0);
   const levelMismatchCount = summaries.reduce((sum, item) => sum + item.levelMismatches, 0);
-  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s), ${shortRenderedCount} correction(s) affichée(s) trop courte(s), ${levelMismatchCount} famille(s) hors niveau.`);
-  if (genericCount > 0 || shortRenderedCount > 0 || levelMismatchCount > 0) process.exitCode = 1;
+  console.log(`${report.chapters} chapitres et ${report.generated} exercices audités : ${genericCount} retour(s) générique(s), ${shortRenderedCount} correction(s) affichée(s) trop courte(s), ${levelMismatchCount} famille(s) hors niveau, ${report.missingCoreFamilies.length} notion(s) essentielle(s) absente(s).`);
+  if (genericCount > 0 || shortRenderedCount > 0 || levelMismatchCount > 0 || report.missingCoreFamilies.length > 0) process.exitCode = 1;
 } else {
   console.log(JSON.stringify(report, null, 2));
 }

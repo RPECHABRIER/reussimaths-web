@@ -144,7 +144,9 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "proportionality",
-    match: /proportionnal|échelle/i,
+    // Les pourcentages issus d'effectifs et les évolutions possèdent une
+    // méthode plus précise, même si leur chapitre porte « Proportionnalité ».
+    match: /^(?!.*(?:pourcentage depuis|évolutions? en pourcentage|pourcentage.*effectif|effectifs?.*pourcentage|augment(?:e[rz]?|ation)|diminu(?:e[rz]?|tion)|taux d['’]évolution|remise|réduction)).*(?:proportionnal|échelle)/i,
     intro: "Non, tu as utilisé un raisonnement additif alors que les deux grandeurs sont proportionnelles.",
     meaning: "On peut commencer par calculer la valeur correspondant à une unité : c’est la méthode du retour à l’unité. On reconstruit ensuite la quantité demandée.",
     rule: "Si une grandeur est multipliée par un nombre, l’autre doit être multipliée par le même nombre. Effectue l’arrondi seulement à la fin si l’énoncé le demande.",
@@ -340,7 +342,9 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "probability_conditional",
-    match: /^(?!.*(?:arbre|indépendance|indépendants)).*(?:probabilit(?:é|és) conditionnelle|sachant que)/i,
+    // « sachant que » est aussi très fréquent en algèbre et en géométrie :
+    // il ne suffit pas, seul, à reconnaître une probabilité conditionnelle.
+    match: /^(?!.*(?:arbre|indépendance|indépendants)).*(?:probabilit(?:é|és) conditionnelle|(?:probabilit(?:é|és)|\bP\s*\()[^\n]{0,120}sachant que|sachant que[^\n]{0,120}(?:probabilit(?:é|és)|\bP\s*\())/i,
     intro: "Non, la probabilité a été calculée dans l’univers de départ alors que l’information « sachant que » réduit les possibilités.",
     meaning: "Dans P_A(B), on sait que A est réalisé. A devient donc le nouvel univers et l’on cherche, parmi les cas de A, ceux qui réalisent aussi B.",
     rule: "P_A(B)=P(A∩B)÷P(A), à condition que P(A) ne soit pas nulle.",

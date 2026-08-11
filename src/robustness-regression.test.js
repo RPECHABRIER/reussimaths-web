@@ -375,6 +375,13 @@ test("le mot ensuite ne déclenche jamais une correction sur les suites numériq
   assert.notEqual(translation.family, "sequence_convergence");
 });
 
+test("sachant que ne déclenche une probabilité conditionnelle que dans un contexte probabiliste", () => {
+  const algebra = buildPedagogicalFeedback({ chapter: "Équations", prompt: "Sachant que 4x − 7 = 13, calcule x.", answer: 5, steps: ["On ajoute 7.", "On divise par 4."] }, "3");
+  const probability = buildPedagogicalFeedback({ chapter: "Probabilités conditionnelles", prompt: "Calcule la probabilité de B sachant que A est réalisé.", answer: 0.4, steps: ["On se restreint à A.", "On calcule le quotient."] }, "0,7");
+  assert.notEqual(algebra.family, "probability_conditional");
+  assert.equal(probability.family, "probability_conditional");
+});
+
 test("les corrections privilégient le sens principal avant l’arrondi ou l’unité", () => {
   const fractionQuantity = buildPedagogicalFeedback({ chapter: "Fractions — Problèmes", prompt: "Lina prend \\(\\dfrac{1}{4}\\) de 44 cL de sirop.", answer: 11, steps: ["44 ÷ 4 = 11", "Lina prend 11 cL."] }, "4");
   assert.equal(fractionQuantity.family, "fraction_of_number");

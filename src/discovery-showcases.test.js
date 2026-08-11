@@ -115,6 +115,18 @@ test("la vitrine 3e distingue méthode, résultat et contrôle", () => {
   assert.match(corrections, /Chercher un antécédent conduirait au contraire à résoudre une équation/);
   assert.match(corrections, /80 × 1,20 = 96/);
   assert.match(corrections, /0,3 \+ 0,7 = 1/);
+  assert.match(corrections, /Au brevet/);
+  assert.match(corrections, /conditions, l’égalité des rapports et le calcul/);
+});
+
+test("les vitrines collège annoncent clairement leurs aides pédagogiques", () => {
+  for (const levelId of ["sixieme", "cinquieme", "quatrieme", "troisieme"]) {
+    const showcase = getDiscoveryShowcase(levelId);
+    assert.match(showcase.meta.description, /méthode/);
+    assert.match(showcase.meta.description, /correction animée/);
+    assert.match(showcase.meta.description, /contrôle du résultat/);
+  }
+  assert.match(getDiscoveryShowcase("troisieme").meta.title, /brevet/i);
 });
 
 test("Thalès, fonctions, probabilités et distributivité ont un visuel contextualisé", async () => {

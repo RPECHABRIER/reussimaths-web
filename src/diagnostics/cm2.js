@@ -16,7 +16,17 @@ export const CM2_DIAGNOSTIC_CHAPTERS = [
     type: "numeric", chapter: "Proportionnalité", prompt: "3 cahiers coûtent 6 €. Combien coûtent 5 cahiers au même prix ?", answer: 10, steps: ["Un cahier coûte 6 ÷ 3 = 2 €.", "5 cahiers coûtent 5 × 2 = 10 €."],
   })),
   chapter("cm2-grandeurs", "Grandeurs et mesures", () => ({
-    type: "numeric", chapter: "Grandeurs et mesures", prompt: "Convertis 2,5 m en centimètres.", answer: 250, steps: ["1 m = 100 cm.", "2,5 × 100 = 250 cm."],
+    type: "numeric",
+    chapter: "Grandeurs et mesures — Unités de longueur",
+    prompt: "Convertis 2,5 m en centimètres.",
+    answer: 250,
+    answerUnit: "cm",
+    conversionTable: { kind: "length", value: 2.5, fromUnit: "m", toUnit: "cm", answer: 250 },
+    steps: [
+      "On place le chiffre des unités, ici 2, dans son unité, donc la colonne des mètres.",
+      "Chaque déplacement d’une colonne vers la droite multiplie la mesure par 10 ; de m vers cm, on se déplace de deux colonnes.",
+      "On complète le tableau jusqu’aux centimètres : 2,5 m = 250 cm.",
+    ],
   })),
   chapter("cm2-geometrie", "Repères géométriques", () => ({
     type: "qcm", chapter: "Repères géométriques", prompt: "Combien de degrés mesure un angle droit ?", options: ["45°", "90°", "180°", "360°"], answer: "90°", steps: ["Par définition, un angle droit mesure 90°."],

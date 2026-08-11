@@ -220,3 +220,15 @@ test("l’administration classe les notions fragiles et les corrections consult�
   assert.match(migration, /learning_review_cards: admin read/);
   assert.match(migration, /auth\.jwt\(\).*email/);
 });
+
+test("la conversion CM2 de 2,5 m affiche le tableau de longueurs et une méthode complète", async () => {
+  const [diagnostic, showcase] = await Promise.all([
+    read("./diagnostics/cm2.js"),
+    read("./discoveryShowcases.js"),
+  ]);
+  for (const source of [diagnostic, showcase]) {
+    assert.match(source, /Convertis 2,5 m en centimètres/);
+    assert.match(source, /conversionTable:\s*\{ kind: "length", value: 2\.5, fromUnit: "m", toUnit: "cm", answer: 250 \}/);
+    assert.match(source, /chiffre des unités, ici 2/);
+  }
+});

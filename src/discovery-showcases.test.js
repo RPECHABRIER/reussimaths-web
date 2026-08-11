@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "./discoveryShowcases.js";
+import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises, getDiscoveryShowcase } from "./discoveryShowcases.js";
 import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
 
 const LEVEL_IDS = ["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"];
@@ -57,5 +57,13 @@ test("les diagnostics des dix niveaux utilisent cinq questions auditées", () =>
         assert.ok(feedback.meaning.length >= 75, `${levelId}, question ${index + 1}: explication`);
       });
     }
+  }
+});
+
+test("le diagnostic et la série découverte d’un même niveau ne répètent aucune question", () => {
+  for (const levelId of LEVEL_IDS) {
+    const diagnosticPrompts = new Set(getDiagnosticShowcaseExercises(levelId).map((exercise) => exercise.prompt));
+    const discoveryPrompts = getDiscoveryShowcase(levelId).showcaseExercises.map((exercise) => exercise.prompt);
+    assert.equal(discoveryPrompts.some((prompt) => diagnosticPrompts.has(prompt)), false, levelId);
   }
 });

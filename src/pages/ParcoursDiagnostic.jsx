@@ -83,7 +83,7 @@ export default function ParcoursDiagnostic() {
             <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05 }}>Trouve ton bon point de départ</h1>
             <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>
               {previousLevel
-                ? `Nous vérifions d’abord les acquis essentiels de ${previousLevel.label}, puis les chapitres de ${level.label} que tu as déjà abordés.`
+                ? `Nous vérifions les acquis essentiels de ${previousLevel.label} dont tu as besoin pour les chapitres de ${level.label} que tu as déjà abordés.`
                 : "Nous vérifions les acquis fondamentaux de l’école primaire et les premiers repères utiles pour la 6e."}
             </p>
           </div>

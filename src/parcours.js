@@ -186,19 +186,21 @@ export function getDiagnosticChapters(levelId, selectedChapterIds = []) {
   const selectedCurrent = currentChapters.filter((chapter) => selectedSet.has(chapter.meta.id));
   const previousLevelId = getPreviousLevelId(levelId);
   const previousChapters = previousLevelId ? levelChapters(previousLevelId) : CM2_DIAGNOSTIC_CHAPTERS;
-  const currentCount = selectedCurrent.length ? Math.min(2, selectedCurrent.length) : 0;
-  const prerequisiteCount = DIAGNOSTIC_QUESTIONS - currentCount;
+  // Les chapitres déjà étudiés servent à choisir les prérequis les plus utiles,
+  // mais leurs propres questions restent réservées à la série découverte. Le
+  // diagnostic et la première série ne peuvent ainsi jamais se répéter.
+  const prerequisiteCount = DIAGNOSTIC_QUESTIONS;
   const prerequisites = previousLevelId
     ? selectPrerequisiteChapters(levelId, selectedCurrent, previousChapters, prerequisiteCount)
     : previousChapters;
-  const picked = [...sampleAcross(prerequisites, prerequisiteCount), ...sampleAcross(selectedCurrent, currentCount)];
+  const picked = sampleAcross(prerequisites, prerequisiteCount);
   const unique = [...new Map(picked.map((chapter) => [chapter.meta.id, chapter])).values()];
   if (unique.length < DIAGNOSTIC_QUESTIONS) {
     const fillers = [...prerequisites, ...selectedCurrent, ...currentChapters].filter((chapter) => !unique.some((item) => item.meta.id === chapter.meta.id));
     unique.push(...fillers.slice(0, DIAGNOSTIC_QUESTIONS - unique.length));
   }
   const selected = unique.slice(0, DIAGNOSTIC_QUESTIONS);
-  const auditedExercises = getDiagnosticShowcaseExercises(levelId, currentCount);
+  const auditedExercises = getDiagnosticShowcaseExercises(levelId);
   return selected.map((chapter, index) => ({
     ...chapter,
     generate: () => auditedExercises[index] ?? chapter.generate("standard"),

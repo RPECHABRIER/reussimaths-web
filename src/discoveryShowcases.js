@@ -101,7 +101,14 @@ const CM2_FOUNDATIONS = [
   n("Calcul — Priorités", "Calcule 6 + 4 × 5.", 26, ["La multiplication est prioritaire sur l’addition.", "4 × 5 = 20.", "6 + 20 = 26."]),
   n("Fractions — Fraction d'une quantité", "Calcule les 3/4 de 20.", 15, ["On partage 20 en 4 parts : 20 ÷ 4 = 5.", "On prend 3 parts : 3 × 5.", "Les 3/4 de 20 valent 15."]),
   n("Proportionnalité — Retour à l’unité", "5 objets identiques coûtent 15 €. Combien coûtent 2 objets ?", 6, ["Un objet coûte 15 ÷ 5 = 3 €.", "Deux objets coûtent 2 × 3.", "Deux objets coûtent 6 €."], "€"),
-  n("Grandeurs et mesures — Périmètre", "Un rectangle mesure 8 cm sur 3 cm. Calcule son périmètre.", 22, ["Le périmètre est la longueur du contour.", "P = 2 × (8 + 3).", "P = 22 cm."], "cm"),
+  {
+    ...n("Grandeurs et mesures — Unités de longueur", "Convertis 2,5 m en centimètres.", 250, [
+      "On place le chiffre des unités, ici 2, dans son unité, donc la colonne des mètres.",
+      "Chaque déplacement d’une colonne vers la droite multiplie la mesure par 10 ; de m vers cm, on se déplace de deux colonnes.",
+      "On complète le tableau jusqu’aux centimètres : 2,5 m = 250 cm.",
+    ], "cm"),
+    conversionTable: { kind: "length", value: 2.5, fromUnit: "m", toUnit: "cm", answer: 250 },
+  },
 ];
 
 const PREVIOUS_LEVEL = {
@@ -116,9 +123,7 @@ const PREVIOUS_LEVEL = {
   "terminale-techno": "premiere-techno",
 };
 
-export function getDiagnosticShowcaseExercises(levelId, currentCount = 0) {
-  const current = SHOWCASES[levelId] ?? [];
+export function getDiagnosticShowcaseExercises(levelId) {
   const previous = levelId === "sixieme" ? CM2_FOUNDATIONS : SHOWCASES[PREVIOUS_LEVEL[levelId]] ?? [];
-  const safeCurrentCount = Math.min(Math.max(currentCount, 0), 2);
-  return [...previous.slice(0, 5 - safeCurrentCount), ...current.slice(0, safeCurrentCount)];
+  return previous.slice(0, 5);
 }

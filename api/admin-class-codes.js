@@ -22,11 +22,36 @@ async function requireAdmin(req, res) {
 async function listCodes(res) {
   const [{ data: codes, error: codesError }, { data: redemptions, error: redemptionsError }] = await Promise.all([
     supabaseAdmin.from("class_access_codes").select("code, level, label, active, expires_at, max_redemptions, created_at").order("created_at", { ascending: false }),
-    supabaseAdmin.from("class_access_redemptions").select("code"),
+    supabaseAdmin.from("class_access_redemptions").select("code, user_id, redeemed_at"),
   ]);
   if (codesError || redemptionsError) throw codesError || redemptionsError;
-  const counts = (redemptions ?? []).reduce((map, row) => map.set(row.code, (map.get(row.code) ?? 0) + 1), new Map());
-  res.status(200).json({ codes: (codes ?? []).map((code) => ({ ...code, redemption_count: counts.get(code.code) ?? 0 })) });
+  const userIds = [...new Set((redemptions ?? []).map((row) => row.user_id))];
+  const [activityResult, subscriptionsResult] = userIds.length ? await Promise.all([
+    supabaseAdmin.from("daily_activity").select("user_id, activity_date, attempts, correct").in("user_id", userIds),
+    supabaseAdmin.from("subscriptions").select("user_id, plan, status, admin_granted").in("user_id", userIds),
+  ]) : [{ data: [], error: null }, { data: [], error: null }];
+  if (activityResult.error || subscriptionsResult.error) throw activityResult.error || subscriptionsResult.error;
+  const activityByUser = (activityResult.data ?? []).reduce((map, row) => {
+    const current = map.get(row.user_id) ?? { days: new Set(), attempts: 0, correct: 0 };
+    current.days.add(row.activity_date); current.attempts += row.attempts ?? 0; current.correct += row.correct ?? 0;
+    map.set(row.user_id, current); return map;
+  }, new Map());
+  const paidUsers = new Set((subscriptionsResult.data ?? []).filter((row) => row.plan === "mensuel" && !row.admin_granted && ["active", "trialing"].includes(row.status)).map((row) => row.user_id));
+  res.status(200).json({ codes: (codes ?? []).map((code) => {
+    const members = (redemptions ?? []).filter((row) => row.code === code.code);
+    const activity = members.map((row) => activityByUser.get(row.user_id)).filter(Boolean);
+    const attempts = activity.reduce((sum, row) => sum + row.attempts, 0);
+    const correct = activity.reduce((sum, row) => sum + row.correct, 0);
+    return {
+      ...code,
+      redemption_count: members.length,
+      activated_count: activity.filter((row) => row.attempts > 0).length,
+      active_week_count: activity.filter((row) => row.days.size >= 2).length,
+      converted_count: members.filter((row) => paidUsers.has(row.user_id)).length,
+      attempts,
+      success_rate: attempts ? Math.round(correct / attempts * 100) : null,
+    };
+  }) });
 }
 
 export default async function handler(req, res) {

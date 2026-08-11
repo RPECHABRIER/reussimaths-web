@@ -1,4 +1,7 @@
+import { createClient } from "@supabase/supabase-js";
+
 const MAX_BODY_BYTES = 12_000;
+const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
 
 function safeText(value, max = 1200) {
   return typeof value === "string" ? value
@@ -26,5 +29,16 @@ export default async function handler(req, res) {
   if (!event.message) return res.status(400).json({ error: "Signalement invalide" });
 
   console.error("[client-error]", JSON.stringify(event));
+  const { error } = await supabaseAdmin.from("client_errors").insert({
+    message: event.message,
+    stack: event.stack || null,
+    path: event.path || null,
+    source: event.source || null,
+    component_stack: event.componentStack || null,
+    occurred_at: Number.isFinite(Date.parse(event.occurredAt)) ? event.occurredAt : new Date().toISOString(),
+  });
+  // La migration peut ne pas encore être appliquée lors d'un déploiement :
+  // les logs Vercel restent alors le filet de sécurité sans casser le client.
+  if (error && error.code !== "42P01") console.error("[client-error-storage]", error.message);
   return res.status(204).end();
 }

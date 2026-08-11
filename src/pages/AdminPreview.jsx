@@ -104,9 +104,11 @@ function ProductMetrics() {
       supabase.from("subscriptions").select("plan, status, admin_granted, current_period_end"),
       supabase.from("learning_attempts").select("skill_id,chapter_id,error_code").not("error_code", "is", null).gte("attempted_at", since),
       supabase.from("learning_review_cards").select("payload,reviewed_at").gte("reviewed_at", since),
-    ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult, reviewsResult]) => {
+      supabase.from("client_errors").select("message,path,source,occurred_at").gte("occurred_at", since).order("occurred_at", { ascending: false }).limit(20),
+    ]).then(([eventsResult, feedbackResult, subscriptionsResult, attemptsResult, reviewsResult, clientErrorsResult]) => {
       const reviewsError = reviewsResult.error?.code === "42P01" ? null : reviewsResult.error;
-      const firstError = eventsResult.error || feedbackResult.error || subscriptionsResult.error || attemptsResult.error || reviewsError;
+      const clientErrorsError = clientErrorsResult.error?.code === "42P01" ? null : clientErrorsResult.error;
+      const firstError = eventsResult.error || feedbackResult.error || subscriptionsResult.error || attemptsResult.error || reviewsError || clientErrorsError;
       if (firstError) { setError(firstError.message); return; }
       const events = eventsResult.data ?? [];
       const uniqueByEvent = (name) => new Set(events.filter((item) => item.event_name === name).map((item) => item.anonymous_id)).size;
@@ -148,6 +150,7 @@ function ProductMetrics() {
         fragileSkills: [...fragileSkills.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
         reviewFamilies: [...reviewFamilies.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
         reviewCount: reviewsResult.data?.length ?? 0,
+        clientErrors: clientErrorsResult.error?.code === "42P01" ? [] : clientErrorsResult.data ?? [],
       });
     });
   }, []);
@@ -164,6 +167,7 @@ function ProductMetrics() {
         <div className="rounded-2xl p-3 md:col-span-2" style={{backgroundColor:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.gold}}>Notions déclenchant le plus d’erreurs</p><p className="text-xs mt-1" style={{color:colors.slate}}>{data.fragileSkills.length ? data.fragileSkills.map(([name,count])=>`${name} (${count})`).join(" · ") : "Pas encore assez de données."}</p></div>
       </div>
       {data.reviewFamilies.length > 0 && <p className="text-xs mt-2" style={{color:colors.slate}}>Corrections les plus consultées : {data.reviewFamilies.map(([name,count])=>`${name} (${count})`).join(" · ")}</p>}
+      <div className="mt-3 rounded-2xl p-3" style={{backgroundColor:data.clientErrors.length?`${colors.red}0d`:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:data.clientErrors.length?colors.red:colors.green}}>Erreurs techniques sur 30 jours : {data.clientErrors.length}</p>{data.clientErrors.slice(0,3).map((item,index)=><p key={`${item.occurred_at}-${index}`} className="mt-1 text-[10px]" style={{color:colors.slate}}>{new Date(item.occurred_at).toLocaleDateString("fr-FR")} · {item.path || "page inconnue"} · {item.message}</p>)}</div>
       <div className="flex flex-col gap-2 mt-3">{data.feedback.filter((item) => item.comment).slice(0,5).map((item,index) => <div key={`${item.created_at}-${index}`} className="rounded-xl p-3 text-xs" style={{ backgroundColor: colors.bg, color: colors.ink }}><strong>{item.role}</strong> — {item.comment}</div>)}</div></>}
   </div>;
 }
@@ -237,7 +241,7 @@ function ClassInvitationsTool() {
       {error && <p role="alert" className="text-xs font-semibold" style={{ color: colors.red }}>{error}</p>}
       {codes?.map((item) => {
         const expired = item.expires_at && new Date(item.expires_at) <= new Date();
-        return <div key={item.code} className="rounded-2xl p-3 flex items-start justify-between gap-3" style={{ backgroundColor: colors.bg, opacity: item.active && !expired ? 1 : 0.55 }}><div><p className="text-sm font-bold" style={{ color: colors.ink, fontFamily: fonts.mono }}>{item.code}</p><p className="text-xs" style={{ color: colors.slate }}>{item.label || "Sans libellé"} · {item.redemption_count}/{item.max_redemptions ?? "∞"}</p></div><div className="flex flex-col items-end gap-1"><button onClick={() => navigator.clipboard.writeText(item.code)} className="text-xs font-semibold" style={{ color: colors.gold }}>Copier</button>{item.active && !expired && <button onClick={() => deactivate(item.code)} className="text-xs" style={{ color: colors.red }}>Désactiver</button>}</div></div>;
+        return <div key={item.code} className="rounded-2xl p-3 flex items-start justify-between gap-3" style={{ backgroundColor: colors.bg, opacity: item.active && !expired ? 1 : 0.55 }}><div><p className="text-sm font-bold" style={{ color: colors.ink, fontFamily: fonts.mono }}>{item.code}</p><p className="text-xs" style={{ color: colors.slate }}>{item.label || "Sans libellé"} · {item.redemption_count}/{item.max_redemptions ?? "∞"} inscrits</p><p className="text-[10px] mt-1" style={{color:colors.slate}}>Activés {item.activated_count ?? 0} · revenus au moins 2 jours {item.active_week_count ?? 0} · abonnés {item.converted_count ?? 0} · {item.attempts ?? 0} réponses{item.success_rate == null?"":` · ${item.success_rate} % justes`}</p></div><div className="flex flex-col items-end gap-1"><button onClick={() => navigator.clipboard.writeText(item.code)} className="text-xs font-semibold" style={{ color: colors.gold }}>Copier</button>{item.active && !expired && <button onClick={() => deactivate(item.code)} className="text-xs" style={{ color: colors.red }}>Désactiver</button>}</div></div>;
       })}
     </div>
   );

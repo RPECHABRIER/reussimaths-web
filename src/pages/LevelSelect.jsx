@@ -5,6 +5,7 @@ import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { setPreferredLevel } from "../lib/preferences";
+import { ArrowLeft } from "lucide-react";
 
 export default function LevelSelect() {
   const [searchParams] = useSearchParams();
@@ -12,6 +13,7 @@ export default function LevelSelect() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-md mx-auto">
+        <Link to="/" className="inline-flex items-center gap-1.5 py-2 text-sm font-bold" style={{ color: colors.ink }}><ArrowLeft size={17} /> Retour à l’accueil</Link>
         <div className="text-center mb-10 pt-4">
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
             RéussiMaths

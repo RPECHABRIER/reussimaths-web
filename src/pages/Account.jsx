@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles, Mail } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
@@ -69,6 +69,8 @@ export default function Account() {
   const [newPassword, setNewPassword] = useState("");
   const [passwordUpdateLoading, setPasswordUpdateLoading] = useState(false);
   const [passwordUpdateMessage, setPasswordUpdateMessage] = useState(null);
+  const [subscriptionRepairing, setSubscriptionRepairing] = useState(false);
+  const subscriptionRepairAttempted = useRef(false);
 
   const admin = isAdminUser(user);
   const fullAccess = isFullAccessSubscription(subscription);
@@ -85,6 +87,21 @@ export default function Account() {
   const previewing = isRealAdmin(user) && !!getAdminPreview()?.mode && getAdminPreview()?.mode !== "admin";
 
   useEffect(() => { trackProductEvent("offer_viewed", { authenticated: !!user }); }, []);
+
+  useEffect(() => {
+    if (!user || subscriptionLoading || subscriptionError || rawSubscription || subscriptionRepairing || subscriptionRepairAttempted.current) return;
+    let cancelled = false;
+    subscriptionRepairAttempted.current = true;
+    setSubscriptionRepairing(true);
+    authenticatedFetch("/api/checkout-status?reconcile=1")
+      .then((response) => response.json().then((data) => ({ response, data })))
+      .then(({ response, data }) => {
+        if (!cancelled && response.ok && data.activated) reloadSubscription();
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setSubscriptionRepairing(false); });
+    return () => { cancelled = true; };
+  }, [user?.id, subscriptionLoading, subscriptionError, rawSubscription, subscriptionRepairing, reloadSubscription]);
 
   const referralLink = profile?.referral_code
     ? `${window.location.origin}/?ref=${profile.referral_code}`
@@ -375,7 +392,7 @@ export default function Account() {
             {profile?.pseudo ?? "Connecté"}
           </p>
           <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
+            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading || subscriptionRepairing ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
           </p>
 
           {subscriptionError && (

@@ -70,6 +70,7 @@ export default async function handler(req, res) {
       // compte rattacher l'abonnement (voir stripe-webhook.js).
       client_reference_id: user.id,
       metadata: { supabase_user_id: user.id, plan, purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt },
+      ...(mode === "subscription" ? { subscription_data: { metadata: { supabase_user_id: user.id, plan } } } : {}),
       ...(customer ? { customer } : { customer_email: user.email }),
       success_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=cancel`,

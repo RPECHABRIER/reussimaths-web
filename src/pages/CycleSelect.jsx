@@ -14,6 +14,7 @@ import {
   BarChart3,
   KeyRound,
   UserRound,
+  Timer,
 } from "lucide-react";
 import { CYCLES } from "../levels";
 import Mascot from "../components/Mascot";
@@ -23,6 +24,9 @@ import { useDueSkillsCount } from "../hooks/useDueSkillsCount";
 import { getLevel } from "../levels";
 import { getPreferredLevel } from "../lib/preferences";
 import { colors, fonts, shadow, cycleColors } from "../theme";
+import { useSubscription } from "../hooks/useProgress";
+import { useDailyMentalSummary } from "../hooks/useDailyMentalSummary";
+import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
 
 // Nouvelle page d'accueil (/) : premier choix, avant même les niveaux —
 // Collège ou Lycée. Chaque carte mène à /college ou /lycee (voir
@@ -42,6 +46,10 @@ export default function CycleSelect() {
   const { streak } = useDailyStreak(user?.id);
   const dueCount = useDueSkillsCount(user?.id);
   const preferredLevel = getLevel(getPreferredLevel());
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const { summary: mentalSummary } = useDailyMentalSummary(user?.id);
+  const fullAccess = isFullAccessSubscription(getEffectiveSubscription(user, rawSubscription));
+  const todayMentalScore = mentalSummary?.days?.at(-1)?.score ?? null;
   const hasStreak = streak?.current_streak > 0;
   const nextAction = !user
     ? { to: "/niveaux?objectif=essai", title: "Commencer gratuitement", detail: "Choisis ton niveau, puis fais un diagnostic court et une série adaptée" }
@@ -114,6 +122,15 @@ export default function CycleSelect() {
                   <span key={item} className="inline-flex items-center gap-1.5"><CheckCircle2 size={13} color={colors.green} />{item}</span>
                 ))}
               </div>
+              {user && fullAccess && (
+                <Link
+                  to={preferredLevel ? `/calcul-mental/${preferredLevel.id}` : "/niveaux"}
+                  className="mt-5 mx-auto lg:mx-0 flex max-w-lg items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left transition-transform active:scale-[0.98]"
+                  style={{ background: `linear-gradient(135deg, ${colors.gold}22, ${colors.green}18)`, border: `2px solid ${colors.gold}55`, boxShadow: shadow.soft }}
+                >
+                  <span className="flex items-center gap-3"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" style={{background:colors.card}}><Timer size={23} color={colors.gold}/></span><span><span className="block text-base font-black" style={{color:colors.ink}}>Mon calcul mental du jour</span><span className="block text-xs mt-0.5" style={{color:colors.slate}}>{todayMentalScore === null ? "10 nouvelles questions · sans calculatrice" : `Terminé aujourd’hui : ${todayMentalScore}/10 · Rejouer`}</span></span></span><ArrowRight size={19} color={colors.ink}/>
+                </Link>
+              )}
             </div>
 
             <div className="relative max-w-lg w-full mx-auto">

@@ -137,7 +137,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "space_vectors",
-    match: /vecteurs? de l['’]espace|orthogonalité et distances|vecteur normal|distance point-plan|positions relatives/i,
+    match: /^(?!.*(?:produit scalaire|vecteurs?.*orthogonaux)).*(?:vecteurs? de l['’]espace|orthogonalité et distances|vecteur normal|distance point-plan|positions relatives)/i,
     intro: "Non, les coordonnées ou la propriété géométrique des vecteurs de l’espace n’ont pas été exploitées correctement.",
     meaning: "Dans l’espace, un vecteur possède trois coordonnées. La colinéarité décrit une même direction, l’orthogonalité se vérifie avec un produit scalaire nul et un vecteur normal permet de décrire la direction perpendiculaire à un plan.",
     rule: "Écris les trois coordonnées, choisis colinéarité ou produit scalaire selon la question, puis interprète le résultat dans la configuration géométrique.",
@@ -346,8 +346,8 @@ const FAMILY_FEEDBACK = [
     // il ne suffit pas, seul, à reconnaître une probabilité conditionnelle.
     match: /^(?!.*(?:arbre|indépendance|indépendants)).*(?:probabilit(?:é|és) conditionnelle|(?:probabilit(?:é|és)|\bP\s*\()[^\n]{0,120}sachant que|sachant que[^\n]{0,120}(?:probabilit(?:é|és)|\bP\s*\())/i,
     intro: "Non, la probabilité a été calculée dans l’univers de départ alors que l’information « sachant que » réduit les possibilités.",
-    meaning: "Dans P_A(B), on sait que A est réalisé. A devient donc le nouvel univers et l’on cherche, parmi les cas de A, ceux qui réalisent aussi B.",
-    rule: "P_A(B)=P(A∩B)÷P(A), à condition que P(A) ne soit pas nulle.",
+    meaning: "Dans \\(P_A(B)\\), on sait que \\(A\\) est réalisé. \\(A\\) devient donc le nouvel univers et l’on cherche, parmi les cas de \\(A\\), ceux qui réalisent aussi \\(B\\).",
+    rule: "\\(P_A(B)=\\dfrac{P(A\\cap B)}{P(A)}\\), à condition que \\(P(A)\\) ne soit pas nulle.",
   },
   {
     id: "probability_tree",
@@ -449,7 +449,7 @@ const FAMILY_FEEDBACK = [
   },
   {
     id: "geometry_vectors",
-    match: /vecteurs?|colinéarité/i,
+    match: /^(?!.*(?:produit scalaire|vecteurs?.*orthogonaux)).*(?:vecteurs?|colinéarité)/i,
     intro: "Non, les coordonnées, la direction ou le sens du vecteur n’ont pas été déterminés correctement.",
     meaning: "Les coordonnées du vecteur AB s’obtiennent en faisant arrivée moins départ pour chaque coordonnée : xB−xA puis yB−yA.",
     rule: "Traite séparément abscisses et ordonnées, puis vérifie la direction et le sens du vecteur obtenu.",
@@ -514,8 +514,8 @@ const FAMILY_FEEDBACK = [
     id: "geometry_dot_product",
     match: /produit scalaire|vecteurs?.*orthogonaux/i,
     intro: "Non, le produit scalaire n’a pas été relié correctement à l’angle ou à l’orthogonalité des vecteurs.",
-    meaning: "Le produit scalaire de deux vecteurs orthogonaux est nul. Réciproquement, pour deux vecteurs non nuls, un produit scalaire nul permet de conclure qu’ils sont orthogonaux.",
-    rule: "Calcule le produit scalaire, puis utilise son signe ou sa nullité pour interpréter la géométrie.",
+    meaning: "Le produit scalaire de deux vecteurs orthogonaux est nul. Avec les coordonnées, \\(\\vec u(x;y)\\cdot\\vec v(x';y')=xx'+yy'\\).",
+    rule: "Calcule \\(xx'+yy'\\). S’il vaut 0 et si les deux vecteurs sont non nuls, alors les vecteurs sont orthogonaux.",
   },
   {
     id: "geometry_rectangle_measure",

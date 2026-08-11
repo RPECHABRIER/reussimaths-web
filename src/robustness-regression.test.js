@@ -280,3 +280,15 @@ test("le bilan parental propose une période, un plan familial et une version im
   assert.match(css, /\.weekly-report \.report-card/);
   assert.match(css, /break-inside: avoid/);
 });
+
+test("le rituel enseignant permet de composer et partager une séance exacte", async () => {
+  const teacher = await read("./pages/Enseignant.jsx");
+  assert.match(teacher, /Trois propositions sont affichées par thème/);
+  assert.match(teacher, /deriveSimpleNumericQuestion/);
+  assert.match(teacher, /Propositions et bonne réponse/);
+  assert.match(teacher, /moveSelected/);
+  assert.match(teacher, /Votre séance est prête/);
+  assert.match(teacher, /encodeSession/);
+  assert.match(teacher, /decodeSession/);
+  assert.match(teacher, /value\.length > 40000/);
+});

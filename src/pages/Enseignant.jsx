@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X } from "lucide-react";
+import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X, ChevronUp, ChevronDown, Copy, Save } from "lucide-react";
 import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import MathText from "../components/MathText";
@@ -48,15 +48,64 @@ function buildChapterProposals(chapter) {
   return Object.fromEntries(chapter.themes.map((theme) => [theme.id, buildThemeProposals(chapter, theme.id)]));
 }
 
+function frenchNumber(value) {
+  return Number(String(value).replace(",", "."));
+}
+
+function deriveSimpleNumericQuestion(prompt) {
+  const normalized = prompt.replace(/\\[()]/g, "").replace(/\{,\}/g, ",").trim();
+  const operation = normalized.match(/(-?\d+(?:[,.]\d+)?)\s*([+\-×x*÷/])\s*(-?\d+(?:[,.]\d+)?)\s*=\s*\?/);
+  if (operation) {
+    const a = frenchNumber(operation[1]); const b = frenchNumber(operation[3]); const symbol = operation[2];
+    if (![a,b].every(Number.isFinite) || ((symbol === "÷" || symbol === "/") && b === 0)) return null;
+    const answer = symbol === "+" ? a+b : symbol === "-" ? a-b : ["×","x","*"].includes(symbol) ? a*b : a/b;
+    const rounded = Math.round(answer * 1e9) / 1e9;
+    return { answer: rounded, steps: [{type:"calcul",text:`${formatAnswer(a)} ${symbol} ${formatAnswer(b)} = ${formatAnswer(rounded)}`}] };
+  }
+  const missing = normalized.match(/(-?\d+(?:[,.]\d+)?)\s*([+\-])\s*\?\s*=\s*(-?\d+(?:[,.]\d+)?)/);
+  if (missing) {
+    const a=frenchNumber(missing[1]); const target=frenchNumber(missing[3]); const answer=missing[2]==="+"?target-a:a-target;
+    const rounded=Math.round(answer*1e9)/1e9;
+    return {answer:rounded,steps:[{type:"calcul",text:`Le nombre manquant est ${formatAnswer(rounded)}.`}]};
+  }
+  return null;
+}
+
+function encodeSession(payload) {
+  const bytes = new TextEncoder().encode(JSON.stringify(payload));
+  let binary = ""; bytes.forEach((byte)=>{binary+=String.fromCharCode(byte);});
+  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+}
+
+function decodeSession(value) {
+  if (!value || value.length > 40000) return null;
+  const base64=value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length/4)*4,"=");
+  const binary=atob(base64); const bytes=Uint8Array.from(binary,(char)=>char.charCodeAt(0));
+  const parsed=JSON.parse(new TextDecoder().decode(bytes));
+  if (!parsed || !Array.isArray(parsed.exercises) || parsed.exercises.length !== 5) return null;
+  const exercises=parsed.exercises.map((exercise)=>{
+    if (!exercise || typeof exercise.prompt!=="string" || exercise.prompt.length>1200 || typeof exercise.chapter!=="string" || exercise.chapter.length>240) throw new Error("Séance invalide");
+    const options=Array.isArray(exercise.options)?exercise.options.slice(0,8).map((option)=>String(option).slice(0,300)):undefined;
+    return {...exercise,prompt:exercise.prompt,chapter:exercise.chapter,options};
+  });
+  return {levelId:typeof parsed.levelId==="string"?parsed.levelId:"",exercises};
+}
+
+function QuestionEditForm({ draft, setDraft, isQcm, onSave, onCancel }) {
+  const auto = !isQcm ? deriveSimpleNumericQuestion(draft.prompt) : null;
+  return <div><label className="block text-[10px] font-bold" style={{color:colors.slate}}>Énoncé personnalisé<textarea rows={3} value={draft.prompt} onChange={(event)=>{const prompt=event.target.value;const derived=deriveSimpleNumericQuestion(prompt);setDraft((current)=>({...current,prompt,...(derived?{answer:formatAnswer(derived.answer),autoSteps:derived.steps}:{autoSteps:null})}));}} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>{isQcm?<><p className="mt-2 text-[10px] font-bold" style={{color:colors.slate}}>Propositions et bonne réponse</p><div className="mt-1 grid gap-1.5">{draft.options.map((option,optionIndex)=><label key={optionIndex} className="flex items-center gap-2"><input type="radio" name={`correct-${draft.id}`} checked={draft.correctIndex===optionIndex} onChange={()=>setDraft((current)=>({...current,correctIndex:optionIndex}))}/><input value={option} onChange={(event)=>setDraft((current)=>({...current,options:current.options.map((item,index)=>index===optionIndex?event.target.value:item)}))} className="min-w-0 flex-1 rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>)}</div></>:<label className="block mt-2 text-[10px] font-bold" style={{color:colors.slate}}>Réponse attendue<input value={draft.answer} onChange={(event)=>setDraft((current)=>({...current,answer:event.target.value,autoSteps:null}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:colors.ink}}/></label>}{auto&&<p className="mt-2 text-[10px] font-bold" style={{color:colors.green}}>Réponse recalculée automatiquement pour cette opération simple.</p>}<p className="mt-2 text-[10px]" style={{color:colors.slate}}>La correction sera reconstruite avec la nouvelle réponse afin de ne pas conserver des calculs liés aux anciennes valeurs.</p><div className="mt-2 flex gap-2"><button type="button" onClick={onSave} className="rounded-full px-3 py-1.5 text-[10px] font-black" style={{backgroundColor:colors.gold,color:colors.ink}}>Enregistrer</button><button type="button" onClick={onCancel} className="inline-flex items-center gap-1 px-2 text-[10px] font-bold" style={{color:colors.slate}}><X size={11}/> Annuler</button></div></div>;
+}
+
 export default function Enseignant() {
   const [view, setView] = useState("setup");
   const [levelId, setLevelId] = useState("");
   const [proposals, setProposals] = useState({});
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editDraft, setEditDraft] = useState({ prompt: "", answer: "" });
+  const [editDraft, setEditDraft] = useState({ id: "", prompt: "", answer: "", options: [], correctIndex: 0, autoSteps: null });
   const [exercises, setExercises] = useState([]);
   const [index, setIndex] = useState(0);
+  const [shareMessage, setShareMessage] = useState("");
 
   const chapter = useMemo(() => AUTOMATISMES_CHAPTERS.find((c) => c.meta.level === levelId) ?? null, [levelId]);
   const total = selectedQuestions.length;
@@ -86,22 +135,27 @@ export default function Enseignant() {
 
   const startEditing = (proposal) => {
     setEditingId(proposal.id);
-    setEditDraft({ prompt: proposal.exercise.prompt, answer: formatAnswer(proposal.exercise.answer) });
+    const options=Array.isArray(proposal.exercise.options)?proposal.exercise.options.map(String):[];
+    const correctIndex=options.findIndex((option)=>option===String(proposal.exercise.answer));
+    setEditDraft({ id:proposal.id,prompt:proposal.exercise.prompt,answer:formatAnswer(proposal.exercise.answer),options,correctIndex:correctIndex>=0?correctIndex:0,autoSteps:null });
   };
 
   const saveCustomization = (proposal) => {
     const prompt = editDraft.prompt.trim();
-    const rawAnswer = editDraft.answer.trim();
-    if (!prompt || !rawAnswer) return;
+    const isQcm=proposal.exercise.type==="qcm"&&editDraft.options.length>0;
+    const rawAnswer = isQcm?editDraft.options[editDraft.correctIndex]?.trim():editDraft.answer.trim();
+    if (!prompt || !rawAnswer || (isQcm&&editDraft.options.some((option)=>!option.trim()))) return;
     const parsed = Number(rawAnswer.replace(",", "."));
-    const answer = typeof proposal.exercise.answer === "number" && Number.isFinite(parsed) ? parsed : rawAnswer;
+    const answer = !isQcm&&typeof proposal.exercise.answer === "number" && Number.isFinite(parsed) ? parsed : rawAnswer;
+    const derived=!isQcm?deriveSimpleNumericQuestion(prompt):null;
     const updated = {
       ...proposal,
       exercise: {
         ...proposal.exercise,
         prompt,
         answer,
-        steps: [{ type: "resultat", text: `Réponse attendue : ${formatAnswer(answer)}` }],
+        ...(isQcm?{options:editDraft.options.map((option)=>option.trim())}:{}),
+        steps: derived?.steps ?? [{ type: "resultat", text: `Réponse attendue : ${formatAnswer(answer)}` }],
         teacherCustomized: true,
       },
     };
@@ -110,11 +164,19 @@ export default function Enseignant() {
     setEditingId(null);
   };
 
+  const moveSelected = (selectedIndex, direction) => {
+    setSelectedQuestions((current)=>{
+      const target=selectedIndex+direction;
+      if(target<0||target>=current.length)return current;
+      const next=[...current];[next[selectedIndex],next[target]]=[next[target],next[selectedIndex]];return next;
+    });
+  };
+
   const launch = () => {
     if (!chapter || total !== 5) return;
     setExercises(selectedQuestions.map((item) => item.exercise));
     setIndex(0);
-    setView("diaporama");
+    setView("review");
   };
 
   const launchDemo = () => {
@@ -127,7 +189,7 @@ export default function Enseignant() {
     setSelectedQuestions([]);
     setExercises(demoExercises);
     setIndex(0);
-    setView("diaporama");
+    setView("review");
   };
 
   const next = () => {
@@ -136,7 +198,8 @@ export default function Enseignant() {
   };
 
   const restartSameParams = () => {
-    launch();
+    setIndex(0);
+    setView("diaporama");
   };
 
   const backToSetup = () => {
@@ -149,6 +212,26 @@ export default function Enseignant() {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen?.();
   };
+
+  const copySessionLink = async () => {
+    try {
+      const encoded=encodeSession({levelId,exercises});
+      if(encoded.length>40000)throw new Error("Lien trop long");
+      const url=`${window.location.origin}/enseignant?seance=${encoded}`;
+      await navigator.clipboard.writeText(url);
+      setShareMessage("Lien de séance copié.");
+    } catch { setShareMessage("Cette séance contient trop d’éléments pour être partagée par un lien."); }
+  };
+
+  useEffect(() => {
+    const value=new URLSearchParams(window.location.search).get("seance");
+    if(!value)return;
+    try {
+      const imported=decodeSession(value);
+      if(!imported)throw new Error("Séance invalide");
+      setLevelId(imported.levelId);setExercises(imported.exercises);setIndex(0);setView("review");
+    } catch { setShareMessage("Le lien de séance est invalide ou incomplet."); }
+  }, []);
 
   useEffect(() => {
     if (view !== "diaporama") return undefined;
@@ -252,8 +335,8 @@ export default function Enseignant() {
                         {(proposals[t.id] ?? []).map((proposal) => {
                           const selectedIndex = selectedQuestions.findIndex((item)=>item.id===proposal.id);
                           const selected = selectedIndex >= 0;
-                          const editable = ["numeric", "text"].includes(proposal.exercise.type) && !proposal.exercise.figure && !proposal.exercise.graph && !Array.isArray(proposal.exercise.answer);
-                          return <div key={proposal.id} className="rounded-xl p-3" style={{backgroundColor:selected?`${colors.green}12`:colors.card,border:`1px solid ${selected?colors.green:colors.hairline}`,opacity:!selected&&total>=5?.55:1}}>{editingId===proposal.id?<div><label className="block text-[10px] font-bold" style={{color:slate}}>Énoncé personnalisé<textarea rows={3} value={editDraft.prompt} onChange={(event)=>setEditDraft((current)=>({...current,prompt:event.target.value}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:ink}}/></label><label className="block mt-2 text-[10px] font-bold" style={{color:slate}}>Réponse attendue<input value={editDraft.answer} onChange={(event)=>setEditDraft((current)=>({...current,answer:event.target.value}))} className="mt-1 w-full rounded-lg border bg-white p-2 text-xs" style={{borderColor:colors.hairline,color:ink}}/></label><p className="mt-2 text-[10px]" style={{color:slate}}>Après modification, la correction affiche cette réponse attendue afin de ne pas conserver des calculs liés aux anciennes valeurs.</p><div className="mt-2 flex gap-2"><button type="button" onClick={()=>saveCustomization(proposal)} className="rounded-full px-3 py-1.5 text-[10px] font-black" style={{backgroundColor:gold,color:ink}}>Enregistrer</button><button type="button" onClick={()=>setEditingId(null)} className="inline-flex items-center gap-1 px-2 text-[10px] font-bold" style={{color:slate}}><X size={11}/> Annuler</button></div></div>:<div className="flex items-start gap-2"><button type="button" onClick={()=>toggleQuestion(proposal)} disabled={!selected&&total>=5} className="min-w-0 flex-1 text-left flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-[10px] font-black" style={{width:24,height:24,backgroundColor:selected?colors.green:`${ink}0d`,color:selected?"white":slate}}>{selected?selectedIndex+1:"+"}</span><span className="min-w-0"><MathText as="span" text={proposal.exercise.prompt} className="text-xs leading-relaxed" style={{color:ink}}/>{proposal.exercise.teacherCustomized&&<span className="block mt-1 text-[9px] font-black uppercase tracking-wide" style={{color:gold}}>Question personnalisée</span>}</span></button>{editable&&<button type="button" onClick={()=>startEditing(proposal)} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold" style={{backgroundColor:colors.bg,color:slate}}><Pencil size={10}/> Modifier</button>}</div>}</div>;
+                          const editable = (["numeric", "text"].includes(proposal.exercise.type) || (proposal.exercise.type === "qcm" && Array.isArray(proposal.exercise.options))) && !proposal.exercise.figure && !proposal.exercise.graph && !Array.isArray(proposal.exercise.answer);
+                          return <div key={proposal.id} className="rounded-xl p-3" style={{backgroundColor:selected?`${colors.green}12`:colors.card,border:`1px solid ${selected?colors.green:colors.hairline}`,opacity:!selected&&total>=5?.55:1}}>{editingId===proposal.id?<QuestionEditForm draft={editDraft} setDraft={setEditDraft} isQcm={proposal.exercise.type==="qcm"} onSave={()=>saveCustomization(proposal)} onCancel={()=>setEditingId(null)}/>:<div className="flex items-start gap-2"><button type="button" onClick={()=>toggleQuestion(proposal)} disabled={!selected&&total>=5} className="min-w-0 flex-1 text-left flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-[10px] font-black" style={{width:24,height:24,backgroundColor:selected?colors.green:`${ink}0d`,color:selected?"white":slate}}>{selected?selectedIndex+1:"+"}</span><span className="min-w-0"><MathText as="span" text={proposal.exercise.prompt} className="text-xs leading-relaxed" style={{color:ink}}/>{proposal.exercise.teacherCustomized&&<span className="block mt-1 text-[9px] font-black uppercase tracking-wide" style={{color:gold}}>Question personnalisée</span>}</span></button>{editable&&<button type="button" onClick={()=>startEditing(proposal)} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold" style={{backgroundColor:colors.bg,color:slate}}><Pencil size={10}/> Modifier</button>}</div>}</div>;
                         })}
                       </div>
                     </div>
@@ -263,6 +346,8 @@ export default function Enseignant() {
             </div>
           )}
 
+              {selectedQuestions.length > 0 && <div className="mt-5 rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-xs uppercase tracking-wide font-bold" style={{color:slate}}>Ordre de projection</p><div className="mt-2 grid gap-1.5">{selectedQuestions.map((item,selectedIndex)=><div key={item.id} className="flex items-center gap-2 rounded-xl bg-white p-2"><span className="text-xs font-black" style={{color:gold}}>{selectedIndex+1}</span><MathText as="span" text={item.exercise.prompt} className="min-w-0 flex-1 truncate text-[10px]" style={{color:ink}}/><button type="button" onClick={()=>moveSelected(selectedIndex,-1)} disabled={selectedIndex===0} aria-label="Monter la question" style={{opacity:selectedIndex===0?.3:1,color:slate}}><ChevronUp size={14}/></button><button type="button" onClick={()=>moveSelected(selectedIndex,1)} disabled={selectedIndex===selectedQuestions.length-1} aria-label="Descendre la question" style={{opacity:selectedIndex===selectedQuestions.length-1?.3:1,color:slate}}><ChevronDown size={14}/></button></div>)}</div></div>}
+
               <button
             type="button"
             disabled={total !== 5}
@@ -270,7 +355,7 @@ export default function Enseignant() {
             className="w-full mt-5 py-3.5 rounded-full font-bold flex items-center justify-center gap-2"
             style={{ backgroundColor: total === 5 ? gold : colors.hairline, color: total === 5 ? ink : slate, opacity: total === 5 ? 1 : 0.75, display: chapter ? undefined : "none" }}
           >
-            <Play size={16} /> Lancer le diaporama
+            <CheckCircle2 size={16} /> Vérifier la séance
           </button>
               {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher les propositions.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez examiner puis sélectionner exactement cinq questions.</p></div>}
             </section>
@@ -278,6 +363,11 @@ export default function Enseignant() {
         </div>
       </div>
     );
+  }
+
+  // ------------------------------------------------------------- REVIEW ---
+  if (view === "review") {
+    return <div className="min-h-screen w-full p-4 sm:p-8" style={{background:paper,fontFamily:fonts.body}}><div className="mx-auto max-w-3xl"><button type="button" onClick={()=>setView("setup")} className="inline-flex items-center gap-1 text-xs font-semibold" style={{color:slate}}><ArrowLeft size={14}/> Modifier la sélection</button><div className="mt-8 text-center"><p className="text-xs uppercase tracking-widest font-bold" style={{color:gold}}>Dernière vérification</p><h1 className="mt-2 text-3xl font-black" style={{fontFamily:fonts.display,color:ink}}>Votre séance est prête</h1><p className="mt-2 text-sm" style={{color:slate}}>Contrôlez l’ordre, les énoncés et les réponses avant de projeter.</p></div><div className="mt-7 grid gap-3">{exercises.map((exercise,exerciseIndex)=><div key={`${exercise.prompt}-${exerciseIndex}`} className="rounded-2xl p-4" style={{backgroundColor:colors.card,boxShadow:shadow.soft}}><div className="flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-xs font-black" style={{width:28,height:28,backgroundColor:gold,color:ink}}>{exerciseIndex+1}</span><div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-wide font-bold" style={{color:slate}}>{exercise.chapter}</p><MathText as="p" text={exercise.prompt} className="mt-1 text-sm font-bold" style={{color:ink}}/><p className="mt-2 text-xs" style={{color:colors.green}}>Réponse : <MathText text={formatAnswer(exercise.answer)}/></p>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<p className="mt-1 text-[10px]" style={{color:slate}}>Propositions : {exercise.options.map(String).join(" · ")}</p>}</div></div></div>)}</div><div className="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" onClick={()=>{setIndex(0);setView("diaporama");}} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:gold,color:ink}}><Play size={16}/> Lancer la projection</button><button type="button" onClick={copySessionLink} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Copy size={16}/> Copier le lien de cette séance</button></div>{shareMessage&&<p className="mt-3 text-center text-xs font-bold" style={{color:shareMessage.includes("copié")?colors.green:colors.red}}>{shareMessage}</p>}<p className="mt-3 text-center text-[10px]" style={{color:slate}}><Save size={11} className="inline mr-1"/>Le lien contient les cinq questions : aucun compte n’est nécessaire pour le rouvrir.</p></div></div>;
   }
 
   // ---------------------------------------------------------- DIAPORAMA ---

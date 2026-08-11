@@ -6,14 +6,16 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 ### Cadre professionnel et administratif
 
-- [ ] Vérifier auprès de la hiérarchie ou du référent déontologue les règles de cumul applicables à la situation d’agent public, avant le début de l’activité commerciale.
-- [ ] Obtenir l’autorisation ou effectuer la déclaration requise avant de créer/exploiter l’activité, selon la réponse de l’administration.
-- [ ] Déclarer l’entreprise individuelle sous régime micro-entrepreneur sur le guichet unique officiel.
+- [ ] Confirmer que la mère du créateur sera l’exploitante effective de RéussiMaths, et pas uniquement la titulaire administrative de l’activité.
+- [ ] Déclarer à son nom l’entreprise individuelle sous régime micro-entrepreneur sur le guichet unique officiel.
+- [ ] Formaliser par écrit le droit pour l’entreprise d’exploiter le logiciel, les contenus, la marque et les visuels créés antérieurement.
+- [ ] Faire valider par un professionnel le cadre de la contribution régulière du créateur au produit, afin d’éviter une activité professionnelle informelle ou une gérance de fait.
 - [ ] Recevoir et contrôler les numéros SIREN/SIRET et le code APE attribué.
 - [ ] Créer le compte bancaire dédié Indy et conserver les justificatifs d’ouverture.
 - [ ] Créer les espaces Urssaf et impots.gouv professionnels dès que les identifiants sont disponibles.
 - [ ] Déterminer avec l’Urssaf ou le SIE la qualification fiscale/sociale exacte de la vente d’abonnements à RéussiMaths (BIC ou BNC) ; ne pas la deviner dans le formulaire.
 - [ ] Vérifier l’éligibilité à l’Acre et au versement libératoire, sans les sélectionner automatiquement.
+- [ ] Demander à la caisse de retraite de l’exploitante de confirmer les règles de cumul emploi-retraite applicables à sa pension.
 - [ ] Prévoir un livre des recettes et une numérotation continue des factures.
 
 ### Confiance et conformité du site
@@ -23,7 +25,7 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 - [ ] Mettre à jour les mentions légales avec identité, statut, adresse de contact, SIREN/SIRET et coordonnées professionnelles.
 - [ ] Mettre à jour les CGV/CGU, la politique de confidentialité et l’identité affichée dans Stripe.
 - [ ] Vérifier les règles applicables aux mineurs, aux données scolaires et au consentement parental.
-- [ ] Vérifier la séparation entre la fonction institutionnelle du fondateur et la promotion de l’activité privée.
+- [ ] Maintenir une séparation stricte entre les fonctions institutionnelles du créateur et la promotion de l’activité privée de sa mère.
 
 ### Paiement et exploitation
 

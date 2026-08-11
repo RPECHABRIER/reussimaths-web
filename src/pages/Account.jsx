@@ -29,6 +29,10 @@ import LoadError from "../components/LoadError";
 import { markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
 
 const TERMS_VERSION = "2026-08-09";
+// Apple demande un compte Developer, un Services ID et un secret renouvelé
+// tous les six mois. Le bouton reste donc masqué tant que l'intégration n'est
+// pas volontairement réactivée dans les variables publiques Vercel.
+const APPLE_AUTH_ENABLED = import.meta.env.VITE_APPLE_AUTH_ENABLED === "true";
 
 // Note : la redirection vers /pseudo pour un utilisateur sans profil est
 // gérée globalement dans App.jsx (fonctionne quelle que soit la page
@@ -333,9 +337,9 @@ export default function Account() {
             <div className="rounded-2xl p-4 mt-6" style={{ backgroundColor: colors.bg }}>
               <p className="text-xs font-bold" style={{ color: colors.ink }}>Crée d’abord ton espace personnel</p>
               <p className="text-xs mt-1" style={{ color: colors.slate }}>La connexion sauvegarde la progression et rattache l’abonnement au bon élève.</p>
-              <div className="grid sm:grid-cols-2 gap-2 mt-3">
+              <div className={`grid ${APPLE_AUTH_ENABLED ? "sm:grid-cols-2" : "grid-cols-1"} gap-2 mt-3`}>
                 <button onClick={() => { markSignupStarted("google"); signInWithGoogle(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Google</button>
-                <button onClick={() => { markSignupStarted("apple"); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>
+                {APPLE_AUTH_ENABLED && <button onClick={() => { markSignupStarted("apple"); signInWithApple(); }} className="py-3 rounded-full text-sm font-bold" style={{ backgroundColor: colors.ink, color: colors.bg }}>Avec Apple</button>}
               </div>
               <div className="flex items-center gap-3 my-4"><span className="h-px flex-1" style={{ backgroundColor: colors.hairline }} /><span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: colors.slate }}>ou par e-mail</span><span className="h-px flex-1" style={{ backgroundColor: colors.hairline }} /></div>
               <form onSubmit={handleEmailAuth} className="flex flex-col gap-2.5">

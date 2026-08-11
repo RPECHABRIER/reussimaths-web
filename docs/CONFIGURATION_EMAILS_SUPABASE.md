@@ -63,3 +63,13 @@ Choisis un nouveau mot de passe — RéussiMaths
 ```
 
 Ne pas activer le suivi des clics chez un éventuel fournisseur SMTP : la réécriture des liens peut empêcher la confirmation Supabase de fonctionner.
+
+## Réactivation ultérieure d’Apple
+
+Le bouton Apple est masqué par défaut. Une fois le Services ID, le callback et le secret OAuth Apple entièrement configurés dans Supabase, ajouter dans les variables **Production** de Vercel :
+
+```text
+VITE_APPLE_AUTH_ENABLED=true
+```
+
+Puis redéployer. Pour le masquer de nouveau, remettre la variable à `false` ou la supprimer. Ne jamais placer la clé privée Apple `.p8` dans Vercel ni dans le dépôt : Supabase ne reçoit que le secret OAuth généré.

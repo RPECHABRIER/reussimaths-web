@@ -42,6 +42,16 @@ test("le paiement évite les doublons, conserve le consentement et synchronise p
   assert.match(migration, /immediate_access_accepted boolean not null check/);
 });
 
+test("Apple reste masqué tant que son OAuth n'est pas explicitement activé", async () => {
+  const [account, envExample] = await Promise.all([
+    readFile(new URL("../src/pages/Account.jsx", import.meta.url), "utf8"),
+    readFile(new URL("../.env.example", import.meta.url), "utf8"),
+  ]);
+  assert.match(account, /VITE_APPLE_AUTH_ENABLED === "true"/);
+  assert.match(account, /APPLE_AUTH_ENABLED && <button/);
+  assert.match(envExample, /VITE_APPLE_AUTH_ENABLED=false/);
+});
+
 test("les invitations classe suivent la durée choisie et restent réservées à l'admin", async () => {
   const [migration, endpoint] = await Promise.all([
     readFile(new URL("../supabase/class-invitations-admin-duration-migration-2026-08-09.sql", import.meta.url), "utf8"),

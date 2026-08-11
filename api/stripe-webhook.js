@@ -53,6 +53,7 @@ async function saveCheckoutSession(session) {
   const row = {
     user_id: userId,
     stripe_customer_id: session.customer,
+    stripe_subscription_id: null,
     status: "active",
     plan,
     updated_at: new Date().toISOString(),
@@ -61,6 +62,7 @@ async function saveCheckoutSession(session) {
     const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
     if (!subscriptionId) throw new Error("Abonnement Stripe absent de la session Checkout");
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+    row.stripe_subscription_id = stripeSubscription.id;
     row.status = stripeSubscription.status;
     row.current_period_end = new Date(stripeSubscription.current_period_end * 1000).toISOString();
     row.cancel_at_period_end = !!stripeSubscription.cancel_at_period_end;
@@ -170,16 +172,31 @@ export default async function handler(req, res) {
         // api/cancel-subscription.js) pour rester cohérent même si
         // l'abonnement est résilié/réactivé directement dans le dashboard
         // Stripe plutôt que depuis l'app.
-        const { error } = await supabaseAdmin
+        const subscriptionUpdate = {
+          status: sub.status, // active | trialing | canceled | past_due ...
+          current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+          cancel_at_period_end: !!sub.cancel_at_period_end,
+          updated_at: new Date().toISOString(),
+        };
+        const { data: updatedRows, error } = await supabaseAdmin
           .from("subscriptions")
-          .update({
-            status: sub.status, // active | trialing | canceled | past_due ...
-            current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
-            cancel_at_period_end: !!sub.cancel_at_period_end,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("stripe_customer_id", sub.customer);
+          .update(subscriptionUpdate)
+          // L'identifiant de l'abonnement évite qu'un événement tardif lié à
+          // un ancien abonnement du même client n'écrase l'accès actuel.
+          .eq("stripe_subscription_id", sub.id)
+          .select("user_id");
         if (error) throw error;
+        if ((updatedRows ?? []).length === 0) {
+          // Migration douce des abonnements historiques qui ne possédaient
+          // que le customer Stripe. On ne touche jamais une ligne déjà liée
+          // à un autre abonnement précis.
+          const { error: legacyError } = await supabaseAdmin
+            .from("subscriptions")
+            .update({ ...subscriptionUpdate, stripe_subscription_id: sub.id })
+            .eq("stripe_customer_id", sub.customer)
+            .is("stripe_subscription_id", null);
+          if (legacyError) throw legacyError;
+        }
         break;
       }
       default:

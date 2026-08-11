@@ -20,11 +20,19 @@ create table if not exists public.profiles (
 create table if not exists public.subscriptions (
   user_id uuid primary key references auth.users (id) on delete cascade,
   stripe_customer_id text,
+  stripe_subscription_id text,
   status text not null default 'none', -- none | trialing | active | canceled | past_due
   plan text, -- 'mensuel' | 'special_examen'
   current_period_end timestamptz,
   updated_at timestamptz not null default now()
 );
+
+alter table public.subscriptions
+  add column if not exists stripe_subscription_id text;
+
+create unique index if not exists subscriptions_stripe_subscription_id_key
+  on public.subscriptions (stripe_subscription_id)
+  where stripe_subscription_id is not null;
 
 -- Progression par chapitre.
 create table if not exists public.chapter_progress (

@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { classifyLearningError } from "./lib/learningError.js";
 import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
 import brevetChapter from "./chapters/dossier-brevet-troisieme.js";
+import { canAccessChapter, isClassAccessSubscription, isFullAccessSubscription, isPackExamenSubscription } from "./lib/access.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -35,6 +36,39 @@ test("le parcours découverte rend ses bénéfices immédiatement visibles", asy
   assert.match(overview, /Méthode expliquée/);
   assert.match(overview, /Animation utile/);
   assert.match(overview, /Résultat vérifié/);
+});
+
+test("les quatre états d’accès restent nettement séparés", () => {
+  const paidChapter = { meta: { id: "chapitre-payant", level: "troisieme", free: false } };
+  const future = new Date(Date.now() + 86_400_000).toISOString();
+  const monthly = { plan: "mensuel", status: "active", current_period_end: future };
+  const exam = { plan: "special_examen", status: "active", current_period_end: future, pack_examen_level: "troisieme", pack_examen_bonus_chapters: ["chapitre-payant"] };
+  const classAccess = { class_access_level: "troisieme", class_access_expires_at: future };
+  assert.equal(canAccessChapter(paidChapter, {}), false);
+  assert.equal(isFullAccessSubscription(monthly), true);
+  assert.equal(canAccessChapter(paidChapter, { subscription: monthly }), true);
+  assert.equal(isPackExamenSubscription(exam), true);
+  assert.equal(canAccessChapter(paidChapter, { subscription: exam }), true);
+  assert.equal(isClassAccessSubscription(classAccess), true);
+  assert.equal(canAccessChapter(paidChapter, { subscription: classAccess }), true);
+});
+
+test("Stripe rattache chaque webhook à l’abonnement exact", async () => {
+  const [schema, webhook, cancel, checkout, account] = await Promise.all([
+    read("../supabase/schema.sql"),
+    read("../api/stripe-webhook.js"),
+    read("../api/cancel-subscription.js"),
+    read("../api/create-checkout-session.js"),
+    read("./pages/Account.jsx"),
+  ]);
+  assert.match(schema, /stripe_subscription_id text/);
+  assert.match(webhook, /row\.stripe_subscription_id = stripeSubscription\.id/);
+  assert.match(webhook, /\.eq\("stripe_subscription_id", sub\.id\)/);
+  assert.match(webhook, /\.is\("stripe_subscription_id", null\)/);
+  assert.match(cancel, /retrieve\(subRow\.stripe_subscription_id\)/);
+  assert.match(checkout, /idempotencyKey: `checkout_\$\{user\.id\}_\$\{purchaseAttemptId\}`/);
+  assert.match(account, /checkout=success|checkout"\) === "success"|checkout !== "success"/);
+  assert.match(account, /aucun nouveau paiement n’est nécessaire/);
 });
 
 test("une erreur de révisions ne devient pas un faux état vide", async () => {

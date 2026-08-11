@@ -19,6 +19,11 @@ const EXPECTED_LEVEL_FAMILIES = {
   quatrieme: new Set(["relative_numbers", "fractions", "powers", "distributivity", "equations", "proportionality", "statistics_mean", "probability_basic", "pythagoras", "geometry_thales"]),
   troisieme: new Set(["number_theory", "distributivity", "equations", "function_image", "function_antecedent", "function_affine_coefficients", "proportionality", "statistics_mean", "probability_basic", "geometry_thales", "geometry_trigonometry"]),
   seconde: new Set(["real_number_sets", "powers", "equations", "geometry_vectors", "geometry_coordinates", "function_domain", "function_image", "function_antecedent", "function_affine_coefficients", "function_variations", "percentage_change", "statistics_mean", "statistics_median", "statistics_quartiles", "probability_basic"]),
+  "premiere-spe": new Set(["algebra_second_degree", "calculus_derivative", "sequence_convergence", "exponential_logarithm", "geometry_trigonometry", "geometry_dot_product", "random_variables", "probability_conditional", "algorithm_assignments"]),
+  "premiere-non-spe": new Set(["algebra_second_degree", "calculus_derivative", "sequence_convergence", "function_variations", "percentage_change", "statistics_median", "probability_basic", "probability_tree"]),
+  "premiere-techno": new Set(["algebra_second_degree", "calculus_derivative", "sequence_convergence", "function_variations", "statistics", "random_variables", "probability_conditional", "algorithm_assignments"]),
+  "terminale-spe": new Set(["calculus_derivative", "continuity_reasoning", "sequence_convergence", "exponential_logarithm", "integral_calculus", "space_vectors", "combinatorics", "random_variables"]),
+  "terminale-techno": new Set(["function_variations", "sequence_convergence", "exponential_logarithm", "statistics", "random_variables", "probability_conditional", "probability_tree"]),
 };
 
 const stepText = (step) => typeof step === "string" ? step : step?.text ?? "";

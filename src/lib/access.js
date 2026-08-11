@@ -38,7 +38,7 @@
 // de la préviz.
 // ---------------------------------------------------------------------------
 
-import { getAdminPreview } from "./adminPreview";
+import { getAdminPreview } from "./adminPreview.js";
 
 export const ADMIN_EMAIL = "romainpechabrier@gmail.com";
 

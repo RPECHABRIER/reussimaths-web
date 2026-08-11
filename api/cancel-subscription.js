@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   try {
     const { data: subRow, error: subError } = await supabaseAdmin
       .from("subscriptions")
-      .select("plan, status, stripe_customer_id")
+      .select("plan, status, stripe_customer_id, stripe_subscription_id")
       .eq("user_id", user.id)
       .maybeSingle();
     if (subError) throw subError;
@@ -55,15 +55,15 @@ export default async function handler(req, res) {
       return;
     }
 
-    const existing = await stripe.subscriptions.list({
-      customer: subRow.stripe_customer_id,
-      status: "all",
-      limit: 5,
-    });
-    // On cible l'abonnement encore actif/à l'essai (pas un ancien abonnement
-    // déjà annulé, s'il devait y en avoir plusieurs dans l'historique Stripe).
-    const stripeSub = existing.data.find((s) => ["active", "trialing"].includes(s.status));
-    if (!stripeSub) {
+    let stripeSub = null;
+    if (subRow.stripe_subscription_id?.startsWith("sub_")) {
+      stripeSub = await stripe.subscriptions.retrieve(subRow.stripe_subscription_id);
+    } else {
+      // Compatibilité avec les abonnements créés avant cette colonne.
+      const existing = await stripe.subscriptions.list({ customer: subRow.stripe_customer_id, status: "all", limit: 5 });
+      stripeSub = existing.data.find((item) => ["active", "trialing"].includes(item.status));
+    }
+    if (!stripeSub || !["active", "trialing"].includes(stripeSub.status)) {
       res.status(400).json({ error: "Aucun abonnement Stripe actif trouvé." });
       return;
     }
@@ -74,6 +74,7 @@ export default async function handler(req, res) {
     const { error: updateError } = await supabaseAdmin
       .from("subscriptions")
       .update({
+        stripe_subscription_id: stripeSub.id,
         cancel_at_period_end: cancelAtPeriodEnd,
         current_period_end: new Date(updated.current_period_end * 1000).toISOString(),
         updated_at: new Date().toISOString(),

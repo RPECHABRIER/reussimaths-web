@@ -106,8 +106,17 @@ const FAMILY_FEEDBACK = [
     rule: "Choisis une unité commune, utilise 1 h = 60 min et 1 min = 60 s, puis reconvertis le résultat si la question le demande.",
   },
   {
+    id: "number_sequence_pattern",
+    match: /compléter les suites|suite logique/i,
+    intro: "Non, le pas régulier entre les nombres n’a pas encore été repéré correctement.",
+    meaning: "Dans cette suite logique, on passe d’un nombre au suivant en ajoutant ou en retirant toujours la même quantité. Cette quantité s’appelle le pas.",
+    rule: "Calcule l’écart entre les deux premiers nombres, vérifie qu’il est identique entre les deux suivants, puis applique une nouvelle fois ce même pas.",
+  },
+  {
     id: "sequence_convergence",
-    match: /suites?|somme des n premiers entiers/i,
+    // Les bornes sont indispensables : sans elles, le mot courant « ensuite »
+    // était parfois interprété comme le thème des suites numériques.
+    match: /\bsuites?\b|somme des n premiers entiers/i,
     intro: "Non, le type de suite, son mode de définition ou l’argument de convergence n’a pas été identifié correctement.",
     meaning: "Une suite peut être donnée par une formule explicite ou une relation de récurrence. Pour étudier sa limite, on combine son sens de variation, ses bornes et les limites de référence ; une démonstration par récurrence comporte initialisation, hérédité et conclusion.",
     rule: "Repère d’abord comment la suite est définie et ce qui doit être démontré, puis utilise la formule, la récurrence ou le théorème de convergence adapté.",

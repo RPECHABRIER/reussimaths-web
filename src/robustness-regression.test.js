@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { classifyLearningError } from "./lib/learningError.js";
+import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -358,4 +359,16 @@ test("les consignes de calculatrice ont trois états et se contrôlent dans le l
   assert.doesNotMatch(mode, /arrondi\|au centième/);
   assert.match(lab, /Tous les modes de calcul/);
   assert.match(lab, /Libre choix/);
+});
+
+test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {
+  const feedback = await read("./lib/pedagogicalFeedback.js");
+  assert.match(feedback, /number_sequence_pattern/);
+  assert.match(feedback, /Calcule l’écart entre les deux premiers nombres/);
+  assert.match(feedback, /\\bsuites\?\\b/);
+  const elementary = buildPedagogicalFeedback({ chapter: "Automatismes — Compléter les suites", prompt: "Complète la suite logique : 2 ; 2,5 ; 3 ; ...", answer: 3.5, steps: ["On ajoute 0,5.", "Le résultat est 3,5."] }, "4");
+  assert.equal(elementary.family, "number_sequence_pattern");
+  assert.doesNotMatch(elementary.meaning, /limite|récurrence|convergence/i);
+  const ordinary = buildPedagogicalFeedback({ chapter: "Calcul numérique", prompt: "On calcule d’abord, ensuite on vérifie.", answer: 4, steps: ["2 + 2 = 4", "La réponse est 4."] }, "5");
+  assert.notEqual(ordinary.family, "sequence_convergence");
 });

@@ -10,7 +10,7 @@ export default function CGU() {
         l'application RéussiMaths (le « Service »), destinée à la révision des mathématiques du collège et du lycée.
         En créant un compte ou en utilisant le Service, l'utilisateur accepte les présentes CGU.
       </p>
-      <p><strong>Vendeur et éditeur :</strong> <strong>[à compléter avant la première vente]</strong> — Mme [nom et prénom], entrepreneur individuel, SIRET [numéro], adresse et coordonnées professionnelles publiées dans les mentions légales.</p>
+      <p><strong>Vendeur et éditeur :</strong> Nadine LEFEBVRE, Entrepreneur individuel (EI), nom commercial RéussiMaths, SIREN 108 734 930, RCS Meaux 108 734 930. Adresse et coordonnées professionnelles publiées dans les mentions légales.</p>
 
       <h2>1. Description du Service</h2>
       <p>
@@ -21,7 +21,7 @@ export default function CGU() {
 
       <h2>2. Compte utilisateur</h2>
       <p>
-        La création d'un compte se fait via une adresse e-mail ou une connexion Google ou Apple. Aucun nom réel ni
+        La création d'un compte se fait via une adresse e-mail ou une connexion Google. Aucun nom réel ni
         adresse e-mail de connexion n'est affiché publiquement dans l'application : l'utilisateur choisit un pseudo
         après sa première connexion, qui constitue son identité publique (visible par ses amis en cas de défi).
         L'utilisateur est responsable de la confidentialité de son moyen de connexion.
@@ -95,7 +95,7 @@ export default function CGU() {
       <p>Les présentes CGU sont soumises au droit français.</p>
 
       <h2>11. Réclamation et médiation</h2>
-      <p>En cas de difficulté, l’utilisateur doit d’abord contacter l’éditeur afin de rechercher une solution amiable. <strong>[À compléter avant la première vente]</strong> — les coordonnées du médiateur de la consommation choisi par l’éditeur seront ajoutées ici et dans les mentions légales.</p>
+      <p>En cas de difficulté, l’utilisateur doit d’abord adresser une réclamation écrite à <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a> afin de rechercher une solution amiable. <strong>L'adhésion au dispositif de médiation est en cours avant l'ouverture commerciale.</strong> Les coordonnées du médiateur désigné seront publiées ici et dans les mentions légales dès la signature de la convention.</p>
     </LegalLayout>
   );
 }

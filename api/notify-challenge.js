@@ -1,16 +1,15 @@
 // Vercel serverless function — POST /api/notify-challenge
-// Envoie un email à l'ami défié pour le prévenir, via Gmail SMTP (compte
-// dédié au site) + Nodemailer. Appelée en best-effort depuis
+// Envoie un email à l'ami défié pour le prévenir via le serveur SMTP
+// professionnel configuré + Nodemailer. Appelée en best-effort depuis
 // src/hooks/useChallenges.js juste après la création d'un défi (voir
 // createChallenge) : un échec ici ne doit jamais bloquer la création du défi
 // elle-même, qui est déjà enregistrée en base à ce stade.
 //
 // Variables d'environnement nécessaires (à définir dans Vercel, PAS dans le
 // bundle client) :
-//   GMAIL_USER          : l'adresse Gmail dédiée au site (ex: contact@...)
-//   GMAIL_APP_PASSWORD  : le "mot de passe d'application" généré dans les
-//                         paramètres de sécurité de ce compte Gmail (16
-//                         caractères, PAS le mot de passe normal du compte).
+//   SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASSWORD : paramètres
+//                         fournis par le prestataire d'e-mail.
+//   SMTP_FROM           : expéditeur visible (facultatif, SMTP_USER sinon).
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY : déjà utilisées par
 //                         api/stripe-webhook.js — nécessaires ici pour lire
 //                         l'email et le pseudo des deux utilisateurs (RLS
@@ -27,11 +26,17 @@ import { requireSupabaseUser } from "./_auth.js";
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
 
 function buildTransport() {
+  const required = ["SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD"];
+  const missing = required.filter((name) => !process.env[name]);
+  if (missing.length) throw new Error(`Configuration SMTP incomplète : ${missing.join(", ")}`);
+  const port = Number(process.env.SMTP_PORT ?? 587);
   return nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.SMTP_HOST,
+    port,
+    secure: process.env.SMTP_SECURE === "true" || port === 465,
     auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
   });
 }
@@ -105,15 +110,16 @@ export default async function handler(req, res) {
     const safeFromPseudo = escapeHtml(fromPseudo);
     const appUrl = process.env.PUBLIC_APP_URL ?? "https://reussimaths.fr";
     const sujet = challenge.chapter_id ? ` sur le chapitre ${challenge.chapter_id}` : "";
+    const safeSujet = escapeHtml(sujet);
 
     const transport = buildTransport();
     await transport.sendMail({
-      from: `RéussiMaths <${process.env.GMAIL_USER}>`,
+      from: `RéussiMaths <${process.env.SMTP_FROM ?? process.env.SMTP_USER}>`,
       to: toUser.user.email,
       subject: `${fromPseudo} te défie${sujet} !`,
       text: `${fromPseudo} vient de te lancer un défi${sujet} sur RéussiMaths.\n\nRelève le défi ici : ${appUrl}/amis\n\n— L'équipe RéussiMaths`,
       html: `
-        <p>${safeFromPseudo} vient de te lancer un défi${sujet} sur RéussiMaths.</p>
+        <p>${safeFromPseudo} vient de te lancer un défi${safeSujet} sur RéussiMaths.</p>
         <p><a href="${appUrl}/amis">Relever le défi</a></p>
         <p style="color:#6E7787;font-size:12px;">— L'équipe RéussiMaths</p>
       `,

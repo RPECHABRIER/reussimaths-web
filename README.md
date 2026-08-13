@@ -79,15 +79,15 @@ ne fonctionneront pas.
 2. Dans l'éditeur SQL du projet, exécute `supabase/schema.sql` (tables `profiles`,
    `subscriptions`, `chapter_progress`, `friendships`, avec Row Level Security :
    chaque utilisateur ne voit/modifie que ses propres lignes).
-3. Dans Authentication > Providers, active Google et Apple, avec les identifiants
-   OAuth de chaque plateforme (Google Cloud Console / Apple Developer).
+3. Dans Authentication > Providers, active Google. Apple reste désactivé tant
+   que son Services ID et son secret OAuth ne sont pas intégralement configurés.
 4. Renseigne `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` (Project Settings > API).
 
 Important sur l'anonymat (décision produit actée) : l'app n'affiche jamais le
 nom réel ni l'email de connexion. Après la première connexion, l'utilisateur
 est automatiquement redirigé vers `/pseudo` (voir `src/pages/Onboarding.jsx`)
 pour choisir un pseudo stocké dans `profiles`, complètement séparé de son
-identité Google/Apple.
+identité Google ou e-mail.
 
 ### Mise à jour du schéma pour un projet Supabase déjà existant
 
@@ -145,21 +145,16 @@ Stripe directement) pour savoir si un chapitre est débloqué.
 ## Notification email des défis entre amis
 
 Quand un défi est lancé (voir `src/pages/Amis.jsx` / `src/hooks/useChallenges.js`),
-`/api/notify-challenge` envoie un email à l'ami défié via un compte Gmail dédié.
+`/api/notify-challenge` envoie un email à l'ami défié via le serveur SMTP professionnel configuré.
 
-1. Crée un compte Gmail dédié au site (pas ton adresse perso).
-2. Sur ce compte : active la validation en deux étapes, puis dans les
-   paramètres de sécurité Google, génère un "mot de passe d'application"
-   (App Password) pour "Mail" — c'est un code à 16 caractères, différent du
-   mot de passe normal du compte.
-3. Renseigne sur Vercel : `GMAIL_USER` (l'adresse Gmail) et
-   `GMAIL_APP_PASSWORD` (le mot de passe d'application). Réutilise
-   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` et `PUBLIC_APP_URL`, déjà
-   nécessaires pour Stripe ci-dessus.
-
-Limite connue : Gmail plafonne l'envoi à ~500 emails/jour par ce biais — large
-pour des notifications de défi, à revoir si l'appli grossit beaucoup (passer
-à un service d'emails transactionnels dédié, ex. Resend).
+1. Utilise une adresse professionnelle et génère un identifiant SMTP dédié à RéussiMaths.
+2. Renseigne sur Vercel : `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`,
+   `SMTP_PASSWORD` et `SMTP_FROM`. Réutilise `SUPABASE_URL`,
+   `SUPABASE_SERVICE_ROLE_KEY` et `PUBLIC_APP_URL`, déjà nécessaires pour Stripe.
+3. Avec Proton et un domaine personnalisé sur une offre payante : hôte
+   `smtp.protonmail.ch`, port `587`, `SMTP_SECURE=false` (STARTTLS), adresse
+   personnalisée comme utilisateur et jeton SMTP comme mot de passe. Ne jamais
+   utiliser le mot de passe du compte Proton.
 
 ## Déploiement
 

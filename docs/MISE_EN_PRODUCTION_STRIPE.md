@@ -24,7 +24,16 @@ Cette checklist ne doit être cochée qu'avec les clés **Live**. Les essais Str
 - [ ] `STRIPE_PRICE_EXAMEN` = identifiant Live du paiement unique (`price_…`).
 - [ ] `PUBLIC_APP_URL` = domaine public définitif, en HTTPS et sans slash final.
 - [ ] `SUPABASE_URL` et `SUPABASE_SERVICE_ROLE_KEY` correspondent au projet de production.
+- [ ] `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` et `SMTP_FROM` sont renseignés, puis une notification de défi réelle a été reçue.
 - [ ] Aucun secret Stripe ou Supabase n'est préfixé par `VITE_` ni présent dans le dépôt.
+
+Avant l'ouverture, lancer localement avec les variables de production chargées :
+
+```bash
+npm run check:production
+```
+
+Le contrôle doit terminer sans `ERREUR`. Une alerte SMTP n'empêche pas le paiement, mais signifie que les notifications de défi ne seront pas envoyées.
 
 ## 3. Webhook Live
 

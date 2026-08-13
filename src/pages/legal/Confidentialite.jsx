@@ -9,13 +9,13 @@ export default function Confidentialite() {
         Cette politique explique quelles données sont collectées par RéussiMaths, pourquoi, et comment elles sont
         protégées, conformément au Règlement Général sur la Protection des Données (RGPD).
       </p>
-      <p><strong>Responsable du traitement :</strong> <strong>[à compléter avant la première vente]</strong> — Mme [nom et prénom], entrepreneur individuel, SIRET [numéro], coordonnées publiées dans les mentions légales.</p>
+      <p><strong>Responsable du traitement :</strong> Nadine LEFEBVRE, Entrepreneur individuel (EI), nom commercial RéussiMaths, SIREN 108 734 930. Contact : <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a>.</p>
 
       <h2>1. Données collectées</h2>
       <ul>
         <li>
           <strong>Identité de connexion</strong> : une adresse e-mail et un identifiant unique sont enregistrés lors
-          de la création du compte, directement ou par l’intermédiaire de Google ou Apple. Cette adresse n'est jamais
+          de la création du compte, directement ou par l’intermédiaire de Google. Cette adresse n'est jamais
           affichée publiquement dans l'application.
         </li>
         <li>
@@ -53,7 +53,7 @@ export default function Confidentialite() {
       <ul>
         <li>Supabase (hébergement de la base de données et authentification)</li>
         <li>Stripe (traitement des paiements)</li>
-        <li>Google et Apple, uniquement lorsqu’un utilisateur choisit l’un de ces moyens d’authentification</li>
+        <li>Google, uniquement lorsqu’un utilisateur choisit ce moyen d’authentification</li>
         <li>Vercel (hébergement de l'application)</li>
       </ul>
       <p>Aucune donnée n'est vendue à des tiers à des fins publicitaires.</p>
@@ -69,8 +69,9 @@ export default function Confidentialite() {
       <p>
         Conformément au RGPD, l'utilisateur dispose d'un droit d'accès, de rectification, d'effacement, de limitation
         et de portabilité de ses données, ainsi que d'un droit d'opposition. Ces droits peuvent être exercés en
-        contactant l'éditeur (coordonnées publiées dans les{" "}
-        <a href="/mentions-legales">mentions légales</a> dès finalisation du statut de l'éditeur).
+        écrivant à <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a>. L'utilisateur peut également
+        introduire une réclamation auprès de la CNIL. Les autres coordonnées sont publiées dans les{" "}
+        <a href="/mentions-legales">mentions légales</a>.
       </p>
 
       <h2>8. Sécurité et diagnostic technique</h2>

@@ -1,34 +1,28 @@
 import { Link } from "react-router-dom";
 import LegalLayout from "./LegalLayout";
 
-// ⚠️ Contenu générique à faire relire par un professionnel (avocat,
-// expert-comptable ou CFE) avant toute exploitation commerciale réelle —
-// ceci n'est pas un conseil juridique. Voir les [À compléter] ci-dessous :
-// une fois le statut auto-entrepreneur créé, il faudra a minima publier
-// nom/prénom, statut, SIRET et adresse conformément à l'article 6-III de la
-// loi LCEN pour toute activité professionnelle (même en ligne).
 export default function MentionsLegales() {
   return (
     <LegalLayout title="Mentions légales">
+      <h2>Éditrice et exploitante</h2>
       <p>
-        RéussiMaths est actuellement en <strong>phase de test</strong>. L'éditeur du site n'a, à ce stade, pas encore
-        finalisé son immatriculation professionnelle (auto-entrepreneur). Cette page doit donc rester considérée comme
-        provisoire et sera complétée avant toute ouverture commerciale réelle.
+        Le site RéussiMaths est édité et exploité par <strong>Nadine LEFEBVRE, Entrepreneur individuel (EI)</strong>,
+        exerçant sous le nom commercial <strong>RéussiMaths</strong>.
       </p>
-      <div className="legal-callout">
-        <strong>Ouverture commerciale bloquée tant que ces informations ne sont pas publiées :</strong>
-        <ul><li>nom, prénom, statut et adresse professionnelle de l’éditeur ;</li><li>SIRET et inscription au registre national des entreprises ;</li><li>adresse e-mail et numéro de téléphone professionnels ;</li><li>coordonnées du médiateur de la consommation choisi.</li></ul>
-      </div>
-      <p>
-        <strong>[À compléter dès l'immatriculation]</strong> — avant toute ouverture commerciale réelle
-        (abonnements payants hors mode test), cette page sera mise à jour avec : nom et prénom de l'exploitante,
-        statut (entrepreneur individuel), numéro SIRET, adresse du siège, adresse e-mail et numéro de téléphone
-        professionnels. L'entreprise individuelle ainsi désignée sera l'éditrice et l'exploitante de RéussiMaths.
-      </p>
+      <ul>
+        <li>Adresse professionnelle : 37 rue Caron, 77610 Marles-en-Brie, France</li>
+        <li>SIREN : 108 734 930</li>
+        <li>Immatriculation : RCS Meaux 108 734 930 et Registre national des entreprises (RNE)</li>
+        <li>SIRET : en cours d'attribution</li>
+        <li>Adresse électronique : <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a></li>
+        <li>Téléphone professionnel : en cours de mise en service avant l'ouverture commerciale</li>
+        <li>TVA non applicable, article 293 B du Code général des impôts</li>
+      </ul>
+      <p>Directrice de la publication : Nadine LEFEBVRE.</p>
 
       <h2>Hébergement</h2>
       <p>
-        Le site est hébergé par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. Informations légales de l'hébergeur disponibles sur{" "}
+        Le site est hébergé par Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — téléphone : +1 559 288 7060. Informations légales de l'hébergeur disponibles sur{" "}
         <a href="https://vercel.com/legal" target="_blank" rel="noreferrer">
           vercel.com/legal
         </a>
@@ -59,13 +53,14 @@ export default function MentionsLegales() {
 
       <h2>Contact</h2>
       <p>
-        Pour toute question relative au site, une adresse de contact sera publiée ici dès la finalisation du statut
-        de l'éditeur. En attendant, voir les <Link to="/cgu">CGU</Link> et la{" "}
+        Pour toute question relative au site ou toute réclamation, écrire à{" "}
+        <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a>. Voir également les{" "}
+        <Link to="/cgu">CGU/CGV</Link> et la{" "}
         <Link to="/confidentialite">politique de confidentialité</Link>.
       </p>
 
       <h2>Médiation de la consommation</h2>
-      <p><strong>[À compléter avant la première vente]</strong> — les coordonnées et le site internet du médiateur de la consommation auquel l’éditeur aura adhéré seront publiés dans cette section.</p>
+      <p><strong>Adhésion en cours avant l'ouverture commerciale.</strong> Les coordonnées et le site internet du médiateur de la consommation désigné seront publiés ici dès la signature de la convention.</p>
     </LegalLayout>
   );
 }

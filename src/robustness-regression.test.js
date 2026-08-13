@@ -412,6 +412,13 @@ test("chaque abonné reçoit une série quotidienne de calcul mental chronométr
   assert.match(migration, /attempts integer not null default 1/);
 });
 
+test("le raccourci de calcul mental suit le niveau mensuel actif", async () => {
+  const home = await read("./pages/CycleSelect.jsx");
+  assert.match(home, /subscriptionLevel \?\? preferredLevel/);
+  assert.match(home, /`\/calcul-mental\/\$\{mentalLevel\.id\}`/);
+  assert.match(home, /useDailyMentalSummary\(user\?\.id, subscriptionLevel\?\.id \?\? null\)/);
+});
+
 test("le parcours découverte affiche les égalités de fractions en LaTeX", async () => {
   const showcases = await read("./discoveryShowcases.js");
   assert.match(showcases, /\\\\dfrac\{x\}\{6\}=\\\\dfrac\{4\}\{3\}/);

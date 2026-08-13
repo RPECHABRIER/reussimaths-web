@@ -44,19 +44,27 @@ const ICONS = { college: School, lycee: GraduationCap };
 export default function CycleSelect() {
   const { user } = useAuth();
   const { streak } = useDailyStreak(user?.id);
-  const dueCount = useDueSkillsCount(user?.id);
   const preferredLevel = getLevel(getPreferredLevel());
   const { subscription: rawSubscription } = useSubscription(user?.id);
-  const { summary: mentalSummary } = useDailyMentalSummary(user?.id);
-  const fullAccess = isFullAccessSubscription(getEffectiveSubscription(user, rawSubscription));
+  const subscription = getEffectiveSubscription(user, rawSubscription);
+  const fullAccess = isFullAccessSubscription(subscription);
+  // Le niveau acheté prime sur une ancienne préférence locale issue d'un
+  // essai, afin que tous les raccourcis d'accueil restent dans l'abonnement.
+  const subscriptionLevel = fullAccess && !subscription?.admin_granted
+    ? getLevel(subscription?.subscription_level)
+    : null;
+  const journeyLevel = subscriptionLevel ?? preferredLevel;
+  const mentalLevel = subscriptionLevel ?? preferredLevel;
+  const dueCount = useDueSkillsCount(user?.id, subscriptionLevel?.id ?? null);
+  const { summary: mentalSummary } = useDailyMentalSummary(user?.id, subscriptionLevel?.id ?? null);
   const todayMentalScore = mentalSummary?.days?.at(-1)?.score ?? null;
   const hasStreak = streak?.current_streak > 0;
   const nextAction = !user
     ? { to: "/niveaux?objectif=essai", title: "Commencer gratuitement", detail: "Choisis ton niveau, puis fais un diagnostic court et une série adaptée" }
     : dueCount > 0
     ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
-    : preferredLevel
-    ? { to: `/parcours/niveau/${preferredLevel.id}/programme`, title: `Continuer en ${preferredLevel.label}`, detail: "Indique ce que tu fais en classe, puis vérifie tes prérequis" }
+    : journeyLevel
+    ? { to: `/parcours/niveau/${journeyLevel.id}/programme`, title: `Continuer en ${journeyLevel.label}`, detail: "Indique ce que tu fais en classe, puis vérifie tes prérequis" }
     : { to: "/niveaux?objectif=essai", title: "Choisir mon niveau", detail: "Un diagnostic court puis une série adaptée" };
 
   return (
@@ -122,9 +130,9 @@ export default function CycleSelect() {
                   <span key={item} className="inline-flex items-center gap-1.5"><CheckCircle2 size={13} color={colors.green} />{item}</span>
                 ))}
               </div>
-              {user && fullAccess && (
+              {user && fullAccess && mentalLevel && (
                 <Link
-                  to={preferredLevel ? `/calcul-mental/${preferredLevel.id}` : "/niveaux"}
+                  to={`/calcul-mental/${mentalLevel.id}`}
                   className="mt-5 mx-auto lg:mx-0 flex max-w-lg items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left transition-transform active:scale-[0.98]"
                   style={{ background: `linear-gradient(135deg, ${colors.gold}22, ${colors.green}18)`, border: `2px solid ${colors.gold}55`, boxShadow: shadow.soft }}
                 >

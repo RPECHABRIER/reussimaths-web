@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseUser } from "./_auth.js";
+import { getStripePeriodEndIso } from "./_stripe-subscription.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -29,7 +30,7 @@ async function syncPaidSession(session, user) {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
     row.stripe_subscription_id = stripeSubscription.id;
     row.status = stripeSubscription.status;
-    row.current_period_end = new Date(stripeSubscription.current_period_end * 1000).toISOString();
+    row.current_period_end = getStripePeriodEndIso(stripeSubscription);
     row.cancel_at_period_end = !!stripeSubscription.cancel_at_period_end;
   } else {
     const periodEnd = new Date(session.created * 1000);

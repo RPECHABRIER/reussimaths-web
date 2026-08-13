@@ -19,6 +19,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseUser } from "./_auth.js";
+import { getStripePeriodEndIso } from "./_stripe-subscription.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -76,7 +77,7 @@ export default async function handler(req, res) {
       .update({
         stripe_subscription_id: stripeSub.id,
         cancel_at_period_end: cancelAtPeriodEnd,
-        current_period_end: new Date(updated.current_period_end * 1000).toISOString(),
+        current_period_end: getStripePeriodEndIso(updated),
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", user.id);
@@ -85,7 +86,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       ok: true,
       cancelAtPeriodEnd,
-      currentPeriodEnd: new Date(updated.current_period_end * 1000).toISOString(),
+      currentPeriodEnd: getStripePeriodEndIso(updated),
     });
   } catch (err) {
     console.error("[cancel-subscription]", err);

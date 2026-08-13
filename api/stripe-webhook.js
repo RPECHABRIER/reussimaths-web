@@ -13,6 +13,7 @@
 
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { getStripePeriodEndIso, getStripePeriodEndSeconds } from "./_stripe-subscription.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -67,7 +68,7 @@ async function saveCheckoutSession(session) {
     const stripeSubscription = await stripe.subscriptions.retrieve(subscriptionId);
     row.stripe_subscription_id = stripeSubscription.id;
     row.status = stripeSubscription.status;
-    row.current_period_end = new Date(stripeSubscription.current_period_end * 1000).toISOString();
+    row.current_period_end = getStripePeriodEndIso(stripeSubscription);
     row.cancel_at_period_end = !!stripeSubscription.cancel_at_period_end;
   } else {
     const threeMonthsLater = new Date();
@@ -121,7 +122,7 @@ async function grantReferralFreeMonthIfEligible(referredUserId) {
     const stripeSub = existing.data.find((s) => ["active", "trialing"].includes(s.status));
     if (!stripeSub) return;
 
-    const oneMonthLater = stripeSub.current_period_end + 30 * 24 * 60 * 60;
+    const oneMonthLater = getStripePeriodEndSeconds(stripeSub) + 30 * 24 * 60 * 60;
     await stripe.subscriptions.update(stripeSub.id, {
       trial_end: oneMonthLater,
       proration_behavior: "none",
@@ -177,7 +178,7 @@ export default async function handler(req, res) {
         // Stripe plutôt que depuis l'app.
         const subscriptionUpdate = {
           status: sub.status, // active | trialing | canceled | past_due ...
-          current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+          current_period_end: getStripePeriodEndIso(sub),
           cancel_at_period_end: !!sub.cancel_at_period_end,
           updated_at: new Date().toISOString(),
         };

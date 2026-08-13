@@ -107,7 +107,11 @@ export default function Account() {
       .catch(() => {})
       .finally(() => { if (!cancelled) setSubscriptionRepairing(false); });
     return () => { cancelled = true; };
-  }, [user?.id, subscriptionLoading, subscriptionError, rawSubscription, subscriptionRepairing, reloadSubscription]);
+  // Ne pas dépendre de `subscriptionRepairing` ici : le passage à `true`
+  // relancerait l'effet, exécuterait son cleanup et empêcherait le `finally`
+  // de remettre l'état à `false`. La page resterait alors indéfiniment sur
+  // « Abonnement : vérification… » pour un compte sans abonnement.
+  }, [user?.id, subscriptionLoading, subscriptionError, rawSubscription, reloadSubscription]);
 
   const referralLink = profile?.referral_code
     ? `${window.location.origin}/?ref=${profile.referral_code}`

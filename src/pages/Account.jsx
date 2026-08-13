@@ -97,16 +97,25 @@ export default function Account() {
   useEffect(() => {
     if (!user || subscriptionLoading || subscriptionError || rawSubscription || subscriptionRepairing || subscriptionRepairAttempted.current) return;
     let cancelled = false;
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 8000);
     subscriptionRepairAttempted.current = true;
     setSubscriptionRepairing(true);
-    authenticatedFetch("/api/checkout-status?reconcile=1")
+    authenticatedFetch("/api/checkout-status?reconcile=1", { signal: controller.signal })
       .then((response) => response.json().then((data) => ({ response, data })))
       .then(({ response, data }) => {
         if (!cancelled && response.ok && data.activated) reloadSubscription();
       })
       .catch(() => {})
-      .finally(() => { if (!cancelled) setSubscriptionRepairing(false); });
-    return () => { cancelled = true; };
+      .finally(() => {
+        window.clearTimeout(timeoutId);
+        if (!cancelled) setSubscriptionRepairing(false);
+      });
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
   // Ne pas dépendre de `subscriptionRepairing` ici : le passage à `true`
   // relancerait l'effet, exécuterait son cleanup et empêcherait le `finally`
   // de remettre l'état à `false`. La page resterait alors indéfiniment sur
@@ -424,7 +433,7 @@ export default function Account() {
             {profile?.pseudo ?? "Connecté"}
           </p>
           <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading || subscriptionRepairing ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""}${monthlyLevelLabel ? ` · ${monthlyLevelLabel}` : ""})` : "aucun"}
+            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""}${monthlyLevelLabel ? ` · ${monthlyLevelLabel}` : ""})` : "aucun"}
           </p>
 
           {subscriptionError && (

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { getChapter } from "../chapters/registry";
 
 // ---------------------------------------------------------------------------
 // Nombre de compétences dues en répétition espacée (voir useSkillTracking /
@@ -9,7 +10,7 @@ import { supabase } from "../lib/supabaseClient";
 // "count" légère (head: true, aucune ligne rapatriée) plutôt que de recharger
 // tout ce que getDueSkills() renvoie déjà côté page /reviser.
 // ---------------------------------------------------------------------------
-export function useDueSkillsCount(userId) {
+export function useDueSkillsCount(userId, levelId = null) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -20,20 +21,22 @@ export function useDueSkillsCount(userId) {
     let cancelled = false;
     supabase
       .from("skill_mastery")
-      .select("*", { count: "exact", head: true })
+      .select("chapter_id")
       .eq("user_id", userId)
       .lte("next_review_at", new Date().toISOString())
-      .then(({ count: c, error }) => {
+      .then(({ data, error }) => {
         if (error) {
           console.error("[useDueSkillsCount] error:", error.message);
           return;
         }
-        if (!cancelled) setCount(c ?? 0);
+        const rows = data ?? [];
+        const filtered = levelId ? rows.filter((row) => getChapter(row.chapter_id)?.meta?.level === levelId) : rows;
+        if (!cancelled) setCount(filtered.length);
       });
     return () => {
       cancelled = true;
     };
-  }, [userId]);
+  }, [userId, levelId]);
 
   return count;
 }

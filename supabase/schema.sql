@@ -30,6 +30,10 @@ create table if not exists public.subscriptions (
 alter table public.subscriptions
   add column if not exists stripe_subscription_id text;
 
+alter table public.subscriptions add column if not exists subscription_level text;
+alter table public.subscriptions add column if not exists subscription_level_selected_at timestamptz;
+alter table public.subscriptions add column if not exists subscription_level_changed_at timestamptz;
+
 create unique index if not exists subscriptions_stripe_subscription_id_key
   on public.subscriptions (stripe_subscription_id)
   where stripe_subscription_id is not null;
@@ -335,8 +339,8 @@ grant execute on function public.submit_challenge_response(uuid, integer, intege
 
 -- ---------------------------------------------------------------------------
 -- Paliers d'accès (2026-08-03) : Pack Examen restreint (niveau choisi + 2
--- chapitres bonus fixés une fois), abonnement complet à accès total (tous
--- niveaux, pas de restriction), anti-partage (1 session active par compte),
+-- chapitres bonus fixés une fois), abonnement mensuel associé à un seul
+-- niveau actif, anti-partage (1 session active par compte),
 -- et un onglet "Idées d'amélioration" réservé à l'abonnement complet, visible
 -- uniquement par l'admin (romainpechabrier@gmail.com). Voir src/lib/access.js
 -- pour toute la logique côté client.
@@ -915,8 +919,8 @@ grant execute on function public.redeem_class_access_code(text) to authenticated
 
 -- ---------------------------------------------------------------------------
 -- Accès complet offert par l'admin (voir /admin, api/admin-grant-access.js) :
--- permet à Romain de donner gratuitement l'accès complet (comme l'abonnement
--- "mensuel") à une personne de son choix, à partir de son email, sans passer
+-- permet à l'admin de donner gratuitement un accès exceptionnel à tous les
+-- niveaux à une personne de son choix, à partir de son email, sans passer
 -- par Stripe. `admin_granted` distingue ces comptes offerts des vrais abonnés
 -- payants (aucun stripe_customer_id/current_period_end n'est renseigné pour
 -- eux, donc la carte de résiliation dans Mon compte reste masquée — rien qui

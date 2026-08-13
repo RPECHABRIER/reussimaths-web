@@ -13,7 +13,7 @@ Cette checklist ne doit être cochée qu'avec les clés **Live**. Les essais Str
 
 - [ ] SIRET, nom de l'entreprise, adresse, e-mail de support et coordonnées bancaires validés dans Stripe.
 - [ ] Libellé bancaire reconnaissable (`REUSSIMATHS`) et e-mails de reçus activés.
-- [ ] Produit mensuel : **4,99 EUR**, récurrent tous les mois, sans période d'essai Stripe.
+- [ ] Produit mensuel : **4,99 EUR**, récurrent tous les mois, sans période d'essai Stripe, pour un niveau scolaire choisi.
 - [ ] Pack Examen : **9 EUR**, paiement unique, trois mois d'accès, un seul niveau.
 - [ ] Les identifiants Live des deux prix sont copiés sans espaces.
 
@@ -54,7 +54,7 @@ Le contrôle doit terminer sans `ERREUR`. Une alerte SMTP n'empêche pas le paie
 
 - [ ] Utiliser un compte élève distinct de l'administrateur.
 - [ ] Vérifier le consentement CGU/CGV avant l'ouverture de Checkout.
-- [ ] Effectuer un seul achat mensuel réel puis vérifier l'accès, la facture et la date de renouvellement.
+- [ ] Effectuer un seul achat mensuel réel, choisir un niveau, puis vérifier l'accès à ce niveau, le verrouillage des autres niveaux, la facture et la date de renouvellement.
 - [ ] Vérifier dans Supabase `subscriptions`, `purchase_consents` et `stripe_webhook_events`.
 - [ ] Recharger, se déconnecter et se reconnecter : l'accès doit rester actif.
 - [ ] Tenter un second achat : il doit être refusé comme doublon.

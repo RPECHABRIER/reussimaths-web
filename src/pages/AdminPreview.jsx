@@ -364,7 +364,7 @@ function GrantAccessTool() {
     <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-3 h-full" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
       <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.green}16` }}><Sparkles size={19} color={colors.green} /></div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Offrir un accès complet</p></div>
       <p className="text-xs" style={{ color: colors.slate }}>
-        Donne gratuitement l'accès complet (tous niveaux, comme l'abonnement) à un compte de ton choix, à partir de
+        Donne exceptionnellement et gratuitement l'accès à tous les niveaux à un compte de ton choix, à partir de
         son email. La personne doit déjà avoir créé son compte sur l'app.
       </p>
       <input
@@ -408,7 +408,7 @@ function GrantAccessTool() {
 function PreviewSwitcher() {
   const stored = getAdminPreview();
   const [mode, setMode] = useState(stored?.mode ?? "admin");
-  const [level, setLevel] = useState(stored?.packExamenLevel ?? "");
+  const [level, setLevel] = useState(stored?.packExamenLevel ?? stored?.subscriptionLevel ?? "");
   const [bonusA, setBonusA] = useState(stored?.packExamenBonusChapters?.[0] ?? "");
   const [bonusB, setBonusB] = useState(stored?.packExamenBonusChapters?.[1] ?? "");
 
@@ -438,6 +438,8 @@ function PreviewSwitcher() {
         packExamenLevel: level || null,
         packExamenBonusChapters: [bonusA, bonusB].filter(Boolean),
       });
+    } else if (mode === "mensuel") {
+      setAdminPreview({ mode, subscriptionLevel: level || "troisieme" });
     } else {
       setAdminPreview({ mode });
     }
@@ -450,7 +452,7 @@ function PreviewSwitcher() {
     <div className="rounded-[1.75rem] p-5 sm:p-6 flex flex-col gap-3 h-full" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${colors.hairline}` }}>
       <div className="flex items-center gap-3"><div className="rounded-xl flex items-center justify-center" style={{ width: 40, height: 40, backgroundColor: `${colors.gold}18` }}><Eye size={19} color={colors.gold} /></div><p style={{ fontFamily: fonts.display, fontSize: "1.05rem", fontWeight: 800, color: colors.ink }}>Prévisualiser une offre</p></div>
       <p className="text-xs" style={{ color: colors.slate }}>
-        Voir l'app comme un compte gratuit / Pack Examen / abonnement complet, sans créer de vrai compte de test.
+        Voir l'app comme un compte gratuit / Pack Examen / abonnement mensuel ciblé, sans créer de vrai compte de test.
         {currentlyPreviewing && " Une prévisualisation est actuellement active (bandeau en haut de l'app)."}
       </p>
 
@@ -463,8 +465,19 @@ function PreviewSwitcher() {
         <option value="admin">Vue réelle (admin, accès complet)</option>
         <option value="gratuit">Gratuit</option>
         <option value="special_examen">Pack Examen</option>
-        <option value="mensuel">Abonnement complet</option>
+        <option value="mensuel">Abonnement mensuel — un niveau</option>
       </select>
+
+      {mode === "mensuel" && (
+        <select
+          value={level || "troisieme"}
+          onChange={(e) => setLevel(e.target.value)}
+          className="text-xs rounded-lg px-2.5 py-2"
+          style={{ border: `1px solid ${colors.ink}22`, color: colors.ink, backgroundColor: colors.bg }}
+        >
+          {levelsWithContent.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+        </select>
+      )}
 
       {mode === "special_examen" && (
         <>
@@ -539,7 +552,7 @@ function paletteForSub(sub) {
   }
   const isActive = sub?.status === "active" || sub?.status === "trialing";
   if (!isActive) return "Gratuit";
-  if (sub?.plan === "mensuel") return sub?.admin_granted ? "Abonnement complet (offert)" : "Abonnement complet";
+  if (sub?.plan === "mensuel") return sub?.admin_granted ? "Accès tous niveaux offert" : "Abonnement mensuel — un niveau";
   if (sub?.plan === "special_examen") return "Pack Examen";
   return "Gratuit";
 }

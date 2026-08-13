@@ -18,6 +18,7 @@ const PRICE_BY_PLAN = {
   mensuel: process.env.STRIPE_PRICE_MENSUEL,
   special_examen: process.env.STRIPE_PRICE_EXAMEN,
 };
+const LEVELS = new Set(["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"]);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
   const user = await requireSupabaseUser(req, res, supabaseAdmin);
   if (!user) return;
 
-  const { plan, purchaseAttemptId, termsVersion, immediateAccessAccepted } = req.body ?? {};
+  const { plan, level, purchaseAttemptId, termsVersion, immediateAccessAccepted } = req.body ?? {};
   const price = PRICE_BY_PLAN[plan];
 
   if (!price) {
@@ -37,6 +38,10 @@ export default async function handler(req, res) {
   }
   if (!/^[0-9a-f-]{36}$/i.test(purchaseAttemptId ?? "") || !termsVersion || immediateAccessAccepted !== true) {
     res.status(400).json({ error: "Consentement commercial incomplet." });
+    return;
+  }
+  if (plan === "mensuel" && !LEVELS.has(level)) {
+    res.status(400).json({ error: "Choisis le niveau scolaire associé à l'abonnement." });
     return;
   }
 
@@ -69,8 +74,8 @@ export default async function handler(req, res) {
       // On passe l'id Supabase en metadata pour que le webhook sache à quel
       // compte rattacher l'abonnement (voir stripe-webhook.js).
       client_reference_id: user.id,
-      metadata: { supabase_user_id: user.id, plan, purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt },
-      ...(mode === "subscription" ? { subscription_data: { metadata: { supabase_user_id: user.id, plan } } } : {}),
+      metadata: { supabase_user_id: user.id, plan, level: level ?? "", purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt },
+      ...(mode === "subscription" ? { subscription_data: { metadata: { supabase_user_id: user.id, plan, level } } } : {}),
       ...(customer ? { customer } : { customer_email: user.email }),
       success_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=cancel`,
@@ -81,6 +86,7 @@ export default async function handler(req, res) {
       stripe_checkout_session_id: session.id,
       purchase_attempt_id: purchaseAttemptId,
       plan,
+      purchase_level: plan === "mensuel" ? level : null,
       terms_version: termsVersion,
       immediate_access_accepted: true,
       consented_at: consentedAt,

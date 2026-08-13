@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // Logique centralisée des paliers d'accès (gratuit / Pack Examen / abonnement
-// complet / accès admin). Un seul endroit à modifier si les règles changent —
+// mensuel ciblé / accès admin). Un seul endroit à modifier si les règles changent —
 // voir supabase/schema.sql pour les colonnes pack_examen_level /
 // pack_examen_bonus_chapters sur `subscriptions`, et src/hooks/useProgress.js
 // pour useSubscription (qui charge la ligne `subscriptions` telle quelle,
@@ -19,8 +19,8 @@
 //                       (pack_examen_bonus_chapters, voir la fonction RPC
 //                       set_pack_examen_choices dans schema.sql). Rien
 //                       d'autre.
-//   - Abonnement      : plan "mensuel". Accès complet à tous les niveaux,
-//     complet            sans restriction (voir schema anti-partage :
+//   - Abonnement      : plan "mensuel". Accès complet au seul niveau choisi
+//     mensuel            (subscription_level ; voir schema anti-partage :
 //                       1 seule session active, src/hooks/useSingleSession.js).
 //   - Accès classe    : accès exceptionnel à un niveau, créé uniquement par
 //                       l'admin et activé par un code d'invitation.
@@ -29,7 +29,7 @@
 //
 // Mode prévisualisation admin (voir src/pages/AdminPreview.jsx, route
 // /admin) : l'admin peut se faire passer pour un compte gratuit / Pack
-// Examen / abonnement complet, purement côté client (voir
+// Examen / abonnement mensuel ciblé, purement côté client (voir
 // src/lib/adminPreview.js), pour tester l'app à tous les paliers sans créer
 // de vrais comptes. isAdminUser() et getEffectiveSubscription() ci-dessous
 // sont les deux seuls points d'entrée qui en tiennent compte — tout le reste
@@ -105,7 +105,7 @@ function buildPreviewSubscription(preview) {
     // pendant la préviz alors qu'elle apparaît bien pour un vrai abonné.
     const periodEnd = new Date();
     periodEnd.setMonth(periodEnd.getMonth() + 1);
-    return { plan: "mensuel", status: "active", current_period_end: periodEnd.toISOString() };
+    return { plan: "mensuel", status: "active", current_period_end: periodEnd.toISOString(), subscription_level: preview.subscriptionLevel ?? "troisieme" };
   }
   return null;
 }
@@ -161,7 +161,8 @@ export function canAccessChapter(chapter, ctx = {}) {
   if (chapter.meta.free) return true;
   if (chapter.meta.freemiumDaily) return true; // ouvert à tous, quota séparé (useDailyQuota) — pas un verrou d'accès
   if (isAdminUser(user)) return true;
-  if (isFullAccessSubscription(subscription)) return true;
+  if (isFullAccessSubscription(subscription) && subscription.admin_granted) return true;
+  if (isFullAccessSubscription(subscription) && chapter.meta.level === subscription.subscription_level) return true;
   if (isClassAccessSubscription(subscription) && chapter.meta.level === subscription.class_access_level) return true;
   if (referralBonusChapterId && chapter.meta.id === referralBonusChapterId) return true;
 
@@ -175,13 +176,14 @@ export function canAccessChapter(chapter, ctx = {}) {
 }
 
 // Le quota quotidien (Automatismes) doit sauter pour : l'admin, l'abonnement
-// complet, et le Pack Examen mais UNIQUEMENT pour le niveau qu'il a choisi
+// mensuel pour son niveau actif, et le Pack Examen mais UNIQUEMENT pour le niveau qu'il a choisi
 // (pas les Automatismes des autres niveaux, qui restent limités comme pour un
 // utilisateur gratuit).
 export function hasUnlimitedQuota(chapter, ctx = {}) {
   const { user, subscription } = ctx;
   if (isAdminUser(user)) return true;
-  if (isFullAccessSubscription(subscription)) return true;
+  if (isFullAccessSubscription(subscription) && subscription.admin_granted) return true;
+  if (isFullAccessSubscription(subscription) && subscription.subscription_level === chapter?.meta?.level) return true;
   if (isPackExamenSubscription(subscription) && subscription?.pack_examen_level === chapter?.meta?.level) return true;
   if (isClassAccessSubscription(subscription) && subscription.class_access_level === chapter?.meta?.level) return true;
   return false;

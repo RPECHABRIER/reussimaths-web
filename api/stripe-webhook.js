@@ -16,6 +16,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
+const LEVELS = new Set(["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"]);
 
 // Vercel doit recevoir le corps brut (non parsé) pour vérifier la signature Stripe.
 export const config = { api: { bodyParser: false } };
@@ -40,8 +41,9 @@ async function releaseEvent(eventId) {
 async function saveCheckoutSession(session) {
   const userId = session.client_reference_id;
   const plan = session.metadata?.plan;
+  const level = session.metadata?.level || null;
   const validShape =
-    (plan === "mensuel" && session.mode === "subscription") ||
+    (plan === "mensuel" && session.mode === "subscription" && LEVELS.has(level)) ||
     (plan === "special_examen" && session.mode === "payment");
   const paymentConfirmed = ["paid", "no_payment_required"].includes(session.payment_status);
 
@@ -56,6 +58,7 @@ async function saveCheckoutSession(session) {
     stripe_subscription_id: null,
     status: "active",
     plan,
+    ...(plan === "mensuel" ? { subscription_level: level, subscription_level_selected_at: new Date().toISOString() } : {}),
     updated_at: new Date().toISOString(),
   };
   if (session.mode === "subscription") {

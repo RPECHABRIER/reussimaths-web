@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { RotateCcw } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useDueSkillsCount } from "../hooks/useDueSkillsCount";
+import { useSubscription } from "../hooks/useProgress";
+import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 
 // ---------------------------------------------------------------------------
@@ -14,7 +16,10 @@ import { colors, fonts } from "../theme";
 // ---------------------------------------------------------------------------
 export default function ReviserCard({ className = "" }) {
   const { user } = useAuth();
-  const dueCount = useDueSkillsCount(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
+  const activeLevel = isFullAccessSubscription(subscription) && !subscription.admin_granted ? subscription.subscription_level : null;
+  const dueCount = useDueSkillsCount(user?.id, activeLevel);
 
   return (
     <Link to="/reviser" className={className}>
@@ -41,7 +46,7 @@ export default function ReviserCard({ className = "" }) {
           <p className="text-xs mt-0.5 truncate" style={{ color: colors.slate }}>
             {dueCount > 0
               ? `${dueCount} compétence${dueCount > 1 ? "s" : ""} à repasser aujourd'hui`
-              : "Répétition espacée, tous niveaux confondus"}
+              : activeLevel ? "Répétition espacée adaptée au niveau actif" : "Répétition espacée personnalisée"}
           </p>
         </div>
       </div>

@@ -160,7 +160,7 @@ export default function App() {
               ? "vue Gratuit"
               : preview.mode === "special_examen"
               ? "vue Pack Examen"
-              : "vue Abonnement complet"}
+              : "vue Abonnement mensuel — un niveau"}
           </span>
           <button
             onClick={() => {

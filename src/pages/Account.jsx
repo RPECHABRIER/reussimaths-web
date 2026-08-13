@@ -28,7 +28,7 @@ import { authenticatedFetch } from "../lib/api";
 import LoadError from "../components/LoadError";
 import { markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
 
-const TERMS_VERSION = "2026-08-09";
+const TERMS_VERSION = "2026-08-13";
 // Apple demande un compte Developer, un Services ID et un secret renouvelé
 // tous les six mois. Le bouton reste donc masqué tant que l'intégration n'est
 // pas volontairement réactivée dans les variables publiques Vercel.
@@ -70,6 +70,9 @@ export default function Account() {
   const [passwordUpdateLoading, setPasswordUpdateLoading] = useState(false);
   const [passwordUpdateMessage, setPasswordUpdateMessage] = useState(null);
   const [subscriptionRepairing, setSubscriptionRepairing] = useState(false);
+  const [monthlyLevel, setMonthlyLevel] = useState("");
+  const [levelChangeLoading, setLevelChangeLoading] = useState(false);
+  const [levelChangeMessage, setLevelChangeMessage] = useState(null);
   const subscriptionRepairAttempted = useRef(false);
 
   const admin = isAdminUser(user);
@@ -80,6 +83,9 @@ export default function Account() {
     ? LEVELS.find((l) => l.id === subscription.class_access_level)?.label ?? subscription.class_access_level
     : null;
   const packExamenNeedsChoice = packExamen && !subscription?.pack_examen_level;
+  const monthlyLevelLabel = fullAccess
+    ? LEVELS.find((level) => level.id === subscription?.subscription_level)?.label ?? null
+    : null;
   // isActive recalculé sur la subscription EFFECTIVE (donc cohérent avec une
   // préviz admin en cours) plutôt que de reprendre isActive du hook, qui
   // porte toujours sur la vraie ligne en base.
@@ -112,6 +118,10 @@ export default function Account() {
       setCheckoutError("Confirme d’abord la demande d’accès immédiat et l’acceptation des CGU.");
       return;
     }
+    if (plan === "mensuel" && !monthlyLevel) {
+      setCheckoutError("Choisis d’abord le niveau scolaire de l’élève.");
+      return;
+    }
     setCheckoutLoading(true);
     setCheckoutError(null);
     try {
@@ -120,7 +130,7 @@ export default function Account() {
       const res = await authenticatedFetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, purchaseAttemptId, termsVersion: TERMS_VERSION, immediateAccessAccepted: true }),
+        body: JSON.stringify({ plan, level: plan === "mensuel" ? monthlyLevel : undefined, purchaseAttemptId, termsVersion: TERMS_VERSION, immediateAccessAccepted: true }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Impossible d'ouvrir le paiement.");
@@ -129,6 +139,24 @@ export default function Account() {
       setCheckoutError(err.message);
     } finally {
       setCheckoutLoading(false);
+    }
+  };
+
+  const handleMonthlyLevelChange = async (event) => {
+    const nextLevel = event.target.value;
+    if (!nextLevel || nextLevel === subscription?.subscription_level) return;
+    setLevelChangeLoading(true);
+    setLevelChangeMessage(null);
+    try {
+      const { error } = await supabase.rpc("change_monthly_subscription_level", { p_level: nextLevel });
+      if (error) throw error;
+      await reloadSubscription();
+      setLevelChangeMessage({ type: "success", text: "Le niveau actif a bien été modifié." });
+    } catch (error) {
+      const limited = /30 jours/i.test(error?.message ?? "");
+      setLevelChangeMessage({ type: "error", text: limited ? "Le niveau ne peut être changé qu’une fois tous les 30 jours après la période de correction initiale." : "Impossible de modifier le niveau pour le moment." });
+    } finally {
+      setLevelChangeLoading(false);
     }
   };
 
@@ -341,13 +369,13 @@ export default function Account() {
           <section className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Accès complet</p>
+                <p className="text-xs uppercase tracking-widest font-bold" style={{ color: colors.gold }}>Un niveau complet</p>
                 <p className="text-3xl font-black mt-1" style={{ color: colors.ink }}>4,99 € <span className="text-sm font-semibold" style={{ color: colors.slate }}>/ mois</span></p>
               </div>
               <Mascot size={62} />
             </div>
             <div className="flex flex-col gap-2.5 mt-5">
-              {["Tous les niveaux, de la 6e à la Terminale", "Entraînement et corrections détaillées illimités", "Révisions espacées et bilan hebdomadaire", "Résiliation à tout moment depuis le compte"].map((feature) => (
+              {["Un niveau scolaire choisi pour chaque élève", "Entraînement et corrections détaillées illimités", "Révisions espacées et bilan hebdomadaire", "Résiliation à tout moment depuis le compte"].map((feature) => (
                 <p key={feature} className="flex items-start gap-2 text-sm" style={{ color: colors.ink }}><Check size={16} color={colors.green} className="shrink-0 mt-0.5" />{feature}</p>
               ))}
             </div>
@@ -392,7 +420,7 @@ export default function Account() {
             {profile?.pseudo ?? "Connecté"}
           </p>
           <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading || subscriptionRepairing ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""})` : "aucun"}
+            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading || subscriptionRepairing ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""}${monthlyLevelLabel ? ` · ${monthlyLevelLabel}` : ""})` : "aucun"}
           </p>
 
           {subscriptionError && (
@@ -437,6 +465,13 @@ export default function Account() {
 
           {fullAccess && !admin && subscription?.plan === "mensuel" && subscription?.current_period_end && (
             <div className="rounded-2xl p-4 text-left" style={{ backgroundColor: colors.bg }}>
+              <label className="text-xs font-semibold" style={{ color: colors.ink }} htmlFor="active-monthly-level">Niveau actif</label>
+              <select id="active-monthly-level" value={subscription.subscription_level ?? ""} onChange={handleMonthlyLevelChange} disabled={levelChangeLoading} className="mt-1 mb-2 w-full rounded-xl px-3 py-2 text-sm" style={{ color: colors.ink, backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
+                {!subscription.subscription_level && <option value="">Choisir un niveau</option>}
+                {LEVELS.map((level) => <option key={level.id} value={level.id}>{level.label}</option>)}
+              </select>
+              <p className="text-[11px] mb-3" style={{ color: colors.slate }}>Correction libre pendant 24 h après le choix initial, puis un changement possible tous les 30 jours. Les progrès déjà réalisés restent conservés.</p>
+              {levelChangeMessage && <p className="text-xs mb-3" style={{ color: levelChangeMessage.type === "error" ? colors.red : colors.green }}>{levelChangeMessage.text}</p>}
               {!subscription.cancel_at_period_end ? (
                 <>
                   <p className="text-xs" style={{ color: colors.slate }}>
@@ -527,7 +562,7 @@ export default function Account() {
                   ))}
                 </ul>
                 <p className="text-xs mt-2" style={{ color: colors.slate }}>
-                  Ton choix est définitif : abonne-toi en complet pour débloquer tous les niveaux.
+                  Ton choix est définitif pour ce Pack Examen.
                 </p>
               </div>
             );
@@ -628,17 +663,17 @@ export default function Account() {
             <div className="flex flex-col gap-4 -mx-6 px-6 pt-2" style={{ borderTop: `1px solid ${colors.hairline}` }}>
               <div>
                 <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.15rem", fontWeight: 800 }}>
-                  Débloque tout RéussiMaths
+                  Débloque le niveau de l’élève
                 </p>
                 <p className="text-xs mt-1" style={{ color: colors.slate }}>
-                  Tous les chapitres, tous les niveaux, corrections détaillées illimitées.
+                  Tous les chapitres d’un niveau choisi, avec corrections détaillées illimitées.
                 </p>
               </div>
 
               <div className="flex items-center justify-center gap-3">
                 {[
                   { label: "exercices", value: "Illimités" },
-                  { label: "niveaux", value: "6e → Tale" },
+                  { label: "niveau", value: "Au choix" },
                   { label: "programme", value: "2026" },
                 ].map((s, i) => (
                   <div key={s.label} className="flex items-center gap-3">
@@ -664,7 +699,7 @@ export default function Account() {
                 </span>
                 <div className="flex items-baseline justify-between mt-1">
                   <p className="text-sm font-bold" style={{ color: colors.ink }}>
-                    Accès complet
+                    Un niveau complet
                   </p>
                   <p className="text-base font-bold" style={{ color: colors.ink }}>
                     4,99 € <span className="text-xs font-medium" style={{ color: colors.slate }}>/mois</span>
@@ -672,7 +707,7 @@ export default function Account() {
                 </div>
                 <div className="flex flex-col gap-1 mt-2">
                   {[
-                    "Tous les niveaux, tous les chapitres",
+                    "Tous les chapitres du niveau choisi",
                     "Bilan hebdomadaire pour suivre les progrès",
                     "Résiliable en un clic, sans engagement",
                   ].map((f) => (
@@ -684,16 +719,25 @@ export default function Account() {
                 </div>
               </div>
 
+              <label className="rounded-2xl p-3.5 text-left flex flex-col gap-2" style={{ backgroundColor: colors.bg, border: `1px solid ${monthlyLevel ? colors.gold : colors.hairline}` }}>
+                <span className="text-xs font-bold" style={{ color: colors.ink }}>Niveau scolaire de l’élève</span>
+                <select value={monthlyLevel} onChange={(event) => { setMonthlyLevel(event.target.value); setCheckoutError(null); }} className="rounded-xl px-3 py-2.5 text-sm" style={{ color: colors.ink, backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
+                  <option value="">Choisir le niveau</option>
+                  {LEVELS.map((level) => <option key={level.id} value={level.id}>{level.label}</option>)}
+                </select>
+                <span className="text-[11px]" style={{ color: colors.slate }}>Ce niveau organise les exercices, les révisions et le bilan de progression de ce compte élève.</span>
+              </label>
+
               <label className="rounded-2xl p-3.5 text-left flex items-start gap-3 cursor-pointer" style={{ backgroundColor: colors.bg, border: `1px solid ${acceptImmediateAccess ? colors.gold : colors.hairline}` }}>
                 <input type="checkbox" checked={acceptImmediateAccess} onChange={(event) => { setAcceptImmediateAccess(event.target.checked); setCheckoutError(null); }} className="mt-0.5 shrink-0" style={{ minHeight: 0, accentColor: colors.gold }} />
                 <span className="text-[11px] leading-relaxed" style={{ color: colors.slate }}>Je demande l’accès immédiat au contenu numérique et reconnais qu’une fois cet accès commencé, je renonce à mon droit de rétractation. J’accepte les <Link to="/cgu" className="underline font-semibold" style={{ color: colors.ink }}>CGU/CGV</Link>.</span>
               </label>
 
               <button
-                disabled={checkoutLoading || !acceptImmediateAccess}
+                disabled={checkoutLoading || !acceptImmediateAccess || !monthlyLevel}
                 onClick={() => startCheckout("mensuel")}
                 className="py-3 rounded-full font-bold"
-                style={{ backgroundColor: colors.gold, color: colors.ink, opacity: acceptImmediateAccess ? 1 : 0.5 }}
+                style={{ backgroundColor: colors.gold, color: colors.ink, opacity: acceptImmediateAccess && monthlyLevel ? 1 : 0.5 }}
               >
                 {checkoutLoading ? "Ouverture du paiement…" : "S'abonner avec obligation de paiement — 4,99 €/mois"}
               </button>

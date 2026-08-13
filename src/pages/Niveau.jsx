@@ -8,7 +8,7 @@ import { getParcoursForLevel } from "../parcours";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useReferralBonus } from "../hooks/useReferralBonus";
-import { canAccessChapter, getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
+import { canAccessChapter, getEffectiveSubscription, isFullAccessSubscription, isAdminUser } from "../lib/access";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import ComingSoon from "./ComingSoon";
 import { setPreferredLevel } from "../lib/preferences";
@@ -75,7 +75,7 @@ export default function Niveau() {
 
         {parcoursList.length > 0 && (
           <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto mb-8">
-          {isFullAccessSubscription(subscription)&&<Link to={`/calcul-mental/${levelId}`} className="sm:col-span-2 block"><div className="rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}35`,boxShadow:shadow.soft}}><div className="flex items-center justify-center rounded-2xl" style={{width:44,height:44,backgroundColor:colors.card}}><Brain size={21} color={colors.green}/></div><div className="flex-1"><p className="font-black" style={{color:colors.ink}}>Ton calcul mental du jour</p><p className="text-xs mt-0.5" style={{color:colors.slate}}>10 questions · 18 secondes chacune · quatre opérations et pourcentages</p></div><ArrowRight size={18} color={colors.green}/></div></Link>}
+          {(isAdminUser(user) || (isFullAccessSubscription(subscription) && (subscription.admin_granted || subscription.subscription_level === levelId)))&&<Link to={`/calcul-mental/${levelId}`} className="sm:col-span-2 block"><div className="rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}35`,boxShadow:shadow.soft}}><div className="flex items-center justify-center rounded-2xl" style={{width:44,height:44,backgroundColor:colors.card}}><Brain size={21} color={colors.green}/></div><div className="flex-1"><p className="font-black" style={{color:colors.ink}}>Ton calcul mental du jour</p><p className="text-xs mt-0.5" style={{color:colors.slate}}>10 questions · 18 secondes chacune · quatre opérations et pourcentages</p></div><ArrowRight size={18} color={colors.green}/></div></Link>}
           <Link to={`/parcours/niveau/${levelId}`} className="block">
             <div
               className="h-full rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1 active:scale-[0.98]"

@@ -4,11 +4,13 @@ import { requireSupabaseUser } from "./_auth.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
+const LEVELS = new Set(["sixieme", "cinquieme", "quatrieme", "troisieme", "seconde", "premiere-spe", "premiere-non-spe", "premiere-techno", "terminale-spe", "terminale-techno"]);
 
 async function syncPaidSession(session, user) {
   if (session.client_reference_id !== user.id) throw Object.assign(new Error("Accès refusé"), { statusCode: 403 });
   const plan = session.metadata?.plan;
-  const validShape = (plan === "mensuel" && session.mode === "subscription") || (plan === "special_examen" && session.mode === "payment");
+  const level = session.metadata?.level || null;
+  const validShape = (plan === "mensuel" && session.mode === "subscription" && LEVELS.has(level)) || (plan === "special_examen" && session.mode === "payment");
   if (!validShape || !["paid", "no_payment_required"].includes(session.payment_status)) return null;
 
   const row = {
@@ -17,6 +19,7 @@ async function syncPaidSession(session, user) {
     stripe_subscription_id: null,
     status: "active",
     plan,
+    ...(plan === "mensuel" ? { subscription_level: level, subscription_level_selected_at: new Date(session.created * 1000).toISOString() } : {}),
     updated_at: new Date().toISOString(),
     cancel_at_period_end: false,
   };

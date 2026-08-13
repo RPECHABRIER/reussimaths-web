@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, RotateCcw, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSkillTracking } from "../hooks/useSkillTracking";
+import { useSubscription } from "../hooks/useProgress";
+import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -20,6 +22,9 @@ import { LEARNING_ERROR_LABELS } from "../lib/learningError";
 // ---------------------------------------------------------------------------
 export default function Reviser() {
   const { user } = useAuth();
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
+  const activeLevel = isFullAccessSubscription(subscription) && !subscription.admin_granted ? subscription.subscription_level : null;
   const { getDueSkills, getRecurringErrors } = useSkillTracking(user?.id);
   const [dueSkills, setDueSkills] = useState(null); // null = chargement
   const [recurringErrors, setRecurringErrors] = useState([]);
@@ -44,8 +49,10 @@ export default function Reviser() {
           const current = bySkill.get(key);
           if (!current || item.count > current.count) bySkill.set(key, item);
         }
-        setRecurringErrors(recurring);
-        setDueSkills([...rows].sort((a, b) => {
+        const levelRows = activeLevel ? rows.filter((row) => getChapter(row.chapter_id)?.meta?.level === activeLevel) : rows;
+        const levelRecurring = activeLevel ? recurring.filter((row) => getChapter(row.chapter_id)?.meta?.level === activeLevel) : recurring;
+        setRecurringErrors(levelRecurring);
+        setDueSkills([...levelRows].sort((a, b) => {
           const aCount = bySkill.get(`${a.chapter_id}\u0000${a.skill_id}`)?.count ?? 0;
           const bCount = bySkill.get(`${b.chapter_id}\u0000${b.skill_id}`)?.count ?? 0;
           return bCount - aCount || new Date(a.next_review_at) - new Date(b.next_review_at);
@@ -61,7 +68,7 @@ export default function Reviser() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, retryNonce]);
+  }, [user?.id, retryNonce, activeLevel]);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -83,7 +90,7 @@ export default function Reviser() {
             Réviser
           </h1>
           <p className="text-sm mt-2" style={{ color: slate }}>
-            Les compétences à repasser aujourd'hui, tous niveaux confondus — au bon moment pour les ancrer durablement.
+            Les compétences à repasser aujourd'hui{activeLevel ? " dans ton niveau actif" : ""} — au bon moment pour les ancrer durablement.
           </p>
         </div>
 

@@ -248,7 +248,7 @@ export default function CycleSelect() {
             <div>
               <p className="text-sm font-bold" style={{ color: colors.gold }}>Accès complet</p>
               <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Tout RéussiMaths pour 4,99 €/mois</p>
-              <p className="text-sm mt-1" style={{ color: colors.slate }}>Tous les niveaux, entraînement illimité et bilan de progression. Sans engagement.</p>
+              <p className="text-sm mt-1" style={{ color: colors.slate }}>Un niveau au choix, entraînement illimité et bilan de progression. Sans engagement.</p>
             </div>
             <Link to="/compte" className="inline-flex items-center gap-2 py-3 px-5 rounded-full font-bold text-sm shrink-0"
               style={{ backgroundColor: colors.ink, color: colors.bg }}>

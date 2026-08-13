@@ -34,7 +34,7 @@ export function buildDailyMentalSummary(rows = []) {
   return { current, previous, trend, days: currentDates.map((date) => ({ date, score: bestByDate.get(date) ?? null })) };
 }
 
-export function useDailyMentalSummary(userId) {
+export function useDailyMentalSummary(userId, levelId = null) {
   const [state, setState] = useState({ loading: Boolean(userId), summary: null, error: null });
   useEffect(() => {
     if (!userId) { setState({ loading: false, summary: null, error: null }); return undefined; }
@@ -43,9 +43,10 @@ export function useDailyMentalSummary(userId) {
     supabase.from("daily_mental_sessions").select("session_date, level_id, score, total, attempts").eq("user_id", userId).gte("session_date", recentDates(14)[0]).order("session_date", { ascending: false }).then(({ data, error }) => {
       if (cancelled) return;
       if (error) { console.error("[useDailyMentalSummary] daily_mental_sessions error:", error.message); setState({ loading: false, summary: null, error }); return; }
-      setState({ loading: false, summary: buildDailyMentalSummary(data ?? []), error: null });
+      const rows = levelId ? (data ?? []).filter((row) => row.level_id === levelId) : (data ?? []);
+      setState({ loading: false, summary: buildDailyMentalSummary(rows), error: null });
     });
     return () => { cancelled = true; };
-  }, [userId]);
+  }, [userId, levelId]);
   return state;
 }

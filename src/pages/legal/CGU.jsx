@@ -30,12 +30,13 @@ export default function CGU() {
       <h2>3. Abonnements et paiement</h2>
       <p>Deux formules sont proposées à ce jour :</p>
       <ul>
-        <li>un abonnement mensuel à 4,99 € TTC, reconductible automatiquement, résiliable à tout moment depuis l'espace « Mon compte » ;</li>
+        <li>un abonnement mensuel à 4,99 € TTC donnant accès à un niveau scolaire choisi, reconductible automatiquement et résiliable à tout moment depuis l'espace « Mon compte » ;</li>
         <li>
           une offre ponctuelle (« Pack Examen », 3 mois d'accès pour un niveau) à 9 € TTC : paiement unique, non reconductible, qui n'est
           jamais débité à nouveau automatiquement.
         </li>
       </ul>
+      <p>Un compte est destiné au suivi d'un seul élève. Le niveau associé à l'abonnement mensuel peut être corrigé librement pendant les 24 heures suivant le choix initial, puis modifié au maximum une fois tous les 30 jours. Une modification de niveau ne supprime pas l'historique de progression déjà enregistré.</p>
       <p>
         Les paiements sont traités par Stripe, prestataire de paiement tiers. RéussiMaths n'a à aucun moment accès
         aux coordonnées bancaires complètes de l'utilisateur. Les tarifs sont indiqués toutes taxes comprises le cas

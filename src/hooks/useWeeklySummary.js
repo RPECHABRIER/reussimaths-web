@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { getChapter } from "../chapters/registry";
 
 function isoDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -25,7 +26,7 @@ function lastNDays(count) {
 //   - skill_mastery (quelles compétences ont été travaillées cette semaine,
 //     et lesquelles sont le plus fragiles pour la liste de priorités)
 // ---------------------------------------------------------------------------
-export function useWeeklySummary(userId) {
+export function useWeeklySummary(userId, levelId = null) {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
@@ -94,7 +95,9 @@ export function useWeeklySummary(userId) {
       const previousCorrect = previousDayRows.reduce((s, d) => s + d.correct, 0);
       const previousSuccessRate = previousAttempts > 0 ? Math.round((previousCorrect / previousAttempts) * 100) : null;
 
-      const skillsWorked = skillsRes.data ?? [];
+      const skillsWorked = (skillsRes.data ?? []).filter(
+        (skill) => !levelId || getChapter(skill.chapter_id)?.meta?.level === levelId
+      );
       // Priorités pour la semaine suivante : parmi les compétences
       // travaillées cette semaine, celles dont le taux de réussite cumulé
       // est le plus faible (au moins 2 tentatives pour éviter de pointer une
@@ -134,7 +137,7 @@ export function useWeeklySummary(userId) {
     return () => {
       cancelled = true;
     };
-  }, [userId, retryNonce]);
+  }, [userId, levelId, retryNonce]);
 
   return { loading, summary, error, reload: () => setRetryNonce((value) => value + 1) };
 }

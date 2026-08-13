@@ -15,7 +15,7 @@
 
 - Configurer le portail client Stripe et autoriser l'historique des factures ainsi que la mise à jour du moyen de paiement.
 - Vérifier les prix : 4,99 EUR mensuel récurrent et 9 EUR en paiement unique.
-- Souscrire au mensuel : le retour doit afficher « Activation en cours », puis « Accès activé » sans second paiement.
+- Souscrire au mensuel après avoir choisi un niveau : le retour doit afficher « Activation en cours », puis « Accès activé » sans second paiement ; les autres niveaux restent verrouillés.
 - Rouvrir Checkout avec le même compte actif : l'API doit refuser le doublon.
 - Ouvrir « Factures et moyen de paiement », puis revenir sur `/compte`.
 - Résilier : l'accès doit rester actif jusqu'à la fin de période.

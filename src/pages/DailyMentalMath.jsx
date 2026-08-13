@@ -6,7 +6,7 @@ import { useSubscription } from "../hooks/useProgress";
 import { useDailyStreak } from "../hooks/useDailyStreak";
 import { useSkillTracking } from "../hooks/useSkillTracking";
 import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
-import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
+import { getEffectiveSubscription, isAdminUser, isFullAccessSubscription } from "../lib/access";
 import { buildDailyMentalQuestions, localDateKey, recommendedAdjustment } from "../lib/dailyMentalMath";
 import { parseNumericInput } from "../lib/answerMatch";
 import { supabase } from "../lib/supabaseClient";
@@ -23,7 +23,7 @@ export default function DailyMentalMath() {
   const skillTracking = useSkillTracking(user?.id);
   const { subscription: raw, loading } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, raw);
-  const allowed = isFullAccessSubscription(subscription);
+  const allowed = isAdminUser(user) || (isFullAccessSubscription(subscription) && (subscription?.admin_granted || subscription?.subscription_level === levelId));
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const goalKey = `reussimaths_mental_goal_${user?.id ?? "anonymous"}_${levelId}`;

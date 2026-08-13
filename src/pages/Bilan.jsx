@@ -4,6 +4,8 @@ import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { useLearningReviews } from "../hooks/useLearningReviews";
 import { useDailyMentalSummary } from "../hooks/useDailyMentalSummary";
+import { useSubscription } from "../hooks/useProgress";
+import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -75,9 +77,13 @@ function parentSummary(summary) {
 
 export default function Bilan() {
   const { user } = useAuth();
-  const { loading, summary, error, reload } = useWeeklySummary(user?.id);
+  const { subscription: rawSubscription } = useSubscription(user?.id);
+  const subscription = getEffectiveSubscription(user, rawSubscription);
+  const activeLevel = isFullAccessSubscription(subscription) && !subscription?.admin_granted ? subscription?.subscription_level : null;
+  const activeLevelLabel = activeLevel ? getLevel(activeLevel)?.label ?? activeLevel : null;
+  const { loading, summary, error, reload } = useWeeklySummary(user?.id, activeLevel);
   const learningReviews = useLearningReviews(user?.id);
-  const mentalMath = useDailyMentalSummary(user?.id);
+  const mentalMath = useDailyMentalSummary(user?.id, activeLevel);
 
   const ink = colors.ink;
   const paper = colors.bg;
@@ -101,6 +107,7 @@ export default function Bilan() {
           <p className="text-sm mt-2" style={{ color: slate }}>
             Un bilan clair à regarder ensemble : travail effectué, acquis et prochaine étape.
           </p>
+          {activeLevelLabel && <p className="mt-2 text-xs font-bold" style={{ color: colors.green }}>Abonnement {activeLevelLabel} · bilan centré sur ce niveau</p>}
           {summary?.days?.length > 0 && <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold" style={{color:gold}}><CalendarDays size={14}/>{formatWeekRange(summary.days)}</p>}
           <div className="print-hide mt-4">
             <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold" style={{backgroundColor:colors.card,color:ink,boxShadow:shadow.soft}}><Printer size={14}/> Imprimer ou enregistrer en PDF</button>

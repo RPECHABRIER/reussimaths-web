@@ -41,12 +41,14 @@ test("le parcours découverte rend ses bénéfices immédiatement visibles", asy
 test("les quatre états d’accès restent nettement séparés", () => {
   const paidChapter = { meta: { id: "chapitre-payant", level: "troisieme", free: false } };
   const future = new Date(Date.now() + 86_400_000).toISOString();
-  const monthly = { plan: "mensuel", status: "active", current_period_end: future };
+  const monthly = { plan: "mensuel", status: "active", current_period_end: future, subscription_level: "troisieme" };
+  const otherLevelChapter = { meta: { id: "autre-niveau", level: "seconde", free: false } };
   const exam = { plan: "special_examen", status: "active", current_period_end: future, pack_examen_level: "troisieme", pack_examen_bonus_chapters: ["chapitre-payant"] };
   const classAccess = { class_access_level: "troisieme", class_access_expires_at: future };
   assert.equal(canAccessChapter(paidChapter, {}), false);
   assert.equal(isFullAccessSubscription(monthly), true);
   assert.equal(canAccessChapter(paidChapter, { subscription: monthly }), true);
+  assert.equal(canAccessChapter(otherLevelChapter, { subscription: monthly }), false);
   assert.equal(isPackExamenSubscription(exam), true);
   assert.equal(canAccessChapter(paidChapter, { subscription: exam }), true);
   assert.equal(isClassAccessSubscription(classAccess), true);

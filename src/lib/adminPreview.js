@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Mode "prévisualisation" admin (voir src/pages/AdminPreview.jsx, route
 // /admin) : permet à l'admin (romainpechabrier@gmail.com) de voir l'app
-// comme un compte gratuit / Pack Examen / abonnement complet, SANS créer de
+// comme un compte gratuit / Pack Examen / abonnement mensuel ciblé, SANS créer de
 // vrais comptes de test (la connexion se fait uniquement via Google/Apple,
 // impossible de se connecter à la place de quelqu'un). Purement une
 // simulation côté client, stockée en localStorage — ne touche JAMAIS aux
@@ -19,7 +19,8 @@ const STORAGE_KEY = "reussimaths_admin_preview";
 // preview = null (vue réelle) ou :
 // { mode: "gratuit" | "special_examen" | "mensuel",
 //   packExamenLevel?: string,
-//   packExamenBonusChapters?: string[] }
+//   packExamenBonusChapters?: string[],
+//   subscriptionLevel?: string }
 export function getAdminPreview() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

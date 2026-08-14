@@ -20,6 +20,7 @@ import { CYCLES } from "../levels";
 import Mascot from "../components/Mascot";
 import TodayPlan from "../components/TodayPlan";
 import HomeLearningDemo from "../components/HomeLearningDemo";
+import HomeTestimonials from "../components/HomeTestimonials";
 import { useAuth } from "../hooks/useAuth";
 import { useDailyStreak } from "../hooks/useDailyStreak";
 import { useDueSkillsCount } from "../hooks/useDueSkillsCount";
@@ -198,6 +199,8 @@ export default function CycleSelect() {
           )}
 
           <HomeLearningDemo />
+
+          <HomeTestimonials />
 
           <section className="mt-16 sm:mt-24">
             <div className="text-center max-w-2xl mx-auto">

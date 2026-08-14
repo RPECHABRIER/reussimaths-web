@@ -801,6 +801,20 @@ test("la page publique fait essayer une correction avant l’inscription", async
   assert.match(demo, /Faire mon diagnostic gratuit/);
 });
 
+test("les témoignages publics restent réels, autorisés et masqués tant qu’ils sont absents", async () => {
+  const [home, component, data] = await Promise.all([
+    read("./pages/CycleSelect.jsx"),
+    read("./components/HomeTestimonials.jsx"),
+    read("./data/testimonials.js"),
+  ]);
+  assert.match(home, /<HomeTestimonials/);
+  assert.match(component, /testimonials\.length === 0\) return null/);
+  assert.match(component, /publiés avec leur accord/);
+  assert.match(component, /Aucun témoignage n’est publié sans validation/);
+  assert.match(data, /HOME_TESTIMONIALS = \[\]/);
+  assert.match(data, /Ne jamais ajouter de texte reconstitué/);
+});
+
 test("la fin de séance rend le progrès visible et partageable aux parents", async () => {
   const [runner, celebration] = await Promise.all([
     read("./components/ChapterRunner.jsx"),

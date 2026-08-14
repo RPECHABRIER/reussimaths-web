@@ -114,6 +114,15 @@ test("l’image de 4 suit la machine 3x moins 2 sans confusion avec un antécéd
   assert.match(visual, /4 est à l’entrée de la machine/);
 });
 
+test("l’augmentation de 20 % relie pourcentages et montants en euros", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="percentage-change-values"/);
+  assert.match(visual, /100 %/);
+  assert.match(visual, /= \{String\(initialPrice\)/);
+  assert.match(visual, /= \+\{String\(increase\)/);
+  assert.match(visual, /= \{String\(finalPrice\)/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

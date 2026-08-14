@@ -196,15 +196,22 @@ export default function FeedbackVisual({ family, exercise }) {
     return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Passer de l’écriture décimale au pourcentage</p><div className="mt-3 flex items-center justify-center gap-2 text-xs font-black" style={{color:colors.ink}}><span className="rounded-xl px-3 py-2" style={{background:`${colors.ink}0d`}}>0,20</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-xl px-3 py-2 animate-pulse" style={{background:`${colors.gold}30`}}>× 100</span><ArrowRight size={16} color={colors.gold}/><span className="rounded-xl px-3 py-2" style={{background:`${colors.green}18`}}>20 %</span></div></div>;
   }
   if (["percentage_change", "percentage_coefficient"].includes(family)) {
+    const prompt = `${exercise?.prompt ?? ""}`;
+    const priceMatch = prompt.match(/(\d+(?:[,.]\d+)?)\s*€/);
+    const rateMatch = prompt.match(/(\d+(?:[,.]\d+)?)\s*%/);
+    const initialPrice = priceMatch ? Number(priceMatch[1].replace(",", ".")) : null;
+    const rate = rateMatch ? Number(rateMatch[1].replace(",", ".")) : 20;
+    const increase = initialPrice == null ? null : initialPrice * rate / 100;
+    const finalPrice = initialPrice == null ? null : initialPrice + increase;
     return (
-      <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" style={{ border: `1px solid ${colors.gold}35` }}>
+      <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" data-visual="percentage-change-values" style={{ border: `1px solid ${colors.gold}35` }}>
         <p className="text-xs font-bold" style={{ color: colors.ink }}>Voir l’augmentation</p>
         <div className="mt-3 flex items-center gap-2 text-[11px] font-bold" style={{ color: colors.ink }}>
-          <div className="h-8 rounded-lg flex items-center justify-center" style={{ width: "64%", background: `${colors.ink}18` }}>100 %</div>
-          <div className="h-8 rounded-lg flex items-center justify-center animate-pulse" style={{ width: "22%", background: `${colors.gold}55` }}>+ 20 %</div>
+          <div className="flex h-10 items-center justify-center rounded-lg text-center" style={{ width: "64%", background: `${colors.ink}18` }}>100 %{initialPrice != null&&<span className="ml-1">= {String(initialPrice).replace(".",",")} €</span>}</div>
+          <div className="flex h-10 items-center justify-center rounded-lg text-center animate-pulse" style={{ width: "25%", background: `${colors.gold}55` }}>+ {rate} %{increase != null&&<span className="ml-1">= +{String(increase).replace(".",",")} €</span>}</div>
         </div>
         <div className="flex justify-center my-1"><ArrowDown size={15} color={colors.gold} /></div>
-        <div className="h-9 w-full rounded-lg flex items-center justify-center text-xs font-black" style={{ background: `${colors.green}18`, color: colors.green }}>120 % de la valeur initiale</div>
+        <div className="flex h-10 w-full items-center justify-center rounded-lg text-xs font-black" style={{ background: `${colors.green}18`, color: colors.green }}>{100+rate} % de la valeur initiale{finalPrice != null&&<span className="ml-1">= {String(finalPrice).replace(".",",")} €</span>}</div><p className="mt-2 text-center text-[11px] font-bold" style={{color:colors.slate}}>{initialPrice != null?`${initialPrice} € + ${increase} € = ${finalPrice} €`:`Le coefficient multiplicateur vaut ${String(1+rate/100).replace(".",",")}.`}</p>
       </div>
     );
   }

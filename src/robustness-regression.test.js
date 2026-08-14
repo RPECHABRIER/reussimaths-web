@@ -718,6 +718,19 @@ test("une question proche de vitrine ne repart jamais sur une notion étrangère
   const runner = await read("./components/ChapterRunner.jsx");
   assert.match(runner, /currentExercise\?\.similarExercise \?\? currentExercise/);
   assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
+  assert.match(runner, /exercisePromptTemplate\(candidate\.prompt\) === template/);
+  assert.match(runner, /candidate\.prompt !== currentExercise\?\.prompt/);
+});
+
+test("chaque vitrine de 5e propose le même exercice avec de nouveaux nombres", () => {
+  const exercises = getDiscoveryShowcase("cinquieme").showcaseExercises;
+  assert.equal(exercises.length, 5);
+  for (const exercise of exercises) {
+    assert.ok(exercise.similarExercise, `${exercise.chapter} doit avoir une variante proche`);
+    assert.equal(exercise.similarExercise.chapter, exercise.chapter);
+    assert.notEqual(exercise.similarExercise.prompt, exercise.prompt);
+    assert.equal(exercise.similarExercise.type, exercise.type);
+  }
 });
 
 test("le bilan admin reprend le niveau réellement ouvert pendant la prévisualisation", async () => {

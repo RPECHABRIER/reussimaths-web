@@ -103,6 +103,43 @@ function generateMatchingSkill(chapter, difficulty, skillLabel) {
   return chapter.generate(difficulty);
 }
 
+// Deux énoncés ont le même modèle lorsque seuls leurs nombres changent.
+// On neutralise aussi les nombres écrits en LaTeX, les décimaux français,
+// les signes et les exposants, puis on compare le texte restant. Cette règle
+// évite qu'un bouton « question très proche » change de méthode au sein d'une
+// compétence large (par exemple passer d'un retour à l'unité à un produit en
+function exercisePromptTemplate(prompt = "") {
+  return String(prompt)
+    .normalize("NFKC")
+    .replace(/\\[([]|\\[)\]]/g, " ")
+    .replace(/[−–—+]?\s*\d+(?:[.,]\d+)?/g, " # ")
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, "#")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLocaleLowerCase("fr");
+}
+
+function generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise) {
+  const template = exercisePromptTemplate(currentExercise?.prompt);
+  let fallback = null;
+
+  for (let i = 0; i < 40; i++) {
+    const candidate = chapter.generate(difficulty);
+    if (candidate.chapter !== currentExercise?.chapter) continue;
+    fallback ??= candidate;
+    if (
+      candidate.prompt !== currentExercise?.prompt
+      && exercisePromptTemplate(candidate.prompt) === template
+    ) return candidate;
+  }
+
+  // Si le générateur ne sait pas fabriquer une nouvelle occurrence du même
+  // modèle, refaire exactement la question vaut mieux que changer de méthode.
+  return fallback && exercisePromptTemplate(fallback.prompt) === template
+    ? fallback
+    : currentExercise;
+}
+
 function generateExercise(chapter, difficulty, index = 0) {
   if (Array.isArray(chapter.showcaseExercises) && chapter.showcaseExercises.length > 0) {
     return chapter.showcaseExercises[index % chapter.showcaseExercises.length];
@@ -119,7 +156,7 @@ function generateSimilarExercise(chapter, difficulty, currentExercise) {
   if (Array.isArray(chapter.showcaseExercises)) {
     return currentExercise?.similarExercise ?? currentExercise;
   }
-  return generateMatchingSkill(chapter, difficulty, currentExercise?.chapter);
+  return generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise);
 }
 
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError }) {

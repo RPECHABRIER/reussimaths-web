@@ -41,7 +41,7 @@ const SHOWCASES = {
       { type: "regle", text: "Le numérateur, le nombre du haut, indique combien de parts sont prises." },
       { type: "calcul", text: "Trois parts sont coloriées parmi les quatre parts égales : la fraction est donc 3/4." },
       { type: "resultat", text: "La partie coloriée représente 3/4 de l’unité." },
-    ], null, "3/4"),
+  ], null, "3/4"),
     {
       ...n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
       { type: "donnee", text: "Quatre cahiers identiques coûtent 10 € et on cherche le prix de six cahiers." },
@@ -70,36 +70,76 @@ const SHOWCASES = {
     ]),
   ],
   cinquieme: [
-    n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, [
+    {
+      ...n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, [
       { type: "donnee", text: "On additionne deux nombres de signes opposés : −7 est négatif et 12 est positif." },
       { type: "regle", text: "Le plus « fort », celui qui a la plus grande distance à zéro, donne son signe au résultat, mais il perd les points de l’autre nombre." },
       { type: "calcul", text: "Douze est plus éloigné de zéro que sept : le résultat sera positif. Il perd ensuite 7 points de vie, donc 12 − 7 = 5." },
       { type: "resultat", text: "Ainsi, −7 + 12 = 5." },
-    ]),
-    n("Fractions — Addition", "Calcule : 2/3 + 1/4.", 11/12, [
+      ]),
+      similarExercise: n("Nombres relatifs — Addition de signes opposés", "Calcule : −9 + 14.", 5, [
+        { type: "donnee", text: "On additionne deux nombres de signes opposés : −9 est négatif et 14 est positif." },
+        { type: "regle", text: "Le plus « fort », celui qui a la plus grande distance à zéro, donne son signe au résultat, mais il perd les points de l’autre nombre." },
+        { type: "calcul", text: "Quatorze est plus éloigné de zéro que neuf : le résultat sera positif. Il perd ensuite 9 points de vie, donc 14 − 9 = 5." },
+        { type: "resultat", text: "Ainsi, −9 + 14 = 5." },
+      ]),
+    },
+    {
+      ...n("Fractions — Addition", "Calcule : 2/3 + 1/4.", 11/12, [
       { type: "donnee", text: "Les deux fractions n’ont pas le même dénominateur : les parts n’ont donc pas encore la même taille." },
       { type: "regle", text: "On commence par obtenir un dénominateur commun en multipliant en haut et en bas par un même nombre, ce qui ne change pas la valeur de la fraction." },
       { type: "calcul", text: "On transforme 2/3 en 8/12 en multipliant par 4, et 1/4 en 3/12 en multipliant par 3. On peut alors additionner les numérateurs : 8 + 3 = 11." },
       { type: "resultat", text: "On obtient donc 2/3 + 1/4 = 11/12." },
-    ], null, "11/12"),
-    n("Pourcentages — Calculer une proportion", "Calcule 20 % de 80.", 16, [
+      ], null, "11/12"),
+      similarExercise: n("Fractions — Addition", "Calcule : 3/4 + 1/6.", 11/12, [
+        { type: "donnee", text: "Les deux fractions n’ont pas le même dénominateur : les parts n’ont donc pas encore la même taille." },
+        { type: "regle", text: "On commence par obtenir un dénominateur commun en multipliant en haut et en bas par un même nombre, ce qui ne change pas la valeur de la fraction." },
+        { type: "calcul", text: "On transforme 3/4 en 9/12 en multipliant par 3, et 1/6 en 2/12 en multipliant par 2. On peut alors additionner les numérateurs : 9 + 2 = 11." },
+        { type: "resultat", text: "On obtient donc 3/4 + 1/6 = 11/12." },
+      ], null, "11/12"),
+    },
+    {
+      ...n("Pourcentages — Calculer une proportion", "Calcule 20 % de 80.", 16, [
       { type: "donnee", text: "On cherche une proportion de la quantité 80 : 20 % ne signifie pas ajouter le nombre 20." },
       { type: "regle", text: "Le plus simple est de calculer d’abord 10 %, c’est-à-dire le dixième, puis de doubler ce résultat pour obtenir 20 %." },
       { type: "calcul", text: "Dix pour cent de 80 vaut 80 ÷ 10 = 8. Vingt pour cent est le double de 10 %, donc 2 × 8 = 16." },
       { type: "resultat", text: "Ainsi, 20 % de 80 est égal à 16. On peut aussi utiliser l’écriture décimale : pour prendre une part d’une quantité, on utilise la multiplication. Comme 20 % = 20/100 = 0,2, on calcule 80 × 0,2 = 16." },
-    ]),
-    n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
+      ]),
+      similarExercise: n("Pourcentages — Calculer une proportion", "Calcule 30 % de 70.", 21, [
+        { type: "donnee", text: "On cherche une proportion de la quantité 70 : 30 % ne signifie pas ajouter le nombre 30." },
+        { type: "regle", text: "Le plus simple est de calculer d’abord 10 %, c’est-à-dire le dixième, puis de tripler ce résultat pour obtenir 30 %." },
+        { type: "calcul", text: "Dix pour cent de 70 vaut 70 ÷ 10 = 7. Trente pour cent est le triple de 10 %, donc 3 × 7 = 21." },
+        { type: "resultat", text: "Ainsi, 30 % de 70 est égal à 21." },
+      ]),
+    },
+    {
+      ...n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
       { type: "donnee", text: "Deux angles du triangle mesurent 50° et 60°. On cherche la mesure du troisième angle." },
       { type: "regle", text: "Dans tous les triangles, la somme des mesures des trois angles est égale à 180°." },
       { type: "calcul", text: "Les deux angles connus mesurent ensemble 50 + 60 = 110°. Il reste donc 180 − 110 = 70°." },
       { type: "resultat", text: "Le troisième angle mesure 70°. On vérifie bien que 50 + 60 + 70 = 180." },
-    ], "°"),
-    n("Probabilités — Issues favorables", "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, [
+      ], "°"),
+      similarExercise: n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 45° et 65°. Calcule le troisième angle.", 70, [
+        { type: "donnee", text: "Deux angles du triangle mesurent 45° et 65°. On cherche la mesure du troisième angle." },
+        { type: "regle", text: "Dans tous les triangles, la somme des mesures des trois angles est égale à 180°." },
+        { type: "calcul", text: "Les deux angles connus mesurent ensemble 45 + 65 = 110°. Il reste donc 180 − 110 = 70°." },
+        { type: "resultat", text: "Le troisième angle mesure 70°. On vérifie bien que 45 + 65 + 70 = 180." },
+      ], "°"),
+    },
+    {
+      ...n("Probabilités — Issues favorables", "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, [
       { type: "donnee", text: "L’événement recherché est « obtenir une boule rouge ». Il y a 3 boules rouges : ce sont les issues favorables." },
       { type: "regle", text: "Pour calculer une probabilité dans une situation équiprobable, on compare le nombre d’issues favorables au nombre total d’issues possibles." },
       { type: "calcul", text: "Le sac contient 3 + 2 = 5 boules au total. La probabilité cherchée est donc nombre de boules rouges ÷ nombre total de boules = 3/5." },
       { type: "resultat", text: "La probabilité d’obtenir une boule rouge est 3/5. Ce résultat est bien compris entre 0 et 1." },
-    ], null, "3/5"),
+      ], null, "3/5"),
+      similarExercise: n("Probabilités — Issues favorables", "Un sac contient 4 boules rouges et 3 bleues. Quelle est la probabilité d’obtenir une rouge ?", 4/7, [
+        { type: "donnee", text: "L’événement recherché est « obtenir une boule rouge ». Il y a 4 boules rouges : ce sont les issues favorables." },
+        { type: "regle", text: "Pour calculer une probabilité dans une situation équiprobable, on compare le nombre d’issues favorables au nombre total d’issues possibles." },
+        { type: "calcul", text: "Le sac contient 4 + 3 = 7 boules au total. La probabilité cherchée est donc nombre de boules rouges ÷ nombre total de boules = 4/7." },
+        { type: "resultat", text: "La probabilité d’obtenir une boule rouge est 4/7. Ce résultat est bien compris entre 0 et 1." },
+      ], null, "4/7"),
+    },
   ],
   quatrieme: [
     n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, [

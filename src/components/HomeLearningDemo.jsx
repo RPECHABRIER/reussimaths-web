@@ -50,8 +50,8 @@ export default function HomeLearningDemo() {
               <p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.gold}}>Comprendre visuellement</p>
               <p className="mt-2 text-xs leading-relaxed" style={{color:colors.slate}}>On partage chaque demi en 3 parts égales et chaque tiers en 2 parts égales. Les morceaux obtenus ont alors tous la même taille : ce sont des sixièmes.</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                <PartitionedFraction label="\\dfrac{1}{2}" groups={2} split={3} filled={1} color={`${colors.green}d9`} result="1 demi → 3 sixièmes" />
-                <PartitionedFraction label="\\dfrac{1}{3}" groups={3} split={2} filled={1} color={`${colors.gold}d9`} result="1 tiers → 2 sixièmes" />
+                <PartitionedFraction label={"\\dfrac{1}{2}"} groups={2} split={3} filled={1} color={`${colors.green}d9`} result="1 demi → 3 sixièmes" />
+                <PartitionedFraction label={"\\dfrac{1}{3}"} groups={3} split={2} filled={1} color={`${colors.gold}d9`} result="1 tiers → 2 sixièmes" />
               </div>
               <div className="mt-3 rounded-xl p-3" style={{ background: `${colors.ink}06` }}>
                 <p className="text-[10px] font-black uppercase tracking-wide" style={{ color: colors.ink }}>On réunit les parts</p>

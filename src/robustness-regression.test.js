@@ -793,6 +793,11 @@ test("la page publique fait essayer une correction avant l’inscription", async
   assert.match(home, /<HomeLearningDemo/);
   assert.match(demo, /Une erreur devient une méthode comprise/);
   assert.match(demo, /dénominateur commun/);
+  assert.match(demo, /chaque demi en 3 parts égales/);
+  assert.match(demo, /chaque tiers en 2 parts égales/);
+  assert.match(demo, /numérateur et son dénominateur par un même nombre non nul/);
+  assert.match(demo, /1\\\\times3/);
+  assert.match(demo, /Trois sixièmes verts plus deux sixièmes dorés/);
   assert.match(demo, /Faire mon diagnostic gratuit/);
 });
 

@@ -109,6 +109,8 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 ## 4. Premier mois après lancement
 
+- [ ] Appliquer chaque semaine le rituel de maintenance de 1 à 2 heures décrit dans `docs/RITUEL_HEBDOMADAIRE_APRES_LANCEMENT.md`.
+
 - [ ] Mesurer activation, retour à J7, fréquence hebdomadaire, parcours terminés et conversion.
 - [ ] Distinguer les cohortes plutôt que de mélanger tous les utilisateurs.
 - [ ] Identifier les trois abandons les plus fréquents dans le tunnel.

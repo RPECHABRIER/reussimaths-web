@@ -473,6 +473,9 @@ test("le laboratoire note les corrections sur 10 et bloque une vitrine sous 9", 
   assert.match(lab, /qualityScore/);
   assert.match(lab, /Copier le bilan d’apprentissage pour Codex/);
   assert.match(lab, /Famille :/);
+  assert.match(lab, /Toutes les notes/);
+  assert.match(lab, /Toutes les familles/);
+  assert.match(lab, /File prioritaire/);
   assert.match(lab, /Number\(audit\.qualityScore\)>=9/);
   assert.match(migration, /quality_score between 0 and 10/);
   assert.match(migration, /new\.quality_score < 9/);

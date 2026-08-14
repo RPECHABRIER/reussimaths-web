@@ -114,6 +114,8 @@ export default function CorrectionsLab() {
   const [audits, setAudits] = useState(loadReviews);
   const [statusFilter, setStatusFilter] = useState("toutes");
   const [calculationFilter, setCalculationFilter] = useState("tous");
+  const [scoreFilter, setScoreFilter] = useState("toutes");
+  const [familyFilter, setFamilyFilter] = useState("toutes");
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState(false);
   const allowed = import.meta.env.DEV || isRealAdmin(user);
@@ -141,8 +143,14 @@ export default function CorrectionsLab() {
   const filteredSamples = useMemo(() => LAB_SAMPLES.map((sample,sampleIndex)=>({sample,sampleIndex})).filter(({sample})=>{
     const status = audits[sample[0]]?.status ?? "à_revoir";
     const mode = getCalculationMode(sample[1]) ?? "choix";
-    return (statusFilter === "toutes" || status === statusFilter) && (calculationFilter === "tous" || calculationFilter === mode) && sample[0].toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr"));
-  }), [audits, calculationFilter, search, statusFilter]);
+    const score = audits[sample[0]]?.qualityScore;
+    const family = getFamily(sample);
+    const scoreMatches = scoreFilter === "toutes"
+      || (scoreFilter === "non_evaluees" && score == null)
+      || (scoreFilter === "bloquees" && score != null && Number(score) < 9)
+      || (scoreFilter === "vitrine" && Number(score) >= 9);
+    return (statusFilter === "toutes" || status === statusFilter) && (calculationFilter === "tous" || calculationFilter === mode) && scoreMatches && (familyFilter === "toutes" || family === familyFilter) && sample[0].toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr"));
+  }), [audits, calculationFilter, familyFilter, scoreFilter, search, statusFilter]);
   useEffect(() => {
     if (filteredSamples.length > 0 && !filteredSamples.some(({sampleIndex})=>sampleIndex===index)) setIndex(filteredSamples[0].sampleIndex);
   }, [filteredSamples, index]);
@@ -184,6 +192,15 @@ export default function CorrectionsLab() {
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2500);
   };
+  const availableFamilies = useMemo(() => [...new Set(LAB_SAMPLES.map(getFamily))].sort(), []);
+  const prioritySamples = useMemo(() => LAB_SAMPLES
+    .map((sample, sampleIndex) => ({ sample, sampleIndex, audit: audits[sample[0]] }))
+    .filter(({ sample, audit: sampleAudit }) => isDiscoveryTitle(sample[0]) && !isPublishable(sample[0], sampleAudit))
+    .sort((a, b) => {
+      const scoreA = a.audit?.qualityScore == null ? -1 : Number(a.audit.qualityScore);
+      const scoreB = b.audit?.qualityScore == null ? -1 : Number(b.audit.qualityScore);
+      return scoreA - scoreB;
+    }), [audits]);
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   return (
@@ -198,7 +215,8 @@ export default function CorrectionsLab() {
           <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Découverte publiables</p><p className="mt-1 text-2xl font-black" style={{color:labSummary.discoveryApproved===labSummary.discoveryTotal?colors.green:colors.red}}>{labSummary.discoveryApproved}/{labSummary.discoveryTotal}</p></div>
         </section>
         <button type="button" onClick={copyLearningBrief} className="mt-3 inline-flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-xs font-black" style={{borderColor:colors.hairline,color:colors.ink}}><ClipboardCopy size={15}/>{copied ? "Bilan copié" : "Copier le bilan d’apprentissage pour Codex"}</button>
-        <div className="mt-5 grid gap-2 sm:grid-cols-3"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select><select value={calculationFilter} onChange={(event)=>setCalculationFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="tous">Tous les modes de calcul</option><option value="mental">Sans calculatrice</option><option value="calculator">Calculatrice autorisée</option><option value="choix">Libre choix</option></select></div>
+        <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select><select value={scoreFilter} onChange={(event)=>setScoreFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les notes</option><option value="non_evaluees">Non évaluées</option><option value="bloquees">Sous 9/10</option><option value="vitrine">9 ou 10/10</option></select><select value={familyFilter} onChange={(event)=>setFamilyFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les familles</option>{availableFamilies.map((family)=><option key={family} value={family}>{family}</option>)}</select><select value={calculationFilter} onChange={(event)=>setCalculationFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="tous">Tous les modes de calcul</option><option value="mental">Sans calculatrice</option><option value="calculator">Calculatrice autorisée</option><option value="choix">Libre choix</option></select></div>
+        {prioritySamples.length > 0 && <section className="mt-4 rounded-2xl border p-4" style={{borderColor:`${colors.red}35`,backgroundColor:`${colors.red}08`}}><p className="text-xs font-black" style={{color:colors.red}}>File prioritaire — {prioritySamples.length} correction{prioritySamples.length>1?"s":""} Découverte à traiter</p><div className="mt-2 flex flex-wrap gap-2">{prioritySamples.slice(0,8).map(({sample:[sampleTitle],sampleIndex,audit:sampleAudit})=><button type="button" key={sampleTitle} onClick={()=>setIndex(sampleIndex)} className="rounded-lg bg-white px-2.5 py-1.5 text-[10px] font-bold" style={{color:colors.ink}}>{sampleTitle.replace("Découverte ","")} · {sampleAudit?.qualityScore == null?"non notée":`${sampleAudit.qualityScore}/10`}</button>)}</div></section>}
         <label className="block mt-3 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>

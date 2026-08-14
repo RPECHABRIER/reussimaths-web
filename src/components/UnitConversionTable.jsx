@@ -52,8 +52,14 @@ export default function UnitConversionTable({ spec }) {
       <p className="text-xs font-bold mb-2" style={{ color: colors.ink }}>
         Placement dans le tableau de conversion
       </p>
-      <div className="overflow-x-auto pb-1">
-        <table className="w-full border-collapse text-center text-xs" style={{ minWidth: groups.length * places * 88, color: colors.ink }}>
+      <p className="conversion-table-swipe-hint mb-1 text-[10px] font-semibold" style={{ color: colors.slate }}>
+        Fais glisser le tableau horizontalement si nécessaire.
+      </p>
+      <div className="conversion-table-scroll overflow-x-auto pb-1" tabIndex={0} aria-label="Tableau de conversion défilable horizontalement">
+        <table
+          className="conversion-table-grid w-full border-collapse text-center text-xs"
+          style={{ "--conversion-column-count": groups.length * places, color: colors.ink }}
+        >
           <thead>
             <tr>
               {groups.map((unit) => (
@@ -64,7 +70,7 @@ export default function UnitConversionTable({ spec }) {
             </tr>
             <tr>
               {groups.flatMap((unit) => PLACE_LABELS[places].map((place) => (
-                <th key={`${unit}-${place}`} className="border-2 px-2 py-2 font-semibold" style={{ borderColor: colors.ink }}>
+                <th key={`${unit}-${place}`} className="conversion-place-cell border-2 px-2 py-2 font-semibold" style={{ borderColor: colors.ink }}>
                   {place}
                 </th>
               )))}
@@ -73,7 +79,7 @@ export default function UnitConversionTable({ spec }) {
           <tbody>
             <tr>
               {digits.map((digit, index) => (
-                <td key={index} className="border-2 px-3 py-3 text-base font-black" style={{ borderColor: colors.ink, backgroundColor: digit ? "white" : `${colors.slate}08` }}>
+                <td key={index} className="conversion-digit-cell border-2 px-3 py-3 text-base font-black" style={{ borderColor: colors.ink, backgroundColor: digit ? "white" : `${colors.slate}08` }}>
                   {digit || "\u00a0"}
                 </td>
               ))}

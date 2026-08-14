@@ -758,3 +758,16 @@ test("les animations pédagogiques gardent une hauteur raisonnable sur mobile", 
   assert.match(css, /\.learning-feedback-graph svg[\s\S]*max-height: 210px/);
   assert.match(css, /\.learning-feedback-visual \.sm\\:grid-cols-2/);
 });
+
+test("les tableaux de conversion sont compacts et explicitement défilables sur mobile", async () => {
+  const [table, css] = await Promise.all([
+    read("./components/UnitConversionTable.jsx"),
+    read("./index.css"),
+  ]);
+  assert.match(table, /conversion-table-grid/);
+  assert.match(table, /Fais glisser le tableau horizontalement si nécessaire/);
+  assert.match(table, /tabIndex=\{0\}/);
+  assert.match(css, /\.conversion-table-grid[\s\S]*58px/);
+  assert.match(css, /\.conversion-place-cell/);
+  assert.match(css, /\.conversion-digit-cell/);
+});

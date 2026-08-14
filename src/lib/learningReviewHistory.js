@@ -20,11 +20,12 @@ export function getLearningReviews() {
   }
 }
 
-export function rememberLearningReview({ exercise, response, feedback }) {
+export function rememberLearningReview({ exercise, response, feedback, levelId = null }) {
   if (!exercise || !feedback || typeof localStorage === "undefined") return;
   const review = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     createdAt: Date.now(),
+    levelId,
     chapter: String(exercise.chapter ?? "Notion travaillée").slice(0, 180),
     prompt: String(exercise.prompt ?? "").slice(0, 500),
     response: Array.isArray(response) ? response.join(" ; ") : String(response ?? ""),

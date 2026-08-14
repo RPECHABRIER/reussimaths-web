@@ -335,7 +335,7 @@ export default function ParcoursDiagnostic() {
                 <Mascot size={42} motion={feedback.correct ? "celebrate" : "encourage"} />
                 <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
               </div>
-              {(!feedback.correct || trial) && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact remember correct={feedback.correct} /></div>}
+              {(!feedback.correct || trial) && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact remember correct={feedback.correct} levelId={levelId} /></div>}
               <button
                 onClick={next}
                 className="w-full mt-3 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"

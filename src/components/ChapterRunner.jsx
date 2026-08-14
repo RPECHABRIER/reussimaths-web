@@ -110,6 +110,18 @@ function generateExercise(chapter, difficulty, index = 0) {
   return chapter.generate(difficulty);
 }
 
+// Les vitrines sont une petite banque fixe : leur `generate()` historique
+// renvoie la première question, qui peut appartenir à une tout autre notion.
+// Une vérification doit impérativement rester sur l'exercice courant. Une
+// variante dédiée est utilisée lorsqu'elle existe ; sinon on préfère refaire
+// la même question plutôt que d'envoyer l'élève vers une notion étrangère.
+function generateSimilarExercise(chapter, difficulty, currentExercise) {
+  if (Array.isArray(chapter.showcaseExercises)) {
+    return currentExercise?.similarExercise ?? currentExercise;
+  }
+  return generateMatchingSkill(chapter, difficulty, currentExercise?.chapter);
+}
+
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError }) {
   const { user } = useAuth();
   usePracticeHeartbeat(user?.id);
@@ -336,7 +348,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
   const practiceSimilar = () => {
     const skill = exercise.chapter;
-    setExercise(generateMatchingSkill(chapter, effectiveDifficulty, skill));
+    setExercise(generateSimilarExercise(chapter, effectiveDifficulty, exercise));
     setInput("");
     setSelectedOption(null);
     setSelectedMulti([]);
@@ -634,7 +646,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
           {verificationSkill && (
             <p className="rounded-xl px-3 py-2 mb-3 text-xs font-semibold" style={{ backgroundColor: `${gold}14`, color: ink }}>
-              Question de vérification — même notion, nouvelles données. Explique-toi mentalement chaque étape avant de valider.
+              Question de vérification — même notion, sans changer de thème. Explique-toi mentalement chaque étape avant de valider.
             </p>
           )}
 
@@ -855,7 +867,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
               {!feedback.correct && (
                 <>
-                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember /></div>
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember levelId={chapter.meta.level} /></div>
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={retry}
@@ -884,7 +896,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 </>
               )}
               {feedback.correct && isDiscoverySession && (
-                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} correct remember /></div>
+                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} correct remember levelId={chapter.meta.level} /></div>
               )}
 
               {!feedback.correct && showHelp && !isDefi && !isDecouverte && (

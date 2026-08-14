@@ -52,6 +52,8 @@ test("la somme des angles du triangle est démontrée par les alternes-internes"
   assert.match(visual, /angles alternes-internes/);
   assert.match(visual, /forment alors un angle plat/);
   assert.match(visual, /50°<\/span>.*70°<\/span>.*60°/s);
+  assert.match(visual, /droite passant par le sommet, parallèle à la base/);
+  assert.doesNotMatch(visual, /M126 139 l8 -5 l8 5/);
 });
 
 test("la probabilité d’une boule rouge compte les favorables et contrôle l’intervalle", async () => {
@@ -445,8 +447,8 @@ test("une erreur déclenche une vérification proche et priorise les erreurs ré
     read("./pages/ChapterPage.jsx"),
   ]);
   assert.match(runner, /practiceSimilar/);
-  assert.match(runner, /generateMatchingSkill\(chapter, effectiveDifficulty, skill\)/);
-  assert.match(runner, /Question de vérification — même notion, nouvelles données/);
+  assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
+  assert.match(runner, /Question de vérification — même notion, sans changer de thème/);
   assert.match(tracking, /getRecurringErrors/);
   assert.match(tracking, /item\.count >= 2/);
   assert.match(review, /Priorité :/);
@@ -691,7 +693,8 @@ test("les coordonnées 6e affichent le point 3 moins 2 dans un repère adapté",
   assert.match(visual, /3 horizontalement/);
   assert.match(visual, /−2 verticalement/);
   assert.match(visual, /Le « a » finit horizontalement/);
-  assert.match(visual, /Le « o » remonte verticalement/);
+  assert.match(visual, /La boucle du « o » se termine en remontant/);
+  assert.match(visual, /Le o manuscrit forme sa boucle puis remonte verticalement/);
   assert.match(visual, /comme une altitude/);
 });
 
@@ -703,11 +706,25 @@ test("la première vitrine 6e montre l'addition décimale posée et alignée", a
   assert.match(visual, /Les virgules, les unités et les dixièmes/);
 });
 
-test("la vitrine 6e de proportionnalité vérifie le résultat par un raisonnement sur la moitié", () => {
+test("la vitrine 6e de proportionnalité garde une seule méthode dans le déroulé", () => {
   const exercise = getDiscoveryShowcase("sixieme").showcaseExercises[2];
-  assert.match(exercise.steps.at(-1).text, /moitié de quatre/);
-  assert.match(exercise.steps.at(-1).text, /moitié de 10/);
-  assert.match(exercise.steps.at(-1).text, /confirme.*15 €/);
+  assert.equal(exercise.steps.at(-1).text, "Six cahiers coûtent 15 €.");
+  assert.match(exercise.steps[2].text, /6 × 2,50 = 15/);
+  assert.match(exercise.similarExercise.prompt, /5 cahiers coûtent 12,50/);
+  assert.equal(exercise.similarExercise.answer, 20);
+});
+
+test("une question proche de vitrine ne repart jamais sur une notion étrangère", async () => {
+  const runner = await read("./components/ChapterRunner.jsx");
+  assert.match(runner, /currentExercise\?\.similarExercise \?\? currentExercise/);
+  assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
+});
+
+test("le bilan admin reprend le niveau réellement ouvert pendant la prévisualisation", async () => {
+  const report = await read("./pages/Bilan.jsx");
+  assert.match(report, /preview\?\.mode \? getPreferredLevel\(\) \?\? activeLevel : activeLevel/);
+  assert.match(report, /useWeeklySummary\(user\?\.id, reportLevel\)/);
+  assert.match(report, /useDailyMentalSummary\(user\?\.id, reportLevel\)/);
 });
 
 test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {

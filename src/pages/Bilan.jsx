@@ -5,7 +5,9 @@ import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { useLearningReviews } from "../hooks/useLearningReviews";
 import { useDailyMentalSummary } from "../hooks/useDailyMentalSummary";
 import { useSubscription } from "../hooks/useProgress";
-import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/access";
+import { getEffectiveSubscription, isFullAccessSubscription, isRealAdmin } from "../lib/access";
+import { getAdminPreview } from "../lib/adminPreview";
+import { getPreferredLevel } from "../lib/preferences";
 import { getChapter } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { colors, fonts, shadow } from "../theme";
@@ -81,10 +83,15 @@ export default function Bilan() {
   const { subscription: rawSubscription } = useSubscription(user?.id);
   const subscription = getEffectiveSubscription(user, rawSubscription);
   const activeLevel = isFullAccessSubscription(subscription) && !subscription?.admin_granted ? subscription?.subscription_level : null;
-  const activeLevelLabel = activeLevel ? getLevel(activeLevel)?.label ?? activeLevel : null;
-  const { loading, summary, error, reload } = useWeeklySummary(user?.id, activeLevel);
+  const preview = isRealAdmin(user) ? getAdminPreview() : null;
+  // En prévisualisation, les données appartiennent toujours au compte admin.
+  // Le niveau simulé ne doit donc pas être présenté comme le niveau réellement
+  // travaillé : on reprend le dernier niveau ouvert pendant le test.
+  const reportLevel = preview?.mode ? getPreferredLevel() ?? activeLevel : activeLevel;
+  const activeLevelLabel = reportLevel ? getLevel(reportLevel)?.label ?? reportLevel : null;
+  const { loading, summary, error, reload } = useWeeklySummary(user?.id, reportLevel);
   const learningReviews = useLearningReviews(user?.id);
-  const mentalMath = useDailyMentalSummary(user?.id, activeLevel);
+  const mentalMath = useDailyMentalSummary(user?.id, reportLevel);
 
   const ink = colors.ink;
   const paper = colors.bg;

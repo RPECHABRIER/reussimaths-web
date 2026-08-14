@@ -42,12 +42,20 @@ const SHOWCASES = {
       { type: "calcul", text: "Trois parts sont coloriées parmi les quatre parts égales : la fraction est donc 3/4." },
       { type: "resultat", text: "La partie coloriée représente 3/4 de l’unité." },
     ], null, "3/4"),
-    n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
+    {
+      ...n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
       { type: "donnee", text: "Quatre cahiers identiques coûtent 10 € et on cherche le prix de six cahiers." },
       { type: "regle", text: "On commence par chercher le prix d’un cahier : c’est la méthode du retour à l’unité." },
-      { type: "calcul", text: "Un cahier coûte 10 ÷ 4 = 2,50 €. Quatre cahiers coûtent 10 €, puis deux cahiers supplémentaires coûtent 2 × 2,50 = 5 €." },
-      { type: "resultat", text: "Six cahiers correspondent aux quatre cahiers de départ, auxquels on ajoute deux cahiers. Deux est la moitié de quatre : leur prix est donc la moitié de 10 €, soit 5 €. On ajoute 5 € à 10 €, ce qui confirme que six cahiers coûtent 15 €." },
-    ], "€"),
+      { type: "calcul", text: "Un cahier coûte 10 ÷ 4 = 2,50 €. Six cahiers coûtent donc 6 × 2,50 = 15 €." },
+      { type: "resultat", text: "Six cahiers coûtent 15 €." },
+      ], "€"),
+      similarExercise: n("Proportionnalité — Retour à l’unité", "5 cahiers coûtent 12,50 €. Combien coûtent 8 cahiers ?", 20, [
+        { type: "donnee", text: "Cinq cahiers identiques coûtent 12,50 € et on cherche le prix de huit cahiers." },
+        { type: "regle", text: "On commence par chercher le prix d’un cahier : c’est la méthode du retour à l’unité." },
+        { type: "calcul", text: "Un cahier coûte 12,50 ÷ 5 = 2,50 €. Huit cahiers coûtent donc 8 × 2,50 = 20 €." },
+        { type: "resultat", text: "Huit cahiers coûtent 20 €." },
+      ], "€"),
+    },
     n("Grandeurs et mesures — Aire d'un rectangle", "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, [
       { type: "donnee", text: "Le rectangle a une longueur de 7 cm et une largeur de 4 cm." },
       { type: "regle", text: "L’aire mesure la surface occupée. Pour un rectangle, on multiplie la longueur par la largeur." },
@@ -57,7 +65,7 @@ const SHOWCASES = {
     t("Géométrie repérée — Coordonnées", "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", [
       { type: "donnee", text: "L’abscisse du point A vaut 3 et son ordonnée vaut −2." },
       { type: "regle", text: "Dans les coordonnées d’un point, on écrit toujours d’abord le déplacement horizontal, puis le déplacement vertical : (abscisse ; ordonnée). L’ordonnée peut être comparée à une altitude : elle se lit sur l’axe vertical." },
-      { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position. En écriture attachée, la fin du a d’abscisse part horizontalement et celle du o d’ordonnée remonte verticalement : ce geste aide à retenir les axes." },
+      { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position. En écriture attachée, la fin du a d’abscisse part horizontalement, tandis que la boucle du o d’ordonnée se termine en remontant verticalement : ce geste aide à retenir les axes." },
       { type: "resultat", text: "Le point A a pour coordonnées (3 ; −2)." },
     ]),
   ],

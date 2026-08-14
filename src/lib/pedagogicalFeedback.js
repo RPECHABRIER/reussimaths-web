@@ -473,7 +473,7 @@ const FAMILY_FEEDBACK = [
     match: /coordonnées.*point|point.*abscisse.*ordonnée|géométrie repérée.*coordonnées/i,
     intro: "Non, l’abscisse et l’ordonnée n’ont pas été écrites dans le bon ordre.",
     meaning: "Les coordonnées d’un point s’écrivent toujours dans l’ordre (abscisse ; ordonnée). L’abscisse correspond à la position horizontale. L’ordonnée ressemble à une altitude : elle indique à quelle hauteur se trouve le point et se lit donc sur l’axe vertical.",
-    rule: "Repère d’abord l’abscisse, puis l’ordonnée. Pour les mémoriser en écriture attachée : le geste qui termine le a d’abscisse part horizontalement, tandis que le geste qui termine le o d’ordonnée remonte verticalement.",
+    rule: "Repère d’abord l’abscisse, puis l’ordonnée. Pour les mémoriser en écriture attachée : le geste qui termine le a d’abscisse part horizontalement, tandis que la boucle du o d’ordonnée se termine en remontant verticalement.",
   },
   {
     id: "geometry_coordinates",

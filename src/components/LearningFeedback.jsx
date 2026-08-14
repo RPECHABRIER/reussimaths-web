@@ -77,7 +77,7 @@ export default function LearningFeedback({ exercise, response, compact = false, 
       )}
 
       {exercise?.feedbackGraph && (
-        <div className="mt-4 rounded-xl bg-white pt-3" style={{ border: `1px solid ${colors.gold}35` }}>
+        <div className="learning-feedback-graph mt-4 rounded-xl bg-white pt-3" style={{ border: `1px solid ${colors.gold}35` }}>
           <p className="px-3 text-xs font-bold" style={{ color: colors.ink }}>Le chemin à suivre sur le graphique</p>
           <Graph spec={exercise.feedbackGraph} />
         </div>
@@ -85,7 +85,9 @@ export default function LearningFeedback({ exercise, response, compact = false, 
 
       {exercise?.conversionTable && <UnitConversionTable spec={exercise.conversionTable} />}
 
-      <FeedbackVisual family={feedback.family} exercise={exercise} />
+      <div className="learning-feedback-visual">
+        <FeedbackVisual family={feedback.family} exercise={exercise} />
+      </div>
 
       <div className="mt-3 grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5 rounded-xl bg-white p-3 sm:p-3.5" style={{ color: colors.ink }}>
         <CheckCircle2 size={17} color={colors.green} className="mt-0.5" />

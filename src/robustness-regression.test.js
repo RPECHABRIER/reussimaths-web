@@ -746,3 +746,15 @@ test("l’audit refuse les familles de lycée dans les exercices du collège", a
   assert.match(audit, /famille_hors_niveau/);
   assert.match(audit, /levelMismatchCount > 0/);
 });
+
+test("les animations pédagogiques gardent une hauteur raisonnable sur mobile", async () => {
+  const [feedback, css] = await Promise.all([
+    read("./components/LearningFeedback.jsx"),
+    read("./index.css"),
+  ]);
+  assert.match(feedback, /learning-feedback-visual/);
+  assert.match(feedback, /learning-feedback-graph/);
+  assert.match(css, /\.learning-feedback-visual svg[\s\S]*max-height: 190px/);
+  assert.match(css, /\.learning-feedback-graph svg[\s\S]*max-height: 210px/);
+  assert.match(css, /\.learning-feedback-visual \.sm\\:grid-cols-2/);
+});

@@ -746,21 +746,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   boxShadow: isDefi ? "0 0 0 1px #3a4d76" : "0 0 0 1px rgba(27,42,74,0.08)",
                 }}
               />
-              {!feedback ? (
+              {!feedback && (
                 <button
                   onClick={submitText}
                   className="w-full py-2.5 rounded-full text-sm font-semibold mb-3"
                   style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
                 >
                   Valider
-                </button>
-              ) : (
-                <button
-                  onClick={newExercise}
-                  className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
-                  style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
-                >
-                  Suivant <ArrowRight size={14} />
                 </button>
               )}
             </>
@@ -799,21 +791,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   );
                 })}
               </div>
-              {!feedback ? (
+              {!feedback && (
                 <button
                   onClick={submitMulti}
                   className="w-full py-2.5 rounded-full text-sm font-semibold mb-3"
                   style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
                 >
                   Valider
-                </button>
-              ) : (
-                <button
-                  onClick={newExercise}
-                  className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
-                  style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
-                >
-                  Suivant <ArrowRight size={14} />
                 </button>
               )}
             </>
@@ -892,7 +876,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 ))}
               </div>
               <div className="flex gap-2 mb-3">
-                {!feedback ? (
+                {!feedback && (
                   <button
                     onClick={submitNumeric}
                     className="flex-1 py-2.5 rounded-full text-sm font-semibold"
@@ -900,27 +884,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   >
                     Valider
                   </button>
-                ) : (
-                  <button
-                    onClick={newExercise}
-                    className="flex-1 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"
-                    style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
-                  >
-                    Suivant <ArrowRight size={14} />
-                  </button>
                 )}
               </div>
             </>
-          )}
-
-          {exercise.type === "qcm" && feedback && (
-            <button
-              onClick={newExercise}
-              className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1 mb-3"
-              style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
-            >
-              Suivant <ArrowRight size={14} />
-            </button>
           )}
 
           {feedback && (
@@ -981,6 +947,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   )}
                 </div>
               )}
+              <button
+                onClick={newExercise}
+                className="w-full mt-3 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"
+                style={{ backgroundColor: isDefi ? gold : ink, color: isDefi ? ink : paper }}
+              >
+                {feedback.correct ? "Continuer" : "J’ai compris, continuer"} <ArrowRight size={14} />
+              </button>
             </div>
           )}
         </div>

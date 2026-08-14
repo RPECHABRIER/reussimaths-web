@@ -326,15 +326,7 @@ export default function ParcoursDiagnostic() {
             >
               Valider
             </button>
-          ) : (
-            <button
-              onClick={next}
-              className="w-full py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"
-              style={{ backgroundColor: colors.ink, color: colors.bg }}
-            >
-              {index + 1 >= total ? "Voir mon résultat" : "Suivant"} <ArrowRight size={14} />
-            </button>
-          )}
+          ) : null}
 
           {feedback && (
             <>
@@ -343,6 +335,13 @@ export default function ParcoursDiagnostic() {
                 <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
               </div>
               {(!feedback.correct || trial) && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact remember correct={feedback.correct} /></div>}
+              <button
+                onClick={next}
+                className="w-full mt-3 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-1"
+                style={{ backgroundColor: colors.ink, color: colors.bg }}
+              >
+                {index + 1 >= total ? "Voir mon résultat" : "J’ai compris, question suivante"} <ArrowRight size={14} />
+              </button>
             </>
           )}
         </div>

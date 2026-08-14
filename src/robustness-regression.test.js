@@ -410,6 +410,18 @@ test("tous les pavés numériques partagent les symboles nécessaires sans limit
   }
 });
 
+test("les parcours présentent la correction avant de proposer de continuer", async () => {
+  const [runner, diagnostic, sound] = await Promise.all([
+    read("./components/ChapterRunner.jsx"),
+    read("./pages/ParcoursDiagnostic.jsx"),
+    read("./components/SoundManager.jsx"),
+  ]);
+  assert.match(runner, /J’ai compris, continuer/);
+  assert.match(diagnostic, /J’ai compris, question suivante/);
+  assert.match(sound, /avoidProgrammeActions/);
+  assert.match(sound, /top-4 bottom-auto/);
+});
+
 test("une erreur déclenche une vérification proche et priorise les erreurs récurrentes", async () => {
   const [runner, tracking, review, chapterPage] = await Promise.all([
     read("./components/ChapterRunner.jsx"),

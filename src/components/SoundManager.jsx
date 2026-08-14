@@ -27,6 +27,7 @@ const FADE_STEP_MS = 40;
 
 export default function SoundManager({ avoidStudentDock = false }) {
   const location = useLocation();
+  const avoidProgrammeActions = location.pathname.endsWith("/programme");
   const audioRef = useRef(null);
   const fadeTimerRef = useRef(null);
   const currentZoneRef = useRef(null);
@@ -171,7 +172,7 @@ export default function SoundManager({ avoidStudentDock = false }) {
       onClick={() => setMuted((m) => !m)}
       aria-label={muted ? "Activer le son" : "Couper le son"}
       title={muted ? "Activer le son" : "Couper le son"}
-      className={`fixed right-4 z-50 flex items-center justify-center rounded-full ${avoidStudentDock ? "bottom-24 sm:bottom-4" : "bottom-4"}`}
+      className={`fixed right-4 z-50 flex items-center justify-center rounded-full ${avoidProgrammeActions ? "top-4 bottom-auto" : avoidStudentDock ? "bottom-24 sm:bottom-4" : "bottom-4"}`}
       style={{
         width: 44,
         height: 44,

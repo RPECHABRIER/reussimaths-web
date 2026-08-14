@@ -121,23 +121,19 @@ function exercisePromptTemplate(prompt = "") {
 
 function generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise) {
   const template = exercisePromptTemplate(currentExercise?.prompt);
-  let fallback = null;
 
   for (let i = 0; i < 40; i++) {
     const candidate = chapter.generate(difficulty);
     if (candidate.chapter !== currentExercise?.chapter) continue;
-    fallback ??= candidate;
     if (
       candidate.prompt !== currentExercise?.prompt
       && exercisePromptTemplate(candidate.prompt) === template
     ) return candidate;
   }
 
-  // Si le générateur ne sait pas fabriquer une nouvelle occurrence du même
-  // modèle, refaire exactement la question vaut mieux que changer de méthode.
-  return fallback && exercisePromptTemplate(fallback.prompt) === template
-    ? fallback
-    : currentExercise;
+  // Pas de repli vers l'énoncé identique : dans ce cas le bouton n'est pas
+  // proposé, afin de ne jamais donner l'impression d'une banque trop pauvre.
+  return null;
 }
 
 function generateExercise(chapter, difficulty, index = 0) {
@@ -150,11 +146,11 @@ function generateExercise(chapter, difficulty, index = 0) {
 // Les vitrines sont une petite banque fixe : leur `generate()` historique
 // renvoie la première question, qui peut appartenir à une tout autre notion.
 // Une vérification doit impérativement rester sur l'exercice courant. Une
-// variante dédiée est utilisée lorsqu'elle existe ; sinon on préfère refaire
-// la même question plutôt que d'envoyer l'élève vers une notion étrangère.
+// variante dédiée est utilisée lorsqu'elle existe ; sinon aucune vérification
+// immédiate n'est proposée plutôt que de répéter l'énoncé ou changer de notion.
 function generateSimilarExercise(chapter, difficulty, currentExercise) {
   if (Array.isArray(chapter.showcaseExercises)) {
-    return currentExercise?.similarExercise ?? currentExercise;
+    return currentExercise?.similarExercise ?? null;
   }
   return generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise);
 }
@@ -195,6 +191,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedMulti, setSelectedMulti] = useState([]);
   const [feedback, setFeedback] = useState(null);
+  const [similarExercise, setSimilarExercise] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [verificationSkill, setVerificationSkill] = useState(null);
   const [score, setScore] = useState(0);
@@ -369,6 +366,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setSimilarExercise(null);
     setShowHelp(false);
     setVerificationSkill(null);
     assistanceUsedRef.current = false;
@@ -380,16 +378,19 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setSimilarExercise(null);
     setShowHelp(false);
   };
 
   const practiceSimilar = () => {
+    if (!similarExercise) return;
     const skill = exercise.chapter;
-    setExercise(generateSimilarExercise(chapter, effectiveDifficulty, exercise));
+    setExercise(similarExercise);
     setInput("");
     setSelectedOption(null);
     setSelectedMulti([]);
     setFeedback(null);
+    setSimilarExercise(null);
     setShowHelp(false);
     setVerificationSkill(skill);
     assistanceUsedRef.current = false;
@@ -401,6 +402,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     const responseTimeMs = Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000);
     const assisted = isDecouverte || assistanceUsedRef.current;
     setFeedback({ correct, response, errorCode });
+    setSimilarExercise(correct ? null : generateSimilarExercise(chapter, effectiveDifficulty, exercise));
     if (quotaApplies) quota.consume();
     if (isSession) {
       setAnsweredCount((c) => c + 1);
@@ -923,13 +925,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                     </button>
                   )}
                 </div>
-                <button
-                  onClick={practiceSimilar}
-                  className="w-full mt-2 py-2 rounded-full text-xs font-bold"
-                  style={{ backgroundColor: `${gold}20`, color: ink, boxShadow: `0 0 0 1px ${gold}55` }}
-                >
-                  Vérifier avec une question très proche
-                </button>
+                {similarExercise && (
+                  <button
+                    onClick={practiceSimilar}
+                    className="w-full mt-2 py-2 rounded-full text-xs font-bold"
+                    style={{ backgroundColor: `${gold}20`, color: ink, boxShadow: `0 0 0 1px ${gold}55` }}
+                  >
+                    Vérifier avec une question très proche
+                  </button>
+                )}
                 </>
               )}
               {feedback.correct && isDiscoverySession && (

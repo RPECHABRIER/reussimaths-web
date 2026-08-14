@@ -716,10 +716,12 @@ test("la vitrine 6e de proportionnalité garde une seule méthode dans le dérou
 
 test("une question proche de vitrine ne repart jamais sur une notion étrangère", async () => {
   const runner = await read("./components/ChapterRunner.jsx");
-  assert.match(runner, /currentExercise\?\.similarExercise \?\? currentExercise/);
+  assert.match(runner, /currentExercise\?\.similarExercise \?\? null/);
   assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
   assert.match(runner, /exercisePromptTemplate\(candidate\.prompt\) === template/);
   assert.match(runner, /candidate\.prompt !== currentExercise\?\.prompt/);
+  assert.match(runner, /return null;/);
+  assert.match(runner, /\{similarExercise && \(/);
 });
 
 test("chaque vitrine de 5e propose le même exercice avec de nouveaux nombres", () => {

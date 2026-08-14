@@ -275,6 +275,9 @@ export default function FeedbackVisual({ family, exercise }) {
     const middle = Math.floor(displayValues.length / 2);
     return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Ranger puis viser le centre</p><div className="mt-3 flex items-center justify-center gap-1">{displayValues.map((value,index)=><span key={`${value}-${index}`} className="flex h-10 min-w-9 items-center justify-center rounded-lg px-2 text-xs font-black" style={{color:colors.ink,background:index===middle?`${colors.green}30`:`${colors.ink}0d`,animation:index===middle?"pulse 1.6s infinite":undefined}}>{value}</span>)}</div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>La valeur centrale partage la série ordonnée en deux groupes de même effectif : médiane = {exercise?.answerDisplay ?? exercise?.answer ?? "?"}.</p></div>;
   }
+  if (family === "statistics_mean" && /8\s*,\s*10\s*et\s*15/i.test(`${exercise?.prompt ?? ""}`)) {
+    return null;
+  }
   if (family.startsWith("statistics")) {
     const values = valuesFrom(exercise).map((value) => Number(String(value).replace(",", ".").replace(/[^\d.-]/g, ""))).filter(Number.isFinite);
     const heights = values.length >= 3 ? values.slice(0, 6).map((value) => 18 + (value / Math.max(...values, 1)) * 42) : [12,24,18,36,30,48];

@@ -85,6 +85,12 @@ test("Pythagore affiche trois vrais carrés pour le triangle 6 8 10", async () =
   assert.match(visual, /BC = √100 = 10 cm/);
 });
 
+test("la moyenne simple 8 10 15 reste volontairement sans animation", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /family === "statistics_mean" && \/8\\s\*,\\s\*10/);
+  assert.match(visual, /return null/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

@@ -97,6 +97,15 @@ test("le calcul de Thalès emploie la technique du produit en croix", async () =
   assert.match(showcases, /x=6\\\\times4\\\\div3=24\\\\div3=8/);
 });
 
+test("l’équation-produit nul se sépare en deux branches de résolution", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="zero-product-branches"/);
+  assert.match(visual, /Produit nul : au moins un facteur est nul/);
+  assert.match(visual, /x = 2/);
+  assert.match(visual, /x = −3/);
+  assert.match(visual, /solution positive demandée/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

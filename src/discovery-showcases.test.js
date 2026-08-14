@@ -144,7 +144,7 @@ test("la vitrine 2nde explicite les distinctions essentielles", () => {
   assert.match(corrections, /Chercher un antécédent de 9 signifie résoudre/);
   assert.match(corrections, /variation verticale lorsque l’abscisse augmente d’une unité/);
   assert.match(corrections, /deux groupes de même effectif/);
-  assert.match(corrections, /arrivée B moins coordonnées du départ A/);
+  assert.ok(corrections.includes("coordonnées de l’arrivée \\(B\\) moins coordonnées du départ \\(A\\)"));
   assert.match(corrections, /0,42 \+ 0,58 = 1/);
 });
 
@@ -180,7 +180,7 @@ test("les quinze vitrines de Première ont été relues manuellement", () => {
 test("les notions vitrines de Première disposent de visuels spécialisés", async () => {
   const { readFile } = await import("node:fs/promises");
   const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
-  assert.match(visual, /Produit scalaire nul : angle droit/);
+  assert.match(visual, /Deux directions perpendiculaires, un produit scalaire nul/);
   assert.match(visual, /Mesurer l’écart entre les deux extrêmes/);
   assert.match(visual, /Passer d’un terme au suivant/);
   assert.match(visual, /Suivre une branche à la fois/);

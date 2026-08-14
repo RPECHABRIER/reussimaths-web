@@ -27,12 +27,15 @@ function structureShowcaseExercise(exercise) {
 
 const SHOWCASES = {
   sixieme: [
-    n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
+    {
+      ...n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
       { type: "donnee", text: "Sept dixièmes s’écrit 0,7 : le chiffre 7 occupe la colonne des dixièmes." },
       { type: "regle", text: "Pour additionner des nombres décimaux, on place les unités sous les unités et les virgules l’une sous l’autre." },
       { type: "calcul", text: "On calcule donc 12,4 + 0,7. Quatre dixièmes et sept dixièmes donnent onze dixièmes, c’est-à-dire une unité et un dixième." },
       { type: "resultat", text: "On obtient finalement 13,1." },
-    ]),
+      ]),
+      decimalOperation: { left: 12.4, right: 0.7, operator: "+", answer: 13.1, decimalPlaces: 1 },
+    },
     n("Fractions — Partage", "Une unité est partagée en 4 parts égales et on en prend 3. Quelle fraction est coloriée ?", 0.75, [
       { type: "donnee", text: "L’unité est découpée en quatre parts de même taille : le dénominateur est donc 4." },
       { type: "regle", text: "Le numérateur, le nombre du haut, indique combien de parts sont prises." },
@@ -43,7 +46,7 @@ const SHOWCASES = {
       { type: "donnee", text: "Quatre cahiers identiques coûtent 10 € et on cherche le prix de six cahiers." },
       { type: "regle", text: "On commence par chercher le prix d’un cahier : c’est la méthode du retour à l’unité." },
       { type: "calcul", text: "Un cahier coûte 10 ÷ 4 = 2,50 €. Quatre cahiers coûtent 10 €, puis deux cahiers supplémentaires coûtent 2 × 2,50 = 5 €." },
-      { type: "resultat", text: "Six cahiers coûtent donc 10 + 5 = 15 €." },
+      { type: "resultat", text: "Six cahiers correspondent aux quatre cahiers de départ, auxquels on ajoute deux cahiers. Deux est la moitié de quatre : leur prix est donc la moitié de 10 €, soit 5 €. On ajoute 5 € à 10 €, ce qui confirme que six cahiers coûtent 15 €." },
     ], "€"),
     n("Grandeurs et mesures — Aire d'un rectangle", "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, [
       { type: "donnee", text: "Le rectangle a une longueur de 7 cm et une largeur de 4 cm." },
@@ -53,8 +56,8 @@ const SHOWCASES = {
     ], "cm²"),
     t("Géométrie repérée — Coordonnées", "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", [
       { type: "donnee", text: "L’abscisse du point A vaut 3 et son ordonnée vaut −2." },
-      { type: "regle", text: "Dans les coordonnées d’un point, on écrit toujours d’abord le déplacement horizontal, puis le déplacement vertical : (abscisse ; ordonnée)." },
-      { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position." },
+      { type: "regle", text: "Dans les coordonnées d’un point, on écrit toujours d’abord le déplacement horizontal, puis le déplacement vertical : (abscisse ; ordonnée). L’ordonnée peut être comparée à une altitude : elle se lit sur l’axe vertical." },
+      { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position. En écriture attachée, la fin du a d’abscisse part horizontalement et celle du o d’ordonnée remonte verticalement : ce geste aide à retenir les axes." },
       { type: "resultat", text: "Le point A a pour coordonnées (3 ; −2)." },
     ]),
   ],

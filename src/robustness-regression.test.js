@@ -3,10 +3,19 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { classifyLearningError } from "./lib/learningError.js";
 import { buildPedagogicalFeedback } from "./lib/pedagogicalFeedback.js";
+import { getDiscoveryShowcase } from "./discoveryShowcases.js";
+import { matchesText } from "./lib/answerMatch.js";
 import brevetChapter from "./chapters/dossier-brevet-troisieme.js";
 import { canAccessChapter, isClassAccessSubscription, isFullAccessSubscription, isPackExamenSubscription } from "./lib/access.js";
 
 const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
+
+test("les coordonnées tolèrent les espaces autour du point-virgule", () => {
+  assert.equal(matchesText("(3;-2)", "(3 ; -2)"), true);
+  assert.equal(matchesText("(3 ; -2)", "(3;-2)"), true);
+  assert.equal(matchesText("(3 ; −2)", "(3;-2)"), true);
+  assert.equal(matchesText("(-2;3)", "(3;-2)"), false);
+});
 
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
@@ -503,6 +512,39 @@ test("les vitrines 6e distinguent le partage d'une fraction et les coordonnées 
   assert.match(fraction.meaning, /dénominateur.*numérateur/i);
   assert.equal(point.family, "point_coordinates");
   assert.doesNotMatch(point.meaning, /milieu|vecteur/i);
+});
+
+test("le partage d'une fraction possède son propre visuel en parts égales", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /family === "fraction_sharing"/);
+  assert.match(visual, /parts prises sur quatre parts égales/);
+  assert.match(visual, /Le nombre du haut compte les parts coloriées/);
+});
+
+test("les coordonnées 6e affichent le point 3 moins 2 dans un repère adapté", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /family === "point_coordinates"/);
+  assert.match(visual, /A\(3 ; −2\)/);
+  assert.match(visual, /3 horizontalement/);
+  assert.match(visual, /−2 verticalement/);
+  assert.match(visual, /Le « a » finit horizontalement/);
+  assert.match(visual, /Le « o » remonte verticalement/);
+  assert.match(visual, /comme une altitude/);
+});
+
+test("la première vitrine 6e montre l'addition décimale posée et alignée", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  const exercise = getDiscoveryShowcase("sixieme").showcaseExercises[0];
+  assert.deepEqual(exercise.decimalOperation, { left: 12.4, right: 0.7, operator: "+", answer: 13.1, decimalPlaces: 1 });
+  assert.match(visual, /Poser l’addition en alignant les rangs/);
+  assert.match(visual, /Les virgules, les unités et les dixièmes/);
+});
+
+test("la vitrine 6e de proportionnalité vérifie le résultat par un raisonnement sur la moitié", () => {
+  const exercise = getDiscoveryShowcase("sixieme").showcaseExercises[2];
+  assert.match(exercise.steps.at(-1).text, /moitié de quatre/);
+  assert.match(exercise.steps.at(-1).text, /moitié de 10/);
+  assert.match(exercise.steps.at(-1).text, /confirme.*15 €/);
 });
 
 test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {

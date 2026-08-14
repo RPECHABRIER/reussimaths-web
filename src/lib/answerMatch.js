@@ -5,6 +5,8 @@
 // ---------------------------------------------------------------------------
 
 // Normalise une chaîne pour la comparaison : espaces, casse, accents ignorés.
+// Les espaces autour de la ponctuation mathématique sont facultatifs :
+// "(3;-2)" et "(3 ; -2)" représentent les mêmes coordonnées.
 // Ex: normalizeText("  Losange ") === normalizeText("losange") === "losange"
 export function normalizeText(s) {
   return s
@@ -13,6 +15,8 @@ export function normalizeText(s) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
+    .replace(/−/g, "-")
+    .replace(/\s*([();,])\s*/g, "$1")
     .replace(/\s+/g, " ");
 }
 

@@ -91,6 +91,12 @@ test("la moyenne simple 8 10 15 reste volontairement sans animation", async () =
   assert.match(visual, /return null/);
 });
 
+test("le calcul de Thalès emploie la technique du produit en croix", async () => {
+  const showcases = await read("./discoveryShowcases.js");
+  assert.match(showcases, /on utilise la technique du produit en croix/);
+  assert.match(showcases, /x=6\\\\times4\\\\div3=24\\\\div3=8/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

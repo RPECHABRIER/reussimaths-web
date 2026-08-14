@@ -129,7 +129,7 @@ const SHOWCASES = {
     n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). Calcule \\(x\\).", 8, [
       { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). L’ordre des côtés est déjà indiqué par l’égalité." },
       { type: "regle", text: "Au brevet, on commence par citer les alignements et le parallélisme. Les droites parallèles forment alors deux triangles semblables : ils ont les mêmes angles et leurs longueurs correspondantes suivent la même proportion. On conserve exactement le même ordre dans chaque quotient." },
-      { type: "calcul", text: "Pour isoler \\(x\\), on écrit \\(x=6\\times\\dfrac{4}{3}\\). On peut simplifier \\(6\\div3=2\\), puis calculer \\(2\\times4=8\\)." },
+      { type: "calcul", text: "Pour calculer \\(x\\), on utilise la technique du produit en croix. On multiplie les deux nombres connus placés en diagonale, puis on divise par le nombre qui est croisé avec \\(x\\). Ici, \\(x=6\\times4\\div3=24\\div3=8\\)." },
       { type: "resultat", text: "Ainsi, \\(x=8\\). Vérification : \\(\\dfrac{8}{6}=\\dfrac{4}{3}\\). La rédaction distingue bien les conditions, l’égalité des rapports et le calcul." },
     ], null, null, "mental"),
     n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [

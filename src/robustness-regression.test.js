@@ -464,6 +464,21 @@ test("les consignes de calculatrice ont trois états et se contrôlent dans le l
   assert.match(lab, /Libre choix/);
 });
 
+test("le laboratoire note les corrections sur 10 et bloque une vitrine sous 9", async () => {
+  const [lab, migration] = await Promise.all([
+    read("./pages/CorrectionsLab.jsx"),
+    read("../supabase/correction-quality-scores-2026-08-14.sql"),
+  ]);
+  assert.match(lab, /Note globale de la correction/);
+  assert.match(lab, /qualityScore/);
+  assert.match(lab, /Copier le bilan d’apprentissage pour Codex/);
+  assert.match(lab, /Famille :/);
+  assert.match(lab, /Number\(audit\.qualityScore\)>=9/);
+  assert.match(migration, /quality_score between 0 and 10/);
+  assert.match(migration, /new\.quality_score < 9/);
+  assert.match(migration, /cardinality\(new\.checked_criteria\) < 8/);
+});
+
 test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {
   const feedback = await read("./lib/pedagogicalFeedback.js");
   assert.match(feedback, /number_sequence_pattern/);

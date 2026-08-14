@@ -60,7 +60,7 @@ export default function MentionsLegales() {
       </p>
 
       <h2>Médiation de la consommation</h2>
-      <p><strong>Adhésion en cours avant l'ouverture commerciale.</strong> Les coordonnées et le site internet du médiateur de la consommation désigné seront publiés ici dès la signature de la convention.</p>
+      <p><strong>La convention de médiation est signée.</strong> Les coordonnées et le site internet du médiateur de la consommation désigné seront publiés ici dès leur réception.</p>
     </LegalLayout>
   );
 }

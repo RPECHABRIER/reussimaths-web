@@ -812,6 +812,9 @@ create table if not exists public.pedagogical_correction_audits (
   status text not null default 'à_revoir' check (status in ('à_revoir', 'validée', 'prioritaire')),
   checked_criteria smallint[] not null default '{}',
   note text not null default '' check (length(note) <= 5000),
+  quality_score smallint check (quality_score between 0 and 10),
+  sample_kind text not null default 'reference' check (sample_kind in ('reference', 'discovery', 'diagnostic')),
+  feedback_family text not null default 'general' check (length(feedback_family) between 1 and 120),
   updated_at timestamptz not null default now()
 );
 alter table public.pedagogical_correction_audits enable row level security;
@@ -819,6 +822,7 @@ create policy "pedagogical audits: admin read" on public.pedagogical_correction_
 create policy "pedagogical audits: admin insert" on public.pedagogical_correction_audits for insert to authenticated with check ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
 create policy "pedagogical audits: admin update" on public.pedagogical_correction_audits for update to authenticated using ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com') with check ((auth.jwt() ->> 'email') = 'romainpechabrier@gmail.com');
 create index if not exists pedagogical_audits_status_idx on public.pedagogical_correction_audits (status, updated_at desc);
+create index if not exists pedagogical_audits_quality_idx on public.pedagogical_correction_audits (sample_kind, quality_score, updated_at desc);
 revoke all on table public.pedagogical_correction_audits from anon;
 grant select, insert, update on table public.pedagogical_correction_audits to authenticated;
 grant execute on function public.add_practice_seconds(integer, date) to authenticated;

@@ -98,7 +98,7 @@ export default function CGU() {
       <p>Les présentes CGU sont soumises au droit français.</p>
 
       <h2>11. Réclamation et médiation</h2>
-      <p>En cas de difficulté, l’utilisateur doit d’abord adresser une réclamation écrite à <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a> afin de rechercher une solution amiable. <strong>L'adhésion au dispositif de médiation est en cours avant l'ouverture commerciale.</strong> Les coordonnées du médiateur désigné seront publiées ici et dans les mentions légales dès la signature de la convention.</p>
+      <p>En cas de difficulté, l’utilisateur doit d’abord adresser une réclamation écrite à <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a> afin de rechercher une solution amiable. <strong>La convention de médiation est signée.</strong> Les coordonnées du médiateur désigné seront publiées ici et dans les mentions légales dès leur réception.</p>
     </LegalLayout>
   );
 }

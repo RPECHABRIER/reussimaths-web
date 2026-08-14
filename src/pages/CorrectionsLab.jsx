@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ClipboardCopy } from "lucide-react";
 import { Link } from "react-router-dom";
 import LearningFeedback from "../components/LearningFeedback";
 import MathText from "../components/MathText";
@@ -10,6 +10,7 @@ import { getAllDiscoveryShowcases, getDiagnosticShowcaseExercises } from "../dis
 import { supabase } from "../lib/supabaseClient";
 import CalculationModeBadge from "../components/CalculationModeBadge";
 import { getCalculationMode } from "../lib/calculationMode";
+import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -91,6 +92,17 @@ const QUALITY_CRITERIA = [
   "Une question proche permettrait de vérifier l’apprentissage.",
 ];
 
+const isDiscoveryTitle = (sampleTitle) => sampleTitle.startsWith("Découverte ");
+const sampleKind = (sampleTitle) => isDiscoveryTitle(sampleTitle)
+  ? "discovery"
+  : sampleTitle.startsWith("Diagnostic ") ? "diagnostic" : "reference";
+const getFamily = (sample) => buildPedagogicalFeedback(sample[1], sample[2]).family ?? "general";
+const isPublishable = (sampleTitle, audit) => (
+  Number(audit?.qualityScore) >= 9
+  && audit?.checks?.length === QUALITY_CRITERIA.length
+  && audit?.status === "validée"
+);
+
 function loadReviews() {
   try { return JSON.parse(localStorage.getItem("reussimaths:correction-audits") ?? "{}"); }
   catch { return {}; }
@@ -103,23 +115,27 @@ export default function CorrectionsLab() {
   const [statusFilter, setStatusFilter] = useState("toutes");
   const [calculationFilter, setCalculationFilter] = useState("tous");
   const [search, setSearch] = useState("");
+  const [copied, setCopied] = useState(false);
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   const [title, exercise, response] = LAB_SAMPLES[index];
   useEffect(() => {
     if (!user?.id) return;
-    supabase.from("pedagogical_correction_audits").select("sample_key,title,status,checked_criteria,note,updated_at").then(({data,error}) => {
+    supabase.from("pedagogical_correction_audits").select("sample_key,title,status,checked_criteria,note,quality_score,sample_kind,feedback_family,updated_at").then(({data,error}) => {
       if (error) { if (error.code !== "42P01") console.error("[CorrectionsLab] chargement :", error.message); return; }
-      const remote = Object.fromEntries((data ?? []).map((row)=>[row.sample_key,{checks:row.checked_criteria ?? [],note:row.note ?? "",status:row.status,updatedAt:row.updated_at}]));
+      const remote = Object.fromEntries((data ?? []).map((row)=>[row.sample_key,{checks:row.checked_criteria ?? [],note:row.note ?? "",qualityScore:row.quality_score,status:row.status,sampleKind:row.sample_kind,feedbackFamily:row.feedback_family,updatedAt:row.updated_at}]));
       setAudits((local)=>{const merged={...local,...remote};localStorage.setItem("reussimaths:correction-audits",JSON.stringify(merged));return merged;});
     });
   }, [user?.id]);
-  const audit = audits[title] ?? { checks: [], note: "", status: "à_revoir" };
+  const audit = audits[title] ?? { checks: [], note: "", qualityScore: null, status: "à_revoir" };
+  const feedbackFamily = getFamily([title, exercise, response]);
   const updateAudit = (next) => {
-    const value = { ...audit, ...next, updatedAt: new Date().toISOString() };
+    const value = { ...audit, ...next, sampleKind: sampleKind(title), feedbackFamily, updatedAt: new Date().toISOString() };
+    if (value.qualityScore != null && Number(value.qualityScore) < 9 && isDiscoveryTitle(title)) value.status = "prioritaire";
+    if (value.checks.length < QUALITY_CRITERIA.length && value.status === "validée") value.status = "à_revoir";
     const updated = { ...audits, [title]: value };
     setAudits(updated);
     localStorage.setItem("reussimaths:correction-audits", JSON.stringify(updated));
-    if (user?.id) supabase.from("pedagogical_correction_audits").upsert({sample_key:title,title,status:value.status,checked_criteria:value.checks,note:value.note,updated_at:value.updatedAt}).then(({error})=>{if(error&&error.code!=="42P01")console.error("[CorrectionsLab] sauvegarde :",error.message);});
+    if (user?.id) supabase.from("pedagogical_correction_audits").upsert({sample_key:title,title,status:value.status,checked_criteria:value.checks,note:value.note,quality_score:value.qualityScore,sample_kind:value.sampleKind,feedback_family:value.feedbackFamily,updated_at:value.updatedAt}).then(({error})=>{if(error&&error.code!=="42P01")console.error("[CorrectionsLab] sauvegarde :",error.message);});
   };
   const checkedCount = audit.checks.length;
   const filteredSamples = useMemo(() => LAB_SAMPLES.map((sample,sampleIndex)=>({sample,sampleIndex})).filter(({sample})=>{
@@ -130,6 +146,44 @@ export default function CorrectionsLab() {
   useEffect(() => {
     if (filteredSamples.length > 0 && !filteredSamples.some(({sampleIndex})=>sampleIndex===index)) setIndex(filteredSamples[0].sampleIndex);
   }, [filteredSamples, index]);
+  const labSummary = useMemo(() => {
+    const evaluated = LAB_SAMPLES.filter(([sampleTitle]) => audits[sampleTitle]?.qualityScore != null);
+    const discovery = DISCOVERY_SAMPLES.map((sample) => ({ sample, audit: audits[sample[0]] }));
+    const familyRows = new Map();
+    for (const sample of evaluated) {
+      const family = getFamily(sample);
+      const row = familyRows.get(family) ?? { family, count: 0, total: 0, weakCriteria: Array(QUALITY_CRITERIA.length).fill(0), notes: [] };
+      const sampleAudit = audits[sample[0]];
+      row.count += 1;
+      row.total += Number(sampleAudit.qualityScore);
+      QUALITY_CRITERIA.forEach((_, criterionIndex) => { if (!sampleAudit.checks?.includes(criterionIndex)) row.weakCriteria[criterionIndex] += 1; });
+      if (sampleAudit.note?.trim()) row.notes.push(sampleAudit.note.trim());
+      familyRows.set(family, row);
+    }
+    return {
+      evaluated: evaluated.length,
+      average: evaluated.length ? evaluated.reduce((sum, [sampleTitle]) => sum + Number(audits[sampleTitle].qualityScore), 0) / evaluated.length : 0,
+      discoveryApproved: discovery.filter(({ sample, audit: sampleAudit }) => isPublishable(sample[0], sampleAudit)).length,
+      discoveryTotal: discovery.length,
+      families: [...familyRows.values()].sort((a, b) => (a.total / a.count) - (b.total / b.count)),
+    };
+  }, [audits]);
+  const copyLearningBrief = async () => {
+    const lines = [
+      "# Apprentissage éditorial RéussiMaths",
+      `Corrections évaluées : ${labSummary.evaluated}/${LAB_SAMPLES.length}. Moyenne : ${labSummary.average.toFixed(1)}/10.`,
+      `Parcours Découverte publiables : ${labSummary.discoveryApproved}/${labSummary.discoveryTotal}.`,
+      "",
+      ...labSummary.families.flatMap((row) => {
+        const weak = row.weakCriteria.map((count, criterionIndex) => ({ count, label: QUALITY_CRITERIA[criterionIndex] })).filter(({ count }) => count > 0).sort((a, b) => b.count - a.count).slice(0, 3);
+        return [`## ${row.family} — ${(row.total / row.count).toFixed(1)}/10 (${row.count})`, ...weak.map(({ count, label }) => `- Point faible (${count}) : ${label}`), ...row.notes.map((note) => `- Retour expert : ${note}`), ""];
+      }),
+      "Consigne à Codex : utilise ces retours pour améliorer les règles communes dans pedagogicalFeedback.js, puis vérifie toutes les corrections de la même famille et les parcours Découverte concernés.",
+    ];
+    await navigator.clipboard.writeText(lines.join("\n"));
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2500);
+  };
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   return (
@@ -138,6 +192,12 @@ export default function CorrectionsLab() {
         <Link to="/admin" className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: colors.slate }}><ArrowLeft size={14} /> Administration</Link>
         <p className="mt-5 text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: colors.gold }}>Laboratoire pédagogique</p>
         <h1 className="mt-1 text-2xl sm:text-3xl font-black" style={{ color: colors.ink, fontFamily: fonts.display }}>Contrôler les corrections</h1>
+        <section className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Évaluées</p><p className="mt-1 text-2xl font-black" style={{color:colors.ink}}>{labSummary.evaluated}/{LAB_SAMPLES.length}</p></div>
+          <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Note moyenne</p><p className="mt-1 text-2xl font-black" style={{color:colors.ink}}>{labSummary.evaluated ? labSummary.average.toFixed(1) : "—"}/10</p></div>
+          <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Découverte publiables</p><p className="mt-1 text-2xl font-black" style={{color:labSummary.discoveryApproved===labSummary.discoveryTotal?colors.green:colors.red}}>{labSummary.discoveryApproved}/{labSummary.discoveryTotal}</p></div>
+        </section>
+        <button type="button" onClick={copyLearningBrief} className="mt-3 inline-flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-xs font-black" style={{borderColor:colors.hairline,color:colors.ink}}><ClipboardCopy size={15}/>{copied ? "Bilan copié" : "Copier le bilan d’apprentissage pour Codex"}</button>
         <div className="mt-5 grid gap-2 sm:grid-cols-3"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select><select value={calculationFilter} onChange={(event)=>setCalculationFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="tous">Tous les modes de calcul</option><option value="mental">Sans calculatrice</option><option value="calculator">Calculatrice autorisée</option><option value="choix">Libre choix</option></select></div>
         <label className="block mt-3 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
@@ -159,12 +219,18 @@ export default function CorrectionsLab() {
             <div><p className="text-[10px] font-black uppercase tracking-[0.15em]" style={{color:colors.gold}}>Validation experte</p><h2 className="mt-1 text-lg font-black" style={{color:colors.ink,fontFamily:fonts.display}}>Grille de qualité pédagogique</h2></div>
             <span className="rounded-full px-3 py-1 text-xs font-black" style={{backgroundColor:checkedCount===QUALITY_CRITERIA.length?`${colors.green}18`:`${colors.gold}18`,color:checkedCount===QUALITY_CRITERIA.length?colors.green:colors.ink}}>{checkedCount}/{QUALITY_CRITERIA.length}</span>
           </div>
+          <div className="mt-4 rounded-2xl p-4" style={{backgroundColor:colors.bg}}>
+            <div className="flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-black" style={{color:colors.ink}}>Note globale de la correction</p><span className="text-xl font-black" style={{color:Number(audit.qualityScore)>=9?colors.green:Number(audit.qualityScore)>=7?colors.gold:colors.red}}>{audit.qualityScore == null ? "—" : audit.qualityScore}/10</span></div>
+            <div className="mt-3 grid grid-cols-6 gap-1.5 sm:grid-cols-11">{Array.from({length:11},(_,score)=><button type="button" key={score} onClick={()=>updateAudit({qualityScore:score})} className="rounded-lg border px-2 py-2 text-xs font-black" style={{borderColor:Number(audit.qualityScore)===score?colors.ink:colors.hairline,backgroundColor:Number(audit.qualityScore)===score?colors.ink:"white",color:Number(audit.qualityScore)===score?"white":colors.ink}}>{score}</button>)}</div>
+            <p className="mt-2 text-[10px]" style={{color:colors.slate}}>9 ou 10 = qualité vitrine. Une correction Découverte notée sous 9 est automatiquement classée prioritaire et ne peut pas être validée.</p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-black"><span className="rounded-full px-2.5 py-1" style={{backgroundColor:`${colors.ink}0D`,color:colors.ink}}>Famille : {feedbackFamily}</span>{isDiscoveryTitle(title)&&<span className="rounded-full px-2.5 py-1" style={{backgroundColor:isPublishable(title,audit)?`${colors.green}18`:`${colors.red}12`,color:isPublishable(title,audit)?colors.green:colors.red}}>{isPublishable(title,audit)?"Publiable dans Découverte":"Bloquée pour Découverte"}</span>}</div>
           <div className="mt-4 grid gap-2">
             {QUALITY_CRITERIA.map((criterion, criterionIndex) => <label key={criterion} className="flex items-start gap-2 rounded-xl p-2.5 text-xs cursor-pointer" style={{backgroundColor:colors.bg,color:colors.ink}}><input type="checkbox" className="mt-0.5" checked={audit.checks.includes(criterionIndex)} onChange={() => updateAudit({checks:audit.checks.includes(criterionIndex)?audit.checks.filter((item)=>item!==criterionIndex):[...audit.checks,criterionIndex]})}/><span>{criterion}</span></label>)}
           </div>
-          <label className="block mt-4 text-xs font-bold" style={{color:colors.slate}}>Décision éditoriale<select value={audit.status} onChange={(event)=>updateAudit({status:event.target.value})} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5" style={{borderColor:colors.hairline,color:colors.ink}}><option value="à_revoir">À revoir</option><option value="validée">Validée</option><option value="prioritaire">Correction prioritaire</option></select></label>
+          <label className="block mt-4 text-xs font-bold" style={{color:colors.slate}}>Décision éditoriale<select value={audit.status} onChange={(event)=>updateAudit({status:event.target.value})} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5" style={{borderColor:colors.hairline,color:colors.ink}}><option value="à_revoir">À revoir</option><option value="validée" disabled={Number(audit.qualityScore)<9 || checkedCount<QUALITY_CRITERIA.length}>Validée (note ≥ 9 et grille complète)</option><option value="prioritaire">Correction prioritaire</option></select></label>
           <label className="block mt-3 text-xs font-bold" style={{color:colors.slate}}>Note de l’expert<textarea value={audit.note} onChange={(event)=>updateAudit({note:event.target.value})} rows={4} placeholder="Ce qui doit être réécrit, illustré ou vérifié…" className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 font-normal" style={{borderColor:colors.hairline,color:colors.ink}} /></label>
-          <p className="mt-3 text-[10px]" style={{color:colors.slate}}>La validation est conservée sur cet appareil et synchronisée avec votre compte administrateur lorsque la migration est installée. Une correction n’est considérée publiable qu’avec 8 critères validés et le statut « Validée ».</p>
+          <p className="mt-3 text-[10px]" style={{color:colors.slate}}>La validation est conservée sur cet appareil et synchronisée avec votre compte administrateur. Une correction n’est publiable qu’avec une note d’au moins 9/10, les 8 critères validés et le statut « Validée ». Les retours sont regroupés par famille afin qu’une amélioration de règle bénéficie à toutes les corrections semblables.</p>
         </section>
       </div>
     </main>

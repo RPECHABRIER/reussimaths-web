@@ -26,7 +26,8 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 - [ ] Recevoir le SIRET et le code APE, puis remplacer « en cours d'attribution » dans les mentions légales.
 - [ ] Disposer d'un numéro de téléphone professionnel publiable ; les sources officielles françaises le listent parmi les coordonnées obligatoires d'un site marchand.
-- [ ] Finaliser l'adhésion au médiateur de la consommation et publier son nom, ses coordonnées et son site dans les mentions légales et les CGV.
+- [x] Signer la convention avec le médiateur de la consommation.
+- [ ] À réception, publier le nom, les coordonnées et le site du médiateur dans les mentions légales et les CGV.
 - [ ] Faire relire le cadre contractuel, la propriété intellectuelle et le rôle effectif de chaque intervenant par un professionnel compétent.
 
 ## 1. Avant d’accepter le premier paiement

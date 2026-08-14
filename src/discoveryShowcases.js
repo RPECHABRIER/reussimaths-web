@@ -78,7 +78,7 @@ const SHOWCASES = {
       { type: "donnee", text: "On cherche une proportion de la quantité 80 : 20 % ne signifie pas ajouter le nombre 20." },
       { type: "regle", text: "Le plus simple est de calculer d’abord 10 %, c’est-à-dire le dixième, puis de doubler ce résultat pour obtenir 20 %." },
       { type: "calcul", text: "Dix pour cent de 80 vaut 80 ÷ 10 = 8. Vingt pour cent est le double de 10 %, donc 2 × 8 = 16." },
-      { type: "resultat", text: "Ainsi, 20 % de 80 est égal à 16." },
+      { type: "resultat", text: "Ainsi, 20 % de 80 est égal à 16. On peut aussi utiliser l’écriture décimale : pour prendre une part d’une quantité, on utilise la multiplication. Comme 20 % = 20/100 = 0,2, on calcule 80 × 0,2 = 16." },
     ]),
     n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
       { type: "donnee", text: "Deux angles du triangle mesurent 50° et 60°. On cherche la mesure du troisième angle." },

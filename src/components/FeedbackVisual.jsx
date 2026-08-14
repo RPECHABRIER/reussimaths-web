@@ -170,11 +170,19 @@ export default function FeedbackVisual({ family, exercise }) {
     );
   }
   if (["percentage_of_number", "percentages"].includes(family)) {
+    const percentageMatch = `${exercise?.prompt ?? ""}`.match(/(\d+(?:[,.]\d+)?)\s*%/);
+    const quantityMatch = `${exercise?.prompt ?? ""}`.match(/%\s*(?:de|d['’])\s*(\d+(?:[,.]\d+)?)/i);
+    const percentage = Number((percentageMatch?.[1] ?? "20").replace(",", "."));
+    const quantity = Number((quantityMatch?.[1] ?? "80").replace(",", "."));
+    const highlightedGroups = Math.max(0, Math.min(10, Math.round(percentage / 10)));
+    const tenPercentValue = quantity / 10;
+    const result = Number.isFinite(Number(exercise?.answer)) ? Number(exercise.answer) : quantity * percentage / 100;
     return (
-      <div className="mt-4 rounded-xl bg-white p-3" style={{ border: `1px solid ${colors.gold}35` }}>
-        <p className="text-xs font-bold" style={{ color: colors.ink }}>Partager la quantité en pourcentages</p>
-        <div className="mt-3 grid grid-cols-10 gap-1">{Array.from({ length: 10 }, (_, index) => <span key={index} className="h-8 rounded-md animate-pulse" style={{ background: index < 2 ? `${colors.gold}75` : `${colors.ink}12`, animationDelay: `${index * 60}ms` }} />)}</div>
-        <p className="mt-2 text-[11px] text-center" style={{ color: colors.slate }}>Chaque bloc représente 10 % ; deux blocs représentent 20 %.</p>
+      <div className="mt-4 rounded-xl bg-white p-3" data-visual="percentage-ten-groups" style={{ border: `1px solid ${colors.gold}35` }}>
+        <p className="text-xs font-bold" style={{ color: colors.ink }}>Partager {quantity} en dix groupes égaux</p>
+        <div className="mt-3 grid grid-cols-5 gap-1 sm:grid-cols-10">{Array.from({ length: 10 }, (_, index) => <span key={index} className="flex h-10 items-center justify-center rounded-md text-[10px] font-black" style={{ background: index < highlightedGroups ? (index === 0 ? `${colors.gold}85` : `${colors.green}75`) : `${colors.ink}12`, color:index<highlightedGroups?"white":colors.slate, animation:index<highlightedGroups?`pulse 1.8s ${index*260}ms infinite`:undefined }}>{Number.isInteger(tenPercentValue)?tenPercentValue:String(tenPercentValue).replace(".",",")}</span>)}</div>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-[11px] font-black" style={{color:colors.ink}}><span className="rounded-lg px-2 py-1" style={{background:`${colors.gold}22`}}>10 % = {String(tenPercentValue).replace(".",",")}</span><ArrowRight size={14} color={colors.gold}/><span className="rounded-lg px-2 py-1" style={{background:`${colors.green}20`}}>{percentage} % = {highlightedGroups} × {String(tenPercentValue).replace(".",",")} = {String(result).replace(".",",")}</span></div>
+        <p className="mt-2 text-[11px] text-center" style={{ color: colors.slate }}>Le premier groupe représente 10 %. On en colorie {highlightedGroups} pour obtenir {percentage} %, soit {String(result).replace(".",",")}.</p>
       </div>
     );
   }

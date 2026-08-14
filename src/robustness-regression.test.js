@@ -35,6 +35,17 @@ test("l’addition de fractions montre le redécoupage au dénominateur commun",
   assert.match(visual, /On réunit les parts de même taille/);
 });
 
+test("le calcul de 20 % de 80 montre deux groupes de huit", async () => {
+  const [visual, showcases] = await Promise.all([
+    read("./components/FeedbackVisual.jsx"),
+    read("./discoveryShowcases.js"),
+  ]);
+  assert.match(visual, /data-visual="percentage-ten-groups"/);
+  assert.match(visual, /Partager \{quantity\} en dix groupes égaux/);
+  assert.match(showcases, /pour prendre une part d’une quantité, on utilise la multiplication/);
+  assert.match(showcases, /80 × 0,2 = 16/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

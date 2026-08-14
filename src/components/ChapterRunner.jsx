@@ -20,6 +20,7 @@ import { colors, fonts, shadow } from "../theme";
 import { classifyLearningError, LEARNING_ERROR_LABELS } from "../lib/learningError";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { selectAdaptiveNextExercise } from "../lib/adaptiveNextExercise";
+import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -396,7 +397,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
+    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) <= tolerance, input);
   };
 
   const submitQCM = (option) => {
@@ -866,7 +867,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
+                {NUMERIC_KEYPAD_KEYS.map((key) => (
                   <button
                     key={key}
                     disabled={!!feedback}
@@ -876,7 +877,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
                       else if (key === ",") setInput((v) => (v.includes(",") || v.includes("/") ? v : v === "" ? "0," : v + ","));
                       else if (key === "/") setInput((v) => (v === "" || v.includes("/") || v.includes(",") ? v : v + "/"));
-                      else setInput((v) => (v.length < 8 ? v + key : v));
+                      else setInput((v) => (v.length < MAX_NUMERIC_INPUT_LENGTH ? v + key : v));
                     }}
                     className="py-2.5 rounded-xl text-base font-semibold"
                     style={{

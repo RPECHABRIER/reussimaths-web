@@ -12,6 +12,7 @@ import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import LearningFeedback from "../components/LearningFeedback";
 import CalculationModeBadge from "../components/CalculationModeBadge";
+import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
@@ -128,7 +129,7 @@ export default function ParcoursDiagnostic() {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
+    registerResult(Number.isFinite(val) && Math.abs(val - exercise.answer) <= tolerance, input);
   };
   const submitQCM = (option) => {
     if (feedback) return;
@@ -243,7 +244,7 @@ export default function ParcoursDiagnostic() {
                 style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}
               />
               <div className="grid grid-cols-3 gap-2 mb-3" aria-label="Pavé numérique avec signe moins">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
+                {NUMERIC_KEYPAD_KEYS.map((key) => (
                   <button
                     type="button"
                     key={key}
@@ -255,7 +256,7 @@ export default function ParcoursDiagnostic() {
                       else if (key === "⌫") setInput((value) => value.slice(0, -1));
                       else if (key === ",") setInput((value) => (value.includes(",") || value.includes("/") ? value : value === "" ? "0," : `${value},`));
                       else if (key === "/") setInput((value) => (value === "" || value.includes("/") || value.includes(",") ? value : `${value}/`));
-                      else setInput((value) => (value.length < 8 ? `${value}${key}` : value));
+                      else setInput((value) => (value.length < MAX_NUMERIC_INPUT_LENGTH ? `${value}${key}` : value));
                     }}
                     className="py-2 rounded-xl text-sm font-semibold"
                     style={{ fontFamily: fonts.mono, backgroundColor: "#F5F5F7", color: colors.ink, boxShadow: "0 0 0 1px rgba(27,42,74,0.08)" }}

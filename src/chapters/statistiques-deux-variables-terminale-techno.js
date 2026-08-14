@@ -86,8 +86,12 @@ function genChoisirChangementVariableQCM() {
 // ---------- 3. Utiliser un ajustement affine sur la variable transformée pour revenir au modèle d'origine ----------
 function genRevenirModeleOrigineNumeric() {
   const a = pick([2, 3, 0.5, -1, -2]);
-  const b = randInt(-5, 15);
-  const x = randInt(1, 15);
+  const x = randInt(1, 8);
+  // On choisit l'ordonnée à l'origine pour que le retour 10^Y reste une
+  // valeur raisonnable à saisir et à interpréter (ni 10^60, ni zéro arrondi).
+  const minB = Math.ceil(-4 - a * x);
+  const maxB = Math.floor(6 - a * x);
+  const b = randInt(minB, maxB);
   // Y = log(y) = ax + b, donc y = 10^(ax+b)
   const Y = roundTo(a * x + b, 3);
   const answer = roundTo(10 ** Y, 2);

@@ -130,7 +130,7 @@ test("l’audit géométrique couvre mesures, repérage, solides et vecteurs", (
   const solid = buildPedagogicalFeedback({ type: "text", chapter: "Géométrie dans l'espace — Vocabulaire", prompt: "Nomme le segment.", answer: "arête" }, "sommet");
   const vector = buildPedagogicalFeedback({ type: "text", chapter: "Vecteurs — Coordonnées", prompt: "Calcule AB.", answer: "(3;4)" }, "(5;8)");
   assert.equal(polygon.family, "geometry_polygon_measure");
-  assert.equal(coordinates.family, "geometry_coordinates");
+  assert.equal(coordinates.family, "point_coordinates");
   assert.equal(solid.family, "geometry_solids_vocabulary");
   assert.equal(vector.family, "geometry_vectors");
 });

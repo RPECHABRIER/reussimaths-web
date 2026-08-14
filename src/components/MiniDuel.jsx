@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, X, Timer, Square, CheckSquare, ArrowRight } from "lucide-react";
 import MathText from "./MathText";
+import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import StepsList from "./StepsList";
 import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
@@ -93,7 +94,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) <= tolerance, input);
   };
 
   const submitQCM = (opt) => {
@@ -239,7 +240,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
             {input || <span style={{ opacity: 0.35 }}>0</span>}
           </div>
           <div className="grid grid-cols-3 gap-2 mb-2">
-            {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
+            {NUMERIC_KEYPAD_KEYS.map((key) => (
               <button
                 key={key}
                 disabled={!!feedback}
@@ -249,7 +250,7 @@ export default function MiniDuel({ chapter, count, themeId, onFinish }) {
                   else if (key === "⌫") setInput((v) => v.slice(0, -1));
                   else if (key === ",") setInput((v) => (v.includes(",") || v.includes("/") ? v : v === "" ? "0," : v + ","));
                   else if (key === "/") setInput((v) => (v === "" || v.includes("/") || v.includes(",") ? v : v + "/"));
-                  else setInput((v) => (v.length < 8 ? v + key : v));
+                  else setInput((v) => (v.length < MAX_NUMERIC_INPUT_LENGTH ? v + key : v));
                 }}
                 className="py-2 rounded-xl text-sm font-semibold"
                 style={{ fontFamily: fonts.mono, backgroundColor: field, color: ink, boxShadow: `0 0 0 1px ${ring}` }}

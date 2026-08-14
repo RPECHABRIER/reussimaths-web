@@ -7,6 +7,7 @@ import LearningFeedback from "./LearningFeedback";
 import Figure from "./Figure";
 import Graph from "./Graph";
 import CalculationModeBadge from "./CalculationModeBadge";
+import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
@@ -142,7 +143,7 @@ export default function AutomatismesRunner({ chapter }) {
     if (input.trim() === "" || feedback) return;
     const val = parseNumericInput(input);
     const tolerance = exercise.tolerance ?? 0.001;
-    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) < tolerance, input);
+    registerAnswer(Number.isFinite(val) && Math.abs(val - exercise.answer) <= tolerance, input);
   };
 
   const submitQCM = (opt) => {
@@ -441,7 +442,7 @@ export default function AutomatismesRunner({ chapter }) {
                 {input || <span style={{ opacity: 0.35 }}>0</span>}
               </div>
               <div className="grid grid-cols-3 gap-2 mb-3">
-                {["7", "8", "9", "4", "5", "6", "1", "2", "3", "±", "0", ",", "/", "+∞", "−∞", "⌫"].map((key) => (
+                {NUMERIC_KEYPAD_KEYS.map((key) => (
                   <button
                     key={key}
                     disabled={!!feedback}
@@ -451,7 +452,7 @@ export default function AutomatismesRunner({ chapter }) {
                       else if (key === "⌫") setInput((v) => v.slice(0, -1));
                       else if (key === ",") setInput((v) => (v.includes(",") || v.includes("/") ? v : v === "" ? "0," : v + ","));
                       else if (key === "/") setInput((v) => (v === "" || v.includes("/") || v.includes(",") ? v : v + "/"));
-                      else setInput((v) => (v.length < 8 ? v + key : v));
+                      else setInput((v) => (v.length < MAX_NUMERIC_INPUT_LENGTH ? v + key : v));
                     }}
                     className="py-2.5 rounded-xl text-base font-semibold"
                     style={{ fontFamily: fonts.mono, backgroundColor: field, color: ink, boxShadow: `0 0 0 1px ${ring}` }}

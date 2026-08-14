@@ -390,6 +390,26 @@ test("tous les parcours numériques permettent les nombres négatifs et explique
   assert.match(explanation, /Méthode à retenir/);
 });
 
+test("tous les pavés numériques partagent les symboles nécessaires sans limite à huit caractères", async () => {
+  const [keypad, runner, automatic, duel, diagnostic] = await Promise.all([
+    read("./lib/numericKeypad.js"),
+    read("./components/ChapterRunner.jsx"),
+    read("./components/AutomatismesRunner.jsx"),
+    read("./components/MiniDuel.jsx"),
+    read("./pages/ParcoursDiagnostic.jsx"),
+  ]);
+  assert.match(keypad, /"±"/);
+  assert.match(keypad, /"\/"/);
+  assert.match(keypad, /"\+∞"/);
+  assert.match(keypad, /"−∞"/);
+  assert.match(keypad, /MAX_NUMERIC_INPUT_LENGTH = 32/);
+  for (const source of [runner, automatic, duel, diagnostic]) {
+    assert.match(source, /NUMERIC_KEYPAD_KEYS/);
+    assert.match(source, /MAX_NUMERIC_INPUT_LENGTH/);
+    assert.doesNotMatch(source, /length < 8/);
+  }
+});
+
 test("une erreur déclenche une vérification proche et priorise les erreurs récurrentes", async () => {
   const [runner, tracking, review, chapterPage] = await Promise.all([
     read("./components/ChapterRunner.jsx"),

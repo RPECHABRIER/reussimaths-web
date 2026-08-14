@@ -68,6 +68,14 @@ test("le produit de relatifs nomme explicitement la règle des signes", async ()
   assert.match(showcases, /On applique d’abord la règle des signes/);
 });
 
+test("la résolution de 4x moins 7 égale 13 anime les deux opérations de balance", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="equation-balance-two-steps"/);
+  assert.match(visual, /Ajouter 7 de chaque côté/);
+  assert.match(visual, /Partager chaque côté en 4 parts égales/);
+  assert.match(visual, /Une part face à une part : x = 5/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

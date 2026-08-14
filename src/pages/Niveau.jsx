@@ -12,6 +12,7 @@ import { canAccessChapter, getEffectiveSubscription, isFullAccessSubscription, i
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import ComingSoon from "./ComingSoon";
 import { setPreferredLevel } from "../lib/preferences";
+import AppHeader from "../components/AppHeader";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId), en mélangeant les
 // chapitres réels (avec du contenu, voir chapters/registry.js) et les
@@ -60,22 +61,19 @@ export default function Niveau() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-5xl mx-auto">
-        <Link to={level.cycle ? `/${level.cycle}` : "/"} className="text-sm font-medium" style={{ color: colors.ink }}>
-          ← Changer de niveau
-        </Link>
+        <AppHeader backTo={level.cycle ? `/${level.cycle}` : "/"} backLabel="Changer de niveau" />
 
-        <div className="text-center my-10 sm:my-14">
-          <div className="inline-block mb-2 rounded-full" style={{ width: 36, height: 3, backgroundColor: cc.accent }} />
-          <p className="text-xs uppercase tracking-widest font-bold" style={{ color: cc.accent }}>Programme 2026</p>
-          <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2.3rem, 5vw, 3.6rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
+        <div className="page-hero my-6 rounded-[2rem] px-5 py-8 text-center sm:my-9 sm:px-10 sm:py-11" style={{background:`linear-gradient(135deg, ${colors.ink}, ${cc.dark})`,boxShadow:shadow.raised}}>
+          <p className="text-xs uppercase tracking-widest font-black" style={{ color: cc.accent === cycleColors.college.accent ? "#67D7E8" : "#B9B0FF" }}>Programme 2026 · parcours personnalisé</p>
+          <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.card, fontSize: "clamp(2.3rem, 5vw, 3.6rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
             Maths · {level.label}
           </h1>
-          <p className="text-base mt-2" style={{ color: colors.slate }}>Choisis un parcours guidé ou travaille directement un chapitre.</p>
+          <p className="mx-auto mt-2 max-w-xl text-sm sm:text-base" style={{ color: "rgba(255,255,255,.72)" }}>Une prochaine étape claire, des chapitres reliés au travail en classe et des révisions qui reviennent au bon moment.</p>
         </div>
 
         {parcoursList.length > 0 && (
           <div className="grid sm:grid-cols-2 gap-3 max-w-3xl mx-auto mb-8">
-          {(isAdminUser(user) || (isFullAccessSubscription(subscription) && (subscription.admin_granted || subscription.subscription_level === levelId)))&&<Link to={`/calcul-mental/${levelId}`} className="sm:col-span-2 block"><div className="rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}35`,boxShadow:shadow.soft}}><div className="flex items-center justify-center rounded-2xl" style={{width:44,height:44,backgroundColor:colors.card}}><Brain size={21} color={colors.green}/></div><div className="flex-1"><p className="font-black" style={{color:colors.ink}}>Ton calcul mental du jour</p><p className="text-xs mt-0.5" style={{color:colors.slate}}>10 questions · 18 secondes chacune · quatre opérations et pourcentages</p></div><ArrowRight size={18} color={colors.green}/></div></Link>}
+          {(isAdminUser(user) || (isFullAccessSubscription(subscription) && (subscription.admin_granted || subscription.subscription_level === levelId)))&&<Link to={`/calcul-mental/${levelId}`} className="interactive-card sm:col-span-2 block rounded-3xl"><div className="rounded-3xl px-5 py-5 flex items-center gap-3" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}35`,boxShadow:shadow.soft}}><div className="flex items-center justify-center rounded-2xl" style={{width:44,height:44,backgroundColor:colors.card}}><Brain size={21} color={colors.green}/></div><div className="flex-1"><p className="font-black" style={{color:colors.ink}}>Ton calcul mental du jour</p><p className="text-xs mt-0.5" style={{color:colors.slate}}>10 questions · 18 secondes chacune · quatre opérations et pourcentages</p></div><ArrowRight size={18} color={colors.green}/></div></Link>}
           <Link to={`/parcours/niveau/${levelId}`} className="block">
             <div
               className="h-full rounded-3xl px-5 py-5 flex items-center gap-3 transition-transform hover:-translate-y-1 active:scale-[0.98]"

@@ -10,6 +10,7 @@ import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
 import { ADAPTIVE_REASON_LABELS } from "../lib/adaptiveNextExercise";
 import { ArrowRight, BookOpenCheck, CreditCard, Eye, KeyRound, RefreshCw, ShieldCheck, Sparkles, Users } from "lucide-react";
+import AppHeader from "../components/AppHeader";
 
 // ---------------------------------------------------------------------------
 // Panneau admin (/admin, réservé à romainpechabrier@gmail.com) — voir
@@ -55,12 +56,10 @@ export default function AdminPreview() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-6xl mx-auto flex flex-col gap-7">
-        <div className="rounded-[2rem] p-6 sm:p-8 relative overflow-hidden" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}>
+        <AppHeader backTo="/compte" backLabel="Mon compte" account={false} compact />
+        <div className="page-hero rounded-[2rem] p-6 sm:p-8 relative overflow-hidden" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}>
           <div className="absolute rounded-full" style={{ width: 260, height: 260, right: -80, top: -130, backgroundColor: `${colors.gold}24` }} />
-          <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>
-            <span style={{ color: "rgba(255,255,255,.72)" }}>← Mon compte</span>
-          </Link>
-          <div className="relative mt-7 flex items-start justify-between gap-5">
+          <div className="relative flex items-start justify-between gap-5">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] font-bold" style={{ color: colors.gold }}>Pilotage sécurisé</p>
           <h1

@@ -818,3 +818,32 @@ test("le parcours montre une représentation visuelle de la maîtrise", async ()
   assert.match(path, /Chemin de progression/);
   assert.match(path, /const done = !!step\.done/);
 });
+
+test("les pages principales partagent une navigation et des héros cohérents", async () => {
+  const [header, account, level, report, admin] = await Promise.all([
+    read("./components/AppHeader.jsx"),
+    read("./pages/Account.jsx"),
+    read("./pages/Niveau.jsx"),
+    read("./pages/Bilan.jsx"),
+    read("./pages/AdminPreview.jsx"),
+  ]);
+  assert.match(header, /Accueil RéussiMaths/);
+  assert.match(header, /aria-label=\{backLabel\}/);
+  assert.match(account, /<AppHeader/);
+  assert.match(account, /Abonnement :/);
+  assert.match(account, /Continuer en/);
+  assert.match(level, /page-hero/);
+  assert.match(report, /report-hero page-hero/);
+  assert.match(admin, /<AppHeader/);
+});
+
+test("le chemin de progression reste lisible quand il comporte de nombreuses étapes", async () => {
+  const [path, css] = await Promise.all([
+    read("./components/ProgressPath.jsx"),
+    read("./index.css"),
+  ]);
+  assert.match(path, /progress-path-scroll/);
+  assert.match(path, /overflow-x-auto/);
+  assert.match(path, /snap-start/);
+  assert.match(css, /\.progress-path-scroll::\-webkit-scrollbar/);
+});

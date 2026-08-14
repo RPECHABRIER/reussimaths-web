@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles, Mail } from "lucide-react";
+import { BarChart3, Check, ArrowRight, ShieldCheck, Target, RotateCcw, Sparkles, Mail, BookOpenCheck } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useSubscription } from "../hooks/useProgress";
 import { useProfile } from "../hooks/useProfile";
@@ -27,6 +27,7 @@ import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
 import LoadError from "../components/LoadError";
 import { markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
+import AppHeader from "../components/AppHeader";
 
 const TERMS_VERSION = "2026-08-13";
 // Apple demande un compte Developer, un Services ID et un secret renouvelé
@@ -345,9 +346,7 @@ export default function Account() {
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-6xl mx-auto">
-      <Link to="/" className="inline-flex text-sm font-medium" style={{ color: colors.ink }}>
-        ← Accueil
-      </Link>
+      <AppHeader account={false} />
 
       {!user ? (
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-14 items-center py-10 lg:py-20">
@@ -419,7 +418,7 @@ export default function Account() {
           </section>
         </div>
       ) : (
-        <div className="flex flex-col gap-4 w-full max-w-3xl mx-auto text-center rounded-[2rem] p-5 sm:p-8 lg:p-10 my-8" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+        <div className="premium-card flex flex-col gap-4 w-full max-w-3xl mx-auto overflow-hidden text-center rounded-[2rem] p-5 sm:p-8 lg:p-10 my-5 sm:my-8" style={{ backgroundColor: colors.card }}>
           {(passwordRecovery || new URLSearchParams(window.location.search).get("recovery") === "1") && (
             <form onSubmit={handlePasswordUpdate} className="rounded-2xl p-4 text-left flex flex-col gap-3" style={{ backgroundColor: `${colors.gold}12`, border: `1px solid ${colors.gold}35` }}>
               <div><p className="text-sm font-black" style={{ color: colors.ink }}>Choisir un nouveau mot de passe</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Utilise au moins 8 caractères et évite un mot de passe déjà employé ailleurs.</p></div>
@@ -428,13 +427,15 @@ export default function Account() {
               {passwordUpdateMessage && <p role="status" className="text-xs" style={{ color: passwordUpdateMessage.type === "error" ? colors.red : colors.green }}>{passwordUpdateMessage.text}</p>}
             </form>
           )}
-          <Mascot size={84} className="mx-auto" />
-          <p style={{ fontFamily: fonts.display, fontWeight: 700, color: colors.ink, fontSize: "1.1rem" }}>
-            {profile?.pseudo ?? "Connecté"}
-          </p>
-          <p className="text-sm" style={{ color: colors.slate }}>
-            Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `actif (${subscription?.plan ?? ""}${monthlyLevelLabel ? ` · ${monthlyLevelLabel}` : ""})` : "aucun"}
-          </p>
+          <section className="page-hero -mx-5 -mt-5 mb-1 flex flex-col items-center gap-4 px-5 py-7 text-left sm:-mx-8 sm:-mt-8 sm:flex-row sm:px-8 lg:-mx-10 lg:-mt-10 lg:px-10" style={{background:`linear-gradient(135deg, ${colors.ink}, #253A66)`,color:colors.card}}>
+            <Mascot size={76} className="shrink-0" style={{boxShadow:"0 12px 30px -16px rgba(0,0,0,.55)"}} />
+            <div className="min-w-0 flex-1 text-center sm:text-left">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-widest" style={{background:isActive?"rgba(63,166,107,.18)":"rgba(255,255,255,.1)",color:isActive?"#78E1A4":colors.gold}}><ShieldCheck size={12}/>{subscriptionLoading?"Vérification de l’accès":subscriptionError?"Accès à vérifier":isActive?"Accès actif":"Espace gratuit"}</span>
+              <h1 className="mt-2 truncate text-2xl font-black" style={{fontFamily:fonts.display}}>{profile?.pseudo ?? "Mon espace"}</h1>
+              <p className="mt-1 text-xs leading-relaxed" style={{color:"rgba(255,255,255,.7)"}}>Abonnement : {admin ? "accès complet (admin)" : subscriptionLoading ? "vérification…" : subscriptionError ? "statut indisponible" : isActive ? `${subscription?.plan === "mensuel" ? "mensuel" : "Pack Examen"}${monthlyLevelLabel ? ` · ${monthlyLevelLabel}` : ""}` : "aucun"}</p>
+            </div>
+            {monthlyLevelLabel && <Link to={`/niveau/${subscription.subscription_level}`} className="inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-xs font-black" style={{background:colors.gold,color:colors.ink}}>Continuer en {monthlyLevelLabel}<ArrowRight size={14}/></Link>}
+          </section>
 
           {subscriptionError && (
             <LoadError message="Le statut de ton abonnement n'a pas pu être vérifié." onRetry={reloadSubscription} />
@@ -609,6 +610,8 @@ export default function Account() {
           )}
 
           <ReviserCard />
+
+          {fullAccess && subscription?.subscription_level && <div className="grid grid-cols-2 gap-2"><Link to={`/niveau/${subscription.subscription_level}`} className="interactive-card rounded-2xl p-3 text-left" style={{background:`${colors.green}10`,border:`1px solid ${colors.green}25`}}><BookOpenCheck size={17} color={colors.green}/><p className="mt-2 text-xs font-black" style={{color:colors.ink}}>Mon niveau</p><p className="mt-0.5 text-[10px]" style={{color:colors.slate}}>Reprendre le parcours</p></Link><Link to="/" className="interactive-card rounded-2xl p-3 text-left" style={{background:`${colors.gold}10`,border:`1px solid ${colors.gold}25`}}><Target size={17} color={colors.gold}/><p className="mt-2 text-xs font-black" style={{color:colors.ink}}>Aujourd’hui</p><p className="mt-0.5 text-[10px]" style={{color:colors.slate}}>Voir la priorité du jour</p></Link></div>}
 
           <Link to="/retour-pilote" className="rounded-2xl p-3 text-sm font-bold" style={{ backgroundColor: `${colors.green}10`, color: colors.green }}>
             Donner mon retour sur RéussiMaths

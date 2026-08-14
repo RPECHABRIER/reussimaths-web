@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake, Brain } from "lucide-react";
+import { Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake, Brain, ShieldCheck } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useWeeklySummary } from "../hooks/useWeeklySummary";
 import { useLearningReviews } from "../hooks/useLearningReviews";
@@ -12,6 +12,7 @@ import { colors, fonts, shadow } from "../theme";
 import LoadError from "../components/LoadError";
 import MathText from "../components/MathText";
 import FeedbackVisual from "../components/FeedbackVisual";
+import AppHeader from "../components/AppHeader";
 
 // ---------------------------------------------------------------------------
 // Page "Bilan de la semaine" (/bilan) : pensée pour être consultée par un
@@ -93,22 +94,22 @@ export default function Bilan() {
   return (
     <div className="weekly-report min-h-screen w-full max-w-full overflow-x-hidden p-3 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
       <div className="w-full min-w-0 max-w-5xl mx-auto">
-        <Link to="/compte" className="print-hide inline-flex items-center gap-1 text-xs font-semibold mb-4" style={{ color: slate }}>
-          <ArrowLeft size={14} /> Mon compte
-        </Link>
+        <AppHeader backTo="/compte" backLabel="Mon compte" account={false} compact />
 
-        <div className="text-center mb-10 mt-5">
+        <div className="report-hero page-hero mb-7 mt-3 rounded-[2rem] px-5 py-7 text-center sm:mb-10 sm:px-10 sm:py-10" style={{background:`linear-gradient(135deg, ${ink}, #263B68)`,boxShadow:shadow.raised}}>
           <p className="text-xs tracking-widest uppercase mb-1 font-semibold" style={{ color: gold, letterSpacing: "0.12em" }}>
             Suivi de la progression
           </p>
-          <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "clamp(2.1rem, 5vw, 3.3rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
+          <h1 style={{ fontFamily: fonts.display, color: colors.card, fontSize: "clamp(2.1rem, 5vw, 3.3rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
             Une semaine de progrès
           </h1>
-          <p className="text-sm mt-2" style={{ color: slate }}>
+          <p className="mx-auto mt-2 max-w-2xl text-sm" style={{ color: "rgba(255,255,255,.7)" }}>
             Un bilan clair à regarder ensemble : travail effectué, acquis et prochaine étape.
           </p>
-          {activeLevelLabel && <p className="mt-2 text-xs font-bold" style={{ color: colors.green }}>Abonnement {activeLevelLabel} · bilan centré sur ce niveau</p>}
-          {summary?.days?.length > 0 && <p className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold" style={{color:gold}}><CalendarDays size={14}/>{formatWeekRange(summary.days)}</p>}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            {activeLevelLabel && <p className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold" style={{ color: "#78E1A4",background:"rgba(63,166,107,.14)" }}><ShieldCheck size={13}/> Niveau {activeLevelLabel}</p>}
+            {summary?.days?.length > 0 && <p className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold" style={{color:gold,background:"rgba(217,164,65,.12)"}}><CalendarDays size={14}/>{formatWeekRange(summary.days)}</p>}
+          </div>
           <div className="print-hide mt-4">
             <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold" style={{backgroundColor:colors.card,color:ink,boxShadow:shadow.soft}}><Printer size={14}/> Imprimer ou enregistrer en PDF</button>
           </div>

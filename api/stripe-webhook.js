@@ -9,7 +9,7 @@
 //
 // Config Stripe : ajoute cette URL dans le dashboard Stripe > Webhooks, sur
 // les événements checkout.session.completed, customer.subscription.updated,
-// customer.subscription.deleted.
+// customer.subscription.deleted et charge.refunded.
 
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
@@ -59,6 +59,12 @@ async function saveCheckoutSession(session) {
     stripe_subscription_id: null,
     status: "active",
     plan,
+    stripe_payment_intent_id:
+      plan === "special_examen"
+        ? typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : session.payment_intent?.id ?? null
+        : null,
     ...(plan === "mensuel" ? { subscription_level: level, subscription_level_selected_at: new Date().toISOString() } : {}),
     updated_at: new Date().toISOString(),
   };
@@ -201,6 +207,32 @@ export default async function handler(req, res) {
             .is("stripe_subscription_id", null);
           if (legacyError) throw legacyError;
         }
+        break;
+      }
+      case "charge.refunded": {
+        const charge = event.data.object;
+        const paymentIntentId =
+          typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
+        const fullyRefunded = charge.refunded === true || charge.amount_refunded >= charge.amount;
+        if (!paymentIntentId || !fullyRefunded) break;
+
+        // Un remboursement intégral du paiement unique retire immédiatement
+        // le Pack correspondant. Le payment_intent est enregistré lors du
+        // Checkout : un remboursement tardif d'un ancien achat ne peut donc
+        // jamais supprimer un Pack racheté ensuite par le même client.
+        const { error } = await supabaseAdmin
+          .from("subscriptions")
+          .update({
+            status: "canceled",
+            current_period_end: new Date().toISOString(),
+            cancel_at_period_end: false,
+            pack_examen_level: null,
+            pack_examen_bonus_chapters: null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("plan", "special_examen")
+          .eq("stripe_payment_intent_id", paymentIntentId);
+        if (error) throw error;
         break;
       }
       default:

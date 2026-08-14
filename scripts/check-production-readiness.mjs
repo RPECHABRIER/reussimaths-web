@@ -46,7 +46,7 @@ if (process.env.PUBLIC_APP_URL && !/^https:\/\/[^/]+$/.test(process.env.PUBLIC_A
 
 for (const file of legalFiles) {
   const content = await readFile(resolve(root, file), "utf8");
-  if (/\[À compléter|\[à compléter|phase de test|ouverture commerciale bloquée|téléphone professionnel\s*:\s*en cours|adhésion (?:au dispositif de médiation )?est en cours|adhésion en cours avant l'ouverture/i.test(content)) {
+  if (/\[À compléter|\[à compléter|phase de test|ouverture commerciale bloquée|SIRET\s*:\s*en cours|téléphone professionnel\s*:\s*en cours|adhésion (?:au dispositif de médiation )?est en cours|adhésion en cours avant l'ouverture/i.test(content)) {
     console.error(`ERREUR  Informations juridiques provisoires détectées dans ${file}`);
     failed = true;
   }

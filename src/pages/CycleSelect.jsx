@@ -254,8 +254,8 @@ export default function CycleSelect() {
           <section className="mt-6 max-w-5xl mx-auto rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
             style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}` }}>
             <div>
-              <p className="text-sm font-bold" style={{ color: colors.gold }}>Accès complet</p>
-              <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Tout RéussiMaths pour 4,99 €/mois</p>
+              <p className="text-sm font-bold" style={{ color: colors.gold }}>Un niveau complet</p>
+              <p className="text-2xl font-black mt-1" style={{ color: colors.ink }}>Le niveau de l’élève pour 4,99 €/mois</p>
               <p className="text-sm mt-1" style={{ color: colors.slate }}>Un niveau au choix, entraînement illimité et bilan de progression. Sans engagement.</p>
             </div>
             <Link to="/compte" className="inline-flex items-center gap-2 py-3 px-5 rounded-full font-bold text-sm shrink-0"

@@ -30,6 +30,16 @@ create table if not exists public.subscriptions (
 alter table public.subscriptions
   add column if not exists stripe_subscription_id text;
 
+-- Identifiant du paiement unique ayant activé un Pack Examen. Il permet de
+-- révoquer uniquement le Pack concerné lors d'un remboursement Stripe, sans
+-- toucher à un achat plus récent effectué par le même client.
+alter table public.subscriptions
+  add column if not exists stripe_payment_intent_id text;
+
+create unique index if not exists subscriptions_stripe_payment_intent_id_key
+  on public.subscriptions (stripe_payment_intent_id)
+  where stripe_payment_intent_id is not null;
+
 alter table public.subscriptions add column if not exists subscription_level text;
 alter table public.subscriptions add column if not exists subscription_level_selected_at timestamptz;
 alter table public.subscriptions add column if not exists subscription_level_changed_at timestamptz;

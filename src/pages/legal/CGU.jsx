@@ -32,8 +32,10 @@ export default function CGU() {
       <ul>
         <li>un abonnement mensuel à 4,99 € TTC donnant accès à un niveau scolaire choisi, reconductible automatiquement et résiliable à tout moment depuis l'espace « Mon compte » ;</li>
         <li>
-          une offre ponctuelle (« Pack Examen », 3 mois d'accès pour un niveau) à 9 € TTC : paiement unique, non reconductible, qui n'est
-          jamais débité à nouveau automatiquement.
+          une offre ponctuelle (« Pack Examen ») à 9 € TTC donnant, pendant 3 mois et pour un niveau choisi,
+          accès au chapitre de préparation à l'examen, aux automatismes en illimité et à deux chapitres bonus
+          choisis par l'utilisateur : paiement unique, non reconductible, qui n'est jamais débité à nouveau
+          automatiquement.
         </li>
       </ul>
       <p>Un compte est destiné au suivi d'un seul élève. Le niveau associé à l'abonnement mensuel peut être corrigé librement pendant les 24 heures suivant le choix initial, puis modifié au maximum une fois tous les 30 jours. Une modification de niveau ne supprime pas l'historique de progression déjà enregistré.</p>

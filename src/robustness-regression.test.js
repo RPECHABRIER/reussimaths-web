@@ -73,6 +73,35 @@ test("Stripe rattache chaque webhook à l’abonnement exact", async () => {
   assert.match(account, /aucun nouveau paiement n’est nécessaire/);
 });
 
+test("un remboursement intégral révoque uniquement le Pack Examen correspondant", async () => {
+  const [webhook, checkoutStatus, schema, migration] = await Promise.all([
+    read("../api/stripe-webhook.js"),
+    read("../api/checkout-status.js"),
+    read("../supabase/schema.sql"),
+    read("../supabase/pack-refund-revocation-2026-08-14.sql"),
+  ]);
+
+  assert.match(webhook, /case "charge\.refunded"/);
+  assert.match(webhook, /charge\.amount_refunded >= charge\.amount/);
+  assert.match(webhook, /\.eq\("plan", "special_examen"\)/);
+  assert.match(webhook, /\.eq\("stripe_payment_intent_id", paymentIntentId\)/);
+  assert.match(checkoutStatus, /stripe_payment_intent_id/);
+  assert.match(schema, /stripe_payment_intent_id text/);
+  assert.match(migration, /stripe_payment_intent_id text/);
+});
+
+test("l'offre publique annonce clairement un seul niveau scolaire", async () => {
+  const [home, account, terms] = await Promise.all([
+    read("./pages/CycleSelect.jsx"),
+    read("./pages/Account.jsx"),
+    read("./pages/legal/CGU.jsx"),
+  ]);
+  assert.match(home, /Le niveau de l’élève pour 4,99 €\/mois/);
+  assert.match(account, /Un niveau scolaire choisi pour chaque élève/);
+  assert.match(terms, /abonnement mensuel à 4,99 € TTC donnant accès à un niveau scolaire choisi/);
+  assert.doesNotMatch(home, /Tout RéussiMaths pour 4,99 €\/mois/);
+});
+
 test("une erreur de révisions ne devient pas un faux état vide", async () => {
   const [tracking, page] = await Promise.all([
     read("./hooks/useSkillTracking.js"),

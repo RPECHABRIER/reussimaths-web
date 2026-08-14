@@ -20,6 +20,12 @@ async function syncPaidSession(session, user) {
     stripe_subscription_id: null,
     status: "active",
     plan,
+    stripe_payment_intent_id:
+      plan === "special_examen"
+        ? typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : session.payment_intent?.id ?? null
+        : null,
     ...(plan === "mensuel" ? { subscription_level: level, subscription_level_selected_at: new Date(session.created * 1000).toISOString() } : {}),
     updated_at: new Date().toISOString(),
     cancel_at_period_end: false,

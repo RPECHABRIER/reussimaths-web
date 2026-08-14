@@ -2,16 +2,43 @@
 
 Document de pilotage vivant. L’audit de Claude sert de second avis ; les priorités ci-dessous tiennent compte de la stratégie réelle de RéussiMaths : abonnement familial, rituel enseignant gratuit et accès classe exceptionnel créé uniquement par l’administrateur.
 
+## État vérifié le 14 août 2026
+
+### Validé
+
+- [x] Entreprise individuelle de Nadine LEFEBVRE créée ; SIREN reçu et compte Indy ouvert.
+- [x] Stripe activé en production avec un prix mensuel et un prix Pack Examen.
+- [x] Abonnement mensuel testé avec un paiement réel : activation, niveau unique, calcul mental, résiliation, webhook et remboursement contrôlés.
+- [x] Pack Examen testé avec un paiement réel : activation, durée de trois mois, choix du niveau et de deux bonus, verrouillage des autres chapitres et remboursement contrôlés.
+- [x] Webhooks d'abonnement adaptés à l'API Stripe 2026 et retours `200 OK` observés.
+- [x] Recette automatisée : 48 tests techniques réussis, 135 chapitres, 27 000 exercices, 884 figures, 475 graphiques et 15 692 expressions mathématiques contrôlés sans anomalie.
+- [x] Audit pédagogique : 32 400 exercices contrôlés, aucun retour générique, aucune correction trop courte et aucune famille hors niveau.
+- [x] Audit des cours, modes de calcul et rendus LaTeX réussi sans anomalie.
+
+### Actions techniques avant le prochain remboursement réel
+
+- [ ] Exécuter `supabase/pack-refund-revocation-2026-08-14.sql` dans Supabase.
+- [ ] Déployer le webhook contenant la gestion de `charge.refunded`.
+- [ ] Ajouter l'événement `charge.refunded` à la destination Stripe « RéussiMaths production ».
+- [ ] Effectuer ensuite un dernier remboursement de Pack sur un compte de test et vérifier la révocation automatique.
+
+### Blocages juridiques avant ouverture commerciale publique
+
+- [ ] Recevoir le SIRET et le code APE, puis remplacer « en cours d'attribution » dans les mentions légales.
+- [ ] Disposer d'un numéro de téléphone professionnel publiable ; les sources officielles françaises le listent parmi les coordonnées obligatoires d'un site marchand.
+- [ ] Finaliser l'adhésion au médiateur de la consommation et publier son nom, ses coordonnées et son site dans les mentions légales et les CGV.
+- [ ] Faire relire le cadre contractuel, la propriété intellectuelle et le rôle effectif de chaque intervenant par un professionnel compétent.
+
 ## 1. Avant d’accepter le premier paiement
 
 ### Cadre professionnel et administratif
 
 - [ ] Confirmer que la mère du créateur sera l’exploitante effective de RéussiMaths, et pas uniquement la titulaire administrative de l’activité.
-- [ ] Déclarer à son nom l’entreprise individuelle sous régime micro-entrepreneur sur le guichet unique officiel.
+- [x] Déclarer à son nom l’entreprise individuelle sous régime micro-entrepreneur sur le guichet unique officiel.
 - [ ] Formaliser par écrit le droit pour l’entreprise d’exploiter le logiciel, les contenus, la marque et les visuels créés antérieurement.
 - [ ] Faire valider par un professionnel le cadre de la contribution régulière du créateur au produit, afin d’éviter une activité professionnelle informelle ou une gérance de fait.
 - [ ] Recevoir et contrôler les numéros SIREN/SIRET et le code APE attribué.
-- [ ] Créer le compte bancaire dédié Indy et conserver les justificatifs d’ouverture.
+- [x] Créer le compte bancaire dédié Indy et conserver les justificatifs d’ouverture.
 - [ ] Créer les espaces Urssaf et impots.gouv professionnels dès que les identifiants sont disponibles.
 - [ ] Déterminer avec l’Urssaf ou le SIE la qualification fiscale/sociale exacte de la vente d’abonnements à RéussiMaths (BIC ou BNC) ; ne pas la deviner dans le formulaire.
 - [ ] Vérifier l’éligibilité à l’Acre et au versement libératoire, sans les sélectionner automatiquement.
@@ -29,10 +56,10 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 ### Paiement et exploitation
 
-- [ ] Passer Stripe en production uniquement après obtention des informations d’entreprise et du compte bancaire.
-- [ ] Créer le produit et le prix réels, puis reporter les identifiants dans Vercel.
-- [ ] Contrôler le webhook Stripe en production et effectuer un paiement réel de faible montant.
-- [ ] Vérifier le remboursement, l’annulation en fin de période et l’accès au portail client.
+- [x] Passer Stripe en production uniquement après obtention des informations d’entreprise et du compte bancaire.
+- [x] Créer le produit et le prix réels, puis reporter les identifiants dans Vercel.
+- [x] Contrôler le webhook Stripe en production et effectuer un paiement réel de faible montant.
+- [x] Vérifier le remboursement, l’annulation en fin de période et l’accès au portail client.
 - [ ] Vérifier l’émission et le contenu des justificatifs/factures.
 - [ ] Appliquer la migration `client-errors-monitoring-migration-2026-08-11.sql`.
 - [ ] Vérifier que les erreurs techniques apparaissent dans le panneau admin.
@@ -45,7 +72,7 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 - [ ] Tester au moins un exercice nécessitant une réponse négative à chaque niveau concerné.
 - [ ] Contrôler figures, graphiques, tableaux de conversion et formules longues sur mobile.
 - [ ] Vérifier la musique et le bouton de son dans chaque mode.
-- [ ] Lancer la suite complète de tests et conserver un résultat sans erreur.
+- [x] Lancer la suite complète de tests et conserver un résultat sans erreur.
 - [ ] Geler les nouvelles fonctionnalités pendant les derniers jours précédant le pilote.
 
 ## 2. Préparation du pilote

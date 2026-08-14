@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AlertCircle, BookOpenCheck, Search, Target } from "lucide-react";
+import { AlertCircle, BookOpenCheck, CheckCircle2, Search, Target } from "lucide-react";
 import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
 import { rememberLearningReview } from "../lib/learningReviewHistory";
 import { toRemoteLearningReview } from "../lib/learningReviewHistory";
@@ -32,34 +32,46 @@ export default function LearningFeedback({ exercise, response, compact = false, 
     }
   }, [remember, exercise, response, feedback.family, feedback.conclusion, user?.id]);
   return (
-    <div data-feedback-family={feedback.family} className={`rounded-2xl text-left ${compact ? "p-3" : "p-4"}`} style={{ backgroundColor: correct ? `${colors.green}0d` : `${colors.gold}12`, border: `1px solid ${correct ? colors.green : colors.gold}35` }}>
-      <p className="flex items-start gap-2 text-sm font-bold leading-relaxed" style={{ color: colors.ink }}>
-        <AlertCircle size={16} color={correct ? colors.green : colors.gold} className="shrink-0 mt-0.5" />
+    <div
+      data-feedback-family={feedback.family}
+      className={`overflow-hidden rounded-[1.4rem] text-left ${compact ? "p-3 sm:p-4" : "p-4 sm:p-5"}`}
+      style={{ backgroundColor: correct ? `${colors.green}0d` : `${colors.gold}12`, border: `1px solid ${correct ? colors.green : colors.gold}35` }}
+    >
+      <p className="flex items-start gap-2.5 text-[0.95rem] sm:text-base font-bold leading-relaxed" style={{ color: colors.ink }}>
+        <AlertCircle size={18} color={correct ? colors.green : colors.gold} className="shrink-0 mt-0.5" />
         <MathText text={feedback.intro} />
       </p>
 
-      <p className="flex items-start gap-2 text-xs mt-3 leading-relaxed" style={{ color: colors.slate }}>
-        <Search size={14} className="shrink-0 mt-0.5" />
-        <span><strong style={{ color: colors.ink }}>Comprendre :</strong> <MathText text={feedback.meaning} /></span>
-      </p>
+      <div className="mt-3 grid gap-2.5">
+        <section className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5 rounded-xl bg-white/70 p-3 sm:p-3.5">
+          <Search size={17} className="mt-0.5" color={colors.slate} />
+          <div className="min-w-0 text-sm leading-6" style={{ color: colors.slate }}>
+            <p className="mb-0.5 font-bold" style={{ color: colors.ink }}>Comprendre</p>
+            <MathText text={feedback.meaning} />
+          </div>
+        </section>
 
-      <p className="flex items-start gap-2 text-xs mt-3 leading-relaxed" style={{ color: colors.slate }}>
-        <Target size={14} color={colors.gold} className="shrink-0 mt-0.5" />
-        <span><strong style={{ color: colors.ink }}>Méthode à retenir :</strong> <MathText text={feedback.rule} /></span>
-      </p>
+        <section className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5 rounded-xl bg-white/70 p-3 sm:p-3.5">
+          <Target size={17} color={colors.gold} className="mt-0.5" />
+          <div className="min-w-0 text-sm leading-6" style={{ color: colors.slate }}>
+            <p className="mb-0.5 font-bold" style={{ color: colors.ink }}>Méthode à retenir</p>
+            <MathText text={feedback.rule} />
+          </div>
+        </section>
+      </div>
 
       {feedback.steps.length > 0 && (
-        <div className="mt-3">
-          <p className="flex items-center gap-2 text-xs font-bold mb-1" style={{ color: colors.ink }}>
-            <BookOpenCheck size={14} color={colors.green} /> Application à cette question
+        <section className="mt-3 rounded-xl bg-white/70 p-3 sm:p-3.5">
+          <p className="flex items-center gap-2 text-sm font-bold mb-2.5" style={{ color: colors.ink }}>
+            <BookOpenCheck size={17} color={colors.green} /> Application à cette question
           </p>
           <StepsList steps={feedback.steps} dark={false} />
-        </div>
+        </section>
       )}
 
       {exercise?.type === "numeric" && Number(exercise.answer) < 0 && (
-        <p className="flex items-start gap-2 text-xs mt-3 font-semibold" style={{ color: colors.ink, fontFamily: fonts.mono }}>
-          <Target size={14} color={colors.gold} className="shrink-0 mt-0.5" />
+        <p className="flex items-start gap-2 text-sm mt-3 rounded-xl bg-white/70 p-3 font-semibold leading-relaxed" style={{ color: colors.ink, fontFamily: fonts.mono }}>
+          <Target size={16} color={colors.gold} className="shrink-0 mt-0.5" />
           Ici, le résultat recherché est un nombre négatif : pense à utiliser la touche ±.
         </p>
       )}
@@ -75,9 +87,13 @@ export default function LearningFeedback({ exercise, response, compact = false, 
 
       <FeedbackVisual family={feedback.family} exercise={exercise} />
 
-      <p className="mt-3 rounded-xl px-3 py-2 text-xs font-semibold leading-relaxed" style={{ backgroundColor: "white", color: colors.ink }}>
-        <MathText text={feedback.conclusion} />
-      </p>
+      <div className="mt-3 grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5 rounded-xl bg-white p-3 sm:p-3.5" style={{ color: colors.ink }}>
+        <CheckCircle2 size={17} color={colors.green} className="mt-0.5" />
+        <div className="min-w-0 text-sm font-semibold leading-6">
+          <p className="mb-0.5 font-black">Résultat et idée essentielle</p>
+          <MathText text={feedback.conclusion} />
+        </div>
+      </div>
     </div>
   );
 }

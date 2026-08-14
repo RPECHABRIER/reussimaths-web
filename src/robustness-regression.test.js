@@ -419,7 +419,22 @@ test("les parcours présentent la correction avant de proposer de continuer", as
   assert.match(runner, /J’ai compris, continuer/);
   assert.match(diagnostic, /J’ai compris, question suivante/);
   assert.match(sound, /avoidProgrammeActions/);
+  assert.match(sound, /avoidLearningContent/);
+  assert.match(sound, /includes\("\/diagnostic"\)/);
   assert.match(sound, /top-4 bottom-auto/);
+});
+
+test("les corrections longues restent structurées et lisibles sur mobile", async () => {
+  const [feedback, steps] = await Promise.all([
+    read("./components/LearningFeedback.jsx"),
+    read("./components/StepsList.jsx"),
+  ]);
+  assert.match(feedback, /text-\[0\.95rem\] sm:text-base/);
+  assert.match(feedback, /Comprendre/);
+  assert.match(feedback, /Méthode à retenir/);
+  assert.match(feedback, /Résultat et idée essentielle/);
+  assert.match(steps, /grid-cols-\[1\.65rem_minmax\(0,1fr\)\]/);
+  assert.doesNotMatch(steps, /list-outside ml-4/);
 });
 
 test("une erreur déclenche une vérification proche et priorise les erreurs récurrentes", async () => {

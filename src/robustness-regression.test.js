@@ -123,6 +123,13 @@ test("l’augmentation de 20 % relie pourcentages et montants en euros", async (
   assert.match(visual, /= \{String\(finalPrice\)/);
 });
 
+test("l’événement et son contraire remplissent une barre de probabilité égale à 1", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="probability-contrary-complete-bar"/);
+  assert.match(visual, /Barre complète : 1, soit 100 % des cas possibles/);
+  assert.match(visual, /P\(non A\)/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

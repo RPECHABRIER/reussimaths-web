@@ -54,6 +54,15 @@ test("la somme des angles du triangle est démontrée par les alternes-internes"
   assert.match(visual, /50°<\/span>.*70°<\/span>.*60°/s);
 });
 
+test("la probabilité d’une boule rouge compte les favorables et contrôle l’intervalle", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="probability-favorable-balls"/);
+  assert.match(visual, /3 rouges/);
+  assert.match(visual, /3 \+ 2 = 5 boules/);
+  assert.match(visual, /3\/2 = 1,5/);
+  assert.match(visual, /hors de \[0 ; 1\]/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

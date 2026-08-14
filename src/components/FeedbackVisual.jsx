@@ -93,11 +93,33 @@ export default function FeedbackVisual({ family, exercise }) {
     return <div className="mt-4 rounded-xl bg-white p-3" style={{border:`1px solid ${colors.gold}35`}}><p className="text-xs font-bold" style={{color:colors.ink}}>Déterminer le signe avant de calculer</p><div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xl font-black" style={{color:colors.ink}}><span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{background:`${colors.gold}25`}}>{signs[0]}</span><span>×</span><span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{background:`${colors.gold}25`}}>{signs[1]}</span><span>=</span><span className="flex h-11 w-11 items-center justify-center rounded-xl animate-pulse" style={{background:`${colors.green}25`,color:colors.green}}>{signs[2]}</span></div><p className="mt-2 text-[11px] text-center" style={{color:colors.slate}}>Même signe : résultat positif. Signes opposés : résultat négatif. On calcule ensuite avec les distances à zéro.</p></div>;
   }
   if (family === "relative_numbers") {
+    const operands = [...`${exercise?.prompt ?? ""}`.matchAll(/[−-]?\s*\d+(?:[,.]\d+)?/g)]
+      .slice(0, 2)
+      .map((match) => Number(match[0].replace(/\s/g, "").replace("−", "-").replace(",", ".")));
+    const [first = -7, second = 12] = operands;
+    const negativeDistance = Math.abs(first < 0 ? first : second < 0 ? second : -7);
+    const positiveDistance = Math.abs(first > 0 ? first : second > 0 ? second : 12);
+    const negativeWins = negativeDistance > positiveDistance;
+    const winnerDistance = Math.max(negativeDistance, positiveDistance, 1);
+    const neutralized = Math.min(negativeDistance, positiveDistance);
+    const remaining = Math.abs(positiveDistance - negativeDistance);
+    const winnerColor = negativeWins ? colors.red : colors.green;
+    const cellCount = Number.isInteger(winnerDistance) && winnerDistance <= 20 ? winnerDistance : 12;
+    const neutralizedCells = Math.round((neutralized / winnerDistance) * cellCount);
+    const remainingCells = Math.max(0, cellCount - neutralizedCells);
     return (
-      <div className="mt-4 rounded-xl bg-white p-3" style={{ border: `1px solid ${colors.gold}35` }}>
-        <p className="text-xs font-bold" style={{ color: colors.ink }}>Se déplacer sur la droite graduée</p>
-        <div className="relative mt-5 h-10"><div className="absolute left-2 right-2 top-3 h-0.5" style={{ background: colors.ink }} />{[-2,-1,0,1,2].map((n,i)=><div key={n} className="absolute top-1 text-[10px] text-center" style={{ left:`${5+i*22.5}%`, color:colors.slate }}><span className="block h-4 w-px mx-auto" style={{background:colors.ink}} />{n}</div>)}<ArrowRight size={18} color={colors.gold} className="absolute right-0 top-1 animate-pulse" /></div>
-        <p className="text-[11px] text-center" style={{ color: colors.slate }}>Le signe donne le sens ; la distance à zéro donne la longueur du déplacement.</p>
+      <div className="mt-4 rounded-xl bg-white p-3" data-visual="relative-neutralization" style={{ border: `1px solid ${colors.gold}35` }}>
+        <p className="text-xs font-bold" style={{ color: colors.ink }}>Superposer pour neutraliser les forces opposées</p>
+        <div className="mt-3 grid gap-2 text-[10px] font-bold" style={{color:colors.ink}}>
+          <div className="flex items-center gap-2"><span className="w-16 shrink-0 text-right" style={{color:colors.red}}>négatif : {negativeDistance}</span><div className="h-5 rounded-md" style={{width:`${Math.max(12,(negativeDistance/winnerDistance)*100)}%`,maxWidth:"calc(100% - 4.5rem)",background:colors.red}} /></div>
+          <div className="flex items-center gap-2"><span className="w-16 shrink-0 text-right" style={{color:colors.green}}>positif : {positiveDistance}</span><div className="h-5 rounded-md" style={{width:`${Math.max(12,(positiveDistance/winnerDistance)*100)}%`,maxWidth:"calc(100% - 4.5rem)",background:colors.green}} /></div>
+        </div>
+        <div className="mt-4 flex overflow-hidden rounded-lg" aria-label={`${neutralized} unités se neutralisent et il reste ${remaining} unités ${negativeWins ? "négatives" : "positives"}`} style={{border:`2px solid ${colors.ink}25`}}>
+          {Array.from({length:neutralizedCells},(_,index)=><span key={`neutral-${index}`} className="flex h-10 flex-1 items-center justify-center border-r text-xs font-black" style={{minWidth:10,borderColor:"white",background:`linear-gradient(135deg, ${colors.red} 0 46%, ${colors.slate} 47% 53%, ${colors.green} 54% 100%)`,color:"white"}}>×</span>)}
+          {Array.from({length:remainingCells},(_,index)=><span key={`remain-${index}`} className="h-10 flex-1 border-r last:border-r-0 animate-pulse" style={{minWidth:10,borderColor:"white",background:winnerColor}} />)}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[11px] font-bold" style={{color:colors.slate}}><span>{neutralized} unités se neutralisent</span><ArrowRight size={14} color={colors.gold}/><span style={{color:winnerColor}}>il reste {remaining} unité{remaining>1?"s":""} {negativeWins?"en rouge":"en vert"}</span></div>
+        <p className="mt-2 text-center text-sm font-black" style={{color:winnerColor}}>Résultat : {negativeWins?"−":""}{remaining}</p>
       </div>
     );
   }

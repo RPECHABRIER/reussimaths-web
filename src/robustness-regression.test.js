@@ -17,6 +17,16 @@ test("les coordonnées tolèrent les espaces autour du point-virgule", () => {
   assert.equal(matchesText("(-2;3)", "(3;-2)"), false);
 });
 
+test("l’addition de relatifs visualise la neutralisation rouge et verte", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="relative-neutralization"/);
+  assert.match(visual, /négatif :/);
+  assert.match(visual, /positif :/);
+  assert.match(visual, /unités se neutralisent/);
+  assert.match(visual, /colors\.red/);
+  assert.match(visual, /colors\.green/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

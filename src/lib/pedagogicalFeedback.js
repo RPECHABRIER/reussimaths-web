@@ -324,7 +324,7 @@ const FAMILY_FEEDBACK = [
     match: /fonctions? affines?.*(?:coefficient|identifier a et b|déterminer)|(?:coefficient directeur|ordonnée à l['’]origine).*fonction/i,
     intro: "Non, le coefficient directeur et l’ordonnée à l’origine ont été confondus ou lus au mauvais endroit.",
     meaning: "Dans f(x)=ax+b, a mesure la variation de f lorsque x augmente d’une unité, tandis que b=f(0) est l’ordonnée du point où la droite coupe l’axe vertical.",
-    rule: "Repère d’abord b à x=0, puis calcule a comme variation verticale ÷ variation horizontale.",
+    rule: "Repère d’abord \\(b\\) lorsque \\(x=0\\), puis calcule le coefficient directeur avec \\(a=\\dfrac{y_B-y_A}{x_B-x_A}\\). Il faut conserver le même ordre pour les deux différences.",
   },
   {
     id: "function_variations",

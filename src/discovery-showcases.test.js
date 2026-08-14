@@ -143,6 +143,8 @@ test("la vitrine 2nde explicite les distinctions essentielles", () => {
   const corrections = exercises.map((exercise) => exercise.steps.map((step) => step.text).join(" ")).join(" ");
   assert.match(corrections, /Chercher un antécédent de 9 signifie résoudre/);
   assert.match(corrections, /variation verticale lorsque l’abscisse augmente d’une unité/);
+  assert.ok(corrections.includes("\\dfrac{y_B-y_A}{x_B-x_A}"));
+  assert.ok(corrections.includes("\\dfrac{9-3}{4-1}=\\dfrac{6}{3}=2"));
   assert.match(corrections, /deux groupes de même effectif/);
   assert.ok(corrections.includes("coordonnées de l’arrivée \\(B\\) moins coordonnées du départ \\(A\\)"));
   assert.match(corrections, /0,42 \+ 0,58 = 1/);
@@ -152,6 +154,7 @@ test("coefficient directeur, médiane et vecteurs ont un visuel spécialisé", a
   const { readFile } = await import("node:fs/promises");
   const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
   assert.match(visual, /Comparer la montée et l’avancée/);
+  assert.match(visual, /\\dfrac\{y_B-y_A\}\{x_B-x_A\}/);
   assert.match(visual, /Ranger puis viser le centre/);
   assert.match(visual, /Arrivée moins départ/);
 });

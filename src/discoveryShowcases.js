@@ -269,8 +269,8 @@ const SHOWCASES = {
     ]),
     n("Fonctions affines — Coefficient directeur", "Une droite passe par A(1 ; 3) et B(4 ; 9). Calcule son coefficient directeur.", 2, [
       { type: "donnee", text: "La droite passe par A(1 ; 3) et B(4 ; 9). On connaît donc deux points distincts de la droite." },
-      { type: "regle", text: "Le coefficient directeur mesure la variation verticale lorsque l’abscisse augmente d’une unité : m = (yB − yA) ÷ (xB − xA)." },
-      { type: "calcul", text: "La variation verticale vaut 9 − 3 = 6 et la variation horizontale vaut 4 − 1 = 3. Ainsi, m = 6 ÷ 3." },
+      { type: "regle", text: "Le coefficient directeur mesure la variation verticale lorsque l’abscisse augmente d’une unité : \\(m=\\dfrac{y_B-y_A}{x_B-x_A}\\)." },
+      { type: "calcul", text: "On remplace les coordonnées des points dans la formule, en conservant le même ordre au numérateur et au dénominateur : \\(m=\\dfrac{9-3}{4-1}=\\dfrac{6}{3}=2\\)." },
       { type: "resultat", text: "Le coefficient directeur est 2 : lorsque x augmente de 1, l’image augmente de 2." },
     ]),
     n("Statistiques — Médiane", "Détermine la médiane de la série ordonnée : 2 ; 5 ; 7 ; 9 ; 12.", 7, [

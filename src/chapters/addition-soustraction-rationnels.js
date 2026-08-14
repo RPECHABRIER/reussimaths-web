@@ -193,7 +193,10 @@ function genPlacerFractionSurDroiteGradueeNumeric() {
     prompt: `Sur une droite graduée, à quelle valeur décimale correspond le point d'abscisse \\(\\dfrac{${num}}{${den}}\\) ?`,
     answer,
     tolerance: 0.01,
-    steps: [{ type: "calcul", text: `${num} \\div ${den} = ${fr(answer)}` }],
+    steps: [
+      { type: "regle", text: `Une fraction est aussi un quotient : \\(\\dfrac{${num}}{${den}}=${num}\\div${den}\\).` },
+      { type: "resultat", text: `${num} \\div ${den} = ${fr(answer)}. Le point a donc pour abscisse ${fr(answer)}.` },
+    ],
   };
 }
 
@@ -219,7 +222,10 @@ function genRangerRationnelsCroissantQCM() {
     prompt: `Range dans l'ordre ${asc ? "croissant" : "décroissant"} les nombres rationnels suivants : \\(${entries.map((e) => e[0]).join(", ")}\\)`,
     answer: correctOrder,
     options: options.length >= 2 ? options : [correctOrder, wrongRandom],
-    steps: [{ type: "regle", text: `On convertit chaque écriture fractionnaire en écriture décimale pour comparer.` }],
+    steps: [
+      { type: "regle", text: `On convertit chaque écriture fractionnaire en écriture décimale pour comparer des nombres écrits sous la même forme.` },
+      { type: "resultat", text: `On range ensuite les valeurs ${asc ? "de la plus petite à la plus grande" : "de la plus grande à la plus petite"} : \\(${correctOrder}\\).` },
+    ],
   };
 }
 
@@ -234,7 +240,10 @@ function genErreurSimplificationAdditiveQCM() {
     prompt: `Pour simplifier une fraction, peut-on supprimer un même nombre ajouté au numérateur et au dénominateur (par exemple, simplifier \\(\\dfrac{${a}+${k}}{${b}+${k}}\\) en supprimant les deux \\(${k}\\)) ?`,
     answer: "Non",
     options: ["Oui", "Non"],
-    steps: [{ type: "regle", text: `On ne peut simplifier une fraction qu'en divisant le numérateur et le dénominateur par un même facteur non nul (multiplication), jamais en retirant un même terme ajouté (addition).` }],
+    steps: [
+      { type: "regle", text: `On ne peut simplifier une fraction qu'en divisant le numérateur et le dénominateur par un même facteur non nul (multiplication), jamais en retirant un même terme ajouté (addition).` },
+      { type: "resultat", text: `Ici, ${k} est ajouté : ce n’est pas un facteur commun. La simplification proposée est donc fausse.` },
+    ],
   };
 }
 
@@ -251,7 +260,10 @@ function genAdditionnerRationnelsMemeDenominateurSigne() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${numA}}{${den}} + \\dfrac{${numB}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [{ type: "calcul", text: `${numA} + ${numB} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Les deux fractions ont le même dénominateur ${den} : les parts ont la même taille, donc on conserve ce dénominateur et on additionne les numérateurs.` },
+      { type: "resultat", text: `${numA} + ${numB} = ${answer}, donc le numérateur recherché est ${answer}.` },
+    ],
   };
 }
 
@@ -266,7 +278,10 @@ function genSoustraireRationnelsMemeDenominateurSigne() {
     chapter: "Addition, soustraction de rationnels — Additionner, soustraire",
     prompt: `\\(\\dfrac{${numA}}{${den}} - \\dfrac{${numB}}{${den}} = \\dfrac{?}{${den}}\\) — quel est ce numérateur ?`,
     answer,
-    steps: [{ type: "calcul", text: `${numA} - ${numB} = ${answer}` }],
+    steps: [
+      { type: "regle", text: `Les deux fractions ont le même dénominateur ${den} : on conserve ce dénominateur et on soustrait le second numérateur au premier, en gardant ses parenthèses s’il est négatif.` },
+      { type: "resultat", text: `${numA} - (${numB}) = ${answer}, donc le numérateur recherché est ${answer}.` },
+    ],
   };
 }
 

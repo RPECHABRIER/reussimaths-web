@@ -500,7 +500,7 @@ const FAMILY_FEEDBACK = [
     id: "geometry_vectors",
     match: /^(?!.*(?:produit scalaire|vecteurs?.*orthogonaux)).*(?:vecteurs?|colinéarité)/i,
     intro: "Non, les coordonnées, la direction ou le sens du vecteur n’ont pas été déterminés correctement.",
-    meaning: "Les coordonnées du vecteur AB s’obtiennent en faisant arrivée moins départ pour chaque coordonnée : xB−xA puis yB−yA.",
+    meaning: "Les coordonnées du vecteur \\(\\overrightarrow{AB}\\) s’obtiennent en faisant arrivée moins départ pour chaque coordonnée : \\(x_B-x_A\\) puis \\(y_B-y_A\\).",
     rule: "Traite séparément abscisses et ordonnées, puis vérifie la direction et le sens du vecteur obtenu.",
   },
   {

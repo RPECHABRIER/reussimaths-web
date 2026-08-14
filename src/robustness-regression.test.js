@@ -434,12 +434,15 @@ test("le cahier pédagogique se synchronise sans réponse brute et avec isolatio
   assert.match(migration, /revoke all on table public\.learning_review_cards from anon/i);
 });
 
-test("chaque correction possède désormais un support visuel, même hors familles illustrées", async () => {
+test("une correction n’affiche une animation que lorsqu’elle est spécialisée et fidèle", async () => {
   const visual = await read("./components/FeedbackVisual.jsx");
-  assert.match(visual, /Le chemin de la méthode/);
+  assert.doesNotMatch(visual, /Le chemin de la méthode/);
+  assert.match(visual, /return null;/);
   assert.match(visual, /family\.startsWith\("geometry"\)/);
   assert.match(visual, /calculus_derivative/);
   assert.match(visual, /exponential_logarithm/);
+  assert.match(visual, /conversion-\$\{family\}/);
+  assert.match(visual, /Une puissance est une multiplication répétée/);
 });
 
 test("l’administration classe les notions fragiles et les corrections consultées", async () => {

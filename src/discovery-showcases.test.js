@@ -101,7 +101,7 @@ test("équations, Pythagore, statistiques et vitesses ont un visuel contextualis
   const { readFile } = await import("node:fs/promises");
   const visual = await readFile(new URL("./components/FeedbackVisual.jsx", import.meta.url), "utf8");
   assert.match(visual, /On conserve l’équilibre jusqu’à isoler x/);
-  assert.match(visual, /Les carrés des deux côtés construisent celui de l’hypoténuse/);
+  assert.match(visual, /Les aires 36 et 64 construisent l’aire 100/);
   assert.match(visual, /Pour une moyenne, il doit rester entre la plus petite et la plus grande valeur/);
   assert.match(visual, /Pour trouver la vitesse, on partage la distance par la durée/);
   assert.match(visual, /Déterminer le signe avant de calculer/);

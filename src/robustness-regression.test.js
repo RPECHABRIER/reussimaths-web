@@ -76,6 +76,15 @@ test("la résolution de 4x moins 7 égale 13 anime les deux opérations de balan
   assert.match(visual, /Une part face à une part : x = 5/);
 });
 
+test("Pythagore affiche trois vrais carrés pour le triangle 6 8 10", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="pythagoras-squares-6-8-10"/);
+  assert.match(visual, /6² = 36/);
+  assert.match(visual, /8² = 64/);
+  assert.match(visual, /BC² = 100/);
+  assert.match(visual, /BC = √100 = 10 cm/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

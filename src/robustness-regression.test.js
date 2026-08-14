@@ -455,7 +455,7 @@ test("une erreur déclenche une vérification proche et priorise les erreurs ré
 });
 
 test("la mesure produit et les retours restent minimaux", async () => {
-  const [analytics, endpoint, feedback, admin, app, account, runner] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js"), read("./pages/AdminPreview.jsx"), read("./App.jsx"), read("./pages/Account.jsx"), read("./components/ChapterRunner.jsx")]);
+  const [analytics, endpoint, feedback, admin, app, account, celebration] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js"), read("./pages/AdminPreview.jsx"), read("./App.jsx"), read("./pages/Account.jsx"), read("./components/SessionCelebration.jsx")]);
   assert.match(analytics, /anonymousId/);
   assert.doesNotMatch(analytics, /user\.email|email:/);
   assert.match(endpoint, /ALLOWED_EVENTS/);
@@ -465,7 +465,7 @@ test("la mesure produit et les retours restent minimaux", async () => {
   assert.match(analytics, /SIGNUP_PENDING_KEY/);
   assert.match(app, /trackCompletedSignup/);
   assert.match(account, /markSignupStarted/);
-  assert.match(runner, /account_cta_clicked/);
+  assert.match(celebration, /account_cta_clicked/);
   assert.match(admin, /strictFunnel/);
   assert.match(admin, /Trois abandons prioritaires du tunnel/);
 });
@@ -770,4 +770,51 @@ test("les tableaux de conversion sont compacts et explicitement défilables sur 
   assert.match(css, /\.conversion-table-grid[\s\S]*58px/);
   assert.match(css, /\.conversion-place-cell/);
   assert.match(css, /\.conversion-digit-cell/);
+});
+
+test("l’accueil abonné donne une priorité quotidienne unique", async () => {
+  const [home, today] = await Promise.all([
+    read("./pages/CycleSelect.jsx"),
+    read("./components/TodayPlan.jsx"),
+  ]);
+  assert.match(home, /user && fullAccess/);
+  assert.match(home, /<TodayPlan/);
+  assert.match(today, /Une seule étape pour avancer/);
+  assert.match(today, /Plan de travail du jour/);
+  assert.match(today, /Calcul mental/);
+  assert.match(today, /Consolidation/);
+});
+
+test("la page publique fait essayer une correction avant l’inscription", async () => {
+  const [home, demo] = await Promise.all([
+    read("./pages/CycleSelect.jsx"),
+    read("./components/HomeLearningDemo.jsx"),
+  ]);
+  assert.match(home, /<HomeLearningDemo/);
+  assert.match(demo, /Une erreur devient une méthode comprise/);
+  assert.match(demo, /dénominateur commun/);
+  assert.match(demo, /Faire mon diagnostic gratuit/);
+});
+
+test("la fin de séance rend le progrès visible et partageable aux parents", async () => {
+  const [runner, celebration] = await Promise.all([
+    read("./components/ChapterRunner.jsx"),
+    read("./components/SessionCelebration.jsx"),
+  ]);
+  assert.match(runner, /<SessionCelebration/);
+  assert.match(celebration, /Ton chemin de maîtrise/);
+  assert.match(celebration, /prochaine révision programmée/);
+  assert.match(celebration, /Montrer ce progrès à mes parents/);
+  assert.match(celebration, /account_cta_clicked/);
+});
+
+test("le parcours montre une représentation visuelle de la maîtrise", async () => {
+  const [overview, path] = await Promise.all([
+    read("./pages/ParcoursOverview.jsx"),
+    read("./components/ProgressPath.jsx"),
+  ]);
+  assert.match(overview, /Ton chemin/);
+  assert.match(overview, /<ProgressPath/);
+  assert.match(path, /Chemin de progression/);
+  assert.match(path, /const done = !!step\.done/);
 });

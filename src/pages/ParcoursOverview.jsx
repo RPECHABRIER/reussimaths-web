@@ -9,6 +9,7 @@ import { useParcoursProgress } from "../hooks/useParcoursProgress";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts, shadow } from "../theme";
 import { getDiscoveryShowcase } from "../discoveryShowcases";
+import ProgressPath from "../components/ProgressPath";
 
 // Détail d'un parcours (/parcours/:parcoursId) : la liste de ses étapes avec
 // leur statut (terminée / suivante / à venir), le pourcentage global, et un
@@ -47,6 +48,14 @@ export default function ParcoursOverview() {
   const nextChapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : nextStep ? getChapter(nextStep.chapterId) : null;
   const nextLocked = !parcours.free && nextChapter && !canAccessChapter(nextChapter, { user, subscription, referralBonusChapterId });
   const primaryTo = nextLocked ? "/compte" : `/parcours/${parcours.id}/etape/${finished ? 0 : nextStepIndex}`;
+  const pathSteps = parcours.steps.map((step) => {
+    const chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
+    return {
+      label: step.title,
+      done: !!stepByIndex.get(step.progressIndex)?.completed,
+      locked: !parcours.free && chapter && !canAccessChapter(chapter, { user, subscription, referralBonusChapterId }),
+    };
+  });
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -90,6 +99,13 @@ export default function ParcoursOverview() {
               <div className="h-full rounded-full transition-all" style={{ width: `${percent}%`, backgroundColor: colors.green }} />
             </div>
           </div>
+        )}
+
+        {total > 0 && (
+          <section className="mb-6 rounded-3xl p-4" style={{background:colors.card,boxShadow:shadow.soft}}>
+            <div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-widest" style={{color:colors.gold}}>Ton chemin</p><p className="mt-0.5 text-xs" style={{color:colors.slate}}>Comprendre, s’entraîner, consolider.</p></div><span className="rounded-full px-2.5 py-1 text-[10px] font-black" style={{background:`${colors.green}14`,color:colors.green}}>{completedSteps}/{total}</span></div>
+            <ProgressPath steps={pathSteps} activeIndex={finished ? -1 : nextStepIndex} compact />
+          </section>
         )}
 
         {total > 0 && !finished && (

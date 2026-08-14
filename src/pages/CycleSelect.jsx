@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { CYCLES } from "../levels";
 import Mascot from "../components/Mascot";
+import TodayPlan from "../components/TodayPlan";
+import HomeLearningDemo from "../components/HomeLearningDemo";
 import { useAuth } from "../hooks/useAuth";
 import { useDailyStreak } from "../hooks/useDailyStreak";
 import { useDueSkillsCount } from "../hooks/useDueSkillsCount";
@@ -83,6 +85,15 @@ export default function CycleSelect() {
         </header>
 
         <main>
+          {user && fullAccess && (
+            <TodayPlan
+              primary={nextAction}
+              mentalTo={mentalLevel ? `/calcul-mental/${mentalLevel.id}` : "/niveaux?objectif=essai"}
+              mentalDone={todayMentalScore !== null}
+              dueCount={dueCount}
+              levelLabel={journeyLevel?.label}
+            />
+          )}
           <section className="grid lg:grid-cols-[1.08fr_0.92fr] gap-8 lg:gap-14 items-center pt-6 sm:pt-10 lg:pt-16">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full" style={{ backgroundColor: `${colors.gold}18` }}>
@@ -185,6 +196,8 @@ export default function CycleSelect() {
               <Flame size={16} /> {streak.current_streak} jour{streak.current_streak > 1 ? "s" : ""} de suite
             </div>
           )}
+
+          <HomeLearningDemo />
 
           <section className="mt-16 sm:mt-24">
             <div className="text-center max-w-2xl mx-auto">

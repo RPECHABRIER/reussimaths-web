@@ -123,6 +123,13 @@ input:focus, select:focus, textarea:focus {
   overflow-x: visible;
 }
 
+/* Les formules très courtes de la démonstration publique tiennent toujours
+   dans leur carte : aucun ascenseur visuel ne doit parasiter l'exemple. */
+.home-learning-demo .katex {
+  max-width: none;
+  overflow-x: visible;
+}
+
 .conversion-table-grid {
   min-width: calc(var(--conversion-column-count) * 88px);
 }

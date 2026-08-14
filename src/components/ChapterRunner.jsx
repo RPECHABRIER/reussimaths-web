@@ -19,6 +19,7 @@ import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch
 import { colors, fonts, shadow } from "../theme";
 import { classifyLearningError, LEARNING_ERROR_LABELS } from "../lib/learningError";
 import { trackProductEvent } from "../lib/productAnalytics";
+import { selectAdaptiveNextExercise } from "../lib/adaptiveNextExercise";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -157,6 +158,12 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const completionTrackedRef = useRef(false);
   const assistanceUsedRef = useRef(false);
   const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
+  const lastAttemptRef = useRef(null);
+  const consecutiveCorrectRef = useRef(0);
+  const activeDecisionRef = useRef(null);
+  const [adaptiveDecision, setAdaptiveDecision] = useState(() => (
+    focusSkill ? selectAdaptiveNextExercise({ currentDifficulty: effectiveDifficulty, focusSkill }) : null
+  ));
 
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
@@ -258,22 +265,37 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     const showcase = Array.isArray(chapter.showcaseExercises);
     const decremented = showcase ? [] : redrillQueue.map((r) => ({ ...r, in: r.in - 1 }));
     const dueIndex = decremented.findIndex((r) => r.in <= 0);
+    const dueSkill = dueIndex >= 0 ? decremented[dueIndex].skill : null;
+    const decision = showcase ? null : selectAdaptiveNextExercise({
+      currentDifficulty: effectiveDifficulty,
+      lastAttempt: lastAttemptRef.current,
+      consecutiveCorrect: consecutiveCorrectRef.current,
+      dueSkill,
+      focusSkill,
+    });
+    const generationDifficulty = difficulty ?? decision?.difficulty ?? effectiveDifficulty;
     let nextEx;
-    if (dueIndex >= 0) {
-      nextEx = generateMatchingSkill(chapter, effectiveDifficulty, decremented[dueIndex].skill);
+    if (decision?.skill) {
+      nextEx = generateMatchingSkill(chapter, generationDifficulty, decision.skill);
+      if (dueIndex >= 0 && decision.skill === dueSkill) {
+        setRedrillQueue(decremented.filter((_, i) => i !== dueIndex));
+      } else {
+        setRedrillQueue(decremented);
+      }
+    } else if (dueIndex >= 0) {
+      nextEx = generateMatchingSkill(chapter, generationDifficulty, dueSkill);
       setRedrillQueue(decremented.filter((_, i) => i !== dueIndex));
-    } else if (focusSkill) {
-      nextEx = generateMatchingSkill(chapter, effectiveDifficulty, focusSkill);
-      setRedrillQueue(decremented);
     } else {
-      nextEx = generateExercise(chapter, effectiveDifficulty, answeredCount);
+      nextEx = generateExercise(chapter, generationDifficulty, answeredCount);
       setRedrillQueue(decremented);
     }
     if (!showcase && seenPromptsRef.current.has(nextEx?.prompt)) {
       for (let attempt = 0; attempt < 12; attempt++) {
         const candidate = focusSkill
-          ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill)
-          : chapter.generate(effectiveDifficulty);
+          ? generateMatchingSkill(chapter, generationDifficulty, focusSkill)
+          : decision?.skill
+            ? generateMatchingSkill(chapter, generationDifficulty, decision.skill)
+            : chapter.generate(generationDifficulty);
         if (!seenPromptsRef.current.has(candidate?.prompt)) {
           nextEx = candidate;
           break;
@@ -281,6 +303,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       }
     }
     if (nextEx?.prompt) seenPromptsRef.current.add(nextEx.prompt);
+    activeDecisionRef.current = decision;
+    setAdaptiveDecision(decision);
+    if (decision) trackProductEvent("adaptive_next_selected", {
+      reason: decision.reason,
+      difficulty: decision.difficulty,
+      skill: decision.skill ?? chapter.meta.id,
+      levelId: chapter.meta.level,
+      chapterId: chapter.meta.id,
+    });
     setExercise(nextEx);
     setInput("");
     setSelectedOption(null);
@@ -290,7 +321,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setVerificationSkill(null);
     assistanceUsedRef.current = false;
     exerciseStartRef.current = Date.now();
-  }, [chapter, effectiveDifficulty, isSession, answeredCount, sessionLength, redrillQueue, focusSkill]);
+  }, [chapter, effectiveDifficulty, difficulty, isSession, answeredCount, sessionLength, redrillQueue, focusSkill]);
 
   const retry = () => {
     setInput("");
@@ -314,7 +345,10 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   };
 
   const registerResult = (correct, response) => {
-    setFeedback({ correct, response, errorCode: correct ? null : classifyLearningError(exercise, response) });
+    const errorCode = correct ? null : classifyLearningError(exercise, response);
+    const responseTimeMs = Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000);
+    const assisted = isDecouverte || assistanceUsedRef.current;
+    setFeedback({ correct, response, errorCode });
     if (quotaApplies) quota.consume();
     if (isSession) {
       setAnsweredCount((c) => c + 1);
@@ -322,13 +356,23 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     }
     adjustDifficulty(correct);
     if (!correct) queueRedrill(exercise.chapter);
+    consecutiveCorrectRef.current = correct ? consecutiveCorrectRef.current + 1 : 0;
+    lastAttemptRef.current = { correct, errorCode, skill: exercise.chapter, responseTimeMs, assisted };
+    if (activeDecisionRef.current) trackProductEvent("adaptive_next_outcome", {
+      reason: activeDecisionRef.current.reason,
+      correct,
+      assisted,
+      difficulty: activeDecisionRef.current.difficulty,
+      levelId: chapter.meta.level,
+      chapterId: chapter.meta.id,
+    });
     skillTracking.recordAttempt({
       skillId: exercise.chapter,
       chapterId: chapter.meta.id,
       correct,
-      errorCode: correct ? null : classifyLearningError(exercise, response),
-      responseTimeMs: Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000),
-      assisted: isDecouverte || assistanceUsedRef.current,
+      errorCode,
+      responseTimeMs,
+      assisted,
     });
     if (correct) {
       const newStreak = streak + 1;
@@ -636,6 +680,12 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           {verificationSkill && (
             <p className="rounded-xl px-3 py-2 mb-3 text-xs font-semibold" style={{ backgroundColor: `${gold}14`, color: ink }}>
               Question de vérification — même notion, nouvelles données. Explique-toi mentalement chaque étape avant de valider.
+            </p>
+          )}
+
+          {adaptiveDecision && !isDiscoverySession && (
+            <p className="rounded-xl px-3 py-2 mb-3 text-xs" style={{ backgroundColor: `${green}10`, color: slate }}>
+              <strong style={{ color: green }}>Pourquoi cette question ?</strong> {adaptiveDecision.reasonLabel}.
             </p>
           )}
 

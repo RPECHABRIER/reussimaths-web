@@ -8,7 +8,7 @@
     "build": "vite build",
     "check:production": "node scripts/check-production-readiness.mjs",
     "preview": "vite preview",
-    "test": "node --test tests/api-auth.test.js tests/security-regression.test.js tests/performance-regression.test.js tests/prerequisites.test.js src/robustness-regression.test.js && node test-all-chapters.mjs && node audit-pedagogy.mjs --check && node audit-courses.mjs && node audit-calculation-modes.mjs && node test-proportionnalite.mjs && node test-organisation-gestion-donnees.mjs"
+    "test": "node --test tests/api-auth.test.js tests/security-regression.test.js tests/performance-regression.test.js tests/prerequisites.test.js tests/adaptive-next-exercise.test.js src/robustness-regression.test.js && node test-all-chapters.mjs && node audit-pedagogy.mjs --check && node audit-courses.mjs && node audit-calculation-modes.mjs && node test-proportionnalite.mjs && node test-organisation-gestion-donnees.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.45.4",

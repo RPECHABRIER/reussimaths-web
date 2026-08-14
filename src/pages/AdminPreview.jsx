@@ -8,6 +8,7 @@ import { chapters } from "../chapters/registry";
 import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
+import { ADAPTIVE_REASON_LABELS } from "../lib/adaptiveNextExercise";
 import { ArrowRight, BookOpenCheck, CreditCard, Eye, KeyRound, RefreshCw, ShieldCheck, Sparkles, Users } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -209,6 +210,15 @@ function ProductMetrics() {
         map.set(family, (map.get(family) ?? 0) + 1);
         return map;
       }, new Map());
+      const adaptiveSelections = events.filter((item) => item.event_name === "adaptive_next_selected");
+      const adaptiveOutcomes = events.filter((item) => item.event_name === "adaptive_next_outcome");
+      const adaptiveByReason = Object.entries(ADAPTIVE_REASON_LABELS).map(([reason, label]) => {
+        const selected = adaptiveSelections.filter((item) => item.properties?.reason === reason).length;
+        const outcomes = adaptiveOutcomes.filter((item) => item.properties?.reason === reason);
+        const autonomous = outcomes.filter((item) => !item.properties?.assisted);
+        const correct = autonomous.filter((item) => item.properties?.correct).length;
+        return { reason, label, selected, attempts: autonomous.length, successRate: autonomous.length ? Math.round(correct / autonomous.length * 100) : null };
+      }).filter((item) => item.selected || item.attempts);
       setData({
         funnel: strictFunnel, dropoffs,
         rawActivation: { diagnostics:uniqueByEvent("diagnostic_completed"),trials:uniqueByEvent("trial_completed"),signups:uniqueByEvent("signup_completed") },
@@ -221,6 +231,11 @@ function ProductMetrics() {
         correctionEfficacy: {
           immediateEligible, immediateRate: immediateEligible ? Math.round(immediateSuccess / immediateEligible * 100) : null,
           spacedEligible, spacedRate: spacedEligible ? Math.round(spacedSuccess / spacedEligible * 100) : null,
+        },
+        adaptive: {
+          selected: adaptiveSelections.length,
+          outcomes: adaptiveOutcomes.length,
+          byReason: adaptiveByReason,
         },
         clientErrors: clientErrorsResult.error?.code === "42P01" ? [] : clientErrorsResult.data ?? [],
       });
@@ -241,6 +256,11 @@ function ProductMetrics() {
       </div>
       {data.reviewFamilies.length > 0 && <p className="text-xs mt-2" style={{color:colors.slate}}>Corrections les plus consultées : {data.reviewFamilies.map(([name,count])=>`${name} (${count})`).join(" · ")}</p>}
       <div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-lg font-black" style={{color:colors.ink}}>{data.correctionEfficacy.immediateRate==null?"—":`${data.correctionEfficacy.immediateRate} %`}</p><p className="text-[10px]" style={{color:colors.slate}}>réussite autonome après correction · {data.correctionEfficacy.immediateEligible} vérifications</p></div><div className="rounded-2xl p-3" style={{backgroundColor:colors.bg}}><p className="text-lg font-black" style={{color:colors.ink}}>{data.correctionEfficacy.spacedRate==null?"—":`${data.correctionEfficacy.spacedRate} %`}</p><p className="text-[10px]" style={{color:colors.slate}}>réussite autonome après au moins 2 jours · {data.correctionEfficacy.spacedEligible} vérifications</p></div></div>
+      <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:`${colors.green}0b`,border:`1px solid ${colors.green}25`}}>
+        <div className="flex flex-wrap items-center justify-between gap-2"><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.green}}>Prochaine question personnalisée · moteur gratuit</p><p className="text-[10px]" style={{color:colors.slate}}>{data.adaptive.selected} décisions · {data.adaptive.outcomes} réponses mesurées</p></div>
+        <div className="mt-2 grid gap-2 md:grid-cols-3">{data.adaptive.byReason.length ? data.adaptive.byReason.map((item)=><div key={item.reason} className="rounded-xl p-3" style={{backgroundColor:colors.card}}><p className="text-xs font-black" style={{color:colors.ink}}>{item.label}</p><p className="mt-1 text-[10px]" style={{color:colors.slate}}>{item.selected} sélection{item.selected>1?"s":""} · réussite autonome {item.successRate==null?"—":`${item.successRate} %`} ({item.attempts})</p></div>) : <p className="text-xs" style={{color:colors.slate}}>Les premières décisions apparaîtront après la publication.</p>}</div>
+        <p className="mt-2 text-[10px]" style={{color:colors.slate}}>Ordre appliqué : réparer une erreur → vérifier avec une question proche → consolider → réviser une compétence due → avancer dans le chapitre étudié. Aucun modèle externe et aucune réponse brute ne sont utilisés.</p>
+      </div>
       <div className="mt-3 rounded-2xl p-3" style={{backgroundColor:data.clientErrors.length?`${colors.red}0d`:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:data.clientErrors.length?colors.red:colors.green}}>Erreurs techniques sur 30 jours : {data.clientErrors.length}</p>{data.clientErrors.slice(0,3).map((item,index)=><p key={`${item.occurred_at}-${index}`} className="mt-1 text-[10px]" style={{color:colors.slate}}>{new Date(item.occurred_at).toLocaleDateString("fr-FR")} · {item.path || "page inconnue"} · {item.message}</p>)}</div>
       <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:`${colors.green}0c`,border:`1px solid ${colors.green}25`}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.green}}>Revue pédagogique hebdomadaire · 45 minutes</p><div className="mt-2 grid gap-1 md:grid-cols-5">{["1. Choisir 5 erreurs", "2. Identifier le raisonnement", "3. Relire la correction", "4. Vérifier le visuel", "5. Contrôler le réapprentissage"].map((step)=><p key={step} className="rounded-xl p-2 text-[10px] font-bold" style={{backgroundColor:colors.card,color:colors.ink}}>{step}</p>)}</div><p className="mt-2 text-xs" style={{color:colors.slate}}>Priorité actuelle : {data.fragileSkills[0]?.[0] ?? "attendre davantage de réponses"}. Ouvrir le laboratoire pour valider la correction avec la grille experte.</p><Link to="/admin/corrections" className="inline-flex items-center gap-1 mt-2 text-xs font-black" style={{color:colors.green}}>Commencer la revue <ArrowRight size={13}/></Link></div>
       <div className="flex flex-col gap-2 mt-3">{data.feedback.filter((item) => item.comment).slice(0,5).map((item,index) => <div key={`${item.created_at}-${index}`} className="rounded-xl p-3 text-xs" style={{ backgroundColor: colors.bg, color: colors.ink }}><strong>{item.role}</strong> — {item.comment}</div>)}</div></>}

@@ -41,7 +41,7 @@ export function useMascotKey() {
   return "gratuit";
 }
 
-export default function Mascot({ size = 84, className, style }) {
+export default function Mascot({ size = 84, className = "", style, motion = "none" }) {
   const key = useMascotKey();
   return (
     <img
@@ -49,7 +49,7 @@ export default function Mascot({ size = 84, className, style }) {
       alt="RéussiMaths"
       width={size}
       height={size}
-      className={className}
+      className={`${className} ${motion !== "none" ? `mascot-motion-${motion}` : ""}`.trim()}
       style={{ objectFit: "contain", borderRadius: size * 0.22, ...style }}
     />
   );

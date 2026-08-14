@@ -22,6 +22,7 @@ import { trackProductEvent } from "../lib/productAnalytics";
 import { selectAdaptiveNextExercise } from "../lib/adaptiveNextExercise";
 import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import SessionCelebration from "./SessionCelebration";
+import Mascot from "./Mascot";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -598,7 +599,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         )}
 
         <div
-          className="rounded-[2rem] p-5 sm:p-7 transition-all duration-500"
+          className="exercise-stage rounded-[2rem] p-5 sm:p-7 transition-all duration-500"
           style={{
             backgroundColor: isDefi ? "#16233f" : colors.card,
             boxShadow: isDefi ? `0 0 40px -8px ${gold}2e, inset 0 0 0 1px #ffffff0d` : shadow.soft,
@@ -845,11 +846,11 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
           {feedback && (
             <div className="mt-2">
               <div
-                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm"
+                className="feedback-moment grid grid-cols-[44px_1fr] items-center gap-3 rounded-2xl px-3 py-2 text-sm"
                 style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
               >
-                {feedback.correct ? <Check size={16} /> : <X size={16} />}
-                <span className="font-semibold">{feedback.correct ? "Bien joué ! Cette notion progresse." : "Pas encore — réessaie ou utilise la méthode."}</span>
+                <Mascot size={42} motion={feedback.correct ? "celebrate" : "encourage"} />
+                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? "Bien joué ! Cette notion progresse." : "Pas encore — réessaie ou utilise la méthode."}</span>
               </div>
 
               {!feedback.correct && (

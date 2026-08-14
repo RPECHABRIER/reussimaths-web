@@ -11,6 +11,7 @@ import { supabase } from "../lib/supabaseClient";
 import MathText from "../components/MathText";
 import Figure from "../components/Figure";
 import LearningFeedback from "../components/LearningFeedback";
+import Mascot from "../components/Mascot";
 import CalculationModeBadge from "../components/CalculationModeBadge";
 import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import { matchesText, matchesMulti, parseNumericInput } from "../lib/answerMatch";
@@ -80,7 +81,7 @@ export default function ParcoursDiagnostic() {
         <div className="max-w-2xl w-full rounded-[2rem] p-6 sm:p-9" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, borderTop: `3px solid ${cycleColor}` }}>
           <Link to={`/parcours/niveau/${levelId}/programme${trial ? "?objectif=essai" : ""}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← Modifier les chapitres étudiés</Link>
           <div className="mt-7 text-center">
-            <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${cycleColor}18` }}><Target size={26} color={cycleColor} /></div>
+            <div className="relative mx-auto w-fit"><Mascot size={76} motion="float" /><span className="absolute -right-2 -bottom-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow"><Target size={17} color={cycleColor} /></span></div>
             <p className="text-xs uppercase tracking-widest font-bold mt-5" style={{ color: cycleColor }}>Diagnostic {level.label}</p>
             <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05 }}>Trouve ton bon point de départ</h1>
             <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>
@@ -330,9 +331,9 @@ export default function ParcoursDiagnostic() {
 
           {feedback && (
             <>
-              <div className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm mt-3" style={{ backgroundColor: feedback.correct ? `${colors.green}18` : `${colors.red}18`, color: feedback.correct ? colors.green : colors.red }}>
-                {feedback.correct ? <Check size={16} /> : <X size={16} />}
-                <span className="font-semibold">{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
+              <div className="feedback-moment grid grid-cols-[44px_1fr] items-center gap-3 rounded-2xl px-3 py-2 text-sm mt-3" style={{ backgroundColor: feedback.correct ? `${colors.green}18` : `${colors.red}13`, color: feedback.correct ? colors.green : colors.red }}>
+                <Mascot size={42} motion={feedback.correct ? "celebrate" : "encourage"} />
+                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? "Bien joué !" : "Pas tout à fait — comprends l’erreur avant de continuer."}</span>
               </div>
               {(!feedback.correct || trial) && <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} compact remember correct={feedback.correct} /></div>}
               <button

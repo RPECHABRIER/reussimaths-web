@@ -73,6 +73,13 @@ input:focus, select:focus, textarea:focus {
   background: rgba(217, 164, 65, 0.16);
 }
 
+.page-hero.compact {
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border-radius: 2rem;
+  background: linear-gradient(145deg, #142443 0%, #1d3158 72%, #253a64 100%);
+  box-shadow: 0 24px 54px -34px rgba(18, 35, 66, .72);
+}
+
 .premium-card {
   border: 1px solid rgba(27, 42, 74, 0.07);
   box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 18px 42px -20px rgba(16,24,40,0.2);
@@ -80,6 +87,50 @@ input:focus, select:focus, textarea:focus {
 
 .interactive-card {
   transform: translateZ(0);
+}
+
+.exercise-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.exercise-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #d9a441, #37a66d, #1789a0);
+}
+
+.learning-feedback-card,
+.feedback-moment {
+  animation: feedback-reveal 320ms cubic-bezier(.2,.75,.3,1) both;
+}
+
+.mascot-motion-float { animation: mascot-float 3.6s ease-in-out infinite; }
+.mascot-motion-celebrate { animation: mascot-celebrate 620ms cubic-bezier(.2,.8,.25,1) both; }
+.mascot-motion-encourage { animation: mascot-encourage 680ms ease-out both; }
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-4px) rotate(1deg); }
+}
+
+@keyframes mascot-celebrate {
+  0% { transform: scale(.82) rotate(-6deg); opacity: .45; }
+  55% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes mascot-encourage {
+  0% { transform: scale(.9); opacity: .55; }
+  55% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes feedback-reveal {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @media (hover: hover) {

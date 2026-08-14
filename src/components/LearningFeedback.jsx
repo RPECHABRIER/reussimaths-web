@@ -34,13 +34,19 @@ export default function LearningFeedback({ exercise, response, compact = false, 
   return (
     <div
       data-feedback-family={feedback.family}
-      className={`overflow-hidden rounded-[1.4rem] text-left ${compact ? "p-3 sm:p-4" : "p-4 sm:p-5"}`}
+      className={`learning-feedback-card overflow-hidden rounded-[1.4rem] text-left ${compact ? "p-3 sm:p-4" : "p-4 sm:p-5"}`}
       style={{ backgroundColor: correct ? `${colors.green}0d` : `${colors.gold}12`, border: `1px solid ${correct ? colors.green : colors.gold}35` }}
     >
       <p className="flex items-start gap-2.5 text-[0.95rem] sm:text-base font-bold leading-relaxed" style={{ color: colors.ink }}>
         <AlertCircle size={18} color={correct ? colors.green : colors.gold} className="shrink-0 mt-0.5" />
         <MathText text={feedback.intro} />
       </p>
+
+      <div className="mt-3 grid grid-cols-3 gap-1.5" aria-label="Les trois temps de la correction">
+        {["1 Comprendre", "2 Appliquer", "3 Retenir"].map((label, index) => (
+          <div key={label} className="rounded-full px-2 py-1.5 text-center text-[9px] sm:text-[10px] font-black uppercase tracking-wide" style={{ background: index === 0 ? `${colors.gold}20` : "rgba(255,255,255,.75)", color: index === 2 ? colors.green : colors.ink }}>{label}</div>
+        ))}
+      </div>
 
       <div className="mt-3 grid gap-2.5">
         <section className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5 rounded-xl bg-white/70 p-3 sm:p-3.5">

@@ -22,7 +22,7 @@ export default function SessionCelebration({ chapterTitle, correct, total, disco
   ];
   return (
     <div className="w-full max-w-lg rounded-[2rem] p-5 text-center sm:p-7" style={{background:colors.card,boxShadow:shadow.floating}}>
-      <div className="mx-auto h-20 w-20"><Mascot size={80} style={{boxShadow:shadow.soft}}/></div>
+      <div className="mx-auto h-20 w-20"><Mascot size={80} motion="celebrate" style={{boxShadow:shadow.soft}}/></div>
       <p className="mt-4 text-[10px] font-black uppercase tracking-[.18em]" style={{color:colors.gold}}>Séance accomplie</p>
       <h1 className="mt-1 text-2xl font-black" style={{fontFamily:fonts.display,color:colors.ink}}>{discoverySignup ? "Tu viens d’apprendre une vraie méthode" : "Cette notion vient de progresser"}</h1>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed" style={{color:colors.slate}}>{progressMessage(ratio)}</p>

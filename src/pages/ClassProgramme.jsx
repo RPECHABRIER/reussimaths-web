@@ -9,6 +9,7 @@ import { getStudyProgramme, setStudyProgramme, STUDY_STATUSES } from "../lib/stu
 import { setDiagnosticProfile } from "../lib/diagnosticProfile";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { colors, fonts, shadow, cycleColors } from "../theme";
+import Mascot from "../components/Mascot";
 
 export default function ClassProgramme() {
   const { levelId } = useParams();
@@ -75,18 +76,21 @@ export default function ClassProgramme() {
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
       <div className="max-w-3xl mx-auto">
         <Link to={trial ? "/niveaux?objectif=essai" : `/niveau/${levelId}`} className="text-xs font-semibold" style={{ color: colors.slate }}>← Changer de niveau</Link>
-        <header className="text-center mt-7 mb-7">
-          <div className="mx-auto flex items-center justify-center rounded-2xl" style={{ width: 56, height: 56, backgroundColor: `${accent}18` }}><BookOpenCheck size={27} color={accent} /></div>
+        <header className="page-hero compact mt-5 mb-7 overflow-hidden text-center">
+          <Mascot size={64} motion="float" className="mx-auto" />
           <p className="text-xs uppercase tracking-widest font-bold mt-4" style={{ color: accent }}>Programme de {level.label}</p>
-          <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(1.9rem, 6vw, 2.8rem)", fontWeight: 900, letterSpacing: "-0.035em", lineHeight: 1.05 }}>Où en es-tu en classe ?</h1>
-          <p className="text-sm sm:text-base mt-3 max-w-xl mx-auto" style={{ color: colors.slate }}>Indique ce que tu travailles actuellement et ce que ta classe a déjà étudié. Nous vérifierons aussi les prérequis utiles de l’année précédente.</p>
+          <h1 className="mt-2" style={{ fontFamily: fonts.display, color: "white", fontSize: "clamp(1.9rem, 6vw, 2.8rem)", fontWeight: 900, letterSpacing: "-0.035em", lineHeight: 1.05 }}>Où en es-tu en classe ?</h1>
+          <p className="text-sm sm:text-base mt-3 max-w-xl mx-auto" style={{ color: "#d9e1f0" }}>Choisis les chapitres qui te concernent. RéussiMaths construira ensuite un diagnostic court, puis ton parcours.</p>
+          <div className="mt-5 grid grid-cols-3 gap-2" aria-label="Les trois étapes de personnalisation">
+            {["1. Chapitres", "2. Diagnostic", "3. Parcours"].map((step, i) => <div key={step} className="rounded-xl px-2 py-2 text-[10px] sm:text-xs font-bold" style={{ background: i === 0 ? `${accent}30` : "rgba(255,255,255,.08)", color: i === 0 ? "white" : "#c7d1e3", border: `1px solid ${i === 0 ? `${accent}70` : "rgba(255,255,255,.1)"}` }}>{step}</div>)}
+          </div>
         </header>
 
         <div className="grid gap-3">
           {chapters.map((chapter) => {
             const status = selections[chapter.meta.id];
             return (
-              <div key={chapter.meta.id} className="rounded-2xl p-4 sm:flex sm:items-center sm:justify-between gap-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${status ? `${accent}55` : colors.hairline}` }}>
+              <div key={chapter.meta.id} className="interactive-card rounded-2xl p-4 sm:flex sm:items-center sm:justify-between gap-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft, border: `1px solid ${status ? `${accent}75` : colors.hairline}`, borderLeftWidth: status ? 4 : 1 }}>
                 <div className="min-w-0"><p className="font-bold" style={{ color: colors.ink }}>{chapter.meta.title}</p>{chapter.meta.description && <p className="text-xs mt-1 line-clamp-2" style={{ color: colors.slate }}>{chapter.meta.description}</p>}</div>
                 <div className="grid grid-cols-2 gap-2 mt-3 sm:mt-0 shrink-0">
                   <button type="button" onClick={() => setStatus(chapter.meta.id, STUDY_STATUSES.CURRENT)} className="px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5" style={{ backgroundColor: status === STUDY_STATUSES.CURRENT ? accent : colors.bg, color: status === STUDY_STATUSES.CURRENT ? colors.bg : colors.ink }}><BookOpenCheck size={14} /> En cours</button>

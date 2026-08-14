@@ -476,10 +476,33 @@ test("le laboratoire note les corrections sur 10 et bloque une vitrine sous 9", 
   assert.match(lab, /Toutes les notes/);
   assert.match(lab, /Toutes les familles/);
   assert.match(lab, /File prioritaire/);
+  assert.match(lab, /Correction suivante/);
+  assert.match(lab, /Activation progressive des vitrines/);
   assert.match(lab, /Number\(audit\.qualityScore\)>=9/);
   assert.match(migration, /quality_score between 0 and 10/);
   assert.match(migration, /new\.quality_score < 9/);
   assert.match(migration, /cardinality\(new\.checked_criteria\) < 8/);
+});
+
+test("le verrou Découverte se prépare niveau par niveau sans couper une vitrine incomplète", async () => {
+  const { getDiscoveryLevelReadiness, filterApprovedDiscoveryExercises } = await import("./lib/discoveryQualityGate.js");
+  const exercises = [1, 2, 3, 4, 5];
+  const approvedAudit = { qualityScore: 9, status: "validée", checks: [0, 1, 2, 3, 4, 5, 6, 7] };
+  const partial = Object.fromEntries([1, 2, 3, 4].map((index) => [`Découverte sixieme — question ${index}`, approvedAudit]));
+  assert.equal(getDiscoveryLevelReadiness(partial, "sixieme").ready, false);
+  assert.deepEqual(filterApprovedDiscoveryExercises(exercises, partial, "sixieme"), exercises);
+  const complete = { ...partial, "Découverte sixieme — question 5": approvedAudit };
+  assert.equal(getDiscoveryLevelReadiness(complete, "sixieme").ready, true);
+  assert.deepEqual(filterApprovedDiscoveryExercises(exercises, complete, "sixieme"), exercises);
+});
+
+test("les vitrines 6e distinguent le partage d'une fraction et les coordonnées d'un point", () => {
+  const fraction = buildPedagogicalFeedback({ chapter: "Fractions — Partage", prompt: "Une unité est partagée en 4 parts égales et 3 sont coloriées.", answer: "3/4", steps: [] }, "4/3");
+  const point = buildPedagogicalFeedback({ chapter: "Géométrie repérée — Coordonnées", prompt: "Le point A a pour abscisse 3 et pour ordonnée -2.", answer: "(3 ; -2)", steps: [] }, "(-2 ; 3)");
+  assert.equal(fraction.family, "fraction_sharing");
+  assert.match(fraction.meaning, /dénominateur.*numérateur/i);
+  assert.equal(point.family, "point_coordinates");
+  assert.doesNotMatch(point.meaning, /milieu|vecteur/i);
 });
 
 test("le mot ensuite ne déclenche jamais une correction sur les suites numériques", async () => {

@@ -201,6 +201,13 @@ const FAMILY_FEEDBACK = [
     rule: "Écris les nombres avec leurs virgules alignées, complète les positions manquantes par des zéros si besoin, puis calcule colonne par colonne.",
   },
   {
+    id: "fraction_sharing",
+    match: /fractions?\s*[—-]\s*(?:partage|représentation)|parts? égales?.*fraction|fraction.*coloriée/i,
+    intro: "Non, le nombre de parts prises et le nombre total de parts égales ont été confondus.",
+    meaning: "Une fraction décrit un partage en parts égales. Le dénominateur, en bas, indique en combien de parts égales l’unité est découpée ; le numérateur, en haut, indique combien de ces parts sont prises ou coloriées.",
+    rule: "Compte d’abord toutes les parts égales pour obtenir le dénominateur, puis les parts prises ou coloriées pour obtenir le numérateur.",
+  },
+  {
     id: "relative_product",
     match: /relatifs?.*(?:produit|multiplier|division)|(?:produit|multiplie|divise).*nombres? (?:négatifs?|relatifs?)/i,
     intro: "Non, la valeur absolue du calcul est correcte, mais la règle des signes du produit ou du quotient n’a pas été appliquée correctement.",
@@ -460,6 +467,13 @@ const FAMILY_FEEDBACK = [
     intro: "Non, la position des droites ne peut pas être conclue sans utiliser le codage ou une propriété précise.",
     meaning: "Deux droites parallèles ne se rencontrent pas. Deux droites perpendiculaires forment un angle droit. Des angles correspondants ou alternes-internes permettent aussi d’établir un parallélisme lorsque les conditions sont réunies.",
     rule: "Nomme la propriété utilisée et vérifie toutes ses conditions avant de conclure.",
+  },
+  {
+    id: "point_coordinates",
+    match: /coordonnées.*point|point.*abscisse.*ordonnée|géométrie repérée.*coordonnées/i,
+    intro: "Non, l’abscisse et l’ordonnée n’ont pas été écrites dans le bon ordre.",
+    meaning: "Les coordonnées d’un point s’écrivent toujours dans l’ordre (abscisse ; ordonnée). L’abscisse correspond à la position horizontale et l’ordonnée à la position verticale.",
+    rule: "Repère d’abord l’abscisse, écris-la avant le point-virgule, puis écris l’ordonnée en seconde position en conservant son signe.",
   },
   {
     id: "geometry_coordinates",

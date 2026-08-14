@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ClipboardCopy } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardCopy } from "lucide-react";
 import { Link } from "react-router-dom";
 import LearningFeedback from "../components/LearningFeedback";
 import MathText from "../components/MathText";
@@ -11,6 +11,7 @@ import { supabase } from "../lib/supabaseClient";
 import CalculationModeBadge from "../components/CalculationModeBadge";
 import { getCalculationMode } from "../lib/calculationMode";
 import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
+import { getDiscoveryLevelReadiness } from "../lib/discoveryQualityGate";
 
 const SAMPLES = [
   ["Nombres relatifs", { type: "numeric", chapter: "Nombres relatifs — Additionner deux relatifs de signes contraires", prompt: "Calcule : \\(-7+12\\)", answer: 5, steps: ["Les signes sont opposés : 12 est le plus « fort ».", "\\(12-7=5\\) : le résultat est positif."] }, "-19"],
@@ -118,6 +119,7 @@ export default function CorrectionsLab() {
   const [familyFilter, setFamilyFilter] = useState("toutes");
   const [search, setSearch] = useState("");
   const [copied, setCopied] = useState(false);
+  const [weeklyHealth, setWeeklyHealth] = useState({ feedback: null, errors: null });
   const allowed = import.meta.env.DEV || isRealAdmin(user);
   const [title, exercise, response] = LAB_SAMPLES[index];
   useEffect(() => {
@@ -127,6 +129,17 @@ export default function CorrectionsLab() {
       const remote = Object.fromEntries((data ?? []).map((row)=>[row.sample_key,{checks:row.checked_criteria ?? [],note:row.note ?? "",qualityScore:row.quality_score,status:row.status,sampleKind:row.sample_kind,feedbackFamily:row.feedback_family,updatedAt:row.updated_at}]));
       setAudits((local)=>{const merged={...local,...remote};localStorage.setItem("reussimaths:correction-audits",JSON.stringify(merged));return merged;});
     });
+  }, [user?.id]);
+  useEffect(() => {
+    if (!user?.id) return;
+    const since = new Date(Date.now() - 7 * 86400000).toISOString();
+    Promise.all([
+      supabase.from("pilot_feedback").select("id", { count: "exact", head: true }).gte("created_at", since),
+      supabase.from("client_errors").select("id", { count: "exact", head: true }).gte("occurred_at", since),
+    ]).then(([feedbackResult, errorResult]) => setWeeklyHealth({
+      feedback: feedbackResult.error ? null : feedbackResult.count ?? 0,
+      errors: errorResult.error ? null : errorResult.count ?? 0,
+    }));
   }, [user?.id]);
   const audit = audits[title] ?? { checks: [], note: "", qualityScore: null, status: "à_revoir" };
   const feedbackFamily = getFamily([title, exercise, response]);
@@ -201,6 +214,12 @@ export default function CorrectionsLab() {
       const scoreB = b.audit?.qualityScore == null ? -1 : Number(b.audit.qualityScore);
       return scoreA - scoreB;
     }), [audits]);
+  const levelReadiness = useMemo(() => DIAGNOSTIC_LEVELS.map((levelId) => getDiscoveryLevelReadiness(audits, levelId)), [audits]);
+  const goToNextPriority = () => {
+    const currentPosition = prioritySamples.findIndex(({ sampleIndex }) => sampleIndex === index);
+    const next = prioritySamples[currentPosition >= 0 ? (currentPosition + 1) % prioritySamples.length : 0];
+    if (next) setIndex(next.sampleIndex);
+  };
   if (loading) return null;
   if (!allowed) return <main className="min-h-screen p-8" style={{ background: colors.bg, color: colors.ink }}>Accès réservé à l’administration.</main>;
   return (
@@ -209,14 +228,17 @@ export default function CorrectionsLab() {
         <Link to="/admin" className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: colors.slate }}><ArrowLeft size={14} /> Administration</Link>
         <p className="mt-5 text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: colors.gold }}>Laboratoire pédagogique</p>
         <h1 className="mt-1 text-2xl sm:text-3xl font-black" style={{ color: colors.ink, fontFamily: fonts.display }}>Contrôler les corrections</h1>
-        <section className="mt-5 grid gap-3 sm:grid-cols-3">
+        <section className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
           <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Évaluées</p><p className="mt-1 text-2xl font-black" style={{color:colors.ink}}>{labSummary.evaluated}/{LAB_SAMPLES.length}</p></div>
           <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Note moyenne</p><p className="mt-1 text-2xl font-black" style={{color:colors.ink}}>{labSummary.evaluated ? labSummary.average.toFixed(1) : "—"}/10</p></div>
           <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Découverte publiables</p><p className="mt-1 text-2xl font-black" style={{color:labSummary.discoveryApproved===labSummary.discoveryTotal?colors.green:colors.red}}>{labSummary.discoveryApproved}/{labSummary.discoveryTotal}</p></div>
+          <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Retours · 7 jours</p><p className="mt-1 text-2xl font-black" style={{color:colors.ink}}>{weeklyHealth.feedback ?? "—"}</p></div>
+          <div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-[10px] font-black uppercase tracking-wider" style={{color:colors.slate}}>Erreurs · 7 jours</p><p className="mt-1 text-2xl font-black" style={{color:weeklyHealth.errors?colors.red:colors.green}}>{weeklyHealth.errors ?? "—"}</p></div>
         </section>
+        <section className="mt-3 rounded-2xl bg-white p-4 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-xs font-black" style={{color:colors.ink}}>Activation progressive des vitrines</p><p className="mt-0.5 text-[10px]" style={{color:colors.slate}}>Le verrou public ne sera activé pour un niveau qu’après validation de ses 5 corrections.</p></div><Link to="/admin" className="text-[10px] font-black" style={{color:colors.ink}}>Incidents et paiements →</Link></div><div className="mt-3 flex flex-wrap gap-2">{levelReadiness.map((item)=><span key={item.levelId} className="rounded-full px-2.5 py-1 text-[10px] font-black" style={{backgroundColor:item.ready?`${colors.green}18`:`${colors.gold}15`,color:item.ready?colors.green:colors.ink}}>{item.levelId} · {item.approved}/{item.required}</span>)}</div></section>
         <button type="button" onClick={copyLearningBrief} className="mt-3 inline-flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-xs font-black" style={{borderColor:colors.hairline,color:colors.ink}}><ClipboardCopy size={15}/>{copied ? "Bilan copié" : "Copier le bilan d’apprentissage pour Codex"}</button>
         <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"><input value={search} onChange={(event)=>setSearch(event.target.value)} placeholder="Rechercher une notion…" className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}/><select value={statusFilter} onChange={(event)=>setStatusFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les corrections</option><option value="à_revoir">À revoir</option><option value="prioritaire">Prioritaires</option><option value="validée">Validées</option></select><select value={scoreFilter} onChange={(event)=>setScoreFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les notes</option><option value="non_evaluees">Non évaluées</option><option value="bloquees">Sous 9/10</option><option value="vitrine">9 ou 10/10</option></select><select value={familyFilter} onChange={(event)=>setFamilyFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="toutes">Toutes les familles</option>{availableFamilies.map((family)=><option key={family} value={family}>{family}</option>)}</select><select value={calculationFilter} onChange={(event)=>setCalculationFilter(event.target.value)} className="rounded-xl border bg-white px-3 py-3 text-sm" style={{borderColor:colors.hairline,color:colors.ink}}><option value="tous">Tous les modes de calcul</option><option value="mental">Sans calculatrice</option><option value="calculator">Calculatrice autorisée</option><option value="choix">Libre choix</option></select></div>
-        {prioritySamples.length > 0 && <section className="mt-4 rounded-2xl border p-4" style={{borderColor:`${colors.red}35`,backgroundColor:`${colors.red}08`}}><p className="text-xs font-black" style={{color:colors.red}}>File prioritaire — {prioritySamples.length} correction{prioritySamples.length>1?"s":""} Découverte à traiter</p><div className="mt-2 flex flex-wrap gap-2">{prioritySamples.slice(0,8).map(({sample:[sampleTitle],sampleIndex,audit:sampleAudit})=><button type="button" key={sampleTitle} onClick={()=>setIndex(sampleIndex)} className="rounded-lg bg-white px-2.5 py-1.5 text-[10px] font-bold" style={{color:colors.ink}}>{sampleTitle.replace("Découverte ","")} · {sampleAudit?.qualityScore == null?"non notée":`${sampleAudit.qualityScore}/10`}</button>)}</div></section>}
+        {prioritySamples.length > 0 && <section className="mt-4 rounded-2xl border p-4" style={{borderColor:`${colors.red}35`,backgroundColor:`${colors.red}08`}}><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-black" style={{color:colors.red}}>File prioritaire — {prioritySamples.length} correction{prioritySamples.length>1?"s":""} Découverte à traiter</p><button type="button" onClick={goToNextPriority} className="inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-[10px] font-black" style={{color:colors.ink}}>Correction suivante <ArrowRight size={13}/></button></div><div className="mt-2 flex flex-wrap gap-2">{prioritySamples.slice(0,8).map(({sample:[sampleTitle],sampleIndex,audit:sampleAudit})=><button type="button" key={sampleTitle} onClick={()=>setIndex(sampleIndex)} className="rounded-lg bg-white px-2.5 py-1.5 text-[10px] font-bold" style={{color:colors.ink}}>{sampleTitle.replace("Découverte ","")} · {sampleAudit?.qualityScore == null?"non notée":`${sampleAudit.qualityScore}/10`}</button>)}</div></section>}
         <label className="block mt-3 text-xs font-bold" style={{ color: colors.slate }}>
           Exemple à examiner
           <select value={index} onChange={(event) => setIndex(Number(event.target.value))} className="mt-2 w-full rounded-xl border bg-white px-3 py-3 text-sm" style={{ borderColor: colors.hairline, color: colors.ink }}>

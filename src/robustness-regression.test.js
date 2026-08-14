@@ -106,6 +106,14 @@ test("l’équation-produit nul se sépare en deux branches de résolution", asy
   assert.match(visual, /solution positive demandée/);
 });
 
+test("l’image de 4 suit la machine 3x moins 2 sans confusion avec un antécédent", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="function-image-machine-3x-minus-2"/);
+  assert.match(visual, /f\(4\) = 3 × 4 − 2 = 10/);
+  assert.match(visual, /Ce serait une recherche d’antécédent/);
+  assert.match(visual, /4 est à l’entrée de la machine/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

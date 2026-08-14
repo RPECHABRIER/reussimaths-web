@@ -46,6 +46,14 @@ test("le calcul de 20 % de 80 montre deux groupes de huit", async () => {
   assert.match(showcases, /80 × 0,2 = 16/);
 });
 
+test("la somme des angles du triangle est démontrée par les alternes-internes", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="triangle-alternate-interior-angles"/);
+  assert.match(visual, /angles alternes-internes/);
+  assert.match(visual, /forment alors un angle plat/);
+  assert.match(visual, /50°<\/span>.*70°<\/span>.*60°/s);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

@@ -198,7 +198,7 @@ export default function CourseTables() {
             ← Jeux
           </Link>
 
-          <div className="text-center my-7">
+          <div className="game-intro-hero text-center my-7">
             <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
               Course aux tables
             </h1>
@@ -299,7 +299,7 @@ export default function CourseTables() {
             thresholds={thresholds}
           />
 
-          <div className="flex-1 flex flex-col items-center justify-center text-center">
+          <div className="game-question-stage flex-1 flex flex-col items-center justify-center text-center">
             <p
               style={{
                 fontFamily: fonts.display,
@@ -358,7 +358,7 @@ export default function CourseTables() {
   // ----------------------------------------------------------- RESULT ---
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto text-center">
+      <div className="game-result-card max-w-md mx-auto text-center">
         <RaceTrack
           player={player}
           opponents={opponents}

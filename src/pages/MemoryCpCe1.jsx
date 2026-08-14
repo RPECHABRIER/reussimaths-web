@@ -183,7 +183,7 @@ export default function MemoryCpCe1() {
             ← Jeux
           </Link>
 
-          <div className="text-center my-7">
+          <div className="game-intro-hero text-center my-7">
             <span
               className="inline-block text-[0.65rem] font-bold px-2.5 py-1 rounded-full mb-3"
               style={{ backgroundColor: `${gold}22`, color: ink }}
@@ -233,6 +233,7 @@ export default function MemoryCpCe1() {
           </div>
 
           <div
+            className="memory-board-shell"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(5, 1fr)",
@@ -278,7 +279,7 @@ export default function MemoryCpCe1() {
   // ----------------------------------------------------------- RESULT ---
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto text-center">
+      <div className="game-result-card max-w-md mx-auto text-center">
         <p style={{ fontFamily: fonts.display, color: gold, fontSize: "1.8rem", fontWeight: 800 }}>Bravo !</p>
         <p className="text-sm mt-2" style={{ color: slate }}>
           Terminé en <strong style={{ color: ink }}>{formatSeconds(finalTimeMs)}s</strong>, en{" "}

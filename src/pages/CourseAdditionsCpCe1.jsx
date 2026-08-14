@@ -200,7 +200,7 @@ export default function CourseAdditionsCpCe1() {
             ← Jeux
           </Link>
 
-          <div className="text-center my-7">
+          <div className="game-intro-hero text-center my-7">
             <span
               className="inline-block text-xs font-bold uppercase tracking-wide rounded-full px-3 py-1 mb-3"
               style={{ backgroundColor: `${colors.green}22`, color: colors.green }}
@@ -270,7 +270,7 @@ export default function CourseAdditionsCpCe1() {
 
           <RaceTrackRank player={player} opponents={opponents} progress={progress} rank={rank} feedback={feedback} />
 
-          <div className="flex-1 flex flex-col items-center justify-center text-center">
+          <div className="game-question-stage flex-1 flex flex-col items-center justify-center text-center">
             <p
               style={{
                 fontFamily: fonts.display,
@@ -312,7 +312,7 @@ export default function CourseAdditionsCpCe1() {
   const info = RANK_INFO[finalRank] ?? RANK_INFO[4];
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
-      <div className="max-w-md mx-auto text-center">
+      <div className="game-result-card max-w-md mx-auto text-center">
         <RaceTrackRank player={player} opponents={opponents} progress={1} rank={finalRank} feedback={null} />
 
         <p style={{ fontFamily: fonts.display, color: info.color, fontSize: "1.8rem", fontWeight: 800 }}>{info.label}</p>

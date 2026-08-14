@@ -17,6 +17,22 @@ test("les coordonnées tolèrent les espaces autour du point-virgule", () => {
   assert.equal(matchesText("(-2;3)", "(3;-2)"), false);
 });
 
+test("les vecteurs courts restent entièrement visibles dans les énoncés", async () => {
+  const mathText = await read("./components/MathText.jsx");
+  const css = await read("./index.css");
+  assert.match(mathText, /math-text-short-vector/);
+  assert.match(mathText, /\\\\overrightarrow/);
+  assert.match(css, /\.math-text-short-vector \.katex/);
+  assert.match(css, /overflow-x: visible/);
+});
+
+test("les probabilités contraires sont arrondies avant affichage", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /formatFrenchDecimal/);
+  assert.match(visual, /toFixed\(maximumDigits\)/);
+  assert.doesNotMatch(visual, /String\(eventPercent \/ 100\)\.replace/);
+});
+
 test("l’addition de relatifs visualise la neutralisation rouge et verte", async () => {
   const visual = await read("./components/FeedbackVisual.jsx");
   assert.match(visual, /data-visual="relative-neutralization"/);

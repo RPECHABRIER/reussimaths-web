@@ -30,6 +30,7 @@ function withAutoDelimiters(text) {
 export default function MathText({ text, as: Tag = "span", className, style }) {
   const ref = useRef(null);
   const displayText = withAutoDelimiters(text);
+  const containsShortVector = typeof text === "string" && /\\overrightarrow\{[A-Za-z]{1,3}\}/.test(text);
 
   useEffect(() => {
     if (ref.current) {
@@ -38,7 +39,7 @@ export default function MathText({ text, as: Tag = "span", className, style }) {
   }, [displayText]);
 
   return (
-    <Tag ref={ref} className={className} style={style}>
+    <Tag ref={ref} className={[className, containsShortVector ? "math-text-short-vector" : ""].filter(Boolean).join(" ")} style={style}>
       {displayText}
     </Tag>
   );

@@ -96,7 +96,7 @@ const SHOWCASES = {
   quatrieme: [
     n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, [
       { type: "donnee", text: "On multiplie deux nombres négatifs : −4 et −3." },
-      { type: "regle", text: "On détermine le signe avant de calculer la distance à zéro : deux facteurs de même signe donnent un produit positif ; deux facteurs de signes opposés donnent un produit négatif." },
+      { type: "regle", text: "On applique d’abord la règle des signes avant de calculer la distance à zéro : deux facteurs de même signe donnent un produit positif ; deux facteurs de signes opposés donnent un produit négatif." },
       { type: "calcul", text: "Les deux facteurs sont négatifs, donc le produit est positif. On multiplie ensuite leurs distances à zéro : 4 × 3 = 12." },
       { type: "resultat", text: "Ainsi, (−4) × (−3) = 12. Le signe « moins » n’est pas conservé : deux signes négatifs dans un produit donnent bien un résultat positif." },
     ], null, null, "mental"),

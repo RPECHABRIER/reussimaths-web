@@ -63,6 +63,11 @@ test("la probabilité d’une boule rouge compte les favorables et contrôle l�
   assert.match(visual, /hors de \[0 ; 1\]/);
 });
 
+test("le produit de relatifs nomme explicitement la règle des signes", async () => {
+  const showcases = await read("./discoveryShowcases.js");
+  assert.match(showcases, /On applique d’abord la règle des signes/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

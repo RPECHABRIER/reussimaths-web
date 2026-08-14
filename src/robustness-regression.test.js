@@ -27,6 +27,14 @@ test("l’addition de relatifs visualise la neutralisation rouge et verte", asyn
   assert.match(visual, /colors\.green/);
 });
 
+test("l’addition de fractions montre le redécoupage au dénominateur commun", async () => {
+  const visual = await read("./components/FeedbackVisual.jsx");
+  assert.match(visual, /data-visual="fraction-common-denominator"/);
+  assert.match(visual, /Les parts n’ont pas la même taille/);
+  assert.match(visual, /On redécoupe les deux bandes/);
+  assert.match(visual, /On réunit les parts de même taille/);
+});
+
 test("le dossier brevet couvre les compétences DNB et les affiche à l’élève", async () => {
   assert.equal(brevetChapter.auditGenerators.length, 15);
   const competencies = new Set();

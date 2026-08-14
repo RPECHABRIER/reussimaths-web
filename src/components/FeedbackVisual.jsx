@@ -13,6 +13,13 @@ function fractionsFrom(exercise) {
     .filter(({ numerator, denominator }) => denominator > 0 && denominator <= 12 && numerator >= 0);
 }
 
+function gcd(a, b) {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  while (y) [x, y] = [y, x % y];
+  return x || 1;
+}
+
 export default function FeedbackVisual({ family, exercise }) {
   if (family === "fraction_decimal_quotient") {
     const match = `${exercise?.prompt ?? ""}`.match(/\\dfrac\{(\d+)\}\{(\d+)\}/);
@@ -30,6 +37,25 @@ export default function FeedbackVisual({ family, exercise }) {
   if (["fractions", "fraction_equivalence", "fraction_comparison", "fraction_simplification"].includes(family)) {
     const parsedFractions = fractionsFrom(exercise);
     const strips = parsedFractions.length === 2 ? parsedFractions : [{ numerator: 1, denominator: 3 }, { numerator: 1, denominator: 4 }];
+    const isAddition = family === "fractions" && parsedFractions.length === 2 && /addition|ajout|\+/i.test(`${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`);
+    if (isAddition) {
+      const [left, right] = parsedFractions;
+      const commonDenominator = (left.denominator * right.denominator) / gcd(left.denominator, right.denominator);
+      const leftEquivalent = left.numerator * (commonDenominator / left.denominator);
+      const rightEquivalent = right.numerator * (commonDenominator / right.denominator);
+      const total = leftEquivalent + rightEquivalent;
+      const cells = (filled, accent = colors.gold, offset = 0) => Array.from({length:commonDenominator},(_,index)=><span key={index} className="h-7 border-r last:border-r-0" style={{borderColor:`${colors.ink}25`,background:index<offset?`${colors.gold}75`:index<offset+filled?`${accent}75`:colors.bg,animation:index>=offset&&index<offset+filled?`pulse 1.8s ${index*70}ms infinite`:undefined}} />);
+      return <div className="mt-4 rounded-xl bg-white p-3" data-visual="fraction-common-denominator" style={{border:`1px solid ${colors.gold}35`}}>
+        <p className="text-xs font-bold" style={{color:colors.ink}}>Redécouper les parts avant de les additionner</p>
+        <div className="mt-3 grid gap-3">
+          <div><p className="mb-1 text-[10px] font-bold" style={{color:colors.slate}}>1. Les parts n’ont pas la même taille</p><div className="grid grid-cols-2 gap-3">{[left,right].map(({numerator,denominator},stripIndex)=><div key={stripIndex}><div className="grid overflow-hidden rounded-md" style={{gridTemplateColumns:`repeat(${denominator}, minmax(0, 1fr))`,border:`1px solid ${colors.ink}25`}}>{Array.from({length:denominator},(_,index)=><span key={index} className="h-7 border-r last:border-r-0" style={{borderColor:`${colors.ink}25`,background:index<numerator?`${colors.gold}65`:colors.bg}} />)}</div><p className="mt-1 text-center text-[10px] font-black" style={{color:colors.ink}}>{numerator}/{denominator}</p></div>)}</div></div>
+          <ArrowDown size={17} color={colors.gold} className="mx-auto animate-pulse"/>
+          <div><p className="mb-1 text-[10px] font-bold" style={{color:colors.slate}}>2. On redécoupe les deux bandes en {commonDenominator} parts égales</p><div className="grid gap-2">{[[leftEquivalent,`${leftEquivalent}/${commonDenominator}`],[rightEquivalent,`${rightEquivalent}/${commonDenominator}`]].map(([filled,label],index)=><div key={label} className="flex items-center gap-2"><div className="grid flex-1 overflow-hidden rounded-md" style={{gridTemplateColumns:`repeat(${commonDenominator}, minmax(0, 1fr))`,border:`1px solid ${colors.ink}25`}}>{cells(filled,index?colors.green:colors.gold)}</div><span className="w-10 text-[10px] font-black" style={{color:colors.ink}}>{label}</span></div>)}</div></div>
+          <ArrowDown size={17} color={colors.gold} className="mx-auto animate-pulse"/>
+          <div><p className="mb-1 text-[10px] font-bold" style={{color:colors.slate}}>3. On réunit les parts de même taille</p><div className="grid overflow-hidden rounded-md" style={{gridTemplateColumns:`repeat(${commonDenominator}, minmax(0, 1fr))`,border:`2px solid ${colors.ink}30`}}>{cells(rightEquivalent,colors.green,leftEquivalent)}{total < commonDenominator ? null : null}</div><p className="mt-2 text-center text-sm font-black" style={{color:colors.ink}}>{leftEquivalent}/{commonDenominator} + {rightEquivalent}/{commonDenominator} = <span style={{color:colors.green}}>{total}/{commonDenominator}</span></p></div>
+        </div>
+      </div>;
+    }
     return (
       <div className="mt-4 rounded-xl bg-white p-3 overflow-hidden" style={{ border: `1px solid ${colors.gold}35` }}>
         <p className="text-xs font-bold" style={{ color: colors.ink }}>Des parts de même taille</p>

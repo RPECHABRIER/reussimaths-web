@@ -724,14 +724,16 @@ test("une question proche de vitrine ne repart jamais sur une notion étrangère
   assert.match(runner, /\{similarExercise && \(/);
 });
 
-test("chaque vitrine de 5e propose le même exercice avec de nouveaux nombres", () => {
-  const exercises = getDiscoveryShowcase("cinquieme").showcaseExercises;
-  assert.equal(exercises.length, 5);
-  for (const exercise of exercises) {
-    assert.ok(exercise.similarExercise, `${exercise.chapter} doit avoir une variante proche`);
-    assert.equal(exercise.similarExercise.chapter, exercise.chapter);
-    assert.notEqual(exercise.similarExercise.prompt, exercise.prompt);
-    assert.equal(exercise.similarExercise.type, exercise.type);
+test("chaque vitrine du collège propose le même exercice avec de nouveaux nombres", () => {
+  for (const levelId of ["sixieme", "cinquieme", "quatrieme", "troisieme"]) {
+    const exercises = getDiscoveryShowcase(levelId).showcaseExercises;
+    assert.equal(exercises.length, 5);
+    for (const exercise of exercises) {
+      assert.ok(exercise.similarExercise, `${levelId} — ${exercise.chapter} doit avoir une variante proche`);
+      assert.equal(exercise.similarExercise.chapter, exercise.chapter);
+      assert.notEqual(exercise.similarExercise.prompt, exercise.prompt);
+      assert.equal(exercise.similarExercise.type, exercise.type);
+    }
   }
 });
 

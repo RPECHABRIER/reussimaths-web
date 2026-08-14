@@ -25,6 +25,61 @@ function structureShowcaseExercise(exercise) {
   };
 }
 
+function replaceVariantText(value, replacements) {
+  if (typeof value === "string") {
+    const placeholders = [];
+    let result = value;
+    [...replacements].sort((a, b) => b[0].length - a[0].length).forEach(([from, to], index) => {
+      const placeholder = `\uE000${String.fromCharCode(65 + index)}\uE001`;
+      result = result.split(from).join(placeholder);
+      placeholders.push([placeholder, to]);
+    });
+    placeholders.forEach(([placeholder, replacement]) => {
+      result = result.split(placeholder).join(replacement);
+    });
+    return result;
+  }
+  if (Array.isArray(value)) return value.map((item) => replaceVariantText(item, replacements));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replaceVariantText(item, replacements)]));
+  }
+  return value;
+}
+
+function buildNumberVariant(exercise, { replacements, answer, answerDisplay, answerUnit }) {
+  const transformed = replaceVariantText(exercise, replacements);
+  return {
+    ...transformed,
+    answer,
+    ...(answerDisplay !== undefined ? { answerDisplay } : {}),
+    ...(answerUnit !== undefined ? { answerUnit } : {}),
+  };
+}
+
+const COLLEGE_VARIANTS = {
+  sixieme: [
+    { replacements: [["12,4", "15,3"], ["0,7", "0,6"], ["13,1", "15,9"], ["Sept", "Six"], ["sept", "six"], ["7", "6"], ["Quatre dixièmes", "Trois dixièmes"], ["onze dixièmes, c’est-à-dire une unité et un dixième", "neuf dixièmes, sans retenue"]], answer: 15.9 },
+    { replacements: [["4 parts", "5 parts"], ["quatre parts", "cinq parts"], ["quatre", "cinq"], ["3/4", "4/5"], ["Trois parts", "Quatre parts"], ["trois parts", "quatre parts"], ["3", "4"], ["4", "5"]], answer: 0.8, answerDisplay: "4/5" },
+    null,
+    { replacements: [["7 cm", "8 cm"], ["4 cm", "5 cm"], ["7 × 4 = 28", "8 × 5 = 40"], ["28 cm²", "40 cm²"], ["28", "40"]], answer: 40 },
+    { replacements: [["(3 ; -2)", "(4 ; -3)"], ["(3 ; −2)", "(4 ; −3)"], ["abscisse 3", "abscisse 4"], ["ordonnée −2", "ordonnée −3"], ["vaut 3", "vaut 4"], ["vaut −2", "vaut −3"], ["3 en première", "4 en première"], ["−2 en seconde", "−3 en seconde"]], answer: "(4 ; -3)" },
+  ],
+  quatrieme: [
+    { replacements: [["(−4) × (−3)", "(−5) × (−2)"], ["−4 et −3", "−5 et −2"], ["4 × 3 = 12", "5 × 2 = 10"], ["= 12", "= 10"]], answer: 10 },
+    { replacements: [["4x − 7 = 13", "3x − 6 = 15"], ["On ajoute 7", "On ajoute 6"], ["4x = 20", "3x = 21"], ["par 4", "par 3"], ["x = 5", "x = 7"], ["4 × 5 − 7 = 20 − 7 = 13", "3 × 7 − 6 = 21 − 6 = 15"]], answer: 7 },
+    { replacements: [["AB = 6 cm", "AB = 5 cm"], ["AC = 8 cm", "AC = 12 cm"], ["6² + 8² = 36 + 64 = 100", "5² + 12² = 25 + 144 = 169"], ["√100 = 10", "√169 = 13"], ["6 + 8 = 14", "5 + 12 = 17"], ["10 cm", "13 cm"]], answer: 13 },
+    { replacements: [["150 km", "180 km"], ["2 h", "3 h"], ["150 ÷ 2 = 75", "180 ÷ 3 = 60"], ["75 km/h", "60 km/h"]], answer: 60 },
+    { replacements: [["8, 10 et 15", "9, 12 et 15"], ["8 + 10 + 15 = 33", "9 + 12 + 15 = 36"], ["33 ÷ 3 = 11", "36 ÷ 3 = 12"], ["moyenne est 11", "moyenne est 12"], ["valeur 8", "valeur 9"]], answer: 12 },
+  ],
+  troisieme: [
+    { replacements: [["\\dfrac{x}{6}=\\dfrac{4}{3}", "\\dfrac{x}{5}=\\dfrac{6}{3}"], ["x=6\\times4\\div3=24\\div3=8", "x=5\\times6\\div3=30\\div3=10"], ["x=8", "x=10"], ["\\dfrac{8}{6}=\\dfrac{4}{3}", "\\dfrac{10}{5}=\\dfrac{6}{3}"]], answer: 10 },
+    { replacements: [["(x − 2)(x + 3)", "(x − 4)(x + 2)"], ["(x − 2) et (x + 3)", "(x − 4) et (x + 2)"], ["x − 2 = 0", "x − 4 = 0"], ["x = 2", "x = 4"], ["x + 3 = 0", "x + 2 = 0"], ["x = −3", "x = −2"], ["−3 et 2", "−2 et 4"], ["positive demandée est donc 2", "positive demandée est donc 4"]], answer: 4 },
+    { replacements: [["f(x) = 3x − 2", "f(x) = 2x + 1"], ["image de 4", "image de 5"], ["vaut 4", "vaut 5"], ["f(4) = 3 × 4 − 2", "f(5) = 2 × 5 + 1"], ["12 − 2 = 10", "10 + 1 = 11"], ["f est 10", "f est 11"]], answer: 11 },
+    { replacements: [["80 €", "60 €"], ["80 vaut 8", "60 vaut 6"], ["20 % vaut 16", "20 % vaut 12"], ["80 + 16 = 96", "60 + 12 = 72"], ["96 €", "72 €"], ["80 × 1,20 = 96", "60 × 1,20 = 72"]], answer: 72 },
+    { replacements: [["P(A) = 0,3", "P(A) = 0,4"], ["probabilité de 0,3", "probabilité de 0,4"], ["1 − 0,3 = 0,7", "1 − 0,4 = 0,6"], ["P(non A) = 0,7", "P(non A) = 0,6"], ["0,3 + 0,7 = 1", "0,4 + 0,6 = 1"]], answer: 0.6 },
+  ],
+};
+
 const SHOWCASES = {
   sixieme: [
     {
@@ -277,7 +332,13 @@ const SHOWCASES = {
 export function getDiscoveryShowcase(levelId) {
   const sourceExercises = SHOWCASES[levelId];
   if (!sourceExercises) return null;
-  const exercises = sourceExercises.map(structureShowcaseExercise);
+  const exercises = sourceExercises.map((sourceExercise, index) => {
+    const exercise = structureShowcaseExercise(sourceExercise);
+    const variantConfig = COLLEGE_VARIANTS[levelId]?.[index];
+    return exercise.similarExercise || !variantConfig
+      ? exercise
+      : { ...exercise, similarExercise: buildNumberVariant(exercise, variantConfig) };
+  });
   return {
     meta: {
       id: `decouverte-${levelId}`,

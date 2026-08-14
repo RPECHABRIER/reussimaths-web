@@ -119,15 +119,27 @@ function exercisePromptTemplate(prompt = "") {
     .toLocaleLowerCase("fr");
 }
 
+function exerciseMethodTemplate(exercise) {
+  const steps = Array.isArray(exercise?.steps) ? exercise.steps : [];
+  const rule = steps.find((step) => step?.type === "regle") ?? steps[1] ?? steps[0];
+  const text = typeof rule === "string" ? rule : rule?.text ?? "";
+  return exercisePromptTemplate(text);
+}
+
 function generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise) {
   const template = exercisePromptTemplate(currentExercise?.prompt);
+  const method = exerciseMethodTemplate(currentExercise);
 
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 250; i++) {
     const candidate = chapter.generate(difficulty);
     if (candidate.chapter !== currentExercise?.chapter) continue;
     if (
       candidate.prompt !== currentExercise?.prompt
-      && exercisePromptTemplate(candidate.prompt) === template
+      && candidate.type === currentExercise?.type
+      && (
+        exercisePromptTemplate(candidate.prompt) === template
+        || (method && exerciseMethodTemplate(candidate) === method)
+      )
     ) return candidate;
   }
 

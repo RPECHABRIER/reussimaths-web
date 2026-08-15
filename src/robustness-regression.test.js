@@ -263,6 +263,13 @@ test("les mentions légales publient une coordonnée téléphonique exploitable"
   assert.doesNotMatch(legal, /Téléphone professionnel : en cours/);
 });
 
+test("les mentions légales publient le SIRET et le code APE en vigueur", async () => {
+  const legal = await read("./pages/legal/MentionsLegales.jsx");
+  assert.match(legal, /SIRET : 108 734 930 00010/);
+  assert.match(legal, /58\.29C — Édition de logiciels applicatifs/);
+  assert.doesNotMatch(legal, /SIRET : en cours d'attribution/);
+});
+
 test("une erreur de révisions ne devient pas un faux état vide", async () => {
   const [tracking, page] = await Promise.all([
     read("./hooks/useSkillTracking.js"),

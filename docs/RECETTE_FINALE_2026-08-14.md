@@ -58,10 +58,10 @@ Déploiement requis :
 
 ## Blocages avant ouverture publique
 
-1. SIRET et code APE à recevoir et publier.
-2. Numéro de téléphone professionnel à publier.
-3. Médiateur de la consommation à contractualiser et publier dans les mentions
-   légales et les CGV.
+1. ~~SIRET et code APE à recevoir et publier.~~ Terminé le 15 août 2026.
+2. ~~Numéro de téléphone professionnel à publier.~~ Terminé le 15 août 2026.
+3. ~~Médiateur de la consommation à contractualiser et publier dans les mentions
+   légales et les CGV.~~ Terminé le 15 août 2026.
 4. Relecture professionnelle recommandée des CGV, de la confidentialité, de la
    propriété intellectuelle et de l'organisation réelle de l'exploitation.
 

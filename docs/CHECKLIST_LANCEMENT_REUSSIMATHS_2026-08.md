@@ -24,7 +24,7 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 ### Blocages juridiques avant ouverture commerciale publique
 
-- [ ] Recevoir le SIRET et le code APE, puis remplacer « en cours d'attribution » dans les mentions légales.
+- [x] Recevoir le SIRET et le code APE, puis remplacer « en cours d'attribution » dans les mentions légales (`108 734 930 00010`, APE `58.29C`).
 - [ ] Disposer d'un numéro de téléphone professionnel publiable ; les sources officielles françaises le listent parmi les coordonnées obligatoires d'un site marchand.
 - [x] Signer la convention avec le médiateur de la consommation.
 - [ ] À réception, publier le nom, les coordonnées et le site du médiateur dans les mentions légales et les CGV.
@@ -38,7 +38,7 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 - [x] Déclarer à son nom l’entreprise individuelle sous régime micro-entrepreneur sur le guichet unique officiel.
 - [ ] Formaliser par écrit le droit pour l’entreprise d’exploiter le logiciel, les contenus, la marque et les visuels créés antérieurement.
 - [ ] Faire valider par un professionnel le cadre de la contribution régulière du créateur au produit, afin d’éviter une activité professionnelle informelle ou une gérance de fait.
-- [ ] Recevoir et contrôler les numéros SIREN/SIRET et le code APE attribué.
+- [x] Recevoir et contrôler les numéros SIREN/SIRET et le code APE attribué.
 - [x] Créer le compte bancaire dédié Indy et conserver les justificatifs d’ouverture.
 - [ ] Créer les espaces Urssaf et impots.gouv professionnels dès que les identifiants sont disponibles.
 - [ ] Déterminer avec l’Urssaf ou le SIE la qualification fiscale/sociale exacte de la vente d’abonnements à RéussiMaths (BIC ou BNC) ; ne pas la deviner dans le formulaire.
@@ -50,7 +50,7 @@ Document de pilotage vivant. L’audit de Claude sert de second avis ; les prior
 
 - [ ] Acheter et connecter un nom de domaine RéussiMaths.
 - [ ] Créer une adresse électronique professionnelle sur ce domaine.
-- [ ] Mettre à jour les mentions légales avec identité, statut, adresse de contact, SIREN/SIRET et coordonnées professionnelles.
+- [x] Mettre à jour les mentions légales avec identité, statut, adresse de contact, SIREN/SIRET et coordonnées professionnelles.
 - [ ] Mettre à jour les CGV/CGU, la politique de confidentialité et l’identité affichée dans Stripe.
 - [ ] Vérifier les règles applicables aux mineurs, aux données scolaires et au consentement parental.
 - [ ] Maintenir une séparation stricte entre les fonctions institutionnelles du créateur et la promotion de l’activité privée de sa mère.

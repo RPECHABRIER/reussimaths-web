@@ -8,7 +8,7 @@
 - [x] Droites graduées et repères cartésiens normalisés.
 - [x] Paiement idempotent, consentement enregistré et abonnement synchronisé.
 - [ ] Terminer la recette réelle Stripe Live et compléter `MISE_EN_PRODUCTION_STRIPE.md`.
-- [ ] Compléter les mentions légales avec le SIRET et les informations définitives.
+- [x] Compléter les mentions légales avec le SIRET et les informations définitives (`108 734 930 00010`, APE `58.29C`).
 
 ## Lot 2 — Recette du pilote
 

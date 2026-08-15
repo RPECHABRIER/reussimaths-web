@@ -13,7 +13,8 @@ export default function MentionsLegales() {
         <li>Adresse professionnelle : 37 rue Caron, 77610 Marles-en-Brie, France</li>
         <li>SIREN : 108 734 930</li>
         <li>Immatriculation : RCS Meaux 108 734 930 et Registre national des entreprises (RNE)</li>
-        <li>SIRET : en cours d'attribution</li>
+        <li>SIRET : 108 734 930 00010</li>
+        <li>Code APE en vigueur : 58.29C — Édition de logiciels applicatifs</li>
         <li>Adresse électronique : <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a></li>
         <li>Téléphone professionnel : <a href="tel:+33602720997">06 02 72 09 97</a></li>
         <li>TVA non applicable, article 293 B du Code général des impôts</li>

@@ -242,6 +242,20 @@ test("l'offre publique annonce clairement un seul niveau scolaire", async () => 
   assert.doesNotMatch(home, /Tout RéussiMaths pour 4,99 €\/mois/);
 });
 
+test("les documents légaux publient le médiateur de la consommation désigné", async () => {
+  const [terms, legal] = await Promise.all([
+    read("./pages/legal/CGU.jsx"),
+    read("./pages/legal/MentionsLegales.jsx"),
+  ]);
+  for (const document of [terms, legal]) {
+    assert.match(document, /Société Médiation Professionnelle/);
+    assert.match(document, /https:\/\/www\.mediateur-consommation-smp\.fr\//);
+    assert.match(document, /Alteritae, 5 rue Salvaing, 12000 Rodez/);
+  }
+  assert.match(terms, /délai raisonnable d’un \(1\)/);
+  assert.match(terms, /L\.612-2 du Code de la consommation/);
+});
+
 test("une erreur de révisions ne devient pas un faux état vide", async () => {
   const [tracking, page] = await Promise.all([
     read("./hooks/useSkillTracking.js"),

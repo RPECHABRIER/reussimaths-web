@@ -60,7 +60,17 @@ export default function MentionsLegales() {
       </p>
 
       <h2>Médiation de la consommation</h2>
-      <p><strong>La convention de médiation est signée.</strong> Les coordonnées et le site internet du médiateur de la consommation désigné seront publiés ici dès leur réception.</p>
+      <p>
+        Après une réclamation écrite préalable auprès de RéussiMaths et à défaut de solution amiable, le Client
+        consommateur peut saisir gratuitement le médiateur de la consommation désigné :
+      </p>
+      <address className="not-italic">
+        <strong>La Société Médiation Professionnelle</strong><br />
+        <a href="https://www.mediateur-consommation-smp.fr/" target="_blank" rel="noreferrer">
+          www.mediateur-consommation-smp.fr
+        </a><br />
+        Alteritae, 5 rue Salvaing, 12000 Rodez
+      </address>
     </LegalLayout>
   );
 }

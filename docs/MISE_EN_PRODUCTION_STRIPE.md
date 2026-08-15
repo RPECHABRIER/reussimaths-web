@@ -16,6 +16,15 @@ Cette checklist ne doit être cochée qu'avec les clés **Live**. Les essais Str
 - [ ] Produit mensuel : **4,99 EUR**, récurrent tous les mois, sans période d'essai Stripe, pour un niveau scolaire choisi.
 - [ ] Pack Examen : **9 EUR**, paiement unique, trois mois d'accès, un seul niveau.
 - [ ] Les identifiants Live des deux prix sont copiés sans espaces.
+- [ ] Le modèle de facture Stripe contient ce pied de page légal :
+
+```text
+Société Médiation Professionnelle
+https://www.mediateur-consommation-smp.fr
+Alteritae 5 rue Salvaing 12000 Rodez
+```
+
+- [ ] Ces coordonnées apparaissent sur une facture PDF d’abonnement et sur tout document de facturation remis pour le Pack Examen.
 
 ## 2. Variables Vercel — Production uniquement
 

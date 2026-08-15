@@ -98,7 +98,25 @@ export default function CGU() {
       <p>Les présentes CGU sont soumises au droit français.</p>
 
       <h2>11. Réclamation et médiation</h2>
-      <p>En cas de difficulté, l’utilisateur doit d’abord adresser une réclamation écrite à <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a> afin de rechercher une solution amiable. <strong>La convention de médiation est signée.</strong> Les coordonnées du médiateur désigné seront publiées ici et dans les mentions légales dès leur réception.</p>
+      <p>
+        En cas de litige entre le Client et l’entreprise, ceux-ci s’efforceront de le résoudre à l’amiable. Le Client
+        adressera une réclamation écrite à RéussiMaths à l’adresse{" "}
+        <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a>.
+      </p>
+      <p>
+        À défaut d’accord amiable ou en l’absence de réponse du professionnel dans un délai raisonnable d’un (1)
+        mois, le Client consommateur au sens de l’article L.612-2 du Code de la consommation a la possibilité de
+        saisir gratuitement, si un désaccord subsiste, le médiateur compétent inscrit sur la liste des médiateurs
+        établie par la Commission d’évaluation et de contrôle de la médiation de la consommation en application de
+        l’article L.615-1 du Code de la consommation, à savoir :
+      </p>
+      <address className="not-italic">
+        <strong>La Société Médiation Professionnelle</strong><br />
+        <a href="https://www.mediateur-consommation-smp.fr/" target="_blank" rel="noreferrer">
+          www.mediateur-consommation-smp.fr
+        </a><br />
+        Alteritae, 5 rue Salvaing, 12000 Rodez
+      </address>
     </LegalLayout>
   );
 }

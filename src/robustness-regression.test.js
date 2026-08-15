@@ -256,6 +256,13 @@ test("les documents légaux publient le médiateur de la consommation désigné"
   assert.match(terms, /L\.612-2 du Code de la consommation/);
 });
 
+test("les mentions légales publient une coordonnée téléphonique exploitable", async () => {
+  const legal = await read("./pages/legal/MentionsLegales.jsx");
+  assert.match(legal, /href="tel:\+33602720997"/);
+  assert.match(legal, /06 02 72 09 97/);
+  assert.doesNotMatch(legal, /Téléphone professionnel : en cours/);
+});
+
 test("une erreur de révisions ne devient pas un faux état vide", async () => {
   const [tracking, page] = await Promise.all([
     read("./hooks/useSkillTracking.js"),

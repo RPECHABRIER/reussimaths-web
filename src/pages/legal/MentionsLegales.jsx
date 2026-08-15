@@ -15,7 +15,7 @@ export default function MentionsLegales() {
         <li>Immatriculation : RCS Meaux 108 734 930 et Registre national des entreprises (RNE)</li>
         <li>SIRET : en cours d'attribution</li>
         <li>Adresse électronique : <a href="mailto:reussimaths@protonmail.com">reussimaths@protonmail.com</a></li>
-        <li>Téléphone professionnel : en cours de mise en service avant l'ouverture commerciale</li>
+        <li>Téléphone professionnel : <a href="tel:+33602720997">06 02 72 09 97</a></li>
         <li>TVA non applicable, article 293 B du Code général des impôts</li>
       </ul>
       <p>Directrice de la publication : Nadine LEFEBVRE.</p>

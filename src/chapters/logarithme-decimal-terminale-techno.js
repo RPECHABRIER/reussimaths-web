@@ -145,7 +145,9 @@ function genSensVariationLogQCM() {
 // ---------- 8. Ordre de grandeur / nombre de chiffres d'un entier ----------
 function genNombreDeChiffresQCM() {
   const chiffres = randInt(3, 9);
-  const n = randInt(10 ** (chiffres - 1), 10 ** chiffres - 1);
+  // Garder log(n) loin d'un entier : son arrondi au millième ne peut ainsi
+  // franchir une puissance de 10 et changer artificiellement le nombre de chiffres.
+  const n = randInt(2 * 10 ** (chiffres - 1), 8 * 10 ** (chiffres - 1));
   const logN = Math.log10(n);
   return {
     type: "numeric",

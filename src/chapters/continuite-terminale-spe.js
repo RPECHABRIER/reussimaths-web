@@ -187,7 +187,7 @@ function genIntervalleContientSolutionQCM() {
     options: ["Oui", "Non"],
     steps: [
       { type: "calcul", text: `f(1) \\times f(2) = ${f1} \\times ${f2} = ${f1 * f2}` },
-      { type: "resultat", text: contientEntre12 ? "Le produit est négatif : une solution est garantie sur [1;2]." : "Le produit est positif ou nul : rien n'est garanti sur [1;2]." },
+      { type: "resultat", text: contientEntre12 ? "Le produit est négatif : une solution est garantie sur [1;2]." : "Le produit est strictement positif : ce seul critère ne permet pas de conclure sur [1;2]." },
     ],
   };
 }

@@ -179,13 +179,13 @@ function genPointMoyenQCM() {
 
 function genChangementVariableQCM() {
   const cas = pick([
-    { description: "Le nuage de points (x ; y) a une forme parabolique croissante.", reponse: "Poser Y = √y (ou y = x²) pour tenter un ajustement affine" },
-    { description: "Le nuage de points semble suivre une décroissance en 1/x.", reponse: "Poser X = 1/x pour tenter un ajustement affine" },
+    { description: "Le contexte conduit à conjecturer y² = ax+b.", reponse: "Poser Y = y² pour tester un ajustement affine" },
+    { description: "Le contexte conduit à conjecturer y = a/x+b.", reponse: "Poser X = 1/x pour tester un ajustement affine" },
   ]);
   return {
     type: "qcm",
     chapter: "Automatismes (Terminale techno) — Statistiques",
-    prompt: `« ${cas.description} » Quel changement de variable peut-on essayer pour se ramener à un ajustement affine ?`,
+    prompt: `« ${cas.description} » Quel changement de variable est cohérent avec cette relation conjecturée ?`,
     answer: cas.reponse,
     options: [cas.reponse, "Aucun changement de variable n'est utile ici"],
     steps: [cas.reponse],
@@ -239,7 +239,7 @@ function genCoefficientBinomialQCM() {
 
 function genReconnaitreBinomialeQCM() {
   const cas = pick([
-    { description: "On répète 10 fois, de façon indépendante, un tirage avec remise dans une urne à deux couleurs.", reponse: "Loi binomiale" },
+    { description: "On répète 10 fois, de façon indépendante, le même tirage avec remise : la probabilité de succès reste p.", reponse: "Loi binomiale" },
     { description: "On tire successivement, sans remise, 3 cartes parmi 32.", reponse: "Pas une loi binomiale" },
   ]);
   return {

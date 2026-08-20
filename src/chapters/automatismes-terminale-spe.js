@@ -904,9 +904,9 @@ function genAutoSigneIntegraleMental() {
     type: "qcm",
     chapter: "Automatismes — Calcul intégral",
     prompt: `Sur \\([a;b]\\) (a<b), \\(f ${positive ? "\\geqslant" : "\\leqslant"} 0\\). Signe de \\(\\int_a^b f\\) ?`,
-    answer: positive ? "Positif" : "Négatif",
-    options: ["Positif", "Négatif"],
-    steps: [positive ? "Positif" : "Négatif"],
+    answer: positive ? "Positif ou nul" : "Négatif ou nul",
+    options: ["Positif ou nul", "Négatif ou nul"],
+    steps: [positive ? "f ≥ 0 : l'intégrale est positive ou nulle." : "f ≤ 0 : l'intégrale est négative ou nulle."],
   };
 }
 

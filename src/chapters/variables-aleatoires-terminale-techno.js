@@ -201,7 +201,7 @@ function genReconnaitreBinomialeQCM() {
     {
       description: "On tire une carte, on note sa couleur, puis on la remet dans le jeu ; on répète cela 8 fois de façon indépendante.",
       reponse: "Loi binomiale",
-      explication: "Loi binomiale : la remise après chaque tirage garantit que les 8 répétitions sont indépendantes et ont toutes la même probabilité de succès — les deux conditions d'une loi binomiale sont réunies.",
+      explication: "Loi binomiale : la remise rétablit la même composition, donc la même probabilité de succès ; l'énoncé précise séparément que les répétitions sont indépendantes.",
     },
     {
       description: "On tire successivement 5 cartes d'un jeu de 32, sans remise.",
@@ -209,7 +209,7 @@ function genReconnaitreBinomialeQCM() {
       explication: "Pas une loi binomiale : sans remise, la composition du jeu change à chaque tirage, donc la probabilité de succès varie d'un tirage à l'autre — les tirages ne sont pas indépendants.",
     },
     {
-      description: "On interroge 15 personnes sur un sondage oui/non, chaque réponse étant indépendante des autres.",
+      description: "On interroge 15 personnes selon le même protocole : chaque réponse est indépendante des autres et a la même probabilité p d'être « oui ».",
       reponse: "Loi binomiale",
       explication: "Loi binomiale : 15 répétitions indépendantes d'une même question à deux issues (oui/non) avec la même probabilité de succès à chaque fois — c'est exactement le schéma d'une loi binomiale.",
     },

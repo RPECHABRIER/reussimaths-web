@@ -342,6 +342,14 @@ function genProbabiliteConditionnelleTableauNumeric() {
     chapter: "Probabilités — Probabilités conditionnelles",
     prompt: `On étudie ${ctx.contexte} sur un groupe de ${total} ${ctx.sujet}, répartis selon le tableau croisé suivant : ${tableTex} On note A l'événement « être ${ctx.nomA} ». Parmi les ${ctx.sujet} ${ctx.nomA}, quelle est la proportion de ceux ${ctx.nomB} ? Donne le résultat sous forme décimale (arrondie au centième). C'est la probabilité conditionnelle notée \\(P_A(B)\\).`,
     answer: roundTo(nAetB / nA, 2),
+    hints: [
+      `Dans P_A(B), la population de référence est A : reste sur la ligne des ${ctx.nomA}.`,
+      `Parmi les ${nA} ${ctx.sujet} de A, ${nAetB} réalisent aussi B : calcule ${nAetB}/${nA}.`,
+    ],
+    feedback: {
+      default: "Pour une probabilité conditionnelle sachant A, le dénominateur est l'effectif de A.",
+      errorCases: [{ code: "conditional_reference_population", matches: String(roundTo(nAetB / total, 2)), message: "Tu as utilisé l'effectif total. Sachant A, la population de référence est uniquement la ligne A." }],
+    },
     tolerance: 0.01,
     steps: [
       { type: "regle", text: `\\text{La probabilité conditionnelle } P_A(B) \\text{ se calcule en se restreignant aux } \\textbf{${nA} ${ctx.sujet} ${ctx.nomA}} \\text{ (ligne A du tableau), puis en regardant la proportion de ceux qui sont } ${ctx.nomB}.` },
@@ -424,9 +432,9 @@ function genLoiGrandsNombresQCM() {
     type: "qcm",
     chapter: "Probabilités — Loi des grands nombres",
     prompt: `Lorsque la taille d'un échantillon augmente, que peut-on généralement observer concernant la fréquence observée d'un événement par rapport à sa probabilité théorique ?`,
-    answer: "La fréquence observée se rapproche de la probabilité théorique",
-    options: ["La fréquence observée se rapproche de la probabilité théorique", "La fréquence observée s'éloigne de la probabilité théorique", "La fréquence observée reste constante quelle que soit la taille"],
-    steps: [{ type: "regle", text: `\\text{C'est la loi des grands nombres : plus l'échantillon est grand, plus la fréquence observée tend à se rapprocher de la probabilité théorique.}` }],
+    answer: "Un grand écart avec la probabilité théorique devient moins probable",
+    options: ["Un grand écart avec la probabilité théorique devient moins probable", "La fréquence se rapproche à chaque nouvelle observation", "La fréquence reste constante quelle que soit la taille"],
+    steps: [{ type: "regle", text: `\\text{La loi des grands nombres ne décrit pas un rapprochement à chaque tirage : elle dit que la probabilité d'un grand écart devient faible quand la taille augmente.}` }],
   };
 }
 
@@ -594,7 +602,7 @@ export default {
           {
             title: "Loi des grands nombres",
             items: [
-              "Plus on répète une expérience aléatoire un grand nombre de fois, plus la fréquence observée d'un événement se rapproche de sa probabilité théorique.",
+              "Quand le nombre de répétitions augmente, la probabilité que la fréquence observée reste loin de la probabilité théorique devient faible ; la fréquence peut néanmoins fluctuer.",
             ],
           },
         ],

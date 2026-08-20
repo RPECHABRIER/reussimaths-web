@@ -120,13 +120,13 @@ function genSigneConvexiteQCM() {
   return {
     type: "qcm",
     chapter: "Compléments sur la dérivation — Convexité",
-    prompt: `Une fonction f vérifie, pour tout x, \\(f''(x) = ${6 * a}x ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}\\). f est-elle convexe ou concave au point d'abscisse ${x0} ?`,
+    prompt: `Une fonction f vérifie, pour tout x, \\(f''(x) = ${6 * a}x ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)}\\). Au voisinage de ${x0}, f est-elle localement convexe ou concave ?`,
     answer: convexe ? "Convexe" : "Concave",
     options: ["Convexe", "Concave"],
     steps: [
       { type: "regle", text: `\\text{Si } f''(x) > 0, \\text{ f est convexe ; si } f''(x) < 0, \\text{ f est concave.}` },
       { type: "calcul", text: `f''(${x0}) = ${6 * a} \\times ${x0} ${2 * b >= 0 ? "+" : "-"} ${Math.abs(2 * b)} = ${valeur}` },
-      { type: "resultat", text: convexe ? "f'' est positive : f est convexe en ce point." : "f'' est négative : f est concave en ce point." },
+      { type: "resultat", text: convexe ? "f'' est strictement positive en ce point et, par continuité, sur un petit intervalle autour : f y est convexe." : "f'' est strictement négative en ce point et, par continuité, sur un petit intervalle autour : f y est concave." },
     ],
   };
 }
@@ -142,7 +142,7 @@ function genPointInflexionNumeric() {
     prompt: `Une fonction f vérifie, pour tout x, \\(f''(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Détermine l'abscisse du point d'inflexion de la courbe de f (résous \\(f''(x)=0\\)).`,
     answer: x0,
     steps: [
-      { type: "regle", text: `\\text{Un point d'inflexion correspond à un changement de signe de f'', donc à } f''(x) = 0.` },
+      { type: "regle", text: `\\text{Ici f'' est affine de coefficient } ${a} \\neq 0 : \\text{ elle change de signe à son unique zéro. Ce changement de convexité prouve le point d'inflexion.}` },
       { type: "calcul", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = 0` },
       { type: "resultat", text: `x = ${x0}` },
     ],
@@ -384,7 +384,7 @@ export default {
             items: [
               "Multiplier par la dérivée de l'intérieur (\\(u'\\)) à chaque fois.",
               "Rappel de la dérivée d'un produit, souvent combinée avec ces formules : \\((uv)'=u'v+uv'\\).",
-              "Domaine de dérivabilité : \\(\\sqrt{u}\\) n'est dérivable que là où \\(u\\) est STRICTEMENT positive (pas seulement positive ou nulle) — en un point où \\(u=0\\), la tangente devient verticale et f n'y est pas dérivable.",
+              "La formule \\((\\sqrt{u})'=u'/(2\\sqrt{u})\\) s'applique là où \\(u>0\\). En un point où \\(u=0\\), cette formule ne suffit pas : il faut étudier séparément la fonction, qui peut être dérivable ou non selon u.",
             ],
             formula: "\\((u^n)'=nu'u^{n-1}\\), \\((\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}}\\), \\((e^u)'=u'e^u\\)",
           },

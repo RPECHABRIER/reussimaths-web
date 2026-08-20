@@ -308,13 +308,13 @@ function genFrequenceVersProbabiliteQCM() {
     type: "qcm",
     chapter: "Probabilités — Fréquence et probabilité",
     prompt: `On répète un grand nombre de fois une expérience aléatoire. Que peut-on dire de la fréquence d'apparition d'un événement lorsque le nombre de répétitions augmente ?`,
-    answer: "Elle se rapproche de la probabilité théorique de cet événement",
+    answer: "Un grand écart avec la probabilité théorique devient moins probable",
     options: shuffle([
-      "Elle se rapproche de la probabilité théorique de cet événement",
+      "Un grand écart avec la probabilité théorique devient moins probable",
       "Elle devient toujours égale à 0,5",
       "Elle s'éloigne de plus en plus de la probabilité théorique",
     ]),
-    steps: [{ type: "regle", text: `C'est la loi des grands nombres : plus on répète l'expérience, plus la fréquence observée se rapproche de la probabilité théorique.` }],
+    steps: [{ type: "regle", text: `La loi des grands nombres ne promet pas un rapprochement à chaque tirage : quand le nombre de répétitions augmente, un grand écart devient moins probable.` }],
   };
 }
 

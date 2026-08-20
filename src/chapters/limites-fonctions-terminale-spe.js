@@ -101,7 +101,7 @@ function genAsymptoteVerticaleNumeric() {
     chapter: "Limites de fonctions — Asymptotes",
     prompt: `On considère la fonction f définie par \\(f(x) = \\dfrac{2x+1}{x - ${a}}\\), non définie en x = ${a}. Quelle est l'équation de l'asymptote verticale à la courbe de f (donne la valeur de x) ?`,
     answer: a,
-    steps: [{ type: "regle", text: `\\text{L'asymptote verticale a pour équation } x = ${a} \\text{ (valeur interdite du dénominateur).}` }],
+    steps: [{ type: "regle", text: `\\text{Quand } x \\to ${a},\\ 2x+1 \\to ${2 * a + 1} \\neq 0 \\text{ et } x-${a} \\to 0 : \\text{ le quotient a une limite infinie. L'asymptote verticale est } x=${a}.` }],
   };
 }
 

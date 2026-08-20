@@ -12,10 +12,11 @@ export default function RouteSeo() {
     const label = pathname === "/college" ? "collège" : "lycée";
     return <SeoHead title={`Maths ${label} : cours et exercices corrigés | RéussiMaths`} description={`Cours, exercices corrigés et entraînements de maths pour les élèves de ${label}, conformes aux programmes scolaires.`} path={pathname} />;
   }
+  if (pathname === "/enseignant") return <SeoHead title="Automatismes de maths à projeter en classe | RéussiMaths" description="Créez gratuitement un rituel de 5 automatismes de maths, prêt à projeter en classe avec corrections détaillées." path="/enseignant" />;
   const levelId = pathname.match(/^\/niveau\/([^/]+)$/)?.[1];
   const level = getLevel(levelId);
   if (level) return <SeoHead title={`Maths ${level.label} : programme, cours et exercices | RéussiMaths`} description={`Programme de maths ${level.label} : chapitres, cours gratuits, exercices corrigés et entraînements adaptés avec RéussiMaths.`} path={pathname} />;
-  const noindex = PRIVATE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) || pathname.startsWith("/chapitre/") || pathname.startsWith("/parcours/") || pathname.startsWith("/jeux/");
+  const noindex = PRIVATE_PREFIXES.some((prefix) => pathname.startsWith(prefix)) || pathname.startsWith("/chapitre/") || pathname.startsWith("/parcours/") || pathname === "/jeux" || pathname.startsWith("/jeux/");
   if (noindex) return <SeoHead title="RéussiMaths" description="Espace d’entraînement personnalisé RéussiMaths." path={pathname} noindex />;
   return null;
 }

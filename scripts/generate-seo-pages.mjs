@@ -65,6 +65,14 @@ for (const page of PUBLIC_COURSES) {
   await emit(path, { title: `${page.title} | RéussiMaths`, description: page.description, path, jsonLd }, body);
 }
 
+const teacherPath = "/enseignant";
+const teacherDescription = "Créez gratuitement un rituel de 5 automatismes de maths, prêt à projeter en classe avec corrections détaillées.";
+await emit(teacherPath, {
+  title: "Automatismes de maths à projeter en classe | RéussiMaths",
+  description: teacherDescription,
+  path: teacherPath,
+}, shell(`<nav><a href="/">Accueil</a></nav><main><h1>Votre rituel de maths, prêt à projeter</h1><p>${teacherDescription}</p><p>Choisissez un niveau et cinq questions, projetez les énoncés sans réponse, puis affichez toutes les corrections en fin de séance.</p><p><a href="/enseignant">Créer une séance gratuite</a> · <a href="/niveaux?objectif=essai">Découvrir l’expérience élève</a></p></main>`));
+
 const sitemapPaths = ["/", "/college", "/lycee", ...levels.map(([id]) => `/niveau/${id}`), ...PUBLIC_COURSES.map(coursePath), "/enseignant"];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapPaths.map((path) => `  <url><loc>${SITE_URL}${path}</loc></url>`).join("\n")}\n</urlset>\n`;
 await writeFile(join(dist, "sitemap.xml"), sitemap);

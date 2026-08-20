@@ -740,11 +740,17 @@ export function buildPedagogicalFeedback(exercise, response) {
     invalid_format: "Utilise uniquement l’écriture demandée et, pour un nombre négatif, la touche ±.",
     incomplete_reasoning: "Teste chaque proposition indépendamment : chacune doit être vraie à elle seule pour être conservée.",
   }[errorCode];
-  const intro = errorCode === "invalid_format"
+  const customCase = exercise?.feedback?.errorCases?.find((item) => {
+    if (typeof item?.matches === "function") return item.matches(response, exercise);
+    if (Array.isArray(item?.matches)) return item.matches.some((value) => String(value) === String(response));
+    return item?.matches != null && String(item.matches) === String(response);
+  });
+  const customMessage = customCase?.message ?? exercise?.feedback?.default;
+  const intro = customMessage ?? (errorCode === "invalid_format"
     ? `${ERROR_INTROS.invalid_format} ${precision}`
-    : `${family?.intro ?? ERROR_INTROS[errorCode] ?? ERROR_INTROS.unknown}${precision ? ` ${precision}` : ""}`;
+    : `${family?.intro ?? ERROR_INTROS[errorCode] ?? ERROR_INTROS.unknown}${precision ? ` ${precision}` : ""}`);
   return {
-    family: family?.id ?? "general",
+    family: customCase?.code ?? family?.id ?? "general",
     intro,
     meaning: family?.meaning ?? "Repars des données utiles et relie chacune d’elles à une étape précise de la méthode, sans effectuer plusieurs transformations mentalement en même temps.",
     rule: family?.rule ?? "Écris chaque étape, puis contrôle que le résultat répond exactement à la question.",

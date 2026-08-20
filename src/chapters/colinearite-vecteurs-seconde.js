@@ -70,6 +70,7 @@ function genVecteursColineaireQCM() {
     prompt: `\\(\\vec{u}(${a} ; ${b})\\) et \\(\\vec{v}(${c} ; ${d})\\). Ces deux vecteurs sont-ils colinéaires ?`,
     answer: det === 0 ? "Oui" : "Non",
     options: ["Oui", "Non"],
+    hints: ["Deux vecteurs sont colinéaires lorsque leur déterminant est nul.", `Calcule ${a}×${d}−${c}×${b}, puis compare le résultat à 0.`],
     steps: [
       { type: "regle", text: `\\text{Deux vecteurs sont colinéaires si et seulement si leur déterminant est nul : } \\det(\\vec{u},\\vec{v}) = x_{\\vec{u}} y_{\\vec{v}} - x_{\\vec{v}} y_{\\vec{u}} = 0.` },
       { type: "calcul", text: `\\det(\\vec{u} , \\vec{v}) = ${a} \\times ${d} - ${c} \\times ${b} = ${det}` },

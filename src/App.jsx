@@ -9,7 +9,7 @@ import { getAdminPreview, setAdminPreview } from "./lib/adminPreview";
 import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 import StudentDock from "./components/StudentDock";
-import { trackCompletedSignup, trackProductEvent } from "./lib/productAnalytics";
+import { getPageViewProperties, trackCompletedSignup, trackProductEvent } from "./lib/productAnalytics";
 import RouteSeo from "./components/RouteSeo";
 
 const LevelSelect = lazy(() => import("./pages/LevelSelect"));
@@ -88,7 +88,7 @@ export default function App() {
 
   useEffect(() => {
     pathRef.current = location.pathname;
-    trackProductEvent("page_view");
+    trackProductEvent("page_view", getPageViewProperties(location.pathname, document.referrer));
   }, [location.pathname]);
 
   useEffect(()=>{if(!loading&&user)trackCompletedSignup();},[loading,user?.id]);

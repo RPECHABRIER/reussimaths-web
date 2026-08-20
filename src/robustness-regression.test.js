@@ -501,19 +501,29 @@ test("une erreur déclenche une vérification proche et priorise les erreurs ré
 });
 
 test("la mesure produit et les retours restent minimaux", async () => {
-  const [analytics, endpoint, feedback, admin, app, account, celebration] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/pilot-feedback.js"), read("./pages/AdminPreview.jsx"), read("./App.jsx"), read("./pages/Account.jsx"), read("./components/SessionCelebration.jsx")]);
+  const [analytics, endpoint, eventRules, feedback, admin, app, account, celebration, runner, paywall] = await Promise.all([read("./lib/productAnalytics.js"), read("../api/product-event.js"), read("../api/_product-events.js"), read("../api/pilot-feedback.js"), read("./pages/AdminPreview.jsx"), read("./App.jsx"), read("./pages/Account.jsx"), read("./components/SessionCelebration.jsx"), read("./components/ChapterRunner.jsx"), read("./components/PaywallAnalytics.jsx")]);
   assert.match(analytics, /anonymousId/);
   assert.doesNotMatch(analytics, /user\.email|email:/);
-  assert.match(endpoint, /ALLOWED_EVENTS/);
+  assert.match(endpoint, /isAcceptedProductEvent/);
+  assert.match(eventRules, /recovery_success/);
+  assert.match(eventRules, /exercise_started/);
+  assert.match(eventRules, /exercise_completed/);
+  assert.match(eventRules, /paywall_viewed/);
   assert.match(feedback, /slice\(0, 2000\)/);
-  assert.match(endpoint, /account_cta_clicked/);
-  assert.match(endpoint, /signup_completed/);
+  assert.match(eventRules, /account_cta_clicked/);
+  assert.match(eventRules, /signup_completed/);
   assert.match(analytics, /SIGNUP_PENDING_KEY/);
   assert.match(app, /trackCompletedSignup/);
   assert.match(account, /markSignupStarted/);
   assert.match(celebration, /account_cta_clicked/);
   assert.match(admin, /strictFunnel/);
   assert.match(admin, /Trois abandons prioritaires du tunnel/);
+  assert.match(runner, /completedExerciseRef/);
+  assert.match(runner, /exercise_started/);
+  assert.match(runner, /exercise_completed/);
+  const completionPayload = runner.match(/trackProductEvent\("exercise_completed", \{([\s\S]*?)\n\s*\}\);/)?.[1] ?? "";
+  assert.doesNotMatch(completionPayload, /response|input|selectedOption/);
+  assert.match(paywall, /paywall_viewed/);
 });
 
 test("le cahier pédagogique se synchronise sans réponse brute et avec isolation par compte", async () => {

@@ -39,6 +39,10 @@ test("le paiement évite les doublons, conserve le consentement et synchronise p
   assert.match(webhook, /stripe\.subscriptions\.retrieve\(subscriptionId\)/);
   assert.match(webhook, /row\.current_period_end/);
   assert.match(webhook, /row\.cancel_at_period_end/);
+  assert.match(webhook, /subscription_activated/);
+  assert.match(webhook, /pack_examen_activated/);
+  assert.match(webhook, /claimEvent\(event\.id\)/);
+  assert.match(webhook, /source: "stripe_webhook"/);
   assert.match(migration, /immediate_access_accepted boolean not null check/);
 });
 

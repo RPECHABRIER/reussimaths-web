@@ -18,6 +18,7 @@ import { usePracticeHeartbeat } from "../hooks/usePracticeHeartbeat";
 import { hasUnlimitedQuota, getEffectiveSubscription } from "../lib/access";
 import { useAutomatismesBestTime } from "../hooks/useAutomatismesBestTime";
 import { colors, fonts, shadow } from "../theme";
+import PaywallAnalytics from "./PaywallAnalytics";
 
 const QUESTIONS_PER_SERIES = 5;
 
@@ -190,6 +191,7 @@ export default function AutomatismesRunner({ chapter }) {
   if (quotaExhausted && phase === "themes") {
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
+        <PaywallAnalytics chapterId={chapter.meta.id} levelId={chapter.meta.level} offerContext="daily_quota" />
         <div className="max-w-md w-full">
           {backLink}
           <div className="text-center rounded-3xl p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>

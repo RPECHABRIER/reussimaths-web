@@ -14,6 +14,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { getStripePeriodEndIso, getStripePeriodEndSeconds } from "./_stripe-subscription.js";
+import { PRODUCT_EVENT_UUID } from "./_product-events.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -48,7 +49,7 @@ async function saveCheckoutSession(session) {
     (plan === "special_examen" && session.mode === "payment");
   const paymentConfirmed = ["paid", "no_payment_required"].includes(session.payment_status);
 
-  if (!userId || !validShape || !paymentConfirmed) return;
+  if (!userId || !validShape || !paymentConfirmed) return null;
 
   const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
   if (authError || !authUser?.user) throw new Error("Utilisateur Supabase du paiement introuvable");
@@ -85,6 +86,20 @@ async function saveCheckoutSession(session) {
   const { error } = await supabaseAdmin.from("subscriptions").upsert(row);
   if (error) throw error;
   await grantReferralFreeMonthIfEligible(userId);
+  const analyticsAnonymousId = session.metadata?.analytics_anonymous_id;
+  return PRODUCT_EVENT_UUID.test(analyticsAnonymousId ?? "") ? { plan, anonymousId: analyticsAnonymousId } : null;
+}
+
+async function recordActivationEvent(activation) {
+  const eventName = activation.plan === "mensuel" ? "subscription_activated" : "pack_examen_activated";
+  const { error } = await supabaseAdmin.from("product_events").insert({
+    event_name: eventName,
+    anonymous_id: activation.anonymousId,
+    pathname: "/compte",
+    properties: { plan: activation.plan, source: "stripe_webhook" },
+    occurred_at: new Date().toISOString(),
+  });
+  if (error) throw error;
 }
 
 // Récompense de parrainage : si l'utilisateur qui vient de payer (referredUserId)
@@ -171,7 +186,10 @@ export default async function handler(req, res) {
     switch (event.type) {
       case "checkout.session.completed":
       case "checkout.session.async_payment_succeeded": {
-        await saveCheckoutSession(event.data.object);
+        const activation = await saveCheckoutSession(event.data.object);
+        // claimEvent(event.id) rend cette écriture idempotente pour chaque
+        // événement Stripe. Elle n'a lieu qu'après attribution effective.
+        if (activation) await recordActivationEvent(activation);
         break;
       }
       case "customer.subscription.updated":

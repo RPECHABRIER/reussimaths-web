@@ -23,6 +23,7 @@ import { selectAdaptiveNextExercise } from "../lib/adaptiveNextExercise";
 import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
 import SessionCelebration from "./SessionCelebration";
 import Mascot from "./Mascot";
+import PaywallAnalytics from "./PaywallAnalytics";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -218,6 +219,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const defiStartRef = useRef(Date.now());
   const exerciseStartRef = useRef(Date.now());
   const completionTrackedRef = useRef(false);
+  const startedExerciseRef = useRef(null);
+  const completedExerciseRef = useRef(null);
   const assistanceUsedRef = useRef(false);
   const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
   const lastAttemptRef = useRef(null);
@@ -230,6 +233,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
   const isCours = mode === "cours";
+  const analyticsSource = isPersonalizedTrial ? "trial" : isDiscoverySession ? "discovery" : focusSkill ? "review" : "chapter";
 
   // Mode Découverte : la méthode reste visible en permanence, mais la
   // DERNIÈRE étape (celle qui porte la réponse finale) est masquée par
@@ -251,6 +255,21 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   useEffect(() => {
     setRevealResult(false);
   }, [exercise, mode]);
+
+  // Un exercice est commencé lorsqu'il devient réellement visible dans un
+  // mode de réponse. Un passage par l'onglet Cours ne compte pas, et changer
+  // de mode sans changer d'énoncé ne crée pas un second démarrage.
+  useEffect(() => {
+    if (isCours || quotaExhausted || startedExerciseRef.current === exercise) return;
+    startedExerciseRef.current = exercise;
+    completedExerciseRef.current = null;
+    trackProductEvent("exercise_started", {
+      chapterId: chapter.meta.id,
+      levelId: chapter.meta.level,
+      mode,
+      source: analyticsSource,
+    });
+  }, [exercise, isCours, quotaExhausted, chapter.meta.id, chapter.meta.level, mode, analyticsSource]);
 
   // Streak quotidien de pratique : dès qu'on ouvre un chapitre pour s'y
   // exercer, ça compte comme la pratique du jour (voir useDailyStreak, no-op
@@ -416,6 +435,18 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     const errorCode = correct ? null : classifyLearningError(exercise, response);
     const responseTimeMs = Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000);
     const assisted = isDecouverte || assistanceUsedRef.current;
+    // La première réponse clôt l'exercice pour la mesure. Le bouton
+    // « nouvel essai » sur le même énoncé ne gonfle pas les complétions.
+    if (completedExerciseRef.current !== exercise) {
+      completedExerciseRef.current = exercise;
+      trackProductEvent("exercise_completed", {
+        chapterId: chapter.meta.id,
+        levelId: chapter.meta.level,
+        mode,
+        correct,
+        assisted,
+      });
+    }
     setFeedback({ correct, response, errorCode });
     if (!correct) setAttemptsOnExercise((count) => count + 1);
     setSimilarExercise(correct ? null : generateSimilarExercise(chapter, effectiveDifficulty, exercise));
@@ -507,6 +538,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
         style={{ background: paper, fontFamily: fonts.body }}
       >
+        <PaywallAnalytics chapterId={chapter.meta.id} levelId={chapter.meta.level} offerContext="daily_quota" />
         <div
           className="max-w-md w-full text-center rounded-3xl p-7"
           style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}

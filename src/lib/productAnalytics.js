@@ -1,7 +1,7 @@
 const STORAGE_KEY = "reussimaths_anonymous_id";
 const SIGNUP_PENDING_KEY = "reussimaths_signup_pending";
 
-function anonymousId() {
+export function getAnonymousId() {
   try {
     let value = localStorage.getItem(STORAGE_KEY);
     if (!value) {
@@ -19,7 +19,7 @@ function anonymousId() {
 export function trackProductEvent(eventName, properties = {}) {
   const payload = JSON.stringify({
     eventName,
-    anonymousId: anonymousId(),
+    anonymousId: getAnonymousId(),
     pathname: window.location.pathname,
     properties,
     occurredAt: new Date().toISOString(),
@@ -33,6 +33,19 @@ export function trackProductEvent(eventName, properties = {}) {
   } catch {
     // best effort
   }
+}
+
+export function getPageViewProperties(pathname, referrer = "") {
+  const googleSource = /^https?:\/\/([^/]+\.)?google\.[^/]+/i.test(referrer);
+  const source = googleSource ? "google" : referrer ? "referral" : "direct";
+  const course = pathname.match(/^\/cours\/([^/]+)\/([^/]+)$/);
+  if (course) return { contentType: "seo_course", levelId: course[1], courseSlug: course[2], source };
+  const level = pathname.match(/^\/niveau\/([^/]+)$/);
+  if (level) return { contentType: "seo_level", levelId: level[1], source };
+  if (pathname === "/") return { contentType: "seo_home", source };
+  if (pathname === "/college" || pathname === "/lycee") return { contentType: "seo_cycle", source };
+  if (pathname === "/enseignant") return { contentType: "seo_teacher", source };
+  return {};
 }
 
 export function markSignupStarted(provider) {

@@ -48,6 +48,7 @@ function reduceFrac(num, den) {
 
 const objetsUrne = ["boules", "billes", "jetons", "cartes", "pions"];
 const couleurs = ["rouges", "bleus", "verts", "jaunes", "noirs", "blancs"];
+const couleurSinguliere = (couleur) => couleur.endsWith("s") ? couleur.slice(0, -1) : couleur;
 
 // =========================== Généralités sur les probabilités ===========================
 
@@ -136,7 +137,7 @@ function genProbabiliteUrneNumeric() {
   return {
     type: "numeric",
     chapter: "Probabilités — Calculs de probabilités",
-    prompt: `Une urne contient ${c1} ${objet} ${couleurA}, ${c2} ${objet} ${couleurB} et ${c3} ${objet} ${couleurC}, indiscernables au toucher. On tire un ${objet.slice(0, -1)} au hasard. Donne la probabilité d'obtenir un ${objet.slice(0, -1)} ${couleurA} (sous forme décimale, arrondie au millième).`,
+    prompt: `Une urne contient ${c1} ${objet} ${couleurA}, ${c2} ${objet} ${couleurB} et ${c3} ${objet} ${couleurC}, indiscernables au toucher. On tire un ${objet.slice(0, -1)} au hasard. Donne la probabilité d'obtenir un ${objet.slice(0, -1)} ${couleurSinguliere(couleurA)} (sous forme décimale, arrondie au millième).`,
     answer,
     tolerance: 0.002,
     steps: [
@@ -284,7 +285,7 @@ function genProbabiliteApresRetraitNumeric() {
   return {
     type: "numeric",
     chapter: "Probabilités — Calculs de probabilités",
-    prompt: `Une urne contient ${c1} ${objet} ${couleurA} et ${c2} ${objet} d'une autre couleur. On tire un ${objet.slice(0, -1)} au hasard, on constate qu'il est ${retireA ? couleurA : "d'une autre couleur"}, et on ne le remet pas dans l'urne. On tire alors un second ${objet.slice(0, -1)}. Quelle est la probabilité (arrondie au millième) que ce second ${objet.slice(0, -1)} soit ${couleurA} ?`,
+    prompt: `Une urne contient ${c1} ${objet} ${couleurA} et ${c2} ${objet} d'une autre couleur. On tire un ${objet.slice(0, -1)} au hasard, on constate qu'il est ${retireA ? couleurSinguliere(couleurA) : "d'une autre couleur"}, et on ne le remet pas dans l'urne. On tire alors un second ${objet.slice(0, -1)}. Quelle est la probabilité (arrondie au millième) que ce second ${objet.slice(0, -1)} soit ${couleurSinguliere(couleurA)} ?`,
     answer,
     tolerance: 0.002,
     steps: [
@@ -441,6 +442,14 @@ function generate(difficulty) {
   }
   return pick(GENERATORS)();
 }
+
+export const SEO_EXAMPLE_GENERATORS = [
+  genIdentifierEvenementQCM,
+  genProbabiliteUrneNumeric,
+  genEvenementContraireNumeric,
+  genProbabiliteDeNumeric,
+  genProbabiliteApresRetraitNumeric,
+];
 
 export default {
   meta: {

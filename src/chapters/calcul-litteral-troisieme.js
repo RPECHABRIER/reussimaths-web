@@ -471,6 +471,14 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+export const SEO_EXAMPLE_GENERATORS = [
+  genDevelopperSimpleDistributiviteGeneraleNumeric,
+  genDevelopperDoubleDistributiviteGeneraleNumeric,
+  genCorrigerErreurEleveQCM,
+  genFactoriserFacteurCommunXNumeric,
+  genFactoriserDifferenceCarresNumeric,
+];
+
 export default {
   meta: {
     id: "calcul-litteral-troisieme",

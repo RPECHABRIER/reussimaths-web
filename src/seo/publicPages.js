@@ -1,4 +1,80 @@
-export const SITE_URL = "https://reussimaths-web.vercel.app";
+import brevetChapter, { SEO_EXAMPLE_GENERATORS as brevetExamples } from "../chapters/dossier-brevet-troisieme.js";
+import proportionnaliteChapter, { SEO_EXAMPLE_GENERATORS as proportionnaliteExamples } from "../chapters/proportionnalite-cinquieme.js";
+import thalesChapter, { SEO_EXAMPLE_GENERATORS as thalesExamples } from "../chapters/theoreme-thales.js";
+import calculLitteralChapter, { SEO_EXAMPLE_GENERATORS as calculLitteralExamples } from "../chapters/calcul-litteral-troisieme.js";
+import fonctionsAffinesChapter, { SEO_EXAMPLE_GENERATORS as fonctionsAffinesExamples } from "../chapters/fonctions-affines-troisieme.js";
+import probabilitesChapter, { SEO_EXAMPLE_GENERATORS as probabilitesExamples } from "../chapters/probabilites-troisieme.js";
+import { SITE_URL } from "./site.js";
+
+export { SITE_URL };
+
+function withSeed(seed, callback) {
+  const previousRandom = Math.random;
+  let state = seed >>> 0;
+  Math.random = () => {
+    state += 0x6D2B79F5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+  try {
+    return callback();
+  } finally {
+    Math.random = previousRandom;
+  }
+}
+
+function formatAnswer(answer) {
+  if (Array.isArray(answer)) return answer.join(", ");
+  if (typeof answer === "boolean") return answer ? "Oui" : "Non";
+  return String(answer ?? "");
+}
+
+function normalizeMath(text) {
+  if (typeof text !== "string") return text;
+  if (/\\\(|\\\[/.test(text) || !/\\[a-zA-Z]+|[\^_]\{/.test(text)) return text;
+  return `\\(${text}\\)`;
+}
+
+function buildExamples(generators, seed) {
+  return withSeed(seed, () => generators.map((generate) => {
+    const exercise = generate();
+    const method = (exercise.steps ?? []).map((step) => normalizeMath(step.text)).filter(Boolean).join(" Puis : ");
+    return {
+      question: exercise.prompt,
+      answer: `${method}${method ? " " : ""}Réponse : ${formatAnswer(exercise.answer)}.`,
+      sourceGenerator: generate.name,
+    };
+  }));
+}
+
+function selectRules(chapter, titles) {
+  const branches = chapter.meta.cours?.mindMap?.branches ?? [];
+  return titles.map((title) => {
+    const branch = branches.find((candidate) => candidate.title === title);
+    if (!branch) throw new Error(`Section pédagogique introuvable : ${chapter.meta.id} / ${title}`);
+    return { title: branch.title, text: branch.items.join(" "), formula: branch.formula };
+  });
+}
+
+function canonicalCourse(config) {
+  const rules = config.rules ?? selectRules(config.chapter, config.sections);
+  return {
+    ...config,
+    chapterId: config.chapter.meta.id,
+    sourceChapterIds: config.sourceChapterIds ?? [config.chapter.meta.id],
+    points: rules.slice(0, 3).map((rule) => rule.title),
+    rules,
+    exercises: buildExamples(config.exampleGenerators, config.seed),
+    canonicalSource: config.chapter.meta.id,
+    intent: config.intent,
+    chapter: undefined,
+    sections: undefined,
+    exampleGenerators: undefined,
+    seed: undefined,
+  };
+}
 
 export const PUBLIC_COURSES = [
   {
@@ -77,6 +153,130 @@ export const PUBLIC_COURSES = [
       { question: "ABC est rectangle en A, BC = 13 cm et AB = 5 cm. Calcule AC.", answer: "AC = √(13² − 5²) = √144 = 12 cm." },
     ],
   },
+  canonicalCourse({
+    levelId: "troisieme",
+    levelLabel: "3e",
+    slug: "revisions-brevet-maths",
+    chapter: brevetChapter,
+    sourceChapterIds: ["dossier-brevet-troisieme", "calcul-litteral-troisieme", "fonctions-affines-troisieme", "probabilites-troisieme", "theoreme-thales"],
+    intent: "révisions Brevet maths 3e",
+    title: "Révisions Brevet maths : exercices corrigés de 3e",
+    description: "Révise les notions essentielles du Brevet de maths avec des méthodes claires, des exemples et des exercices corrigés de niveau 3e.",
+    h1: "Révisions Brevet maths : méthodes et exercices corrigés",
+    intro: "Prépare l’épreuve avec une synthèse active : repère la famille du problème, choisis une méthode, puis confronte ton raisonnement à une correction. Les exemples couvrent les grands réflexes attendus au Brevet sans annoncer systématiquement la méthode à employer.",
+    rules: [
+      selectRules(calculLitteralChapter, ["Développer"])[0],
+      selectRules(fonctionsAffinesChapter, ["Identifier a et b"])[0],
+      selectRules(probabilitesChapter, ["Calculer une probabilité"])[0],
+      selectRules(thalesChapter, ["La configuration de Thalès"])[0],
+    ],
+    exampleGenerators: brevetExamples,
+    seed: 202608201,
+    ctaLabel: "Commencer une série type Brevet",
+    relatedLinks: [
+      { label: "Calcul littéral en 3e", path: "/cours/troisieme/calcul-litteral" },
+      { label: "Fonctions affines en 3e", path: "/cours/troisieme/fonctions-affines" },
+      { label: "Probabilités en 3e", path: "/cours/troisieme/probabilites" },
+    ],
+  }),
+  canonicalCourse({
+    levelId: "cinquieme",
+    levelLabel: "5e",
+    slug: "proportionnalite",
+    chapter: proportionnaliteChapter,
+    intent: "proportionnalité 5e",
+    title: "Proportionnalité en 5e : cours et exercices corrigés",
+    description: "Comprends la proportionnalité en 5e : coefficient, valeur manquante, pourcentages, échelles et vitesse avec exercices corrigés.",
+    h1: "Proportionnalité en 5e : cours, méthodes et exercices",
+    intro: "Apprends à reconnaître une situation de proportionnalité avant de calculer. Le coefficient est le fil directeur ; selon les données, un retour à l’unité ou un tableau peut être plus clair qu’un produit en croix.",
+    sections: ["Identifier une situation", "Coefficient et valeur manquante", "Pourcentages", "Échelles", "Vitesse"],
+    exampleGenerators: proportionnaliteExamples,
+    seed: 202608202,
+    ctaLabel: "S’entraîner sur la proportionnalité",
+    relatedLinks: [
+      { label: "Fractions en 5e", path: "/cours/cinquieme/fractions" },
+      { label: "Théorème de Thalès en 4e", path: "/cours/quatrieme/theoreme-thales" },
+    ],
+  }),
+  canonicalCourse({
+    levelId: "quatrieme",
+    levelLabel: "4e",
+    slug: "theoreme-thales",
+    chapter: thalesChapter,
+    intent: "théorème de Thalès 4e",
+    title: "Théorème de Thalès en 4e : cours et exercices corrigés",
+    description: "Apprends le théorème de Thalès en 4e : configuration, calcul de longueur et réciproque avec exemples et exercices corrigés.",
+    h1: "Théorème de Thalès en 4e : méthode et exercices corrigés",
+    intro: "Avant tout calcul, vérifie les alignements et le parallélisme. Une fois la configuration reconnue, conserve le même ordre dans les rapports pour calculer une longueur ou démontrer que deux droites sont parallèles.",
+    sections: ["La configuration de Thalès", "Calculer une longueur", "Réciproque : prouver un parallélisme", "Problèmes, agrandissement/réduction"],
+    exampleGenerators: thalesExamples,
+    seed: 202608203,
+    ctaLabel: "Faire des exercices de Thalès",
+    relatedLinks: [
+      { label: "Théorème de Pythagore en 4e", path: "/cours/quatrieme/theoreme-pythagore" },
+      { label: "Révisions Brevet maths", path: "/cours/troisieme/revisions-brevet-maths" },
+    ],
+  }),
+  canonicalCourse({
+    levelId: "troisieme",
+    levelLabel: "3e",
+    slug: "calcul-litteral",
+    chapter: calculLitteralChapter,
+    intent: "calcul littéral 3e",
+    title: "Calcul littéral en 3e : développer et factoriser",
+    description: "Révise le calcul littéral en 3e : distributivité, identités remarquables, factorisation et programmes de calcul avec corrections.",
+    h1: "Calcul littéral en 3e : développer, factoriser et résoudre",
+    intro: "Développer transforme un produit en somme ; factoriser effectue le chemin inverse. En 3e, savoir choisir entre ces deux écritures permet de simplifier, démontrer et résoudre des problèmes.",
+    sections: ["Développer", "Identités remarquables", "Factoriser", "Programmes de calcul", "Problèmes de périmètre et d'aire"],
+    exampleGenerators: calculLitteralExamples,
+    seed: 202608204,
+    ctaLabel: "S’entraîner en calcul littéral",
+    relatedLinks: [
+      { label: "Révisions Brevet maths", path: "/cours/troisieme/revisions-brevet-maths" },
+      { label: "Fonctions affines en 3e", path: "/cours/troisieme/fonctions-affines" },
+      { label: "Programme de maths 3e", path: "/niveau/troisieme" },
+    ],
+  }),
+  canonicalCourse({
+    levelId: "troisieme",
+    levelLabel: "3e",
+    slug: "fonctions-affines",
+    chapter: fonctionsAffinesChapter,
+    intent: "fonctions affines 3e",
+    title: "Fonctions affines en 3e : cours et exercices corrigés",
+    description: "Comprends les fonctions affines en 3e : formule ax+b, coefficient directeur, représentation graphique, images et antécédents.",
+    h1: "Fonctions affines en 3e : formule, graphique et exercices",
+    intro: "Une fonction affine relie une variation régulière à une valeur de départ. Apprends à lire ses coefficients, tester un point et retrouver une formule à partir de données.",
+    sections: ["Identifier a et b", "Droites et coefficients", "Déterminer une fonction affine", "Comparer deux tarifs"],
+    exampleGenerators: fonctionsAffinesExamples,
+    seed: 202608205,
+    ctaLabel: "S’entraîner sur les fonctions affines",
+    relatedLinks: [
+      { label: "Calcul littéral en 3e", path: "/cours/troisieme/calcul-litteral" },
+      { label: "Révisions Brevet maths", path: "/cours/troisieme/revisions-brevet-maths" },
+      { label: "Programme de maths 3e", path: "/niveau/troisieme" },
+    ],
+  }),
+  canonicalCourse({
+    levelId: "troisieme",
+    levelLabel: "3e",
+    slug: "probabilites",
+    chapter: probabilitesChapter,
+    intent: "probabilités 3e",
+    title: "Probabilités en 3e : cours et exercices corrigés",
+    description: "Révise les probabilités en 3e : issues, événements, équiprobabilité, événement contraire et tirage sans remise avec corrections.",
+    h1: "Probabilités en 3e : cours, méthodes et exercices corrigés",
+    intro: "Décris d’abord l’expérience et ses issues. La formule « cas favorables sur cas possibles » ne s’applique directement que lorsque les issues sont équiprobables ; les corrections ci-dessous rendent cette hypothèse explicite.",
+    sections: ["Vocabulaire", "Calculer une probabilité", "Événement contraire, somme des probabilités", "Tirage sans remise"],
+    exampleGenerators: probabilitesExamples,
+    seed: 202608216,
+    ctaLabel: "Faire des exercices de probabilités",
+    relatedLinks: [
+      { label: "Révisions Brevet maths", path: "/cours/troisieme/revisions-brevet-maths" },
+      { label: "Fonctions affines en 3e", path: "/cours/troisieme/fonctions-affines" },
+      { label: "Programme de maths 3e", path: "/niveau/troisieme" },
+    ],
+  }),
 ];
 
 export function getPublicCourse(levelId, slug) {

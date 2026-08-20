@@ -400,6 +400,14 @@ function generate(difficulty) {
   return { ...generator(), examCompetency: EXAM_COMPETENCIES.get(generator), examFormat: "DNB" };
 }
 
+export const SEO_EXAMPLE_GENERATORS = [
+  genProgrammeCalculNumeric,
+  genFonctionAffineImageAntecedentNumeric,
+  genProbabiliteBrevetNumeric,
+  genPythagoreTrigoBrevetNumeric,
+  genPourcentageEvolutionBrevetNumeric,
+];
+
 export default {
   meta: {
     id: "dossier-brevet-troisieme",

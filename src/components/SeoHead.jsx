@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { SITE_URL } from "../seo/publicPages";
+import { SITE_URL } from "../seo/site";
 
 function upsert(selector, tag, attributes) {
   let node = document.head.querySelector(selector);

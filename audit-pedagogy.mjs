@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import { normalizeExercise } from "./src/lib/exercise.js";
 import { buildPedagogicalFeedback } from "./src/lib/pedagogicalFeedback.js";
 
@@ -38,7 +37,7 @@ function add(file, kind, detail, exercise) {
 }
 
 for (const file of files) {
-  const chapter = (await import(pathToFileURL(new URL(file, chapterDirectory).pathname))).default;
+  const chapter = (await import(new URL(file, chapterDirectory).href)).default;
   if (levelFilter && chapter.meta.level !== levelFilter) continue;
   const prompts = new Set();
   const families = new Set();

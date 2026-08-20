@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import { getCalculationMode } from "./src/lib/calculationMode.js";
 import { buildDailyMentalQuestions } from "./src/lib/dailyMentalMath.js";
 import { LEVELS } from "./src/levels.js";
@@ -10,7 +9,7 @@ const files=(await readdir(chapterDirectory)).filter((name)=>name.endsWith(".js"
 let mental=0,calculator=0,freeChoice=0,checked=0;
 const examples={mental:[],calculator:[],choice:[]};
 for(const file of files){
-  const chapter=(await import(pathToFileURL(new URL(file,chapterDirectory).pathname))).default;
+  const chapter=(await import(new URL(file,chapterDirectory).href)).default;
   const themes=chapter.meta.isAutomatismes?chapter.themes.map((theme)=>theme.id):[undefined];
   for(const theme of themes){for(let index=0;index<4;index+=1){
     const exercise=chapter.generate(theme);if(!exercise)continue;const mode=getCalculationMode(exercise);checked+=1;

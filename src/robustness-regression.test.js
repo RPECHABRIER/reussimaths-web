@@ -518,6 +518,7 @@ test("la mesure produit et les retours restent minimaux", async () => {
   assert.match(celebration, /account_cta_clicked/);
   assert.match(admin, /strictFunnel/);
   assert.match(admin, /Trois abandons prioritaires du tunnel/);
+  assert.match(admin, /firstPaywallAt/);
   assert.match(runner, /completedExerciseRef/);
   assert.match(runner, /exercise_started/);
   assert.match(runner, /exercise_completed/);

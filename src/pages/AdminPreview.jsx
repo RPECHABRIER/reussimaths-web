@@ -194,8 +194,11 @@ function ProductMetrics() {
       const exerciseStarted = events.filter((item)=>item.event_name==="exercise_started").length;
       const exerciseCompleted = events.filter((item)=>item.event_name==="exercise_completed").length;
       const paywallIds = idsForEvents(["paywall_viewed"]);
-      const checkoutIds = idsForEvents(["checkout_started"]);
-      const checkoutFromPaywall = [...paywallIds].filter((id)=>checkoutIds.has(id)).length;
+      const firstPaywallAt = new Map();
+      events.filter((item)=>item.event_name==="paywall_viewed").forEach((item)=>{
+        if (!firstPaywallAt.has(item.anonymous_id)) firstPaywallAt.set(item.anonymous_id, new Date(item.occurred_at).getTime());
+      });
+      const checkoutFromPaywall = new Set(events.filter((item)=>item.event_name==="checkout_started"&&new Date(item.occurred_at).getTime()>=Number(firstPaywallAt.get(item.anonymous_id))).map((item)=>item.anonymous_id)).size;
       const seoLandingIds = new Set(events.filter((item)=>item.event_name==="page_view"&&String(item.properties?.contentType??"").startsWith("seo_")).map((item)=>item.anonymous_id));
       const googleLandingIds = new Set(events.filter((item)=>item.event_name==="page_view"&&item.properties?.source==="google"&&String(item.properties?.contentType??"").startsWith("seo_")).map((item)=>item.anonymous_id));
       const paid = (subscriptionsResult.data ?? []).filter((item) => item.plan === "mensuel" && !item.admin_granted && ["active", "trialing"].includes(item.status));

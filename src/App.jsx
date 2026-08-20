@@ -10,6 +10,7 @@ import { colors, fonts } from "./theme";
 import { supabase } from "./lib/supabaseClient";
 import StudentDock from "./components/StudentDock";
 import { trackCompletedSignup, trackProductEvent } from "./lib/productAnalytics";
+import RouteSeo from "./components/RouteSeo";
 
 const LevelSelect = lazy(() => import("./pages/LevelSelect"));
 const CycleSelect = lazy(() => import("./pages/CycleSelect"));
@@ -41,6 +42,8 @@ const CGU = lazy(() => import("./pages/legal/CGU"));
 const Confidentialite = lazy(() => import("./pages/legal/Confidentialite"));
 const PilotFeedback = lazy(() => import("./pages/PilotFeedback"));
 const DailyMentalMath = lazy(() => import("./pages/DailyMentalMath"));
+const PublicCoursePage = lazy(() => import("./pages/PublicCoursePage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function PageLoader() {
   return (
@@ -148,6 +151,7 @@ export default function App() {
 
   return (
     <>
+      <RouteSeo />
       <SoundManager avoidStudentDock={showStudentDock} />
       {previewing && (
         <div
@@ -186,6 +190,7 @@ export default function App() {
         <Route path="/parcours/:parcoursId/etape/:stepIndex" element={<ParcoursStep />} />
         <Route path="/parcours/:parcoursId" element={<ParcoursOverview />} />
         <Route path="/chapitre/:id" element={<ChapterPage />} />
+        <Route path="/cours/:levelId/:slug" element={<PublicCoursePage />} />
         <Route path="/compte" element={<Account />} />
         <Route path="/pseudo" element={<Onboarding />} />
         <Route path="/amis" element={<Amis />} />
@@ -206,6 +211,7 @@ export default function App() {
         <Route path="/cgu" element={<CGU />} />
         <Route path="/confidentialite" element={<Confidentialite />} />
         <Route path="/retour-pilote" element={<PilotFeedback />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       </Suspense></div>
       {showStudentDock && <StudentDock />}

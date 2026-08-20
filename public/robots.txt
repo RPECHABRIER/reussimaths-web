@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /compte
+Disallow: /amis
+Disallow: /pseudo
+Disallow: /reviser
+Disallow: /bilan
+
+Sitemap: https://reussimaths-web.vercel.app/sitemap.xml

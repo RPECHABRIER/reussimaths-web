@@ -13,6 +13,7 @@ import { colors, fonts, shadow, cycleColors } from "../theme";
 import ComingSoon from "./ComingSoon";
 import { setPreferredLevel } from "../lib/preferences";
 import AppHeader from "../components/AppHeader";
+import { PUBLIC_COURSES, coursePath } from "../seo/publicPages";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId), en mélangeant les
 // chapitres réels (avec du contenu, voir chapters/registry.js) et les
@@ -57,6 +58,7 @@ export default function Niveau() {
   ].sort((a, b) => a.order - b.order);
 
   const cc = cycleColors[level.cycle] ?? cycleColors.college;
+  const publicCourses = PUBLIC_COURSES.filter((page) => page.levelId === levelId);
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -104,6 +106,15 @@ export default function Niveau() {
             </div>
           </Link>
           </div>
+        )}
+
+        {publicCourses.length > 0 && (
+          <section className="mb-8" aria-labelledby="cours-gratuits">
+            <h2 id="cours-gratuits" className="mb-3 text-lg font-black" style={{ color: colors.ink }}>Cours et exercices corrigés gratuits</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {publicCourses.map((page) => <Link key={page.slug} to={coursePath(page)} className="rounded-2xl bg-white p-4 text-sm font-bold" style={{ boxShadow: shadow.soft, color: colors.ink }}>{page.title} <ArrowRight className="ml-1 inline" size={15}/></Link>)}
+            </div>
+          </section>
         )}
 
         <div className="grid md:grid-cols-2 gap-4">

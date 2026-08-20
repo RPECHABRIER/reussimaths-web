@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-seo-pages.mjs",
     "audit:nearby": "node audit-nearby-exercises.mjs",
     "check:production": "node scripts/check-production-readiness.mjs",
     "preview": "vite preview",

@@ -11,6 +11,7 @@ import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 import LoadError from "../components/LoadError";
 import { getDiscoveryShowcase } from "../discoveryShowcases";
+import PaywallAnalytics from "../components/PaywallAnalytics";
 
 // Une étape de parcours (/parcours/:parcoursId/etape/:stepIndex) : le chapitre
 // de cette étape, joué en série notée de `parcours.sessionLength` questions à
@@ -94,6 +95,7 @@ export default function ParcoursStep() {
         className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center"
         style={{ background: colors.bg, fontFamily: fonts.body }}
       >
+        <PaywallAnalytics chapterId={chapter.meta.id} levelId={chapter.meta.level} offerContext="locked_parcours_step" />
         <p style={{ fontFamily: fonts.display, fontSize: "1.3rem", fontWeight: 800, color: colors.ink, letterSpacing: "-0.01em" }}>
           Cette étape est sous abonnement
         </p>

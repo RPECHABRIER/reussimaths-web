@@ -26,7 +26,7 @@ import { LEVELS } from "../levels";
 import { colors, fonts, shadow } from "../theme";
 import { authenticatedFetch } from "../lib/api";
 import LoadError from "../components/LoadError";
-import { markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
+import { getAnonymousId, markSignupStarted, trackProductEvent } from "../lib/productAnalytics";
 import AppHeader from "../components/AppHeader";
 
 const TERMS_VERSION = "2026-08-13";
@@ -144,7 +144,7 @@ export default function Account() {
       const res = await authenticatedFetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, level: plan === "mensuel" ? monthlyLevel : undefined, purchaseAttemptId, termsVersion: TERMS_VERSION, immediateAccessAccepted: true }),
+        body: JSON.stringify({ plan, level: plan === "mensuel" ? monthlyLevel : undefined, purchaseAttemptId, termsVersion: TERMS_VERSION, immediateAccessAccepted: true, analyticsAnonymousId: getAnonymousId() }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Impossible d'ouvrir le paiement.");

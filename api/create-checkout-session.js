@@ -10,6 +10,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { requireSupabaseUser } from "./_auth.js";
+import { PRODUCT_EVENT_UUID } from "./_product-events.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 const supabaseAdmin = createClient(process.env.SUPABASE_URL ?? "", process.env.SUPABASE_SERVICE_ROLE_KEY ?? "");
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
   const user = await requireSupabaseUser(req, res, supabaseAdmin);
   if (!user) return;
 
-  const { plan, level, purchaseAttemptId, termsVersion, immediateAccessAccepted } = req.body ?? {};
+  const { plan, level, purchaseAttemptId, termsVersion, immediateAccessAccepted, analyticsAnonymousId } = req.body ?? {};
   const price = PRICE_BY_PLAN[plan];
 
   if (!price) {
@@ -74,7 +75,7 @@ export default async function handler(req, res) {
       // On passe l'id Supabase en metadata pour que le webhook sache à quel
       // compte rattacher l'abonnement (voir stripe-webhook.js).
       client_reference_id: user.id,
-      metadata: { supabase_user_id: user.id, plan, level: level ?? "", purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt },
+      metadata: { supabase_user_id: user.id, plan, level: level ?? "", purchase_attempt_id: purchaseAttemptId, terms_version: termsVersion, consented_at: consentedAt, ...(PRODUCT_EVENT_UUID.test(analyticsAnonymousId ?? "") ? { analytics_anonymous_id: analyticsAnonymousId } : {}) },
       ...(mode === "subscription" ? { subscription_data: { metadata: { supabase_user_id: user.id, plan, level } } } : {}),
       ...(customer ? { customer } : { customer_email: user.email }),
       success_url: `${process.env.PUBLIC_APP_URL}/compte?checkout=success&session_id={CHECKOUT_SESSION_ID}`,

@@ -160,17 +160,18 @@ function ProductMetrics() {
       if (firstError) { setError(firstError.message); return; }
       const events = eventsResult.data ?? [];
       const uniqueByEvent = (name) => new Set(events.filter((item) => item.event_name === name).map((item) => item.anonymous_id)).size;
+      const idsForEvents = (names) => new Set(events.filter((item) => names.includes(item.event_name)).map((item) => item.anonymous_id));
       const funnelStages = [
         ["Niveau choisi", "level_selected"], ["Programme configuré", "study_topics_selected"],
         ["Diagnostic commencé", "diagnostic_started"], ["Diagnostic terminé", "diagnostic_completed"],
         ["Essai commencé", "trial_started"], ["Essai terminé", "trial_completed"],
         ["Compte demandé", "account_cta_clicked"], ["Inscription lancée", "signup_started"],
         ["Compte créé", "signup_completed"], ["Offre consultée", "offer_viewed"],
-        ["Checkout", "checkout_started"], ["Paiement activé", "payment_activated"],
+        ["Checkout", ["checkout_started"]], ["Accès activé", ["subscription_activated", "pack_examen_activated"]],
       ];
       let continuing = new Set(events.filter((item)=>item.event_name==="page_view").map((item)=>item.anonymous_id));
       const strictFunnel=[["Visiteurs",continuing.size]];
-      funnelStages.forEach(([label,eventName])=>{const reached=new Set(events.filter((item)=>item.event_name===eventName).map((item)=>item.anonymous_id));continuing=new Set([...continuing].filter((id)=>reached.has(id)));strictFunnel.push([label,continuing.size]);});
+      funnelStages.forEach(([label,eventNames])=>{const names=Array.isArray(eventNames)?eventNames:[eventNames];const reached=idsForEvents(names);continuing=new Set([...continuing].filter((id)=>reached.has(id)));strictFunnel.push([label,continuing.size]);});
       const dropoffs=strictFunnel.slice(1).map(([label,value],index)=>{const previousLabel=strictFunnel[index][0];const previousValue=strictFunnel[index][1];const lost=Math.max(0,previousValue-value);return {from:previousLabel,to:label,lost,rate:previousValue?Math.round(lost/previousValue*100):0};}).filter((item)=>item.lost>0).sort((a,b)=>b.rate-a.rate||b.lost-a.lost).slice(0,3);
       const firstSeen = new Map(); const daysSeen = new Map();
       events.forEach((item) => {
@@ -188,8 +189,18 @@ function ProductMetrics() {
           const targetTime = new Date(`${first}T00:00:00`).getTime() + target * 86400000;
           if ([...daysSeen.get(id)].some((day) => Math.abs(new Date(`${day}T00:00:00`).getTime() - targetTime) <= 86400000)) retained += 1;
         }
-        return eligible ? Math.round(retained / eligible * 100) : null;
+        return { eligible, retained, rate: eligible ? Math.round(retained / eligible * 100) : null };
       };
+      const exerciseStarted = events.filter((item)=>item.event_name==="exercise_started").length;
+      const exerciseCompleted = events.filter((item)=>item.event_name==="exercise_completed").length;
+      const paywallIds = idsForEvents(["paywall_viewed"]);
+      const firstPaywallAt = new Map();
+      events.filter((item)=>item.event_name==="paywall_viewed").forEach((item)=>{
+        if (!firstPaywallAt.has(item.anonymous_id)) firstPaywallAt.set(item.anonymous_id, new Date(item.occurred_at).getTime());
+      });
+      const checkoutFromPaywall = new Set(events.filter((item)=>item.event_name==="checkout_started"&&new Date(item.occurred_at).getTime()>=Number(firstPaywallAt.get(item.anonymous_id))).map((item)=>item.anonymous_id)).size;
+      const seoLandingIds = new Set(events.filter((item)=>item.event_name==="page_view"&&String(item.properties?.contentType??"").startsWith("seo_")).map((item)=>item.anonymous_id));
+      const googleLandingIds = new Set(events.filter((item)=>item.event_name==="page_view"&&item.properties?.source==="google"&&String(item.properties?.contentType??"").startsWith("seo_")).map((item)=>item.anonymous_id));
       const paid = (subscriptionsResult.data ?? []).filter((item) => item.plan === "mensuel" && !item.admin_granted && ["active", "trialing"].includes(item.status));
       const attempts = attemptsResult.data ?? [];
       const failedAttempts = attempts.filter((item)=>!item.correct && item.error_code);
@@ -221,7 +232,16 @@ function ProductMetrics() {
       setData({
         funnel: strictFunnel, dropoffs,
         rawActivation: { diagnostics:uniqueByEvent("diagnostic_completed"),trials:uniqueByEvent("trial_completed"),signups:uniqueByEvent("signup_completed") },
-        retention7: retention(7), retention30: retention(30), mrr: paid.length * 4.99,
+        retention1: retention(1), retention7: retention(7), observationDays: 31, mrr: paid.length * 4.99,
+        acquisition: {
+          exerciseStarted, exerciseCompleted,
+          completionRate: exerciseStarted ? Math.round(exerciseCompleted / exerciseStarted * 100) : null,
+          paywallViewed: paywallIds.size, checkoutFromPaywall,
+          subscriptionActivated: events.filter((item)=>item.event_name==="subscription_activated").length,
+          packActivated: events.filter((item)=>item.event_name==="pack_examen_activated").length,
+          recoverySuccess: events.filter((item)=>item.event_name==="recovery_success").length,
+          seoLandings: seoLandingIds.size, googleLandings: googleLandingIds.size,
+        },
         feedback: feedbackResult.data ?? [],
         errorTypes: [...errorCounts.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
         fragileSkills: [...fragileSkills.entries()].sort((a,b) => b[1] - a[1]).slice(0,5),
@@ -246,7 +266,17 @@ function ProductMetrics() {
     {!data && !error && <p className="text-xs mt-4" style={{ color: colors.slate }}>Chargement…</p>}
     {data && <><div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-5">{data.funnel.map(([label,value], index) => { const previous = data.funnel[index - 1]?.[1]; const rate = index > 0 && previous ? Math.round(value / previous * 100) : null; return <div key={label} className="rounded-2xl p-3" style={{ backgroundColor: colors.bg }}><p className="text-xl font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}{rate != null ? ` · ${rate} % de l’étape précédente` : ""}</p></div>; })}</div>
       <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:`${colors.red}08`,border:`1px solid ${colors.red}20`}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.red}}>Trois abandons prioritaires du tunnel</p>{data.dropoffs.length?<div className="mt-2 grid gap-2 md:grid-cols-3">{data.dropoffs.map((item)=><div key={`${item.from}-${item.to}`} className="rounded-xl p-3" style={{backgroundColor:colors.card}}><p className="text-lg font-black" style={{color:colors.ink}}>{item.rate} %</p><p className="text-[10px]" style={{color:colors.slate}}>{item.from} → {item.to}<br/>{item.lost} visiteur{item.lost>1?"s":""} perdu{item.lost>1?"s":""}</p></div>)}</div>:<p className="mt-2 text-xs" style={{color:colors.slate}}>Pas encore assez de données séquentielles.</p>}<p className="mt-2 text-[10px]" style={{color:colors.slate}}>Le calcul suit les mêmes visiteurs pseudonymes de l’accueil au paiement et évite de mélanger des populations différentes.</p></div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">{[["Rétention J+7",data.retention7 == null ? "—" : `${data.retention7} %`],["Rétention J+30",data.retention30 == null ? "—" : `${data.retention30} %`],["MRR estimé",`${data.mrr.toFixed(2)} €`],["Retours pilote",data.feedback.length]].map(([label,value]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor:`${colors.gold}0d` }}><p className="font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p></div>)}</div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">{[["Rétention J+1",data.retention1.rate == null ? "—" : `${data.retention1.rate} %`,`${data.retention1.retained}/${data.retention1.eligible} revenus parmi les éligibles`],["Rétention J+7",data.retention7.rate == null ? "—" : `${data.retention7.rate} %`,`${data.retention7.retained}/${data.retention7.eligible} revenus parmi les éligibles`],["MRR estimé",`${data.mrr.toFixed(2)} €`,"abonnements mensuels actifs"],["Retours pilote",data.feedback.length,`fenêtre observée : ${data.observationDays} jours`]].map(([label,value,detail]) => <div key={label} className="rounded-2xl p-3" style={{ backgroundColor:`${colors.gold}0d` }}><p className="font-black" style={{ color: colors.ink }}>{value}</p><p className="text-[10px]" style={{ color: colors.slate }}>{label}</p><p className="mt-1 text-[9px]" style={{color:colors.slate}}>{detail}</p></div>)}</div>
+      <div className="mt-3 rounded-2xl p-4" style={{backgroundColor:colors.bg}}><p className="text-[10px] font-black uppercase tracking-wide" style={{color:colors.gold}}>Acquisition et activation · {data.observationDays} jours</p><div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">{[
+        ["Exercices commencés",data.acquisition.exerciseStarted],
+        ["Exercices terminés",data.acquisition.exerciseCompleted],
+        ["Taux de complétion",data.acquisition.completionRate==null?"—":`${data.acquisition.completionRate} %`],
+        ["Paywalls vus",data.acquisition.paywallViewed],
+        ["Checkout après paywall",data.acquisition.checkoutFromPaywall],
+        ["Abonnements activés",data.acquisition.subscriptionActivated],
+        ["Packs activés",data.acquisition.packActivated],
+        ["Récupérations réussies",data.acquisition.recoverySuccess],
+      ].map(([label,value])=><div key={label} className="rounded-xl p-3" style={{backgroundColor:colors.card}}><p className="text-lg font-black" style={{color:colors.ink}}>{value}</p><p className="text-[10px]" style={{color:colors.slate}}>{label}</p></div>)}</div><p className="mt-3 text-[10px]" style={{color:colors.slate}}>Landings SEO : {data.acquisition.seoLandings} visiteurs uniques, dont {data.acquisition.googleLandings} attribués à Google. Checkout après paywall = même identifiant pseudonyme ayant vu un blocage puis commencé un checkout pendant la période.</p></div>
       <p className="text-xs mt-4" style={{ color: colors.slate }}>Retours : utilité {average("usefulness")}/5 · simplicité {average("ease")}/5 · recommandation {data.feedback.length ? Math.round(data.feedback.filter((item) => item.would_recommend).length / data.feedback.length * 100) : 0} %</p>
       {data.errorTypes.length > 0 && <p className="text-xs mt-2" style={{ color: colors.slate }}>Erreurs fréquentes : {data.errorTypes.map(([name,count]) => `${name} (${count})`).join(" · ")}</p>}
       <div className="grid md:grid-cols-3 gap-2 mt-3">

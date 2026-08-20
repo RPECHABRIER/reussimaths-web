@@ -8,6 +8,7 @@ import { useReferralBonus } from "../hooks/useReferralBonus";
 import { canAccessChapter, getEffectiveSubscription } from "../lib/access";
 import { colors, fonts } from "../theme";
 import LoadError from "../components/LoadError";
+import PaywallAnalytics from "../components/PaywallAnalytics";
 
 export default function ChapterPage() {
   const { id } = useParams();
@@ -58,6 +59,7 @@ export default function ChapterPage() {
         className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center"
         style={{ background: colors.bg, fontFamily: fonts.body }}
       >
+        <PaywallAnalytics chapterId={chapter.meta.id} levelId={chapter.meta.level} offerContext="locked_chapter" />
         <p style={{ fontFamily: fonts.display, fontSize: "1.3rem", fontWeight: 800, color: colors.ink, letterSpacing: "-0.01em" }}>
           {chapter.meta.title} est un chapitre sous abonnement
         </p>

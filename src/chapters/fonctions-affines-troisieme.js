@@ -351,6 +351,14 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+export const SEO_EXAMPLE_GENERATORS = [
+  genIdentifierABFormeSimpleNumeric,
+  genPointAppartientDroiteQCM,
+  genCroissanteDecroissanteQCM,
+  genDeterminerAffineDeuxConditionsNumeric,
+  genCompareDeuxTarifsSeuilNumeric,
+];
+
 export default {
   meta: {
     id: "fonctions-affines-troisieme",

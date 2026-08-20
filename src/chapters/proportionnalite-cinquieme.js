@@ -440,6 +440,14 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+export const SEO_EXAMPLE_GENERATORS = [
+  genTesterProportionnaliteQuotientsQCM,
+  genCalculerCoefficientNumeric,
+  genTrouverValeurManquanteNumeric,
+  genPourcentageDuneQuantiteNumeric,
+  genEchelleDistanceReelleNumeric,
+];
+
 export default {
   meta: {
     id: "proportionnalite-cinquieme",

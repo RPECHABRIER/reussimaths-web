@@ -275,6 +275,14 @@ function generate(difficulty) {
   return pick(GENERATORS)();
 }
 
+export const SEO_EXAMPLE_GENERATORS = [
+  genVerifierConditionsApplicationQCM,
+  genCalculerLongueurThalesANNumeric,
+  genCalculerLongueurThalesMNNumeric,
+  genFormeCorrecteEgaliteThalesQCM,
+  genReciproqueThalesParallelesQCM,
+];
+
 export default {
   meta: {
     id: "theoreme-thales",

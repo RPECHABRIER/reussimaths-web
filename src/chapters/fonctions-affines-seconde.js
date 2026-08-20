@@ -83,6 +83,10 @@ function genCalculTauxVariationNumeric() {
     chapter: "Fonctions affines — Taux de variation",
     prompt: `La fonction affine ${nom} vérifie \\(${nom}(${x1}) = ${y1}\\) et \\(${nom}(${x2}) = ${y2}\\). Calcule le coefficient directeur de ${nom}.`,
     answer: a,
+    hints: [
+      "Le taux de variation mesure la variation de f par unité de x.",
+      `Utilise le même ordre en haut et en bas : (${y2}-${y1})/(${x2}-${x1}).`,
+    ],
     steps: [
       { type: "regle", text: `\\text{Le coefficient directeur (ou taux de variation) entre deux points d'une fonction affine se calcule par } \\dfrac{y_2 - y_1}{x_2 - x_1}.` },
       { type: "resultat", text: `\\text{Coefficient directeur} = \\dfrac{${nom}(${x2}) - ${nom}(${x1})}{${x2} - ${x1}} = \\dfrac{${y2} - ${y1}}{${x2} - ${x1}} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${a}` },

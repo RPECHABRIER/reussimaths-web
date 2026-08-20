@@ -53,7 +53,7 @@ function genFormuleMarkovQCM() {
 // ---------- 3. Inégalité de Bienaymé-Tchebychev (numeric) ----------
 function genInegaliteBienaymeTchebychevNumeric() {
   const VX = randInt(1, 30);
-  const a = randInt(1, 10);
+  const a = randInt(Math.floor(Math.sqrt(VX)) + 1, Math.floor(Math.sqrt(VX)) + 10);
   const answer = roundTo(VX / (a * a), 4);
   return {
     type: "numeric",
@@ -71,7 +71,7 @@ function genInegaliteBienaymeTchebychevNumeric() {
 // ---------- 4. Minorant complémentaire de Bienaymé-Tchebychev (numeric) ----------
 function genInegaliteBienaymeTchebychevComplementaireNumeric() {
   const VX = randInt(1, 30);
-  const a = randInt(1, 10);
+  const a = randInt(Math.floor(Math.sqrt(VX)) + 1, Math.floor(Math.sqrt(VX)) + 10);
   const majorant = VX / (a * a);
   const answer = roundTo(1 - majorant, 4);
   return {
@@ -107,8 +107,9 @@ function genFormuleBienaymeTchebychevQCM() {
 // ---------- 6. Inégalité de concentration (numeric) ----------
 function genInegaliteConcentrationNumeric() {
   const VX = randInt(1, 20);
-  const n = randInt(10, 200);
   const epsilon = pick([0.1, 0.2, 0.5, 1, 2]);
+  const nMin = Math.floor(VX / (epsilon * epsilon)) + 1;
+  const n = randInt(nMin, nMin + 190);
   const answer = roundTo(VX / (n * epsilon * epsilon), 4);
   return {
     type: "numeric",
@@ -126,8 +127,9 @@ function genInegaliteConcentrationNumeric() {
 // ---------- 7. Minorant complémentaire de l'inégalité de concentration (numeric) ----------
 function genInegaliteConcentrationComplementaireNumeric() {
   const VX = randInt(1, 20);
-  const n = randInt(10, 200);
   const epsilon = pick([0.1, 0.2, 0.5, 1, 2]);
+  const nMin = Math.floor(VX / (epsilon * epsilon)) + 1;
+  const n = randInt(nMin, nMin + 190);
   const majorant = VX / (n * epsilon * epsilon);
   const answer = roundTo(1 - majorant, 4);
   return {
@@ -211,7 +213,7 @@ function genEsperanceMoyenneEmpiriqueQCM() {
 // ---------- 12. Vrai ou faux sur la loi des grands nombres (QCM) ----------
 function genVraiFauxLGNQCM() {
   const cas = pick([
-    { description: "Plus n est grand, plus la moyenne empirique \\(M_n\\) se rapproche de \\(E(X)\\).", reponse: "Vrai", explication: "C'est vrai : c'est exactement l'énoncé de la loi des grands nombres." },
+    { description: "Quand n augmente, la moyenne empirique se rapproche nécessairement de E(X) à chaque nouvelle observation.", reponse: "Faux", explication: "C'est faux : la moyenne peut fluctuer. La loi des grands nombres dit que la probabilité d'un écart fixé devient faible quand n grandit." },
     { description: "L'inégalité de Markov s'applique à toute variable aléatoire, même si elle prend des valeurs négatives.", reponse: "Faux", explication: "C'est faux : l'inégalité de Markov nécessite que X soit une variable aléatoire positive." },
     { description: "L'inégalité de concentration permet de justifier la loi des grands nombres.", reponse: "Vrai", explication: "C'est vrai : elle montre que P(|Mn-E(X)|≥ε) tend vers 0 quand n devient grand, ce qui traduit le rapprochement de Mn vers E(X)." },
     { description: "L'inégalité de Bienaymé-Tchebychev donne une égalité exacte de la probabilité.", reponse: "Faux", explication: "C'est faux : c'est une inégalité, elle fournit seulement une majoration, pas une valeur exacte." },

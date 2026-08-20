@@ -124,6 +124,15 @@ test("la géométrie distingue ses conditions d’application", () => {
   assert.equal(existence.family, "geometry_triangle_existence");
 });
 
+test("un exercice pilote peut fournir un feedback ciblé sans casser le fallback", () => {
+  const exercise = numeric("Fonctions affines — Inéquation", "Résous -2x < 6.", -3);
+  exercise.feedback = { default: "Reprends l'inéquation.", errorCases: [{ code: "negative_division_direction", matches: "3", message: "En divisant par un nombre négatif, inverse le sens de l’inégalité." }] };
+  const targeted = buildPedagogicalFeedback(exercise, "3");
+  assert.equal(targeted.family, "negative_division_direction");
+  assert.match(targeted.intro, /inverse le sens/);
+  assert.equal(buildPedagogicalFeedback(exercise, "0").intro, "Reprends l'inéquation.");
+});
+
 test("l’audit géométrique couvre mesures, repérage, solides et vecteurs", () => {
   const polygon = buildPedagogicalFeedback(numeric("Automatismes — Aire d'un triangle", "Calcule l’aire.", 20), "40");
   const coordinates = buildPedagogicalFeedback({ type: "text", chapter: "Géométrie repérée — Coordonnées", prompt: "Donne les coordonnées.", answer: "(2;-3)" }, "(-3;2)");

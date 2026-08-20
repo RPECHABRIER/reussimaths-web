@@ -205,6 +205,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [feedback, setFeedback] = useState(null);
   const [similarExercise, setSimilarExercise] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [attemptsOnExercise, setAttemptsOnExercise] = useState(0);
   const [verificationSkill, setVerificationSkill] = useState(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -380,6 +381,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setFeedback(null);
     setSimilarExercise(null);
     setShowHelp(false);
+    setAttemptsOnExercise(0);
     setVerificationSkill(null);
     assistanceUsedRef.current = false;
     exerciseStartRef.current = Date.now();
@@ -404,6 +406,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     setFeedback(null);
     setSimilarExercise(null);
     setShowHelp(false);
+    setAttemptsOnExercise(0);
     setVerificationSkill(skill);
     assistanceUsedRef.current = false;
     exerciseStartRef.current = Date.now();
@@ -414,6 +417,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     const responseTimeMs = Math.min(Date.now() - exerciseStartRef.current, 30 * 60 * 1000);
     const assisted = isDecouverte || assistanceUsedRef.current;
     setFeedback({ correct, response, errorCode });
+    if (!correct) setAttemptsOnExercise((count) => count + 1);
     setSimilarExercise(correct ? null : generateSimilarExercise(chapter, effectiveDifficulty, exercise));
     if (quotaApplies) quota.consume();
     if (isSession) {
@@ -441,6 +445,10 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       assisted,
     });
     if (correct) {
+      if (verificationSkill) {
+        trackProductEvent("recovery_success", { skill: verificationSkill, levelId: chapter.meta.level, chapterId: chapter.meta.id });
+        setVerificationSkill(null);
+      }
       const newStreak = streak + 1;
       const bonus = newStreak % 5 === 0 ? 20 : 0;
       const newScore = score + 10 + bonus;
@@ -918,7 +926,14 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
               {!feedback.correct && (
                 <>
-                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember levelId={chapter.meta.level} /></div>
+                {Array.isArray(exercise.hints) && attemptsOnExercise <= exercise.hints.length ? (
+                  <div className="mt-2 rounded-2xl px-4 py-3 text-sm font-semibold" style={{ backgroundColor: `${gold}14`, color: ink }}>
+                    <Lightbulb size={16} className="mr-2 inline" color={gold} />
+                    <MathText text={exercise.hints[Math.max(0, attemptsOnExercise - 1)]} />
+                  </div>
+                ) : (
+                  <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember levelId={chapter.meta.level} /></div>
+                )}
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={retry}

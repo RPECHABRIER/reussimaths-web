@@ -54,21 +54,21 @@ function genCalculerChangementVariableNumeric() {
   };
 }
 
-// ---------- 2. Choisir le bon changement de variable selon la forme du nuage ----------
+// ---------- 2. Choisir un changement de variable depuis une relation conjecturée ----------
 function genChoisirChangementVariableQCM() {
   const cas = pick([
     {
-      description: "Le nuage de points (x ; y) suit une allure de parabole (croissance de plus en plus rapide, en escalier symétrique).",
-      reponse: "Poser Y = y² (ou étudier x en fonction de √y)",
-      explication: "Poser Y = y² (ou étudier x en fonction de √y) : une allure de parabole correspond à une relation du type y² proportionnel à x, donc c'est en élevant y au carré que le nuage transformé devient aligné.",
+      description: "L'étude du phénomène conduit à conjecturer une relation y² = ax + b.",
+      reponse: "Poser Y = y²",
+      explication: "La relation conjecturée y² = ax + b devient Y = ax + b en posant Y = y². C'est la relation, et non la seule allure du nuage, qui justifie ce choix.",
     },
     {
-      description: "Le nuage de points (x ; y) suit une décroissance qui ralentit, en se rapprochant de 0 sans jamais l'atteindre.",
+      description: "L'étude du phénomène conduit à conjecturer une relation 1/y = ax + b.",
       reponse: "Poser Y = 1/y",
-      explication: "Poser Y = 1/y : une décroissance qui ralentit vers 0 est caractéristique d'une relation en 1/x, donc c'est en inversant y qu'on retrouve un nuage aligné.",
+      explication: "La relation conjecturée 1/y = ax + b devient affine en posant Y = 1/y.",
     },
     {
-      description: "Le nuage de points (x ; y) suit une croissance exponentielle très rapide.",
+      description: "Le contexte conduit à conjecturer un modèle exponentiel y = A×q^x avec A>0 et q>0.",
       reponse: "Poser Y = log(y)",
       explication: "Poser Y = log(y) : une croissance exponentielle devient une droite une fois qu'on prend le logarithme, car log(y) = log(a) + x·log(q) pour une suite géométrique de raison q.",
     },
@@ -78,7 +78,7 @@ function genChoisirChangementVariableQCM() {
     chapter: "Statistiques à deux variables (Terminale techno) — Changement de variable",
     prompt: `« ${cas.description} » Quel changement de variable peut permettre un ajustement affine du nuage transformé ?`,
     answer: cas.reponse,
-    options: shuffle(["Poser Y = y² (ou étudier x en fonction de √y)", "Poser Y = 1/y", "Poser Y = log(y)"]),
+    options: shuffle(["Poser Y = y²", "Poser Y = 1/y", "Poser Y = log(y)"]),
     steps: [{ type: "regle", text: cas.explication }],
   };
 }
@@ -223,8 +223,8 @@ export default {
           {
             title: "Choisir le bon changement de variable",
             items: [
-              "L'allure du nuage de départ guide le choix (courbe qui explose, qui plafonne, qui ralentit...).",
-              "Allure de parabole (croissance de plus en plus rapide, symétrique) → poser \\(Y=y^2\\). Décroissance qui ralentit vers 0 → poser \\(Y=\\frac{1}{y}\\). Croissance exponentielle très rapide → poser \\(Y=\\log y\\).",
+              "L'allure seule ne suffit pas : le contexte ou une relation conjecturée doit justifier la transformation essayée.",
+              "Si l'on conjecture y²=ax+b, poser Y=y² ; si 1/y=ax+b, poser Y=1/y ; si y=A×q^x, poser Y=log(y). On vérifie ensuite l'alignement du nuage transformé.",
             ],
           },
           {

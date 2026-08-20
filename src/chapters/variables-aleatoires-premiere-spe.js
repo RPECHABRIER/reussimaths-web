@@ -118,14 +118,14 @@ function genLineariteEsperanceNumeric() {
   };
 }
 
-// ---------- 6. Linéarité de la variance : V(aX + b) = a²V(X) ----------
+// ---------- 6. Effet d'une transformation affine sur la variance ----------
 function genLineariteVarianceNumeric() {
   const VX = pick([2, 3, 4, 5, 6]);
   const a = nonZero(-4, 4);
   const answer = a * a * VX;
   return {
     type: "numeric",
-    chapter: "Variables aléatoires — Linéarité de la variance",
+    chapter: "Variables aléatoires — Transformation de la variance",
     prompt: `Une variable aléatoire \\(X\\) vérifie \\(V(X) = ${VX}\\). Calcule \\(V(${a}X + 5)\\) (formule \\(V(aX+b) = a^2 V(X)\\), le terme \\(b\\) n'a aucun effet sur la variance).`,
     answer,
     steps: [{ type: "resultat", text: `V(${a}X + 5) = ${a}^2 \\times V(X) = ${a * a} \\times ${VX} = ${answer}` }],

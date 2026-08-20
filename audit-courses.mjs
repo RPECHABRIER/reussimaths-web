@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import katex from "katex";
 
 const chapterDirectory = new URL("./src/chapters/", import.meta.url);
@@ -32,7 +31,7 @@ function checkMath(file, text) {
 }
 
 for (const file of files) {
-  const chapter = (await import(pathToFileURL(new URL(file, chapterDirectory).pathname))).default;
+  const chapter = (await import(new URL(file, chapterDirectory).href)).default;
   if (levelFilter && chapter.meta.level !== levelFilter) continue;
   chapters += 1;
   const course = chapter.meta.cours;

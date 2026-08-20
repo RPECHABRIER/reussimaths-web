@@ -123,9 +123,9 @@ function genSigneIntegraleQCM() {
     type: "qcm",
     chapter: "Calcul intégral — Signe et encadrement",
     prompt: `Sur \\([${a};${b}]\\) (avec ${a} < ${b}), on a f ${positive ? "\\geqslant" : "\\leqslant"} 0. Quel est le signe de \\(\\displaystyle\\int_{${a}}^{${b}} f(x)\\,\\mathrm{d}x\\) ?`,
-    answer: positive ? "Positif" : "Négatif",
-    options: ["Positif", "Négatif"],
-    steps: [{ type: "regle", text: positive ? "f est positive donc l'intégrale est positive." : "f est négative donc l'intégrale est négative." }],
+    answer: positive ? "Positive ou nulle" : "Négative ou nulle",
+    options: ["Positive ou nulle", "Négative ou nulle"],
+    steps: [{ type: "regle", text: positive ? "f est positive ou nulle donc l'intégrale est positive ou nulle." : "f est négative ou nulle donc l'intégrale est négative ou nulle." }],
   };
 }
 
@@ -347,7 +347,7 @@ export default {
             title: "Intégrale = aire algébrique",
             items: [
               "Se calcule avec une primitive F de f : différence des valeurs de F aux bornes.",
-              "Si f ⩾ 0 sur [a;b], l'intégrale est l'aire sous la courbe, en unités d'aire ; si f ⩽ 0, elle est négative.",
+              "Si f ⩾ 0 sur [a;b], l'intégrale est positive ou nulle et représente l'aire sous la courbe ; si f ⩽ 0, elle est négative ou nulle.",
             ],
             formula: "\\(\\displaystyle\\int_a^b f(x)\\,dx = F(b)-F(a)\\)",
           },
@@ -361,7 +361,7 @@ export default {
           {
             title: "Signe et encadrement",
             items: [
-              "Si \\(f \\leqslant g\\) sur [a;b], alors \\(\\int_a^b f \\leqslant \\int_a^b g\\) (en particulier, si \\(f\\geqslant 0\\), l'intégrale est positive).",
+              "Si \\(f \\leqslant g\\) sur [a;b], alors \\(\\int_a^b f \\leqslant \\int_a^b g\\) (en particulier, si \\(f\\geqslant 0\\), l'intégrale est positive ou nulle).",
               "Encadrer une intégrale : si \\(m \\leqslant f(x) \\leqslant M\\) sur [a;b], alors en intégrant l'inégalité, \\(m(b-a) \\leqslant \\int_a^b f(x)\\,dx \\leqslant M(b-a)\\).",
               "Piège classique : inverser les bornes change le signe de l'intégrale.",
             ],

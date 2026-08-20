@@ -76,6 +76,11 @@ function genVecteurDirecteurDepuisCartesienneNumeric() {
     chapter: "Équations de droites — Vecteur directeur",
     prompt: `La droite (d) a pour équation cartésienne \\(${texEquationCartesienne(a, b, c)}\\). Un vecteur directeur de (d) a pour coordonnées \\((-b ; a)\\). Quelle est ${demanderAbscisse ? "l'abscisse" : "l'ordonnée"} de ce vecteur directeur ?`,
     answer: demanderAbscisse ? -b : a,
+    hints: ["Pour l'équation ax+by+c=0, un vecteur directeur est (-b ; a).", "Lis d'abord b avec son signe, puis calcule -b ; la seconde coordonnée est a."],
+    feedback: {
+      default: "Relis l'ordre des coordonnées du vecteur directeur : (-b ; a).",
+      errorCases: [{ code: "vector_coordinate_order", matches: String(demanderAbscisse ? b : -a), message: "Les coordonnées ont été inversées ou le signe de -b a été oublié : le vecteur directeur est (-b ; a)." }],
+    },
     steps: [{ type: "calcul", text: demanderAbscisse ? `-b = -(${b}) = ${-b}` : `a = ${a}` }],
   };
 }

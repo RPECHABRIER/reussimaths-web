@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import { normalizeExercise } from "./src/lib/exercise.js";
 
 const chapterDirectory = new URL("./src/chapters/", import.meta.url);
@@ -34,7 +33,7 @@ let nonNumeric = 0;
 const uncovered = [];
 
 for (const file of files) {
-  const chapter = (await import(pathToFileURL(new URL(file, chapterDirectory).pathname))).default;
+  const chapter = (await import(new URL(file, chapterDirectory).href)).default;
   if (!chapter?.meta?.id || typeof chapter.generate !== "function") continue;
 
   for (const difficulty of difficulties) {

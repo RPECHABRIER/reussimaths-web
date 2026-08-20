@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import { normalizeExercise } from "./src/lib/exercise.js";
 import { buildPedagogicalFeedback } from "./src/lib/pedagogicalFeedback.js";
 
@@ -24,7 +23,7 @@ function flag(file, difficulty, reason, exercise) {
 }
 
 for (const file of files) {
-  const chapter = (await import(pathToFileURL(new URL(file, directory).pathname))).default;
+  const chapter = (await import(new URL(file, directory).href)).default;
   if (!COLLEGE_LEVELS.has(chapter?.meta?.level)) continue;
   const prompts = new Set();
   const families = new Set();

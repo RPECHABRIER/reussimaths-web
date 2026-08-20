@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import katex from "katex";
 import { normalizeExercise } from "./src/lib/exercise.js";
 
@@ -157,7 +156,7 @@ function inspect(exercise, file, difficulty) {
 for (const file of files) {
   let chapter;
   try {
-    chapter = (await import(pathToFileURL(new URL(file, chapterDirectory).pathname))).default;
+    chapter = (await import(new URL(file, chapterDirectory).href)).default;
   } catch (error) {
     report(file, null, `import impossible : ${error.message}`);
     continue;

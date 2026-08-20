@@ -93,6 +93,14 @@ function genAntecedentFormuleAffineNumeric() {
     chapter: "Généralités sur les fonctions — Image et antécédent",
     prompt: `On considère la fonction ${nom} définie par \\(${nom}(x) = ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}\\). Détermine l'antécédent de ${k} par ${nom} (c'est-à-dire résous \\(${nom}(x) = ${k}\\)).`,
     answer: xSol,
+    hints: [
+      `Chercher un antécédent de ${k}, c'est chercher x tel que ${nom}(x)=${k}.`,
+      `Écris d'abord ${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)}=${k}, puis isole x en effectuant la même opération des deux côtés.`,
+    ],
+    feedback: {
+      default: "Tu dois résoudre l'équation f(x)=k, et non calculer une nouvelle image.",
+      errorCases: [{ code: "image_antecedent_confusion", matches: String(k), message: "Tu as repris l'image donnée. Un antécédent est la valeur de x qui produit cette image." }],
+    },
     steps: [
       { type: "donnee", text: `${a}x ${b >= 0 ? "+" : "-"} ${Math.abs(b)} = ${k}` },
       { type: "calcul", text: `${a}x = ${k - b}` },

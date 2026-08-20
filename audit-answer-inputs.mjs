@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import { normalizeExercise } from "./src/lib/exercise.js";
 import { parseNumericInput } from "./src/lib/answerMatch.js";
 import { canTypeNumericAnswer, canonicalNumericInput, NUMERIC_KEYPAD_KEYS } from "./src/lib/numericKeypad.js";
@@ -18,7 +17,7 @@ for (const required of ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "±", 
 }
 
 for (const file of files) {
-  const chapter = (await import(pathToFileURL(new URL(file, directory).pathname))).default;
+  const chapter = (await import(new URL(file, directory).href)).default;
   for (const difficulty of difficulties) {
     for (let index = 0; index < 120; index += 1) {
       const exercise = normalizeExercise(chapter.generate(difficulty));

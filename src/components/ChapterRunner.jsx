@@ -24,6 +24,7 @@ import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKey
 import SessionCelebration from "./SessionCelebration";
 import Mascot from "./Mascot";
 import PaywallAnalytics from "./PaywallAnalytics";
+import { correctWowMessage, prepareWowExercise } from "../lib/pedagogyWow";
 
 // ---------------------------------------------------------------------------
 // Composant générique d'exercice : (Cours) / Découverte/Entraînement/Défi,
@@ -196,9 +197,10 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   // Visite libre avec un Cours disponible -> on y atterrit par défaut (voir
   // commentaire d'en-tête) ; sinon comportement historique inchangé.
   const [mode, setMode] = useState(() => (isSession ? "entrainement" : hasCours ? "cours" : "decouverte"));
-  const [exercise, setExercise] = useState(() =>
+  const [exercise, setExercise] = useState(() => prepareWowExercise(
+    chapter,
     focusSkill ? generateMatchingSkill(chapter, effectiveDifficulty, focusSkill) : generateExercise(chapter, effectiveDifficulty, 0)
-  );
+  ));
   const [redrillQueue, setRedrillQueue] = useState([]); // [{ skill, in }] — voir queueRedrill
   const [input, setInput] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
@@ -213,6 +215,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const [best, setBest] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [sessionSkillStats, setSessionSkillStats] = useState({});
   const [sessionDone, setSessionDone] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [revealResult, setRevealResult] = useState(false);
@@ -221,6 +224,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const completionTrackedRef = useRef(false);
   const startedExerciseRef = useRef(null);
   const completedExerciseRef = useRef(null);
+  const sessionCorrectExercisesRef = useRef(new WeakSet());
   const assistanceUsedRef = useRef(false);
   const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
   const lastAttemptRef = useRef(null);
@@ -393,7 +397,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       levelId: chapter.meta.level,
       chapterId: chapter.meta.id,
     });
-    setExercise(nextEx);
+    setExercise(prepareWowExercise(chapter, nextEx));
     setInput("");
     setSelectedOption(null);
     setSelectedMulti([]);
@@ -418,7 +422,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const practiceSimilar = () => {
     if (!similarExercise) return;
     const skill = exercise.chapter;
-    setExercise(similarExercise);
+    setExercise(prepareWowExercise(chapter, similarExercise));
     setInput("");
     setSelectedOption(null);
     setSelectedMulti([]);
@@ -437,7 +441,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     const assisted = isDecouverte || assistanceUsedRef.current;
     // La première réponse clôt l'exercice pour la mesure. Le bouton
     // « nouvel essai » sur le même énoncé ne gonfle pas les complétions.
-    if (completedExerciseRef.current !== exercise) {
+    const firstResponseForExercise = completedExerciseRef.current !== exercise;
+    if (firstResponseForExercise) {
       completedExerciseRef.current = exercise;
       trackProductEvent("exercise_completed", {
         chapterId: chapter.meta.id,
@@ -447,13 +452,32 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         assisted,
       });
     }
-    setFeedback({ correct, response, errorCode });
-    if (!correct) setAttemptsOnExercise((count) => count + 1);
+    const recovered = correct && Boolean(verificationSkill);
+    setFeedback({ correct, response, errorCode, recovered });
+    if (!correct) {
+      assistanceUsedRef.current = true;
+      setAttemptsOnExercise((count) => count + 1);
+    }
     setSimilarExercise(correct ? null : generateSimilarExercise(chapter, effectiveDifficulty, exercise));
-    if (quotaApplies) quota.consume();
+    if (quotaApplies && firstResponseForExercise) quota.consume();
     if (isSession) {
-      setAnsweredCount((c) => c + 1);
-      if (correct) setCorrectCount((c) => c + 1);
+      if (firstResponseForExercise) setAnsweredCount((c) => c + 1);
+      if (correct && !sessionCorrectExercisesRef.current.has(exercise)) {
+        sessionCorrectExercisesRef.current.add(exercise);
+        setCorrectCount((c) => c + 1);
+      }
+      setSessionSkillStats((previous) => {
+        const skill = exercise.chapter ?? chapter.meta.title;
+        const current = previous[skill] ?? { attempts: 0, correct: 0, autonomousCorrect: 0 };
+        return {
+          ...previous,
+          [skill]: {
+            attempts: current.attempts + 1,
+            correct: current.correct + (correct ? 1 : 0),
+            autonomousCorrect: current.autonomousCorrect + (correct && !assisted ? 1 : 0),
+          },
+        };
+      });
     }
     adjustDifficulty(correct);
     if (!correct) queueRedrill(exercise.chapter);
@@ -575,7 +599,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
         style={{ background: paper, fontFamily: fonts.body }}
       >
-        <SessionCelebration chapterTitle={chapter.meta.title} correct={correctCount} total={sessionLength} discoverySignup={discoverySignup} levelId={chapter.meta.level} onContinue={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}/>
+        <SessionCelebration chapterTitle={chapter.meta.title} correct={correctCount} total={sessionLength} skillStats={sessionSkillStats} discoverySignup={discoverySignup} levelId={chapter.meta.level} onContinue={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}/>
       </div>
     );
   }
@@ -953,7 +977,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
               >
                 <Mascot size={42} motion={feedback.correct ? "celebrate" : "encourage"} />
-                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? "Bien joué ! Cette notion progresse." : "Pas encore — réessaie ou utilise la méthode."}</span>
+                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? correctWowMessage(exercise, feedback.recovered) : "Pas encore — réfléchis avec l’indice, puis réessaie."}</span>
               </div>
 
               {!feedback.correct && (
@@ -995,10 +1019,6 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 )}
                 </>
               )}
-              {feedback.correct && isDiscoverySession && (
-                <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} correct remember levelId={chapter.meta.level} /></div>
-              )}
-
               {!feedback.correct && showHelp && !isDefi && !isDecouverte && (
                 <div className="mt-2">
                   <StepsList steps={exercise.steps} dark={false} />

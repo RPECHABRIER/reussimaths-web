@@ -193,6 +193,8 @@ function ProductMetrics() {
       };
       const exerciseStarted = events.filter((item)=>item.event_name==="exercise_started").length;
       const exerciseCompleted = events.filter((item)=>item.event_name==="exercise_completed").length;
+      const recoveryOpportunities = events.filter((item)=>item.event_name==="recovery_opportunity").length;
+      const recoverySuccess = events.filter((item)=>item.event_name==="recovery_success").length;
       const paywallIds = idsForEvents(["paywall_viewed"]);
       const firstPaywallAt = new Map();
       events.filter((item)=>item.event_name==="paywall_viewed").forEach((item)=>{
@@ -239,7 +241,8 @@ function ProductMetrics() {
           paywallViewed: paywallIds.size, checkoutFromPaywall,
           subscriptionActivated: events.filter((item)=>item.event_name==="subscription_activated").length,
           packActivated: events.filter((item)=>item.event_name==="pack_examen_activated").length,
-          recoverySuccess: events.filter((item)=>item.event_name==="recovery_success").length,
+          recoveryOpportunities, recoverySuccess,
+          recoveryRate: recoveryOpportunities ? Math.round(recoverySuccess / recoveryOpportunities * 100) : null,
           seoLandings: seoLandingIds.size, googleLandings: googleLandingIds.size,
         },
         feedback: feedbackResult.data ?? [],
@@ -275,7 +278,9 @@ function ProductMetrics() {
         ["Checkout après paywall",data.acquisition.checkoutFromPaywall],
         ["Abonnements activés",data.acquisition.subscriptionActivated],
         ["Packs activés",data.acquisition.packActivated],
+        ["Opportunités de récupération",data.acquisition.recoveryOpportunities],
         ["Récupérations réussies",data.acquisition.recoverySuccess],
+        ["Taux de récupération",data.acquisition.recoveryRate==null?"—":`${data.acquisition.recoveryRate} %`],
       ].map(([label,value])=><div key={label} className="rounded-xl p-3" style={{backgroundColor:colors.card}}><p className="text-lg font-black" style={{color:colors.ink}}>{value}</p><p className="text-[10px]" style={{color:colors.slate}}>{label}</p></div>)}</div><p className="mt-3 text-[10px]" style={{color:colors.slate}}>Landings SEO : {data.acquisition.seoLandings} visiteurs uniques, dont {data.acquisition.googleLandings} attribués à Google. Checkout après paywall = même identifiant pseudonyme ayant vu un blocage puis commencé un checkout pendant la période.</p></div>
       <p className="text-xs mt-4" style={{ color: colors.slate }}>Retours : utilité {average("usefulness")}/5 · simplicité {average("ease")}/5 · recommandation {data.feedback.length ? Math.round(data.feedback.filter((item) => item.would_recommend).length / data.feedback.length * 100) : 0} %</p>
       {data.errorTypes.length > 0 && <p className="text-xs mt-2" style={{ color: colors.slate }}>Erreurs fréquentes : {data.errorTypes.map(([name,count]) => `${name} (${count})`).join(" · ")}</p>}

@@ -4,7 +4,7 @@ export const ALLOWED_PRODUCT_EVENTS = new Set([
   "checkout_started", "checkout_returned", "payment_activated", "portal_opened",
   "session_completed", "feedback_sent", "study_topics_selected",
   "account_cta_clicked", "signup_completed", "adaptive_next_selected",
-  "adaptive_next_outcome", "recovery_success", "exercise_started",
+  "adaptive_next_outcome", "recovery_opportunity", "recovery_success", "exercise_started",
   "exercise_completed", "paywall_viewed", "subscription_activated",
   "pack_examen_activated",
 ]);

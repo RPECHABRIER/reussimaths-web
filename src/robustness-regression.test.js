@@ -506,6 +506,7 @@ test("la mesure produit et les retours restent minimaux", async () => {
   assert.doesNotMatch(analytics, /user\.email|email:/);
   assert.match(endpoint, /isAcceptedProductEvent/);
   assert.match(eventRules, /recovery_success/);
+  assert.match(eventRules, /recovery_opportunity/);
   assert.match(eventRules, /exercise_started/);
   assert.match(eventRules, /exercise_completed/);
   assert.match(eventRules, /paywall_viewed/);

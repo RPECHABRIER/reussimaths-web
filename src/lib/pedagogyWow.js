@@ -1,4 +1,34 @@
 const PROFILES = {
+  "nombres-decimaux": {
+    level: "sixieme",
+    skills: [
+      [/écrire en chiffres|écriture décimale|décomposition/i, "Construis le nombre classe par classe : unités, dixièmes, centièmes.", "Place chaque chiffre dans son rang, puis relis la partie entière et la partie décimale séparées par la virgule."],
+      [/comparer|ranger/i, "Compare d’abord les parties entières.", "Si elles sont égales, complète mentalement avec des zéros et compare dixièmes, puis centièmes, de gauche à droite."],
+      [/droite graduée|encadrer/i, "Cherche entre quels deux nombres entiers se trouve le nombre.", "Repère la valeur d’une petite graduation, puis avance depuis la graduation connue sans compter le point de départ."],
+      [/fractions décimales/i, "Le dénominateur indique le rang du dernier chiffre.", "Des dixièmes correspondent à un dénominateur 10, des centièmes à 100 et des millièmes à 1 000."],
+    ],
+    success: "Exact. Tu as correctement utilisé la valeur de position des chiffres.",
+  },
+  "operations-sur-les-nombres": {
+    level: "cinquieme",
+    skills: [
+      [/priorités opératoires/i, "Repère les parenthèses et les multiplications avant de calculer.", "Calcule d’abord les parenthèses, puis multiplications et divisions, enfin additions et soustractions."],
+      [/nommer un calcul/i, "Observe l’opération effectuée en dernier.", "L’opération principale donne le nom de l’expression : somme, différence, produit ou quotient."],
+      [/distributivité/i, "Le nombre devant la parenthèse agit sur chacun de ses termes.", "Multiplie ce nombre par chaque terme de la parenthèse, en conservant les signes, puis réduis."],
+      [/programme de calcul|choisir une opération/i, "Traduis une seule instruction à la fois.", "Écris les opérations dans l’ordre du programme et ajoute des parenthèses pour conserver cet ordre."],
+    ],
+    success: "Exact. L’ordre des opérations est correctement respecté.",
+  },
+  "addition-soustraction-rationnels": {
+    level: "quatrieme",
+    skills: [
+      [/rappels|simplif/i, "Cherche un diviseur commun au numérateur et au dénominateur.", "Divise le numérateur et le dénominateur par le même nombre jusqu’à obtenir une fraction irréductible."],
+      [/comparer/i, "Pour comparer sûrement, donne la même taille aux parts.", "Réduis les fractions au même dénominateur, puis compare leurs numérateurs en tenant compte du signe."],
+      [/additionner|soustraire|dénominateur/i, "Peut-on additionner directement des parts qui n’ont pas la même taille ?", "Cherche un dénominateur commun, transforme chaque fraction, puis calcule uniquement les numérateurs."],
+      [/problèmes/i, "Identifie d’abord les fractions qui décrivent le même tout.", "Traduis la situation par une somme ou une différence de fractions avant de choisir le dénominateur commun."],
+    ],
+    success: "Exact. Les fractions ont été transformées sans changer leur valeur.",
+  },
   fractions: {
     level: "sixieme",
     skills: [
@@ -50,6 +80,27 @@ const PROFILES = {
     ],
     success: "Exact. L’interprétation de la fonction affine est cohérente.",
   },
+  "nombres-calculs-seconde": {
+    level: "seconde",
+    skills: [
+      [/appartient.*intervalle/i, "Teste séparément chaque condition imposée par les bornes.", "Vérifie la valeur par rapport à la borne gauche puis à la borne droite, en respectant les crochets ouverts ou fermés."],
+      [/encadrement/i, "Applique l’opération aux deux bornes en surveillant son sens.", "Pour une addition, additionne les bornes correspondantes ; pour une multiplication, examine les produits possibles avant de retenir le minimum et le maximum."],
+      [/convertir.*intervalle|inégalité.*intervalle/i, "Repère la borne et demande-toi si elle est autorisée.", "Une inégalité large inclut la borne ; une inégalité stricte l’exclut. Traduis ensuite le sens vers la droite ou la gauche."],
+      [/valeur absolue|distance/i, "Une valeur absolue représente une distance, donc elle ne peut pas être négative.", "Traduis |x-a| comme la distance entre x et a sur la droite réelle, puis traite les deux positions possibles si nécessaire."],
+    ],
+    success: "Exact. L’ensemble ou l’intervalle est interprété avec les bonnes bornes.",
+  },
+  "second-degre": {
+    level: "premiere-spe",
+    skills: [
+      [/développement|factorisation/i, "Contrôle les signes avant de regrouper les termes.", "Développe facteur par facteur ou vérifie la factorisation en redéveloppant ; les deux formes doivent représenter le même trinôme."],
+      [/discriminant|nombre de solutions|résolution/i, "Identifie a, b et c sans perdre leur signe.", "Calcule Δ=b²−4ac, puis choisis le cas Δ<0, Δ=0 ou Δ>0 avant d’écrire les racines."],
+      [/forme canonique|formes multiples|détermination/i, "Choisis la forme qui rend visible l’information demandée.", "La forme développée donne les coefficients, la forme canonique le sommet et la forme factorisée les racines."],
+      [/signe|inéquations/i, "Place d’abord les racines dans l’ordre et repère le signe de a.", "Le trinôme est du signe de a à l’extérieur des racines et du signe opposé entre elles."],
+      [/modélisation/i, "Traduis d’abord la grandeur étudiée par un trinôme.", "Choisis ensuite la forme adaptée à la question et vérifie que la solution respecte le domaine concret."],
+    ],
+    success: "Exact. La forme du trinôme et son interprétation sont cohérentes.",
+  },
   "derivation-premiere-spe": {
     level: "premiere-spe",
     skills: [
@@ -82,6 +133,17 @@ const PROFILES = {
     ],
     success: "Exact. Le modèle statistique est calculé et interprété dans son contexte.",
   },
+  "reviser-les-bases-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/calcule .*% de/i, "Repère la quantité de référence : c’est elle qui représente 100 %.", "Écris le pourcentage sous forme décimale puis multiplie-le par la quantité de référence."],
+      [/coefficient multiplicateur/i, "Un taux et un coefficient multiplicateur ne s’écrivent pas de la même façon.", "Pour une hausse, utilise 1+t ; pour une baisse, 1−t, avec t écrit sous forme décimale."],
+      [/valeur finale/i, "Commence par identifier la valeur initiale et le sens de l’évolution.", "Construis le coefficient multiplicateur adapté, puis multiplie la valeur initiale par ce coefficient."],
+      [/taux d'évolution global|augmente.*puis.*diminue/i, "Deux évolutions successives ne s’additionnent pas.", "Transforme chaque taux en coefficient multiplicateur, multiplie les coefficients, puis reconvertis le coefficient global en taux."],
+      [/revenir exactement.*valeur initiale/i, "Le taux opposé ne ramène généralement pas à la valeur initiale.", "Prends l’inverse du premier coefficient multiplicateur, puis transforme ce coefficient réciproque en taux."],
+    ],
+    success: "Exact. Le pourcentage est appliqué à la bonne valeur de référence.",
+  },
   "calcul-integral-terminale-spe": {
     level: "terminale-spe",
     skills: [
@@ -93,6 +155,17 @@ const PROFILES = {
     ],
     success: "Exact. La propriété d’intégration est utilisée avec ses hypothèses.",
   },
+  "suites-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/limites/i, "Identifie d’abord la famille de la suite et le terme dominant.", "Applique la limite de référence avec ses hypothèses ; en cas de forme indéterminée, transforme l’expression avant de conclure."],
+      [/théorèmes de convergence|comparaison|gendarmes/i, "Quel encadrement ou quelle monotonie est réellement démontré ?", "Énonce les hypothèses du théorème choisi, vérifie-les une par une, puis seulement conclus sur la limite."],
+      [/arithmético-géométriques/i, "Cherche le point fixe avant de transformer la suite.", "Définis une suite auxiliaire centrée sur le point fixe, montre qu’elle est géométrique, puis reviens à la suite initiale."],
+      [/sachant que.*calcule.*u_|calcule.*u_\{?n\+1/i, "Utilise seulement la relation donnée avec la valeur connue de uₙ.", "Remplace uₙ par sa valeur dans la relation de récurrence, puis effectue le calcul numérique ; aucune preuve par récurrence n’est nécessaire ici."],
+      [/raisonnement par récurrence/i, "Distingue la propriété P(n), son initialisation et l’étape d’hérédité.", "Vérifie P au rang initial ; suppose P(n) vraie, démontre P(n+1), puis conclus explicitement pour tout entier du domaine."],
+    ],
+    success: "Exact. Le raisonnement sur la suite utilise les hypothèses nécessaires.",
+  },
   "statistiques-deux-variables-terminale-techno": {
     level: "terminale-techno",
     skills: [
@@ -102,7 +175,44 @@ const PROFILES = {
     ],
     success: "Exact. Tu distingues correctement les données transformées, le modèle et son interprétation.",
   },
+  "reviser-les-bases-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/augmente.*coefficient multiplicateur/i, "Traduis le taux en écriture décimale avant de construire le coefficient.", "Pour une hausse de t %, le coefficient multiplicateur vaut 1+t/100 ; contrôle qu’il est supérieur à 1."],
+      [/diminue.*coefficient multiplicateur/i, "Une baisse doit produire un coefficient compris entre 0 et 1.", "Pour une baisse de t %, utilise 1−t/100, puis contrôle le sens économique du résultat."],
+      [/évolutions successives|taux d'évolution global/i, "Évalue chaque évolution séparément avant d’interpréter l’ensemble.", "Multiplie les coefficients successifs, puis utilise CM global−1 pour obtenir le taux global et interprète son signe."],
+      [/taux réciproque|revenir exactement/i, "Le retour dépend de la nouvelle base, pas de la valeur initiale.", "Inverse le coefficient de la première évolution, puis traduis ce coefficient réciproque en taux."],
+      [/coefficient multiplicateur/i, "Distingue le taux, le coefficient et la valeur obtenue.", "Construis le coefficient à partir du taux et contrôle s’il est cohérent avec une hausse ou une baisse."],
+    ],
+    success: "Exact. Le coefficient traduit correctement le sens de l’évolution.",
+  },
 };
+
+const ANNUAL_SHOWCASE_IDS = [
+  "fractions",
+  "proportionnalite-cinquieme",
+  "triangles-rectangles-quatrieme",
+  "calcul-litteral-troisieme",
+  "fonctions-affines-seconde",
+  "derivation-premiere-spe",
+  "analyse-information-chiffree-premiere-non-spe",
+  "statistiques-deux-variables-premiere-techno",
+  "calcul-integral-terminale-spe",
+  "statistiques-deux-variables-terminale-techno",
+];
+
+const BACK_TO_SCHOOL_SHOWCASE_IDS = [
+  "nombres-decimaux",
+  "operations-sur-les-nombres",
+  "addition-soustraction-rationnels",
+  "calcul-litteral-troisieme",
+  "nombres-calculs-seconde",
+  "second-degre",
+  "analyse-information-chiffree-premiere-non-spe",
+  "reviser-les-bases-premiere-techno",
+  "suites-terminale-spe",
+  "reviser-les-bases-terminale-techno",
+];
 
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
@@ -131,8 +241,14 @@ export function correctWowMessage(exercise, recovered = false) {
   return exercise?.wowSuccess ?? "✓ Exact. Tu peux poursuivre sans revoir toute la correction.";
 }
 
-export const WOW_SHOWCASES = Object.entries(PROFILES).map(([chapterId, profile]) => ({
-  chapterId,
-  levelId: profile.level,
-  diagnosticCount: profile.skills.length,
-}));
+function showcaseRows(ids) {
+  return ids.map((chapterId) => ({
+    chapterId,
+    levelId: PROFILES[chapterId].level,
+    diagnosticCount: PROFILES[chapterId].skills.length,
+  }));
+}
+
+export const WOW_SHOWCASES = showcaseRows(ANNUAL_SHOWCASE_IDS);
+
+export const BACK_TO_SCHOOL_SHOWCASES = showcaseRows(BACK_TO_SCHOOL_SHOWCASE_IDS);

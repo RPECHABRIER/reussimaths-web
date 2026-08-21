@@ -268,9 +268,48 @@ function genEvolutionValeurNumeric() {
   };
 }
 
+// ---------- 12. Évolutions successives ----------
+function genEvolutionsSuccessivesNumeric() {
+  const hausse = pick([5, 10, 15, 20, 25]);
+  const baisse = pick([5, 10, 15, 20]);
+  const coefficientGlobal = (1 + hausse / 100) * (1 - baisse / 100);
+  const answer = roundTo((coefficientGlobal - 1) * 100, 2);
+  return {
+    type: "numeric",
+    chapter: "Réviser les bases (Première techno) — Proportionnalité",
+    prompt: `Une valeur augmente de ${hausse} %, puis diminue de ${baisse} %. Calcule son taux d'évolution global, en % (arrondi au centième).`,
+    answer,
+    tolerance: 0.02,
+    steps: [
+      { type: "regle", text: "Pour enchaîner deux évolutions, on multiplie leurs coefficients multiplicateurs ; on n'additionne pas les taux." },
+      { type: "calcul", text: `CM_{global} = (1 + ${hausse}/100)(1 - ${baisse}/100) = ${fr(roundTo(coefficientGlobal, 4))}` },
+      { type: "resultat", text: `t = (${fr(roundTo(coefficientGlobal, 4))} - 1) \\times 100 = ${fr(answer)}\\%` },
+    ],
+  };
+}
+
+// ---------- 13. Taux réciproque ----------
+function genTauxReciproqueNumeric() {
+  const hausse = pick([5, 10, 20, 25, 40, 50]);
+  const coefficientRetour = 1 / (1 + hausse / 100);
+  const answer = roundTo((1 - coefficientRetour) * 100, 2);
+  return {
+    type: "numeric",
+    chapter: "Réviser les bases (Première techno) — Proportionnalité",
+    prompt: `Après une hausse de ${hausse} %, quel pourcentage de baisse permet de revenir exactement à la valeur initiale ? (Arrondis au centième.)`,
+    answer,
+    tolerance: 0.02,
+    steps: [
+      { type: "regle", text: "L'évolution réciproque utilise l'inverse du coefficient multiplicateur, pas le taux opposé." },
+      { type: "calcul", text: `CM_{retour} = 1 \\div (1 + ${hausse}/100) \\approx ${fr(roundTo(coefficientRetour, 4))}` },
+      { type: "resultat", text: `\\text{Baisse réciproque} \\approx ${fr(answer)}\\%` },
+    ],
+  };
+}
+
 // =========================== Lecture de tableaux et diagrammes ===========================
 
-// ---------- 12. Moyenne pondérée simple ----------
+// ---------- 14. Moyenne pondérée simple ----------
 function genMoyennePondereeNumeric() {
   const n1 = pick([15, 18, 20, 25]);
   const note1 = randInt(4, 18);
@@ -291,7 +330,7 @@ function genMoyennePondereeNumeric() {
   };
 }
 
-// ---------- 13. Lecture d'un tableau croisé (effectif) ----------
+// ---------- 15. Lecture d'un tableau croisé (effectif) ----------
 function genLectureTableauCroiseNumeric() {
   const a = randInt(30, 120);
   const b = randInt(30, 120);
@@ -322,6 +361,8 @@ const GENERATORS = [
   genPourcentageDuneQuantiteNumeric,
   genCoefficientMultiplicateurNumeric,
   genEvolutionValeurNumeric,
+  genEvolutionsSuccessivesNumeric,
+  genTauxReciproqueNumeric,
   genMoyennePondereeNumeric,
   genLectureTableauCroiseNumeric,
 ];

@@ -39,7 +39,44 @@ function genCoefficientMultiplicateurNumeric() {
   };
 }
 
-// ---------- 2. Terme d'une suite arithmétique ----------
+// ---------- 2. Évolutions successives dans un contexte ----------
+function genEvolutionsSuccessivesNumeric() {
+  const hausse = pick([4, 8, 12, 15, 20]);
+  const baisse = pick([3, 5, 10, 15]);
+  const coefficientGlobal = (1 + hausse / 100) * (1 - baisse / 100);
+  const answer = roundTo((coefficientGlobal - 1) * 100, 2);
+  return {
+    type: "numeric",
+    chapter: "Réviser les bases (Terminale techno) — Évolutions successives",
+    prompt: `Le chiffre d'affaires d'une entreprise augmente de ${hausse} %, puis diminue de ${baisse} %. Détermine le taux d'évolution global, en % (arrondi au centième).`,
+    answer,
+    tolerance: 0.02,
+    steps: [
+      { type: "calcul", text: `CM_{global} = (1 + ${hausse}/100)(1 - ${baisse}/100) = ${fr(roundTo(coefficientGlobal, 4))}` },
+      { type: "resultat", text: `t_{global} = (CM_{global} - 1) \\times 100 = ${fr(answer)}\\%` },
+    ],
+  };
+}
+
+// ---------- 3. Taux réciproque ----------
+function genTauxReciproqueNumeric() {
+  const baisse = pick([5, 10, 15, 20, 25, 40]);
+  const coefficientRetour = 1 / (1 - baisse / 100);
+  const answer = roundTo((coefficientRetour - 1) * 100, 2);
+  return {
+    type: "numeric",
+    chapter: "Réviser les bases (Terminale techno) — Taux réciproque",
+    prompt: `Une valeur a baissé de ${baisse} %. Quel taux d'augmentation permet de revenir exactement à la valeur initiale ? (Arrondis au centième.)`,
+    answer,
+    tolerance: 0.02,
+    steps: [
+      { type: "calcul", text: `CM_{retour} = 1 \\div (1 - ${baisse}/100) \\approx ${fr(roundTo(coefficientRetour, 4))}` },
+      { type: "resultat", text: `t_{retour} = (CM_{retour} - 1) \\times 100 \\approx ${fr(answer)}\\%` },
+    ],
+  };
+}
+
+// ---------- 4. Terme d'une suite arithmétique ----------
 function genTermeArithmetiqueNumeric() {
   const u0 = randInt(-20, 20);
   const r = nonZero(-8, 8);
@@ -170,6 +207,8 @@ function genEsperanceSimpleNumeric() {
 
 const GENERATORS = [
   genCoefficientMultiplicateurNumeric,
+  genEvolutionsSuccessivesNumeric,
+  genTauxReciproqueNumeric,
   genTermeArithmetiqueNumeric,
   genTermeGeometriqueNumeric,
   genPuissanceNumeric,

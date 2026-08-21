@@ -225,6 +225,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const startedExerciseRef = useRef(null);
   const completedExerciseRef = useRef(null);
   const sessionCorrectExercisesRef = useRef(new WeakSet());
+  const recoveryOpportunityTrackedRef = useRef(new WeakSet());
   const assistanceUsedRef = useRef(false);
   const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
   const lastAttemptRef = useRef(null);
@@ -422,6 +423,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const practiceSimilar = () => {
     if (!similarExercise) return;
     const skill = exercise.chapter;
+    if (!recoveryOpportunityTrackedRef.current.has(similarExercise)) {
+      recoveryOpportunityTrackedRef.current.add(similarExercise);
+      trackProductEvent("recovery_opportunity", {
+        levelId: chapter.meta.level,
+        chapterId: chapter.meta.id,
+        skill,
+        mode,
+      });
+    }
     setExercise(prepareWowExercise(chapter, similarExercise));
     setInput("");
     setSelectedOption(null);

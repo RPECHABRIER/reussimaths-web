@@ -121,6 +121,15 @@ test("le moteur conserve retry, question analogue, recovery et progression factu
   assert.match(runner, /attemptsOnExercise <= exercise\.hints\.length/);
   assert.match(runner, /practiceSimilar/);
   assert.match(runner, /trackProductEvent\("recovery_success"/);
+  assert.match(runner, /trackProductEvent\("recovery_opportunity"/);
+  assert.match(runner, /recoveryOpportunityTrackedRef\.current\.has\(similarExercise\)/);
+  assert.match(runner, /recoveryOpportunityTrackedRef\.current\.add\(similarExercise\)/);
+  const opportunityPayload = runner.match(/trackProductEvent\("recovery_opportunity", \{([\s\S]*?)\n\s*\}\);/)?.[1] ?? "";
+  assert.match(opportunityPayload, /levelId/);
+  assert.match(opportunityPayload, /chapterId/);
+  assert.match(opportunityPayload, /skill/);
+  assert.match(opportunityPayload, /mode/);
+  assert.doesNotMatch(opportunityPayload, /response|input|email|user|url/i);
   assert.match(runner, /correctWowMessage\(exercise, feedback\.recovered\)/);
   assert.match(runner, /quotaApplies && firstResponseForExercise/);
   assert.match(runner, /assistanceUsedRef\.current = true/);

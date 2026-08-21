@@ -5,9 +5,9 @@ import { getPageViewProperties } from "../src/lib/productAnalytics.js";
 
 const anonymousId = "b3b2de42-2e6a-4dcc-8d8f-d4ac93872b31";
 
-test("recovery_success et les événements du lot A sont acceptés", () => {
+test("les événements de récupération et du lot A sont acceptés", () => {
   for (const eventName of [
-    "recovery_success", "exercise_started", "exercise_completed", "paywall_viewed",
+    "recovery_opportunity", "recovery_success", "exercise_started", "exercise_completed", "paywall_viewed",
     "subscription_activated", "pack_examen_activated",
   ]) assert.equal(isAcceptedProductEvent(eventName, anonymousId), true, eventName);
 });

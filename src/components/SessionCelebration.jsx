@@ -11,7 +11,7 @@ function progressMessage(ratio) {
   return "Tu as identifié ce qu’il faut retravailler. C’est une information utile : RéussiMaths va maintenant cibler ce point.";
 }
 
-export default function SessionCelebration({ chapterTitle, correct, total, discoverySignup, levelId, onContinue }) {
+export default function SessionCelebration({ chapterTitle, correct, total, skillStats = {}, discoverySignup, levelId, onContinue }) {
   const ratio = total > 0 ? correct / total : 0;
   const percent = Math.round(ratio * 100);
   const path = [
@@ -20,6 +20,12 @@ export default function SessionCelebration({ chapterTitle, correct, total, disco
     { label: "Consolider", done: false },
     { label: "Maîtrisé", done: false },
   ];
+  const skillRows = Object.entries(skillStats);
+  const mastered = skillRows.filter(([, stats]) => stats.autonomousCorrect > 0).map(([skill]) => skill);
+  const reinforce = skillRows
+    .filter(([, stats]) => stats.correct < stats.attempts && stats.autonomousCorrect === 0)
+    .map(([skill]) => skill);
+  const nextPriority = reinforce[0] ?? skillRows.find(([, stats]) => stats.autonomousCorrect === 0)?.[0] ?? null;
   return (
     <div className="w-full max-w-lg rounded-[2rem] p-5 text-center sm:p-7" style={{background:colors.card,boxShadow:shadow.floating}}>
       <div className="mx-auto h-20 w-20"><Mascot size={80} motion="celebrate" style={{boxShadow:shadow.soft}}/></div>
@@ -36,6 +42,12 @@ export default function SessionCelebration({ chapterTitle, correct, total, disco
         <div className="mb-3 flex items-center justify-between"><p className="text-xs font-black" style={{color:colors.ink}}>Ton chemin de maîtrise</p><span className="flex items-center gap-1 text-[10px] font-bold" style={{color:colors.gold}}><CalendarClock size={12}/> prochaine révision programmée</span></div>
         <ProgressPath steps={path} activeIndex={ratio >= .5 ? 2 : 1} compact />
       </div>
+
+      {skillRows.length > 0 && <div className="mt-4 grid gap-2 text-left text-xs">
+        <div className="rounded-2xl p-3" style={{background:`${colors.green}0d`}}><p className="font-black" style={{color:colors.green}}>Bien maîtrisé</p><p className="mt-1" style={{color:colors.slate}}>{mastered.length ? mastered.join(" · ") : "Pas encore de réussite autonome confirmée."}</p></div>
+        <div className="rounded-2xl p-3" style={{background:`${colors.gold}0d`}}><p className="font-black" style={{color:colors.ink}}>À renforcer</p><p className="mt-1" style={{color:colors.slate}}>{reinforce.length ? reinforce.join(" · ") : "Aucune difficulté repérée dans cette courte série."}</p></div>
+        <div className="rounded-2xl p-3" style={{background:colors.bg}}><p className="font-black" style={{color:colors.ink}}>Prochaine priorité</p><p className="mt-1" style={{color:colors.slate}}>{nextPriority ?? "Consolider cette réussite lors d’une prochaine séance."}</p></div>
+      </div>}
 
       {discoverySignup ? <>
         <div className="mt-4 grid grid-cols-2 gap-2 text-left"><div className="rounded-2xl p-3" style={{background:`${colors.green}0d`}}><BarChart3 size={16} color={colors.green}/><p className="mt-1.5 text-xs font-black" style={{color:colors.ink}}>Garde ce progrès</p><p className="mt-0.5 text-[10px]" style={{color:colors.slate}}>Retrouve ta priorité et tes corrections.</p></div><div className="rounded-2xl p-3" style={{background:`${colors.gold}0d`}}><UserPlus size={16} color={colors.gold}/><p className="mt-1.5 text-xs font-black" style={{color:colors.ink}}>Espace gratuit</p><p className="mt-0.5 text-[10px]" style={{color:colors.slate}}>Un pseudo suffit, sans afficher ton nom.</p></div></div>

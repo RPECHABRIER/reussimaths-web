@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowRight, BookOpenCheck, Check, CircleHelp, History } from "lucide-react";
+import { ArrowRight, BookOpenCheck, Check, CircleHelp, History, Sparkles } from "lucide-react";
 import { getChaptersByLevel } from "../chapters/registry";
 import { getLevel } from "../levels";
 import { useAuth } from "../hooks/useAuth";
@@ -10,6 +10,7 @@ import { setDiagnosticProfile } from "../lib/diagnosticProfile";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import Mascot from "../components/Mascot";
+import { getRecommendedStartingChapter } from "../lib/recommendedStartingChapters";
 
 export default function ClassProgramme() {
   const { levelId } = useParams();
@@ -18,10 +19,12 @@ export default function ClassProgramme() {
   const { user } = useAuth();
   const trial = searchParams.get("objectif") === "essai";
   const level = getLevel(levelId);
+  const allChapters = useMemo(() => getChaptersByLevel(levelId), [levelId]);
   const chapters = useMemo(
-    () => getChaptersByLevel(levelId).filter((chapter) => !chapter.meta.free && !chapter.meta.freemiumDaily),
-    [levelId],
+    () => allChapters.filter((chapter) => !chapter.meta.free && !chapter.meta.freemiumDaily),
+    [allChapters],
   );
+  const recommended = useMemo(() => getRecommendedStartingChapter(levelId, allChapters), [levelId, allChapters]);
   const [selections, setSelections] = useState(() => getStudyProgramme(levelId));
   const [syncing, setSyncing] = useState(false);
   const accent = cycleColors[level?.cycle]?.accent ?? colors.gold;
@@ -57,8 +60,8 @@ export default function ClassProgramme() {
     });
   };
 
-  const continueToDiagnostic = async (unknown = false) => {
-    const chosen = unknown ? {} : selections;
+  const continueToDiagnostic = async (unknown = false, explicitSelection = null) => {
+    const chosen = unknown ? {} : (explicitSelection ?? selections);
     setStudyProgramme(levelId, chosen);
     trackProductEvent("study_topics_selected", { levelId, count: Object.keys(chosen).length, unknown, trial });
     if (user?.id) {
@@ -80,11 +83,30 @@ export default function ClassProgramme() {
           <Mascot size={64} motion="float" className="mx-auto" />
           <p className="text-xs uppercase tracking-widest font-bold mt-4" style={{ color: accent }}>Programme de {level.label}</p>
           <h1 className="mt-2" style={{ fontFamily: fonts.display, color: "white", fontSize: "clamp(1.9rem, 6vw, 2.8rem)", fontWeight: 900, letterSpacing: "-0.035em", lineHeight: 1.05 }}>Où en es-tu en classe ?</h1>
-          <p className="text-sm sm:text-base mt-3 max-w-xl mx-auto" style={{ color: "#d9e1f0" }}>Choisis les chapitres qui te concernent. RéussiMaths construira ensuite un diagnostic court, puis ton parcours.</p>
+          <p className="text-sm sm:text-base mt-3 max-w-xl mx-auto" style={{ color: "#d9e1f0" }}>Choisis ce que tu fais en classe. Ensuite, 5 questions rapides permettront de te proposer un premier entraînement adapté.</p>
           <div className="mt-5 grid grid-cols-3 gap-2" aria-label="Les trois étapes de personnalisation">
-            {["1. Chapitres", "2. Diagnostic", "3. Parcours"].map((step, i) => <div key={step} className="rounded-xl px-2 py-2 text-[10px] sm:text-xs font-bold" style={{ background: i === 0 ? `${accent}30` : "rgba(255,255,255,.08)", color: i === 0 ? "white" : "#c7d1e3", border: `1px solid ${i === 0 ? `${accent}70` : "rgba(255,255,255,.1)"}` }}>{step}</div>)}
+            {["1. Ce que tu fais", "2. 5 questions", "3. Première série"].map((step, i) => <div key={step} className="rounded-xl px-2 py-2 text-[10px] sm:text-xs font-bold" style={{ background: i === 0 ? `${accent}30` : "rgba(255,255,255,.08)", color: i === 0 ? "white" : "#c7d1e3", border: `1px solid ${i === 0 ? `${accent}70` : "rgba(255,255,255,.1)"}` }}>{step}</div>)}
           </div>
         </header>
+
+        {recommended && (
+          <section className="mb-7 rounded-3xl p-5 sm:p-6" style={{ background: `linear-gradient(135deg, ${accent}1f, ${colors.card} 68%)`, border: `2px solid ${accent}55`, boxShadow: shadow.raised }}>
+            <p className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest font-black" style={{ color: accent }}><Sparkles size={14} /> Recommandé pour commencer</p>
+            <h2 className="text-xl sm:text-2xl font-black mt-2" style={{ color: colors.ink }}>{recommended.chapter.meta.title}</h2>
+            <p className="text-sm mt-2 leading-relaxed max-w-xl" style={{ color: colors.slate }}>{recommended.description}</p>
+            <button
+              type="button"
+              disabled={syncing}
+              onClick={() => continueToDiagnostic(false, { [recommended.chapterId]: STUDY_STATUSES.CURRENT })}
+              className="mt-5 w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-black transition-transform active:scale-[0.98]"
+              style={{ backgroundColor: colors.ink, color: colors.bg, opacity: syncing ? 0.65 : 1 }}
+            >
+              {syncing ? "Enregistrement…" : "Commencer avec ce chapitre"} <ArrowRight size={16} />
+            </button>
+          </section>
+        )}
+
+        <h2 className="text-lg font-black mb-3" style={{ color: colors.ink }}>Tous les chapitres</h2>
 
         <div className="grid gap-3">
           {chapters.map((chapter) => {
@@ -101,7 +123,7 @@ export default function ClassProgramme() {
           })}
         </div>
 
-        <div className="sticky bottom-3 mt-6 rounded-3xl p-4 sm:p-5" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
+        <div className={`${count > 0 ? "sticky bottom-3" : ""} mt-6 rounded-3xl p-4 sm:p-5`} style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
           <button disabled={count === 0 || syncing} onClick={() => continueToDiagnostic(false)} className="w-full py-3.5 rounded-full font-bold flex items-center justify-center gap-2" style={{ backgroundColor: colors.ink, color: colors.bg, opacity: count ? 1 : 0.45 }}>{syncing ? "Enregistrement…" : `Continuer avec ${count} chapitre${count > 1 ? "s" : ""}`} <ArrowRight size={16} /></button>
           <button disabled={syncing} onClick={() => continueToDiagnostic(true)} className="w-full mt-2 py-2 text-xs font-semibold inline-flex items-center justify-center gap-1.5" style={{ color: colors.slate }}><CircleHelp size={14} /> Je ne sais pas encore — tester mes acquis précédents</button>
           <p className="text-[11px] text-center mt-1 flex items-center justify-center gap-1" style={{ color: colors.slate }}><History size={12} /> Tu pourras modifier ces choix à tout moment.</p>

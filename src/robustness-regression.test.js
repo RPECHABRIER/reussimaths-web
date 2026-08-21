@@ -391,7 +391,7 @@ test("tous les accès à l'essai commencent au niveau choisi, au programme puis 
     read("./lib/prerequisites.js"),
     read("./parcours.js"),
   ]);
-  assert.match(home, /Commencer gratuitement/);
+  assert.match(home, /Choisir mon niveau et commencer/);
   assert.doesNotMatch(home, /code pilote/);
   assert.doesNotMatch(home, /to="\/parcours\/decouverte"/);
   assert.doesNotMatch(teacher, /to="\/parcours\/decouverte"/);

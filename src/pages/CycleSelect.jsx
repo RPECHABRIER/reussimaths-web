@@ -6,7 +6,6 @@ import {
   Brain,
   Gamepad2,
   Flame,
-  Presentation,
   ArrowRight,
   CheckCircle2,
   Target,
@@ -39,9 +38,7 @@ import { getEffectiveSubscription, isFullAccessSubscription } from "../lib/acces
 //
 // Chaque cycle a sa propre couleur d'accent (voir cycleColors dans theme.js)
 // pour bien différencier collège et lycée dès le premier écran, tout en
-// gardant la base marine/or de la marque. L'accès enseignant, auparavant en
-// tout petit tout en bas de page (quasi invisible), est remonté ici en badge
-// bien visible sous l'accroche.
+// gardant la base marine/or de la marque.
 const ICONS = { college: School, lycee: GraduationCap };
 
 export default function CycleSelect() {
@@ -63,7 +60,7 @@ export default function CycleSelect() {
   const todayMentalScore = mentalSummary?.days?.at(-1)?.score ?? null;
   const hasStreak = streak?.current_streak > 0;
   const nextAction = !user
-    ? { to: "/niveaux?objectif=essai", title: "Commencer gratuitement", detail: "Choisis ton niveau, puis fais un diagnostic court et une série adaptée" }
+    ? { to: "/niveaux?objectif=essai", title: "Choisir mon niveau et commencer", detail: null }
     : dueCount > 0
     ? { to: "/reviser", title: "Mes révisions du jour", detail: `${dueCount} compétence${dueCount > 1 ? "s" : ""} à consolider maintenant` }
     : journeyLevel
@@ -99,7 +96,7 @@ export default function CycleSelect() {
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full" style={{ backgroundColor: `${colors.gold}18` }}>
                 <Sparkles size={13} color={colors.gold} />
-                <p className="text-xs font-bold" style={{ color: colors.gold }}>Maths collège & lycée · Programmes 2026</p>
+                <p className="text-xs font-bold" style={{ color: colors.gold }}>Maths de la 6e à la Terminale</p>
               </div>
 
               <h1
@@ -113,11 +110,10 @@ export default function CycleSelect() {
                   letterSpacing: "-0.045em",
                 }}
               >
-                Travaille ce qu’il faut. <span style={{ color: colors.gold }}>Vois tes progrès.</span>
+                Entraîne-toi sur ce que tu fais en classe.
               </h1>
               <p className="text-base sm:text-lg mt-5 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: colors.slate }}>
-                RéussiMaths transforme 15 minutes d’entraînement en prochaine action claire : diagnostic, exercices ciblés,
-                correction détaillée et révisions au bon moment.
+                RéussiMaths comprend tes erreurs, t’aide étape par étape et vérifie que tu sais ensuite réussir seul.
               </p>
 
               <div className="mt-7 max-w-lg mx-auto lg:mx-0">
@@ -128,17 +124,10 @@ export default function CycleSelect() {
                 >
                   {nextAction.title} <ArrowRight size={17} />
                 </Link>
-                <p className="text-xs mt-2.5 text-center" style={{ color: colors.slate }}>{nextAction.detail}</p>
-                <Link
-                  to="/enseignant"
-                  className="inline-flex items-center justify-center gap-1.5 mt-4 text-sm font-bold"
-                  style={{ color: colors.ink }}
-                >
-                  <Presentation size={16} /> Enseignant ? Ouvrir le rituel gratuit
-                </Link>
+                {nextAction.detail && <p className="text-xs mt-2.5 text-center" style={{ color: colors.slate }}>{nextAction.detail}</p>}
               </div>
               <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mt-4 text-xs" style={{ color: colors.slate }}>
-                {["Première série gratuite", "Sans carte bancaire", "Corrections détaillées"].map((item) => (
+                {["Première série gratuite", "Sans carte bancaire", "Corrections expliquées"].map((item) => (
                   <span key={item} className="inline-flex items-center gap-1.5"><CheckCircle2 size={13} color={colors.green} />{item}</span>
                 ))}
               </div>

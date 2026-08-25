@@ -5,6 +5,7 @@ import {
   BACK_TO_SCHOOL_SHOWCASES,
   correctWowMessage,
   PEDAGOGY_GENERALIZATION_LOT_1,
+  PEDAGOGY_GENERALIZATION_LOT_2,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -46,6 +47,26 @@ const CHAPTER_FILES = {
   "automatismes-premiere-techno": "automatismes-premiere-techno",
   "reviser-les-bases-terminale-spe": "reviser-les-bases-terminale-spe",
   "suites-terminale-techno": "suites-terminale-techno",
+  "grandeurs-mesures": "grandeurs-mesures",
+  "distances-symetries": "distances-symetries",
+  angles: "angles",
+  puissances: "puissances",
+  "calcul-litteral": "calcul-litteral",
+  "nombres-relatifs": "nombres-relatifs",
+  "multiplication-division-rationnels": "multiplication-division-rationnels",
+  "puissances-quatrieme": "puissances-quatrieme",
+  "calcul-litteral-quatrieme": "calcul-litteral-quatrieme",
+  "automatismes-troisieme": "automatismes-troisieme",
+  "calcul-numerique-troisieme": "calcul-numerique-troisieme",
+  "equations-troisieme": "equations-troisieme",
+  "automatismes-seconde": "automatismes-seconde",
+  "variations-fonctions-seconde": "variations-fonctions-seconde",
+  "automatismes-premiere-spe": "automatismes-premiere-spe",
+  "suites-numeriques-premiere-spe": "suites-numeriques-premiere-spe",
+  "automatismes-premiere-non-spe": "automatismes-premiere-non-spe",
+  "suites-numeriques-premiere-techno": "suites-numeriques-premiere-techno",
+  "automatismes-terminale-spe": "automatismes-terminale-spe",
+  "fonctions-exponentielles-terminale-techno": "fonctions-exponentielles-terminale-techno",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -91,6 +112,45 @@ test("vingt générations par chapitre du lot 1 conservent la réponse et reçoi
     }
     assert.equal(targeted, 20, `${chapterRow.chapterId}: seulement ${targeted}/20 générations ciblées`);
   }
+});
+
+test("le lot 2 contient exactement les vingt chapitres validés avec 3 à 6 familles fiables", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_2.length, 20);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_2) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 2 préservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_2) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("la somme des n premiers entiers reçoit une aide dédiée sans faux vocabulaire de suite", async () => {
+  const { default: chapter } = await import("../src/chapters/suites-numeriques-premiere-spe.js");
+  let checked = 0;
+  for (let draw = 0; draw < 5000 && checked < 20; draw += 1) {
+    const original = chapter.generate();
+    if (!/Somme des n premiers entiers/i.test(original.chapter)) continue;
+    const prepared = prepareWowExercise(chapter, original);
+    const guidance = `${prepared.hints.join(" ")} ${prepared.feedback.default}`;
+    assert.match(guidance, /n\(n\+1\)\/2/);
+    assert.doesNotMatch(guidance, /raison|terme général|récurrence|rang initial/i);
+    checked += 1;
+  }
+  assert.equal(checked, 20);
 });
 
 test("un ancien chapitre hors profils conserve exactement son exercice", async () => {

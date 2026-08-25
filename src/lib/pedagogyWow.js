@@ -410,6 +410,101 @@ const PROFILES = {
     ],
     success: "Exact. Le logarithme est utilisé sur son domaine avec la bonne propriété.",
   },
+  proportionnalite: {
+    level: "sixieme",
+    skills: [
+      [/quatrième proportionnelle|coefficient de proportionnalité|compléter un tableau/i, "Cherche ce qui relie les deux grandeurs.", "Trouve le multiplicateur constant ou passe par la valeur pour une unité, puis complète avec la même relation."],
+      [/reconnaître un tableau|identifier une situation/i, "Compare plusieurs couples de valeurs.", "Vérifie qu’un même multiplicateur relie toujours les deux grandeurs ; un seul couple ne suffit pas."],
+      [/pourcentage|remises/i, "Repère la quantité qui représente le tout.", "Prends cette quantité comme 100 %, calcule la part demandée, puis ajoute ou retire seulement si la situation le demande."],
+      [/échelles|recettes|consommation|peinture|partage|meilleur prix/i, "Commence par donner du sens à une unité.", "Passe à l’unité ou utilise la relation multiplicative du contexte, puis reviens à la quantité demandée avec les bonnes unités."],
+      [/comparer deux proportions|pourcentage inverse/i, "Quelle grandeur sert de référence dans chaque rapport ?", "Écris chaque proportion avec son propre total, puis compare ou retrouve la valeur de départ sans appliquer une règle automatique."],
+    ],
+    success: "Exact. Les deux grandeurs sont reliées par la même relation.",
+  },
+  triangles: {
+    level: "cinquieme",
+    skills: [
+      [/triangles — angles/i, "Dans un triangle, les trois angles forment 180°.", "Additionne les angles connus, puis retire cette somme à 180° en tenant compte des codages."],
+      [/isocèle/i, "Repère les deux côtés ou les deux angles codés égaux.", "Dans un triangle isocèle, les angles à la base sont égaux ; utilise cette propriété avec la somme de 180°."],
+      [/médiatrices|cercle circonscrit/i, "Observe quel point est à égale distance des sommets.", "La médiatrice d’un côté regroupe les points équidistants de ses extrémités ; leur intersection est le centre du cercle circonscrit."],
+      [/hauteurs|médianes/i, "Repère le côté ou le milieu visé par la droite.", "Une hauteur est perpendiculaire au côté opposé ; une médiane relie un sommet au milieu du côté opposé."],
+      [/aire|figures composées/i, "Choisis une base et la hauteur qui lui est perpendiculaire.", "Utilise base×hauteur÷2 pour un triangle, puis découpe ou additionne les figures sans compter deux fois une zone."],
+      [/culture mathématique/i, "Lis les propriétés et les codages avant de nommer la figure.", "Relie le vocabulaire aux côtés, aux angles et aux droites réellement indiqués."],
+    ],
+    success: "Exact. La propriété utilisée correspond aux codages de la figure.",
+  },
+  "proportionnalite-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/ratios/i, "Identifie les deux quantités et leur ordre dans le rapport.", "Simplifie le ratio ou exprime chaque part par rapport au même total, puis interprète-le dans le contexte."],
+      [/évolutions en pourcentage/i, "Distingue le taux du coefficient multiplicateur.", "Traduis chaque taux par 1+t ou 1−t ; pour plusieurs évolutions, multiplie les coefficients plutôt que d’additionner les taux."],
+      [/coefficient réciproque|revenir/i, "Le retour se calcule à partir de la nouvelle valeur.", "Inverse le coefficient de l’évolution initiale, puis transforme ce coefficient réciproque en taux."],
+      [/proportionnalité|appliquer/i, "Choisis la relation adaptée au contexte.", "Utilise passage à l’unité, coefficient ou linéarité selon les données, puis contrôle les unités et l’ordre de grandeur."],
+    ],
+    success: "Exact. Le rapport ou le coefficient traduit correctement la situation.",
+  },
+  "statistiques-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/paramètres statistiques/i, "Vérifie d’abord quelles données doivent intervenir.", "Range la série si nécessaire, tiens compte des effectifs, puis calcule uniquement l’indicateur demandé : moyenne, médiane ou étendue."],
+      [/représentations graphiques/i, "Lis les axes, les classes et les graduations.", "Relie chaque hauteur, secteur ou point à son effectif ou sa fréquence, avec le bon total de référence."],
+      [/comparer deux séries|tableau à classes|diagramme circulaire/i, "Choisis les mêmes indicateurs pour les deux séries.", "Calcule ou lis chaque indicateur avec sa population, puis formule une comparaison limitée à ce qu’il permet d’affirmer."],
+    ],
+    success: "Exact. L’indicateur statistique utilise les données pertinentes.",
+  },
+  "vecteurs-seconde": {
+    level: "seconde",
+    skills: [
+      [/coordonnées d'un vecteur|vecteurs définis par des points/i, "Respecte l’ordre origine puis extrémité.", "Soustrais les coordonnées du point de départ à celles du point d’arrivée, coordonnée par coordonnée."],
+      [/norme d'un vecteur/i, "La norme mesure une longueur, pas une direction.", "À partir des coordonnées, utilise la racine de la somme des carrés et vérifie que le résultat est positif."],
+      [/égalité de vecteurs|translations|direction et sens/i, "Compare les coordonnées et le sens des déplacements.", "Deux vecteurs sont égaux s’ils ont les mêmes coordonnées ; interprète ensuite direction, sens et longueur dans la figure."],
+      [/relation de Chasles|somme de vecteurs|vecteur opposé/i, "Repère les points de départ et d’arrivée.", "Enchaîne les déplacements par un point intermédiaire et simplifie les vecteurs dont les extrémités se suivent."],
+      [/parallélogramme|milieu|équation vectorielle|multiplication|combinaison|propriétés/i, "Choisis une relation vectorielle cohérente avec la figure.", "Traduis-la coordonnée par coordonnée, résous les égalités obtenues puis vérifie le sens géométrique."],
+    ],
+    success: "Exact. Les coordonnées et le sens du vecteur sont cohérents.",
+  },
+  "colinearite-vecteurs-seconde": {
+    level: "seconde",
+    skills: [
+      [/déterminant|reconnaître deux vecteurs colinéaires|propriétés/i, "Compare les directions avec un critère calculable.", "Calcule le déterminant dans un ordre constant ; il doit être nul pour conclure à la colinéarité."],
+      [/coefficient de colinéarité|équation de colinéarité/i, "Cherche un même multiplicateur pour les deux coordonnées.", "Écris une coordonnée comme multiple de l’autre, puis vérifie que le même coefficient convient partout."],
+      [/alignement de points/i, "Construis deux vecteurs à partir d’un même point.", "Vérifie leur colinéarité avec le critère de ton choix, puis seulement conclus sur l’alignement."],
+      [/parallélisme|vecteurs directeurs|axes/i, "Repère les vecteurs qui donnent la direction des droites.", "Compare leurs directions par colinéarité, sans confondre droites parallèles et vecteurs égaux."],
+    ],
+    success: "Exact. La conclusion repose sur un critère de colinéarité vérifié.",
+  },
+  "vecteurs-produit-scalaire-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/calcul avec les coordonnées|vecteurs définis par des points|bilinéarité|symétrie/i, "Identifie la forme du produit scalaire avant de calculer.", "Utilise les coordonnées ou développe par bilinéarité, puis contrôle les signes et la symétrie du produit."],
+      [/norme|cas particulier u·u|développement de normes/i, "Relie le produit d’un vecteur par lui-même à sa norme.", "Utilise u·u=||u||² et développe les normes carrées avant de prendre éventuellement une racine."],
+      [/orthogonalité|triangle rectangle/i, "Quelle égalité permet de vérifier l’angle droit ?", "Calcule le produit scalaire avec les données disponibles ; sa nullité justifie l’orthogonalité, elle ne doit pas être supposée."],
+      [/formule avec le cosinus|calcul d'un angle/i, "Repère les deux normes et l’angle entre les vecteurs.", "Utilise u·v=||u||×||v||×cos(θ), puis contrôle que le cosinus obtenu appartient à [−1;1]."],
+      [/Al-Kashi/i, "Identifie le côté opposé à l’angle étudié.", "Écris la formule d’Al-Kashi avec les trois côtés dans leur rôle correct, puis isole la grandeur cherchée."],
+      [/vrai ou faux/i, "Choisis une propriété vérifiable plutôt qu’une impression géométrique.", "Appuie la réponse sur un calcul de produit scalaire, de norme ou sur un contre-exemple précis."],
+    ],
+    success: "Exact. La formule du produit scalaire est utilisée avec ses hypothèses.",
+  },
+  "croissance-exponentielle-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/suites géométriques/i, "Repère le rang initial et le coefficient entre deux termes.", "Utilise uₙ=uₚ×q^(n−p) avec le rang réellement donné, puis interprète q comme coefficient par période."],
+      [/fonctions exponentielles|modélisation/i, "Identifie la valeur initiale et la durée d’une période.", "Écris valeur initiale×coefficient^(nombre de périodes), puis interprète le résultat dans son unité et son contexte."],
+      [/évolutions successives/i, "Un taux n’est pas encore un coefficient multiplicateur.", "Transforme chaque taux en coefficient, multiplie les coefficients successifs, puis reconvertis seulement le résultat global en taux."],
+      [/taux d'évolution moyen/i, "Le même coefficient doit agir à chaque période.", "Prends la racine correspondant au nombre de périodes du coefficient global, puis retire 1 pour obtenir le taux moyen."],
+    ],
+    success: "Exact. Le modèle exponentiel respecte la valeur initiale et le nombre de périodes.",
+  },
+  "modelisation-quadratique-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/forme canonique et forme développée/i, "Choisis la forme qui rend visible l’information demandée.", "La forme développée donne les coefficients ; la forme canonique donne le sommet. Vérifie l’équivalence en développant."],
+      [/discriminant|résolution d'une équation/i, "Repère les coefficients avec leurs signes.", "Calcule le discriminant, puis utilise le cas correspondant au nombre de solutions sans oublier le contexte du modèle."],
+      [/signe d'un trinôme|inéquation/i, "Place les racines dans l’ordre et observe l’orientation de la parabole.", "Étudie le signe sur les intervalles délimités par les racines, puis conserve seulement les valeurs pertinentes pour la situation."],
+      [/sommet de la parabole|modélisation/i, "Distingue la valeur extrême du moment où elle est atteinte.", "Lis ou calcule les deux coordonnées du sommet, puis interprète chacune dans les unités du problème."],
+    ],
+    success: "Exact. Le modèle quadratique est interprété dans la situation étudiée.",
+  },
   "reviser-les-bases": {
     level: "sixieme",
     skills: [
@@ -880,6 +975,19 @@ const GENERALIZATION_LOT_3_IDS = [
   "logarithme-decimal-terminale-techno",
 ];
 
+const GENERALIZATION_LOT_4A_IDS = [
+  "proportionnalite",
+  "triangles",
+  "proportionnalite-troisieme",
+  "statistiques-troisieme",
+  "vecteurs-seconde",
+  "colinearite-vecteurs-seconde",
+  "vecteurs-produit-scalaire-premiere-spe",
+  "croissance-exponentielle-premiere-non-spe",
+  "modelisation-quadratique-premiere-non-spe",
+  "fonctions-second-degre-premiere-techno",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -924,3 +1032,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_1 = showcaseRows(GENERALIZATION_LOT_1_I
 export const PEDAGOGY_GENERALIZATION_LOT_2 = showcaseRows(GENERALIZATION_LOT_2_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_3 = showcaseRows(GENERALIZATION_LOT_3_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_4A = showcaseRows(GENERALIZATION_LOT_4A_IDS);

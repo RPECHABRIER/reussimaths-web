@@ -10,6 +10,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_4A,
   PEDAGOGY_GENERALIZATION_LOT_4B,
   PEDAGOGY_GENERALIZATION_LOT_5A,
+  PEDAGOGY_GENERALIZATION_LOT_5B,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -120,6 +121,16 @@ const CHAPTER_FILES = {
   "equations-droites-seconde": "equations-droites-seconde",
   "informations-chiffrees-seconde": "informations-chiffrees-seconde",
   "statistiques-descriptives-seconde": "statistiques-descriptives-seconde",
+  "transformations-plan-troisieme": "transformations-plan-troisieme",
+  "geometrie-espace-troisieme": "geometrie-espace-troisieme",
+  "geometrie-reperee-premiere-spe": "geometrie-reperee-premiere-spe",
+  "probabilites-conditionnelles-premiere-spe": "probabilites-conditionnelles-premiere-spe",
+  "complements-derivation-terminale-spe": "complements-derivation-terminale-spe",
+  "logarithme-neperien-terminale-spe": "logarithme-neperien-terminale-spe",
+  "fonctions-trigonometriques-terminale-spe": "fonctions-trigonometriques-terminale-spe",
+  "primitives-equations-differentielles-terminale-spe": "primitives-equations-differentielles-terminale-spe",
+  "loi-binomiale-terminale-spe": "loi-binomiale-terminale-spe",
+  "sommes-variables-aleatoires-terminale-spe": "sommes-variables-aleatoires-terminale-spe",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -442,6 +453,85 @@ test("la proportionnalité 4e n'impose pas le produit en croix", async () => {
     const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
     assert.doesNotMatch(guidance, /produit en croix/i);
     assert.match(guidance, /unité|coefficient|relation|grandeur|rapport|origine|longueur|aire|volume|référence|tableau/i);
+  }
+});
+
+test("le lot 5B contient exactement les dix chapitres sensibles autorisés", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_5B.length, 10);
+  assert.equal(new Set(PEDAGOGY_GENERALIZATION_LOT_5B.map(({ chapterId }) => chapterId)).size, 10);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_5B) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 5B préservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_5B) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("les probabilités du lot 5B n'inventent pas le raisonnement et vérifient les hypothèses", async () => {
+  for (const file of ["probabilites-conditionnelles-premiere-spe", "loi-binomiale-terminale-spe", "sommes-variables-aleatoires-terminale-spe"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 300; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur|tu as utilisé/i);
+      assert.match(guidance, /condition|référence|partition|indépend|Bernoulli|binomial|succès|événement|espérance|variance|covariance|hypothèse/i);
+    }
+  }
+});
+
+test("dérivation, logarithme et équations différentielles conservent leurs garde-fous", async () => {
+  const files = ["complements-derivation-terminale-spe", "logarithme-neperien-terminale-spe", "primitives-equations-differentielles-terminale-spe"];
+  const texts = new Map(files.map((file) => [file, []]));
+  for (const file of files) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 2000; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      texts.get(file).push(`${prepared.hints?.join(" ")} ${prepared.feedback?.default}`);
+    }
+  }
+  const { default: derivationChapter } = await import("../src/chapters/complements-derivation-terminale-spe.js");
+  const extremum = prepareWowExercise(derivationChapter, {
+    type: "numeric",
+    chapter: "Compléments sur la dérivation — Extremum",
+    prompt: "Étudier un extremum à partir de la dérivée.",
+    answer: 0,
+    steps: [{ type: "methode", text: "Étudier le signe de la dérivée." }],
+  });
+  const derivation = `${extremum.hints.join(" ")} ${extremum.feedback.default}`;
+  assert.match(derivation, /dérivée nulle ne suffit pas|changement de variation/i);
+  assert.doesNotMatch(derivation, /f'\(a\)=0 (?:implique|prouve|donne) un extremum/i);
+  const logarithm = texts.get("logarithme-neperien-terminale-spe").join(" ");
+  assert.match(logarithm, /strictement positif|a,b>0/i);
+  assert.match(logarithm, /aucune formule analogue n’existe pour ln\(a\+b\)/i);
+  const differential = texts.get("primitives-equations-differentielles-terminale-spe").join(" ");
+  assert.match(differential, /primitive se vérifie en la dérivant/i);
+  assert.match(differential, /équation homogène|solution particulière/i);
+  assert.match(differential, /dérivation et substitution/i);
+});
+
+test("les profils géométriques du lot 5B restent conceptuels sans nouveau moteur", async () => {
+  for (const file of ["transformations-plan-troisieme", "geometrie-espace-troisieme", "geometrie-reperee-premiere-spe"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 300; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur/i);
+      assert.match(guidance, /transformation|centre|rapport|solide|sphère|section|droite|cercle|distance|équation|vecteur|coordonnée|rayon|volume|angle/i);
+    }
   }
 });
 

@@ -1100,6 +1100,110 @@ const PROFILES = {
     ],
     success: "Exact. L’indicateur statistique est calculé et interprété avec la bonne série.",
   },
+  "transformations-plan-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/coordonnées d'images/i, "Identifie la transformation, son centre ou son vecteur avant de calculer.", "Applique uniquement la règle correspondant aux données : translation par addition du vecteur, symétrie autour du centre donné ou rotation avec son angle et son sens."],
+      [/homothéties/i, "Repère le centre et le rapport de l’homothétie.", "Depuis le centre, l’image reste sur la même droite ; multiplie la distance orientée par le rapport et tiens compte de son signe."],
+      [/propriétés/i, "Cherche ce que la transformation conserve réellement.", "Les isométries conservent longueurs et angles ; une homothétie conserve les angles mais multiplie les longueurs par la valeur absolue de son rapport."],
+    ],
+    success: "Exact. La transformation et ses données ont été correctement identifiées.",
+  },
+  "geometrie-espace-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/sections de solides/i, "Repère le solide, le plan de coupe et les points réellement donnés.", "Identifie la forme de la section à partir des faces rencontrées, puis utilise seulement les longueurs ou propriétés indiquées par la configuration."],
+      [/la sphère(?! terrestre)/i, "Distingue rayon, diamètre, aire et volume.", "Choisis la formule de la grandeur demandée, remplace le rayon dans la bonne unité, puis contrôle l’unité finale."],
+      [/sphère terrestre/i, "Repère latitude, longitude et rayon avant de modéliser.", "Traduis l’angle en fraction de tour pour une distance sur un parallèle ou un méridien, puis distingue la distance sur la sphère d’une distance dans l’espace."],
+    ],
+    success: "Exact. La représentation du solide et le calcul sont cohérents.",
+  },
+  "geometrie-reperee-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/équation d'une droite|vecteur normal/i, "Identifie le rôle du vecteur donné avant de choisir une équation.", "Un vecteur normal (a ; b) conduit à ax+by+c=0 ; détermine c avec un point de la droite. Toute équation proportionnelle décrit la même droite."],
+      [/projection orthogonale|distance point-droite/i, "Repère la perpendicularité et le point projeté.", "Détermine le projeté avec la droite perpendiculaire ou utilise la formule de distance après avoir identifié les coefficients de l’équation cartésienne."],
+      [/équation de cercle/i, "Repère le centre et le rayon dans l’équation.", "Ramène l’expression à (x−a)²+(y−b)²=r², éventuellement en complétant les carrés, puis vérifie que r² est positif."],
+      [/appartenance à un cercle/i, "Teste les coordonnées dans l’équation sans te fier au dessin.", "Calcule la distance au carré entre le point et le centre, puis compare-la au rayon au carré."],
+      [/vrai ou faux/i, "Traduis l’affirmation avec les coordonnées et propriétés données.", "Choisis un critère adapté — équation, produit scalaire, distance ou déterminant — puis vérifie-le avant de conclure."],
+    ],
+    success: "Exact. Le critère géométrique et le calcul en coordonnées concordent.",
+  },
+  "probabilites-conditionnelles-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/probabilité conditionnelle|notations/i, "Identifie d’abord l’événement qui sert de condition.", "Dans P_A(B), A est la population de référence : utilise P(A∩B)/P(A), avec P(A)>0, sans intervertir A et B."],
+      [/arbre de probabilités/i, "Lis chaque branche avec la condition portée par son nœud de départ.", "Multiplie les probabilités le long d’un chemin pour une intersection, puis additionne les chemins incompatibles correspondant à l’événement demandé."],
+      [/probabilités totales|partition de l'univers/i, "Vérifie que les événements de départ forment une partition.", "Décompose l’événement suivant chaque branche de la partition, calcule chaque intersection, puis additionne-les."],
+      [/indépendance/i, "L’indépendance doit être donnée ou vérifiée, jamais supposée.", "Compare P(A∩B) à P(A)P(B), ou P_A(B) à P(B) lorsque la probabilité conditionnelle est définie."],
+      [/Bernoulli/i, "Vérifie les deux issues et la probabilité de succès.", "Pour des répétitions, contrôle qu’elles sont identiques et indépendantes avant d’utiliser un modèle de Bernoulli répété."],
+      [/vrai ou faux/i, "Identifie la définition ou l’hypothèse réellement testée.", "Réécris l’affirmation avec intersections, conditionnement ou indépendance, puis vérifie-la avec les données sans déduire le raisonnement d’une valeur seule."],
+    ],
+    success: "Exact. La condition et la population de référence sont correctement utilisées.",
+  },
+  "complements-derivation-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/domaine de dérivabilité|dérivée d'un produit|dérivée d'une composée/i, "Identifie le domaine et la structure de la fonction avant de dériver.", "Vérifie la dérivabilité des fonctions en jeu, puis applique la règle du produit ou de la composée avec le facteur intérieur."],
+      [/tangentes/i, "Une tangente utilise la valeur de la fonction et celle de sa dérivée au même point.", "Écris y=f'(a)(x−a)+f(a), puis remplace a seulement après avoir calculé f(a) et f'(a)."],
+      [/convexité|dérivée seconde/i, "La convexité se lit sur le signe de la dérivée seconde.", "Étudie f'' sur l’intervalle : f''≥0 donne la convexité et f''≤0 la concavité, sous les hypothèses de dérivabilité requises."],
+      [/points d'inflexion/i, "Une dérivée seconde nulle ne suffit pas à elle seule.", "Vérifie que la convexité change de sens, par exemple grâce à un changement de signe de f'', avant de conclure à un point d’inflexion."],
+      [/extremum|variations/i, "Une dérivée nulle ne suffit pas à identifier un extremum.", "Étudie le signe de f' de part et d’autre du point : seul un changement de variation pertinent permet de conclure."],
+    ],
+    success: "Exact. La dérivée est interprétée avec les hypothèses et le signe nécessaires.",
+  },
+  "logarithme-neperien-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/domaine de définition/i, "L’argument d’un logarithme doit être strictement positif.", "Résous d’abord l’inéquation portant sur chaque argument de ln, puis travaille uniquement sur l’intersection des domaines obtenus."],
+      [/propriétés algébriques/i, "Vérifie que les logarithmes sont définis avant toute transformation.", "Utilise ln(ab)=ln(a)+ln(b) et ln(a/b)=ln(a)−ln(b) pour a,b>0 ; aucune formule analogue n’existe pour ln(a+b)."],
+      [/équations|signe et comparaison/i, "Commence par le domaine, puis utilise la stricte croissance de ln.", "Sur les arguments positifs, ln u=ln v équivaut à u=v et ln u≤ln v à u≤v ; conserve ensuite uniquement les solutions du domaine."],
+      [/dérivée/i, "Repère l’argument intérieur et son domaine.", "Pour ln(u), utilise u'/u là où u>0, puis étudie le signe de la dérivée avec le domaine de définition."],
+      [/limites/i, "Identifie la limite de l’argument avant celle du logarithme.", "Utilise les limites de référence de ln uniquement avec un argument positif et transforme l’expression si une forme indéterminée apparaît."],
+      [/modélisation/i, "Relie le logarithme à la grandeur positive du modèle.", "Isole l’expression exponentielle ou multiplicative, applique ln sur des quantités positives, puis interprète la solution dans le domaine du problème."],
+    ],
+    success: "Exact. Le logarithme est utilisé sur son domaine et avec la propriété adaptée.",
+  },
+  "fonctions-trigonometriques-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/valeurs remarquables|signe|comparaison/i, "Repère l’angle sur le cercle et son quadrant.", "Réduis l’angle modulo 2π, utilise l’angle de référence, puis détermine le signe de sinus ou cosinus avec le quadrant."],
+      [/parité et périodicité|propriétés/i, "Identifie la symétrie ou la période réellement utile.", "Utilise cos(−x)=cos x, sin(−x)=−sin x et la période 2π sans imposer une transformation inutile."],
+      [/formules d'addition|formules de réduction|identité remarquable/i, "Choisis une identité qui correspond exactement aux angles présents.", "Écris l’identité avant de remplacer les valeurs, puis simplifie ; une autre méthode équivalente reste valide."],
+      [/dérivée|nombre dérivé/i, "Distingue la fonction extérieure et l’angle intérieur.", "Dérive sinus ou cosinus en conservant le signe et multiplie par la dérivée de l’angle intérieur lorsqu’il est composé."],
+      [/limites/i, "Utilise d’abord les bornes ou équivalents trigonométriques adaptés.", "Près de zéro, mobilise sin x/x→1 avec des angles en radians ; ailleurs, transforme ou encadre avant de conclure."],
+      [/équations|lecture graphique/i, "Repère toutes les solutions sur une période.", "Résous sur une période avec le cercle trigonométrique, puis ajoute la périodicité en respectant l’intervalle demandé."],
+    ],
+    success: "Exact. L’identité ou la propriété trigonométrique est adaptée aux données.",
+  },
+  "primitives-equations-differentielles-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/condition initiale|solution particulière/i, "La constante dépend de la condition imposée.", "Remplace le point initial dans la famille de solutions, résous pour la constante, puis vérifie la solution dans l’équation par dérivation et substitution."],
+      [/— équations différentielles/i, "Identifie l’équation et la présence éventuelle d’une condition initiale.", "Pour y'=ay, utilise Ce^{ax}. Pour y'=ay+b, cherche une solution particulière puis ajoute la solution de l’équation homogène, et détermine C avec la condition donnée."],
+      [/— primitives/i, "Une primitive se vérifie en la dérivant.", "Détermine une famille F(x)+C, puis utilise une éventuelle condition pour fixer C ; contrôle ensuite que la dérivée redonne bien la fonction."],
+    ],
+    success: "Exact. La famille, la constante et la vérification correspondent au problème posé.",
+  },
+  "loi-binomiale-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/paramètres/i, "Vérifie le nombre d’épreuves et la probabilité de succès.", "Une loi B(n,p) modélise n répétitions identiques et indépendantes d’une épreuve à deux issues, avec une probabilité p constante."],
+      [/coefficients binomiaux/i, "Repère le nombre de succès demandé parmi les répétitions.", "Le coefficient binomial compte les choix de k succès parmi n ; vérifie 0≤k≤n et utilise les propriétés de symétrie si elles simplifient le calcul."],
+      [/calcul de probabilités/i, "Traduis précisément l’événement portant sur X.", "Pour X=k, utilise le terme binomial adapté ; pour “au moins” ou “au plus”, additionne les valeurs concernées ou passe au contraire lorsque c’est plus simple."],
+      [/espérance et variance/i, "Identifie l’indicateur demandé avant d’appliquer une formule.", "Pour X suivant B(n,p), E(X)=np et V(X)=np(1−p) ; interprète l’espérance comme un nombre moyen de succès."],
+    ],
+    success: "Exact. Le modèle binomial, ses paramètres et l’événement sont cohérents.",
+  },
+  "sommes-variables-aleatoires-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/espérance/i, "L’espérance est linéaire, sans hypothèse d’indépendance.", "Utilise E(aX+bY)=aE(X)+bE(Y), puis interprète la somme ou la combinaison dans le contexte."],
+      [/variance/i, "Vérifie si l’indépendance est réellement donnée.", "Pour des variables indépendantes, les variances d’une somme s’additionnent ; sans cette hypothèse, il faut tenir compte de la covariance ou rester avec les données fournies."],
+      [/somme de n variables/i, "Identifie si les variables ont la même loi et si elles sont indépendantes.", "Additionne toujours les espérances ; pour la variance, n’utilise la somme des variances que lorsque l’indépendance est établie."],
+    ],
+    success: "Exact. Les propriétés d’espérance et de variance utilisent les bonnes hypothèses.",
+  },
 };
 
 const ANNUAL_SHOWCASE_IDS = [
@@ -1234,6 +1338,19 @@ const GENERALIZATION_LOT_5A_IDS = [
   "statistiques-descriptives-seconde",
 ];
 
+const GENERALIZATION_LOT_5B_IDS = [
+  "transformations-plan-troisieme",
+  "geometrie-espace-troisieme",
+  "geometrie-reperee-premiere-spe",
+  "probabilites-conditionnelles-premiere-spe",
+  "complements-derivation-terminale-spe",
+  "logarithme-neperien-terminale-spe",
+  "fonctions-trigonometriques-terminale-spe",
+  "primitives-equations-differentielles-terminale-spe",
+  "loi-binomiale-terminale-spe",
+  "sommes-variables-aleatoires-terminale-spe",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -1284,3 +1401,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_4A = showcaseRows(GENERALIZATION_LOT_4A
 export const PEDAGOGY_GENERALIZATION_LOT_4B = showcaseRows(GENERALIZATION_LOT_4B_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_5A = showcaseRows(GENERALIZATION_LOT_5A_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_5B = showcaseRows(GENERALIZATION_LOT_5B_IDS);

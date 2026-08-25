@@ -44,7 +44,7 @@ const GAMES = [
   {
     id: "memory-cp-ce1",
     title: "Memory CP/CE1",
-    description: "Retrouve des groupes de 3 cartes qui vont ensemble (ex. 6 + 6 / 2 × 6 / 12), sur les doubles et les triples.",
+    description: "Retrouve les paires de doubles et affronte le robot, avec un point pour chaque paire gagnée.",
     icon: Baby,
     level: "CP / CE1",
     accent: "#E56B8B",
@@ -77,6 +77,11 @@ export default function Jeux() {
           <p className="relative text-sm sm:text-base mt-3 max-w-xl mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,.68)" }}>Des parties courtes pour entraîner les automatismes sans avoir l’impression de refaire une fiche d’exercices.</p>
           <div className="relative flex flex-wrap justify-center gap-4 mt-5 text-xs" style={{ color: "rgba(255,255,255,.72)" }}><span className="inline-flex items-center gap-1.5"><ShieldCheck size={14} color={colors.green} /> Gratuit</span><span>Sans compte</span><span>Sans publicité</span></div>
         </div>
+
+        <nav aria-label="Catégories de jeux" className="mb-6 flex justify-center gap-2">
+          <span className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: colors.ink, color: "white" }}>Tous les jeux</span>
+          <Link to="/jeux/ce1" className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: `${colors.gold}22`, color: colors.ink, border: `1px solid ${colors.gold}` }}>CE1</Link>
+        </nav>
 
         <div className="grid sm:grid-cols-2 gap-4">
           {GAMES.map((game, index) => {

@@ -4,56 +4,34 @@ import { colors, fonts, shadow } from "../theme";
 import { shuffle, formatSeconds } from "../lib/gameUtils";
 
 // ---------------------------------------------------------------------------
-// Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : variante "memory à trios"
-// (demande de Romain) — on ne cherche plus des PAIRES mais des GROUPES DE 3
-// cartes qui représentent la même valeur, uniquement sur les doubles des
-// nombres de 1 à 10 : "6 + 6", "2 × 6", "12".
-// 10 groupes de 3 cartes = 30 cartes, plateau fixe (tout le contenu tient sur
-// un seul plateau, plus besoin de tirer un sous-ensemble au hasard).
-//
-// Mécanique de retournement : comme un memory classique, on retourne 2
-// cartes par tour. Si elles appartiennent au même groupe, elles restent
-// retournées (2 des 3 membres du groupe trouvés). La 3e et dernière carte
-// d'un groupe déjà trouvé à 2/3 se valide alors TOUTE SEULE dès qu'on la
-// retourne (inutile de lui trouver un partenaire : on sait déjà qu'elle va
-// avec les 2 autres) — sinon elle ne pourrait jamais être confirmée, ses 2
-// partenaires étant déjà immobilisés face visible.
-//
-// Comme pour la version précédente, AUCUN texte affiché ne se répète ailleurs
-// dans le plateau (vérifié par script Node avant intégration) : indispensable
-// dans un memory, sinon deux cartes de valeur identique mais de groupes
-// différents se confondraient.
-//
-// Gratuit, sans connexion : meilleur temps et meilleur nombre de coups
-// gardés en localStorage sur cet appareil (clés dédiées à cette version, la
-// mécanique ayant changé par rapport à la précédente version "en paires").
+// Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : memory classique à 15 paires.
+// Pour chaque nombre n de 1 à 15, l'enfant associe n + n à son résultat 2n.
+// Une égalité animée apparaît brièvement après chaque paire trouvée.
 // ---------------------------------------------------------------------------
 
-const CP_CE1_GROUPS = [
-  { id: "double-1", cards: ["1 + 1", "2 × 1", "2"] },
-  { id: "double-2", cards: ["2 + 2", "2 × 2", "4"] },
-  { id: "double-3", cards: ["3 + 3", "2 × 3", "6"] },
-  { id: "double-4", cards: ["4 + 4", "2 × 4", "8"] },
-  { id: "double-5", cards: ["5 + 5", "2 × 5", "10"] },
-  { id: "double-6", cards: ["6 + 6", "2 × 6", "12"] },
-  { id: "double-7", cards: ["7 + 7", "2 × 7", "14"] },
-  { id: "double-8", cards: ["8 + 8", "2 × 8", "16"] },
-  { id: "double-9", cards: ["9 + 9", "2 × 9", "18"] },
-  { id: "double-10", cards: ["10 + 10", "2 × 10", "20"] },
+const CP_CE1_GROUPS = Array.from({ length: 15 }, (_, index) => {
+  const n = index + 1;
+  return { id: `double-${n}`, n, cards: [`${n} + ${n}`, String(2 * n)] };
+});
+
+// L'ordre alterne volontairement les familles de teintes pour que deux
+// paires successives ne puissent pas être confondues sur le plateau.
+const GROUP_COLORS = [
+  "#d81b60", "#1565c0", "#ef6c00", "#6a1b9a", "#00897b",
+  "#c62828", "#558b2f", "#4527a0", "#ad6a00", "#00838f",
+  "#9c2f00", "#7b1fa2", "#00695c", "#283593", "#827717",
 ];
 
-const GROUP_COLORS = ["#ec4899", "#3b82f6", "#f97316", "#8b5cf6", "#14b8a6", "#eab308", "#ef4444", "#06b6d4", "#84cc16", "#a855f7"];
-
-const GROUPS_COUNT = CP_CE1_GROUPS.length; // 10
-const TOTAL_CARDS = GROUPS_COUNT * 3; // 30
-const BEST_KEY_MS = "reussimaths_memory_cp_ce1_trio_best_ms";
-const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_trio_best_tries";
+const GROUPS_COUNT = CP_CE1_GROUPS.length; // 15
+const TOTAL_CARDS = GROUPS_COUNT * 2; // 30
+const BEST_KEY_MS = "reussimaths_memory_cp_ce1_pairs_15_best_ms";
+const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_pairs_15_best_tries";
 
 function buildBoard() {
   const cards = [];
   CP_CE1_GROUPS.forEach((group, groupIndex) => {
     group.cards.forEach((text, idx) => {
-      cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, groupColor: GROUP_COLORS[groupIndex], text });
+      cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, groupColor: GROUP_COLORS[groupIndex], n: group.n, text });
     });
   });
   return shuffle(cards);
@@ -65,6 +43,7 @@ export default function MemoryCpCe1() {
   const [flippedUids, setFlippedUids] = useState([]);
   const [matchedUids, setMatchedUids] = useState(new Set());
   const [locked, setLocked] = useState(false);
+  const [matchCelebration, setMatchCelebration] = useState(null);
   const [tries, setTries] = useState(0);
   const [startAt, setStartAt] = useState(null);
   const [nowMs, setNowMs] = useState(0);
@@ -84,7 +63,7 @@ export default function MemoryCpCe1() {
   const matchedGroupsCount = useMemo(() => {
     let count = 0;
     for (const group of CP_CE1_GROUPS) {
-      const uids = [0, 1, 2].map((idx) => `${group.id}-${idx}`);
+      const uids = [0, 1].map((idx) => `${group.id}-${idx}`);
       if (uids.every((uid) => matchedUids.has(uid))) count++;
     }
     return count;
@@ -122,6 +101,7 @@ export default function MemoryCpCe1() {
     setFlippedUids([]);
     setMatchedUids(new Set());
     setLocked(false);
+    setMatchCelebration(null);
     setTries(0);
     setFinalTimeMs(null);
     setIsNewBestTime(false);
@@ -136,15 +116,6 @@ export default function MemoryCpCe1() {
     if (matchedUids.has(card.uid)) return;
     if (flippedUids.includes(card.uid)) return;
 
-    // La 3e carte d'un groupe déjà trouvé à 2/3 se valide toute seule, sans
-    // avoir besoin d'un partenaire (ses 2 partenaires sont déjà immobilisés
-    // face visible, donc impossibles à re-cliquer pour "faire la paire").
-    const groupMatchedCount = board.filter((c) => c.groupId === card.groupId && matchedUids.has(c.uid)).length;
-    if (groupMatchedCount === 2) {
-      setMatchedUids((prev) => new Set(prev).add(card.uid));
-      return;
-    }
-
     if (flippedUids.length === 0) {
       setFlippedUids([card.uid]);
       return;
@@ -157,13 +128,21 @@ export default function MemoryCpCe1() {
     setTries((t) => t + 1);
     setLocked(true);
 
+    if (isMatch) {
+      setMatchCelebration({
+        equation: `${card.n * 2} = ${card.n} + ${card.n}`,
+        color: card.groupColor,
+      });
+    }
+
     setTimeout(() => {
       setFlippedUids([]);
       setLocked(false);
       if (isMatch) {
         setMatchedUids((prev) => new Set(prev).add(firstUid).add(card.uid));
+        setMatchCelebration(null);
       }
-    }, isMatch ? 500 : 900);
+    }, isMatch ? 1100 : 900);
   };
 
   const ink = colors.ink;
@@ -191,8 +170,8 @@ export default function MemoryCpCe1() {
               Memory CP/CE1
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              Ici, pas de paires : il faut retrouver des GROUPES DE 3 cartes qui vont ensemble (par exemple "6 + 6",
-              "2 × 6" et "12"), pour les doubles des nombres de 1 à 10.
+              Retrouve les 15 paires de doubles, de 1 + 1 jusqu’à 15 + 15. Associe chaque somme à son résultat,
+              par exemple « 6 + 6 » avec « 12 ».
             </p>
             {bestTimeMs && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
@@ -203,7 +182,7 @@ export default function MemoryCpCe1() {
 
           <div className="rounded-3xl p-5 mb-6 text-center" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <p className="text-sm font-semibold" style={{ color: ink }}>
-              {TOTAL_CARDS} cartes ({GROUPS_COUNT} groupes de 3)
+              {TOTAL_CARDS} cartes ({GROUPS_COUNT} paires)
             </p>
           </div>
 
@@ -222,7 +201,7 @@ export default function MemoryCpCe1() {
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: slate }}>
-              {matchedGroupsCount} / {GROUPS_COUNT} groupes — {tries} coups
+              {matchedGroupsCount} / {GROUPS_COUNT} paires — {tries} coups
             </p>
             <p className="text-sm font-bold" style={{ fontFamily: fonts.mono, color: gold }}>
               {formatSeconds(nowMs)}s
@@ -249,7 +228,7 @@ export default function MemoryCpCe1() {
                   className="flex items-center justify-center rounded-xl"
                   style={{
                     aspectRatio: "1",
-                    backgroundColor: faceUp ? colors.card : `${colors.ink}0d`,
+                    backgroundColor: isMatched ? `${card.groupColor}18` : faceUp ? colors.card : `${colors.ink}0d`,
                     boxShadow: isMatched ? `0 0 0 3px ${card.groupColor}` : shadow.soft,
                     padding: 2,
                   }}
@@ -268,6 +247,18 @@ export default function MemoryCpCe1() {
               );
             })}
           </div>
+
+          {matchCelebration && (
+            <div className="memory-match-overlay fixed inset-0 z-50 flex items-center justify-center pointer-events-none" aria-live="assertive">
+              <div
+                className="memory-match-celebration rounded-[2rem] px-8 py-7 text-center"
+                style={{ backgroundColor: colors.card, border: `5px solid ${matchCelebration.color}`, boxShadow: shadow.raised }}
+              >
+                <p className="text-xs font-black uppercase tracking-[0.18em]" style={{ color: matchCelebration.color }}>Paire trouvée !</p>
+                <p className="mt-2 text-4xl sm:text-5xl font-black" style={{ fontFamily: fonts.mono, color: ink }}>{matchCelebration.equation}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

@@ -6,11 +6,8 @@ import { shuffle, formatSeconds } from "../lib/gameUtils";
 // ---------------------------------------------------------------------------
 // Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : variante "memory à trios"
 // (demande de Romain) — on ne cherche plus des PAIRES mais des GROUPES DE 3
-// cartes qui représentent la même valeur, uniquement sur les doubles et les
-// triples (les anciennes catégories "amis de 10" et "calculs de base" ont
-// été retirées) :
-//   - Doubles (4 à 10) : "6 + 6", "2 × 6", "12".
-//   - Triples (5, 7, 9) : "7 + 7 + 7", "3 × 7", "21".
+// cartes qui représentent la même valeur, uniquement sur les doubles des
+// nombres de 1 à 10 : "6 + 6", "2 × 6", "12".
 // 10 groupes de 3 cartes = 30 cartes, plateau fixe (tout le contenu tient sur
 // un seul plateau, plus besoin de tirer un sous-ensemble au hasard).
 //
@@ -33,7 +30,9 @@ import { shuffle, formatSeconds } from "../lib/gameUtils";
 // ---------------------------------------------------------------------------
 
 const CP_CE1_GROUPS = [
-  // Doubles.
+  { id: "double-1", cards: ["1 + 1", "2 × 1", "2"] },
+  { id: "double-2", cards: ["2 + 2", "2 × 2", "4"] },
+  { id: "double-3", cards: ["3 + 3", "2 × 3", "6"] },
   { id: "double-4", cards: ["4 + 4", "2 × 4", "8"] },
   { id: "double-5", cards: ["5 + 5", "2 × 5", "10"] },
   { id: "double-6", cards: ["6 + 6", "2 × 6", "12"] },
@@ -41,11 +40,9 @@ const CP_CE1_GROUPS = [
   { id: "double-8", cards: ["8 + 8", "2 × 8", "16"] },
   { id: "double-9", cards: ["9 + 9", "2 × 9", "18"] },
   { id: "double-10", cards: ["10 + 10", "2 × 10", "20"] },
-  // Triples.
-  { id: "triple-5", cards: ["5 + 5 + 5", "3 × 5", "15"] },
-  { id: "triple-7", cards: ["7 + 7 + 7", "3 × 7", "21"] },
-  { id: "triple-9", cards: ["9 + 9 + 9", "3 × 9", "27"] },
 ];
+
+const GROUP_COLORS = ["#ec4899", "#3b82f6", "#f97316", "#8b5cf6", "#14b8a6", "#eab308", "#ef4444", "#06b6d4", "#84cc16", "#a855f7"];
 
 const GROUPS_COUNT = CP_CE1_GROUPS.length; // 10
 const TOTAL_CARDS = GROUPS_COUNT * 3; // 30
@@ -54,9 +51,9 @@ const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_trio_best_tries";
 
 function buildBoard() {
   const cards = [];
-  CP_CE1_GROUPS.forEach((group) => {
+  CP_CE1_GROUPS.forEach((group, groupIndex) => {
     group.cards.forEach((text, idx) => {
-      cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, text });
+      cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, groupColor: GROUP_COLORS[groupIndex], text });
     });
   });
   return shuffle(cards);
@@ -195,7 +192,7 @@ export default function MemoryCpCe1() {
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
               Ici, pas de paires : il faut retrouver des GROUPES DE 3 cartes qui vont ensemble (par exemple "6 + 6",
-              "2 × 6" et "12"), sur les doubles et les triples.
+              "2 × 6" et "12"), pour les doubles des nombres de 1 à 10.
             </p>
             {bestTimeMs && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
@@ -253,7 +250,7 @@ export default function MemoryCpCe1() {
                   style={{
                     aspectRatio: "1",
                     backgroundColor: faceUp ? colors.card : `${colors.ink}0d`,
-                    boxShadow: isMatched ? `0 0 0 2px ${colors.green}` : shadow.soft,
+                    boxShadow: isMatched ? `0 0 0 3px ${card.groupColor}` : shadow.soft,
                     padding: 2,
                   }}
                 >

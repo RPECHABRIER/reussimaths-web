@@ -15,7 +15,7 @@ import { colors, fonts, shadow } from "../theme";
 // connexion — pensé pour une projection en classe. Réutilise TEL QUEL les
 // chapitres Automatismes existants (aucun contenu dupliqué) : l'enseignant
 // choisit un niveau, examine plusieurs questions proposées dans chaque thème,
-// en sélectionne exactement 5, puis lance
+// choisit le nombre de questions (de 1 à 10), puis lance
 // un diaporama SANS réponse visible (l'enseignant avance à la main avec
 // "Suivant") ; à la fin, un écran unique affiche toutes les corrections.
 //
@@ -98,7 +98,7 @@ function decodeSession(value) {
   const base64=value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length/4)*4,"=");
   const binary=atob(base64); const bytes=Uint8Array.from(binary,(char)=>char.charCodeAt(0));
   const parsed=JSON.parse(new TextDecoder().decode(bytes));
-  if (!parsed || !Array.isArray(parsed.exercises) || parsed.exercises.length !== 5) return null;
+  if (!parsed || !Array.isArray(parsed.exercises) || parsed.exercises.length < 1 || parsed.exercises.length > 10) return null;
   const exercises=parsed.exercises.map((exercise)=>{
     if (!exercise || typeof exercise.prompt!=="string" || exercise.prompt.length>1200 || typeof exercise.chapter!=="string" || exercise.chapter.length>240) throw new Error("Séance invalide");
     const options=Array.isArray(exercise.options)?exercise.options.slice(0,8).map((option)=>String(option).slice(0,300)):undefined;
@@ -129,6 +129,7 @@ export default function Enseignant() {
   const [shareMessage, setShareMessage] = useState("");
   const [sessionTitle, setSessionTitle] = useState("Rituel de mathématiques");
   const [sessionDate, setSessionDate] = useState(()=>new Date().toISOString().slice(0,10));
+  const [questionCount, setQuestionCount] = useState(5);
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [printMode, setPrintMode] = useState("student");
@@ -147,7 +148,7 @@ export default function Enseignant() {
   const toggleQuestion = (proposal) => {
     setSelectedQuestions((current) => {
       if (current.some((item) => item.id === proposal.id)) return current.filter((item) => item.id !== proposal.id);
-      if (current.length >= 5) return current;
+      if (current.length >= questionCount) return current;
       return [...current, proposal];
     });
   };
@@ -199,7 +200,7 @@ export default function Enseignant() {
   };
 
   const launch = () => {
-    if (!chapter || total !== 5) return;
+    if (!chapter || total !== questionCount) return;
     setExercises(selectedQuestions.map((item) => item.exercise));
     setIndex(0);
     setView("review");
@@ -297,7 +298,7 @@ export default function Enseignant() {
                 Votre rituel de maths, prêt à projeter.
               </h1>
               <p className="text-base mt-5 max-w-lg leading-relaxed" style={{ color: slate }}>
-                Composez 5 automatismes en moins d’une minute. Les questions s’affichent sans réponse, puis toutes les corrections détaillées arrivent ensemble.
+                Composez de 1 à 10 automatismes en moins d’une minute. Les questions s’affichent sans réponse, puis toutes les corrections détaillées arrivent ensemble.
               </p>
               <div className="grid grid-cols-3 gap-2 mt-7">
                 {["Choisissez", "Projetez", "Corrigez"].map((label, i) => (
@@ -322,8 +323,8 @@ export default function Enseignant() {
 
             <section className="rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, boxShadow: shadow.raised, border: `1px solid ${colors.hairline}` }}>
               <div className="flex items-start justify-between gap-3 mb-6">
-                <div><p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Créer une séance</p><h2 className="text-2xl font-black mt-1" style={{ color: ink }}>Choisissez vos 5 questions</h2></div>
-                <p aria-live="polite" className="text-sm font-black px-3 py-1.5 rounded-full" style={{ color: total === 5 ? colors.green : gold, backgroundColor: total === 5 ? `${colors.green}18` : `${gold}18` }}>{total} / 5</p>
+                <div><p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Créer une séance</p><h2 className="text-2xl font-black mt-1" style={{ color: ink }}>Choisissez vos {questionCount} question{questionCount > 1 ? "s" : ""}</h2></div>
+                <p aria-live="polite" className="text-sm font-black px-3 py-1.5 rounded-full" style={{ color: total === questionCount ? colors.green : gold, backgroundColor: total === questionCount ? `${colors.green}18` : `${gold}18` }}>{total} / {questionCount}</p>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 mb-5">
@@ -352,6 +353,7 @@ export default function Enseignant() {
               })}
             </select>
               <label className="block mt-4 text-xs font-semibold" style={{color:slate}}>Minuteur par question (optionnel)<select value={timerSeconds} onChange={(event)=>setTimerSeconds(Number(event.target.value))} className="mt-1 w-full rounded-xl px-3 py-2.5 text-sm" style={{border:`1px solid ${colors.hairline}`,backgroundColor:colors.bg,color:ink}}><option value={0}>Sans minuteur</option><option value={30}>30 secondes</option><option value={60}>1 minute</option><option value={90}>1 min 30</option><option value={120}>2 minutes</option></select></label>
+              <label className="block mt-4 text-xs font-semibold" style={{color:slate}}>Nombre de questions<select value={questionCount} onChange={(event)=>{const count=Number(event.target.value);setQuestionCount(count);setSelectedQuestions((current)=>current.slice(0,count));}} className="mt-1 w-full rounded-xl px-3 py-2.5 text-sm" style={{border:`1px solid ${colors.hairline}`,backgroundColor:colors.bg,color:ink}}>{Array.from({length:10},(_,index)=>index+1).map((count)=><option key={count} value={count}>{count} question{count>1?"s":""}</option>)}</select></label>
               <div className="my-5" style={{ height: 1, backgroundColor: colors.hairline }} />
 
           {chapter && (
@@ -372,7 +374,7 @@ export default function Enseignant() {
                           const selectedIndex = selectedQuestions.findIndex((item)=>item.id===proposal.id);
                           const selected = selectedIndex >= 0;
                           const editable = (["numeric", "text"].includes(proposal.exercise.type) || (proposal.exercise.type === "qcm" && Array.isArray(proposal.exercise.options))) && !proposal.exercise.figure && !proposal.exercise.graph && !Array.isArray(proposal.exercise.answer);
-                          return <div key={proposal.id} className="rounded-xl p-3" style={{backgroundColor:selected?`${colors.green}12`:colors.card,border:`1px solid ${selected?colors.green:colors.hairline}`,opacity:!selected&&total>=5?.55:1}}>{editingId===proposal.id?<QuestionEditForm draft={editDraft} setDraft={setEditDraft} isQcm={proposal.exercise.type==="qcm"} onSave={()=>saveCustomization(proposal)} onCancel={()=>setEditingId(null)}/>:<div className="flex items-start gap-2"><button type="button" onClick={()=>toggleQuestion(proposal)} disabled={!selected&&total>=5} className="min-w-0 flex-1 text-left flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-[10px] font-black" style={{width:24,height:24,backgroundColor:selected?colors.green:`${ink}0d`,color:selected?"white":slate}}>{selected?selectedIndex+1:"+"}</span><span className="min-w-0"><MathText as="span" text={proposal.exercise.prompt} className="text-xs leading-relaxed" style={{color:ink}}/>{proposal.exercise.teacherCustomized&&<span className="block mt-1 text-[9px] font-black uppercase tracking-wide" style={{color:gold}}>Question personnalisée</span>}</span></button>{editable&&<button type="button" onClick={()=>startEditing(proposal)} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold" style={{backgroundColor:colors.bg,color:slate}}><Pencil size={10}/> Modifier</button>}</div>}</div>;
+                          return <div key={proposal.id} className="rounded-xl p-3" style={{backgroundColor:selected?`${colors.green}12`:colors.card,border:`1px solid ${selected?colors.green:colors.hairline}`,opacity:!selected&&total>=questionCount?.55:1}}>{editingId===proposal.id?<QuestionEditForm draft={editDraft} setDraft={setEditDraft} isQcm={proposal.exercise.type==="qcm"} onSave={()=>saveCustomization(proposal)} onCancel={()=>setEditingId(null)}/>:<div className="flex items-start gap-2"><button type="button" onClick={()=>toggleQuestion(proposal)} disabled={!selected&&total>=questionCount} className="min-w-0 flex-1 text-left flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-[10px] font-black" style={{width:24,height:24,backgroundColor:selected?colors.green:`${ink}0d`,color:selected?"white":slate}}>{selected?selectedIndex+1:"+"}</span><span className="min-w-0"><MathText as="span" text={proposal.exercise.prompt} className="text-xs leading-relaxed" style={{color:ink}}/>{proposal.exercise.teacherCustomized&&<span className="block mt-1 text-[9px] font-black uppercase tracking-wide" style={{color:gold}}>Question personnalisée</span>}</span></button>{editable&&<button type="button" onClick={()=>startEditing(proposal)} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold" style={{backgroundColor:colors.bg,color:slate}}><Pencil size={10}/> Modifier</button>}</div>}</div>;
                         })}
                       </div>
                     </div>
@@ -386,14 +388,14 @@ export default function Enseignant() {
 
               <button
             type="button"
-            disabled={total !== 5}
+            disabled={total !== questionCount}
             onClick={launch}
             className="w-full mt-5 py-3.5 rounded-full font-bold flex items-center justify-center gap-2"
-            style={{ backgroundColor: total === 5 ? gold : colors.hairline, color: total === 5 ? ink : slate, opacity: total === 5 ? 1 : 0.75, display: chapter ? undefined : "none" }}
+            style={{ backgroundColor: total === questionCount ? gold : colors.hairline, color: total === questionCount ? ink : slate, opacity: total === questionCount ? 1 : 0.75, display: chapter ? undefined : "none" }}
           >
             <CheckCircle2 size={16} /> Vérifier la séance
           </button>
-              {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher les propositions.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez examiner puis sélectionner exactement cinq questions.</p></div>}
+              {!chapter && <div className="rounded-2xl p-6 text-center" style={{ backgroundColor: colors.bg }}><p className="text-sm font-semibold" style={{ color: ink }}>Choisissez un niveau pour afficher les propositions.</p><p className="text-xs mt-1" style={{ color: slate }}>Vous pourrez examiner puis sélectionner de 1 à 10 questions.</p></div>}
             </section>
           </div>
         </div>
@@ -486,7 +488,7 @@ export default function Enseignant() {
             Correction collective
           </p>
           <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
-            Les 5 réponses
+            {exercises.length === 1 ? "La réponse" : `Les ${exercises.length} réponses`}
           </h1>
         </div>
 
@@ -516,7 +518,7 @@ export default function Enseignant() {
             className="w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2"
             style={{ backgroundColor: gold, color: ink }}
           >
-            <RotateCcw size={16} /> Rejouer ces 5 questions
+            <RotateCcw size={16} /> Rejouer {exercises.length === 1 ? "cette question" : `ces ${exercises.length} questions`}
           </button>
           <button onClick={backToSetup} className="w-full py-2.5 rounded-full text-sm font-medium" style={{ color: slate }}>
             Modifier les réglages

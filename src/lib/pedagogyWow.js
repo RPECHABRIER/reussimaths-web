@@ -1000,6 +1000,106 @@ const PROFILES = {
     ],
     success: "Exact. Le coefficient traduit correctement le sens de l’évolution.",
   },
+  "notion-fonctions": {
+    level: "quatrieme",
+    skills: [
+      [/tableau de valeurs/i, "Repère d’abord ce qui est donné et ce que tu cherches.", "Dans un tableau, la ligne des entrées donne x et la ligne des sorties donne son image. Pour un antécédent, pars de la sortie et retrouve l’entrée correspondante."],
+      [/image, antécédent/i, "Repère d’abord ce qui est donné et ce que tu cherches.", "Si x est donné, remplace x pour calculer son image. Si la sortie est donnée, cherche l’entrée qui produit cette valeur."],
+      [/proportionnalité/i, "Vérifie si toutes les sorties s’obtiennent avec le même multiplicateur.", "Compare les rapports sortie/entrée pour plusieurs colonnes ; une seule égalité ne suffit pas à caractériser toute la fonction."],
+      [/problèmes/i, "Identifie l’entrée et la grandeur qui en dépend.", "Traduis la situation par une expression, remplace l’entrée demandée, puis contrôle l’unité et le sens du résultat."],
+    ],
+    success: "Exact. Tu as distingué l’entrée, la sortie et la valeur recherchée.",
+  },
+  "proportionnalite-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/quatrième proportionnelle/i, "Cherche la relation multiplicative entre les grandeurs.", "Utilise le passage à l’unité ou le coefficient de proportionnalité, puis applique la même relation à la valeur demandée."],
+      [/grandeurs produits et quotients/i, "Écris les deux grandeurs avec leurs unités.", "Choisis la relation adaptée : par exemple distance = vitesse × temps ou vitesse = distance ÷ temps, puis harmonise les unités."],
+      [/représentation graphique/i, "Une situation proportionnelle possède un repère graphique précis.", "Vérifie que les points sont alignés sur une droite qui passe par l’origine ; l’alignement seul ne suffit pas."],
+      [/agrandissement, réduction/i, "Repère le coefficient appliqué aux longueurs.", "Les longueurs sont multipliées par k, les aires par k² et les volumes par k³. Choisis la puissance adaptée à la grandeur."],
+      [/problèmes/i, "Choisis d’abord la grandeur de référence.", "Organise les données dans un tableau ou passe par l’unité, puis contrôle que la relation reste multiplicative."],
+    ],
+    success: "Exact. La méthode de proportionnalité est adaptée à la situation.",
+  },
+  "theoreme-thales": {
+    level: "quatrieme",
+    skills: [
+      [/calculer une longueur/i, "Repère les deux triangles et les côtés qui se correspondent.", "Vérifie les alignements et le parallélisme, écris les rapports dans le même ordre, puis isole seulement la longueur cherchée."],
+      [/réciproque/i, "Commence par vérifier les alignements et l’ordre des points.", "Compare les rapports de longueurs correspondantes ; leur égalité permet de conclure au parallélisme seulement lorsque la configuration est établie."],
+      [/problèmes/i, "Identifie la configuration avant tout calcul.", "Repère les droites parallèles, les alignements et les triangles concernés, puis associe les côtés correspondants avant d’utiliser les rapports."],
+    ],
+    success: "Exact. Les conditions de Thalès et la correspondance des côtés sont respectées.",
+  },
+  "probabilites-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/généralités/i, "Décris d’abord l’expérience, ses issues et l’événement demandé.", "Construis l’univers, puis compte uniquement les issues qui réalisent l’événement sans supposer qu’elles sont équiprobables si ce n’est pas indiqué."],
+      [/calculs de probabilités/i, "Identifie l’univers et les cas favorables avant de calculer.", "Choisis la bonne référence, vérifie l’équiprobabilité si tu utilises favorable/possible, puis contrôle que le résultat appartient à [0 ; 1]."],
+      [/contraire|dernière issue/i, "Toutes les probabilités de l’univers totalisent 1.", "Utilise P(non A)=1−P(A), ou retire de 1 la somme des probabilités déjà connues."],
+      [/fréquence|effectif attendu/i, "Une fréquence observée et une probabilité théorique ne sont pas exactement la même chose.", "Multiplie la probabilité par le nombre d’essais pour obtenir un effectif attendu, puis interprète-le comme une prévision."],
+    ],
+    success: "Exact. La probabilité utilise le bon univers et la bonne référence.",
+  },
+  "thales-triangles-semblables-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/théorème de Thalès/i, "Vérifie d’abord les alignements et le parallélisme.", "Identifie les deux triangles, associe les côtés correspondants dans le même ordre, puis écris les rapports avant de calculer."],
+      [/réciproque et parallélisme/i, "Les rapports ne suffisent qu’avec les alignements requis.", "Vérifie l’ordre des points, compare les rapports correspondants, puis conclus au parallélisme uniquement si toutes les conditions sont réunies."],
+      [/agrandissement, réduction/i, "Repère quels côtés ou angles se correspondent.", "Pour des triangles semblables, les angles correspondants sont égaux et les longueurs correspondantes sont multipliées par le même coefficient ; les aires utilisent son carré."],
+    ],
+    success: "Exact. La configuration et les côtés correspondants sont correctement identifiés.",
+  },
+  "trigonometrie-triangle-rectangle-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/relations trigonométriques/i, "Repère l’angle considéré et nomme les côtés par rapport à lui.", "Dans le triangle rectangle, identifie hypoténuse, opposé et adjacent, puis choisis le rapport qui relie uniquement les données et l’inconnue."],
+      [/calculer une longueur ou une mesure d'angle/i, "Commence par repérer l’angle, les côtés connus et l’inconnue.", "Choisis sinus, cosinus ou tangente à partir des deux côtés concernés ; utilise ensuite la fonction réciproque seulement pour chercher un angle."],
+      [/applications/i, "Fais apparaître le triangle rectangle caché dans la situation.", "Place l’angle et les longueurs sur un schéma, identifie opposé, adjacent et hypoténuse, puis sélectionne la relation adaptée."],
+    ],
+    success: "Exact. Le rapport trigonométrique correspond aux données du triangle rectangle.",
+  },
+  "mesures-grandeurs-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/vitesse, énergie, débit/i, "Écris la grandeur cherchée et son unité.", "Choisis la relation reliant les trois grandeurs, harmonise les unités, puis isole la grandeur demandée avant de calculer."],
+      [/échelles/i, "Une échelle agit sur les longueurs ; l’effet change pour une aire ou un volume.", "Utilise le rapport k pour une longueur, k² pour une aire et k³ pour un volume, puis effectue la conversion d’unité séparément."],
+      [/problèmes/i, "Sépare la formule de grandeur et les conversions d’unités.", "Identifie longueur, aire, volume, durée ou débit, applique la formule adaptée, puis convertis le résultat dans l’unité demandée."],
+    ],
+    success: "Exact. La formule et l’unité sont cohérentes avec la grandeur demandée.",
+  },
+  "equations-droites-seconde": {
+    level: "seconde",
+    skills: [
+      [/vecteur directeur/i, "Repère la direction de la droite, indépendamment du point choisi.", "À partir de ax+by+c=0, un directeur possible est (−b ; a) ; avec deux points, utilise la différence de leurs coordonnées, à un multiple non nul près."],
+      [/équation cartésienne|équation réduite/i, "Choisis la forme qui utilise directement les données disponibles.", "Remplace les coordonnées d’un point dans l’équation choisie, ou convertis algébriquement entre ax+by+c=0 et y=mx+p sans imposer une méthode unique."],
+      [/droites particulières/i, "Observe quelle coordonnée reste constante.", "Une droite verticale a une équation x=constante ; une droite horizontale a une équation y=constante."],
+      [/position relative|intersection|systèmes/i, "Compare d’abord les directions des deux droites.", "Des directions différentes donnent une intersection unique ; des directions parallèles demandent ensuite de distinguer droites confondues et strictement parallèles."],
+    ],
+    success: "Exact. L’équation et l’interprétation géométrique décrivent la même droite.",
+  },
+  "informations-chiffrees-seconde": {
+    level: "seconde",
+    skills: [
+      [/proportions|proportion d'une proportion|tableau croisé/i, "Repère la partie et le total qui sert de référence.", "Calcule partie/total pour une proportion. Dans un tableau croisé, choisis le total de ligne, de colonne ou général indiqué par la question avant de calculer."],
+      [/coefficient multiplicateur/i, "Distingue le taux du nombre par lequel la valeur est multipliée.", "Une hausse de t utilise 1+t et une baisse 1−t, avec t en écriture décimale ; reconvertis CM−1 en taux si nécessaire."],
+      [/évolutions successives|évolution réciproque/i, "Les taux successifs ne s’additionnent pas.", "Multiplie les coefficients pour l’évolution globale ; pour revenir à la valeur initiale, utilise l’inverse du coefficient global."],
+      [/évolutions|variation absolue et relative/i, "Identifie la valeur initiale, qui sert de référence.", "La variation absolue vaut final−initial ; le taux vaut cette variation divisée par la valeur initiale."],
+      [/proportion ou évolution/i, "Demande-toi si le pourcentage décrit une part ou un changement.", "Une proportion compare une partie à un total au même instant ; une évolution compare une valeur finale à une valeur initiale. Une différence de pourcentages s’exprime en points."],
+    ],
+    success: "Exact. Le pourcentage utilise la bonne valeur de référence.",
+  },
+  "statistiques-descriptives-seconde": {
+    level: "seconde",
+    skills: [
+      [/moyenne/i, "Vérifie si chaque valeur possède le même poids.", "Pour une moyenne simple, additionne puis divise par l’effectif ; avec des effectifs, calcule la somme pondérée puis divise par l’effectif total."],
+      [/médiane/i, "Ordonne la série et repère son effectif total.", "Pour un effectif impair, prends la valeur centrale ; pour un effectif pair, utilise les deux valeurs centrales selon la définition demandée."],
+      [/quartiles/i, "Travaille sur la série ordonnée et utilise les rangs définis dans le cours.", "Repère les rangs de Q1 et Q3 sans interpoler automatiquement, puis calcule Q3−Q1 seulement pour l’écart interquartile."],
+      [/effectifs cumulés/i, "Repère le sens de l’inégalité avant d’additionner.", "Additionne les effectifs jusqu’à la valeur incluse pour “inférieur ou égal”, ou depuis cette valeur pour “supérieur ou égal”."],
+      [/comparer deux séries|lecture critique|écart type/i, "Choisis l’indicateur qui répond exactement à la comparaison.", "Compare le centre avec moyenne ou médiane et la dispersion avec étendue, écart interquartile ou écart type ; contrôle aussi l’échelle d’un graphique."],
+      [/regroupement par classes/i, "Repère les intervalles, leurs effectifs et la grandeur demandée.", "Pour une moyenne approchée, utilise le milieu de chaque classe avec son effectif ; pour une classe médiane, cherche où l’effectif cumulé atteint la moitié du total."],
+    ],
+    success: "Exact. L’indicateur statistique est calculé et interprété avec la bonne série.",
+  },
 };
 
 const ANNUAL_SHOWCASE_IDS = [
@@ -1121,6 +1221,19 @@ const GENERALIZATION_LOT_4B_IDS = [
   "variables-aleatoires-terminale-techno",
 ];
 
+const GENERALIZATION_LOT_5A_IDS = [
+  "notion-fonctions",
+  "proportionnalite-quatrieme",
+  "theoreme-thales",
+  "probabilites-troisieme",
+  "thales-triangles-semblables-troisieme",
+  "trigonometrie-triangle-rectangle-troisieme",
+  "mesures-grandeurs-troisieme",
+  "equations-droites-seconde",
+  "informations-chiffrees-seconde",
+  "statistiques-descriptives-seconde",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -1169,3 +1282,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_3 = showcaseRows(GENERALIZATION_LOT_3_I
 export const PEDAGOGY_GENERALIZATION_LOT_4A = showcaseRows(GENERALIZATION_LOT_4A_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_4B = showcaseRows(GENERALIZATION_LOT_4B_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_5A = showcaseRows(GENERALIZATION_LOT_5A_IDS);

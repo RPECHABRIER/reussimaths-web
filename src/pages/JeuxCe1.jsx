@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Bot, ChevronRight, Delete, Flag, Pizza, Play, Trophy, Undo2 } from "lucide-react";
+import { ArrowLeft, Bot, Brain, ChevronRight, Delete, Flag, Pizza, Play, Trophy, Undo2 } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 import { shuffle } from "../lib/gameUtils";
 
@@ -8,6 +8,7 @@ const GAME_CARDS = [
   { id: "thousand", title: "La course à 1 000", description: "Retrouve les différentes écritures d’un nombre.", icon: Flag, accent: "#1565c0" },
   { id: "pizza", title: "La pizzeria des fractions", description: "Observe les parts et complète les pizzas.", icon: Pizza, accent: "#d81b60" },
   { id: "robot", title: "Le robot livreur", description: "Programme le chemin jusqu’au colis.", icon: Bot, accent: "#00897b" },
+  { id: "mental", title: "Le défi calcul mental", description: "Résous 10 calculs variés sans les poser.", icon: Brain, accent: "#ef6c00" },
 ];
 
 function GameShell({ title, accent, onBack, children }) {
@@ -77,6 +78,41 @@ function makeFractionQuestion() {
   return { numerator, denominator, correct, options: shuffle([...options]), prompt: complement ? "Quelle fraction manque pour compléter la pizza ?" : "Quelle fraction de la pizza est rouge ?" };
 }
 
+function makeMentalQuestion() {
+  const mode = Math.floor(Math.random() * 6);
+  if (mode === 0) { const a = 20 + Math.floor(Math.random() * 70), b = 1 + Math.floor(Math.random() * 9); return { prompt: `${a} + ${b}`, answer: a + b, skill: "Addition rapide" }; }
+  if (mode === 1) { const a = 30 + Math.floor(Math.random() * 70), b = 1 + Math.floor(Math.random() * Math.min(20, a)); return { prompt: `${a} − ${b}`, answer: a - b, skill: "Soustraction rapide" }; }
+  if (mode === 2) { const a = 1 + Math.floor(Math.random() * 9); return { prompt: `${a} + ? = 10`, answer: 10 - a, skill: "Complément à 10" }; }
+  if (mode === 3) { const a = 2 + Math.floor(Math.random() * 39); return { prompt: `Le double de ${a}`, answer: 2 * a, skill: "Les doubles" }; }
+  if (mode === 4) { const answer = 2 + Math.floor(Math.random() * 39); return { prompt: `La moitié de ${2 * answer}`, answer, skill: "Les moitiés" }; }
+  const factor = shuffle([2, 5, 10])[0], a = 1 + Math.floor(Math.random() * 10);
+  return { prompt: `${factor} × ${a}`, answer: factor * a, skill: `Table de ${factor}` };
+}
+
+function MentalGame({ onBack }) {
+  const total = 10;
+  const [question, setQuestion] = useState(makeMentalQuestion);
+  const [round, setRound] = useState(1);
+  const [score, setScore] = useState(0);
+  const [value, setValue] = useState("");
+  const [feedback, setFeedback] = useState(null);
+  const restart = () => { setQuestion(makeMentalQuestion()); setRound(1); setScore(0); setValue(""); setFeedback(null); };
+  const submit = () => {
+    if (!value || feedback) return;
+    const correct = Number(value) === question.answer;
+    if (correct) setScore((current) => current + 1);
+    setFeedback(correct ? "Bonne réponse !" : `La réponse était ${question.answer}.`);
+    window.setTimeout(() => { setRound((current) => current + 1); setQuestion(makeMentalQuestion()); setValue(""); setFeedback(null); }, 950);
+  };
+  return <GameShell title="Le défi calcul mental" accent="#ef6c00" onBack={onBack}>{round > total ? <FinishCard score={score} total={total} restart={restart} back={onBack}/> : <>
+    <p className="mt-2 text-sm" style={{ color: colors.slate }}>Réponds sans poser le calcul. Chaque bonne réponse rapporte une étoile.</p>
+    <div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Calcul {round} / {total}</span><span>⭐ {score}</span></div>
+    <div className="mt-6 rounded-3xl p-6 text-center" style={{ backgroundColor: `${colors.gold}16` }}><p className="text-xs font-black uppercase tracking-wider" style={{ color: "#b45309" }}>{question.skill}</p><p className="mt-3 text-3xl font-black" style={{ fontFamily: fonts.mono, color: colors.ink }}>{question.prompt}</p><div className="mx-auto mt-5 flex h-14 max-w-48 items-center justify-center rounded-2xl text-2xl font-black" style={{ backgroundColor: colors.card, border: `2px solid ${feedback ? colors.hairline : colors.gold}`, color: colors.ink }}>{value || "?"}</div></div>
+    <div className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2">{[1,2,3,4,5,6,7,8,9,"⌫",0,"OK"].map((key) => <button key={key} disabled={!!feedback} onClick={() => { if (key === "⌫") setValue((current) => current.slice(0, -1)); else if (key === "OK") submit(); else setValue((current) => current.length < 3 ? `${current}${key}` : current); }} className="rounded-2xl py-3 text-lg font-black" style={{ backgroundColor: key === "OK" ? colors.gold : colors.bg, border: `1px solid ${colors.hairline}`, color: colors.ink }}>{key}</button>)}</div>
+    <p aria-live="polite" className="mt-4 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("Bonne") ? colors.green : colors.red }}>{feedback}</p>
+  </>}</GameShell>;
+}
+
 const ROBOT_LEVELS = [
   { start: [4, 0], direction: 0, goal: [1, 0] },
   { start: [4, 0], direction: 0, goal: [2, 2] },
@@ -127,5 +163,6 @@ export default function JeuxCe1() {
   if (activeGame === "thousand") return <QuizGame type="number" onBack={() => setActiveGame(null)}/>;
   if (activeGame === "pizza") return <QuizGame type="fraction" onBack={() => setActiveGame(null)}/>;
   if (activeGame === "robot") return <RobotGame onBack={() => setActiveGame(null)}/>;
-  return <div className="min-h-screen p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}><div className="mx-auto max-w-5xl"><Link to="/jeux" className="inline-flex items-center gap-1 text-sm font-bold" style={{ color: colors.slate }}><ArrowLeft size={16}/> Tous les jeux</Link><header className="my-7 rounded-[2rem] p-7 text-center sm:p-10" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}><p className="text-xs font-black uppercase tracking-[.2em]" style={{ color: colors.gold }}>Nouvel espace</p><h1 className="mt-2 text-4xl font-black" style={{ fontFamily: fonts.display, color: "white" }}>Jeux CE1</h1><p className="mx-auto mt-3 max-w-xl text-sm" style={{ color: "rgba(255,255,255,.72)" }}>Trois défis courts pour progresser en numération, en fractions et en repérage tout en s’amusant.</p></header><div className="grid gap-4 md:grid-cols-3">{GAME_CARDS.map(({ id, title, description, icon: Icon, accent }) => <button key={id} onClick={() => setActiveGame(id)} className="interactive-card flex min-h-64 flex-col rounded-3xl p-6 text-left" style={{ backgroundColor: colors.card, borderTop: `5px solid ${accent}`, boxShadow: shadow.soft }}><span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}18` }}><Icon size={27} color={accent}/></span><h2 className="mt-5 text-xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>{title}</h2><p className="mt-2 flex-1 text-sm leading-relaxed" style={{ color: colors.slate }}>{description}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-black" style={{ color: accent }}>Jouer <ChevronRight size={16}/></span></button>)}</div></div></div>;
+  if (activeGame === "mental") return <MentalGame onBack={() => setActiveGame(null)}/>;
+  return <div className="min-h-screen p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}><div className="mx-auto max-w-5xl"><Link to="/jeux" className="inline-flex items-center gap-1 text-sm font-bold" style={{ color: colors.slate }}><ArrowLeft size={16}/> Tous les jeux</Link><header className="my-7 rounded-[2rem] p-7 text-center sm:p-10" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}><p className="text-xs font-black uppercase tracking-[.2em]" style={{ color: colors.gold }}>Espace CE1</p><h1 className="mt-2 text-4xl font-black" style={{ fontFamily: fonts.display, color: "white" }}>Jeux CE1</h1><p className="mx-auto mt-3 max-w-xl text-sm" style={{ color: "rgba(255,255,255,.72)" }}>Quatre défis courts pour progresser en numération, fractions, calcul mental et repérage tout en s’amusant.</p></header><div className="grid gap-4 sm:grid-cols-2">{GAME_CARDS.map(({ id, title, description, icon: Icon, accent }) => <button key={id} onClick={() => setActiveGame(id)} className="interactive-card flex min-h-64 flex-col rounded-3xl p-6 text-left" style={{ backgroundColor: colors.card, borderTop: `5px solid ${accent}`, boxShadow: shadow.soft }}><span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}18` }}><Icon size={27} color={accent}/></span><h2 className="mt-5 text-xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>{title}</h2><p className="mt-2 flex-1 text-sm leading-relaxed" style={{ color: colors.slate }}>{description}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-black" style={{ color: accent }}>Jouer <ChevronRight size={16}/></span></button>)}</div></div></div>;
 }

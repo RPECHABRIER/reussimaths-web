@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Gamepad2, Zap, Calculator, LayoutGrid, Baby, ShieldCheck } from "lucide-react";
+import { ArrowRight, Gamepad2, Zap, Calculator, LayoutGrid, ShieldCheck } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 import Mascot from "../components/Mascot";
 
@@ -40,24 +40,6 @@ const GAMES = [
     level: "6e à Terminale",
     accent: "#6C5CE7",
     duration: "4 min",
-  },
-  {
-    id: "memory-cp-ce1",
-    title: "Memory CP/CE1",
-    description: "Retrouve les paires de doubles et affronte le robot, avec un point pour chaque paire gagnée.",
-    icon: Baby,
-    level: "CP / CE1",
-    accent: "#E56B8B",
-    duration: "4 min",
-  },
-  {
-    id: "course-additions-cp-ce1",
-    title: "Course des additions",
-    description: "Écris la réponse à des additions de nombres jusqu'à 20 et gagne la course jusqu'à 6 bonnes réponses.",
-    icon: Zap,
-    level: "CP / CE1",
-    accent: "#3FA66B",
-    duration: "2 min",
   },
 ];
 

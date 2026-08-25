@@ -268,6 +268,9 @@ export default function MemoryCpCe1() {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md mx-auto">
+          <Link to="/jeux" className="mb-4 inline-flex items-center gap-1 text-sm font-bold" style={{ color: slate }}>
+            ← Retour aux jeux
+          </Link>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4">
             <div className="rounded-xl px-3 py-2 text-center" style={{ backgroundColor: turn === "child" ? `${gold}22` : colors.card, border: `2px solid ${turn === "child" ? gold : colors.hairline}` }}>
               <p className="text-[10px] font-black uppercase" style={{ color: slate }}>Toi</p>

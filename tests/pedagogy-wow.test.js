@@ -138,6 +138,21 @@ test("vingt générations par chapitre du lot 2 préservent le contenu et expose
   }
 });
 
+test("la somme des n premiers entiers reçoit une aide dédiée sans faux vocabulaire de suite", async () => {
+  const { default: chapter } = await import("../src/chapters/suites-numeriques-premiere-spe.js");
+  let checked = 0;
+  for (let draw = 0; draw < 5000 && checked < 20; draw += 1) {
+    const original = chapter.generate();
+    if (!/Somme des n premiers entiers/i.test(original.chapter)) continue;
+    const prepared = prepareWowExercise(chapter, original);
+    const guidance = `${prepared.hints.join(" ")} ${prepared.feedback.default}`;
+    assert.match(guidance, /n\(n\+1\)\/2/);
+    assert.doesNotMatch(guidance, /raison|terme général|récurrence|rang initial/i);
+    checked += 1;
+  }
+  assert.equal(checked, 20);
+});
+
 test("un ancien chapitre hors profils conserve exactement son exercice", async () => {
   const { default: chapter } = await import("../src/chapters/symetrie-centrale-parallelogrammes.js");
   const original = chapter.generate();

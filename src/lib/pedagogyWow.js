@@ -161,7 +161,8 @@ const PROFILES = {
     level: "premiere-spe",
     skills: [
       [/modes de génération|formule explicite/i, "Repère si le terme dépend du rang ou du terme précédent.", "Une forme explicite donne uₙ avec n ; une récurrence calcule un terme à partir d’un terme antérieur."],
-      [/arithmétique|somme des n premiers entiers/i, "Cherche une différence constante entre deux termes consécutifs.", "Utilise le rang initial écrit dans l’énoncé : uₙ=uₚ+(n−p)r, puis adapte la somme au nombre réel de termes."],
+      [/somme des n premiers entiers/i, "Repère la dernière valeur, notée n dans la formule.", "Remplace n dans n(n+1)/2 par la dernière valeur de la somme, puis calcule le produit avant de diviser par 2."],
+      [/arithmétique/i, "Cherche une différence constante entre deux termes consécutifs.", "Utilise le rang initial écrit dans l’énoncé : uₙ=uₚ+(n−p)r, puis adapte la somme au nombre réel de termes."],
       [/géométrique/i, "Cherche un quotient constant entre deux termes consécutifs.", "Utilise le rang initial écrit dans l’énoncé : uₙ=uₚ×q^(n−p), puis adapte la somme au premier terme présent."],
       [/sens de variation/i, "Relie la variation à la raison et aux signes des termes.", "Pour une suite arithmétique, étudie r ; pour une géométrique, contrôle q et le signe des termes avant de conclure."],
       [/modélisation|limite/i, "Identifie si l’évolution est additive ou multiplicative.", "Choisis le modèle, fixe le rang initial à partir du contexte puis interprète le terme ou la limite demandée."],

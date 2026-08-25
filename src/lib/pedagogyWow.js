@@ -1,4 +1,193 @@
 const PROFILES = {
+  "reviser-les-bases": {
+    level: "sixieme",
+    skills: [
+      [/nombres entiers/i, "Lis le nombre par groupes de trois chiffres.", "Repère millions, milliers et unités, puis traite un seul groupe à la fois."],
+      [/automatismes/i, "Commence par l’opération la plus simple.", "Écris une étape par ligne et vérifie l’ordre des opérations."],
+      [/géométrie/i, "Repère les mots qui décrivent la figure.", "Associe chaque propriété au bon objet : point, segment, droite ou angle."],
+      [/problèmes/i, "Cherche ce que la question demande.", "Relève les données utiles, choisis l’opération, puis écris une phrase-réponse."],
+    ],
+    success: "Exact. Tu as utilisé la bonne base de calcul.",
+  },
+  "automatismes-sixieme": {
+    level: "sixieme",
+    skills: [
+      [/fraction|dixièmes|quarts|pourcentage/i, "Imagine l’unité partagée en parts égales.", "Repère la taille d’une part, puis compte le nombre de parts."],
+      [/angle|triangle|cercle|symétrie|longueur|aire|périmètre/i, "Observe la figure ou l’unité demandée.", "Choisis la propriété ou la conversion adaptée, puis fais un calcul court."],
+      [/durée|heure|contenance|masse/i, "Mets les deux mesures dans la même unité.", "Convertis d’abord, puis effectue l’opération demandée."],
+      [/addition|ajouter|soustraire|multiplier|multiplication|diviser|diviseur|multiple|calcul|table|décimal|arrondir|compléter|double|moitié|tiers|triple|distributivité|lexique|ordre de grandeur|rapport|égalité|suite|axe gradué/i, "Estime le résultat avant de calculer.", "Pose mentalement l’opération dans le bon ordre, puis contrôle avec ton estimation."],
+    ],
+    success: "Exact. Le calcul est rapide et bien contrôlé.",
+  },
+  "operations-decimaux": {
+    level: "sixieme",
+    skills: [
+      [/multiplier deux décimaux/i, "Calcule d’abord comme avec des entiers.", "Effectue le produit, puis replace la virgule en comptant les chiffres décimaux des deux facteurs."],
+      [/diviser|division euclidienne/i, "Cherche combien de fois le diviseur entre dans le nombre.", "Effectue la division étape par étape et vérifie avec diviseur × quotient + reste."],
+      [/ordre de grandeur/i, "Arrondis les nombres à des valeurs faciles.", "Calcule avec les valeurs arrondies puis compare l’ordre de grandeur au résultat proposé."],
+      [/aire et périmètre|problèmes|programme de calcul/i, "Traduis une seule information à la fois.", "Choisis la formule ou l’ordre des opérations, calcule, puis indique l’unité si nécessaire."],
+      [/puissances de dix/i, "Observe le sens du déplacement de la virgule.", "Multiplier par 10, 100 ou 1 000 décale la virgule vers la droite du nombre de zéros correspondant."],
+    ],
+    success: "Exact. L’opération décimale et son ordre de grandeur sont cohérents.",
+  },
+  "reviser-les-bases-cinquieme": {
+    level: "cinquieme",
+    skills: [
+      [/fractions/i, "Repère la taille des parts avant de calculer.", "Utilise des parts de même taille, puis compare ou calcule les numérateurs."],
+      [/multiples et diviseurs/i, "Teste les critères les plus simples.", "Vérifie 2, 3, 5, 9 ou 10, puis effectue une division si nécessaire."],
+      [/nombres décimaux/i, "Aligne les chiffres de même rang.", "Complète avec des zéros si besoin, puis calcule colonne par colonne."],
+      [/pourcentages/i, "Prends 100 comme quantité de référence.", "Écris le pourcentage sous forme décimale, puis multiplie par la quantité totale."],
+      [/géométrie|vocabulaire/i, "Relis le mot précis demandé.", "Associe la définition à la propriété avant de conclure."],
+    ],
+    success: "Exact. Le prérequis est bien maîtrisé.",
+  },
+  "automatismes-cinquieme": {
+    level: "cinquieme",
+    skills: [
+      [/fraction|pourcentage|coefficient|proportion|échelle|vitesse/i, "Repère la quantité de référence.", "Écris la relation multiplicative puis effectue un seul calcul."],
+      [/angle|triangle|disque|aire|volume|segment|symétrie|géométrie|distance|droite graduée|graduation|durée|masse|parallélogramme/i, "Identifie la propriété, l’unité ou la formule utile.", "Remplace les données dans la relation choisie et conserve l’unité."],
+      [/probabilit|fréquence|moyenne|statistique|données|événement/i, "Compte les cas ou les valeurs utiles.", "Choisis le bon total de référence puis calcule le rapport demandé."],
+      [/calcul|décim|puissance|carré|cube|divis|produit|somme|équation|égalité|facteur|formule|écart|répartir|suite|problème/i, "Repère l’opération prioritaire.", "Effectue une étape courte, puis vérifie le signe et l’ordre de grandeur."],
+      [/boucle|entrées et sorties/i, "Suis les instructions dans l’ordre.", "Note la valeur après chaque étape ou répétition, sans anticiper la suivante."],
+    ],
+    success: "Exact. L’automatisme est correctement appliqué.",
+  },
+  "divisibilite-fractions": {
+    level: "cinquieme",
+    skills: [
+      [/divisib|multiple|diviseur/i, "Teste d’abord un critère de divisibilité connu.", "Applique les critères de 2, 3, 5, 9 ou 10, puis confirme par une division entière."],
+      [/fraction irréductible|simplif/i, "Cherche un diviseur commun aux deux nombres.", "Divise numérateur et dénominateur par le même facteur jusqu’à ce qu’ils soient premiers entre eux."],
+      [/fraction|dénominateur commun/i, "Les parts doivent avoir la même taille.", "Trouve un multiple commun des dénominateurs, puis transforme les deux fractions sans changer leur valeur."],
+    ],
+    success: "Exact. Les propriétés de divisibilité sont bien utilisées.",
+  },
+  "reviser-les-bases-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/nombres relatifs|priorités/i, "Repère les signes et l’opération prioritaire.", "Traite les parenthèses, puis produits et quotients, avant les sommes et différences."],
+      [/fractions/i, "Vérifie si les dénominateurs sont comparables.", "Réduis au même dénominateur lorsque l’opération l’exige, puis simplifie le résultat."],
+      [/calcul littéral|fonctions/i, "Distingue la valeur connue de l’expression à calculer.", "Remplace ou transforme terme par terme, sans mélanger les termes de nature différente."],
+      [/proportionnalité|statistiques/i, "Identifie le total ou le coefficient de référence.", "Écris la relation avant de calculer et interprète le résultat dans le contexte."],
+      [/géométrie|puissances/i, "Choisis la propriété correspondant aux données.", "Écris la propriété ou la règle des puissances, puis applique-la avec les signes."],
+    ],
+    success: "Exact. Le raisonnement s’appuie sur le bon prérequis.",
+  },
+  "automatismes-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/rationnels|additionner|multiplier|priorités|puissances/i, "Contrôle d’abord les signes et les priorités.", "Écris une seule étape intermédiaire puis simplifie le résultat."],
+      [/calcul littéral|équations|fonctions/i, "Repère l’expression ou l’inconnue concernée.", "Effectue la même transformation des deux côtés ou remplace la valeur demandée."],
+      [/proportionnalité|statistiques|probabilités/i, "Choisis le bon total de référence.", "Écris le rapport ou le coefficient avant d’effectuer le calcul."],
+      [/géométrie|Thalès|triangles rectangles/i, "Liste les données utiles de la figure.", "Choisis la propriété dont toutes les conditions sont vérifiées, puis remplace les longueurs."],
+    ],
+    success: "Exact. La méthode courte est bien choisie.",
+  },
+  "nombres-relatifs-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/additionner|soustraire|compléter/i, "Compare les signes avant de calculer les distances à zéro.", "Même signe : additionne les distances ; signes différents : soustrais-les et garde le signe du plus éloigné de zéro."],
+      [/multiplier|diviser|signe d'un produit|signe d'un quotient|signe d'un facteur|carré|produit de facteurs/i, "Compte les facteurs négatifs.", "Un nombre pair de signes négatifs donne un résultat positif ; un nombre impair donne un résultat négatif."],
+      [/priorités|chaîne/i, "Repère parenthèses, produits et quotients.", "Calcule d’abord les parenthèses, puis produits et quotients, enfin sommes et différences."],
+      [/programme|barème|durées|comparer/i, "Traduis chaque étape avec son signe.", "Construis l’expression complète, puis calcule en contrôlant le sens du résultat."],
+    ],
+    success: "Exact. Les signes et les priorités sont cohérents.",
+  },
+  "reviser-les-bases-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/calcul littéral|équations/i, "Choisis la transformation qui conserve l’égalité.", "Réduis les expressions puis applique la même opération aux deux membres."],
+      [/fractions|nombres relatifs|priorités|puissances/i, "Contrôle les signes et l’ordre des opérations.", "Traite une priorité à la fois, puis simplifie le résultat final."],
+      [/fonctions|proportionnalité/i, "Identifie l’entrée, la sortie et la relation entre elles.", "Écris la formule ou le coefficient, puis remplace la donnée connue."],
+      [/statistiques/i, "Repère la population et l’indicateur demandé.", "Choisis le bon effectif total, calcule puis interprète l’indicateur."],
+      [/Pythagore/i, "Repère l’hypoténuse et vérifie l’angle droit.", "Écris l’égalité des carrés adaptée avant de remplacer les longueurs."],
+    ],
+    success: "Exact. La méthode choisie est justifiée.",
+  },
+  "nombres-entiers-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/divisibilité|division euclidienne|parité/i, "Teste la structure du nombre avant de diviser.", "Utilise un critère de divisibilité ou écris a=bq+r avec un reste compris entre 0 et b−1."],
+      [/nombres premiers|facteurs premiers/i, "Teste les petits nombres premiers dans l’ordre.", "Divise successivement par 2, 3, 5, 7… jusqu’à obtenir uniquement des facteurs premiers."],
+      [/PGCD/i, "Cherche les facteurs communs aux deux nombres.", "Décompose les deux nombres ou utilise l’algorithme d’Euclide, puis garde les facteurs communs."],
+      [/fraction irréductible|simplifier une fraction/i, "Le numérateur et le dénominateur ont-ils un facteur commun ?", "Calcule leur PGCD puis divise les deux termes par ce même nombre."],
+    ],
+    success: "Exact. La propriété arithmétique est utilisée avec méthode.",
+  },
+  "reviser-les-bases-seconde": {
+    level: "seconde",
+    skills: [
+      [/calcul littéral|équations|calcul numérique/i, "Identifie la structure avant de transformer.", "Respecte priorités et signes, puis effectue une transformation équivalente à chaque étape."],
+      [/fonctions affines/i, "Distingue image, antécédent, pente et ordonnée à l’origine.", "Choisis la relation f(x)=ax+b, puis remplace uniquement la donnée connue."],
+      [/proportionnalité|statistiques|probabilités/i, "Identifie la population ou la grandeur de référence.", "Écris le rapport adapté, calcule puis interprète le résultat."],
+      [/Pythagore|trigonométrie/i, "Fais apparaître l’angle droit, les côtés connus et l’inconnue.", "Choisis la relation reliant exactement ces données, puis vérifie la plausibilité du résultat."],
+    ],
+    success: "Exact. Le prérequis est mobilisé sans étape inutile.",
+  },
+  "generalites-fonctions-seconde": {
+    level: "seconde",
+    skills: [
+      [/ensemble de définition/i, "Cherche quelles valeurs de x rendent l’expression possible.", "Exclus les divisions par zéro et les racines carrées de nombres négatifs, puis écris l’ensemble obtenu."],
+      [/image et antécédent|résolution d'équations/i, "Distingue ce qui est connu : x ou f(x).", "Pour une image, remplace x ; pour un antécédent, résous f(x)=valeur."],
+      [/courbe représentative|lecture d'un tableau/i, "Pars de l’axe ou de la ligne correspondant à l’entrée.", "Relie l’abscisse à son ordonnée sans inverser image et antécédent."],
+      [/tableau de signes/i, "Repère les zéros et les intervalles séparés.", "Lis le signe sur chaque intervalle et traite les zéros à part."],
+      [/modes de représentation/i, "Demande-toi quelle information chaque représentation rend visible.", "Relie formule, tableau et courbe en utilisant les mêmes couples (x ; f(x))."],
+    ],
+    success: "Exact. La représentation et l’information recherchée sont cohérentes.",
+  },
+  "reviser-les-bases-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/calcul littéral|calcul numérique/i, "Analyse la structure et les signes avant de calculer.", "Effectue les transformations équivalentes une par une puis contrôle le résultat."],
+      [/équations/i, "Détermine le domaine et la forme de l’équation.", "Choisis factorisation, produit nul ou isolement de l’inconnue, puis vérifie les solutions."],
+      [/fonctions de référence/i, "Identifie la fonction de référence concernée.", "Utilise son domaine, ses variations et sa représentation avant de conclure."],
+      [/proportionnalité/i, "Distingue taux, coefficient et valeur finale.", "Écris le coefficient multiplicateur adapté puis interprète le résultat."],
+      [/vecteurs/i, "Choisis une base ou des coordonnées communes.", "Traduis la relation vectorielle coordonnée par coordonnée puis vérifie la direction obtenue."],
+    ],
+    success: "Exact. Le prérequis algébrique est maîtrisé.",
+  },
+  "reviser-les-bases-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/évolutions et pourcentages/i, "Identifie la valeur de référence et le sens de l’évolution.", "Transforme le taux en coefficient multiplicateur puis applique-le à la valeur initiale."],
+      [/lecture de tableaux|statistiques|probabilités/i, "Repère la population de référence avant le calcul.", "Choisis la ligne, la colonne ou le total pertinent puis interprète le rapport."],
+      [/fonctions affines|fonction carré/i, "Identifie la fonction et la donnée recherchée.", "Utilise la formule ou la représentation adaptée en distinguant image et antécédent."],
+      [/calcul numérique|équations/i, "Contrôle les priorités et les signes.", "Transforme une étape à la fois puis vérifie le résultat dans l’expression initiale."],
+    ],
+    success: "Exact. L’information chiffrée est interprétée avec la bonne référence.",
+  },
+  "automatismes-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/évolutions/i, "Distingue le taux du coefficient multiplicateur.", "Utilise 1+t pour une hausse et 1−t pour une baisse, avec t en écriture décimale."],
+      [/lecture de données|lecture graphique/i, "Vérifie les axes, unités et graduations.", "Repère la donnée de départ, lis la valeur correspondante puis interprète-la dans le contexte."],
+      [/probabilités conditionnelles/i, "Quelle population sert de référence ?", "Restreins d’abord l’univers à la condition, puis calcule la proportion dans ce nouvel ensemble."],
+      [/calcul littéral|équations|signe/i, "Identifie la structure avant de calculer.", "Applique une transformation équivalente, contrôle les signes et vérifie la solution."],
+      [/vocabulaire et logique/i, "Distingue hypothèse, conclusion et réciproque.", "Traduis la phrase avec des conditions précises avant de décider si elle est vraie."],
+    ],
+    success: "Exact. L’automatisme est appliqué avec la bonne interprétation.",
+  },
+  "reviser-les-bases-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/dérivation/i, "Identifie la structure de la fonction avant de choisir la règle.", "Dérive avec la règle adaptée puis exploite le signe de la dérivée seulement si demandé."],
+      [/fonctions exponentielles/i, "Ramène les expressions à une même base si possible.", "Utilise les propriétés de l’exponentielle en contrôlant domaine et monotonie."],
+      [/suites/i, "Distingue définition explicite et récurrence.", "Choisis l’expression correspondant au rang demandé puis justifie toute propriété utilisée."],
+      [/probabilités/i, "Identifie les événements et le conditionnement.", "Construis l’arbre ou la formule adaptée puis vérifie que les probabilités restent entre 0 et 1."],
+      [/équations|vecteurs|évolutions/i, "Choisis le cadre algébrique correspondant aux données.", "Écris la relation complète, résous-la, puis vérifie les conditions du problème."],
+    ],
+    success: "Exact. Le prérequis est utilisé avec ses hypothèses.",
+  },
+  "suites-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/terme général.*arithmétique|preuve arithmétique/i, "Cherche une différence constante entre deux termes.", "Pour une suite arithmétique, utilise uₙ=u₀+nr ou la formule adaptée au rang initial."],
+      [/terme général.*géométrique|preuve géométrique/i, "Cherche un quotient constant entre deux termes.", "Pour une suite géométrique, utilise uₙ=u₀×qⁿ ou la formule adaptée au rang initial."],
+      [/somme.*arithmétique/i, "Compte le nombre de termes avant d’utiliser la formule.", "Multiplie le nombre de termes par la moyenne du premier et du dernier."],
+      [/somme.*géométrique/i, "Repère le premier terme, la raison et le nombre de termes.", "Applique la somme géométrique avec ces trois données et traite séparément le cas q=1."],
+      [/moyenne|modélisation/i, "Identifie le type d’évolution avant de choisir le modèle.", "Une variation additive suggère l’arithmétique ; une évolution multiplicative suggère la géométrique."],
+    ],
+    success: "Exact. Le modèle de suite et ses paramètres sont cohérents.",
+  },
   "nombres-decimaux": {
     level: "sixieme",
     skills: [
@@ -214,6 +403,27 @@ const BACK_TO_SCHOOL_SHOWCASE_IDS = [
   "reviser-les-bases-terminale-techno",
 ];
 
+const GENERALIZATION_LOT_1_IDS = [
+  "reviser-les-bases",
+  "automatismes-sixieme",
+  "operations-decimaux",
+  "reviser-les-bases-cinquieme",
+  "automatismes-cinquieme",
+  "divisibilite-fractions",
+  "reviser-les-bases-quatrieme",
+  "automatismes-quatrieme",
+  "nombres-relatifs-quatrieme",
+  "reviser-les-bases-troisieme",
+  "nombres-entiers-troisieme",
+  "reviser-les-bases-seconde",
+  "generalites-fonctions-seconde",
+  "reviser-les-bases-premiere-spe",
+  "reviser-les-bases-premiere-non-spe",
+  "automatismes-premiere-techno",
+  "reviser-les-bases-terminale-spe",
+  "suites-terminale-techno",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -252,3 +462,5 @@ function showcaseRows(ids) {
 export const WOW_SHOWCASES = showcaseRows(ANNUAL_SHOWCASE_IDS);
 
 export const BACK_TO_SCHOOL_SHOWCASES = showcaseRows(BACK_TO_SCHOOL_SHOWCASE_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_1 = showcaseRows(GENERALIZATION_LOT_1_IDS);

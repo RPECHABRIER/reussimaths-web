@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import {
   BACK_TO_SCHOOL_SHOWCASES,
   correctWowMessage,
+  PEDAGOGY_GENERALIZATION_LOT_1,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -27,6 +28,24 @@ const CHAPTER_FILES = {
   "reviser-les-bases-premiere-techno": "reviser-les-bases-premiere-techno",
   "suites-terminale-spe": "suites-terminale-spe",
   "reviser-les-bases-terminale-techno": "reviser-les-bases-terminale-techno",
+  "reviser-les-bases": "reviser-les-bases",
+  "automatismes-sixieme": "automatismes-sixieme",
+  "operations-decimaux": "operations-decimaux",
+  "reviser-les-bases-cinquieme": "reviser-les-bases-cinquieme",
+  "automatismes-cinquieme": "automatismes-cinquieme",
+  "divisibilite-fractions": "divisibilite-fractions",
+  "reviser-les-bases-quatrieme": "reviser-les-bases-quatrieme",
+  "automatismes-quatrieme": "automatismes-quatrieme",
+  "nombres-relatifs-quatrieme": "nombres-relatifs-quatrieme",
+  "reviser-les-bases-troisieme": "reviser-les-bases-troisieme",
+  "nombres-entiers-troisieme": "nombres-entiers-troisieme",
+  "reviser-les-bases-seconde": "reviser-les-bases-seconde",
+  "generalites-fonctions-seconde": "generalites-fonctions-seconde",
+  "reviser-les-bases-premiere-spe": "reviser-les-bases-premiere-spe",
+  "reviser-les-bases-premiere-non-spe": "reviser-les-bases-premiere-non-spe",
+  "automatismes-premiere-techno": "automatismes-premiere-techno",
+  "reviser-les-bases-terminale-spe": "reviser-les-bases-terminale-spe",
+  "suites-terminale-techno": "suites-terminale-techno",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -44,6 +63,40 @@ test("les dix vitrines de rentrée couvrent dix niveaux sans remplacer les vitri
     assert.ok(showcase.diagnosticCount >= 3 && showcase.diagnosticCount <= 6, showcase.chapterId);
   }
   assert.equal(WOW_SHOWCASES.length, 10);
+});
+
+test("le lot 1 reste limité à dix-huit chapitres de début d'année avec 3 à 6 familles fiables", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_1.length, 18);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_1) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 1 conservent la réponse et reçoivent une aide graduée", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_1) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    let targeted = 0;
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps), chapterRow.chapterId);
+      assert.ok(prepared.wowSuccess, chapterRow.chapterId);
+      if (prepared.hints?.length >= 2) {
+        targeted += 1;
+        assert.notEqual(prepared.hints[0], prepared.hints[1]);
+        assert.ok(prepared.feedback?.default);
+      }
+    }
+    assert.equal(targeted, 20, `${chapterRow.chapterId}: seulement ${targeted}/20 générations ciblées`);
+  }
+});
+
+test("un ancien chapitre hors profils conserve exactement son exercice", async () => {
+  const { default: chapter } = await import("../src/chapters/symetrie-centrale-parallelogrammes.js");
+  const original = chapter.generate();
+  assert.equal(prepareWowExercise(chapter, original), original);
 });
 
 test("vingt générations par vitrine de rentrée conservent les réponses et exposent l’aide graduée", async () => {

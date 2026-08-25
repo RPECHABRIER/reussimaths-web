@@ -210,6 +210,206 @@ const PROFILES = {
     ],
     success: "Exact. Le modèle exponentiel et le taux sont correctement distingués.",
   },
+  "configurations-geometriques": {
+    level: "sixieme",
+    skills: [
+      [/existence d'un triangle/i, "Compare les longueurs des trois côtés.", "Pour construire le triangle, chaque côté doit être plus court que la somme des deux autres."],
+      [/triangles particuliers/i, "Lis les longueurs et les angles codés.", "Repère les côtés égaux ou l’angle droit, puis donne le nom précis du triangle."],
+      [/angles d'un triangle|alignement/i, "Observe la ligne droite ou les trois angles du triangle.", "Utilise 180° pour un angle plat ou pour la somme des angles d’un triangle, puis calcule la mesure manquante."],
+      [/problèmes/i, "Note ce que la figure donne et ce que tu cherches.", "Choisis une seule propriété adaptée aux codages, calcule, puis écris une courte conclusion."],
+      [/représenter l'espace/i, "Repère les faces et les arêtes déjà visibles.", "Appuie-toi sur les sommets reliés et les codages de la figure, sans te fier seulement à son apparence."],
+    ],
+    success: "Exact. Les longueurs, les angles et les codages sont cohérents.",
+  },
+  "organisation-gestion-donnees": {
+    level: "sixieme",
+    skills: [
+      [/diagramme|tableau de données|tableau à double entrée/i, "Lis d’abord le titre, les lignes et les colonnes.", "Repère la catégorie demandée, puis lis la valeur avec la bonne graduation ou à l’intersection correcte."],
+      [/pourcentages et tableaux/i, "Quelle quantité représente le total ?", "Prends le total comme référence, puis calcule la part demandée sur 100."],
+      [/probabilité|expérience aléatoire|issues d'un événement|urne|jeu de cartes|roue de loterie/i, "Compte les issues possibles et celles qui conviennent.", "Si les issues sont équiprobables, écris cas favorables sur cas possibles ; sinon, utilise les informations données."],
+      [/fréquence|tableau d'expérience/i, "Repère le nombre total d’essais.", "Divise l’effectif observé par le nombre total d’essais, puis vérifie que le résultat est entre 0 et 1."],
+      [/événement contraire|comparer des probabilités|égaliser des probabilités/i, "Décris précisément l’événement étudié.", "Utilise le bon univers de référence ; pour un événement contraire, calcule 1 moins la probabilité de l’événement."],
+    ],
+    success: "Exact. La donnée est lue avec le bon total de référence.",
+  },
+  "geometrie-espace": {
+    level: "cinquieme",
+    skills: [
+      [/patrons/i, "Repère quelles faces doivent se rejoindre.", "Vérifie le nombre et la forme des faces, puis imagine le pliage sans superposer deux faces."],
+      [/perspective cavalière/i, "Distingue les arêtes visibles et cachées.", "Conserve le parallélisme des arêtes correspondantes et utilise les pointillés pour les arêtes cachées."],
+      [/volumes et capacités|conversions/i, "Mets les mesures dans la même unité.", "Pour les volumes, chaque changement d’unité cubique vaut 1 000 ; utilise aussi 1 dm³ = 1 L."],
+      [/volumes/i, "Identifie le solide et ses dimensions utiles.", "Choisis la formule du volume, remplace les mesures dans une même unité, puis écris l’unité cubique."],
+      [/culture mathématique/i, "Repère le solide ou la propriété décrite.", "Relie le vocabulaire à la forme, aux faces ou aux dimensions caractéristiques du solide."],
+      [/aire du disque/i, "Repère le rayon du disque.", "Utilise π×rayon×rayon, puis écris une unité d’aire."],
+    ],
+    success: "Exact. Le solide, ses dimensions et son unité sont cohérents.",
+  },
+  "symetrie-centrale-parallelogrammes": {
+    level: "cinquieme",
+    skills: [
+      [/symétrie centrale/i, "Le centre est le milieu entre un point et son image.", "Utilise l’alignement avec le centre et l’égalité des distances ; les longueurs, angles et aires sont conservés."],
+      [/opposés par le sommet|adjacents et supplémentaires|bissectrice/i, "Observe les côtés communs et leurs prolongements.", "Utilise l’égalité des angles opposés, la somme de 180° des angles supplémentaires ou le partage en deux angles égaux."],
+      [/droites parallèles|tester le parallélisme/i, "Repère la sécante et les angles codés.", "Compare les angles correspondants ou alternes-internes, puis cite la propriété avant de conclure."],
+      [/parallélogramme|centre de symétrie/i, "Cherche les côtés ou les diagonales associés.", "Utilise une propriété complète : côtés opposés parallèles et égaux, ou diagonales qui se coupent en leur milieu."],
+      [/culture mathématique/i, "Repère la propriété d’angle décrite.", "Relie le vocabulaire aux côtés, au sommet et aux droites de la figure avant de répondre."],
+    ],
+    success: "Exact. La propriété géométrique utilisée correspond aux codages.",
+  },
+  "resolution-equations": {
+    level: "quatrieme",
+    skills: [
+      [/tester/i, "Remplace l’inconnue par la valeur proposée.", "Calcule séparément les deux membres : la valeur convient seulement s’ils sont égaux."],
+      [/résoudre/i, "Quelle opération empêche l’inconnue d’être seule ?", "Effectue la même opération sur les deux membres, réduis, puis recommence jusqu’à isoler l’inconnue."],
+      [/problèmes/i, "Choisis l’inconnue avant d’écrire le calcul.", "Traduis les deux expressions décrites par la situation, écris leur égalité, résous puis vérifie dans le contexte."],
+    ],
+    success: "Exact. Chaque transformation conserve l’égalité.",
+  },
+  "statistiques-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/moyennes/i, "Repère si certaines valeurs sont répétées.", "Additionne les valeurs en tenant compte de leurs effectifs, puis divise par l’effectif total."],
+      [/médiane/i, "Range d’abord les valeurs dans l’ordre.", "Repère la ou les positions centrales selon que l’effectif est impair ou pair, sans calculer une moyenne de toute la série."],
+      [/diagrammes/i, "Lis l’échelle et le total avant l’angle ou la fréquence.", "Relie chaque effectif à sa part du total, puis à la graduation ou à l’angle correspondant."],
+      [/vocabulaire|problèmes/i, "Identifie la population, le caractère et l’effectif.", "Choisis l’indicateur demandé, utilise le bon total, puis interprète le résultat dans la situation."],
+    ],
+    success: "Exact. L’indicateur utilise toutes les données nécessaires.",
+  },
+  "notion-fonction-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/vocabulaire, image, antécédent/i, "Repère ce qui est donné et ce que tu cherches.", "Si l’entrée est connue, calcule sa sortie ; si la sortie est connue, cherche l’entrée qui la produit."],
+      [/tableau de valeurs/i, "Pars de la ligne de la valeur connue.", "Associe les deux valeurs d’une même colonne sans inverser entrée et sortie."],
+      [/cas particuliers/i, "Observe comment la sortie dépend de l’entrée.", "Compare la relation proposée aux formes usuelles en vérifiant plusieurs valeurs."],
+      [/programmes de calcul|égalité de deux fonctions/i, "Traduis chaque fonction avant de les comparer.", "Écris les deux expressions avec la même entrée, puis résous leur égalité ou compare leurs valeurs."],
+    ],
+    success: "Exact. L’entrée et la sortie ont le bon rôle.",
+  },
+  "fonctions-affines-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/identifier a et b/i, "Dans ax+b, distingue la pente et la valeur de départ.", "Le coefficient a multiplie x ; b est la valeur obtenue pour x=0."],
+      [/droites et coefficients/i, "Observe la variation verticale pour une variation horizontale.", "Calcule la pente dans le même ordre, puis lis l’ordonnée à l’origine sur l’axe vertical."],
+      [/déterminer une fonction/i, "Commence par utiliser deux points pour trouver la pente.", "Calcule a, puis remplace les coordonnées d’un point dans y=ax+b pour déterminer b."],
+      [/problèmes de tarifs/i, "Repère la part fixe et la part qui dépend de la quantité.", "Traduis chaque tarif par une fonction affine, puis compare-les pour la même quantité."],
+    ],
+    success: "Exact. Les coefficients sont interprétés dans la bonne relation.",
+  },
+  "fonctions-reference-seconde": {
+    level: "seconde",
+    skills: [
+      [/images|antécédents/i, "Repère d’abord ce qui est donné et ce qui est cherché.", "Pour une image, remplace x ; pour un antécédent, résous l’équation de la fonction de référence en respectant son domaine."],
+      [/sens de variation|comparaison d'images/i, "Identifie la fonction et l’intervalle étudié.", "Utilise ses variations sur cet intervalle ; la fonction carré ou inverse ne conserve pas toujours l’ordre sur tout son domaine."],
+      [/équations et inéquations/i, "Repère les valeurs interdites et les symétries possibles.", "Ramène le problème à la fonction de référence, résous sur son domaine, puis contrôle chaque solution ou intervalle."],
+      [/propriétés/i, "Nomme la fonction de référence avant de conclure.", "Utilise son domaine, sa parité, son signe ou ses variations selon l’information demandée."],
+    ],
+    success: "Exact. La propriété est appliquée sur le bon domaine.",
+  },
+  "reperage-configurations-seconde": {
+    level: "seconde",
+    skills: [
+      [/coordonnées du milieu|centre de gravité/i, "Travaille coordonnée par coordonnée.", "Pour un milieu, fais la moyenne des abscisses puis celle des ordonnées ; adapte les coefficients au centre de gravité."],
+      [/distance entre deux points|réciproque de Pythagore/i, "Repère les écarts horizontal et vertical.", "Calcule les deux différences dans le même ordre, puis utilise la somme de leurs carrés avant la racine."],
+      [/alignement de points/i, "Compare deux directions à partir d’un même point.", "Calcule des vecteurs ou des coefficients directeurs, puis utilise un critère de colinéarité."],
+      [/parallélogramme/i, "Choisis une propriété vérifiable avec les coordonnées.", "Compare les milieux des diagonales ou les vecteurs de côtés opposés, puis conclus avec la propriété complète."],
+      [/types de repères|droites parallèles aux axes|symétrie/i, "Lis les axes et les coordonnées concernées.", "Utilise les propriétés du repère sans supposer qu’il est orthonormé si ce n’est pas indiqué."],
+    ],
+    success: "Exact. Le critère choisi est justifié par les coordonnées.",
+  },
+  "variations-courbes-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/parité/i, "Compare f(−x) à f(x) et à −f(x).", "Vérifie d’abord que le domaine est symétrique, puis établis l’égalité correspondant à une fonction paire ou impaire."],
+      [/signe de f' et variations|lecture de tableaux/i, "Étudie le signe de la dérivée sur chaque intervalle.", "Relie f'>0 à la croissance et f'<0 à la décroissance, sans conclure à partir d’un seul point où f'=0."],
+      [/extremum|optimisation/i, "Un point stationnaire ne suffit pas à conclure.", "Vérifie le changement de signe de f' ou les variations de part et d’autre, puis contrôle les bornes du domaine."],
+      [/allure de la parabole|symétrie de la parabole/i, "Repère le sommet et le signe du coefficient dominant.", "Utilise l’axe de symétrie, le sommet et l’orientation pour décrire l’allure."],
+      [/inégalités|position relative|vrai ou faux/i, "Compare les deux expressions sur le domaine concerné.", "Étudie le signe de leur différence ou fournis un contre-exemple précis avant de conclure."],
+      [/fonctions constantes/i, "Observe si la valeur de la fonction change avec x.", "Une fonction constante garde la même image sur tout l’intervalle ; sa courbe est horizontale et sa dérivée y est nulle."],
+    ],
+    success: "Exact. La conclusion repose sur le signe et les variations.",
+  },
+  "fonction-exponentielle-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/propriétés algébriques/i, "Ramène les termes à une même structure exponentielle.", "Utilise e^(a+b)=e^a×e^b et e^(a−b)=e^a/e^b ; une exponentielle d’une somme n’est pas une somme d’exponentielles."],
+      [/signe et variations|valeurs particulières/i, "Sépare la valeur de l’exponentielle de celle de son exposant.", "L’exponentielle est strictement positive et croissante ; utilise e^0=1 pour les comparaisons."],
+      [/dérivation/i, "Identifie l’exposant et sa dérivée.", "Dérive e^{u(x)} en u'(x)e^{u(x)}, puis exploite le signe seulement sur le domaine étudié."],
+      [/équations|inéquations|comparaison/i, "La fonction exponentielle est strictement croissante.", "Compare les exposants lorsque les deux membres sont exponentiels, ou transforme l’expression sans inventer de propriété additive."],
+      [/modélisation/i, "Identifie la valeur initiale et le facteur d’évolution.", "Écris le modèle exponentiel, relie le nombre de périodes à l’exposant, puis interprète le résultat."],
+    ],
+    success: "Exact. La propriété exponentielle est utilisée dans le bon contexte.",
+  },
+  "statistique-probabilites-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/fréquences|statistiques à deux variables/i, "Vérifie d’abord quelle population sert de référence.", "Choisis le total de la ligne, de la colonne ou de l’ensemble correspondant exactement à la question, puis calcule le rapport."],
+      [/probabilités conditionnelles|arbres pondérés/i, "Identifie l’événement qui sert de condition.", "Restreins l’univers à cette condition ; dans un arbre, multiplie le long d’un chemin et additionne seulement des chemins incompatibles."],
+      [/indépendance/i, "Distingue indépendance et événements incompatibles.", "Vérifie P(A∩B)=P(A)P(B), ou une probabilité conditionnelle égale à la probabilité non conditionnée."],
+      [/répétitions d'expériences/i, "Décris l’événement contraire de celui demandé.", "Pour « au moins un », calcule souvent 1 moins la probabilité de n’obtenir aucun succès, en vérifiant l’indépendance."],
+    ],
+    success: "Exact. La probabilité utilise le bon événement de référence.",
+  },
+  "croissance-lineaire-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/suites arithmétiques/i, "Repère le rang initial et la différence entre deux termes.", "Utilise uₙ=uₚ+(n−p)r avec le rang p réellement donné, puis vérifie le nombre de pas."],
+      [/modélisation/i, "L’évolution ajoute-t-elle toujours la même quantité ?", "Identifie la valeur initiale, la variation par période et le nombre de périodes avant d’écrire le modèle."],
+      [/fonctions affines/i, "Distingue valeur initiale et variation par unité.", "Dans ax+b, a représente la variation constante et b la valeur obtenue pour une entrée nulle."],
+    ],
+    success: "Exact. La croissance linéaire et son rang initial sont cohérents.",
+  },
+  "fonctions-second-degre-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/image|fonctions de référence/i, "Repère la forme de la fonction et la valeur donnée.", "Remplace l’entrée avec des parenthèses, puis calcule le carré avant les autres opérations."],
+      [/racines|factorisation|signe/i, "Repère ce que la forme factorisée rend visible.", "Les racines annulent un facteur ; utilise ensuite leur ordre et le signe du coefficient pour étudier le signe."],
+      [/allure|sommet et axe de symétrie/i, "Repère l’orientation et l’axe de la parabole.", "Utilise le signe du coefficient dominant et les coordonnées du sommet, sans confondre racine et extremum."],
+      [/résolution graphique/i, "Les solutions cherchées sont des abscisses.", "Repère les intersections avec la droite de niveau demandée, puis lis leurs abscisses."],
+      [/détermination de f/i, "Choisis la forme qui utilise directement les informations données.", "Remplace les points ou les racines dans la forme adaptée, puis détermine les coefficients restants."],
+    ],
+    success: "Exact. La forme du polynôme correspond à l’information utilisée.",
+  },
+  "derivation-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/taux de variation|sécantes et tangente|approximation du nombre dérivé/i, "Repère les deux accroissements comparés.", "Calcule le quotient dans le même ordre ; le nombre dérivé est la limite des pentes des sécantes."],
+      [/nombre dérivé|équation de la tangente/i, "Distingue le point de contact et la pente.", "Utilise y=f'(a)(x−a)+f(a), en calculant séparément f(a) et f'(a)."],
+      [/fonctions de référence|dérivée d'un polynôme|dérivée de kf/i, "Identifie chaque terme avant de dériver.", "Applique les dérivées de référence terme par terme et conserve les coefficients constants."],
+      [/sens de variation|extremums/i, "Étudie le signe de f' sur les intervalles.", "Déduis les variations du signe de f' ; f'(a)=0 ne suffit à donner un extremum que si les variations changent."],
+    ],
+    success: "Exact. La dérivée est interprétée avec son signe et son contexte.",
+  },
+  "combinatoire-denombrement-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/principe multiplicatif|applications/i, "Décompose le choix en étapes compatibles.", "Multiplie les nombres de possibilités des étapes successives ; additionne seulement des cas distincts et incompatibles."],
+      [/dénombrement de tirages/i, "Précise si l’ordre compte et si la répétition est autorisée.", "Choisis le modèle après ces deux vérifications, puis contrôle que chaque résultat est compté une seule fois."],
+      [/factorielles/i, "Repère combien d’objets distincts sont ordonnés.", "Pour ordonner n objets distincts, utilise n! ; adapte si certaines positions ou certains objets sont déjà fixés."],
+      [/coefficients binomiaux/i, "Ici, seul le groupe choisi compte, pas son ordre.", "Utilise le coefficient binomial pour choisir k éléments parmi n, puis vérifie les bornes 0≤k≤n."],
+      [/parties d'un ensemble/i, "Pour chaque élément, deux choix sont possibles.", "Un sous-ensemble contient ou non chacun des n éléments, ce qui donne 2^n parties."],
+    ],
+    success: "Exact. Le dénombrement compte chaque possibilité une seule fois.",
+  },
+  "vecteurs-droites-plans-espace-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/coordonnées|relation de Chasles/i, "Identifie les vecteurs et le repère utilisés.", "Traduis la relation coordonnée par coordonnée, puis vérifie qu’elle respecte les points de départ et d’arrivée."],
+      [/alignement/i, "Cherche une relation de colinéarité entre deux vecteurs.", "Calcule deux vecteurs issus d’un même point et vérifie l’existence d’un même coefficient dans les trois coordonnées."],
+      [/combinaisons linéaires/i, "Identifie les vecteurs qui engendrent la direction recherchée.", "Écris l’égalité vectorielle avec des coefficients inconnus, puis résous le système coordonnée par coordonnée."],
+      [/droites|positions relatives/i, "Compare les directions avant de chercher une intersection.", "Étudie la colinéarité des vecteurs directeurs, puis résous les représentations paramétriques si nécessaire."],
+      [/coplanarité/i, "Cherche si un vecteur dépend de deux directions du plan.", "Exprime-le comme combinaison linéaire de deux vecteurs non colinéaires du plan, puis justifie la conclusion."],
+    ],
+    success: "Exact. La relation vectorielle est établie dans les trois coordonnées.",
+  },
+  "logarithme-decimal-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/valeurs immédiates|ordre de grandeur/i, "Relie le logarithme à une puissance de 10.", "Cherche l’exposant x tel que 10^x donne la valeur étudiée, puis interprète l’ordre de grandeur."],
+      [/propriétés algébriques/i, "Transforme produits et quotients avant les logarithmes.", "Utilise log(ab)=log(a)+log(b) et log(a/b)=log(a)−log(b), avec des arguments strictement positifs."],
+      [/résolution|calcul approché/i, "Vérifie d’abord que les quantités dans le logarithme sont positives.", "Isole la puissance ou le logarithme, applique la fonction réciproque adaptée, puis contrôle la solution."],
+      [/sens de variation/i, "Le logarithme décimal est croissant sur les nombres positifs.", "Contrôle le domaine, puis conserve l’ordre lorsque tu appliques log ou la puissance de 10."],
+    ],
+    success: "Exact. Le logarithme est utilisé sur son domaine avec la bonne propriété.",
+  },
   "reviser-les-bases": {
     level: "sixieme",
     skills: [
@@ -658,6 +858,28 @@ const GENERALIZATION_LOT_2_IDS = [
   "fonctions-exponentielles-terminale-techno",
 ];
 
+const GENERALIZATION_LOT_3_IDS = [
+  "configurations-geometriques",
+  "organisation-gestion-donnees",
+  "geometrie-espace",
+  "symetrie-centrale-parallelogrammes",
+  "resolution-equations",
+  "statistiques-quatrieme",
+  "notion-fonction-troisieme",
+  "fonctions-affines-troisieme",
+  "fonctions-reference-seconde",
+  "reperage-configurations-seconde",
+  "variations-courbes-premiere-spe",
+  "fonction-exponentielle-premiere-spe",
+  "statistique-probabilites-premiere-non-spe",
+  "croissance-lineaire-premiere-non-spe",
+  "fonctions-second-degre-premiere-techno",
+  "derivation-premiere-techno",
+  "combinatoire-denombrement-terminale-spe",
+  "vecteurs-droites-plans-espace-terminale-spe",
+  "logarithme-decimal-terminale-techno",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -700,3 +922,5 @@ export const BACK_TO_SCHOOL_SHOWCASES = showcaseRows(BACK_TO_SCHOOL_SHOWCASE_IDS
 export const PEDAGOGY_GENERALIZATION_LOT_1 = showcaseRows(GENERALIZATION_LOT_1_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_2 = showcaseRows(GENERALIZATION_LOT_2_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_3 = showcaseRows(GENERALIZATION_LOT_3_IDS);

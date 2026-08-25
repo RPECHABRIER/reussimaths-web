@@ -7,6 +7,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_1,
   PEDAGOGY_GENERALIZATION_LOT_2,
   PEDAGOGY_GENERALIZATION_LOT_3,
+  PEDAGOGY_GENERALIZATION_LOT_4A,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -87,6 +88,15 @@ const CHAPTER_FILES = {
   "combinatoire-denombrement-terminale-spe": "combinatoire-denombrement-terminale-spe",
   "vecteurs-droites-plans-espace-terminale-spe": "vecteurs-droites-plans-espace-terminale-spe",
   "logarithme-decimal-terminale-techno": "logarithme-decimal-terminale-techno",
+  proportionnalite: "proportionnalite",
+  triangles: "triangles",
+  "proportionnalite-troisieme": "proportionnalite-troisieme",
+  "statistiques-troisieme": "statistiques-troisieme",
+  "vecteurs-seconde": "vecteurs-seconde",
+  "colinearite-vecteurs-seconde": "colinearite-vecteurs-seconde",
+  "vecteurs-produit-scalaire-premiere-spe": "vecteurs-produit-scalaire-premiere-spe",
+  "croissance-exponentielle-premiere-non-spe": "croissance-exponentielle-premiere-non-spe",
+  "modelisation-quadratique-premiere-non-spe": "modelisation-quadratique-premiere-non-spe",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -223,6 +233,54 @@ test("les profils de dérivation ne déduisent pas un extremum de la seule annul
       checked += 1;
     }
     assert.equal(checked, 20, file);
+  }
+});
+
+test("le lot 4A couvre les dix chapitres autorisés, dont un profil déjà validé au lot 3", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_4A.length, 10);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_4A) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+  assert.ok(PEDAGOGY_GENERALIZATION_LOT_3.some(({ chapterId }) => chapterId === "fonctions-second-degre-premiere-techno"));
+});
+
+test("vingt générations par chapitre du lot 4A conservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_4A) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("la proportionnalité 6e et 3e privilégie le sens et les coefficients au produit en croix", async () => {
+  for (const file of ["proportionnalite", "proportionnalite-troisieme"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /produit en croix/i);
+      assert.match(guidance, /unité|relation|multiplicat|coefficient|rapport|proportion|taux|total|référence|tout|100/i);
+    }
+  }
+});
+
+test("statistiques et produit scalaire gardent un feedback fiable lorsque le raisonnement est ambigu", async () => {
+  for (const file of ["statistiques-troisieme", "vecteurs-produit-scalaire-premiere-spe"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 100; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur/i);
+    }
   }
 });
 

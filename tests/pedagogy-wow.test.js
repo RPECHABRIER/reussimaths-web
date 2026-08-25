@@ -9,6 +9,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_3,
   PEDAGOGY_GENERALIZATION_LOT_4A,
   PEDAGOGY_GENERALIZATION_LOT_4B,
+  PEDAGOGY_GENERALIZATION_LOT_5A,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -109,6 +110,16 @@ const CHAPTER_FILES = {
   "automatismes-terminale-techno": "automatismes-terminale-techno",
   "probabilites-conditionnelles-terminale-techno": "probabilites-conditionnelles-terminale-techno",
   "variables-aleatoires-terminale-techno": "variables-aleatoires-terminale-techno",
+  "notion-fonctions": "notion-fonctions",
+  "proportionnalite-quatrieme": "proportionnalite-quatrieme",
+  "theoreme-thales": "theoreme-thales",
+  "probabilites-troisieme": "probabilites-troisieme",
+  "thales-triangles-semblables-troisieme": "thales-triangles-semblables-troisieme",
+  "trigonometrie-triangle-rectangle-troisieme": "trigonometrie-triangle-rectangle-troisieme",
+  "mesures-grandeurs-troisieme": "mesures-grandeurs-troisieme",
+  "equations-droites-seconde": "equations-droites-seconde",
+  "informations-chiffrees-seconde": "informations-chiffrees-seconde",
+  "statistiques-descriptives-seconde": "statistiques-descriptives-seconde",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -368,6 +379,70 @@ test("variations instantanées ne déduit jamais un extremum de f'(a)=0 seul", a
   const guidance = `${prepared.hints.join(" ")} ${prepared.feedback.default}`;
   assert.match(guidance, /signe|variation/i);
   assert.match(guidance, /ne suffit pas/i);
+});
+
+test("le lot 5A contient exactement les dix chapitres autorisés", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_5A.length, 10);
+  assert.equal(new Set(PEDAGOGY_GENERALIZATION_LOT_5A.map(({ chapterId }) => chapterId)).size, 10);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_5A) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 5A préservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_5A) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("les profils sensibles du lot 5A restent conceptuels lorsque la réponse est ambiguë", async () => {
+  const files = [
+    "notion-fonctions",
+    "probabilites-troisieme",
+    "statistiques-descriptives-seconde",
+    "mesures-grandeurs-troisieme",
+  ];
+  for (const file of files) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur|tu as utilisé/i);
+    }
+  }
+});
+
+test("Thalès et trigonométrie vérifient la configuration avant la formule", async () => {
+  const files = ["theoreme-thales", "thales-triangles-semblables-troisieme", "trigonometrie-triangle-rectangle-troisieme"];
+  for (const file of files) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.match(guidance, /triangle|alignement|parallél|configuration|angle|côté|hypoténuse/i);
+    }
+  }
+});
+
+test("la proportionnalité 4e n'impose pas le produit en croix", async () => {
+  const { default: chapter } = await import("../src/chapters/proportionnalite-quatrieme.js");
+  for (let index = 0; index < 300; index += 1) {
+    const prepared = prepareWowExercise(chapter, chapter.generate());
+    const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+    assert.doesNotMatch(guidance, /produit en croix/i);
+    assert.match(guidance, /unité|coefficient|relation|grandeur|rapport|origine|longueur|aire|volume|référence|tableau/i);
+  }
 });
 
 test("un ancien chapitre hors profils conserve exactement son exercice", async () => {

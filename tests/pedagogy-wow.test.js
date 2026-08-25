@@ -6,6 +6,7 @@ import {
   correctWowMessage,
   PEDAGOGY_GENERALIZATION_LOT_1,
   PEDAGOGY_GENERALIZATION_LOT_2,
+  PEDAGOGY_GENERALIZATION_LOT_3,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -67,6 +68,25 @@ const CHAPTER_FILES = {
   "suites-numeriques-premiere-techno": "suites-numeriques-premiere-techno",
   "automatismes-terminale-spe": "automatismes-terminale-spe",
   "fonctions-exponentielles-terminale-techno": "fonctions-exponentielles-terminale-techno",
+  "configurations-geometriques": "configurations-geometriques",
+  "organisation-gestion-donnees": "organisation-gestion-donnees",
+  "geometrie-espace": "geometrie-espace",
+  "symetrie-centrale-parallelogrammes": "symetrie-centrale-parallelogrammes",
+  "resolution-equations": "resolution-equations",
+  "statistiques-quatrieme": "statistiques-quatrieme",
+  "notion-fonction-troisieme": "notion-fonction-troisieme",
+  "fonctions-affines-troisieme": "fonctions-affines-troisieme",
+  "fonctions-reference-seconde": "fonctions-reference-seconde",
+  "reperage-configurations-seconde": "reperage-configurations-seconde",
+  "variations-courbes-premiere-spe": "variations-courbes-premiere-spe",
+  "fonction-exponentielle-premiere-spe": "fonction-exponentielle-premiere-spe",
+  "statistique-probabilites-premiere-non-spe": "statistique-probabilites-premiere-non-spe",
+  "croissance-lineaire-premiere-non-spe": "croissance-lineaire-premiere-non-spe",
+  "fonctions-second-degre-premiere-techno": "fonctions-second-degre-premiere-techno",
+  "derivation-premiere-techno": "derivation-premiere-techno",
+  "combinatoire-denombrement-terminale-spe": "combinatoire-denombrement-terminale-spe",
+  "vecteurs-droites-plans-espace-terminale-spe": "vecteurs-droites-plans-espace-terminale-spe",
+  "logarithme-decimal-terminale-techno": "logarithme-decimal-terminale-techno",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -153,8 +173,61 @@ test("la somme des n premiers entiers reçoit une aide dédiée sans faux vocabu
   assert.equal(checked, 20);
 });
 
+test("le lot 3 contient exactement les dix-neuf chapitres validés avec 3 à 6 familles fiables", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_3.length, 19);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_3) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 3 préservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_3) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("les profils à risque restent conceptuels sans prétendre connaître le raisonnement de l'élève", async () => {
+  for (const file of ["statistique-probabilites-premiere-non-spe", "combinatoire-denombrement-terminale-spe"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 100; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as confondu|ton erreur est|tu as oublié/i);
+      assert.match(guidance, /référence|condition|événement|ordre|ordonn|répétition|choix|possibilit|factorielle|coefficient|sous-ensemble|parties/i);
+    }
+  }
+});
+
+test("les profils de dérivation ne déduisent pas un extremum de la seule annulation de la dérivée", async () => {
+  for (const file of ["variations-courbes-premiere-spe", "derivation-premiere-techno"]) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    let checked = 0;
+    for (let draw = 0; draw < 2000 && checked < 20; draw += 1) {
+      const original = chapter.generate();
+      if (!/extremum|optimisation|sens de variation/i.test(original.chapter)) continue;
+      const prepared = prepareWowExercise(chapter, original);
+      const guidance = `${prepared.hints.join(" ")} ${prepared.feedback.default}`;
+      assert.match(guidance, /signe|variation/i);
+      assert.doesNotMatch(guidance, /f'\(a\)=0 (?:donne|implique|prouve) un extremum/i);
+      checked += 1;
+    }
+    assert.equal(checked, 20, file);
+  }
+});
+
 test("un ancien chapitre hors profils conserve exactement son exercice", async () => {
-  const { default: chapter } = await import("../src/chapters/symetrie-centrale-parallelogrammes.js");
+  const { default: chapter } = await import("../src/chapters/algorithmique-cinquieme.js");
   const original = chapter.generate();
   assert.equal(prepareWowExercise(chapter, original), original);
 });

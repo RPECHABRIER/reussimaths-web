@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { colors, fonts, shadow } from "../theme";
 import { shuffle, formatSeconds } from "../lib/gameUtils";
+import { MEMORY_PAIR_LEVELS } from "../lib/primaryGameUtils";
 
 // ---------------------------------------------------------------------------
 // Jeu "Memory CP/CE1" (/jeux/memory-cp-ce1) : memory classique à 15 paires.
@@ -22,14 +23,13 @@ const GROUP_COLORS = [
   "#9c2f00", "#7b1fa2", "#00695c", "#283593", "#827717",
 ];
 
-const GROUPS_COUNT = CP_CE1_GROUPS.length; // 15
-const TOTAL_CARDS = GROUPS_COUNT * 2; // 30
-const BEST_KEY_MS = "reussimaths_memory_cp_ce1_pairs_15_best_ms";
-const BEST_KEY_TRIES = "reussimaths_memory_cp_ce1_pairs_15_best_tries";
+const LEVEL_PAIR_COUNTS = MEMORY_PAIR_LEVELS;
+const bestTimeKey = (pairs) => `reussimaths_memory_cp_ce1_pairs_${pairs}_best_ms`;
+const bestTriesKey = (pairs) => `reussimaths_memory_cp_ce1_pairs_${pairs}_best_tries`;
 
-function buildBoard() {
+function buildBoard(pairCount) {
   const cards = [];
-  CP_CE1_GROUPS.forEach((group, groupIndex) => {
+  CP_CE1_GROUPS.slice(0, pairCount).forEach((group, groupIndex) => {
     group.cards.forEach((text, idx) => {
       cards.push({ uid: `${group.id}-${idx}`, groupId: group.id, groupColor: GROUP_COLORS[groupIndex], n: group.n, text });
     });
@@ -38,6 +38,7 @@ function buildBoard() {
 }
 
 export default function MemoryCpCe1() {
+  const [pairCount, setPairCount] = useState(LEVEL_PAIR_COUNTS[0]);
   const [phase, setPhase] = useState("intro"); // intro | playing | result
   const [board, setBoard] = useState([]);
   const [flippedUids, setFlippedUids] = useState([]);
@@ -57,22 +58,29 @@ export default function MemoryCpCe1() {
   const [isNewBestTries, setIsNewBestTries] = useState(false);
 
   const [bestTimeMs, setBestTimeMs] = useState(() => {
-    const stored = Number(localStorage.getItem(BEST_KEY_MS));
+    const stored = Number(localStorage.getItem(bestTimeKey(LEVEL_PAIR_COUNTS[0])));
     return stored > 0 ? stored : null;
   });
   const [bestTries, setBestTries] = useState(() => {
-    const stored = Number(localStorage.getItem(BEST_KEY_TRIES));
+    const stored = Number(localStorage.getItem(bestTriesKey(LEVEL_PAIR_COUNTS[0])));
     return stored > 0 ? stored : null;
   });
 
   const matchedGroupsCount = useMemo(() => {
     let count = 0;
-    for (const group of CP_CE1_GROUPS) {
+    for (const group of CP_CE1_GROUPS.slice(0, pairCount)) {
       const uids = [0, 1].map((idx) => `${group.id}-${idx}`);
       if (uids.every((uid) => matchedUids.has(uid))) count++;
     }
     return count;
-  }, [matchedUids]);
+  }, [matchedUids, pairCount]);
+
+  useEffect(() => {
+    const storedTime = Number(localStorage.getItem(bestTimeKey(pairCount)));
+    const storedTries = Number(localStorage.getItem(bestTriesKey(pairCount)));
+    setBestTimeMs(storedTime > 0 ? storedTime : null);
+    setBestTries(storedTries > 0 ? storedTries : null);
+  }, [pairCount]);
 
   useEffect(() => {
     if (phase !== "playing") return;
@@ -137,27 +145,28 @@ export default function MemoryCpCe1() {
 
   useEffect(() => {
     if (phase !== "playing") return;
-    if (matchedGroupsCount < GROUPS_COUNT) return;
+    if (matchedGroupsCount < pairCount) return;
     const total = Date.now() - startAt;
     setFinalTimeMs(total);
     setPhase("result");
-    const bestMs = Number(localStorage.getItem(BEST_KEY_MS));
+    const bestMs = Number(localStorage.getItem(bestTimeKey(pairCount)));
     if (!bestMs || total < bestMs) {
-      localStorage.setItem(BEST_KEY_MS, String(Math.round(total)));
+      localStorage.setItem(bestTimeKey(pairCount), String(Math.round(total)));
       setBestTimeMs(total);
       setIsNewBestTime(true);
     }
-    const bestT = Number(localStorage.getItem(BEST_KEY_TRIES));
+    const bestT = Number(localStorage.getItem(bestTriesKey(pairCount)));
     if (!bestT || tries < bestT) {
-      localStorage.setItem(BEST_KEY_TRIES, String(tries));
+      localStorage.setItem(bestTriesKey(pairCount), String(tries));
       setBestTries(tries);
       setIsNewBestTries(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchedGroupsCount]);
 
-  const startGame = () => {
-    setBoard(buildBoard());
+  const startGame = (requestedPairCount = pairCount) => {
+    setPairCount(requestedPairCount);
+    setBoard(buildBoard(requestedPairCount));
     setFlippedUids([]);
     setMatchedUids(new Set());
     setLocked(false);
@@ -223,8 +232,8 @@ export default function MemoryCpCe1() {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md mx-auto">
-          <Link to="/jeux" className="text-sm font-medium" style={{ color: ink }}>
-            ← Jeux
+          <Link to="/jeux/cp" className="text-sm font-medium" style={{ color: ink }}>
+            ← Jeux CP
           </Link>
 
           <div className="game-intro-hero text-center my-7">
@@ -238,8 +247,7 @@ export default function MemoryCpCe1() {
               Memory CP/CE1
             </h1>
             <p className="text-sm mt-2" style={{ color: slate }}>
-              Retrouve les 15 paires de doubles, de 1 + 1 jusqu’à 15 + 15. Associe chaque somme à son résultat,
-              par exemple « 6 + 6 » avec « 12 ».
+              Retrouve les doubles : associe par exemple « 6 + 6 » avec « 12 ».
             </p>
             {bestTimeMs && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
@@ -250,14 +258,17 @@ export default function MemoryCpCe1() {
 
           <div className="rounded-3xl p-5 mb-6 text-center" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
             <p className="text-sm font-semibold" style={{ color: ink }}>
-              {TOTAL_CARDS} cartes ({GROUPS_COUNT} paires)
+              Choisis ton plateau
             </p>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {LEVEL_PAIR_COUNTS.map((count, index) => <button key={count} type="button" onClick={() => setPairCount(count)} className="rounded-2xl px-2 py-3 text-xs font-black" style={{ backgroundColor: pairCount === count ? `${gold}28` : paper, border: `2px solid ${pairCount === count ? gold : colors.hairline}`, color: ink }}><span className="block text-base">{count} paires</span>{index === 0 ? "Découverte" : index === 1 ? "Explorateur" : "Champion"}</button>)}
+            </div>
             <p className="text-xs mt-2" style={{ color: slate }}>
               Tu retournes deux cartes, puis le robot joue. Si tu trouves une paire, tu rejoues. Chaque paire rapporte 1 point.
             </p>
           </div>
 
-          <button onClick={startGame} className="w-full py-3.5 rounded-full font-bold text-lg" style={{ backgroundColor: gold, color: ink }}>
+          <button onClick={() => startGame(pairCount)} className="w-full py-3.5 rounded-full font-bold text-lg" style={{ backgroundColor: gold, color: ink }}>
             Commencer
           </button>
         </div>
@@ -270,8 +281,8 @@ export default function MemoryCpCe1() {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md mx-auto">
-          <Link to="/jeux" className="mb-4 inline-flex items-center gap-1 text-sm font-bold" style={{ color: slate }}>
-            ← Retour aux jeux
+          <Link to="/jeux/cp" className="mb-4 inline-flex items-center gap-1 text-sm font-bold" style={{ color: slate }}>
+            ← Retour aux jeux CP
           </Link>
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4">
             <div className="rounded-xl px-3 py-2 text-center" style={{ backgroundColor: turn === "child" ? `${gold}22` : colors.card, border: `2px solid ${turn === "child" ? gold : colors.hairline}` }}>
@@ -287,7 +298,7 @@ export default function MemoryCpCe1() {
             </div>
           </div>
           <p aria-live="polite" className="mb-3 text-center text-xs font-bold" style={{ color: turn === "child" ? gold : colors.green }}>
-            {turn === "child" ? "À toi de jouer !" : "Le robot cherche une paire…"} · {matchedGroupsCount} / {GROUPS_COUNT} paires
+            {turn === "child" ? "À toi de jouer !" : "Le robot cherche une paire…"} · {matchedGroupsCount} / {pairCount} paires
           </p>
 
           <div
@@ -373,11 +384,12 @@ export default function MemoryCpCe1() {
         )}
 
         <div className="flex flex-col gap-2.5 mt-8">
-          <button onClick={startGame} className="w-full py-3 rounded-full font-bold text-lg" style={{ backgroundColor: gold, color: ink }}>
+          {pairCount < LEVEL_PAIR_COUNTS.at(-1) && <button onClick={() => startGame(LEVEL_PAIR_COUNTS[LEVEL_PAIR_COUNTS.indexOf(pairCount) + 1])} className="w-full py-3 rounded-full font-bold text-lg" style={{ backgroundColor: colors.green, color: "white" }}>Plateau suivant</button>}
+          <button onClick={() => startGame(pairCount)} className="w-full py-3 rounded-full font-bold text-lg" style={{ backgroundColor: gold, color: ink }}>
             Rejouer
           </button>
-          <Link to="/jeux" className="text-sm font-medium py-2" style={{ color: slate }}>
-            ← Retour aux jeux
+          <Link to="/jeux/cp" className="text-sm font-medium py-2" style={{ color: slate }}>
+            ← Retour aux jeux CP
           </Link>
         </div>
       </div>

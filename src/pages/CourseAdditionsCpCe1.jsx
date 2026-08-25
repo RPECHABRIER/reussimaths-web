@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { colors, fonts, shadow } from "../theme";
 import RaceTrackRank from "../components/RaceTrackRank";
 import NumberPad from "../components/NumberPad";
+import { generateAdditionQuestion } from "../lib/primaryGameUtils";
 
 // ---------------------------------------------------------------------------
 // Jeu "Course des additions" (/jeux/course-additions-cp-ce1) — pensé pour les
@@ -50,22 +51,12 @@ const RANK_INFO = {
   4: { label: "4e — retente ta chance !", color: colors.red },
 };
 
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Un nouveau calcul aléatoire (aucun terme > 20), en évitant de retomber
-// pile sur les deux mêmes termes que la question précédente.
-function generateQuestion(prev) {
-  let a, b;
-  do {
-    a = randInt(1, 20);
-    b = randInt(1, 20);
-  } while (prev && a === prev.a && b === prev.b);
-  return { a, b, sum: a + b };
-}
-
-export default function CourseAdditionsCpCe1() {
+export default function CourseAdditionsCpCe1({ level = "cp" }) {
+  const isCp = level === "cp";
+  const maxSum = isCp ? 20 : null;
+  const gamesPath = isCp ? "/jeux/cp" : "/jeux/ce1";
+  const bestRankKey = `${BEST_RANK_KEY}_${level}`;
+  const bestMistakesKey = `${BEST_MISTAKES_KEY}_${level}`;
   const [phase, setPhase] = useState("intro"); // intro | racing | result
   const [selectedAnimal, setSelectedAnimal] = useState(ANIMALS[0].id);
   const [question, setQuestion] = useState(null);
@@ -81,11 +72,11 @@ export default function CourseAdditionsCpCe1() {
   const questionStartAtRef = useRef(null);
 
   const [bestRank, setBestRank] = useState(() => {
-    const stored = Number(localStorage.getItem(BEST_RANK_KEY));
+    const stored = Number(localStorage.getItem(bestRankKey));
     return stored >= 1 && stored <= 4 ? stored : null;
   });
   const [bestMistakes, setBestMistakes] = useState(() => {
-    const stored = localStorage.getItem(BEST_MISTAKES_KEY);
+    const stored = localStorage.getItem(bestMistakesKey);
     return stored !== null ? Number(stored) : null;
   });
 
@@ -93,7 +84,7 @@ export default function CourseAdditionsCpCe1() {
   const player = ANIMALS.find((a) => a.id === selectedAnimal);
 
   const startRace = () => {
-    setQuestion(generateQuestion(null));
+    setQuestion(generateAdditionQuestion(null, { maxSum }));
     setTypedValue("");
     setFeedback(null);
     setLocked(false);
@@ -150,20 +141,20 @@ export default function CourseAdditionsCpCe1() {
         setFinalRank(newRank);
         setPhase("result");
 
-        const storedRank = Number(localStorage.getItem(BEST_RANK_KEY));
+        const storedRank = Number(localStorage.getItem(bestRankKey));
         if (!storedRank || newRank < storedRank) {
-          localStorage.setItem(BEST_RANK_KEY, String(newRank));
+          localStorage.setItem(bestRankKey, String(newRank));
           setBestRank(newRank);
           setIsNewBestRank(true);
         }
-        const storedMistakes = localStorage.getItem(BEST_MISTAKES_KEY);
+        const storedMistakes = localStorage.getItem(bestMistakesKey);
         if (storedMistakes === null || mistakes < Number(storedMistakes)) {
-          localStorage.setItem(BEST_MISTAKES_KEY, String(mistakes));
+          localStorage.setItem(bestMistakesKey, String(mistakes));
           setBestMistakes(mistakes);
           setIsNewBestMistakes(true);
         }
       } else {
-        setQuestion((prev) => generateQuestion(prev));
+        setQuestion((prev) => generateAdditionQuestion(prev, { maxSum }));
         setTypedValue("");
         setFeedback(null);
         setLocked(false);
@@ -196,8 +187,8 @@ export default function CourseAdditionsCpCe1() {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md mx-auto">
-          <Link to="/jeux" className="text-sm font-medium" style={{ color: ink }}>
-            ← Jeux
+          <Link to={gamesPath} className="text-sm font-medium" style={{ color: ink }}>
+            ← Jeux {isCp ? "CP" : "CE1"}
           </Link>
 
           <div className="game-intro-hero text-center my-7">
@@ -205,18 +196,21 @@ export default function CourseAdditionsCpCe1() {
               className="inline-block text-xs font-bold uppercase tracking-wide rounded-full px-3 py-1 mb-3"
               style={{ backgroundColor: `${colors.green}22`, color: colors.green }}
             >
-              Jeu pour les CP / CE1
+              Jeu pour les {isCp ? "CP" : "CE1"}
             </span>
             <h1 style={{ fontFamily: fonts.display, color: ink, fontSize: "1.85rem", fontWeight: 800, letterSpacing: "-0.02em" }}>
               Course des additions
             </h1>
-            <p className="text-sm mt-2" style={{ color: slate }}>
-              Des additions avec des nombres jusqu'à 20. Tape ta réponse au clavier. Réponds vite et sans erreur pour
-              rester devant jusqu'à la ligne d'arrivée !
-            </p>
-            <p className="text-sm mt-2" style={{ color: slate }}>
-              La course s'arrête dès que tu as {TARGET_CORRECT} bonnes réponses.
-            </p>
+            {isCp ? (
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm font-black" style={{ color: ink }} aria-label="Calcule, réponds, ton animal avance">
+                <span>🧮 Calcule</span><span aria-hidden="true">→</span><span>🔢 Réponds</span><span aria-hidden="true">→</span><span>🐇 Avance</span>
+              </div>
+            ) : (
+              <p className="text-sm mt-2" style={{ color: slate }}>
+                Calcule, tape ta réponse et reste devant jusqu'à l'arrivée. Les additions peuvent dépasser 20.
+              </p>
+            )}
+            <p className="text-xs mt-3" style={{ color: slate }}>{TARGET_CORRECT} bonnes réponses pour finir la course.</p>
             {bestRank && (
               <p className="text-xs mt-3 font-semibold" style={{ color: gold }}>
                 Ton meilleur classement : {RANK_INFO[bestRank].label}
@@ -262,6 +256,9 @@ export default function CourseAdditionsCpCe1() {
     return (
       <div className="min-h-screen w-full p-4 sm:p-8 flex flex-col" style={{ background: paper, fontFamily: fonts.body }}>
         <div className="max-w-md w-full mx-auto flex-1 flex flex-col">
+          <Link to={gamesPath} className="mb-3 text-sm font-medium" style={{ color: slate }}>
+            ← Jeux {isCp ? "CP" : "CE1"}
+          </Link>
           <div className="flex items-center justify-between mb-4">
             <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: slate }}>
               {correctCount} / {TARGET_CORRECT} bonnes réponses
@@ -335,8 +332,8 @@ export default function CourseAdditionsCpCe1() {
           <button onClick={startRace} className="w-full py-3 rounded-full font-bold text-lg" style={{ backgroundColor: gold, color: ink }}>
             Rejouer
           </button>
-          <Link to="/jeux" className="text-sm font-medium py-2" style={{ color: slate }}>
-            ← Retour aux jeux
+          <Link to={gamesPath} className="text-sm font-medium py-2" style={{ color: slate }}>
+            ← Retour aux jeux {isCp ? "CP" : "CE1"}
           </Link>
         </div>
       </div>

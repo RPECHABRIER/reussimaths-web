@@ -207,7 +207,8 @@ export default function App() {
         <Route path="/jeux/estimation-express" element={<EstimationExpress />} />
         <Route path="/jeux/memory-maths" element={<MemoryMaths />} />
         <Route path="/jeux/memory-cp-ce1" element={<MemoryCpCe1 />} />
-        <Route path="/jeux/course-additions-cp-ce1" element={<CourseAdditionsCpCe1 />} />
+        <Route path="/jeux/course-additions-cp-ce1" element={<CourseAdditionsCpCe1 level="cp" />} />
+        <Route path="/jeux/course-additions-ce1" element={<CourseAdditionsCpCe1 level="ce1" />} />
         <Route path="/idees" element={<Idees />} />
         <Route path="/admin" element={<AdminPreview />} />
         <Route path="/admin/corrections" element={<CorrectionsLab />} />

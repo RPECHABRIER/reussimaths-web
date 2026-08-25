@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Bot, Brain, ChevronRight, Delete, Flag, Pizza, Play, Trophy, Undo2 } from "lucide-react";
+import { ArrowLeft, Bot, Brain, ChevronRight, Delete, Flag, Pizza, Play, Trophy, Undo2, Zap } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 import { shuffle } from "../lib/gameUtils";
 
 const GAME_CARDS = [
+  { id: "additions", path: "/jeux/course-additions-ce1", title: "La course des additions", description: "Calcule vite et fais avancer ton animal jusqu’à l’arrivée.", icon: Zap, accent: "#3fa66b" },
   { id: "thousand", title: "La course à 1 000", description: "Retrouve les différentes écritures d’un nombre.", icon: Flag, accent: "#1565c0" },
   { id: "pizza", title: "La pizzeria des fractions", description: "Observe les parts et complète les pizzas.", icon: Pizza, accent: "#d81b60" },
   { id: "robot", title: "Le robot livreur", description: "Programme le chemin jusqu’au colis.", icon: Bot, accent: "#00897b" },
@@ -23,59 +24,64 @@ function makeNumberQuestion() {
   const number = 100 + Math.floor(Math.random() * 900);
   const hundreds = Math.floor(number / 100), tens = Math.floor(number / 10) % 10, units = number % 10;
   const mode = Math.floor(Math.random() * 2);
-  const representation = (value) => `${Math.floor(value / 100)} centaines, ${Math.floor(value / 10) % 10} dizaines et ${value % 10} unités`;
+  const representation = (value) => { const h = Math.floor(value / 100), t = Math.floor(value / 10) % 10, u = value % 10; return `${h} centaine${h > 1 ? "s" : ""}, ${t} dizaine${t > 1 ? "s" : ""} et ${u} unité${u > 1 ? "s" : ""}`; };
   const correct = mode === 0 ? String(number) : representation(number);
   const options = new Set([correct]);
   while (options.size < 4) {
     const candidate = Math.max(100, Math.min(999, number + shuffle([-100, -10, -1, 1, 10, 100])[0]));
     options.add(mode === 0 ? String(candidate) : representation(candidate));
   }
-  return { prompt: mode === 0 ? `${hundreds} centaines, ${tens} dizaines et ${units} unités` : String(number), correct, options: shuffle([...options]) };
+  return { prompt: mode === 0 ? representation(number) : String(number), correct, options: shuffle([...options]) };
 }
 
-function QuizGame({ type, onBack }) {
+function ThousandRace({ onBack }) {
   const total = 8;
-  const makeQuestion = type === "number" ? makeNumberQuestion : makeFractionQuestion;
-  const [question, setQuestion] = useState(makeQuestion);
+  const [question, setQuestion] = useState(makeNumberQuestion);
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState(null);
-  const restart = () => { setQuestion(makeQuestion()); setRound(1); setScore(0); setFeedback(null); };
+  const restart = () => { setQuestion(makeNumberQuestion()); setRound(1); setScore(0); setFeedback(null); };
   const answer = (option) => {
     if (feedback) return;
     const correct = option === question.correct;
     if (correct) setScore((value) => value + 1);
-    setFeedback(correct ? (type === "number" ? "Bravo !" : "Commande réussie !") : `La bonne réponse était ${question.correct}.`);
-    window.setTimeout(() => { setRound((value) => value + 1); setQuestion(makeQuestion()); setFeedback(null); }, 950);
+    setFeedback(correct ? "Bravo, tu avances !" : `Regarde : la bonne réponse était ${question.correct}.`);
+    window.setTimeout(() => { setRound((value) => value + 1); setQuestion(makeNumberQuestion()); setFeedback(null); }, 850);
   };
-  const numberGame = type === "number";
-  const accent = numberGame ? "#1565c0" : "#d81b60";
-  const title = numberGame ? "La course à 1 000" : "La pizzeria des fractions";
-  return <GameShell title={title} accent={accent} onBack={onBack}>{round > total ? <FinishCard score={score} total={total} restart={restart} back={onBack}/> : <><p className="mt-2 text-sm" style={{ color: colors.slate }}>{numberGame ? "Associe le nombre à son écriture en centaines, dizaines et unités." : "Compte les parts égales avant de choisir ta réponse."}</p><div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>{numberGame ? "Étape" : "Commande"} {round} / {total}</span><span>{score} point{score > 1 ? "s" : ""}</span></div>{numberGame ? <p className="my-8 text-center text-2xl sm:text-3xl font-black" style={{ color: colors.ink }}>{question.prompt}</p> : <><p className="mt-6 text-center text-lg font-black" style={{ color: colors.ink }}>{question.prompt}</p><PizzaPicture numerator={question.numerator} denominator={question.denominator}/></>}<div className={`grid gap-2 ${numberGame ? "sm:grid-cols-2" : "grid-cols-2 sm:grid-cols-4"}`}>{question.options.map((option) => <button key={option} onClick={() => answer(option)} className="min-h-14 rounded-2xl p-3 text-sm font-black" style={{ backgroundColor: colors.bg, border: `2px solid ${colors.hairline}`, color: colors.ink }}>{option}</button>)}</div><p aria-live="polite" className="mt-4 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("Bravo") || feedback?.includes("réussie") ? colors.green : colors.red }}>{feedback}</p></>}</GameShell>;
+  const distance = score * 125;
+  return <GameShell title="La course à 1 000" accent="#1565c0" onBack={onBack}>{round > total ? <><div className="py-8 text-center"><Trophy size={52} className="mx-auto" color={distance === 1000 ? colors.gold : "#1565c0"}/><p className="mt-4 text-3xl font-black" style={{ color: colors.ink }}>{distance} m</p><p className="mt-2 text-sm" style={{ color: colors.slate }}>{distance === 1000 ? "Arrivée atteinte !" : "Belle course ! Rejoue pour te rapprocher de 1 000 m."}</p><div className="mt-7 grid gap-2 sm:grid-cols-2"><button onClick={restart} className="rounded-full py-3 font-black" style={{ backgroundColor: colors.gold, color: colors.ink }}>Rejouer</button><button onClick={onBack} className="rounded-full py-3 font-bold" style={{ border: `1px solid ${colors.hairline}`, color: colors.slate }}>Autre jeu CE1</button></div></div></> : <><p className="mt-2 text-sm" style={{ color: colors.slate }}>Trouve les bonnes écritures pour parcourir 1 000 mètres.</p><div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Étape {round} / {total}</span><span>{distance} / 1 000 m</span></div><div className="relative mt-4 h-12 overflow-hidden rounded-full" style={{ backgroundColor: `${colors.ink}0d`, border: `2px solid ${colors.hairline}` }}><div className="absolute inset-y-0 left-0 transition-all duration-500" style={{ width: `${distance / 10}%`, backgroundColor: "#1565c026" }}/><span className="absolute top-1/2 text-2xl transition-all duration-500" style={{ left: `calc(${Math.min(92, distance / 10)}% - 12px)`, transform: "translateY(-50%)" }} aria-label={`${distance} mètres`}>🚗</span><span className="absolute right-2 top-1/2 -translate-y-1/2 text-xl" aria-hidden="true">🏁</span></div><p className="my-7 text-center text-2xl sm:text-3xl font-black" style={{ color: colors.ink }}>{question.prompt}</p><div className="grid gap-2 sm:grid-cols-2">{question.options.map((option) => <button key={option} onClick={() => answer(option)} className="min-h-14 rounded-2xl p-3 text-sm font-black" style={{ backgroundColor: colors.bg, border: `2px solid ${colors.hairline}`, color: colors.ink }}>{option}</button>)}</div><p aria-live="polite" className="mt-4 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("Bravo") ? colors.green : colors.slate }}>{feedback}</p></>}</GameShell>;
 }
 
-function PizzaPicture({ numerator, denominator }) {
-  const size = 150, center = size / 2, radius = size * .43;
+function PizzaPicture({ denominator, selectedParts, onToggle, disabled }) {
+  const size = 190, center = size / 2, radius = size * .43;
   const paths = Array.from({ length: denominator }, (_, index) => {
     const start = -Math.PI / 2 + index * 2 * Math.PI / denominator, end = -Math.PI / 2 + (index + 1) * 2 * Math.PI / denominator;
     return `M ${center} ${center} L ${center + radius * Math.cos(start)} ${center + radius * Math.sin(start)} A ${radius} ${radius} 0 0 1 ${center + radius * Math.cos(end)} ${center + radius * Math.sin(end)} Z`;
   });
-  return <svg width={size} height={size} role="img" aria-label={`${numerator} parts colorées sur ${denominator}`} className="mx-auto"><circle cx={center} cy={center} r={radius + 5} fill="#d99a38"/>{paths.map((path, index) => <path key={path} d={path} fill={index < numerator ? "#ef5350" : "#fff4d6"} stroke="#8d4d20" strokeWidth="2"/>)}</svg>;
+  return <svg width={size} height={size} role="group" aria-label={`Pizza en ${denominator} parts, touche les parts à colorier`} className="mx-auto touch-manipulation"><circle cx={center} cy={center} r={radius + 5} fill="#d99a38"/>{paths.map((path, index) => { const selected = selectedParts.has(index); return <path key={path} d={path} role="button" tabIndex={disabled ? -1 : 0} aria-label={`Part ${index + 1} ${selected ? "coloriée" : "vide"}`} aria-pressed={selected} onClick={() => !disabled && onToggle(index)} onKeyDown={(event) => { if (!disabled && (event.key === "Enter" || event.key === " ")) onToggle(index); }} fill={selected ? "#ef5350" : "#fff4d6"} stroke="#8d4d20" strokeWidth="3" style={{ cursor: disabled ? "default" : "pointer", transition: "fill .18s ease" }}/>; })}</svg>;
 }
 
 function makeFractionQuestion() {
-  const denominator = shuffle([2, 3, 4, 5, 6, 8, 10])[0], numerator = 1 + Math.floor(Math.random() * (denominator - 1)), complement = Math.random() < .45;
-  const answerNumerator = complement ? denominator - numerator : numerator;
-  const correct = `${answerNumerator}/${denominator}`;
-  const options = new Set([correct]);
-  const distractors = [
-    `${Math.min(denominator, answerNumerator + 1)}/${denominator}`,
-    `${Math.max(1, answerNumerator - 1)}/${denominator}`,
-    `${denominator}/${denominator}`,
-    "1/2", "1/3", "1/4", "2/3", "3/4", "2/5", "4/5",
-  ];
-  for (const distractor of distractors) if (options.size < 4) options.add(distractor);
-  return { numerator, denominator, correct, options: shuffle([...options]), prompt: complement ? "Quelle fraction manque pour compléter la pizza ?" : "Quelle fraction de la pizza est rouge ?" };
+  const denominator = shuffle([2, 3, 4, 5, 6, 8])[0];
+  return { denominator, numerator: 1 + Math.floor(Math.random() * (denominator - 1)) };
+}
+
+function PizzaGame({ onBack }) {
+  const total = 8;
+  const [question, setQuestion] = useState(makeFractionQuestion);
+  const [round, setRound] = useState(1);
+  const [selectedParts, setSelectedParts] = useState(new Set());
+  const [feedback, setFeedback] = useState(null);
+  const [locked, setLocked] = useState(false);
+  const restart = () => { setQuestion(makeFractionQuestion()); setRound(1); setSelectedParts(new Set()); setFeedback(null); setLocked(false); };
+  const togglePart = (index) => { setSelectedParts((current) => { const next = new Set(current); next.has(index) ? next.delete(index) : next.add(index); return next; }); setFeedback(null); };
+  const validate = () => {
+    if (!selectedParts.size || locked) return;
+    if (selectedParts.size !== question.numerator) { setFeedback(`Il faut colorier ${question.numerator} part${question.numerator > 1 ? "s" : ""}. Tu peux corriger.`); return; }
+    setLocked(true); setFeedback("Pizza réussie !");
+    window.setTimeout(() => { setRound((value) => value + 1); setQuestion(makeFractionQuestion()); setSelectedParts(new Set()); setFeedback(null); setLocked(false); }, 750);
+  };
+  return <GameShell title="La pizzeria des fractions" accent="#d81b60" onBack={onBack}>{round > total ? <FinishCard score={total} total={total} restart={restart} back={onBack}/> : <><p className="mt-2 text-sm" style={{ color: colors.slate }}>Touche les parts pour préparer la fraction demandée.</p><div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Commande {round} / {total}</span><span>{selectedParts.size} part{selectedParts.size > 1 ? "s" : ""} coloriée{selectedParts.size > 1 ? "s" : ""}</span></div><p className="mt-5 text-center text-xl font-black" style={{ color: colors.ink }}>Montre {question.numerator}/{question.denominator}</p><PizzaPicture denominator={question.denominator} selectedParts={selectedParts} onToggle={togglePart} disabled={locked}/><button type="button" onClick={validate} disabled={!selectedParts.size || locked} className="mt-3 w-full rounded-full py-3 font-black" style={{ backgroundColor: selectedParts.size && !locked ? colors.gold : colors.hairline, color: colors.ink }}>Valider ma pizza</button><p aria-live="polite" className="mt-3 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("réussie") ? colors.green : colors.slate }}>{feedback}</p></>}</GameShell>;
 }
 
 function makeMentalQuestion() {
@@ -101,12 +107,13 @@ function MentalGame({ onBack }) {
     if (!value || feedback) return;
     const correct = Number(value) === question.answer;
     if (correct) setScore((current) => current + 1);
-    setFeedback(correct ? "Bonne réponse !" : `La réponse était ${question.answer}.`);
+    setFeedback(correct ? "Bonne réponse, la jauge monte !" : `Regarde : la réponse était ${question.answer}.`);
     window.setTimeout(() => { setRound((current) => current + 1); setQuestion(makeMentalQuestion()); setValue(""); setFeedback(null); }, 950);
   };
   return <GameShell title="Le défi calcul mental" accent="#ef6c00" onBack={onBack}>{round > total ? <FinishCard score={score} total={total} restart={restart} back={onBack}/> : <>
-    <p className="mt-2 text-sm" style={{ color: colors.slate }}>Réponds sans poser le calcul. Chaque bonne réponse rapporte une étoile.</p>
-    <div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Calcul {round} / {total}</span><span>⭐ {score}</span></div>
+    <p className="mt-2 text-sm" style={{ color: colors.slate }}>Réponds sans poser le calcul et remplis ta jauge d’énergie.</p>
+    <div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Calcul {round} / {total}</span><span>Jauge {score * 10} %</span></div>
+    <div className="mt-2 h-5 overflow-hidden rounded-full" role="progressbar" aria-label="Jauge d’énergie" aria-valuemin="0" aria-valuemax="100" aria-valuenow={score * 10} style={{ backgroundColor: `${colors.ink}0d`, border: `1px solid ${colors.hairline}` }}><div className="h-full rounded-full transition-all duration-500" style={{ width: `${score * 10}%`, backgroundColor: "#ef6c00" }}/></div>
     <div className="mt-6 rounded-3xl p-6 text-center" style={{ backgroundColor: `${colors.gold}16` }}><p className="text-xs font-black uppercase tracking-wider" style={{ color: "#b45309" }}>{question.skill}</p><p className="mt-3 text-3xl font-black" style={{ fontFamily: fonts.mono, color: colors.ink }}>{question.prompt}</p><div className="mx-auto mt-5 flex h-14 max-w-48 items-center justify-center rounded-2xl text-2xl font-black" style={{ backgroundColor: colors.card, border: `2px solid ${feedback ? colors.hairline : colors.gold}`, color: colors.ink }}>{value || "?"}</div></div>
     <div className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2">{[1,2,3,4,5,6,7,8,9,"⌫",0,"OK"].map((key) => <button key={key} disabled={!!feedback} onClick={() => { if (key === "⌫") setValue((current) => current.slice(0, -1)); else if (key === "OK") submit(); else setValue((current) => current.length < 3 ? `${current}${key}` : current); }} className="rounded-2xl py-3 text-lg font-black" style={{ backgroundColor: key === "OK" ? colors.gold : colors.bg, border: `1px solid ${colors.hairline}`, color: colors.ink }}>{key}</button>)}</div>
     <p aria-live="polite" className="mt-4 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("Bonne") ? colors.green : colors.red }}>{feedback}</p>
@@ -160,9 +167,9 @@ function RobotGame({ onBack }) {
 
 export default function JeuxCe1() {
   const [activeGame, setActiveGame] = useState(null);
-  if (activeGame === "thousand") return <QuizGame type="number" onBack={() => setActiveGame(null)}/>;
-  if (activeGame === "pizza") return <QuizGame type="fraction" onBack={() => setActiveGame(null)}/>;
+  if (activeGame === "thousand") return <ThousandRace onBack={() => setActiveGame(null)}/>;
+  if (activeGame === "pizza") return <PizzaGame onBack={() => setActiveGame(null)}/>;
   if (activeGame === "robot") return <RobotGame onBack={() => setActiveGame(null)}/>;
   if (activeGame === "mental") return <MentalGame onBack={() => setActiveGame(null)}/>;
-  return <div className="min-h-screen p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}><div className="mx-auto max-w-5xl"><Link to="/jeux" className="inline-flex items-center gap-1 text-sm font-bold" style={{ color: colors.slate }}><ArrowLeft size={16}/> Tous les jeux</Link><header className="my-7 rounded-[2rem] p-7 text-center sm:p-10" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}><p className="text-xs font-black uppercase tracking-[.2em]" style={{ color: colors.gold }}>Espace CE1</p><h1 className="mt-2 text-4xl font-black" style={{ fontFamily: fonts.display, color: "white" }}>Jeux CE1</h1><p className="mx-auto mt-3 max-w-xl text-sm" style={{ color: "rgba(255,255,255,.72)" }}>Quatre défis courts pour progresser en numération, fractions, calcul mental et repérage tout en s’amusant.</p></header><div className="grid gap-4 sm:grid-cols-2">{GAME_CARDS.map(({ id, title, description, icon: Icon, accent }) => <button key={id} onClick={() => setActiveGame(id)} className="interactive-card flex min-h-64 flex-col rounded-3xl p-6 text-left" style={{ backgroundColor: colors.card, borderTop: `5px solid ${accent}`, boxShadow: shadow.soft }}><span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}18` }}><Icon size={27} color={accent}/></span><h2 className="mt-5 text-xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>{title}</h2><p className="mt-2 flex-1 text-sm leading-relaxed" style={{ color: colors.slate }}>{description}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-black" style={{ color: accent }}>Jouer <ChevronRight size={16}/></span></button>)}</div></div></div>;
+  return <div className="min-h-screen p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}><div className="mx-auto max-w-5xl"><Link to="/jeux" className="inline-flex items-center gap-1 text-sm font-bold" style={{ color: colors.slate }}><ArrowLeft size={16}/> Tous les jeux</Link><header className="my-7 rounded-[2rem] p-7 text-center sm:p-10" style={{ backgroundColor: colors.ink, boxShadow: shadow.raised }}><p className="text-xs font-black uppercase tracking-[.2em]" style={{ color: colors.gold }}>Espace CE1</p><h1 className="mt-2 text-4xl font-black" style={{ fontFamily: fonts.display, color: "white" }}>Jeux CE1</h1><p className="mx-auto mt-3 max-w-xl text-sm" style={{ color: "rgba(255,255,255,.72)" }}>Cinq défis courts pour progresser en numération, fractions, calcul mental et repérage tout en s’amusant.</p></header><div className="grid gap-4 sm:grid-cols-2">{GAME_CARDS.map(({ id, path, title, description, icon: Icon, accent }) => { const content = <><span className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ backgroundColor: `${accent}18` }}><Icon size={27} color={accent}/></span><h2 className="mt-5 text-xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>{title}</h2><p className="mt-2 flex-1 text-sm leading-relaxed" style={{ color: colors.slate }}>{description}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-black" style={{ color: accent }}>Jouer <ChevronRight size={16}/></span></>; const cardClass = "interactive-card flex min-h-64 flex-col rounded-3xl p-6 text-left"; const cardStyle = { backgroundColor: colors.card, borderTop: `5px solid ${accent}`, boxShadow: shadow.soft }; return path ? <Link key={id} to={path} className={cardClass} style={cardStyle}>{content}</Link> : <button key={id} onClick={() => setActiveGame(id)} className={cardClass} style={cardStyle}>{content}</button>; })}</div></div></div>;
 }

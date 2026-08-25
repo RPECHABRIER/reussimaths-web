@@ -60,11 +60,15 @@ export default function Jeux() {
           <div className="relative flex flex-wrap justify-center gap-4 mt-5 text-xs" style={{ color: "rgba(255,255,255,.72)" }}><span className="inline-flex items-center gap-1.5"><ShieldCheck size={14} color={colors.green} /> Gratuit</span><span>Sans compte</span><span>Sans publicité</span></div>
         </div>
 
-        <nav aria-label="Catégories de jeux" className="mb-6 flex justify-center gap-2">
-          <span className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: colors.ink, color: "white" }}>Tous les jeux</span>
-          <Link to="/jeux/cp" className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: `${colors.green}18`, color: colors.ink, border: `1px solid ${colors.green}` }}>CP</Link>
-          <Link to="/jeux/ce1" className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: `${colors.gold}22`, color: colors.ink, border: `1px solid ${colors.gold}` }}>CE1</Link>
-        </nav>
+        <section className="mb-8 rounded-[2rem] p-5 sm:p-7" style={{ backgroundColor: colors.card, border: `1px solid ${colors.hairline}`, boxShadow: shadow.soft }}>
+          <div className="text-center"><p className="text-xs font-black uppercase tracking-[.16em]" style={{ color: colors.green }}>100 % gratuits · sans compte</p><h2 className="mt-1 text-2xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>Jeux maths pour les plus jeunes</h2><p className="mt-1 text-sm" style={{ color: colors.slate }}>Choisis ta classe et commence à jouer.</p></div>
+          <nav aria-label="Jeux pour les plus jeunes" className="mt-5 grid grid-cols-2 gap-3">
+            <Link to="/jeux/cp" className="flex min-h-24 flex-col items-center justify-center rounded-3xl text-center" style={{ backgroundColor: `${colors.green}18`, color: colors.ink, border: `2px solid ${colors.green}` }}><span className="text-3xl" aria-hidden="true">🐣</span><span className="mt-1 text-xl font-black">Jeux CP</span></Link>
+            <Link to="/jeux/ce1" className="flex min-h-24 flex-col items-center justify-center rounded-3xl text-center" style={{ backgroundColor: `${colors.gold}22`, color: colors.ink, border: `2px solid ${colors.gold}` }}><span className="text-3xl" aria-hidden="true">🚀</span><span className="mt-1 text-xl font-black">Jeux CE1</span></Link>
+          </nav>
+        </section>
+
+        <h2 className="mb-4 text-xl font-black" style={{ fontFamily: fonts.display, color: colors.ink }}>Autres jeux de maths</h2>
 
         <div className="grid sm:grid-cols-2 gap-4">
           {GAMES.map((game, index) => {

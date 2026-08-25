@@ -80,6 +80,7 @@ export default function Jeux() {
 
         <nav aria-label="Catégories de jeux" className="mb-6 flex justify-center gap-2">
           <span className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: colors.ink, color: "white" }}>Tous les jeux</span>
+          <Link to="/jeux/cp" className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: `${colors.green}18`, color: colors.ink, border: `1px solid ${colors.green}` }}>CP</Link>
           <Link to="/jeux/ce1" className="rounded-full px-5 py-2.5 text-sm font-black" style={{ backgroundColor: `${colors.gold}22`, color: colors.ink, border: `1px solid ${colors.gold}` }}>CE1</Link>
         </nav>
 

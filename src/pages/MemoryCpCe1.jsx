@@ -100,9 +100,11 @@ export default function MemoryCpCe1() {
     if (chosen.length < 2 || chosen.some((card) => !card)) return undefined;
 
     const timers = [
-      window.setTimeout(() => setFlippedUids([chosen[0].uid]), 450),
+      window.setTimeout(() => setFlippedUids([chosen[0].uid]), 600),
       window.setTimeout(() => {
         setFlippedUids([chosen[0].uid, chosen[1].uid]);
+      }, 1400),
+      window.setTimeout(() => {
         if (mustFindPair) {
           setMatchCelebration({
             equation: `${chosen[0].n * 2} = ${chosen[0].n} + ${chosen[0].n}`,
@@ -110,7 +112,7 @@ export default function MemoryCpCe1() {
             owner: "opponent",
           });
         }
-      }, 950),
+      }, 2400),
       window.setTimeout(() => {
         setFlippedUids([]);
         setMatchCelebration(null);
@@ -122,9 +124,9 @@ export default function MemoryCpCe1() {
         } else {
           setOpponentAttempts((attempts) => attempts + 1);
         }
-        setTurn("child");
+        setTurn(mustFindPair ? "opponent" : "child");
         setLocked(false);
-      }, mustFindPair ? 2150 : 1750),
+      }, mustFindPair ? 3700 : 3400),
     ];
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
@@ -207,7 +209,7 @@ export default function MemoryCpCe1() {
         setChildScore((score) => score + 1);
         setMatchCelebration(null);
       }
-      setTurn("opponent");
+      setTurn(isMatch ? "child" : "opponent");
     }, isMatch ? 1100 : 900);
   };
 
@@ -251,7 +253,7 @@ export default function MemoryCpCe1() {
               {TOTAL_CARDS} cartes ({GROUPS_COUNT} paires)
             </p>
             <p className="text-xs mt-2" style={{ color: slate }}>
-              Tu retournes deux cartes, puis le robot joue. Chaque paire trouvée rapporte 1 point.
+              Tu retournes deux cartes, puis le robot joue. Si tu trouves une paire, tu rejoues. Chaque paire rapporte 1 point.
             </p>
           </div>
 

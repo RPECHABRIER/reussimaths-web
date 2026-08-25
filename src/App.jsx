@@ -29,6 +29,7 @@ const Reviser = lazy(() => import("./pages/Reviser"));
 const Bilan = lazy(() => import("./pages/Bilan"));
 const Enseignant = lazy(() => import("./pages/Enseignant"));
 const Jeux = lazy(() => import("./pages/Jeux"));
+const JeuxCp = lazy(() => import("./pages/JeuxCp"));
 const JeuxCe1 = lazy(() => import("./pages/JeuxCe1"));
 const CourseTables = lazy(() => import("./pages/CourseTables"));
 const EstimationExpress = lazy(() => import("./pages/EstimationExpress"));
@@ -200,6 +201,7 @@ export default function App() {
         <Route path="/calcul-mental/:levelId" element={<DailyMentalMath />} />
         <Route path="/enseignant" element={<Enseignant />} />
         <Route path="/jeux" element={<Jeux />} />
+        <Route path="/jeux/cp" element={<JeuxCp />} />
         <Route path="/jeux/ce1" element={<JeuxCe1 />} />
         <Route path="/jeux/course-tables" element={<CourseTables />} />
         <Route path="/jeux/estimation-express" element={<EstimationExpress />} />

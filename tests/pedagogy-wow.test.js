@@ -8,6 +8,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_2,
   PEDAGOGY_GENERALIZATION_LOT_3,
   PEDAGOGY_GENERALIZATION_LOT_4A,
+  PEDAGOGY_GENERALIZATION_LOT_4B,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -97,6 +98,17 @@ const CHAPTER_FILES = {
   "vecteurs-produit-scalaire-premiere-spe": "vecteurs-produit-scalaire-premiere-spe",
   "croissance-exponentielle-premiere-non-spe": "croissance-exponentielle-premiere-non-spe",
   "modelisation-quadratique-premiere-non-spe": "modelisation-quadratique-premiere-non-spe",
+  "probabilites-quatrieme": "probabilites-quatrieme",
+  "trigonometrie-premiere-spe": "trigonometrie-premiere-spe",
+  "variations-instantanees-premiere-non-spe": "variations-instantanees-premiere-non-spe",
+  "probabilites-conditionnelles-premiere-techno": "probabilites-conditionnelles-premiere-techno",
+  "epreuves-independantes-premiere-techno": "epreuves-independantes-premiere-techno",
+  "orthogonalite-distances-espace-terminale-spe": "orthogonalite-distances-espace-terminale-spe",
+  "limites-fonctions-terminale-spe": "limites-fonctions-terminale-spe",
+  "continuite-terminale-spe": "continuite-terminale-spe",
+  "automatismes-terminale-techno": "automatismes-terminale-techno",
+  "probabilites-conditionnelles-terminale-techno": "probabilites-conditionnelles-terminale-techno",
+  "variables-aleatoires-terminale-techno": "variables-aleatoires-terminale-techno",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -282,6 +294,80 @@ test("statistiques et produit scalaire gardent un feedback fiable lorsque le rai
       assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur/i);
     }
   }
+});
+
+test("le lot 4B contient exactement les onze chapitres sensibles autorisés", () => {
+  assert.equal(PEDAGOGY_GENERALIZATION_LOT_4B.length, 11);
+  for (const chapter of PEDAGOGY_GENERALIZATION_LOT_4B) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du lot 4B conservent le contenu et exposent deux aides", async () => {
+  for (const chapterRow of PEDAGOGY_GENERALIZATION_LOT_4B) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("probabilités et binomiale vérifient leur univers et leurs hypothèses sans faux diagnostic", async () => {
+  const files = [
+    "probabilites-quatrieme",
+    "probabilites-conditionnelles-premiere-techno",
+    "epreuves-independantes-premiere-techno",
+    "probabilites-conditionnelles-terminale-techno",
+    "variables-aleatoires-terminale-techno",
+  ];
+  for (const file of files) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur/i);
+      assert.match(guidance, /univers|événement|issue|référence|condition|branche|chemin|indépend|succès|épreuve|probabilit|valeurs de X|coefficient|espérance|binomial|répétition/i);
+    }
+  }
+});
+
+test("limites et continuité conservent les garde-fous conceptuels", async () => {
+  const { default: limits } = await import("../src/chapters/limites-fonctions-terminale-spe.js");
+  const { default: continuity } = await import("../src/chapters/continuite-terminale-spe.js");
+  const limitGuidance = [];
+  const continuityGuidance = [];
+  for (let index = 0; index < 1000; index += 1) {
+    const limit = prepareWowExercise(limits, limits.generate());
+    const continuous = prepareWowExercise(continuity, continuity.generate());
+    limitGuidance.push(`${limit.hints?.join(" ")} ${limit.feedback?.default}`);
+    continuityGuidance.push(`${continuous.hints?.join(" ")} ${continuous.feedback?.default}`);
+  }
+  assert.ok(limitGuidance.some((text) => /forme indéterminée/i.test(text)));
+  assert.ok(limitGuidance.some((text) => /valeur interdite seule ne prouve pas une asymptote/i.test(text)));
+  assert.ok(continuityGuidance.some((text) => /existence, pas toujours l’unicité/i.test(text)));
+  assert.ok(continuityGuidance.some((text) => /stricte monotonie/i.test(text)));
+});
+
+test("variations instantanées ne déduit jamais un extremum de f'(a)=0 seul", async () => {
+  const { default: chapter } = await import("../src/chapters/variations-instantanees-premiere-non-spe.js");
+  const prepared = prepareWowExercise(chapter, {
+    type: "numeric",
+    chapter: "Variations instantanées — Extremum",
+    prompt: "Étudier un extremum à partir de la dérivée.",
+    answer: 0,
+    steps: [{ type: "methode", text: "Étudier le signe de la dérivée." }],
+  });
+  const guidance = `${prepared.hints.join(" ")} ${prepared.feedback.default}`;
+  assert.match(guidance, /signe|variation/i);
+  assert.match(guidance, /ne suffit pas/i);
 });
 
 test("un ancien chapitre hors profils conserve exactement son exercice", async () => {

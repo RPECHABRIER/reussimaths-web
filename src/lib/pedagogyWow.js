@@ -505,6 +505,125 @@ const PROFILES = {
     ],
     success: "Exact. Le modèle quadratique est interprété dans la situation étudiée.",
   },
+  "probabilites-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/calculer|équiprobabilité/i, "Décris l’univers et l’événement avant de calculer.", "Si les issues sont équiprobables, utilise cas favorables sur cas possibles ; sinon, appuie-toi sur les probabilités données."],
+      [/vocabulaire/i, "Distingue issue, événement et univers.", "Décris précisément l’ensemble des issues concernées avant de qualifier l’événement."],
+      [/événement contraire/i, "Quel événement complète exactement celui qui est donné ?", "Vérifie qu’ils sont incompatibles et couvrent tout l’univers, puis utilise P contraire = 1−P."],
+      [/vérifier/i, "Contrôle le total et les bornes d’une probabilité.", "Chaque probabilité doit être entre 0 et 1 et la somme des probabilités de toutes les issues doit valoir 1."],
+      [/problèmes/i, "Repère d’abord l’univers de référence.", "Traduis la question en événement, identifie les données utiles, puis choisis une relation sans supposer l’équiprobabilité."],
+    ],
+    success: "Exact. La probabilité utilise le bon univers de référence.",
+  },
+  "trigonometrie-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/radian|longueur d'arc/i, "Relie l’angle à un tour complet.", "Utilise π radians = 180° et longueur d’arc = rayon×angle en radians, avec des unités cohérentes."],
+      [/valeurs remarquables/i, "Repère l’angle de référence sur le cercle trigonométrique.", "Utilise les coordonnées du point du cercle pour lire cosinus et sinus, puis contrôle leur signe."],
+      [/relation fondamentale/i, "Relie sinus et cosinus d’un même angle.", "Utilise cos²(x)+sin²(x)=1, puis conserve seulement les signes compatibles avec le quadrant."],
+      [/angles associés|signe selon le quadrant/i, "Identifie le quadrant et l’angle de référence.", "Déduis le signe de chaque coordonnée sur le cercle, puis applique la relation d’angle associé adaptée."],
+      [/triangle rectangle|formules d'addition|formules de duplication/i, "Identifie les angles et les données réellement disponibles.", "Choisis la relation qui relie ces données, puis vérifie l’unité des angles et les signes avant de calculer."],
+      [/équations trigonométriques/i, "Cherche d’abord les angles de référence.", "Résous sur le cercle, ajoute la périodicité, puis restreins les solutions à l’intervalle demandé."],
+    ],
+    success: "Exact. L’angle, son unité et son quadrant sont cohérents.",
+  },
+  "variations-instantanees-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/nombre dérivé|taux d'accroissement/i, "Distingue la variation de la fonction de celle de l’entrée.", "Calcule le quotient des accroissements dans le même ordre ; le nombre dérivé décrit la pente locale."],
+      [/tangente/i, "Sépare le point de contact et la pente.", "Utilise la valeur de la fonction au point et le nombre dérivé comme coefficient directeur de la tangente."],
+      [/interprétation physique/i, "Repère les unités des deux grandeurs.", "Interprète le nombre dérivé comme un taux instantané avec son unité, sans le confondre avec une variation totale."],
+      [/sens de variation|extremum/i, "Étudie le signe de la dérivée autour du point.", "Déduis les variations intervalle par intervalle ; une dérivée nulle seule ne suffit pas à prouver un extremum."],
+    ],
+    success: "Exact. Le nombre dérivé est interprété comme une variation locale.",
+  },
+  "probabilites-conditionnelles-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/probabilités conditionnelles/i, "Quel événement définit la nouvelle population de référence ?", "Restreins l’univers à la condition, puis calcule la part de l’événement dans cette population."],
+      [/indépendance/i, "Ne confonds pas indépendance et incompatibilité.", "Vérifie une égalité comme P(A∩B)=P(A)P(B) ou P_A(B)=P(B) avant de conclure."],
+      [/probabilités totales/i, "Repère une partition complète de l’univers.", "Décompose l’événement selon les cas de la partition, calcule chaque intersection puis additionne ces cas incompatibles."],
+      [/arbre pondéré|vrai ou faux/i, "Lis les conditions portées par chaque branche.", "Multiplie le long d’un chemin, additionne des chemins incompatibles et vérifie les sommes de branches avant de conclure."],
+    ],
+    success: "Exact. Le conditionnement utilise la bonne population de référence.",
+  },
+  "epreuves-independantes-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/Bernoulli/i, "Identifie le succès et l’échec.", "Vérifie qu’il existe exactement deux issues, puis note la probabilité constante du succès et celle de l’échec."],
+      [/répétition de Bernoulli/i, "Vérifie le nombre d’épreuves et leur indépendance.", "Repère n, p et le nombre de succès visé ; compte les chemins correspondants avant de calculer leur probabilité."],
+      [/arbre pondéré/i, "Chaque niveau représente une nouvelle épreuve.", "Multiplie les probabilités le long d’un chemin et additionne seulement les chemins correspondant à l’événement demandé."],
+      [/au moins un|probabilité exacte|nombre de chemins/i, "Décris l’événement contraire ou le nombre de succès attendu.", "Pour « au moins un », utilise souvent le complément de zéro succès ; sinon, compte les chemins sans double comptage."],
+    ],
+    success: "Exact. Les hypothèses de l’épreuve répétée sont correctement utilisées.",
+  },
+  "orthogonalite-distances-espace-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/produit scalaire/i, "Identifie les deux directions comparées.", "Calcule le produit scalaire dans le repère donné et interprète sa nullité seulement après avoir vérifié les vecteurs utilisés."],
+      [/vecteur normal/i, "Cherche une direction orthogonale au plan.", "Vérifie l’orthogonalité avec deux directions non colinéaires du plan, sans supposer le résultat à partir de la figure."],
+      [/équation d'un plan/i, "Repère un point du plan et un vecteur normal.", "Construis l’équation cartésienne avec le vecteur normal, puis vérifie que le point donné la satisfait."],
+      [/distance point-plan|distances/i, "Identifie la projection orthogonale ou l’équation du plan.", "Utilise la formule de distance avec un vecteur normal et normalise par sa norme, puis contrôle la positivité."],
+      [/positions relatives/i, "Compare d’abord les directions et les vecteurs normaux.", "Étudie parallélisme ou orthogonalité avant de rechercher une éventuelle intersection."],
+    ],
+    success: "Exact. La propriété d’orthogonalité est justifiée dans l’espace.",
+  },
+  "limites-fonctions-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/fonctions rationnelles|fonctions polynomiales/i, "Identifie le terme dominant au voisinage étudié.", "Factorise par la puissance dominante ou compare les degrés, puis contrôle le signe selon la direction de la limite."],
+      [/croissance comparée/i, "Repère les familles de fonctions en présence.", "Utilise une croissance comparée connue avec ses conditions, après avoir transformé l’expression dans une forme adaptée."],
+      [/asymptotes/i, "Une valeur interdite seule ne prouve pas une asymptote.", "Calcule la limite au voisinage ou à l’infini ; conclus à une asymptote seulement si la limite correspondante le justifie."],
+      [/opérations sur les limites/i, "Vérifie si la forme obtenue est déterminée.", "Applique les règles usuelles seulement hors forme indéterminée ; sinon, transforme l’expression avant de reprendre la limite."],
+      [/théorème des gendarmes/i, "Cherche deux fonctions qui encadrent sur le même voisinage.", "Vérifie l’encadrement et l’égalité des deux limites avant d’appliquer le théorème."],
+    ],
+    success: "Exact. La limite est obtenue après contrôle de la forme et du voisinage.",
+  },
+  "continuite-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/théorème des valeurs intermédiaires/i, "Vérifie l’intervalle, la continuité et la valeur encadrée.", "Sur un intervalle fermé, une fonction continue prend toute valeur entre les images des bornes ; cela assure l’existence, pas toujours l’unicité."],
+      [/nombre de solutions|unicité/i, "Sépare l’existence de l’unicité.", "Utilise le TVI pour l’existence et ajoute une stricte monotonie sur l’intervalle pour conclure à une solution unique."],
+      [/fonctions usuelles|opérations sur les fonctions continues/i, "Identifie le domaine avant d’utiliser la continuité.", "Combine les théorèmes de continuité sur un domaine où chaque opération est définie, notamment hors dénominateur nul."],
+      [/dichotomie/i, "Conserve un intervalle où les images encadrent la valeur cherchée.", "Teste le milieu, garde le sous-intervalle qui préserve l’encadrement, puis répète jusqu’à la précision demandée."],
+      [/suites récurrentes/i, "Relie la récurrence à la fonction qui définit le terme suivant.", "Si une limite existe, elle doit vérifier l’équation du point fixe ; démontre séparément les conditions de convergence."],
+    ],
+    success: "Exact. Les hypothèses de continuité et d’unicité sont explicitement vérifiées.",
+  },
+  "automatismes-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/suites/i, "Repère le rang et le type de suite.", "Applique directement la relation adaptée au rang donné."],
+      [/exponentielles/i, "Distingue taux, coefficient et exposant.", "Écris le coefficient par période, puis applique-le au bon nombre de périodes."],
+      [/logarithme/i, "Relie le logarithme à une puissance de 10.", "Utilise la propriété adaptée sur des arguments positifs."],
+      [/statistiques/i, "Repère l’indicateur et les données utiles.", "Calcule l’indicateur demandé avec le bon effectif."],
+      [/probabilités/i, "Identifie la condition de référence.", "Lis le chemin ou la proportion correspondant exactement à l’événement."],
+      [/variables aléatoires/i, "Repère n, p et l’événement sur X.", "Applique la formule binomiale ou l’espérance en une étape contrôlée."],
+    ],
+    success: "Exact. L’automatisme est maîtrisé.",
+  },
+  "probabilites-conditionnelles-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/partition de l'univers/i, "Vérifie que les cas sont incompatibles et couvrent tout l’univers.", "Décompose l’événement selon chaque cas de la partition avant de calculer les intersections."],
+      [/probabilités totales/i, "Identifie tous les chemins qui mènent à l’événement.", "Multiplie sur chaque chemin, puis additionne les chemins incompatibles sans en oublier."],
+      [/arbre pondéré/i, "Lis la condition associée à chaque branche.", "Vérifie que les branches issues d’un nœud totalisent 1, puis calcule le chemin demandé."],
+      [/problème|piège classique/i, "Quel événement sert réellement de référence ?", "Écris la probabilité conditionnelle avec son événement conditionnant ; P_A(B) et P_B(A) ont des univers de référence différents."],
+    ],
+    success: "Exact. La probabilité conditionnelle utilise le bon événement de référence.",
+  },
+  "variables-aleatoires-terminale-techno": {
+    level: "terminale-techno",
+    skills: [
+      [/reconnaître la loi binomiale/i, "Vérifie les hypothèses avant de nommer la loi.", "Il faut n répétitions indépendantes d’une même épreuve à deux issues, avec une probabilité de succès constante p."],
+      [/triangle de Pascal|coefficients binomiaux/i, "Le coefficient compte les positions possibles des succès.", "Utilise la ligne n du triangle ou la relation adaptée, puis contrôle 0≤k≤n."],
+      [/loi binomiale|calculer avec B/i, "Repère n, p et le nombre de succès k.", "Utilise P(X=k)=C(n,k)p^k(1−p)^(n−k), puis adapte si plusieurs valeurs de X sont demandées."],
+      [/espérance/i, "Distingue espérance et valeur certaine.", "Calcule la somme pondérée des valeurs ou np dans le cas binomial, puis interprète-la sur un grand nombre de répétitions."],
+      [/interprétation|évènements liés à X|cas particuliers/i, "Traduis l’événement en valeurs possibles de X.", "Écris l’égalité ou l’inégalité sur X, puis additionne les probabilités correspondantes ou utilise un complément."],
+    ],
+    success: "Exact. Le modèle probabiliste et l’événement sur X sont correctement identifiés.",
+  },
   "reviser-les-bases": {
     level: "sixieme",
     skills: [
@@ -988,6 +1107,20 @@ const GENERALIZATION_LOT_4A_IDS = [
   "fonctions-second-degre-premiere-techno",
 ];
 
+const GENERALIZATION_LOT_4B_IDS = [
+  "probabilites-quatrieme",
+  "trigonometrie-premiere-spe",
+  "variations-instantanees-premiere-non-spe",
+  "probabilites-conditionnelles-premiere-techno",
+  "epreuves-independantes-premiere-techno",
+  "orthogonalite-distances-espace-terminale-spe",
+  "limites-fonctions-terminale-spe",
+  "continuite-terminale-spe",
+  "automatismes-terminale-techno",
+  "probabilites-conditionnelles-terminale-techno",
+  "variables-aleatoires-terminale-techno",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -1034,3 +1167,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_2 = showcaseRows(GENERALIZATION_LOT_2_I
 export const PEDAGOGY_GENERALIZATION_LOT_3 = showcaseRows(GENERALIZATION_LOT_3_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_4A = showcaseRows(GENERALIZATION_LOT_4A_IDS);
+
+export const PEDAGOGY_GENERALIZATION_LOT_4B = showcaseRows(GENERALIZATION_LOT_4B_IDS);

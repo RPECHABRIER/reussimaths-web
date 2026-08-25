@@ -89,7 +89,7 @@ test("vingt générations par chapitre du lot 1 conservent la réponse et reçoi
         assert.ok(prepared.feedback?.default);
       }
     }
-    assert.ok(targeted >= 3, `${chapterRow.chapterId}: seulement ${targeted}/20 générations ciblées`);
+    assert.equal(targeted, 20, `${chapterRow.chapterId}: seulement ${targeted}/20 générations ciblées`);
   }
 });
 

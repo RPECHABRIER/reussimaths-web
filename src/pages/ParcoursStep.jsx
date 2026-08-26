@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
 import { getParcours } from "../parcours";
 import { getChapter } from "../chapters/registry";
 import ChapterRunner from "../components/ChapterRunner";
@@ -35,6 +35,7 @@ export default function ParcoursStep() {
   const { chapterId: referralBonusChapterId } = useReferralBonus(user?.id);
   const { recordStep } = useParcoursProgress(user?.id, parcoursId);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [trialRun] = useState(() => {
     if (parcours?.kind !== "trial") return 0;
     try { return Number(localStorage.getItem(`reussimaths_trial_runs_${parcours.levelId}`) ?? 0); }
@@ -54,10 +55,16 @@ export default function ParcoursStep() {
 
   const step = parcours.steps[idx];
   let chapter = parcours.kind === "trial" ? getDiscoveryShowcase(parcours.levelId) : getChapter(step.chapterId);
-  if (parcours.kind === "trial" && trialRun > 0) {
+  let trialSource = null;
+  if (parcours.kind === "trial") {
     try {
-      const targetedId = sessionStorage.getItem(`reussimaths_trial_chapter_${parcours.levelId}`);
-      chapter = getChapter(targetedId) ?? chapter;
+      const queryChapterId = searchParams.get("chapter");
+      const storedSource = sessionStorage.getItem(`reussimaths_trial_source_${parcours.levelId}`);
+      const requestedId = queryChapterId ?? ((trialRun > 0 || storedSource === "diagnostic") ? sessionStorage.getItem(`reussimaths_trial_chapter_${parcours.levelId}`) : null);
+      const requestedChapter = getChapter(requestedId);
+      if (requestedChapter?.meta.level === parcours.levelId) chapter = requestedChapter;
+      const requestedSource = searchParams.get("trial_source") ?? storedSource;
+      if (["homepage_direct", "diagnostic", "seo_course"].includes(requestedSource)) trialSource = requestedSource;
     } catch { /* stockage indisponible : la série vitrine reste utilisable */ }
   }
 
@@ -125,6 +132,7 @@ export default function ParcoursStep() {
       difficulty={parcours.difficulty}
       sessionLength={parcours.sessionLength}
       backTo={`/parcours/${parcours.id}`}
+      trialSource={trialSource}
       onSessionComplete={async ({ correct, total }) => {
         if (parcours.kind === "trial") {
           try { localStorage.setItem(`reussimaths_trial_runs_${parcours.levelId}`, String(trialRun + 1)); }

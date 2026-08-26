@@ -5,7 +5,8 @@ import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow } from "../theme";
 import { trackProductEvent } from "../lib/productAnalytics";
 import { setPreferredLevel } from "../lib/preferences";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { RECOMMENDED_STARTING_CHAPTERS } from "../lib/recommendedStartingChapters";
 
 export default function LevelSelect() {
   const [searchParams] = useSearchParams();
@@ -44,6 +45,19 @@ export default function LevelSelect() {
         <div className="flex flex-col gap-3">
           {LEVELS.map((level) => {
             const available = getChaptersByLevel(level.id).length > 0;
+            const recommendedChapterId = RECOMMENDED_STARTING_CHAPTERS[level.id]?.chapterId;
+            if (trial) return (
+              <div key={level.id} className="rounded-3xl px-5 py-4" style={{ backgroundColor: colors.card, boxShadow: shadow.soft }}>
+                <div className="flex items-center justify-between gap-3">
+                  <p style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "1.1rem", fontWeight: 700 }}>{level.label}</p>
+                  <span className="text-xs px-3 py-1 rounded-full font-semibold" style={{ backgroundColor: available ? `${colors.green}18` : `${colors.slate}14`, color: available ? colors.green : colors.slate }}>{available ? "Disponible" : "Bientôt"}</span>
+                </div>
+                {available && <div className="mt-3 grid gap-2">
+                  <Link onClick={() => { setPreferredLevel(level.id); trackProductEvent("level_selected", { levelId: level.id, trial: true, trialSource: "homepage_direct" }); }} to={`/parcours/essai-${level.id}/etape/0?chapter=${encodeURIComponent(recommendedChapterId)}&trial_source=homepage_direct`} className="flex items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-black" style={{ backgroundColor: colors.ink, color: colors.bg }}>Commencer ma série gratuite <ArrowRight size={15}/></Link>
+                  <Link onClick={() => { setPreferredLevel(level.id); trackProductEvent("level_selected", { levelId: level.id, trial: true, trialSource: "diagnostic" }); }} to={`/parcours/niveau/${level.id}/programme?objectif=essai`} className="text-center text-xs font-bold underline underline-offset-4" style={{ color: colors.slate }}>Personnaliser mon entraînement avec un diagnostic</Link>
+                </div>}
+              </div>
+            );
             return (
               <Link key={level.id} onClick={() => { setPreferredLevel(level.id); trackProductEvent("level_selected", { levelId: level.id, trial }); }} to={trial ? `/parcours/niveau/${level.id}/programme?objectif=essai` : `/niveau/${level.id}`}>
                 <div

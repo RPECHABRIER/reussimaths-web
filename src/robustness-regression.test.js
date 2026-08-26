@@ -380,7 +380,7 @@ test("les repères cartésiens affichent toujours axes, flèches, graduations et
   }
 });
 
-test("tous les accès à l'essai commencent au niveau choisi, au programme puis au diagnostic", async () => {
+test("l'essai peut commencer directement après le niveau sans supprimer le diagnostic", async () => {
   const [app, home, teacher, levels, programme, diagnostic, prerequisites, parcours] = await Promise.all([
     read("./App.jsx"),
     read("./pages/CycleSelect.jsx"),
@@ -397,6 +397,9 @@ test("tous les accès à l'essai commencent au niveau choisi, au programme puis 
   assert.doesNotMatch(teacher, /to="\/parcours\/decouverte"/);
   assert.match(app, /ClassProgramme/);
   assert.match(levels, /objectif=essai/);
+  assert.match(levels, /Commencer ma série gratuite/);
+  assert.match(levels, /trial_source=homepage_direct/);
+  assert.match(levels, /Personnaliser mon entraînement avec un diagnostic/);
   assert.match(levels, /\/programme\?objectif=essai/);
   assert.match(programme, /En cours/);
   assert.match(programme, /Déjà vu/);

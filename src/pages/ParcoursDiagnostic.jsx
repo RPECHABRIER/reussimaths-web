@@ -161,6 +161,7 @@ export default function ParcoursDiagnostic() {
       const rawTargetedChapterId = priorities[0]?.chapterId ?? results[0]?.chapterId;
       const targetedChapterId = CM2_REMEDIATION[rawTargetedChapterId] ?? rawTargetedChapterId;
       if (targetedChapterId) sessionStorage.setItem(`reussimaths_trial_chapter_${levelId}`, targetedChapterId);
+      sessionStorage.setItem(`reussimaths_trial_source_${levelId}`, "diagnostic");
     }
     return (
       <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>

@@ -169,7 +169,7 @@ function generateSimilarExercise(chapter, difficulty, currentExercise) {
   return generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise);
 }
 
-export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError }) {
+export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError, trialSource }) {
   const { user } = useAuth();
   usePracticeHeartbeat(user?.id);
   const { recordResult } = useProgress(user?.id, chapter.meta.id);
@@ -238,7 +238,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const isDefi = mode === "defi";
   const isDecouverte = mode === "decouverte";
   const isCours = mode === "cours";
-  const analyticsSource = isPersonalizedTrial ? "trial" : isDiscoverySession ? "discovery" : focusSkill ? "review" : "chapter";
+  const analyticsSource = isPersonalizedTrial ? (trialSource ?? "trial") : isDiscoverySession ? "discovery" : focusSkill ? "review" : "chapter";
 
   // Mode Découverte : la méthode reste visible en permanence, mais la
   // DERNIÈRE étape (celle qui porte la réponse finale) est masquée par
@@ -281,7 +281,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   // si déjà comptabilisé aujourd'hui ou si non connecté).
   useEffect(() => {
     dailyStreak.markPracticed();
-    if (isPersonalizedTrial) trackProductEvent("trial_started", { levelId: chapter.meta.level, chapterId: chapter.meta.id });
+    if (isPersonalizedTrial) trackProductEvent("trial_started", { levelId: chapter.meta.level, chapterId: chapter.meta.id, trialSource: trialSource ?? "unknown" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -294,8 +294,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       correct: correctCount,
       total: sessionLength ?? answeredCount,
       subscribed: !!subscription,
+      ...(isPersonalizedTrial ? { trialSource: trialSource ?? "unknown" } : {}),
     });
-  }, [sessionDone, isPersonalizedTrial, chapter.meta.level, chapter.meta.id, correctCount, sessionLength, answeredCount, subscription]);
+  }, [sessionDone, isPersonalizedTrial, chapter.meta.level, chapter.meta.id, correctCount, sessionLength, answeredCount, subscription, trialSource]);
 
   // Chronomètre du mode Défi, remis à zéro à chaque entrée dans ce mode.
   useEffect(() => {

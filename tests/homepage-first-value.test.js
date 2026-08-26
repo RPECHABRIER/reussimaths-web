@@ -44,14 +44,10 @@ test("le hero exprime la promesse et conserve le même point d'entrée", async (
   assert.match(source, /to: "\/niveaux\?objectif=essai"/);
 });
 
-test("la recommandation réutilise le funnel programme et son événement analytics", async () => {
-  const source = await readFile(new URL("../src/pages/ClassProgramme.jsx", import.meta.url), "utf8");
-  assert.match(source, /Recommandé pour commencer/);
-  assert.match(source, /Commencer avec ce chapitre/);
-  assert.match(source, /explicitSelection \?\? selections/);
-  assert.match(source, /trackProductEvent\("study_topics_selected"/);
-  assert.match(source, /chapters\.map/);
-  assert.match(source, /count > 0 \? "sticky bottom-3"/);
-  assert.match(source, /En cours/);
-  assert.match(source, /Déjà vu/);
+test("le choix du niveau mène à la valeur immédiatement tout en gardant la personnalisation", async () => {
+  const source = await readFile(new URL("../src/pages/LevelSelect.jsx", import.meta.url), "utf8");
+  assert.match(source, /Commencer ma série gratuite/);
+  assert.match(source, /trialSource: "homepage_direct"/);
+  assert.match(source, /Personnaliser mon entraînement avec un diagnostic/);
+  assert.match(source, /trialSource: "diagnostic"/);
 });

@@ -7,6 +7,7 @@ export const ALLOWED_PRODUCT_EVENTS = new Set([
   "adaptive_next_outcome", "recovery_opportunity", "recovery_success", "exercise_started",
   "exercise_completed", "paywall_viewed", "subscription_activated",
   "pack_examen_activated",
+  "teacher_session_started", "teacher_question_viewed", "teacher_questions_regenerated",
 ]);
 
 export const PRODUCT_EVENT_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

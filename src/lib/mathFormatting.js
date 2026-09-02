@@ -7,10 +7,12 @@ function latexNumber(value) {
 }
 
 function replaceFractions(text, inMath) {
-  return text.replace(PLAIN_FRACTION, (_, prefix, numerator, denominator) => {
-    const fraction = `\\dfrac{${latexNumber(numerator)}}{${latexNumber(denominator)}}`;
-    return `${prefix}${inMath ? fraction : `\\(${fraction}\\)`}`;
-  });
+  // Preserve URLs (including numeric queries) and complete slash-separated dates.
+  return text.split(/((?:[a-z][a-z0-9+.-]*:\/\/|www\.)[^\s\\]+|\b\d{1,4}\s*\/\s*\d{1,2}\s*\/\s*\d{1,4}\b)/gi)
+    .map((part, index) => index % 2 ? part : part.replace(PLAIN_FRACTION, (_, prefix, numerator, denominator) => {
+      const fraction = `\\dfrac{${latexNumber(numerator)}}{${latexNumber(denominator)}}`;
+      return `${prefix}${inMath ? fraction : `\\(${fraction}\\)`}`;
+    })).join("");
 }
 
 function stackFractionsInDelimitedText(text) {

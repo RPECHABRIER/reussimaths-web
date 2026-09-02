@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import katex from "katex";
 import { PUBLIC_COURSES, SITE_URL, coursePath } from "../src/seo/publicPages.js";
 import { getPageViewProperties } from "../src/lib/productAnalytics.js";
+import { CYCLE_LANDINGS, LEVEL_LANDINGS } from "../src/seo/landingPages.js";
 
 const WAVE_ONE_PATHS = [
   "/cours/troisieme/revisions-brevet-maths",
@@ -64,6 +65,37 @@ test("titles, descriptions, H1 et canonicals sont uniques", () => {
   assert.equal(new Set(canonicals).size, waveOnePages.length);
 });
 
+test("les pages cycle et niveau ont un contenu distinct et substantiel", () => {
+  const landings = [...Object.values(CYCLE_LANDINGS), ...Object.values(LEVEL_LANDINGS)];
+  assert.equal(Object.keys(CYCLE_LANDINGS).length, 2);
+  assert.equal(Object.keys(LEVEL_LANDINGS).length, 10);
+  for (const key of ["title", "description", "h1", "intro"]) {
+    assert.equal(new Set(landings.map((page) => page[key])).size, landings.length, `${key} doit être unique`);
+  }
+  for (const page of Object.values(CYCLE_LANDINGS)) {
+    assert.ok(page.intro.length >= 180);
+    assert.ok(page.details.length >= 180);
+    assert.ok(page.topics.length >= 6);
+  }
+  for (const page of Object.values(LEVEL_LANDINGS)) {
+    assert.ok(page.intro.length >= 140);
+    assert.ok(page.method.length >= 140);
+    assert.ok(page.topics.length >= 6);
+  }
+});
+
+test("les dix cours publics disposent d’un maillage et d’un contenu pédagogique consistants", () => {
+  assert.equal(PUBLIC_COURSES.length, 10);
+  for (const page of PUBLIC_COURSES) {
+    assert.ok(page.h1);
+    assert.ok(page.intent);
+    assert.ok(page.rules.length >= 3);
+    assert.ok(page.exercises.length >= 4);
+    assert.ok(page.relatedLinks.length >= 2);
+    assert.ok(page.relatedLinks.every((link) => link.path.startsWith("/")));
+  }
+});
+
 test("les exemples SEO sont déterministes et leur LaTeX est valide", async () => {
   const first = JSON.stringify(waveOnePages.map((page) => page.exercises));
   const cacheBustedModule = await import(`../src/seo/publicPages.js?determinism=${Date.now()}`);
@@ -90,6 +122,8 @@ test("le générateur pré-rend les cours, les relie aux niveaux et les ajoute a
   assert.match(generator, /\.\.\.PUBLIC_COURSES\.map\(coursePath\)/);
   assert.match(generator, /page\.h1 \?\? page\.title/);
   assert.match(generator, /relatedLinks/);
+  assert.match(generator, /LEVEL_LANDINGS\[id\]/);
+  assert.match(generator, /CYCLE_LANDINGS\[cycle\]/);
   assert.doesNotMatch(generator, /noindex/);
 });
 

@@ -14,6 +14,8 @@ import ComingSoon from "./ComingSoon";
 import { setPreferredLevel } from "../lib/preferences";
 import AppHeader from "../components/AppHeader";
 import { PUBLIC_COURSES, coursePath } from "../seo/publicPages";
+import SeoLearningSection from "../components/SeoLearningSection";
+import { getLevelLanding } from "../seo/landingPages";
 
 // Liste des chapitres d'un niveau donné (/niveau/:levelId), en mélangeant les
 // chapitres réels (avec du contenu, voir chapters/registry.js) et les
@@ -59,6 +61,7 @@ export default function Niveau() {
 
   const cc = cycleColors[level.cycle] ?? cycleColors.college;
   const publicCourses = PUBLIC_COURSES.filter((page) => page.levelId === levelId);
+  const landing = getLevelLanding(levelId);
 
   return (
     <div className="min-h-screen w-full p-4 sm:p-8" style={{ background: colors.bg, fontFamily: fonts.body }}>
@@ -68,7 +71,7 @@ export default function Niveau() {
         <div className="page-hero my-6 rounded-[2rem] px-5 py-8 text-center sm:my-9 sm:px-10 sm:py-11" style={{background:`linear-gradient(135deg, ${colors.ink}, ${cc.dark})`,boxShadow:shadow.raised}}>
           <p className="text-xs uppercase tracking-widest font-black" style={{ color: cc.accent === cycleColors.college.accent ? "#67D7E8" : "#B9B0FF" }}>Programme 2026 · parcours personnalisé</p>
           <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.card, fontSize: "clamp(2.3rem, 5vw, 3.6rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
-            Maths · {level.label}
+            {landing?.h1 ?? `Maths · ${level.label}`}
           </h1>
           <p className="mx-auto mt-2 max-w-xl text-sm sm:text-base" style={{ color: "rgba(255,255,255,.72)" }}>Une prochaine étape claire, des chapitres reliés au travail en classe et des révisions qui reviennent au bon moment.</p>
         </div>
@@ -117,7 +120,16 @@ export default function Niveau() {
           </section>
         )}
 
-        <div className="grid md:grid-cols-2 gap-4">
+        {landing && (
+          <SeoLearningSection
+            title={`Réussir en maths en ${landing.name}`}
+            intro={landing.intro}
+            details={landing.method}
+            topics={landing.topics}
+          />
+        )}
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
           {rows.map((row) => {
             if (row.kind === "planned") {
               const p = row.chapter;

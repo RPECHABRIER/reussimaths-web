@@ -5,6 +5,8 @@ import { getChaptersByLevel } from "../chapters/registry";
 import ReviserCard from "../components/ReviserCard";
 import { colors, fonts, shadow, cycleColors } from "../theme";
 import { setPreferredLevel } from "../lib/preferences";
+import SeoLearningSection from "../components/SeoLearningSection";
+import { CYCLE_LANDINGS } from "../seo/landingPages";
 
 // Deuxième étape de l'accueil (/college ou /lycee) : la liste des niveaux du
 // cycle choisi (repris de l'ancien LevelSelect.jsx, désormais filtré par
@@ -17,6 +19,7 @@ export default function CycleLevels() {
   const cycle = CYCLES.find((c) => c.id === cycleId);
   const levels = getLevelsByCycle(cycleId);
   const c = cycleColors[cycleId] ?? cycleColors.college;
+  const landing = CYCLE_LANDINGS[cycleId];
 
   if (!cycle) {
     return (
@@ -44,10 +47,10 @@ export default function CycleLevels() {
             {cycleId === "college" ? <School size={26} color={c.accent} /> : <GraduationCap size={26} color={c.accent} />}
           </div>
           <h1 style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2.2rem, 5vw, 3.5rem)", fontWeight: 900, letterSpacing: "-0.04em" }}>
-            Ton parcours {cycle.label.toLowerCase()}
+            {landing.h1}
           </h1>
           <p className="text-base mt-2 max-w-xl mx-auto" style={{ color: colors.slate }}>
-            Choisis ta classe pour retrouver les chapitres du programme et commencer par le bon entraînement.
+            Choisis ta classe pour retrouver les chapitres du programme, les cours gratuits et le bon entraînement.
           </p>
         </div>
 
@@ -80,6 +83,13 @@ export default function CycleLevels() {
             );
           })}
         </div>
+
+        <SeoLearningSection
+          title={`Réviser les maths au ${landing.label}`}
+          intro={landing.intro}
+          details={landing.details}
+          topics={landing.topics}
+        />
 
         <div className="text-center mt-10 flex items-center justify-center gap-5">
           <Link to="/compte" className="text-sm font-medium" style={{ color: colors.ink }}>

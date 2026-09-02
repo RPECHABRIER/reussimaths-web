@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import renderMathInElement from "katex/dist/contrib/auto-render.js";
+import { withAutoMathFormatting } from "../lib/mathFormatting";
 
 // ---------------------------------------------------------------------------
 // Rend un texte contenant des passages LaTeX en jolie notation mathématique.
@@ -16,20 +17,14 @@ import renderMathInElement from "katex/dist/contrib/auto-render.js";
 // corriger chaque générateur individuellement, on détecte ici une chaîne qui
 // contient de la syntaxe LaTeX (\commande, ^{ ou _{) mais aucun délimiteur,
 // et on l'enrobe automatiquement de \( \) avant le rendu.
+//
+// Les quotients numériques écrits sous la forme 3/4 sont eux aussi convertis
+// à l'affichage en \dfrac{3}{4}. Les valeurs attendues restent inchangées :
+// l'élève peut toujours saisir 3/4, seule la présentation est normalisée.
 // ---------------------------------------------------------------------------
-const HAS_DELIMITER = /\\\(|\\\[/;
-const HAS_RAW_LATEX = /\\[a-zA-Z]+|[\^_]\{/;
-
-function withAutoDelimiters(text) {
-  if (typeof text !== "string") return text;
-  if (HAS_DELIMITER.test(text)) return text;
-  if (HAS_RAW_LATEX.test(text)) return `\\(${text}\\)`;
-  return text;
-}
-
 export default function MathText({ text, as: Tag = "span", className, style }) {
   const ref = useRef(null);
-  const displayText = withAutoDelimiters(text);
+  const displayText = withAutoMathFormatting(text);
   const containsShortVector = typeof text === "string" && /\\overrightarrow\{[A-Za-z]{1,3}\}/.test(text);
 
   useEffect(() => {

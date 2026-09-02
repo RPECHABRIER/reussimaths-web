@@ -39,7 +39,7 @@ export default function HomeLearningDemo() {
           <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-black" style={{background:`${colors.gold}18`,color:colors.gold}}><Sparkles size={11}/> Fractions</span>
           <p className="mt-5 text-lg font-black leading-relaxed" style={{color:colors.ink}}>Calcule <MathText text={`\\(\\dfrac{1}{2}+\\dfrac{1}{3}\\)`}/>.</p>
           <div className="mt-5 grid grid-cols-3 gap-2">
-            {["2/5","2/6","5/6"].map((option)=><button key={option} type="button" onClick={()=>setAnswer(option)} className="rounded-2xl py-3 text-sm font-black transition-transform active:scale-95" style={{background:answer===option?(option==="5/6"?`${colors.green}18`:`${colors.red}12`):colors.bg,color:answer===option?(option==="5/6"?colors.green:colors.red):colors.ink,border:`1px solid ${answer===option?(option==="5/6"?colors.green:colors.red):colors.hairline}`}}>{option}</button>)}
+            {["2/5","2/6","5/6"].map((option)=><button key={option} type="button" onClick={()=>setAnswer(option)} className="rounded-2xl py-3 text-sm font-black transition-transform active:scale-95" style={{background:answer===option?(option==="5/6"?`${colors.green}18`:`${colors.red}12`):colors.bg,color:answer===option?(option==="5/6"?colors.green:colors.red):colors.ink,border:`1px solid ${answer===option?(option==="5/6"?colors.green:colors.red):colors.hairline}`}}><MathText text={option}/></button>)}
           </div>
           {answer && <button type="button" onClick={()=>setAnswer(null)} className="mx-auto mt-4 flex items-center gap-1 text-[11px] font-bold" style={{color:colors.slate}}><RotateCcw size={12}/> Recommencer</button>}
         </div>

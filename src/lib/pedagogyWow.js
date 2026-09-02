@@ -1207,11 +1207,11 @@ const PROFILES = {
   "statistiques-probabilites": {
     level: "cinquieme",
     skills: [
+      [/fréquence et probabilité/i, "Distingue une observation d’un modèle théorique.", "La fréquence vient des essais réalisés ; la probabilité décrit le modèle. Avec beaucoup d’essais, la fréquence peut se rapprocher de la probabilité sans lui être toujours égale."],
       [/effectif et fréquence|diagramme circulaire|lire un tableau/i, "Repère l’effectif total et la partie étudiée.", "Lis les données utiles, puis calcule la fréquence comme effectif de la catégorie ÷ effectif total ; pour un diagramme, relie la part au tour complet."],
       [/moyenne/i, "Vérifie combien de valeurs sont prises en compte.", "Additionne toutes les valeurs, avec leur effectif si nécessaire, puis divise par l’effectif total."],
       [/qualifier un événement|expérience aléatoire|comparer des probabilités|classement/i, "Décris les issues possibles avant de comparer.", "Identifie l’univers et l’événement, puis utilise les mots impossible, possible ou certain, ou compare les probabilités sur la même échelle."],
       [/équiprobabilité|tirage dans une urne|roue de loterie|simplifier une probabilité/i, "Compte les issues favorables et toutes les issues possibles.", "Dans une situation équiprobable, écris favorables/possibles, puis simplifie la fraction sans changer le rapport."],
-      [/fréquence et probabilité/i, "Distingue une observation d’un modèle théorique.", "La fréquence vient des essais réalisés ; la probabilité décrit le modèle. Avec beaucoup d’essais, la fréquence peut se rapprocher de la probabilité sans lui être toujours égale."],
     ],
     success: "Exact. Les données et le total de référence sont cohérents.",
   },
@@ -1239,8 +1239,8 @@ const PROFILES = {
     level: "quatrieme",
     skills: [
       [/égalité de triangles/i, "Repère les côtés et les angles qui se correspondent.", "Utilise un critère d’égalité adapté aux données et conserve l’ordre des sommets ; n’ajoute pas une égalité seulement parce que la figure semble régulière."],
+      [/translations.*(?:image|coordonnées)|(?:image|coordonnées).*translations/i, "Applique le même déplacement aux deux coordonnées.", "Ajoute les coordonnées du vecteur à celles du point, coordonnée par coordonnée, puis vérifie le sens du déplacement."],
       [/translations/i, "Identifie le vecteur de la translation.", "Une translation déplace tous les points dans la même direction, le même sens et sur la même longueur ; elle conserve longueurs, angles, parallélisme et alignement."],
-      [/image|coordonnées/i, "Applique le même déplacement aux deux coordonnées.", "Ajoute les coordonnées du vecteur à celles du point, coordonnée par coordonnée, puis vérifie le sens du déplacement."],
     ],
     success: "Exact. La propriété géométrique correspond aux données de la figure.",
   },
@@ -1289,8 +1289,8 @@ const PROFILES = {
     skills: [
       [/loi de probabilité|notations/i, "Traduis l’événement portant sur X.", "Sélectionne les valeurs de X concernées et additionne leurs probabilités ; contrôle que la loi complète totalise 1."],
       [/espérance|jeu équitable|comparaison de jeux/i, "Pondère chaque gain ou valeur par sa probabilité.", "Calcule E(X)=ΣxP(X=x) ; pour un jeu équitable, impose une espérance nulle, et pour comparer des jeux utilise le critère demandé."],
-      [/variance|écart-type/i, "Distingue dispersion, variance et écart-type.", "Utilise V(X)=E(X²)−E(X)² puis σ(X)=√V(X), en contrôlant qu’une variance ne peut pas être négative."],
       [/linéarité de l'espérance|transformation de la variance/i, "Identifie l’indicateur transformé.", "Utilise E(aX+b)=aE(X)+b et V(aX+b)=a²V(X) ; une translation ne modifie pas la variance."],
+      [/variance|écart-type/i, "Distingue dispersion, variance et écart-type.", "Utilise V(X)=E(X²)−E(X)² puis σ(X)=√V(X), en contrôlant qu’une variance ne peut pas être négative."],
       [/loi binomiale/i, "Vérifie les répétitions identiques et indépendantes.", "Identifie n, p et l’événement portant sur le nombre de succès avant d’appliquer la formule, l’espérance np ou la variance np(1−p)."],
       [/vrai ou faux/i, "Repère la définition ou la propriété réellement testée.", "Réécris l’affirmation avec la loi, l’espérance ou la variance concernée, puis vérifie ses hypothèses avant de conclure."],
     ],
@@ -1305,6 +1305,118 @@ const PROFILES = {
       [/inégalité de concentration|loi des grands nombres/i, "Identifie n, la variance et la précision ε.", "Utilise la borne V(X)/(nε²), puis résous l’inégalité dans le bon sens ; elle montre une convergence en probabilité sans garantir l’égalité à chaque échantillon."],
     ],
     success: "Exact. Les hypothèses et le sens de l’inégalité sont respectés.",
+  },
+  "exercices-fin-annee-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/programme de calcul|fonctions et équations|calcul littéral/i, "Traduis chaque étape avant de transformer l’expression.", "Écris l’expression ou l’équation correspondant au programme, respecte les priorités, puis développe, réduis ou résous seulement selon la question."],
+      [/statistiques|probabilités/i, "Repère le total de référence et l’indicateur demandé.", "En statistique, utilise l’effectif total adapté ; en probabilité équiprobable, compte les issues favorables et possibles sans inventer le raisonnement à partir du résultat."],
+      [/triangles et Pythagore|Pythagore/i, "Vérifie que le triangle est rectangle ou qu’il faut le tester.", "Identifie l’hypoténuse, écris l’égalité de Pythagore dans le bon sens, puis calcule ou compare les carrés avant de conclure."],
+      [/Thalès/i, "Contrôle les alignements et le parallélisme.", "Écris les rapports de côtés correspondants dans le même ordre, puis calcule la longueur demandée avec les données de la configuration."],
+      [/nombres et calculs/i, "Repère signes, fractions et priorités.", "Traite d’abord parenthèses et produits, conserve les signes, puis simplifie le résultat si la question le demande."],
+      [/géométrie dans l'espace|translations/i, "Identifie la transformation ou le solide concerné.", "Pour un solide, choisis la grandeur et l’unité adaptées ; pour une translation, utilise le même vecteur pour tous les points et contrôle les propriétés conservées."],
+    ],
+    success: "Exact. La méthode choisie correspond à la notion mobilisée.",
+  },
+  "dossier-brevet-troisieme": {
+    level: "troisieme",
+    skills: [
+      [/programmes de calcul|nombres/i, "Pose le calcul ou le programme dans l’ordre.", "Traduis les étapes, respecte les priorités et contrôle le signe ou la divisibilité avant d’interpréter le résultat."],
+      [/calcul littéral|équations/i, "Distingue transformer une expression et résoudre une équation.", "Développe ou réduis si l’on travaille sur une expression ; pour une équation, effectue les mêmes opérations aux deux membres puis vérifie la solution."],
+      [/fonctions/i, "Distingue image, antécédent et coordonnées d’un point.", "Utilise la formule, le tableau ou le graphique dans le bon sens ; une solution graphique se lit sur l’axe correspondant à la grandeur demandée."],
+      [/statistiques|probabilités/i, "Choisis le total ou la série de référence.", "Calcule l’indicateur sur les données concernées ; en probabilité, définis l’univers et l’événement avant de former un rapport."],
+      [/géométrie/i, "Identifie la configuration et les hypothèses données.", "Choisis Pythagore, Thalès, la trigonométrie ou une propriété de transformation seulement après avoir vérifié leurs conditions."],
+      [/pourcentages/i, "Repère la valeur initiale ou le total de référence.", "Transforme le pourcentage en coefficient ou en proportion, calcule, puis interprète sans additionner directement des évolutions successives."],
+    ],
+    success: "Exact. La réponse est justifiée avec une méthode adaptée au Brevet.",
+  },
+  "exercices-fin-annee-seconde": {
+    level: "seconde",
+    skills: [
+      [/fonctions affines|fonctions de référence/i, "Identifie la fonction, l’intervalle et la grandeur cherchée.", "Utilise l’expression ou la représentation adaptée, distingue image et antécédent, puis contrôle le signe et le sens de variation sur l’intervalle."],
+      [/repérage|vecteurs|colinéarité|équations de droites/i, "Repère les coordonnées et le critère géométrique utile.", "Calcule coordonnée par coordonnée, puis applique le déterminant, un vecteur directeur ou l’équation de droite sans conclure depuis la seule apparence de la figure."],
+      [/informations chiffrées/i, "Identifie la valeur de référence du pourcentage.", "Utilise une proportion ou un coefficient multiplicateur selon la situation, puis distingue évolution absolue, taux et points de pourcentage."],
+      [/statistiques/i, "Choisis l’indicateur qui répond à la question.", "Travaille sur la série et les effectifs concernés, puis calcule moyenne, médiane, quartile ou dispersion avec la définition attendue."],
+      [/probabilités/i, "Définis l’univers et l’événement demandé.", "Compte ou additionne les issues pertinentes dans le même univers ; utilise le contraire ou la réunion seulement après avoir traduit l’événement."],
+    ],
+    success: "Exact. La représentation et la propriété utilisées sont cohérentes.",
+  },
+  "exercices-rituels-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/équations|calcul rapide|fractions/i, "Effectue une transformation courte et contrôlée.", "Respecte priorités, signes et dénominateurs ; pour une équation, conserve l’égalité en effectuant la même opération des deux côtés."],
+      [/ordres de grandeur|vitesse moyenne|aires|conversions/i, "Repère la grandeur et l’unité demandées.", "Choisis la relation adaptée, convertis les données dans des unités compatibles, puis contrôle la plausibilité de l’ordre de grandeur."],
+      [/pourcentages|tableaux croisés|probabilités/i, "Choisis le bon total de référence.", "Écris la proportion, le taux ou la probabilité à partir de la population concernée avant de calculer."],
+      [/suites arithmétiques|suites géométriques/i, "Identifie une évolution additive ou multiplicative.", "Repère le rang initial et la raison, puis utilise la formule arithmétique ou géométrique adaptée au terme demandé."],
+      [/nombre dérivé|fonction dérivée/i, "Distingue une valeur de dérivée de la fonction dérivée.", "Utilise le taux de variation ou la formule de dérivation demandée, puis interprète le signe seulement sur l’intervalle concerné."],
+    ],
+    success: "Exact. L’automatisme est exécuté avec la bonne référence.",
+  },
+  "preparation-eam-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/probabilit|fréquence|tableau croisé|événement/i, "Identifie la population ou l’événement de référence.", "Traduis la question par une proportion ou une probabilité, puis utilise uniquement les données de l’univers ou de la condition concernée."],
+      [/suite|terme|raison|récurrence/i, "Repère le rang initial et le type d’évolution.", "Distingue modèle additif et multiplicatif, puis utilise la relation correspondant au rang réellement demandé."],
+      [/second degré|parabole|trinôme|racine/i, "Choisis la forme du trinôme adaptée à la question.", "Utilise la forme développée, factorisée ou canonique selon le calcul, puis vérifie les solutions et leur interprétation."],
+      [/fonction|image|antécédent|variation|courbe/i, "Identifie la représentation et l’intervalle utiles.", "Lis ou calcule la grandeur demandée sans intervertir image et antécédent ; pour une variation, contrôle l’ordre et l’intervalle."],
+      [/statistique|ajustement|droite/i, "Repère les deux variables et ce que modélise l’ajustement.", "Utilise les coordonnées ou l’équation du modèle pour calculer, puis interprète le résultat dans le domaine où l’ajustement est pertinent."],
+      [/pourcentage|taux|coefficient|équation|calcul|sujet officiel|automatismes/i, "Identifie la donnée de départ et l’opération demandée.", "Effectue une transformation concise en conservant les signes et la valeur de référence, puis contrôle l’ordre de grandeur."],
+    ],
+    success: "Exact. La réponse mobilise les données utiles sans surinterpréter le sujet.",
+  },
+  "preparation-eam-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/probabilit|fréquence|événement|Bernoulli/i, "Définis l’univers, l’événement et la référence.", "Utilise la probabilité simple, conditionnelle ou le modèle de Bernoulli seulement avec les hypothèses explicitement données."],
+      [/suite|terme|raison|récurrence/i, "Repère le rang initial et le mode de génération.", "Distingue évolution additive et multiplicative, puis applique la formule correspondant au terme demandé."],
+      [/fonction|image|antécédent|courbe|équation/i, "Identifie l’entrée, la sortie et la représentation utile.", "Lis ou calcule l’image ou l’antécédent dans le bon sens, puis conserve uniquement les solutions compatibles avec le contexte."],
+      [/dériv|tangente|variation|extremum/i, "Relie la dérivée à la question posée sur l’intervalle.", "Calcule ou lis le signe de la dérivée ; une dérivée nulle seule ne suffit pas à prouver un extremum sans changement de variation."],
+      [/pourcentage|taux|coefficient|statistique|moyenne/i, "Choisis la population ou la valeur initiale de référence.", "Écris l’indicateur ou le coefficient multiplicateur avant de calculer, puis interprète avec l’unité ou la population concernée."],
+      [/calcul|équation|expression|automatismes|sujet officiel/i, "Repère la structure du calcul avant de transformer.", "Respecte priorités et signes, effectue une transformation à la fois, puis vérifie la cohérence du résultat."],
+    ],
+    success: "Exact. Les hypothèses et la référence du calcul sont cohérentes.",
+  },
+  "algorithmique-python-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/écrire une fonction|compléter un programme|corriger un programme|vocabulaire/i, "Repère les entrées, les variables et la valeur renvoyée.", "Suis les affectations dans l’ordre ; vérifie la syntaxe, les deux-points et l’indentation seulement lorsque le code présenté permet ce contrôle."],
+      [/listes/i, "Distingue la liste, ses valeurs et leurs indices.", "Parcours ou accède aux éléments avec l’indice attendu, en tenant compte du premier indice utilisé par Python."],
+      [/situations algorithmiques \(suites\)/i, "Repère le terme initial et la mise à jour dans la boucle.", "Initialise au bon rang, exécute l’affectation une fois par itération, puis contrôle le nombre de tours avant de renvoyer le terme."],
+      [/situations algorithmiques \(variables aléatoires\)/i, "Identifie ce qui est simulé et ce qui est compté.", "Associe le test au succès défini, mets à jour le compteur dans la bonne branche, puis rapporte le résultat au nombre de répétitions si une fréquence est demandée."],
+      [/situations algorithmiques \(balayage\)/i, "Repère la condition d’arrêt et le pas.", "Fais évoluer la variable avec le pas prévu tant que la condition est vraie, puis interprète la première valeur qui satisfait le critère."],
+    ],
+    success: "Exact. L’état des variables et le contrôle du programme sont cohérents.",
+  },
+  "algorithmique-python-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/boucles|lire un programme|vocabulaire/i, "Suis les variables instruction par instruction.", "Identifie initialisation, condition, mise à jour et valeur renvoyée ; ne conclus à une erreur de syntaxe ou d’indentation que si le code la montre."],
+      [/calculer un terme de suite/i, "Repère le rang initial et le nombre d’itérations.", "Initialise le terme au rang donné, applique la relation une fois par passage, puis vérifie le décalage entre compteur et rang."],
+      [/dichotomie/i, "Repère l’intervalle et le critère qui choisit sa moitié.", "Calcule le milieu, conserve la moitié compatible avec le test de signe ou la condition, puis arrête lorsque la précision demandée est atteinte."],
+      [/simulation/i, "Identifie l’expérience, le succès et le compteur.", "Répète l’expérience, incrémente uniquement lorsque la condition de succès est vérifiée, puis calcule la fréquence avec le bon nombre d’essais."],
+    ],
+    success: "Exact. Le déroulement du programme et le résultat correspondent.",
+  },
+  "preparation-bac-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/automatismes/i, "Identifie la propriété directement mobilisée.", "Effectue une transformation courte en contrôlant domaine, signes, priorités et hypothèses, puis vérifie la cohérence du résultat."],
+      [/probabilités conditionnelles/i, "Identifie l’événement qui sert de condition.", "Dans une probabilité conditionnelle, restreins la population à la condition ; sur un arbre, multiplie le long d’un chemin et additionne seulement les chemins compatibles."],
+      [/vrai ou faux/i, "Cherche une justification ou un contre-exemple précis.", "Traduis l’affirmation avec la définition ou la propriété concernée, vérifie ses hypothèses, puis conclus sans déduire une méthode depuis la seule valeur finale."],
+    ],
+    success: "Exact. La conclusion repose sur une propriété et ses hypothèses.",
+  },
+  "exercices-transversaux-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/combinatoire|loi binomiale|sommes de variables aléatoires|loi des grands nombres/i, "Identifie le modèle probabiliste et ses hypothèses.", "Définis les objets, événements ou variables ; contrôle indépendance et répétitions avant d’appliquer un coefficient, une variance ou une inégalité."],
+      [/vecteurs de l'espace/i, "Repère les coordonnées et la relation géométrique demandée.", "Calcule coordonnée par coordonnée, puis utilise colinéarité, orthogonalité ou une représentation paramétrique avec les hypothèses données."],
+      [/suites|limites de fonctions|continuité/i, "Identifie le domaine, l’indice ou le point étudié.", "Choisis le théorème adapté et vérifie ses hypothèses ; distingue limite, valeur et continuité, et respecte le rang initial d’une suite."],
+      [/dérivation|logarithme népérien|fonctions trigonométriques/i, "Contrôle le domaine et la structure de la fonction.", "Applique la règle de dérivation ou l’identité adaptée, puis interprète le signe sur le bon intervalle sans déduire un extremum de la seule annulation."],
+      [/primitives|équations différentielles|calcul intégral/i, "Distingue primitive, solution d’équation et intégrale.", "Vérifie une primitive par dérivation, détermine les constantes avec les conditions données et respecte les bornes ainsi que le signe de l’intégrale."],
+      [/révisions/i, "Identifie d’abord la notion et les hypothèses utiles.", "Organise la résolution en étapes courtes, justifie le choix de la propriété, puis contrôle domaine, signe, unité ou plausibilité selon la question."],
+    ],
+    success: "Exact. La méthode de synthèse utilise les hypothèses nécessaires.",
   },
 };
 
@@ -1466,6 +1578,19 @@ const PEDAGOGY_FINAL_LOT_A_IDS = [
   "loi-grands-nombres-terminale-spe",
 ];
 
+const PEDAGOGY_FINAL_LOT_B_IDS = [
+  "exercices-fin-annee-quatrieme",
+  "dossier-brevet-troisieme",
+  "exercices-fin-annee-seconde",
+  "exercices-rituels-premiere-non-spe",
+  "preparation-eam-premiere-non-spe",
+  "preparation-eam-premiere-techno",
+  "algorithmique-python-premiere-techno",
+  "algorithmique-python-premiere-spe",
+  "preparation-bac-premiere-spe",
+  "exercices-transversaux-terminale-spe",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -1520,3 +1645,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_5A = showcaseRows(GENERALIZATION_LOT_5A
 export const PEDAGOGY_GENERALIZATION_LOT_5B = showcaseRows(GENERALIZATION_LOT_5B_IDS);
 
 export const PEDAGOGY_FINAL_LOT_A = showcaseRows(PEDAGOGY_FINAL_LOT_A_IDS);
+
+export const PEDAGOGY_FINAL_LOT_B = showcaseRows(PEDAGOGY_FINAL_LOT_B_IDS);

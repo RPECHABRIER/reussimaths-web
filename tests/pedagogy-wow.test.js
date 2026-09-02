@@ -12,6 +12,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_5A,
   PEDAGOGY_GENERALIZATION_LOT_5B,
   PEDAGOGY_FINAL_LOT_A,
+  PEDAGOGY_FINAL_LOT_B,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -142,7 +143,72 @@ const CHAPTER_FILES = {
   "variables-aleatoires-premiere-techno": "variables-aleatoires-premiere-techno",
   "variables-aleatoires-premiere-spe": "variables-aleatoires-premiere-spe",
   "loi-grands-nombres-terminale-spe": "loi-grands-nombres-terminale-spe",
+  "exercices-fin-annee-quatrieme": "exercices-fin-annee-quatrieme",
+  "dossier-brevet-troisieme": "dossier-brevet-troisieme",
+  "exercices-fin-annee-seconde": "exercices-fin-annee-seconde",
+  "exercices-rituels-premiere-non-spe": "exercices-rituels-premiere-non-spe",
+  "preparation-eam-premiere-non-spe": "preparation-eam-premiere-non-spe",
+  "preparation-eam-premiere-techno": "preparation-eam-premiere-techno",
+  "algorithmique-python-premiere-techno": "algorithmique-python-premiere-techno",
+  "algorithmique-python-premiere-spe": "algorithmique-python-premiere-spe",
+  "preparation-bac-premiere-spe": "preparation-bac-premiere-spe",
+  "exercices-transversaux-terminale-spe": "exercices-transversaux-terminale-spe",
 };
+
+const FINAL_LOT_B_DIAGNOSTIC_CASES = [
+  ["exercices-fin-annee-quatrieme", "Programme de calcul", "", /Traduis chaque étape/],
+  ["exercices-fin-annee-quatrieme", "Statistiques", "", /total de référence/],
+  ["exercices-fin-annee-quatrieme", "Triangles et Pythagore", "", /triangle est rectangle/],
+  ["exercices-fin-annee-quatrieme", "Thalès", "", /alignements/],
+  ["exercices-fin-annee-quatrieme", "Nombres et calculs", "", /signes/],
+  ["exercices-fin-annee-quatrieme", "Géométrie dans l'espace", "", /transformation ou le solide/],
+  ["dossier-brevet-troisieme", "Programmes de calcul", "", /calcul ou le programme/],
+  ["dossier-brevet-troisieme", "Calcul littéral", "", /expression et résoudre/],
+  ["dossier-brevet-troisieme", "Fonctions", "", /image, antécédent/],
+  ["dossier-brevet-troisieme", "Statistiques", "", /total ou la série/],
+  ["dossier-brevet-troisieme", "Géométrie", "", /configuration/],
+  ["dossier-brevet-troisieme", "Pourcentages", "", /valeur initiale/],
+  ["exercices-fin-annee-seconde", "Fonctions affines", "", /fonction, l’intervalle/],
+  ["exercices-fin-annee-seconde", "Vecteurs", "", /coordonnées/],
+  ["exercices-fin-annee-seconde", "Informations chiffrées", "", /valeur de référence/],
+  ["exercices-fin-annee-seconde", "Statistiques", "", /indicateur/],
+  ["exercices-fin-annee-seconde", "Probabilités", "", /univers/],
+  ["exercices-rituels-premiere-non-spe", "Équations", "", /transformation courte/],
+  ["exercices-rituels-premiere-non-spe", "Conversions", "", /grandeur et l’unité/],
+  ["exercices-rituels-premiere-non-spe", "Pourcentages", "", /total de référence/],
+  ["exercices-rituels-premiere-non-spe", "Suites arithmétiques", "", /additive ou multiplicative/],
+  ["exercices-rituels-premiere-non-spe", "Fonction dérivée", "", /valeur de dérivée/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "probabilité d'un événement", /population ou l’événement/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "terme d'une suite", /rang initial/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "racine d'un trinôme du second degré", /forme du trinôme/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "image d'une fonction", /représentation/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "ajustement statistique", /deux variables/],
+  ["preparation-eam-premiere-non-spe", "Sujet officiel", "question sans notion identifiable", /donnée de départ/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "probabilité de Bernoulli", /univers/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "raison d'une suite", /rang initial/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "image d'une fonction", /entrée, la sortie/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "dérivée et extremum", /dérivée à la question/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "taux en pourcentage", /population ou la valeur initiale/],
+  ["preparation-eam-premiere-techno", "Sujet officiel", "question sans notion identifiable", /structure du calcul/],
+  ["algorithmique-python-premiere-techno", "Écrire une fonction", "", /entrées, les variables/],
+  ["algorithmique-python-premiere-techno", "Listes", "", /valeurs et leurs indices/],
+  ["algorithmique-python-premiere-techno", "Situations algorithmiques (suites)", "", /terme initial/],
+  ["algorithmique-python-premiere-techno", "Situations algorithmiques (variables aléatoires)", "", /simulé/],
+  ["algorithmique-python-premiere-techno", "Situations algorithmiques (balayage)", "", /condition d’arrêt/],
+  ["algorithmique-python-premiere-spe", "Boucles", "", /instruction par instruction/],
+  ["algorithmique-python-premiere-spe", "Calculer un terme de suite", "", /rang initial/],
+  ["algorithmique-python-premiere-spe", "Dichotomie", "", /intervalle/],
+  ["algorithmique-python-premiere-spe", "Simulation", "", /expérience/],
+  ["preparation-bac-premiere-spe", "Automatismes", "", /propriété/],
+  ["preparation-bac-premiere-spe", "Probabilités conditionnelles", "", /sert de condition/],
+  ["preparation-bac-premiere-spe", "Vrai ou faux", "", /justification/],
+  ["exercices-transversaux-terminale-spe", "Combinatoire", "", /modèle probabiliste/],
+  ["exercices-transversaux-terminale-spe", "Vecteurs de l'espace", "", /coordonnées/],
+  ["exercices-transversaux-terminale-spe", "Continuité", "", /domaine/],
+  ["exercices-transversaux-terminale-spe", "Dérivation", "", /structure de la fonction/],
+  ["exercices-transversaux-terminale-spe", "Calcul intégral", "", /primitive/],
+  ["exercices-transversaux-terminale-spe", "Révisions", "", /notion et les hypothèses/],
+];
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
   assert.equal(WOW_SHOWCASES.length, 10);
@@ -546,9 +612,9 @@ test("les profils géométriques du lot 5B restent conceptuels sans nouveau mote
   }
 });
 
-test("un chapitre réservé au lot final B conserve exactement son exercice", async () => {
-  const { default: chapter } = await import("../src/chapters/exercices-fin-annee-quatrieme.js");
-  const original = chapter.generate();
+test("un identifiant inconnu conserve exactement son exercice", () => {
+  const chapter = { meta: { id: "chapitre-inconnu" } };
+  const original = { chapter: "Inconnu", prompt: "Question", answer: 1 };
   assert.equal(prepareWowExercise(chapter, original), original);
 });
 
@@ -592,6 +658,69 @@ test("les profils sensibles du FINAL LOT A gardent un feedback général fiable"
       const prepared = prepareWowExercise(chapter, chapter.generate());
       const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
       assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur|tu as utilisé/i);
+    }
+  }
+});
+
+test("les priorités corrigées du FINAL LOT A sélectionnent la famille la plus précise", () => {
+  const cases = [
+    ["statistiques-probabilites", "Fréquence et probabilité", "", /observation d’un modèle/],
+    ["geometrie-plane", "Translations", "Calculer les coordonnées de l'image.", /même déplacement/],
+    ["variables-aleatoires-premiere-spe", "Transformation de la variance", "", /indicateur transformé/],
+  ];
+  for (const [chapterId, label, prompt, expected] of cases) {
+    const prepared = prepareWowExercise(
+      { meta: { id: chapterId } },
+      { chapter: label, prompt, answer: 0, steps: [{ type: "methode", text: "Vérifier." }] },
+    );
+    assert.match(prepared.hints[0], expected, chapterId);
+  }
+});
+
+test("le FINAL LOT B contient exactement dix nouveaux profils de 3 à 6 familles", () => {
+  assert.equal(PEDAGOGY_FINAL_LOT_B.length, 10);
+  assert.equal(new Set(PEDAGOGY_FINAL_LOT_B.map(({ chapterId }) => chapterId)).size, 10);
+  for (const chapter of PEDAGOGY_FINAL_LOT_B) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("chaque famille du FINAL LOT B possède un déclencheur déterministe", () => {
+  for (const [chapterId, label, prompt, expected] of FINAL_LOT_B_DIAGNOSTIC_CASES) {
+    const prepared = prepareWowExercise(
+      { meta: { id: chapterId } },
+      { chapter: label, prompt, answer: 0, steps: [{ type: "methode", text: "Vérifier." }] },
+    );
+    assert.equal(prepared.hints?.length, 2, `${chapterId} — ${label}`);
+    assert.match(prepared.hints[0], expected, `${chapterId} — ${label}`);
+    assert.ok(prepared.feedback?.default, `${chapterId} — ${label}`);
+  }
+});
+
+test("vingt générations par chapitre du FINAL LOT B conservent les exercices et l’aide graduée", async () => {
+  for (const chapterRow of PEDAGOGY_FINAL_LOT_B) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("les synthèses, examens et profils Python du FINAL LOT B n’inventent pas l’erreur de l’élève", async () => {
+  for (const chapterRow of PEDAGOGY_FINAL_LOT_B) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu|utilisé)|ton erreur|ton raisonnement/i);
     }
   }
 });

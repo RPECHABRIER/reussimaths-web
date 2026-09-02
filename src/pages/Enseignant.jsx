@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Maximize, ArrowRight, RotateCcw, Settings2, Play, CheckCircle2, RefreshCw, Pencil, X, ChevronUp, ChevronDown, Copy, Save, Printer, Timer } from "lucide-react";
 import { chapters } from "../chapters/registry";
@@ -9,6 +9,8 @@ import Figure from "../components/Figure";
 import Graph from "../components/Graph";
 import CalculationModeBadge from "../components/CalculationModeBadge";
 import { colors, fonts, shadow } from "../theme";
+import { trackProductEvent } from "../lib/productAnalytics";
+import { teacherQuestionProperties, teacherSeriesProperties } from "../lib/teacherAnalytics";
 
 // ---------------------------------------------------------------------------
 // Mode Automatismes spécial enseignant (/enseignant) : gratuit, public, sans
@@ -133,6 +135,8 @@ export default function Enseignant() {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [printMode, setPrintMode] = useState("student");
+  const teacherSeriesRunRef = useRef(0);
+  const viewedTeacherQuestionsRef = useRef(new Set());
 
   const chapter = useMemo(() => AUTOMATISMES_CHAPTERS.find((c) => c.meta.level === levelId) ?? null, [levelId]);
   const total = selectedQuestions.length;
@@ -155,6 +159,7 @@ export default function Enseignant() {
 
   const refreshTheme = (themeId) => {
     if (!chapter) return;
+    trackProductEvent("teacher_questions_regenerated", teacherSeriesProperties(levelId, questionCount));
     const removedIds = new Set((proposals[themeId] ?? []).map((item) => item.id));
     setSelectedQuestions((current) => current.filter((item) => !removedIds.has(item.id)));
     setProposals((current) => ({ ...current, [themeId]: buildThemeProposals(chapter, themeId) }));
@@ -224,9 +229,16 @@ export default function Enseignant() {
     else setView("corrections");
   };
 
-  const restartSameParams = () => {
+  const startProjection = () => {
+    if (!levelId || exercises.length === 0) return;
+    teacherSeriesRunRef.current += 1;
+    trackProductEvent("teacher_session_started", teacherSeriesProperties(levelId, exercises.length));
     setIndex(0);
     setView("diaporama");
+  };
+
+  const restartSameParams = () => {
+    startProjection();
   };
 
   const backToSetup = () => {
@@ -261,6 +273,14 @@ export default function Enseignant() {
   }, []);
 
   useEffect(()=>{if(view!=="diaporama"||!timerSeconds)return undefined;setTimeLeft(timerSeconds);const interval=window.setInterval(()=>setTimeLeft((value)=>Math.max(0,value-1)),1000);return()=>window.clearInterval(interval);},[view,index,timerSeconds]);
+
+  useEffect(() => {
+    if (view !== "diaporama" || !levelId || exercises.length === 0) return;
+    const viewKey = `${teacherSeriesRunRef.current}:${index}`;
+    if (viewedTeacherQuestionsRef.current.has(viewKey)) return;
+    viewedTeacherQuestionsRef.current.add(viewKey);
+    trackProductEvent("teacher_question_viewed", teacherQuestionProperties(levelId, index, exercises.length));
+  }, [view, index, levelId, exercises.length]);
 
   const printSession=(mode)=>{setPrintMode(mode);window.setTimeout(()=>window.print(),50);};
 
@@ -405,7 +425,7 @@ export default function Enseignant() {
 
   // ------------------------------------------------------------- REVIEW ---
   if (view === "review") {
-    return <div className="teacher-session-page min-h-screen w-full p-4 sm:p-8" style={{background:paper,fontFamily:fonts.body}}><div className="mx-auto max-w-3xl"><button type="button" onClick={()=>setView("setup")} className="inline-flex items-center gap-1 text-xs font-semibold" style={{color:slate}}><ArrowLeft size={14}/> Modifier la sélection</button><div className="mt-8 text-center"><p className="text-xs uppercase tracking-widest font-bold" style={{color:gold}}>Dernière vérification</p><h1 className="mt-2 text-3xl font-black" style={{fontFamily:fonts.display,color:ink}}>{sessionTitle||"Votre séance est prête"}</h1><p className="mt-2 text-sm" style={{color:slate}}>{sessionDate&&new Intl.DateTimeFormat("fr-FR",{dateStyle:"long"}).format(new Date(`${sessionDate}T12:00:00`))} · Contrôlez l’ordre, les énoncés et les réponses.</p></div><div className="mt-7 grid gap-3">{exercises.map((exercise,exerciseIndex)=><div key={`${exercise.prompt}-${exerciseIndex}`} className="rounded-2xl p-4" style={{backgroundColor:colors.card,boxShadow:shadow.soft}}><div className="flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-xs font-black" style={{width:28,height:28,backgroundColor:gold,color:ink}}>{exerciseIndex+1}</span><div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-wide font-bold" style={{color:slate}}>{exercise.chapter}</p><MathText as="p" text={exercise.prompt} className="mt-1 text-sm font-bold" style={{color:ink}}/><p className="mt-2 text-xs" style={{color:colors.green}}>Réponse : <MathText text={formatAnswer(exercise.answer)}/></p>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<p className="mt-1 text-[10px]" style={{color:slate}}>Propositions : {exercise.options.map(String).join(" · ")}</p>}</div></div></div>)}</div><div className="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" onClick={()=>{setIndex(0);setView("diaporama");}} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:gold,color:ink}}><Play size={16}/> Lancer la projection</button><button type="button" onClick={copySessionLink} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Copy size={16}/> Copier le lien de cette séance</button><button type="button" onClick={()=>printSession("student")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF des questions</button><button type="button" onClick={()=>printSession("correction")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF du corrigé</button></div>{shareMessage&&<p className="mt-3 text-center text-xs font-bold" style={{color:shareMessage.includes("copié")?colors.green:colors.red}}>{shareMessage}</p>}<p className="mt-3 text-center text-[10px]" style={{color:slate}}><Save size={11} className="inline mr-1"/>Le lien conserve le titre, la date, le minuteur et les cinq questions.</p></div><PrintableSession title={sessionTitle} date={sessionDate} levelId={levelId} exercises={exercises} withCorrections={printMode==="correction"}/></div>;
+    return <div className="teacher-session-page min-h-screen w-full p-4 sm:p-8" style={{background:paper,fontFamily:fonts.body}}><div className="mx-auto max-w-3xl"><button type="button" onClick={()=>setView("setup")} className="inline-flex items-center gap-1 text-xs font-semibold" style={{color:slate}}><ArrowLeft size={14}/> Modifier la sélection</button><div className="mt-8 text-center"><p className="text-xs uppercase tracking-widest font-bold" style={{color:gold}}>Dernière vérification</p><h1 className="mt-2 text-3xl font-black" style={{fontFamily:fonts.display,color:ink}}>{sessionTitle||"Votre séance est prête"}</h1><p className="mt-2 text-sm" style={{color:slate}}>{sessionDate&&new Intl.DateTimeFormat("fr-FR",{dateStyle:"long"}).format(new Date(`${sessionDate}T12:00:00`))} · Contrôlez l’ordre, les énoncés et les réponses.</p></div><div className="mt-7 grid gap-3">{exercises.map((exercise,exerciseIndex)=><div key={`${exercise.prompt}-${exerciseIndex}`} className="rounded-2xl p-4" style={{backgroundColor:colors.card,boxShadow:shadow.soft}}><div className="flex items-start gap-3"><span className="shrink-0 flex items-center justify-center rounded-full text-xs font-black" style={{width:28,height:28,backgroundColor:gold,color:ink}}>{exerciseIndex+1}</span><div className="min-w-0 flex-1"><p className="text-[10px] uppercase tracking-wide font-bold" style={{color:slate}}>{exercise.chapter}</p><MathText as="p" text={exercise.prompt} className="mt-1 text-sm font-bold" style={{color:ink}}/><p className="mt-2 text-xs" style={{color:colors.green}}>Réponse : <MathText text={formatAnswer(exercise.answer)}/></p>{exercise.type==="qcm"&&Array.isArray(exercise.options)&&<p className="mt-1 text-[10px]" style={{color:slate}}>Propositions : {exercise.options.map(String).join(" · ")}</p>}</div></div></div>)}</div><div className="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" onClick={startProjection} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:gold,color:ink}}><Play size={16}/> Lancer la projection</button><button type="button" onClick={copySessionLink} className="rounded-full py-3.5 font-black inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Copy size={16}/> Copier le lien de cette séance</button><button type="button" onClick={()=>printSession("student")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF des questions</button><button type="button" onClick={()=>printSession("correction")} className="rounded-full py-3 font-bold inline-flex items-center justify-center gap-2" style={{backgroundColor:colors.card,color:ink,border:`1px solid ${colors.hairline}`}}><Printer size={15}/> PDF du corrigé</button></div>{shareMessage&&<p className="mt-3 text-center text-xs font-bold" style={{color:shareMessage.includes("copié")?colors.green:colors.red}}>{shareMessage}</p>}<p className="mt-3 text-center text-[10px]" style={{color:slate}}><Save size={11} className="inline mr-1"/>Le lien conserve le titre, la date, le minuteur et les cinq questions.</p></div><PrintableSession title={sessionTitle} date={sessionDate} levelId={levelId} exercises={exercises} withCorrections={printMode==="correction"}/></div>;
   }
 
   // ---------------------------------------------------------- DIAPORAMA ---

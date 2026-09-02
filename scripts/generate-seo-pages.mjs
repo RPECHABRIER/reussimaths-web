@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PUBLIC_COURSES, SITE_URL, coursePath } from "../src/seo/publicPages.js";
+import { CYCLE_LANDINGS, LEVEL_LANDINGS } from "../src/seo/landingPages.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -41,21 +42,20 @@ async function emit(path, metadata, body) {
 }
 
 const homeDescription = "Progresse en maths avec un diagnostic, des exercices ciblés, des corrections détaillées et des révisions adaptées du collège au lycée.";
-await emit("/", { title: "RéussiMaths — exercices de maths collège et lycée", description: homeDescription, path: "/", jsonLd: { "@context": "https://schema.org", "@graph": [{ "@type": "Organization", name: "RéussiMaths", url: SITE_URL }, { "@type": "WebSite", name: "RéussiMaths", url: SITE_URL, inLanguage: "fr" }] } }, shell(`<main><h1>Progresse en maths du collège au lycée</h1><p>${homeDescription}</p><p><a href="/college">Maths au collège</a> · <a href="/lycee">Maths au lycée</a> · <a href="/enseignant">Espace enseignant gratuit</a></p></main>`));
+await emit("/", { title: "RéussiMaths — exercices de maths collège et lycée", description: homeDescription, path: "/", jsonLd: { "@context": "https://schema.org", "@graph": [{ "@type": "Organization", name: "RéussiMaths", url: SITE_URL }, { "@type": "WebSite", name: "RéussiMaths", url: SITE_URL, inLanguage: "fr" }] } }, shell(`<main><h1>Progresse en maths du collège au lycée</h1><p>${homeDescription}</p><h2>Un entraînement adapté à ce que tu fais en classe</h2><p>RéussiMaths repère les difficultés, propose une aide étape par étape et vérifie ensuite que la méthode peut être réutilisée sans aide. Les corrections expliquent le raisonnement au lieu de donner seulement le résultat.</p><h2>Choisir un niveau</h2><p><a href="/college">Maths au collège</a> · <a href="/lycee">Maths au lycée</a></p><ul>${levels.map(([id, name]) => `<li><a href="/niveau/${id}">Cours et exercices de maths ${escapeHtml(name)}</a></li>`).join("")}</ul><h2>Cours gratuits et exercices corrigés</h2><ul>${PUBLIC_COURSES.map((page) => `<li><a href="${coursePath(page)}">${escapeHtml(page.title)}</a></li>`).join("")}</ul><p><a href="/enseignant">Espace enseignant gratuit</a></p></main>`));
 
 for (const cycle of ["college", "lycee"]) {
-  const label = cycle === "college" ? "collège" : "lycée";
+  const landing = CYCLE_LANDINGS[cycle];
   const cycleLevels = levels.filter((entry) => entry[2] === cycle);
   const path = `/${cycle}`;
-  const description = `Cours, exercices corrigés et entraînements de maths pour les élèves de ${label}, conformes aux programmes scolaires.`;
-  await emit(path, { title: `Maths ${label} : cours et exercices corrigés | RéussiMaths`, description, path }, shell(`<main><h1>Maths au ${label}</h1><p>${description}</p><ul>${cycleLevels.map(([id, name]) => `<li><a href="/niveau/${id}">Programme de maths ${escapeHtml(name)}</a></li>`).join("")}</ul></main>`));
+  await emit(path, { title: landing.title, description: landing.description, path }, shell(`<main><h1>${escapeHtml(landing.h1)}</h1><p>${escapeHtml(landing.intro)}</p><p>${escapeHtml(landing.details)}</p><h2>Choisir une classe</h2><ul>${cycleLevels.map(([id, name]) => `<li><a href="/niveau/${id}">Programme, cours et exercices de maths ${escapeHtml(name)}</a></li>`).join("")}</ul><h2>Notions à travailler</h2><ul>${landing.topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul></main>`));
 }
 
 for (const [id, name, cycle] of levels) {
+  const landing = LEVEL_LANDINGS[id];
   const path = `/niveau/${id}`;
-  const description = `Programme de maths ${name} : chapitres, cours gratuits, exercices corrigés et entraînements adaptés avec RéussiMaths.`;
   const courseLinks = PUBLIC_COURSES.filter((page) => page.levelId === id).map((page) => `<li><a href="${coursePath(page)}">${escapeHtml(page.title)}</a></li>`).join("");
-  await emit(path, { title: `Maths ${name} : programme, cours et exercices | RéussiMaths`, description, path }, shell(`<nav><a href="/${cycle}">Maths ${cycle === "college" ? "collège" : "lycée"}</a></nav><main><h1>Programme de maths ${escapeHtml(name)}</h1><p>${description}</p>${courseLinks ? `<h2>Cours gratuits</h2><ul>${courseLinks}</ul>` : ""}<p>L’application interactive est disponible sur cette page.</p></main>`));
+  await emit(path, { title: landing.title, description: landing.description, path }, shell(`<nav><a href="/${cycle}">Maths ${cycle === "college" ? "collège" : "lycée"}</a></nav><main><h1>${escapeHtml(landing.h1)}</h1><p>${escapeHtml(landing.intro)}</p><p>${escapeHtml(landing.method)}</p><h2>Notions à travailler en ${escapeHtml(landing.name)}</h2><ul>${landing.topics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul>${courseLinks ? `<h2>Cours gratuits et exercices corrigés</h2><ul>${courseLinks}</ul>` : ""}<p>Choisis un chapitre pour commencer un entraînement adapté, obtenir des aides et consulter une correction détaillée.</p></main>`));
 }
 
 for (const page of PUBLIC_COURSES) {
@@ -72,7 +72,7 @@ await emit(teacherPath, {
   title: "Automatismes de maths à projeter en classe | RéussiMaths",
   description: teacherDescription,
   path: teacherPath,
-}, shell(`<nav><a href="/">Accueil</a></nav><main><h1>Votre rituel de maths, prêt à projeter</h1><p>${teacherDescription}</p><p>Choisissez un niveau et cinq questions, projetez les énoncés sans réponse, puis affichez toutes les corrections en fin de séance.</p><p><a href="/enseignant">Créer une séance gratuite</a> · <a href="/niveaux?objectif=essai">Découvrir l’expérience élève</a></p></main>`));
+}, shell(`<nav><a href="/">Accueil</a></nav><main><h1>Votre rituel de maths, prêt à projeter</h1><p>${teacherDescription}</p><h2>Cinq automatismes pour commencer le cours</h2><p>Choisissez une classe du collège ou du lycée et cinq questions. Projetez d’abord les énoncés sans réponse, laissez les élèves chercher, puis affichez les corrections détaillées en fin de séance.</p><h2>Un support gratuit et sans compte élève</h2><p>Le rituel peut servir d’échauffement, de réactivation ou de vérification rapide des prérequis. Aucun compte élève n’est nécessaire pour projeter la séance.</p><p><a href="/enseignant">Créer une séance gratuite</a> · <a href="/niveaux?objectif=essai">Découvrir l’expérience élève</a></p></main>`));
 
 const sitemapPaths = ["/", "/college", "/lycee", ...levels.map(([id]) => `/niveau/${id}`), ...PUBLIC_COURSES.map(coursePath), "/enseignant"];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapPaths.map((path) => `  <url><loc>${SITE_URL}${path}</loc></url>`).join("\n")}\n</urlset>\n`;

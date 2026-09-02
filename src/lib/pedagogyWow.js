@@ -1204,6 +1204,108 @@ const PROFILES = {
     ],
     success: "Exact. Les propriétés d’espérance et de variance utilisent les bonnes hypothèses.",
   },
+  "statistiques-probabilites": {
+    level: "cinquieme",
+    skills: [
+      [/effectif et fréquence|diagramme circulaire|lire un tableau/i, "Repère l’effectif total et la partie étudiée.", "Lis les données utiles, puis calcule la fréquence comme effectif de la catégorie ÷ effectif total ; pour un diagramme, relie la part au tour complet."],
+      [/moyenne/i, "Vérifie combien de valeurs sont prises en compte.", "Additionne toutes les valeurs, avec leur effectif si nécessaire, puis divise par l’effectif total."],
+      [/qualifier un événement|expérience aléatoire|comparer des probabilités|classement/i, "Décris les issues possibles avant de comparer.", "Identifie l’univers et l’événement, puis utilise les mots impossible, possible ou certain, ou compare les probabilités sur la même échelle."],
+      [/équiprobabilité|tirage dans une urne|roue de loterie|simplifier une probabilité/i, "Compte les issues favorables et toutes les issues possibles.", "Dans une situation équiprobable, écris favorables/possibles, puis simplifie la fraction sans changer le rapport."],
+      [/fréquence et probabilité/i, "Distingue une observation d’un modèle théorique.", "La fréquence vient des essais réalisés ; la probabilité décrit le modèle. Avec beaucoup d’essais, la fréquence peut se rapprocher de la probabilité sans lui être toujours égale."],
+    ],
+    success: "Exact. Les données et le total de référence sont cohérents.",
+  },
+  fonctions: {
+    level: "cinquieme",
+    skills: [
+      [/vocabulaire|relation de dépendance/i, "Repère la grandeur d’entrée et celle qui en dépend.", "Une fonction associe une sortie à chaque entrée autorisée ; distingue l’image obtenue de la valeur choisie au départ."],
+      [/évaluer une formule|programme de calcul/i, "Remplace l’entrée par la valeur donnée.", "Effectue le programme dans l’ordre ou remplace la lettre entre parenthèses, puis respecte les priorités de calcul."],
+      [/tableau de valeurs/i, "Lis d’abord la ligne des entrées.", "Dans la colonne de l’entrée demandée, lis ou calcule la sortie correspondante sans intervertir les deux lignes."],
+      [/contexte :|éolienne|température ressentie|distance de freinage|volume d'un cylindre|aire d'un carré/i, "Identifie ce qui varie et l’unité demandée.", "Traduis la situation par la relation fournie, remplace la grandeur d’entrée, calcule puis interprète la sortie avec son unité."],
+    ],
+    success: "Exact. L’entrée, la règle et la sortie sont correctement reliées.",
+  },
+  "algorithmique-cinquieme": {
+    level: "cinquieme",
+    skills: [
+      [/séquencer des instructions|prévoir un résultat/i, "Suis les instructions une par une.", "Note la valeur obtenue après chaque instruction, dans l’ordre, sans anticiper l’étape suivante."],
+      [/entrées et sorties|vocabulaire/i, "Repère ce qui est fourni et ce que l’algorithme renvoie.", "L’entrée est la donnée de départ ; les instructions la transforment ; la sortie est le résultat produit."],
+      [/traduire une formule|modifier un paramètre/i, "Distingue les nombres fixes de la valeur qui peut changer.", "Traduis chaque opération dans l’ordre et remplace seulement le paramètre demandé, en conservant la structure du calcul."],
+      [/boucle inconditionnelle/i, "Repère le nombre exact de répétitions.", "Exécute le bloc une fois par tour, mets à jour les variables après chaque passage, puis arrête-toi au nombre de tours indiqué."],
+    ],
+    success: "Exact. Les instructions ont été suivies dans le bon ordre.",
+  },
+  "geometrie-plane": {
+    level: "quatrieme",
+    skills: [
+      [/égalité de triangles/i, "Repère les côtés et les angles qui se correspondent.", "Utilise un critère d’égalité adapté aux données et conserve l’ordre des sommets ; n’ajoute pas une égalité seulement parce que la figure semble régulière."],
+      [/translations/i, "Identifie le vecteur de la translation.", "Une translation déplace tous les points dans la même direction, le même sens et sur la même longueur ; elle conserve longueurs, angles, parallélisme et alignement."],
+      [/image|coordonnées/i, "Applique le même déplacement aux deux coordonnées.", "Ajoute les coordonnées du vecteur à celles du point, coordonnée par coordonnée, puis vérifie le sens du déplacement."],
+    ],
+    success: "Exact. La propriété géométrique correspond aux données de la figure.",
+  },
+  "geometrie-espace-quatrieme": {
+    level: "quatrieme",
+    skills: [
+      [/volumes/i, "Identifie le solide et l’unité de volume.", "Choisis la formule du solide, remplace les dimensions dans une même unité, puis écris une unité cubique."],
+      [/vocabulaire/i, "Repère faces, arêtes et sommets sur le solide.", "Relie chaque terme à l’élément de l’espace concerné et utilise les propriétés du solide plutôt que son apparence en perspective."],
+      [/patrons/i, "Imagine quelles arêtes se rejoignent au pliage.", "Vérifie le nombre et la forme des faces, puis suis les arêtes communes pour écarter les chevauchements ou les faces mal placées."],
+      [/repérage/i, "Lis les trois axes dans l’ordre annoncé.", "Pars de l’origine, relève chaque coordonnée sur son axe et conserve le même ordre pour placer ou lire le point."],
+    ],
+    success: "Exact. Le solide, sa représentation et les unités sont cohérents.",
+  },
+  "probabilites-echantillonnage-seconde": {
+    level: "seconde",
+    skills: [
+      [/modèle équiprobable|univers d'une expérience|types d'événements|tirage de cartes/i, "Définis l’univers et l’événement avant de calculer.", "Lorsque les issues sont équiprobables, compte les issues favorables et les issues possibles dans le même univers, puis forme leur rapport."],
+      [/événement contraire|réunion d'événements|propriétés/i, "Traduis précisément l’événement demandé.", "Utilise P(non A)=1−P(A) ; pour une réunion, additionne puis retire l’intersection si les événements peuvent se produire ensemble."],
+      [/lancer de deux dés/i, "Les couples de résultats forment l’univers.", "Liste ou organise les couples ordonnés équiprobables, puis compte ceux qui vérifient la condition sans confondre une somme avec une issue."],
+      [/modéliser une expérience|loi des grands nombres/i, "Distingue modèle théorique et fréquences observées.", "Choisis l’équiprobabilité seulement si elle est justifiée ; sinon appuie le modèle sur les observations. Une grande taille stabilise les fréquences sans garantir une égalité exacte."],
+      [/probabilités conditionnelles/i, "Identifie la population qui sert de condition.", "Restreins l’univers à la condition, puis calcule la proportion de l’événement dans cette population ; sur un arbre, multiplie le long d’un chemin."],
+    ],
+    success: "Exact. L’univers, l’événement et la référence sont correctement choisis.",
+  },
+  "variations-globales-premiere-non-spe": {
+    level: "premiere-non-spe",
+    skills: [
+      [/fonction dérivée/i, "Identifie la forme de la fonction avant de dériver.", "Applique la dérivée de référence et la linéarité, puis évalue seulement après avoir obtenu l’expression de la dérivée."],
+      [/tangentes horizontales/i, "Une tangente horizontale correspond à une dérivée nulle.", "Résous f'(x)=0 pour l’abscisse, puis utilise f(x) si l’équation de la tangente est demandée ; la nullité seule ne prouve pas un extremum."],
+      [/sens de variation/i, "Étudie le signe de la dérivée sur l’intervalle.", "Une dérivée positive indique une fonction croissante et une dérivée négative une fonction décroissante ; pour un extremum, vérifie le changement de signe."],
+    ],
+    success: "Exact. Le signe de la dérivée est interprété sur le bon intervalle.",
+  },
+  "variables-aleatoires-premiere-techno": {
+    level: "premiere-techno",
+    skills: [
+      [/loi de probabilité|notations/i, "Identifie les valeurs possibles de X et l’événement demandé.", "Additionne les probabilités correspondant exactement à l’événement ; la somme de toute la loi vaut 1."],
+      [/loi de Bernoulli/i, "Vérifie qu’il existe exactement deux issues.", "Code le succès par 1 et l’échec par 0 avec une probabilité p ; alors l’espérance vaut p."],
+      [/espérance/i, "Associe chaque valeur à sa probabilité.", "Calcule la somme des produits x×P(X=x), puis interprète ce résultat comme une moyenne à long terme, pas comme une issue certaine."],
+      [/fluctuation d'échantillonnage|simulation/i, "Repère la taille de l’échantillon et la fréquence observée.", "Compare la fréquence à p avec l’échelle 1/√n ou résume les simulations ; augmenter n réduit la fluctuation typique sans la supprimer."],
+    ],
+    success: "Exact. La loi et l’indicateur probabiliste sont correctement interprétés.",
+  },
+  "variables-aleatoires-premiere-spe": {
+    level: "premiere-spe",
+    skills: [
+      [/loi de probabilité|notations/i, "Traduis l’événement portant sur X.", "Sélectionne les valeurs de X concernées et additionne leurs probabilités ; contrôle que la loi complète totalise 1."],
+      [/espérance|jeu équitable|comparaison de jeux/i, "Pondère chaque gain ou valeur par sa probabilité.", "Calcule E(X)=ΣxP(X=x) ; pour un jeu équitable, impose une espérance nulle, et pour comparer des jeux utilise le critère demandé."],
+      [/variance|écart-type/i, "Distingue dispersion, variance et écart-type.", "Utilise V(X)=E(X²)−E(X)² puis σ(X)=√V(X), en contrôlant qu’une variance ne peut pas être négative."],
+      [/linéarité de l'espérance|transformation de la variance/i, "Identifie l’indicateur transformé.", "Utilise E(aX+b)=aE(X)+b et V(aX+b)=a²V(X) ; une translation ne modifie pas la variance."],
+      [/loi binomiale/i, "Vérifie les répétitions identiques et indépendantes.", "Identifie n, p et l’événement portant sur le nombre de succès avant d’appliquer la formule, l’espérance np ou la variance np(1−p)."],
+      [/vrai ou faux/i, "Repère la définition ou la propriété réellement testée.", "Réécris l’affirmation avec la loi, l’espérance ou la variance concernée, puis vérifie ses hypothèses avant de conclure."],
+    ],
+    success: "Exact. La variable aléatoire et ses paramètres sont cohérents.",
+  },
+  "loi-grands-nombres-terminale-spe": {
+    level: "terminale-spe",
+    skills: [
+      [/inégalité de Markov/i, "Vérifie que la variable et le seuil sont positifs.", "Pour X positive et a>0, applique P(X≥a)≤E(X)/a ; le résultat est une borne supérieure, à limiter à 1 si nécessaire."],
+      [/Bienaymé-Tchebychev/i, "Repère la variance et l’écart à l’espérance.", "Pour a>0, utilise P(|X−E(X)|≥a)≤V(X)/a² ; passe à l’événement contraire seulement après avoir identifié l’inégalité stricte complémentaire."],
+      [/moyenne empirique/i, "Distingue la variable X de la moyenne Mₙ.", "Sous les hypothèses données, E(Mₙ)=E(X) et, pour des répétitions indépendantes de même loi, V(Mₙ)=V(X)/n."],
+      [/inégalité de concentration|loi des grands nombres/i, "Identifie n, la variance et la précision ε.", "Utilise la borne V(X)/(nε²), puis résous l’inégalité dans le bon sens ; elle montre une convergence en probabilité sans garantir l’égalité à chaque échantillon."],
+    ],
+    success: "Exact. Les hypothèses et le sens de l’inégalité sont respectés.",
+  },
 };
 
 const ANNUAL_SHOWCASE_IDS = [
@@ -1351,6 +1453,19 @@ const GENERALIZATION_LOT_5B_IDS = [
   "sommes-variables-aleatoires-terminale-spe",
 ];
 
+const PEDAGOGY_FINAL_LOT_A_IDS = [
+  "statistiques-probabilites",
+  "fonctions",
+  "algorithmique-cinquieme",
+  "geometrie-plane",
+  "geometrie-espace-quatrieme",
+  "probabilites-echantillonnage-seconde",
+  "variations-globales-premiere-non-spe",
+  "variables-aleatoires-premiere-techno",
+  "variables-aleatoires-premiere-spe",
+  "loi-grands-nombres-terminale-spe",
+];
+
 function findSkill(profile, exercise) {
   const label = `${exercise?.chapter ?? ""} ${exercise?.prompt ?? ""}`;
   return profile?.skills.find(([pattern]) => pattern.test(label));
@@ -1403,3 +1518,5 @@ export const PEDAGOGY_GENERALIZATION_LOT_4B = showcaseRows(GENERALIZATION_LOT_4B
 export const PEDAGOGY_GENERALIZATION_LOT_5A = showcaseRows(GENERALIZATION_LOT_5A_IDS);
 
 export const PEDAGOGY_GENERALIZATION_LOT_5B = showcaseRows(GENERALIZATION_LOT_5B_IDS);
+
+export const PEDAGOGY_FINAL_LOT_A = showcaseRows(PEDAGOGY_FINAL_LOT_A_IDS);

@@ -11,6 +11,7 @@ import {
   PEDAGOGY_GENERALIZATION_LOT_4B,
   PEDAGOGY_GENERALIZATION_LOT_5A,
   PEDAGOGY_GENERALIZATION_LOT_5B,
+  PEDAGOGY_FINAL_LOT_A,
   prepareWowExercise,
   WOW_SHOWCASES,
 } from "../src/lib/pedagogyWow.js";
@@ -131,6 +132,16 @@ const CHAPTER_FILES = {
   "primitives-equations-differentielles-terminale-spe": "primitives-equations-differentielles-terminale-spe",
   "loi-binomiale-terminale-spe": "loi-binomiale-terminale-spe",
   "sommes-variables-aleatoires-terminale-spe": "sommes-variables-aleatoires-terminale-spe",
+  "statistiques-probabilites": "statistiques-probabilites",
+  fonctions: "fonctions",
+  "algorithmique-cinquieme": "algorithmique-cinquieme",
+  "geometrie-plane": "geometrie-plane",
+  "geometrie-espace-quatrieme": "geometrie-espace-quatrieme",
+  "probabilites-echantillonnage-seconde": "probabilites-echantillonnage-seconde",
+  "variations-globales-premiere-non-spe": "variations-globales-premiere-non-spe",
+  "variables-aleatoires-premiere-techno": "variables-aleatoires-premiere-techno",
+  "variables-aleatoires-premiere-spe": "variables-aleatoires-premiere-spe",
+  "loi-grands-nombres-terminale-spe": "loi-grands-nombres-terminale-spe",
 };
 
 test("les dix niveaux possèdent une vitrine et 3 à 6 diagnostics ciblés", () => {
@@ -535,10 +546,54 @@ test("les profils géométriques du lot 5B restent conceptuels sans nouveau mote
   }
 });
 
-test("un ancien chapitre hors profils conserve exactement son exercice", async () => {
-  const { default: chapter } = await import("../src/chapters/algorithmique-cinquieme.js");
+test("un chapitre réservé au lot final B conserve exactement son exercice", async () => {
+  const { default: chapter } = await import("../src/chapters/exercices-fin-annee-quatrieme.js");
   const original = chapter.generate();
   assert.equal(prepareWowExercise(chapter, original), original);
+});
+
+test("le FINAL LOT A contient exactement les dix chapitres retenus", () => {
+  assert.equal(PEDAGOGY_FINAL_LOT_A.length, 10);
+  assert.equal(new Set(PEDAGOGY_FINAL_LOT_A.map(({ chapterId }) => chapterId)).size, 10);
+  for (const chapter of PEDAGOGY_FINAL_LOT_A) {
+    assert.ok(chapter.diagnosticCount >= 3 && chapter.diagnosticCount <= 6, chapter.chapterId);
+  }
+});
+
+test("vingt générations par chapitre du FINAL LOT A exposent l’aide graduée sans altérer l’exercice", async () => {
+  for (const chapterRow of PEDAGOGY_FINAL_LOT_A) {
+    const { default: chapter } = await import(`../src/chapters/${CHAPTER_FILES[chapterRow.chapterId]}.js`);
+    for (let index = 0; index < 20; index += 1) {
+      const original = chapter.generate();
+      const prepared = prepareWowExercise(chapter, original);
+      assert.equal(prepared.prompt, original.prompt);
+      assert.equal(prepared.answer, original.answer);
+      assert.ok(Array.isArray(prepared.steps) && prepared.steps.length > 0, chapterRow.chapterId);
+      assert.equal(prepared.hints?.length >= 2, true, `${chapterRow.chapterId}: aide absente pour ${original.chapter}`);
+      assert.notEqual(prepared.hints[0], prepared.hints[1]);
+      assert.ok(prepared.feedback?.default);
+      assert.ok(prepared.wowSuccess);
+    }
+  }
+});
+
+test("les profils sensibles du FINAL LOT A gardent un feedback général fiable", async () => {
+  const files = [
+    "statistiques-probabilites",
+    "probabilites-echantillonnage-seconde",
+    "variations-globales-premiere-non-spe",
+    "variables-aleatoires-premiere-techno",
+    "variables-aleatoires-premiere-spe",
+    "loi-grands-nombres-terminale-spe",
+  ];
+  for (const file of files) {
+    const { default: chapter } = await import(`../src/chapters/${file}.js`);
+    for (let index = 0; index < 200; index += 1) {
+      const prepared = prepareWowExercise(chapter, chapter.generate());
+      const guidance = `${prepared.hints?.join(" ")} ${prepared.feedback?.default}`;
+      assert.doesNotMatch(guidance, /tu as (?:oublié|confondu)|ton erreur|tu as utilisé/i);
+    }
+  }
 });
 
 test("vingt générations par vitrine de rentrée conservent les réponses et exposent l’aide graduée", async () => {

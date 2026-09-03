@@ -1,6 +1,10 @@
-const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay, calculationMode) => ({ type: "numeric", chapter, prompt, answer, steps, ...(answerUnit ? { answerUnit } : {}), ...(answerDisplay ? { answerDisplay } : {}), ...(calculationMode ? { calculationMode } : {}) });
-const t = (chapter, prompt, answer, steps) => ({ type: "text", chapter, prompt, answer, steps });
-const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", chapter, prompt, answer, options, steps });
+// Métadonnées portées par la question, jamais par sa position dans une liste.
+function questionMetadata(chapter) {
+  return typeof chapter === "string" ? { chapter } : { chapter: chapter.skill, diagnostic: Object.freeze(chapter) };
+}
+const n = (chapter, prompt, answer, steps, answerUnit, answerDisplay, calculationMode) => ({ type: "numeric", ...questionMetadata(chapter), prompt, answer, steps, ...(answerUnit ? { answerUnit } : {}), ...(answerDisplay ? { answerDisplay } : {}), ...(calculationMode ? { calculationMode } : {}) });
+const t = (chapter, prompt, answer, steps) => ({ type: "text", ...questionMetadata(chapter), prompt, answer, steps });
+const q = (chapter, prompt, answer, options, steps) => ({ type: "qcm", ...questionMetadata(chapter), prompt, answer, options, steps });
 const s = (donnee, regle, calcul, resultat) => [
   { type: "donnee", text: donnee }, { type: "regle", text: regle },
   { type: "calcul", text: calcul }, { type: "resultat", text: resultat },
@@ -83,7 +87,7 @@ const COLLEGE_VARIANTS = {
 const SHOWCASES = {
   sixieme: [
     {
-      ...n("Numération décimale — Valeur de position", "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
+      ...n({"id": "sixieme-numeration-decimale-valeur-de-position", "levelId": "sixieme", "skillId": "numeration-decimale-valeur-de-position", "skill": "Numération décimale — Valeur de position", "sourceChapterId": "nombres-decimaux", "remediationChapterId": "nombres-decimaux"}, "Quel nombre obtient-on en ajoutant 7 dixièmes à 12,4 ?", 13.1, [
       { type: "donnee", text: "Sept dixièmes s’écrit 0,7 : le chiffre 7 occupe la colonne des dixièmes." },
       { type: "regle", text: "Pour additionner des nombres décimaux, on place les unités sous les unités et les virgules l’une sous l’autre." },
       { type: "calcul", text: "On calcule donc 12,4 + 0,7. Quatre dixièmes et sept dixièmes donnent onze dixièmes, c’est-à-dire une unité et un dixième." },
@@ -91,14 +95,14 @@ const SHOWCASES = {
       ]),
       decimalOperation: { left: 12.4, right: 0.7, operator: "+", answer: 13.1, decimalPlaces: 1 },
     },
-    n("Fractions — Partage", "Une unité est partagée en 4 parts égales et on en prend 3. Quelle fraction est coloriée ?", 0.75, [
+    n({"id": "sixieme-fractions-partage", "levelId": "sixieme", "skillId": "fractions-partage", "skill": "Fractions — Partage", "sourceChapterId": "fractions", "remediationChapterId": "fractions"}, "Une unité est partagée en 4 parts égales et on en prend 3. Quelle fraction est coloriée ?", 0.75, [
       { type: "donnee", text: "L’unité est découpée en quatre parts de même taille : le dénominateur est donc 4." },
       { type: "regle", text: "Le numérateur, le nombre du haut, indique combien de parts sont prises." },
       { type: "calcul", text: "Trois parts sont coloriées parmi les quatre parts égales : la fraction est donc 3/4." },
       { type: "resultat", text: "La partie coloriée représente 3/4 de l’unité." },
   ], null, "3/4"),
     {
-      ...n("Proportionnalité — Retour à l’unité", "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
+      ...n({"id": "sixieme-proportionnalite-retour-a-lunite", "levelId": "sixieme", "skillId": "proportionnalite-retour-a-lunite", "skill": "Proportionnalité — Retour à l’unité", "sourceChapterId": "proportionnalite", "remediationChapterId": "proportionnalite"}, "4 cahiers coûtent 10 €. Combien coûtent 6 cahiers ?", 15, [
       { type: "donnee", text: "Quatre cahiers identiques coûtent 10 € et on cherche le prix de six cahiers." },
       { type: "regle", text: "On commence par chercher le prix d’un cahier : c’est la méthode du retour à l’unité." },
       { type: "calcul", text: "Un cahier coûte 10 ÷ 4 = 2,50 €. Six cahiers coûtent donc 6 × 2,50 = 15 €." },
@@ -111,13 +115,13 @@ const SHOWCASES = {
         { type: "resultat", text: "Huit cahiers coûtent 20 €." },
       ], "€"),
     },
-    n("Grandeurs et mesures — Aire d'un rectangle", "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, [
+    n({"id": "sixieme-grandeurs-et-mesures-aire-d-un-rectangle", "levelId": "sixieme", "skillId": "grandeurs-et-mesures-aire-d-un-rectangle", "skill": "Grandeurs et mesures — Aire d'un rectangle", "sourceChapterId": "grandeurs-mesures", "remediationChapterId": "grandeurs-mesures"}, "Un rectangle mesure 7 cm de long et 4 cm de large. Calcule son aire.", 28, [
       { type: "donnee", text: "Le rectangle a une longueur de 7 cm et une largeur de 4 cm." },
       { type: "regle", text: "L’aire mesure la surface occupée. Pour un rectangle, on multiplie la longueur par la largeur." },
       { type: "calcul", text: "Aire = longueur × largeur = 7 × 4 = 28." },
       { type: "resultat", text: "L’aire du rectangle est donc égale à 28 cm². L’unité est le centimètre carré, car on mesure une surface." },
     ], "cm²"),
-    t("Géométrie repérée — Coordonnées", "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", [
+    t({"id": "sixieme-geometrie-reperee-coordonnees", "levelId": "sixieme", "skillId": "geometrie-reperee-coordonnees", "skill": "Géométrie repérée — Coordonnées", "sourceChapterId": null, "remediationChapterId": "nombres-relatifs"}, "Le point A a pour abscisse 3 et pour ordonnée −2. Écris ses coordonnées.", "(3 ; -2)", [
       { type: "donnee", text: "L’abscisse du point A vaut 3 et son ordonnée vaut −2." },
       { type: "regle", text: "Dans les coordonnées d’un point, on écrit toujours d’abord le déplacement horizontal, puis le déplacement vertical : (abscisse ; ordonnée). L’ordonnée peut être comparée à une altitude : elle se lit sur l’axe vertical." },
       { type: "calcul", text: "On place donc 3 en première position et −2 en seconde position. En écriture attachée, la fin du a d’abscisse part horizontalement, tandis que la boucle du o d’ordonnée se termine en remontant verticalement : ce geste aide à retenir les axes." },
@@ -126,7 +130,7 @@ const SHOWCASES = {
   ],
   cinquieme: [
     {
-      ...n("Nombres relatifs — Addition de signes opposés", "Calcule : −7 + 12.", 5, [
+      ...n({"id": "cinquieme-nombres-relatifs-addition-de-signes-opposes", "levelId": "cinquieme", "skillId": "nombres-relatifs-addition-de-signes-opposes", "skill": "Nombres relatifs — Addition de signes opposés", "sourceChapterId": "nombres-relatifs", "remediationChapterId": "nombres-relatifs"}, "Calcule : −7 + 12.", 5, [
       { type: "donnee", text: "On additionne deux nombres de signes opposés : −7 est négatif et 12 est positif." },
       { type: "regle", text: "Le plus « fort », celui qui a la plus grande distance à zéro, donne son signe au résultat, mais il perd les points de l’autre nombre." },
       { type: "calcul", text: "Douze est plus éloigné de zéro que sept : le résultat sera positif. Il perd ensuite 7 points de vie, donc 12 − 7 = 5." },
@@ -140,7 +144,7 @@ const SHOWCASES = {
       ]),
     },
     {
-      ...n("Fractions — Addition", "Calcule : 2/3 + 1/4.", 11/12, [
+      ...n({"id": "cinquieme-fractions-addition", "levelId": "cinquieme", "skillId": "fractions-addition", "skill": "Fractions — Addition", "sourceChapterId": "divisibilite-fractions", "remediationChapterId": "divisibilite-fractions"}, "Calcule : 2/3 + 1/4.", 11/12, [
       { type: "donnee", text: "Les deux fractions n’ont pas le même dénominateur : les parts n’ont donc pas encore la même taille." },
       { type: "regle", text: "On commence par obtenir un dénominateur commun en multipliant en haut et en bas par un même nombre, ce qui ne change pas la valeur de la fraction." },
       { type: "calcul", text: "On transforme 2/3 en 8/12 en multipliant par 4, et 1/4 en 3/12 en multipliant par 3. On peut alors additionner les numérateurs : 8 + 3 = 11." },
@@ -154,7 +158,7 @@ const SHOWCASES = {
       ], null, "11/12"),
     },
     {
-      ...n("Pourcentages — Calculer une proportion", "Calcule 20 % de 80.", 16, [
+      ...n({"id": "cinquieme-pourcentages-calculer-une-proportion", "levelId": "cinquieme", "skillId": "pourcentages-calculer-une-proportion", "skill": "Pourcentages — Calculer une proportion", "sourceChapterId": "proportionnalite-cinquieme", "remediationChapterId": "proportionnalite-cinquieme"}, "Calcule 20 % de 80.", 16, [
       { type: "donnee", text: "On cherche une proportion de la quantité 80 : 20 % ne signifie pas ajouter le nombre 20." },
       { type: "regle", text: "Le plus simple est de calculer d’abord 10 %, c’est-à-dire le dixième, puis de doubler ce résultat pour obtenir 20 %." },
       { type: "calcul", text: "Dix pour cent de 80 vaut 80 ÷ 10 = 8. Vingt pour cent est le double de 10 %, donc 2 × 8 = 16." },
@@ -168,7 +172,7 @@ const SHOWCASES = {
       ]),
     },
     {
-      ...n("Angles — Angles d'un triangle", "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
+      ...n({"id": "cinquieme-angles-angles-d-un-triangle", "levelId": "cinquieme", "skillId": "angles-angles-d-un-triangle", "skill": "Angles — Angles d'un triangle", "sourceChapterId": "triangles", "remediationChapterId": "triangles"}, "Un triangle possède deux angles de 50° et 60°. Calcule le troisième angle.", 70, [
       { type: "donnee", text: "Deux angles du triangle mesurent 50° et 60°. On cherche la mesure du troisième angle." },
       { type: "regle", text: "Dans tous les triangles, la somme des mesures des trois angles est égale à 180°." },
       { type: "calcul", text: "Les deux angles connus mesurent ensemble 50 + 60 = 110°. Il reste donc 180 − 110 = 70°." },
@@ -182,7 +186,7 @@ const SHOWCASES = {
       ], "°"),
     },
     {
-      ...n("Probabilités — Issues favorables", "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, [
+      ...n({"id": "cinquieme-probabilites-issues-favorables", "levelId": "cinquieme", "skillId": "probabilites-issues-favorables", "skill": "Probabilités — Issues favorables", "sourceChapterId": "statistiques-probabilites", "remediationChapterId": "statistiques-probabilites"}, "Un sac contient 3 boules rouges et 2 bleues. Quelle est la probabilité d’obtenir une rouge ?", 3/5, [
       { type: "donnee", text: "L’événement recherché est « obtenir une boule rouge ». Il y a 3 boules rouges : ce sont les issues favorables." },
       { type: "regle", text: "Pour calculer une probabilité dans une situation équiprobable, on compare le nombre d’issues favorables au nombre total d’issues possibles." },
       { type: "calcul", text: "Le sac contient 3 + 2 = 5 boules au total. La probabilité cherchée est donc nombre de boules rouges ÷ nombre total de boules = 3/5." },
@@ -197,31 +201,31 @@ const SHOWCASES = {
     },
   ],
   quatrieme: [
-    n("Nombres relatifs — Produit", "Calcule : (−4) × (−3).", 12, [
+    n({"id": "quatrieme-nombres-relatifs-produit", "levelId": "quatrieme", "skillId": "nombres-relatifs-produit", "skill": "Nombres relatifs — Produit", "sourceChapterId": "multiplication-division-rationnels", "remediationChapterId": "multiplication-division-rationnels"}, "Calcule : (−4) × (−3).", 12, [
       { type: "donnee", text: "On multiplie deux nombres négatifs : −4 et −3." },
       { type: "regle", text: "On applique d’abord la règle des signes avant de calculer la distance à zéro : deux facteurs de même signe donnent un produit positif ; deux facteurs de signes opposés donnent un produit négatif." },
       { type: "calcul", text: "Les deux facteurs sont négatifs, donc le produit est positif. On multiplie ensuite leurs distances à zéro : 4 × 3 = 12." },
       { type: "resultat", text: "Ainsi, (−4) × (−3) = 12. Le signe « moins » n’est pas conservé : deux signes négatifs dans un produit donnent bien un résultat positif." },
     ], null, null, "mental"),
-    n("Équations — Résoudre", "Résous l’équation 4x − 7 = 13.", 5, [
+    n({"id": "quatrieme-equations-resoudre", "levelId": "quatrieme", "skillId": "equations-resoudre", "skill": "Équations — Résoudre", "sourceChapterId": "resolution-equations", "remediationChapterId": "resolution-equations"}, "Résous l’équation 4x − 7 = 13.", 5, [
       { type: "donnee", text: "L’équation 4x − 7 = 13 signifie que les deux membres ont la même valeur." },
       { type: "regle", text: "On utilise l’image d’une balance à l’équilibre : chaque opération effectuée dans un membre doit aussi être effectuée dans l’autre." },
       { type: "calcul", text: "On ajoute 7 dans les deux membres : 4x = 20. Pour isoler x, on divise ensuite les deux membres par 4." },
       { type: "resultat", text: "On obtient x = 5. Vérification : 4 × 5 − 7 = 20 − 7 = 13." },
     ], null, null, "mental"),
-    n("Théorème de Pythagore — Hypoténuse", "ABC est rectangle en A, AB = 6 cm et AC = 8 cm. Calcule BC.", 10, [
+    n({"id": "quatrieme-theoreme-de-pythagore-hypotenuse", "levelId": "quatrieme", "skillId": "theoreme-de-pythagore-hypotenuse", "skill": "Théorème de Pythagore — Hypoténuse", "sourceChapterId": "triangles-rectangles-quatrieme", "remediationChapterId": "triangles-rectangles-quatrieme"}, "ABC est rectangle en A, AB = 6 cm et AC = 8 cm. Calcule BC.", 10, [
       { type: "donnee", text: "Le triangle ABC est rectangle en A. Le côté opposé à l’angle droit est BC : c’est l’hypoténuse." },
       { type: "regle", text: "Dans un triangle rectangle, le carré de la longueur de l’hypoténuse est égal à la somme des carrés des deux autres côtés." },
       { type: "calcul", text: "BC² = AB² + AC² = 6² + 8² = 36 + 64 = 100. On cherche BC, et non BC² : il faut donc prendre la racine carrée." },
       { type: "resultat", text: "BC = √100 = 10 cm. Cette longueur est bien strictement inférieure à 6 + 8 = 14 cm." },
     ], "cm", null, "mental"),
-    n("Proportionnalité — Vitesse", "Une voiture parcourt 150 km en 2 h à vitesse constante. Quelle est sa vitesse moyenne ?", 75, [
+    n({"id": "quatrieme-proportionnalite-vitesse", "levelId": "quatrieme", "skillId": "proportionnalite-vitesse", "skill": "Proportionnalité — Vitesse", "sourceChapterId": "proportionnalite-quatrieme", "remediationChapterId": "proportionnalite-quatrieme"}, "Une voiture parcourt 150 km en 2 h à vitesse constante. Quelle est sa vitesse moyenne ?", 75, [
       { type: "donnee", text: "La voiture parcourt une distance de 150 km pendant une durée de 2 h." },
       { type: "regle", text: "Une vitesse moyenne indique la distance parcourue pendant une unité de temps. On calcule vitesse = distance ÷ durée." },
       { type: "calcul", text: "On cherche la distance parcourue en une heure : 150 ÷ 2 = 75." },
       { type: "resultat", text: "La vitesse moyenne de la voiture est donc 75 km/h. L’unité signifie bien « kilomètres parcourus en une heure »." },
     ], "km/h", null, "mental"),
-    n("Statistiques — Moyenne", "Calcule la moyenne de 8, 10 et 15.", 11, [
+    n({"id": "quatrieme-statistiques-moyenne", "levelId": "quatrieme", "skillId": "statistiques-moyenne", "skill": "Statistiques — Moyenne", "sourceChapterId": "statistiques-quatrieme", "remediationChapterId": "statistiques-quatrieme"}, "Calcule la moyenne de 8, 10 et 15.", 11, [
       { type: "donnee", text: "La série contient trois valeurs : 8, 10 et 15." },
       { type: "regle", text: "Pour calculer une moyenne, on additionne toutes les valeurs, puis on partage équitablement cette somme entre le nombre de valeurs." },
       { type: "calcul", text: "La somme vaut 8 + 10 + 15 = 33. La série contient 3 valeurs, donc on calcule 33 ÷ 3 = 11." },
@@ -229,31 +233,31 @@ const SHOWCASES = {
     ], null, null, "mental"),
   ],
   troisieme: [
-    n("Théorème de Thalès — Longueur", "Dans une configuration de Thalès, \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). Calcule \\(x\\).", 8, [
+    n({"id": "troisieme-theoreme-de-thales-longueur", "levelId": "troisieme", "skillId": "theoreme-de-thales-longueur", "skill": "Théorème de Thalès — Longueur", "sourceChapterId": "thales-triangles-semblables-troisieme", "remediationChapterId": "thales-triangles-semblables-troisieme"}, "Dans une configuration de Thalès, \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). Calcule \\(x\\).", 8, [
       { type: "donnee", text: "Les longueurs correspondantes vérifient la proportion \\(\\dfrac{x}{6}=\\dfrac{4}{3}\\). L’ordre des côtés est déjà indiqué par l’égalité." },
       { type: "regle", text: "Au brevet, on commence par citer les alignements et le parallélisme. Les droites parallèles forment alors deux triangles semblables : ils ont les mêmes angles et leurs longueurs correspondantes suivent la même proportion. On conserve exactement le même ordre dans chaque quotient." },
       { type: "calcul", text: "Pour calculer \\(x\\), on utilise la technique du produit en croix. On multiplie les deux nombres connus placés en diagonale, puis on divise par le nombre qui est croisé avec \\(x\\). Ici, \\(x=6\\times4\\div3=24\\div3=8\\)." },
       { type: "resultat", text: "Ainsi, \\(x=8\\). Vérification : \\(\\dfrac{8}{6}=\\dfrac{4}{3}\\). La rédaction distingue bien les conditions, l’égalité des rapports et le calcul." },
     ], null, null, "mental"),
-    n("Équations — Produit nul", "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [
+    n({"id": "troisieme-equations-produit-nul", "levelId": "troisieme", "skillId": "equations-produit-nul", "skill": "Équations — Produit nul", "sourceChapterId": "equations-troisieme", "remediationChapterId": "equations-troisieme"}, "Résous (x − 2)(x + 3) = 0. Donne la solution positive.", 2, [
       { type: "donnee", text: "Le membre de gauche est un produit de deux facteurs, (x − 2) et (x + 3), et ce produit est égal à zéro." },
       { type: "regle", text: "Un produit est nul si, et seulement si, au moins l’un de ses facteurs est nul." },
       { type: "calcul", text: "On résout séparément x − 2 = 0, ce qui donne x = 2, puis x + 3 = 0, ce qui donne x = −3." },
       { type: "resultat", text: "L’équation possède deux solutions, −3 et 2. La solution positive demandée est donc 2." },
     ], null, null, "mental"),
-    n("Fonctions — Image", "Pour f(x) = 3x − 2, calcule l’image de 4.", 10, [
+    n({"id": "troisieme-fonctions-image", "levelId": "troisieme", "skillId": "fonctions-image", "skill": "Fonctions — Image", "sourceChapterId": "notion-fonction-troisieme", "remediationChapterId": "notion-fonction-troisieme"}, "Pour f(x) = 3x − 2, calcule l’image de 4.", 10, [
       { type: "donnee", text: "On demande l’image de 4 : le nombre de départ est donc connu et vaut 4." },
       { type: "regle", text: "Pour calculer une image, on remplace x par le nombre de départ dans l’expression de la fonction. Chercher un antécédent conduirait au contraire à résoudre une équation." },
       { type: "calcul", text: "On écrit f(4) = 3 × 4 − 2, puis on effectue le calcul : 12 − 2 = 10." },
       { type: "resultat", text: "Ainsi, l’image de 4 par la fonction f est 10. Une phrase de conclusion est attendue : on ne répond pas seulement par le calcul intermédiaire." },
     ], null, null, "mental"),
-    n("Pourcentages — Évolution", "Un article coûte 80 €. Son prix augmente de 20 %. Quel est le nouveau prix ?", 96, [
+    n({"id": "troisieme-pourcentages-evolution", "levelId": "troisieme", "skillId": "pourcentages-evolution", "skill": "Pourcentages — Évolution", "sourceChapterId": "proportionnalite-troisieme", "remediationChapterId": "proportionnalite-troisieme"}, "Un article coûte 80 €. Son prix augmente de 20 %. Quel est le nouveau prix ?", 96, [
       { type: "donnee", text: "Le prix initial est 80 € et il augmente de 20 %. Attention : 20 % et le nombre 20 ne représentent pas la même quantité." },
       { type: "regle", text: "On peut calculer d’abord 10 %, le dixième du prix, puis doubler ce résultat. On peut aussi multiplier directement le prix initial par 1,20." },
       { type: "calcul", text: "Dix pour cent de 80 vaut 8, donc 20 % vaut 16. On ajoute cette augmentation au prix initial : 80 + 16 = 96." },
       { type: "resultat", text: "Le nouveau prix est 96 €. Vérification directe : 80 × 1,20 = 96." },
     ], "€", null, "mental"),
-    n("Probabilités — Événement contraire", "On sait que P(A) = 0,3. Calcule P(non A).", 0.7, [
+    n({"id": "troisieme-probabilites-evenement-contraire", "levelId": "troisieme", "skillId": "probabilites-evenement-contraire", "skill": "Probabilités — Événement contraire", "sourceChapterId": "probabilites-troisieme", "remediationChapterId": "probabilites-troisieme"}, "On sait que P(A) = 0,3. Calcule P(non A).", 0.7, [
       { type: "donnee", text: "L’événement A a une probabilité de 0,3. On cherche la probabilité que A ne se réalise pas." },
       { type: "regle", text: "Un événement et son événement contraire regroupent tous les cas possibles. La somme de leurs probabilités est donc égale à 1." },
       { type: "calcul", text: "On calcule P(non A) = 1 − P(A) = 1 − 0,3 = 0,7." },
@@ -261,31 +265,31 @@ const SHOWCASES = {
     ], null, null, "mental"),
   ],
   seconde: [
-    n("Fonctions — Antécédent", "Pour f(x) = 2x + 1, cherche l’antécédent de 9.", 4, [
+    n({"id": "seconde-fonctions-antecedent", "levelId": "seconde", "skillId": "fonctions-antecedent", "skill": "Fonctions — Antécédent", "sourceChapterId": "generalites-fonctions-seconde", "remediationChapterId": "generalites-fonctions-seconde"}, "Pour f(x) = 2x + 1, cherche l’antécédent de 9.", 4, [
       { type: "donnee", text: "On connaît le résultat d’arrivée, 9, et on cherche le nombre de départ qui possède cette image." },
       { type: "regle", text: "Chercher un antécédent de 9 signifie résoudre l’équation f(x) = 9. Il peut parfois y avoir plusieurs antécédents, un seul ou aucun." },
       { type: "calcul", text: "On résout 2x + 1 = 9. On soustrait 1 dans les deux membres : 2x = 8, puis on divise les deux membres par 2." },
       { type: "resultat", text: "On obtient x = 4. Vérification : f(4) = 2 × 4 + 1 = 9." },
     ]),
-    n("Fonctions affines — Coefficient directeur", "Une droite passe par A(1 ; 3) et B(4 ; 9). Calcule son coefficient directeur.", 2, [
+    n({"id": "seconde-fonctions-affines-coefficient-directeur", "levelId": "seconde", "skillId": "fonctions-affines-coefficient-directeur", "skill": "Fonctions affines — Coefficient directeur", "sourceChapterId": "fonctions-affines-seconde", "remediationChapterId": "fonctions-affines-seconde"}, "Une droite passe par A(1 ; 3) et B(4 ; 9). Calcule son coefficient directeur.", 2, [
       { type: "donnee", text: "La droite passe par A(1 ; 3) et B(4 ; 9). On connaît donc deux points distincts de la droite." },
       { type: "regle", text: "Le coefficient directeur mesure la variation verticale lorsque l’abscisse augmente d’une unité : \\(m=\\dfrac{y_B-y_A}{x_B-x_A}\\)." },
       { type: "calcul", text: "On remplace les coordonnées des points dans la formule, en conservant le même ordre au numérateur et au dénominateur : \\(m=\\dfrac{9-3}{4-1}=\\dfrac{6}{3}=2\\)." },
       { type: "resultat", text: "Le coefficient directeur est 2 : lorsque x augmente de 1, l’image augmente de 2." },
     ]),
-    n("Statistiques — Médiane", "Détermine la médiane de la série ordonnée : 2 ; 5 ; 7 ; 9 ; 12.", 7, [
+    n({"id": "seconde-statistiques-mediane", "levelId": "seconde", "skillId": "statistiques-mediane", "skill": "Statistiques — Médiane", "sourceChapterId": "statistiques-descriptives-seconde", "remediationChapterId": "statistiques-descriptives-seconde"}, "Détermine la médiane de la série ordonnée : 2 ; 5 ; 7 ; 9 ; 12.", 7, [
       { type: "donnee", text: "La série est déjà rangée dans l’ordre croissant et contient cinq valeurs." },
       { type: "regle", text: "La médiane partage une série ordonnée en deux groupes de même effectif. Lorsque l’effectif est impair, c’est la valeur située exactement au centre." },
       { type: "calcul", text: "Avec cinq valeurs, la position centrale est la troisième : deux valeurs se trouvent avant elle et deux valeurs après elle." },
       { type: "resultat", text: "La troisième valeur est 7. La médiane de la série est donc 7." },
     ]),
-    t("Vecteurs — Coordonnées", "\\(A(1;2)\\) et \\(B(4;6)\\). Donne les coordonnées du vecteur \\(\\overrightarrow{AB}\\).", "(3 ; 4)", [
+    t({"id": "seconde-vecteurs-coordonnees", "levelId": "seconde", "skillId": "vecteurs-coordonnees", "skill": "Vecteurs — Coordonnées", "sourceChapterId": "vecteurs-seconde", "remediationChapterId": "vecteurs-seconde"}, "\\(A(1;2)\\) et \\(B(4;6)\\). Donne les coordonnées du vecteur \\(\\overrightarrow{AB}\\).", "(3 ; 4)", [
       { type: "donnee", text: "Le vecteur \\(\\overrightarrow{AB}\\) décrit le déplacement qui permet d’aller du point \\(A(1;2)\\) au point \\(B(4;6)\\)." },
       { type: "regle", text: "Pour calculer les coordonnées de \\(\\overrightarrow{AB}\\), on fait toujours coordonnées de l’arrivée \\(B\\) moins coordonnées du départ \\(A\\)." },
       { type: "calcul", text: "Horizontalement : 4 − 1 = 3. Verticalement : 6 − 2 = 4." },
       { type: "resultat", text: "Le vecteur \\(\\overrightarrow{AB}\\) a pour coordonnées \\((3;4)\\). Depuis \\(A\\), avancer de 3 puis monter de 4 conduit bien à \\(B\\)." },
     ]),
-    n("Probabilités — Événement contraire", "Si P(A) = 0,42, calcule P(non A).", 0.58, [
+    n({"id": "seconde-probabilites-evenement-contraire", "levelId": "seconde", "skillId": "probabilites-evenement-contraire", "skill": "Probabilités — Événement contraire", "sourceChapterId": "probabilites-echantillonnage-seconde", "remediationChapterId": "probabilites-echantillonnage-seconde"}, "Si P(A) = 0,42, calcule P(non A).", 0.58, [
       { type: "donnee", text: "L’événement A a une probabilité de 0,42 et on cherche la probabilité qu’il ne se réalise pas." },
       { type: "regle", text: "A et son événement contraire couvrent tous les cas possibles : leurs probabilités ont donc pour somme 1." },
       { type: "calcul", text: "P(non A) = 1 − P(A) = 1 − 0,42 = 0,58." },
@@ -293,11 +297,11 @@ const SHOWCASES = {
     ]),
   ],
   "premiere-spe": [
-    n("Second degré — Discriminant", "Pour x² − 5x + 6 = 0, calcule le discriminant Δ.", 1, s("L’équation est écrite sous la forme ax² + bx + c = 0.", "On relève les coefficients avec leurs signes, puis on utilise Δ = b² − 4ac.", "Ici a = 1, b = −5 et c = 6, donc Δ = (−5)² − 4 × 1 × 6 = 25 − 24.", "On obtient Δ = 1. Le signe positif indique que l’équation possède deux solutions réelles.")),
-    n("Dérivation — Nombre dérivé", "Pour \\(f(x)=x^2\\), calcule \\(f'(3)\\).", 6, s("On cherche le nombre dérivé de \\(f\\) au point d’abscisse 3.", "La fonction \\(x\\mapsto x^2\\) a pour dérivée \\(x\\mapsto 2x\\). Le nombre dérivé \\(f'(3)\\) est le coefficient directeur de la tangente au point d’abscisse 3.", "On remplace \\(x\\) par 3 dans \\(f'(x)=2x\\) : \\(f'(3)=2\\times3\\).", "Ainsi \\(f'(3)=6\\) : la tangente a pour pente 6.")),
-    n("Suites arithmétiques — Terme général", "Une suite arithmétique vérifie u₀ = 4 et a pour raison 3. Calcule u₅.", 19, s("La suite commence à u₀ = 4 et augmente de 3 à chaque nouveau terme.", "Pour une suite arithmétique indexée à partir de 0, uₙ = u₀ + n × r.", "Entre u₀ et u₅, on effectue cinq pas de raison 3 : u₅ = 4 + 5 × 3 = 4 + 15.", "On obtient u₅ = 19. On peut vérifier en énumérant 4, 7, 10, 13, 16, 19.")),
-    n("Probabilités conditionnelles — Probabilité conditionnelle", "On donne \\(P(A\\cap B)=0{,}2\\) et \\(P(A)=0{,}5\\). Calcule \\(P_A(B)\\).", 0.4, s("On connaît la probabilité de \\(A\\) et \\(B\\) simultanément ainsi que celle de \\(A\\).", "Conditionner par \\(A\\) signifie que l’on se place uniquement parmi les cas où \\(A\\) est réalisé : \\(P_A(B)=\\dfrac{P(A\\cap B)}{P(A)}\\).", "On calcule \\(0{,}2\\div0{,}5=0{,}4\\).", "Ainsi \\(P_A(B)=0{,}4\\). Cette probabilité est bien comprise entre 0 et 1.")),
-    t("Produit scalaire — Orthogonalité", "On donne \\(\\vec u=(2;1)\\) et \\(\\vec v=(-1;2)\\). Ces deux vecteurs sont-ils orthogonaux ?", "oui", s("On connaît les coordonnées des deux vecteurs.", "Deux vecteurs non nuls sont orthogonaux si leur produit scalaire est nul : \\(\\vec u\\cdot\\vec v=xx'+yy'\\).", "On calcule \\(2\\times(-1)+1\\times2=-2+2=0\\).", "Le produit scalaire est nul : les vecteurs \\(\\vec u\\) et \\(\\vec v\\) sont orthogonaux.")),
+    n({"id": "premiere-spe-second-degre-discriminant", "levelId": "premiere-spe", "skillId": "second-degre-discriminant", "skill": "Second degré — Discriminant", "sourceChapterId": "second-degre", "remediationChapterId": "second-degre"}, "Pour x² − 5x + 6 = 0, calcule le discriminant Δ.", 1, s("L’équation est écrite sous la forme ax² + bx + c = 0.", "On relève les coefficients avec leurs signes, puis on utilise Δ = b² − 4ac.", "Ici a = 1, b = −5 et c = 6, donc Δ = (−5)² − 4 × 1 × 6 = 25 − 24.", "On obtient Δ = 1. Le signe positif indique que l’équation possède deux solutions réelles.")),
+    n({"id": "premiere-spe-derivation-nombre-derive", "levelId": "premiere-spe", "skillId": "derivation-nombre-derive", "skill": "Dérivation — Nombre dérivé", "sourceChapterId": "derivation-premiere-spe", "remediationChapterId": "derivation-premiere-spe"}, "Pour \\(f(x)=x^2\\), calcule \\(f'(3)\\).", 6, s("On cherche le nombre dérivé de \\(f\\) au point d’abscisse 3.", "La fonction \\(x\\mapsto x^2\\) a pour dérivée \\(x\\mapsto 2x\\). Le nombre dérivé \\(f'(3)\\) est le coefficient directeur de la tangente au point d’abscisse 3.", "On remplace \\(x\\) par 3 dans \\(f'(x)=2x\\) : \\(f'(3)=2\\times3\\).", "Ainsi \\(f'(3)=6\\) : la tangente a pour pente 6.")),
+    n({"id": "premiere-spe-suites-arithmetiques-terme-general", "levelId": "premiere-spe", "skillId": "suites-arithmetiques-terme-general", "skill": "Suites arithmétiques — Terme général", "sourceChapterId": "suites-numeriques-premiere-spe", "remediationChapterId": "suites-numeriques-premiere-spe"}, "Une suite arithmétique vérifie u₀ = 4 et a pour raison 3. Calcule u₅.", 19, s("La suite commence à u₀ = 4 et augmente de 3 à chaque nouveau terme.", "Pour une suite arithmétique indexée à partir de 0, uₙ = u₀ + n × r.", "Entre u₀ et u₅, on effectue cinq pas de raison 3 : u₅ = 4 + 5 × 3 = 4 + 15.", "On obtient u₅ = 19. On peut vérifier en énumérant 4, 7, 10, 13, 16, 19.")),
+    n({"id": "premiere-spe-probabilites-conditionnelles-probabilite-conditionnelle", "levelId": "premiere-spe", "skillId": "probabilites-conditionnelles-probabilite-conditionnelle", "skill": "Probabilités conditionnelles — Probabilité conditionnelle", "sourceChapterId": "probabilites-conditionnelles-premiere-spe", "remediationChapterId": "probabilites-conditionnelles-premiere-spe"}, "On donne \\(P(A\\cap B)=0{,}2\\) et \\(P(A)=0{,}5\\). Calcule \\(P_A(B)\\).", 0.4, s("On connaît la probabilité de \\(A\\) et \\(B\\) simultanément ainsi que celle de \\(A\\).", "Conditionner par \\(A\\) signifie que l’on se place uniquement parmi les cas où \\(A\\) est réalisé : \\(P_A(B)=\\dfrac{P(A\\cap B)}{P(A)}\\).", "On calcule \\(0{,}2\\div0{,}5=0{,}4\\).", "Ainsi \\(P_A(B)=0{,}4\\). Cette probabilité est bien comprise entre 0 et 1.")),
+    t({"id": "premiere-spe-produit-scalaire-orthogonalite", "levelId": "premiere-spe", "skillId": "produit-scalaire-orthogonalite", "skill": "Produit scalaire — Orthogonalité", "sourceChapterId": "vecteurs-produit-scalaire-premiere-spe", "remediationChapterId": "vecteurs-produit-scalaire-premiere-spe"}, "On donne \\(\\vec u=(2;1)\\) et \\(\\vec v=(-1;2)\\). Ces deux vecteurs sont-ils orthogonaux ?", "oui", s("On connaît les coordonnées des deux vecteurs.", "Deux vecteurs non nuls sont orthogonaux si leur produit scalaire est nul : \\(\\vec u\\cdot\\vec v=xx'+yy'\\).", "On calcule \\(2\\times(-1)+1\\times2=-2+2=0\\).", "Le produit scalaire est nul : les vecteurs \\(\\vec u\\) et \\(\\vec v\\) sont orthogonaux.")),
   ],
   "premiere-non-spe": [
     n("Pourcentages — Évolution", "Une quantité de 250 augmente de 8 %. Quelle est sa nouvelle valeur ?", 270, s("La valeur initiale est 250 et l’évolution est une hausse de 8 %.", "Une hausse de 8 % correspond au coefficient multiplicateur 1 + 8/100 = 1,08.", "On calcule directement 250 × 1,08 = 270. On peut aussi calculer 8 % de 250, soit 20, puis ajouter 20.", "La nouvelle valeur est 270.")),
@@ -307,11 +311,11 @@ const SHOWCASES = {
     n("Algorithmique — Affectations", "On exécute x ← 4 puis x ← 3x + 2. Quelle est la valeur finale de x ?", 14, s("La première instruction affecte la valeur 4 à la variable x.", "Les instructions s’exécutent dans l’ordre ; à chaque nouvelle affectation, on utilise la valeur actuelle de la variable.", "Après x ← 4, on remplace x par 4 dans 3x + 2 : 3 × 4 + 2 = 12 + 2.", "La valeur finale de x est 14.")),
   ],
   "premiere-techno": [
-    n("Pourcentages — Coefficient multiplicateur", "Quel coefficient multiplicateur correspond à une hausse de 15 % ?", 1.15, s("La valeur initiale représente 100 % et elle augmente de 15 %.", "Après une hausse de t %, le coefficient multiplicateur est 1 + t/100.", "On passe de 100 % à 115 %, puis 115 % = 115 ÷ 100 = 1,15.", "Le coefficient multiplicateur est 1,15. Il est supérieur à 1, ce qui est cohérent pour une hausse.")),
-    n("Fonctions affines — Antécédent", "Pour f(x) = 5x − 3, cherche l’antécédent de 17.", 4, s("On connaît l’image 17 et on cherche le nombre de départ.", "Chercher un antécédent de 17 signifie résoudre f(x) = 17.", "On résout 5x − 3 = 17 : on ajoute 3 dans les deux membres, donc 5x = 20, puis on divise par 5.", "L’antécédent de 17 est 4. Vérification : 5 × 4 − 3 = 17.")),
-    n("Second degré — Image", "Pour f(x) = x² − 4x + 1, calcule f(2).", -3, s("On cherche l’image de 2 par une fonction du second degré.", "On remplace chaque x par 2, en utilisant des parenthèses pour conserver correctement les signes et les puissances.", "f(2) = 2² − 4 × 2 + 1 = 4 − 8 + 1.", "Ainsi f(2) = −3. Le résultat négatif est possible : une image n’est pas nécessairement positive.")),
-    n("Statistiques — Moyenne pondérée", "Une note 10 a coefficient 1 et une note 16 coefficient 2. Calcule la moyenne.", 14, s("La note 10 compte une fois et la note 16 compte deux fois.", "Pour une moyenne pondérée, on multiplie chaque valeur par son coefficient, puis on divise par la somme des coefficients.", "Somme pondérée : 10 × 1 + 16 × 2 = 42. Somme des coefficients : 1 + 2 = 3. On calcule 42 ÷ 3.", "La moyenne est 14, bien comprise entre 10 et 16.")),
-    n("Algorithmique — Boucle", "Une boucle ajoute 3 à x quatre fois. Si x vaut 2 au départ, combien vaut-il à la fin ?", 14, s("La variable x vaut 2 au départ et la boucle répète quatre fois l’instruction ajouter 3.", "Une boucle applique exactement la même transformation autant de fois que l’indique son compteur.", "Quatre ajouts de 3 représentent 4 × 3 = 12. On ajoute cette variation à la valeur initiale : 2 + 12.", "À la fin de la boucle, x vaut 14. Une exécution pas à pas donne 2, 5, 8, 11, 14.")),
+    n({"id": "premiere-techno-pourcentages-coefficient-multiplicateur", "levelId": "premiere-techno", "skillId": "pourcentages-coefficient-multiplicateur", "skill": "Pourcentages — Coefficient multiplicateur", "sourceChapterId": "informations-chiffrees-seconde", "remediationChapterId": "informations-chiffrees-seconde"}, "Quel coefficient multiplicateur correspond à une hausse de 15 % ?", 1.15, s("La valeur initiale représente 100 % et elle augmente de 15 %.", "Après une hausse de t %, le coefficient multiplicateur est 1 + t/100.", "On passe de 100 % à 115 %, puis 115 % = 115 ÷ 100 = 1,15.", "Le coefficient multiplicateur est 1,15. Il est supérieur à 1, ce qui est cohérent pour une hausse.")),
+    n({"id": "premiere-techno-fonctions-affines-antecedent", "levelId": "premiere-techno", "skillId": "fonctions-affines-antecedent", "skill": "Fonctions affines — Antécédent", "sourceChapterId": "fonctions-affines-seconde", "remediationChapterId": "fonctions-affines-seconde"}, "Pour f(x) = 5x − 3, cherche l’antécédent de 17.", 4, s("On connaît l’image 17 et on cherche le nombre de départ.", "Chercher un antécédent de 17 signifie résoudre f(x) = 17.", "On résout 5x − 3 = 17 : on ajoute 3 dans les deux membres, donc 5x = 20, puis on divise par 5.", "L’antécédent de 17 est 4. Vérification : 5 × 4 − 3 = 17.")),
+    n({"id": "premiere-techno-second-degre-image", "levelId": "premiere-techno", "skillId": "second-degre-image", "skill": "Second degré — Image", "sourceChapterId": "fonctions-second-degre-premiere-techno", "remediationChapterId": "fonctions-second-degre-premiere-techno"}, "Pour f(x) = x² − 4x + 1, calcule f(2).", -3, s("On cherche l’image de 2 par une fonction du second degré.", "On remplace chaque x par 2, en utilisant des parenthèses pour conserver correctement les signes et les puissances.", "f(2) = 2² − 4 × 2 + 1 = 4 − 8 + 1.", "Ainsi f(2) = −3. Le résultat négatif est possible : une image n’est pas nécessairement positive.")),
+    n({"id": "premiere-techno-statistiques-moyenne-ponderee", "levelId": "premiere-techno", "skillId": "statistiques-moyenne-ponderee", "skill": "Statistiques — Moyenne pondérée", "sourceChapterId": "statistiques-descriptives-seconde", "remediationChapterId": "statistiques-descriptives-seconde"}, "Une note 10 a coefficient 1 et une note 16 coefficient 2. Calcule la moyenne.", 14, s("La note 10 compte une fois et la note 16 compte deux fois.", "Pour une moyenne pondérée, on multiplie chaque valeur par son coefficient, puis on divise par la somme des coefficients.", "Somme pondérée : 10 × 1 + 16 × 2 = 42. Somme des coefficients : 1 + 2 = 3. On calcule 42 ÷ 3.", "La moyenne est 14, bien comprise entre 10 et 16.")),
+    n({"id": "premiere-techno-algorithmique-boucle", "levelId": "premiere-techno", "skillId": "algorithmique-boucle", "skill": "Algorithmique — Boucle", "sourceChapterId": "algorithmique-python-premiere-techno", "remediationChapterId": "algorithmique-python-premiere-techno"}, "Une boucle ajoute 3 à x quatre fois. Si x vaut 2 au départ, combien vaut-il à la fin ?", 14, s("La variable x vaut 2 au départ et la boucle répète quatre fois l’instruction ajouter 3.", "Une boucle applique exactement la même transformation autant de fois que l’indique son compteur.", "Quatre ajouts de 3 représentent 4 × 3 = 12. On ajoute cette variation à la valeur initiale : 2 + 12.", "À la fin de la boucle, x vaut 14. Une exécution pas à pas donne 2, 5, 8, 11, 14.")),
   ],
   "terminale-spe": [
     n("Fonction exponentielle — Équation", "Résous eˣ = e³.", 3, s("Les deux membres sont des exponentielles de même base e : leurs exposants sont x et 3.", "La fonction exponentielle est strictement croissante, donc injective : deux exponentielles sont égales si et seulement si leurs exposants sont égaux.", "On peut donc passer de eˣ = e³ à l’égalité des exposants x = 3. Il n’est pas nécessaire d’utiliser une valeur approchée de e.", "L’unique solution de l’équation est x = 3. La vérification est immédiate : e³ = e³.")),
@@ -358,12 +362,12 @@ export function getAllDiscoveryShowcases() {
 }
 
 const CM2_FOUNDATIONS = [
-  n("Numération — Grands nombres", "Quel est le nombre formé de 4 milliers, 3 centaines, 2 dizaines et 7 unités ?", 4327, ["4 milliers valent 4 000.", "3 centaines et 2 dizaines valent 300 et 20.", "4 000 + 300 + 20 + 7 = 4 327."]),
-  n("Calcul — Priorités", "Calcule 6 + 4 × 5.", 26, ["La multiplication est prioritaire sur l’addition.", "4 × 5 = 20.", "6 + 20 = 26."]),
-  n("Fractions — Fraction d'une quantité", "Calcule les 3/4 de 20.", 15, ["On partage 20 en 4 parts : 20 ÷ 4 = 5.", "On prend 3 parts : 3 × 5.", "Les 3/4 de 20 valent 15."]),
-  n("Proportionnalité — Retour à l’unité", "5 objets identiques coûtent 15 €. Combien coûtent 2 objets ?", 6, ["Un objet coûte 15 ÷ 5 = 3 €.", "Deux objets coûtent 2 × 3.", "Deux objets coûtent 6 €."], "€"),
+  n({"id": "cm2-numeration-grands-nombres", "levelId": "cm2", "skillId": "numeration-grands-nombres", "skill": "Numération — Grands nombres", "sourceChapterId": "cm2-numeration-decimale", "remediationChapterId": "nombres-decimaux"}, "Quel est le nombre formé de 4 milliers, 3 centaines, 2 dizaines et 7 unités ?", 4327, ["4 milliers valent 4 000.", "3 centaines et 2 dizaines valent 300 et 20.", "4 000 + 300 + 20 + 7 = 4 327."]),
+  n({"id": "cm2-calcul-priorites", "levelId": "cm2", "skillId": "calcul-priorites", "skill": "Calcul — Priorités", "sourceChapterId": "cm2-operations", "remediationChapterId": "operations-decimaux"}, "Calcule 6 + 4 × 5.", 26, ["La multiplication est prioritaire sur l’addition.", "4 × 5 = 20.", "6 + 20 = 26."]),
+  n({"id": "cm2-fractions-fraction-d-une-quantite", "levelId": "cm2", "skillId": "fractions-fraction-d-une-quantite", "skill": "Fractions — Fraction d'une quantité", "sourceChapterId": "cm2-fractions", "remediationChapterId": "fractions"}, "Calcule les 3/4 de 20.", 15, ["On partage 20 en 4 parts : 20 ÷ 4 = 5.", "On prend 3 parts : 3 × 5.", "Les 3/4 de 20 valent 15."]),
+  n({"id": "cm2-proportionnalite-retour-a-lunite", "levelId": "cm2", "skillId": "proportionnalite-retour-a-lunite", "skill": "Proportionnalité — Retour à l’unité", "sourceChapterId": "cm2-proportionnalite", "remediationChapterId": "proportionnalite"}, "5 objets identiques coûtent 15 €. Combien coûtent 2 objets ?", 6, ["Un objet coûte 15 ÷ 5 = 3 €.", "Deux objets coûtent 2 × 3.", "Deux objets coûtent 6 €."], "€"),
   {
-    ...n("Grandeurs et mesures — Unités de longueur", "Convertis 2,5 m en centimètres.", 250, [
+    ...n({"id": "cm2-grandeurs-et-mesures-unites-de-longueur", "levelId": "cm2", "skillId": "grandeurs-et-mesures-unites-de-longueur", "skill": "Grandeurs et mesures — Unités de longueur", "sourceChapterId": "cm2-grandeurs", "remediationChapterId": "grandeurs-mesures"}, "Convertis 2,5 m en centimètres.", 250, [
       "On place le chiffre des unités, ici 2, dans son unité, donc la colonne des mètres.",
       "Chaque déplacement d’une colonne vers la droite multiplie la mesure par 10 ; de m vers cm, on se déplace de deux colonnes.",
       "On complète le tableau jusqu’aux centimètres : 2,5 m = 250 cm.",

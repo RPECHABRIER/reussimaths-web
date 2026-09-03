@@ -1,7 +1,6 @@
 import { getChapter, getChaptersByLevel } from "./chapters/registry";
 import { getLevel } from "./levels";
-import { CM2_DIAGNOSTIC_CHAPTERS } from "./diagnostics/cm2";
-import { CM2_REMEDIATION, getPreviousLevelId, LEVEL_FOUNDATIONS, selectPrerequisiteChapters } from "./lib/prerequisites";
+import { CM2_REMEDIATION, getPreviousLevelId, LEVEL_FOUNDATIONS } from "./lib/prerequisites";
 import { getDiagnosticRemediationIds } from "./lib/diagnosticProfile";
 import { getStudyProgramme, hasConfiguredStudyProgramme } from "./lib/studyProgramme";
 import { getDiagnosticShowcaseExercises, getDiscoveryShowcase } from "./discoveryShowcases";
@@ -71,10 +70,11 @@ function tierParcoursId(levelId, tierId) {
 function buildTierParcours(levelId, tier) {
   const allCurrentChapters = levelChapters(levelId);
   let chapters = allCurrentChapters;
-  if (hasConfiguredStudyProgramme(levelId)) {
+  const programmeConfigured = hasConfiguredStudyProgramme(levelId);
+  const remediationIds = getDiagnosticRemediationIds(levelId);
+  if (programmeConfigured || remediationIds.length > 0) {
     const selectedIds = new Set(Object.keys(getStudyProgramme(levelId)));
-    const selected = allCurrentChapters.filter((chapter) => selectedIds.has(chapter.meta.id));
-    const remediationIds = getDiagnosticRemediationIds(levelId);
+    const selected = programmeConfigured ? allCurrentChapters.filter((chapter) => selectedIds.has(chapter.meta.id)) : allCurrentChapters;
     const fallbackIds = levelId === "sixieme" ? Object.values(CM2_REMEDIATION) : (LEVEL_FOUNDATIONS[levelId] ?? []);
     const priorityIds = remediationIds.length || selected.length ? remediationIds : fallbackIds;
     const remediation = priorityIds.map(getChapter).filter(Boolean);
@@ -163,47 +163,16 @@ export function getDecouverteParcours() {
 }
 
 // --- Mini-diagnostic de démarrage -----------------------------------------
-// Un petit échantillon de questions réparti sur tout le programme du niveau
-// (pas juste les premiers chapitres, pour être représentatif), à difficulté
-// standard, servant à suggérer un palier de parcours à l'élève. Voir
-// src/pages/ParcoursDiagnostic.jsx — c'est une simple recommandation, rien
-// n'est enregistré en base pour le diagnostic lui-même.
-const DIAGNOSTIC_QUESTIONS = 5;
-
-function sampleAcross(chapters, count) {
-  const n = Math.min(count, chapters.length);
-  if (n === 0) return [];
-  const step = chapters.length / n;
-  const picked = [];
-  for (let i = 0; i < n; i++) picked.push(chapters[Math.floor(i * step)]);
-  return picked;
-}
-
-export function getDiagnosticChapters(levelId, selectedChapterIds = []) {
-  const currentChapters = levelChapters(levelId);
-  if (currentChapters.length === 0) return [];
-  const selectedSet = new Set(selectedChapterIds);
-  const selectedCurrent = currentChapters.filter((chapter) => selectedSet.has(chapter.meta.id));
-  const previousLevelId = getPreviousLevelId(levelId);
-  const previousChapters = previousLevelId ? levelChapters(previousLevelId) : CM2_DIAGNOSTIC_CHAPTERS;
-  // Les chapitres déjà étudiés servent à choisir les prérequis les plus utiles,
-  // mais leurs propres questions restent réservées à la série découverte. Le
-  // diagnostic et la première série ne peuvent ainsi jamais se répéter.
-  const prerequisiteCount = DIAGNOSTIC_QUESTIONS;
-  const prerequisites = previousLevelId
-    ? selectPrerequisiteChapters(levelId, selectedCurrent, previousChapters, prerequisiteCount)
-    : previousChapters;
-  const picked = sampleAcross(prerequisites, prerequisiteCount);
-  const unique = [...new Map(picked.map((chapter) => [chapter.meta.id, chapter])).values()];
-  if (unique.length < DIAGNOSTIC_QUESTIONS) {
-    const fillers = [...prerequisites, ...selectedCurrent, ...currentChapters].filter((chapter) => !unique.some((item) => item.meta.id === chapter.meta.id));
-    unique.push(...fillers.slice(0, DIAGNOSTIC_QUESTIONS - unique.length));
-  }
-  const selected = unique.slice(0, DIAGNOSTIC_QUESTIONS);
-  const auditedExercises = getDiagnosticShowcaseExercises(levelId);
-  return selected.map((chapter, index) => ({
-    ...chapter,
-    generate: () => auditedExercises[index] ?? chapter.generate("standard"),
+// Les cinq questions existantes conservent leurs propres métadonnées.
+// Le chapitre choisi par ailleurs ne doit jamais renommer la notion évaluée.
+export function getDiagnosticChapters(levelId) {
+  return getDiagnosticShowcaseExercises(levelId).map((exercise) => ({
+    meta: {
+      id: exercise.diagnostic.id,
+      level: exercise.diagnostic.levelId,
+      title: exercise.diagnostic.skill,
+    },
+    generate: () => exercise,
   }));
 }
 

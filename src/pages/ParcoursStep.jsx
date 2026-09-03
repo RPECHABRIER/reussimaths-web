@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
+import { getDiagnosticShowcaseExercises } from "../discoveryShowcases";
 import { getParcours } from "../parcours";
 import { getChapter } from "../chapters/registry";
 import ChapterRunner from "../components/ChapterRunner";
@@ -62,9 +63,11 @@ export default function ParcoursStep() {
       const storedSource = sessionStorage.getItem(`reussimaths_trial_source_${parcours.levelId}`);
       const requestedId = queryChapterId ?? ((trialRun > 0 || storedSource === "diagnostic") ? sessionStorage.getItem(`reussimaths_trial_chapter_${parcours.levelId}`) : null);
       const requestedChapter = getChapter(requestedId);
-      if (requestedChapter?.meta.level === parcours.levelId) chapter = requestedChapter;
       const requestedSource = searchParams.get("trial_source") ?? storedSource;
       if (["homepage_direct", "diagnostic", "seo_course"].includes(requestedSource)) trialSource = requestedSource;
+      const diagnosticTarget = requestedSource === "diagnostic" && getDiagnosticShowcaseExercises(parcours.levelId)
+        .some((question) => question.diagnostic.remediationChapterId === requestedId);
+      if (requestedChapter?.meta.level === parcours.levelId || (requestedChapter && diagnosticTarget)) chapter = requestedChapter;
     } catch { /* stockage indisponible : la série vitrine reste utilisable */ }
   }
 

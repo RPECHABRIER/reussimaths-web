@@ -54,12 +54,15 @@ export function getPreviousLevelId(levelId) {
 export function selectPrerequisiteChapters(levelId, selectedCurrent, previousChapters, limit = 6) {
   const selectedDomains = new Set(selectedCurrent.flatMap(domains));
   const foundations = LEVEL_FOUNDATIONS[levelId] ?? [];
-  const scored = previousChapters.map((chapter) => ({
-    chapter,
-    score: domains(chapter).filter((domain) => selectedDomains.has(domain)).length * 10
-      + Math.max(0, foundations.length - foundations.indexOf(chapter.meta.id)),
-  }));
-  scored.sort((a, b) => b.score - a.score || (a.chapter.meta.order ?? 999) - (b.chapter.meta.order ?? 999));
+  const scored = previousChapters.map((chapter) => {
+    const foundationIndex = foundations.indexOf(chapter.meta.id);
+    return {
+      chapter,
+      score: domains(chapter).filter((domain) => selectedDomains.has(domain)).length * 10
+        + (foundationIndex < 0 ? 0 : foundations.length - foundationIndex),
+    };
+  });
+  scored.sort((a, b) => b.score - a.score || (a.chapter.meta.order ?? 999) - (b.chapter.meta.order ?? 999) || a.chapter.meta.id.localeCompare(b.chapter.meta.id));
   return scored.slice(0, limit).map(({ chapter }) => chapter);
 }
 

@@ -404,7 +404,10 @@ test("l'essai peut commencer directement après le niveau sans supprimer le diag
   assert.match(programme, /En cours/);
   assert.match(programme, /Déjà vu/);
   assert.match(programme, /tester mes acquis précédents/);
-  assert.match(diagnostic, /getSelectedStudyChapterIds/);
+  // La question affichée porte son identité ; le programme ne la renomme plus.
+  assert.match(diagnostic, /createDiagnosticResult\(exercise, correct\)/);
+  assert.match(diagnostic, /summarizeDiagnostic\(results\)/);
+  assert.doesNotMatch(diagnostic, /chapterId: chapters\[index\]/);
   assert.match(diagnostic, /Faire ma série gratuite/);
   assert.match(prerequisites, /PREVIOUS_LEVEL/);
   assert.match(parcours, /getTrialParcours/);

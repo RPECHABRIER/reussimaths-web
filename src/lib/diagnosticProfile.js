@@ -1,14 +1,9 @@
-import { CM2_REMEDIATION } from "./prerequisites";
-
-const STORAGE_PREFIX = "reussimaths_diagnostic_profile_";
+const STORAGE_PREFIX = "reussimaths_diagnostic_profile_v2_";
 
 export function setDiagnosticProfile(levelId, results) {
   if (!levelId) return;
-  const cleanResults = (results ?? []).map((result) => ({
-    chapterId: result.chapterId,
-    remediationChapterId: CM2_REMEDIATION[result.chapterId] ?? result.chapterId,
-    correct: !!result.correct,
-  }));
+  // Les anciens résultats positionnels ne permettent pas une remédiation fiable.
+  const cleanResults = (results ?? []).filter((result) => result.questionId && result.skillId && result.remediationChapterId).map((result) => ({ ...result, correct: Boolean(result.correct) }));
   try {
     localStorage.setItem(`${STORAGE_PREFIX}${levelId}`, JSON.stringify({ results: cleanResults, completedAt: new Date().toISOString() }));
   } catch { /* stockage indisponible : le diagnostic reste utilisable */ }

@@ -3,9 +3,8 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Check, X, Sparkles, ArrowRight, Clock3, Target, ShieldCheck, RotateCcw } from "lucide-react";
 import { getDiagnosticChapters, getPreviousLevelId, recommendTier, TIERS } from "../parcours";
 import { getLevel } from "../levels";
-import { getSelectedStudyChapterIds } from "../lib/studyProgramme";
 import { setDiagnosticProfile } from "../lib/diagnosticProfile";
-import { CM2_REMEDIATION } from "../lib/prerequisites";
+import { createDiagnosticResult, summarizeDiagnostic } from "../lib/diagnosticResults";
 import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import MathText from "../components/MathText";
@@ -22,8 +21,8 @@ import { trackProductEvent } from "../lib/productAnalytics";
 // poignée de questions réparties sur tout le programme du niveau, à
 // difficulté standard, pour suggérer un palier de parcours (débutant /
 // avancé / expert). Volontairement léger — pas de pavé numérique ni de mode
-// Jeu comme ChapterRunner, juste de quoi répondre vite. Rien n'est enregistré
-// en base : c'est une recommandation, pas une série notée (voir
+// Jeu comme ChapterRunner, juste de quoi répondre vite. Les résultats sont
+// conservés pour orienter la suite, sans constituer une note scolaire (voir
 // src/parcours.js, getDiagnosticChapters / recommendTier).
 export default function ParcoursDiagnostic() {
   const { levelId } = useParams();
@@ -32,8 +31,7 @@ export default function ParcoursDiagnostic() {
   const trial = searchParams.get("objectif") === "essai";
   const level = getLevel(levelId);
   const previousLevel = getLevel(getPreviousLevelId(levelId));
-  const [selectedStudyChapterIds] = useState(() => getSelectedStudyChapterIds(levelId));
-  const [chapters] = useState(() => getDiagnosticChapters(levelId, selectedStudyChapterIds));
+  const [chapters] = useState(() => getDiagnosticChapters(levelId));
   const [index, setIndex] = useState(0);
   const [exercise, setExercise] = useState(() => chapters[0]?.generate());
   const [input, setInput] = useState("");
@@ -49,7 +47,7 @@ export default function ParcoursDiagnostic() {
     if (!done) return;
     setDiagnosticProfile(levelId, results);
     if (user?.id) {
-      const storedResults = results.map(({ chapterId, correct }) => ({ chapterId, correct }));
+      const storedResults = results.map((result) => ({ ...result }));
       supabase.from("student_diagnostic_profiles").upsert({
         user_id: user.id,
         level_id: levelId,
@@ -86,7 +84,7 @@ export default function ParcoursDiagnostic() {
             <h1 className="mt-2" style={{ fontFamily: fonts.display, color: colors.ink, fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.05 }}>Trouve ton bon point de départ</h1>
             <p className="text-base mt-4 max-w-lg mx-auto leading-relaxed" style={{ color: colors.slate }}>
               {previousLevel
-                ? `Nous vérifions les acquis essentiels de ${previousLevel.label} dont tu as besoin pour les chapitres de ${level.label} que tu as déjà abordés.`
+                ? `Nous vérifions cinq repères de ${previousLevel.label} pour choisir une notion à reprendre avant de poursuivre en ${level.label}.`
                 : "Nous vérifions les acquis fondamentaux de l’école primaire et les premiers repères utiles pour la 6e."}
             </p>
           </div>
@@ -122,7 +120,7 @@ export default function ParcoursDiagnostic() {
 
   const registerResult = (correct, response) => {
     if (correct) setCorrectCount((c) => c + 1);
-    setResults((previous) => [...previous, { chapterId: chapters[index].meta.id, chapterTitle: chapters[index].meta.title, skill: exercise.chapter, correct }]);
+    setResults((previous) => [...previous, createDiagnosticResult(exercise, correct)]);
     setFeedback({ correct, response });
   };
 
@@ -154,12 +152,10 @@ export default function ParcoursDiagnostic() {
     const ratio = total > 0 ? correctCount / total : 0;
     const tierId = recommendTier(ratio);
     const tier = TIERS.find((t) => t.id === tierId);
-    const priorities = results.filter((item) => !item.correct).slice(0, 3);
-    const strengths = results.filter((item) => item.correct).slice(0, 3);
+    const { priorities, strengths, remediationChapterId } = summarizeDiagnostic(results);
     const confidence = total >= 6 && Math.abs(ratio - 0.4) > 0.1 && Math.abs(ratio - 0.75) > 0.1 ? "bonne" : "indicative";
     if (trial) {
-      const rawTargetedChapterId = priorities[0]?.chapterId ?? results[0]?.chapterId;
-      const targetedChapterId = CM2_REMEDIATION[rawTargetedChapterId] ?? rawTargetedChapterId;
+      const targetedChapterId = remediationChapterId;
       if (targetedChapterId) sessionStorage.setItem(`reussimaths_trial_chapter_${levelId}`, targetedChapterId);
       sessionStorage.setItem(`reussimaths_trial_source_${levelId}`, "diagnostic");
     }
@@ -178,7 +174,7 @@ export default function ParcoursDiagnostic() {
           <div className="rounded-2xl p-4 text-left mt-5" style={{ backgroundColor: colors.bg }}><p className="text-xs font-bold" style={{ color: colors.ink }}>Ce résultat est un conseil, pas une étiquette.</p><p className="text-xs mt-1" style={{ color: colors.slate }}>Tu peux changer de palier à tout moment si le rythme te paraît trop facile ou trop exigeant.</p></div>
           <div className="flex flex-col gap-2 items-center">
             <Link
-              to={trial ? `/parcours/essai-${levelId}` : `/parcours/${levelId}-${tierId}`}
+              to={trial ? `/parcours/essai-${levelId}/etape/0?chapter=${encodeURIComponent(remediationChapterId ?? "")}&trial_source=diagnostic` : `/parcours/${levelId}-${tierId}`}
               className="w-full mt-5 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-2"
               style={{ backgroundColor: colors.ink, color: colors.bg }}
             >

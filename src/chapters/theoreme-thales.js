@@ -136,7 +136,9 @@ function genReciproqueThalesParallelesQCM() {
   const AC = q * randInt(2, 8);
   const AM = (AB * p) / q;
   const isParallel = Math.random() < 0.5;
-  const AN = isParallel ? (AC * p) / q : (AC * p) / q + nonZero(1, 3);
+  const parallelAN = (AC * p) / q;
+  // AC >= 4, 1 <= parallelAN < AC : on reste strictement dans [AC].
+  const AN = isParallel ? parallelAN : parallelAN === 1 ? 2 : parallelAN - 1;
   return {
     type: "qcm",
     chapter: "Théorème de Thalès — Réciproque",
@@ -161,7 +163,7 @@ function genVerifierConditionsApplicationQCM() {
   const scenarios = [
     { desc: "M appartient au segment [AB], N appartient au segment [AC], et les droites (MN) et (BC) sont parallèles.", valid: true },
     { desc: "M appartient au segment [AB], N appartient au segment [AC], mais les droites (MN) et (BC) ne sont pas parallèles.", valid: false },
-    { desc: "M appartient à la droite (AB) (mais pas forcément au segment [AB]), et les droites (MN) et (BC) sont parallèles.", valid: true },
+    { desc: "A, B, C sont non alignés, M appartient à la droite (AB), N appartient à la droite (AC), M et N sont distincts de A, et les droites (MN) et (BC) sont parallèles.", valid: true },
     { desc: "Les droites (AB) et (AC) sont parallèles entre elles.", valid: false },
   ];
   const s = pick(scenarios);
@@ -186,7 +188,7 @@ function genRapportAgrandissementReductionThalesQCM() {
   return {
     type: "qcm",
     chapter: "Théorème de Thalès — Problèmes",
-    prompt: `Soit PRS un triangle tel que T appartient au côté [PR] et V appartient au côté [PS], avec les droites (TV) et (RS) parallèles. On donne PT = ${a} cm et PR = ${b} cm. Le triangle PTV est-il un agrandissement ou une réduction du triangle PRS ?`,
+    prompt: `Soit PRS un triangle tel que ${a < b ? "T appartient au côté [PR] et V appartient au côté [PS]" : "R appartient au côté [PT] et S appartient au côté [PV]"}, avec les droites (TV) et (RS) parallèles. On donne PT = ${a} cm et PR = ${b} cm. Le triangle PTV est-il un agrandissement ou une réduction du triangle PRS ?`,
     answer,
     options: ["Agrandissement", "Réduction"],
     steps: [
@@ -336,3 +338,5 @@ export default {
   },
   generate,
 };
+
+export { genCalculerLongueurThalesANNumeric, genCalculerLongueurThalesMNNumeric, genFormeCorrecteEgaliteThalesQCM, genReciproqueThalesParallelesQCM, genRapportAgrandissementReductionThalesQCM };

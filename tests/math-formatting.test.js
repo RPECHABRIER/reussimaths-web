@@ -53,7 +53,7 @@ test("les jeux font passer leurs contenus mathématiques par MathText", async ()
 test("la pizzeria CE1 empile la fraction et distingue les compteurs", async () => {
   const source = await readFile(new URL("../src/pages/JeuxCe1.jsx", import.meta.url), "utf8");
   assert.match(source, /import MathText from "\.\.\/components\/MathText"/);
-  assert.ok(source.includes('Montre <MathText text={`\\\\dfrac{${question.numerator}}{${question.denominator}}`}/>'));
+  assert.ok(source.includes('<MathText text={fraction}/>'));
   assert.ok(!source.includes("Montre {question.numerator}/{question.denominator}"));
   assert.ok(source.includes("Commande {round} sur {total}"));
   assert.ok(source.includes("{score} sur {total}"));

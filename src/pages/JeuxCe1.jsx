@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Bot, Brain, ChevronRight, Delete, Flag, Pizza, Play, Trophy, Undo2, Zap } from "lucide-react";
 import { colors, fonts, shadow } from "../theme";
 import { shuffle } from "../lib/gameUtils";
+import { PIZZA_PART_COUNTS, assessPizza, pizzaRectangleGrid } from "../lib/pizzaFractions";
 
 const GAME_CARDS = [
   { id: "additions", path: "/jeux/course-additions-ce1", title: "La course des additions", description: "Calcule vite et fais avancer ton animal jusqu’à l’arrivée.", icon: Zap, accent: "#3fa66b" },
@@ -53,17 +54,41 @@ function ThousandRace({ onBack }) {
   return <GameShell title="La course à 1 000" accent="#1565c0" onBack={onBack}>{round > total ? <><div className="py-8 text-center"><Trophy size={52} className="mx-auto" color={distance === 1000 ? colors.gold : "#1565c0"}/><p className="mt-4 text-3xl font-black" style={{ color: colors.ink }}>{distance} m</p><p className="mt-2 text-sm" style={{ color: colors.slate }}>{distance === 1000 ? "Arrivée atteinte !" : "Belle course ! Rejoue pour te rapprocher de 1 000 m."}</p><div className="mt-7 grid gap-2 sm:grid-cols-2"><button onClick={restart} className="rounded-full py-3 font-black" style={{ backgroundColor: colors.gold, color: colors.ink }}>Rejouer</button><button onClick={onBack} className="rounded-full py-3 font-bold" style={{ border: `1px solid ${colors.hairline}`, color: colors.slate }}>Autre jeu CE1</button></div></div></> : <><p className="mt-2 text-sm" style={{ color: colors.slate }}>Trouve les bonnes écritures pour parcourir 1 000 mètres.</p><div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Étape {round} / {total}</span><span>{distance} / 1 000 m</span></div><div className="relative mt-4 h-12 overflow-hidden rounded-full" style={{ backgroundColor: `${colors.ink}0d`, border: `2px solid ${colors.hairline}` }}><div className="absolute inset-y-0 left-0 transition-all duration-500" style={{ width: `${distance / 10}%`, backgroundColor: "#1565c026" }}/><span className="absolute top-1/2 text-2xl transition-all duration-500" style={{ left: `calc(${Math.min(92, distance / 10)}% - 12px)`, transform: "translateY(-50%)" }} aria-label={`${distance} mètres`}>🚗</span><span className="absolute right-2 top-1/2 -translate-y-1/2 text-xl" aria-hidden="true">🏁</span></div><p className="my-7 text-center text-2xl sm:text-3xl font-black" style={{ color: colors.ink }}>{question.prompt}</p><div className="grid gap-2 sm:grid-cols-2">{question.options.map((option) => <button key={option} onClick={() => answer(option)} className="min-h-14 rounded-2xl p-3 text-sm font-black" style={{ backgroundColor: colors.bg, border: `2px solid ${colors.hairline}`, color: colors.ink }}>{option}</button>)}</div><p aria-live="polite" className="mt-4 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("Bravo") ? colors.green : colors.slate }}>{feedback}</p></>}</GameShell>;
 }
 
-function PizzaPicture({ denominator, selectedParts, onToggle, disabled }) {
-  const size = 190, center = size / 2, radius = size * .43;
-  const paths = Array.from({ length: denominator }, (_, index) => {
-    const start = -Math.PI / 2 + index * 2 * Math.PI / denominator, end = -Math.PI / 2 + (index + 1) * 2 * Math.PI / denominator;
-    return `M ${center} ${center} L ${center + radius * Math.cos(start)} ${center + radius * Math.sin(start)} A ${radius} ${radius} 0 0 1 ${center + radius * Math.cos(end)} ${center + radius * Math.sin(end)} Z`;
+function PizzaPicture({ denominator, selectedParts, onToggle, disabled, shape, layout }) {
+  const rectangle = shape === "rectangle";
+  const center = 110, radius = 94;
+  const interaction = (index) => ({
+    role: "button", tabIndex: disabled ? -1 : 0,
+    "aria-label": `Part ${index + 1} ${selectedParts.has(index) ? "coloriée" : "vide"}`,
+    "aria-pressed": selectedParts.has(index), "aria-disabled": disabled,
+    onClick: () => !disabled && onToggle(index),
+    onKeyDown: (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        if (!disabled) onToggle(index);
+      }
+    },
+    fill: selectedParts.has(index) ? "#ef5350" : "#fff4d6",
+    stroke: "#8d4d20", strokeWidth: 2,
+    style: { cursor: disabled ? "default" : "pointer", transition: "fill .18s ease" },
   });
-  return <svg width={size} height={size} role="group" aria-label={`Pizza en ${denominator} parts, touche les parts à colorier`} className="mx-auto touch-manipulation"><circle cx={center} cy={center} r={radius + 5} fill="#d99a38"/>{paths.map((path, index) => { const selected = selectedParts.has(index); return <path key={path} d={path} role="button" tabIndex={disabled ? -1 : 0} aria-label={`Part ${index + 1} ${selected ? "coloriée" : "vide"}`} aria-pressed={selected} onClick={() => !disabled && onToggle(index)} onKeyDown={(event) => { if (!disabled && (event.key === "Enter" || event.key === " ")) onToggle(index); }} fill={selected ? "#ef5350" : "#fff4d6"} stroke="#8d4d20" strokeWidth="3" style={{ cursor: disabled ? "default" : "pointer", transition: "fill .18s ease" }}/>; })}</svg>;
+  const { rows, columns } = pizzaRectangleGrid(denominator || 1, layout);
+  return <svg viewBox={rectangle ? "0 0 280 200" : "0 0 220 220"} role={denominator ? "group" : "img"}
+    aria-label={`Pizza ${rectangle ? "rectangulaire" : "ronde"} ${denominator ? `en ${denominator} parts égales` : "entière, pas encore découpée"}`}
+    className="mx-auto my-4 w-full max-w-72 touch-manipulation">
+    {rectangle ? <rect x="9" y="19" width="262" height="162" rx="9" fill="#d99a38"/> : <circle cx={center} cy={center} r={radius + 6} fill="#d99a38"/>}
+    {!denominator ? (rectangle ? <rect x="15" y="25" width="250" height="150" fill="#fff4d6"/> : <circle cx={center} cy={center} r={radius} fill="#fff4d6"/>) :
+      Array.from({ length: denominator }, (_, index) => {
+        if (rectangle) return <rect key={index} x={15 + (index % columns) * 250 / columns} y={25 + Math.floor(index / columns) * 150 / rows} width={250 / columns} height={150 / rows} {...interaction(index)}/>;
+        const start = -Math.PI / 2 + index * 2 * Math.PI / denominator;
+        const end = -Math.PI / 2 + (index + 1) * 2 * Math.PI / denominator;
+        return <path key={index} d={`M ${center} ${center} L ${center + radius * Math.cos(start)} ${center + radius * Math.sin(start)} A ${radius} ${radius} 0 0 1 ${center + radius * Math.cos(end)} ${center + radius * Math.sin(end)} Z`} {...interaction(index)}/>;
+      })}
+  </svg>;
 }
 
 function makeFractionQuestion() {
-  const denominator = shuffle([2, 3, 4, 5, 6, 8])[0];
+  const denominator = shuffle(PIZZA_PART_COUNTS)[0];
   return { denominator, numerator: 1 + Math.floor(Math.random() * (denominator - 1)) };
 }
 
@@ -71,18 +96,58 @@ function PizzaGame({ onBack }) {
   const total = 8;
   const [question, setQuestion] = useState(makeFractionQuestion);
   const [round, setRound] = useState(1);
+  const [cutCount, setCutCount] = useState(null);
+  const [stage, setStage] = useState("cut");
   const [selectedParts, setSelectedParts] = useState(new Set());
   const [feedback, setFeedback] = useState(null);
-  const [locked, setLocked] = useState(false);
-  const restart = () => { setQuestion(makeFractionQuestion()); setRound(1); setSelectedParts(new Set()); setFeedback(null); setLocked(false); };
-  const togglePart = (index) => { setSelectedParts((current) => { const next = new Set(current); next.has(index) ? next.delete(index) : next.add(index); return next; }); setFeedback(null); };
-  const validate = () => {
-    if (!selectedParts.size || locked) return;
-    if (selectedParts.size !== question.numerator) { setFeedback(`Il faut colorier ${question.numerator} part${question.numerator > 1 ? "s" : ""}. Tu peux corriger.`); return; }
-    setLocked(true); setFeedback("Pizza réussie !");
-    window.setTimeout(() => { setRound((value) => value + 1); setQuestion(makeFractionQuestion()); setSelectedParts(new Set()); setFeedback(null); setLocked(false); }, 750);
+  const fraction = `\\dfrac{${question.numerator}}{${question.denominator}}`;
+  const shape = round % 2 === 0 ? "rectangle" : "round";
+  const layout = round < 4 ? "vertical" : round < 6 ? "horizontal" : "grid";
+  const resetPizza = () => { setCutCount(null); setStage("cut"); setSelectedParts(new Set()); setFeedback(null); };
+  const restart = () => { setQuestion(makeFractionQuestion()); setRound(1); resetPizza(); };
+  const chooseCut = (count) => { setCutCount(count); setSelectedParts(new Set()); setFeedback(null); setStage("color"); };
+  const togglePart = (index) => {
+    if (stage !== "color") return;
+    setSelectedParts((current) => { const next = new Set(current); next.has(index) ? next.delete(index) : next.add(index); return next; });
+    setFeedback(null);
   };
-  return <GameShell title="La pizzeria des fractions" accent="#d81b60" onBack={onBack}>{round > total ? <FinishCard score={total} total={total} restart={restart} back={onBack}/> : <><p className="mt-2 text-sm" style={{ color: colors.slate }}>Touche les parts pour préparer la fraction demandée.</p><div className="mt-5 flex justify-between text-xs font-bold" style={{ color: colors.slate }}><span>Commande {round} sur {total}</span><span>{selectedParts.size} part{selectedParts.size > 1 ? "s" : ""} coloriée{selectedParts.size > 1 ? "s" : ""}</span></div><p className="mt-5 text-center text-xl font-black" style={{ color: colors.ink }}>Montre <MathText text={`\\dfrac{${question.numerator}}{${question.denominator}}`}/></p><PizzaPicture denominator={question.denominator} selectedParts={selectedParts} onToggle={togglePart} disabled={locked}/><button type="button" onClick={validate} disabled={!selectedParts.size || locked} className="mt-3 w-full rounded-full py-3 font-black" style={{ backgroundColor: selectedParts.size && !locked ? colors.gold : colors.hairline, color: colors.ink }}>Valider ma pizza</button><p aria-live="polite" className="mt-3 min-h-6 text-center text-sm font-black" style={{ color: feedback?.includes("réussie") ? colors.green : colors.slate }}>{feedback}</p></>}</GameShell>;
+  const validate = () => {
+    if (stage !== "color") return;
+    const result = assessPizza(question, cutCount, selectedParts.size);
+    setFeedback(result);
+    if (result === "correct") setStage("done");
+  };
+  const nextPizza = () => { setRound((value) => value + 1); setQuestion(makeFractionQuestion()); resetPizza(); };
+  const needsNewCut = feedback === "denominator" || feedback === "equivalent";
+  return <GameShell title="La pizzeria des fractions" accent="#d81b60" onBack={onBack}>
+    {round > total ? <><p className="mt-4 text-center text-sm" style={{ color: colors.slate }}>Tu as préparé les 8 pizzas, en corrigeant si nécessaire. Bravo !</p><FinishCard score={total} total={total} restart={restart} back={onBack}/></> : <div className="pizza-game">
+      <p className="mt-2 text-sm" style={{ color: colors.slate }}>Découpe en parts égales, puis choisis les parts à colorier.</p>
+      <div className="mt-5 flex justify-between gap-2 text-xs font-bold" style={{ color: colors.slate }}><span>Commande {round} sur {total}</span><span>{shape === "rectangle" ? "Pizza rectangulaire" : "Pizza ronde"}</span></div>
+      <ol className="mt-4 grid grid-cols-2 gap-2 text-center text-xs font-bold" style={{ color: colors.ink }}>
+        <li aria-current={stage === "cut" ? "step" : undefined} className="rounded-xl p-3" style={{ background: stage === "cut" ? `${colors.gold}35` : colors.bg }}>1. Je découpe</li>
+        <li aria-current={stage !== "cut" ? "step" : undefined} className="rounded-xl p-3" style={{ background: stage !== "cut" ? `${colors.gold}35` : colors.bg }}>2. Je colorie</li>
+      </ol>
+      <div className="mt-5 text-center text-lg font-black leading-loose" style={{ color: colors.ink }}>
+        {stage === "cut" ? <>Pour représenter <MathText text={fraction}/>, en combien de parts égales dois-tu couper cette pizza ?</> : <>Sélectionne les parts pour représenter <MathText text={fraction}/>.</>}
+      </div>
+      <PizzaPicture denominator={cutCount} shape={shape} layout={layout} selectedParts={selectedParts} onToggle={togglePart} disabled={stage !== "color"}/>
+      {stage === "cut" ? <div className="grid grid-cols-3 gap-2" role="group" aria-label="Nombre de parts égales">
+        {PIZZA_PART_COUNTS.map((count) => <button key={count} type="button" onClick={() => chooseCut(count)} className="min-h-12 rounded-xl p-3 font-black" style={{ background: colors.bg, border: `2px solid ${colors.hairline}`, color: colors.ink }}>{count} parts</button>)}
+      </div> : <>
+        <p className="text-center text-sm font-bold" style={{ color: colors.slate }}>{selectedParts.size} part{selectedParts.size > 1 ? "s" : ""} coloriée{selectedParts.size > 1 ? "s" : ""} sur {cutCount}</p>
+        {stage === "color" && <button type="button" onClick={validate} className="mt-3 min-h-12 w-full rounded-full px-4 py-3 font-black" style={{ backgroundColor: colors.gold, color: colors.ink }}>Valider ma pizza</button>}
+      </>}
+      <div aria-live="polite" aria-atomic="true" className="mt-4 text-center text-sm leading-loose" style={{ color: feedback === "correct" || feedback === "equivalent" ? colors.green : colors.ink }}>
+        {feedback && <div className="rounded-2xl p-4" style={{ background: colors.bg }}>
+          {feedback === "correct" ? <>Pizza réussie ! Tu as découpé {cutCount} parts égales et colorié {selectedParts.size} part{selectedParts.size > 1 ? "s" : ""} : <MathText text={fraction}/>.</> : <>
+            <p>Tu as colorié {selectedParts.size} part{selectedParts.size > 1 ? "s" : ""} sur {cutCount} : tu as représenté <MathText text={`\\dfrac{${selectedParts.size}}{${cutCount}}`}/>.</p>
+            {feedback === "equivalent" ? <p>Tu as représenté la même quantité ! <MathText text={`\\dfrac{${selectedParts.size}}{${cutCount}} = ${fraction}`}/>. Maintenant, représente-la avec un découpage en {question.denominator} parts égales.</p> : feedback === "denominator" ? <p>Pas encore : pour représenter <MathText text={fraction}/>, le nombre du bas, {question.denominator}, indique en combien de parts égales découper la pizza. Réessaie le découpage.</p> : <p>Le découpage en {cutCount} parts est correct. Le nombre du haut, {question.numerator}, indique combien de parts colorier. Corrige seulement les parts coloriées.</p>}
+          </>}
+        </div>}
+      </div>
+      {stage === "done" ? <button type="button" onClick={nextPizza} className="mt-4 min-h-12 w-full rounded-full px-4 py-3 font-black" style={{ background: colors.green, color: "white" }}>{round === total ? "Voir mon bilan" : "Pizza suivante"}</button> : stage === "color" && <button type="button" onClick={resetPizza} className="mt-3 min-h-12 w-full rounded-full px-4 py-2 text-sm font-bold underline" style={{ color: colors.ink }}>{needsNewCut ? "Corriger le découpage" : "Changer le découpage"}</button>}
+    </div>}
+  </GameShell>;
 }
 
 function makeMentalQuestion() {

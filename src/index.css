@@ -462,3 +462,10 @@ input:focus, select:focus, textarea:focus {
     text-decoration: none !important;
   }
 }
+
+/* Short game fractions fit their cards; do not create nested scrollbars. */
+.pizza-game .katex,
+.math-text-short-fraction .katex {
+  overflow: visible;
+  max-width: none;
+}

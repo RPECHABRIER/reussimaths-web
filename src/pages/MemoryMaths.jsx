@@ -235,7 +235,7 @@ function CardContent({ content }) {
     );
   }
   if (content.type === "math") {
-    return <MathText text={`\\(${content.tex}\\)`} style={{ fontSize: "0.72rem", color: colors.ink }} />;
+    return <MathText text={`\\(${content.tex}\\)`} className={content.tex.includes("dfrac") ? "math-text-short-fraction" : undefined} style={{ fontSize: "0.72rem", color: colors.ink }} />;
   }
   return (
     <span className="text-center font-semibold" style={{ fontSize: "0.62rem", lineHeight: 1.15, color: colors.ink }}>

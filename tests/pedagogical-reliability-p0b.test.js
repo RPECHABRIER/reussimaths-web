@@ -144,3 +144,15 @@ test('les synchronisations parent restent ordonnées malgré une réponse résea
  vm.runInContext(source+`;persistQuestionReview({},'0',{correct:false},'available');persistQuestionReview({},'1',{correct:true},'available');`,ctx);
  await Promise.resolve();assert.deepEqual(sent,[false]);release({error:null});await ctx.reviewSyncRef.current;assert.deepEqual(sent,[false,true]);
 });
+
+test('la carte du diagnostic conserve sa première réponse autonome avant correction',async()=>{
+ memory.clear();
+ const diagnostic=await readFile(root+'src/pages/ParcoursDiagnostic.jsx','utf8');
+ assert.match(diagnostic,/correct=\{feedback.correct\} autonomous=\{feedback.correct\} assisted=\{false\}/);
+ const source=await readFile(root+'src/components/LearningFeedback.jsx','utf8');
+ const effectCall=source.slice(source.indexOf('    const review = rememberLearningReview'),source.indexOf('    const remote ='));
+ const ctx={rememberLearningReview,exercise,response:11,feedback:{family:'stats',rule:'Additionner puis diviser par 3.',steps:[]},levelId:'troisieme',correct:true,autonomous:true,assisted:false,hadError:false};
+ vm.createContext(ctx);vm.runInContext(effectCall+';this.saved=review;',ctx);
+ assert.equal(ctx.saved.correct,true);assert.equal(ctx.saved.autonomous,true);assert.equal(ctx.saved.assisted,false);assert.equal(ctx.saved.hadError,false);assert.equal(ctx.saved.methodStatus,'consulted');
+ assert.match(reviewObservation(ctx.saved),/réussie sans aide/);
+});

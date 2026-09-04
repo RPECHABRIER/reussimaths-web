@@ -12,13 +12,13 @@ import StepsList from "./StepsList";
 import UnitConversionTable from "./UnitConversionTable";
 import FeedbackVisual from "./FeedbackVisual";
 
-export default function LearningFeedback({ exercise, response, compact = false, remember = false, correct = null, levelId = null }) {
+export default function LearningFeedback({ exercise, response, compact = false, remember = false, correct = null, autonomous = null, assisted = null, hadError = null, levelId = null }) {
   const builtFeedback = buildPedagogicalFeedback(exercise, response);
   const feedback = correct ? { ...builtFeedback, intro: "Oui, cette réponse est correcte. Voici pourquoi la méthode fonctionne et ce qu’il faut retenir." } : builtFeedback;
   const { user } = useAuth();
   useEffect(() => {
     if (!remember) return;
-    const review = rememberLearningReview({ exercise, response, feedback, levelId, correct, methodStatus: "consulted" });
+    const review = rememberLearningReview({ exercise, response, feedback, levelId, correct, autonomous, assisted, hadError, methodStatus: "consulted" });
     const remote = toRemoteLearningReview(review);
     if (user?.id && remote) {
       supabase.from("learning_review_cards").upsert({
@@ -30,7 +30,7 @@ export default function LearningFeedback({ exercise, response, compact = false, 
         if (error && error.code !== "42P01") console.error("[LearningFeedback] synchronisation du cahier :", error.message);
       });
     }
-  }, [remember, correct, exercise, response, feedback.family, feedback.conclusion, levelId, user?.id]);
+  }, [remember, correct, autonomous, assisted, hadError, exercise, response, feedback.family, feedback.conclusion, levelId, user?.id]);
   return (
     <div
       data-feedback-family={feedback.family}

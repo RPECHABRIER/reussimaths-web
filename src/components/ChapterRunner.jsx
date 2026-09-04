@@ -21,6 +21,11 @@ import { classifyLearningError, LEARNING_ERROR_LABELS } from "../lib/learningErr
 import { trackProductEvent } from "../lib/productAnalytics";
 import { selectAdaptiveNextExercise } from "../lib/adaptiveNextExercise";
 import { MAX_NUMERIC_INPUT_LENGTH, NUMERIC_KEYPAD_KEYS } from "../lib/numericKeypad";
+import { observeAnswer, summarizeQuestions } from "../lib/pedagogicalReliability";
+import { generateSimilarExercise } from "../lib/recoveryAnalogue";
+import { rememberLearningReview, toRemoteLearningReview } from "../lib/learningReviewHistory";
+import { buildPedagogicalFeedback } from "../lib/pedagogicalFeedback";
+import { supabase } from "../lib/supabaseClient";
 import SessionCelebration from "./SessionCelebration";
 import Mascot from "./Mascot";
 import PaywallAnalytics from "./PaywallAnalytics";
@@ -105,68 +110,11 @@ function generateMatchingSkill(chapter, difficulty, skillLabel) {
   return chapter.generate(difficulty);
 }
 
-// Deux énoncés ont le même modèle lorsque seuls leurs nombres changent.
-// On neutralise aussi les nombres écrits en LaTeX, les décimaux français,
-// les signes et les exposants, puis on compare le texte restant. Cette règle
-// évite qu'un bouton « question très proche » change de méthode au sein d'une
-// compétence large (par exemple passer d'un retour à l'unité à un produit en
-function exercisePromptTemplate(prompt = "") {
-  return String(prompt)
-    .normalize("NFKC")
-    .replace(/\\[([]|\\[)\]]/g, " ")
-    .replace(/[−–—+]?\s*\d+(?:[.,]\d+)?/g, " # ")
-    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, "#")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLocaleLowerCase("fr");
-}
-
-function exerciseMethodTemplate(exercise) {
-  const steps = Array.isArray(exercise?.steps) ? exercise.steps : [];
-  const rule = steps.find((step) => step?.type === "regle") ?? steps[1] ?? steps[0];
-  const text = typeof rule === "string" ? rule : rule?.text ?? "";
-  return exercisePromptTemplate(text);
-}
-
-function generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise) {
-  const template = exercisePromptTemplate(currentExercise?.prompt);
-  const method = exerciseMethodTemplate(currentExercise);
-
-  for (let i = 0; i < 250; i++) {
-    const candidate = chapter.generate(difficulty);
-    if (candidate.chapter !== currentExercise?.chapter) continue;
-    if (
-      candidate.prompt !== currentExercise?.prompt
-      && candidate.type === currentExercise?.type
-      && (
-        exercisePromptTemplate(candidate.prompt) === template
-        || (method && exerciseMethodTemplate(candidate) === method)
-      )
-    ) return candidate;
-  }
-
-  // Pas de repli vers l'énoncé identique : dans ce cas le bouton n'est pas
-  // proposé, afin de ne jamais donner l'impression d'une banque trop pauvre.
-  return null;
-}
-
 function generateExercise(chapter, difficulty, index = 0) {
   if (Array.isArray(chapter.showcaseExercises) && chapter.showcaseExercises.length > 0) {
     return chapter.showcaseExercises[index % chapter.showcaseExercises.length];
   }
   return chapter.generate(difficulty);
-}
-
-// Les vitrines sont une petite banque fixe : leur `generate()` historique
-// renvoie la première question, qui peut appartenir à une tout autre notion.
-// Une vérification doit impérativement rester sur l'exercice courant. Une
-// variante dédiée est utilisée lorsqu'elle existe ; sinon aucune vérification
-// immédiate n'est proposée plutôt que de répéter l'énoncé ou changer de notion.
-function generateSimilarExercise(chapter, difficulty, currentExercise) {
-  if (Array.isArray(chapter.showcaseExercises)) {
-    return currentExercise?.similarExercise ?? null;
-  }
-  return generateSameExerciseWithNewNumbers(chapter, difficulty, currentExercise);
 }
 
 export default function ChapterRunner({ chapter, difficulty, sessionLength, onSessionComplete, backTo, focusSkill, focusError, trialSource }) {
@@ -227,6 +175,9 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const sessionCorrectExercisesRef = useRef(new WeakSet());
   const recoveryOpportunityTrackedRef = useRef(new WeakSet());
   const assistanceUsedRef = useRef(false);
+  const questionFactsRef = useRef(new Map());
+  const recoverySuccessTrackedRef = useRef(new WeakSet());
+  const reviewSyncRef = useRef(Promise.resolve());
   const seenPromptsRef = useRef(new Set([exercise?.prompt].filter(Boolean)));
   const lastAttemptRef = useRef(null);
   const consecutiveCorrectRef = useRef(0);
@@ -276,6 +227,15 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     });
   }, [exercise, isCours, quotaExhausted, chapter.meta.id, chapter.meta.level, mode, analyticsSource]);
 
+  // La présentation effective, et non le clic, ouvre une récupération.
+  useEffect(() => {
+    if (isCours || quotaExhausted || sessionDone) return;
+    if (isDecouverte) assistanceUsedRef.current = true;
+    if (!verificationSkill || exercise.recoveryCheck?.scope !== "obstacle" || recoveryOpportunityTrackedRef.current.has(exercise)) return;
+    recoveryOpportunityTrackedRef.current.add(exercise);
+    trackProductEvent("recovery_opportunity", { levelId: chapter.meta.level, chapterId: chapter.meta.id, skill: verificationSkill, mode });
+  }, [exercise, verificationSkill, isCours, isDecouverte, quotaExhausted, sessionDone, chapter.meta.id, chapter.meta.level, mode]);
+
   // Streak quotidien de pratique : dès qu'on ouvre un chapitre pour s'y
   // exercer, ça compte comme la pratique du jour (voir useDailyStreak, no-op
   // si déjà comptabilisé aujourd'hui ou si non connecté).
@@ -292,7 +252,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       levelId: chapter.meta.level,
       chapterId: chapter.meta.id,
       correct: correctCount,
-      total: sessionLength ?? answeredCount,
+      total: answeredCount,
       subscribed: !!subscription,
       ...(isPersonalizedTrial ? { trialSource: trialSource ?? "unknown" } : {}),
     });
@@ -412,6 +372,27 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
     exerciseStartRef.current = Date.now();
   }, [chapter, effectiveDifficulty, difficulty, isSession, answeredCount, sessionLength, redrillQueue, focusSkill]);
 
+  const persistQuestionReview = (exercise, response, facts, methodStatus) => {
+    const review = rememberLearningReview({ exercise, response, feedback: buildPedagogicalFeedback(exercise, response), levelId: chapter.meta.level, ...facts, methodStatus });
+    const remote = toRemoteLearningReview(review);
+    if (user?.id && remote) reviewSyncRef.current = reviewSyncRef.current.then(() => supabase.from("learning_review_cards").upsert({ user_id: user.id, review_key: remote.reviewKey, payload: remote.payload, reviewed_at: new Date().toISOString() }, { onConflict: "user_id,review_key" })).then(({ error }) => {
+      if (error && error.code !== "42P01") console.error("[ChapterRunner] synchronisation du cahier :", error.message);
+    }).catch((error) => console.error("[ChapterRunner] synchronisation du cahier :", error.message));
+  };
+
+  const toggleMethod = () => {
+    assistanceUsedRef.current = true;
+    if (!showHelp && feedback) {
+      const facts = questionFactsRef.current.get(exercise);
+      if (facts) {
+        const updated = { ...facts, assisted: true };
+        questionFactsRef.current.set(exercise, updated);
+        persistQuestionReview(exercise, feedback.response, updated, "consulted");
+      }
+    }
+    setShowHelp((shown) => !shown);
+  };
+
   const retry = () => {
     setInput("");
     setSelectedOption(null);
@@ -424,15 +405,6 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
   const practiceSimilar = () => {
     if (!similarExercise) return;
     const skill = exercise.chapter;
-    if (!recoveryOpportunityTrackedRef.current.has(similarExercise)) {
-      recoveryOpportunityTrackedRef.current.add(similarExercise);
-      trackProductEvent("recovery_opportunity", {
-        levelId: chapter.meta.level,
-        chapterId: chapter.meta.id,
-        skill,
-        mode,
-      });
-    }
     setExercise(prepareWowExercise(chapter, similarExercise));
     setInput("");
     setSelectedOption(null);
@@ -463,8 +435,13 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         assisted,
       });
     }
-    const recovered = correct && Boolean(verificationSkill);
-    setFeedback({ correct, response, errorCode, recovered });
+    const facts = observeAnswer(questionFactsRef.current.get(exercise), {
+      correct, assisted, recoveryPresented: recoveryOpportunityTrackedRef.current.has(exercise),
+    });
+    const recovered = correct && facts.recovered;
+    questionFactsRef.current.set(exercise, { ...facts, skill: exercise.chapter ?? chapter.meta.title });
+    setFeedback({ correct, response, errorCode, recovered, assisted: facts.assisted });
+    persistQuestionReview(exercise, response, facts, isDecouverte || (!correct && facts.attempts > (exercise.hints?.length ?? 0)) ? "consulted" : "available");
     if (!correct) {
       assistanceUsedRef.current = true;
       setAttemptsOnExercise((count) => count + 1);
@@ -477,18 +454,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         sessionCorrectExercisesRef.current.add(exercise);
         setCorrectCount((c) => c + 1);
       }
-      setSessionSkillStats((previous) => {
-        const skill = exercise.chapter ?? chapter.meta.title;
-        const current = previous[skill] ?? { attempts: 0, correct: 0, autonomousCorrect: 0 };
-        return {
-          ...previous,
-          [skill]: {
-            attempts: current.attempts + 1,
-            correct: current.correct + (correct ? 1 : 0),
-            autonomousCorrect: current.autonomousCorrect + (correct && !assisted ? 1 : 0),
-          },
-        };
-      });
+      setSessionSkillStats(summarizeQuestions(questionFactsRef.current.values()));
     }
     adjustDifficulty(correct);
     if (!correct) queueRedrill(exercise.chapter);
@@ -511,7 +477,8 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
       assisted,
     });
     if (correct) {
-      if (verificationSkill) {
+      if (recovered && !recoverySuccessTrackedRef.current.has(exercise)) {
+        recoverySuccessTrackedRef.current.add(exercise);
         trackProductEvent("recovery_success", { skill: verificationSkill, levelId: chapter.meta.level, chapterId: chapter.meta.id });
         setVerificationSkill(null);
       }
@@ -610,7 +577,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
         className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8"
         style={{ background: paper, fontFamily: fonts.body }}
       >
-        <SessionCelebration chapterTitle={chapter.meta.title} correct={correctCount} total={sessionLength} skillStats={sessionSkillStats} discoverySignup={discoverySignup} levelId={chapter.meta.level} onContinue={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: sessionLength })}/>
+        <SessionCelebration chapterTitle={chapter.meta.title} correct={correctCount} total={answeredCount} skillStats={sessionSkillStats} discoverySignup={discoverySignup} levelId={chapter.meta.level} onContinue={() => onSessionComplete && onSessionComplete({ correct: correctCount, total: answeredCount })}/>
       </div>
     );
   }
@@ -704,7 +671,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
               return (
                 <button
                   key={m.id}
-                  onClick={() => setMode(m.id)}
+                  onClick={() => { if (m.id === "decouverte" || m.id === "cours") assistanceUsedRef.current = true; setMode(m.id); }}
                   className="relative z-10 flex-1 text-center py-1.5"
                   style={{ color: active ? (isDefi ? ink : paper) : isDefi ? "#9AA3B2" : "#8890A0" }}
                 >
@@ -772,7 +739,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
 
           {verificationSkill && (
             <p className="rounded-xl px-3 py-2 mb-3 text-xs font-semibold" style={{ backgroundColor: `${gold}14`, color: ink }}>
-              Question de vérification — même notion, sans changer de thème. Explique-toi mentalement chaque étape avant de valider.
+              {exercise.recoveryCheck?.scope === "obstacle" ? "Question de vérification — même type de raisonnement, avec de nouvelles données." : "Nouvel essai sur la même compétence. Il ne vérifie pas nécessairement la cause précise de l’erreur."}
             </p>
           )}
 
@@ -988,7 +955,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                 style={{ backgroundColor: feedback.correct ? `${green}18` : `${red}18`, color: feedback.correct ? green : red }}
               >
                 <Mascot size={42} motion={feedback.correct ? "celebrate" : "encourage"} />
-                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? correctWowMessage(exercise, feedback.recovered) : "Pas encore — réfléchis avec l’indice, puis réessaie."}</span>
+                <span className="font-semibold flex items-center gap-2">{feedback.correct ? <Check size={16} /> : <X size={16} />}{feedback.correct ? correctWowMessage(exercise, feedback.recovered, feedback.assisted) : "Pas encore — réfléchis avec l’indice, puis réessaie."}</span>
               </div>
 
               {!feedback.correct && (
@@ -999,7 +966,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                     <MathText text={exercise.hints[Math.max(0, attemptsOnExercise - 1)]} />
                   </div>
                 ) : (
-                  <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} remember levelId={chapter.meta.level} /></div>
+                  <div className="mt-2"><LearningFeedback exercise={exercise} response={feedback.response} levelId={chapter.meta.level} /></div>
                 )}
                 <div className="flex gap-2 mt-2">
                   <button
@@ -1011,7 +978,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                   </button>
                   {!isDefi && !isDecouverte && (
                     <button
-                      onClick={() => { assistanceUsedRef.current = true; setShowHelp((s) => !s); }}
+                      onClick={toggleMethod}
                       className="flex-1 py-2 rounded-full text-xs font-semibold"
                       style={{ backgroundColor: "transparent", color: ink, boxShadow: `0 0 0 1px ${ink}` }}
                     >
@@ -1025,7 +992,7 @@ export default function ChapterRunner({ chapter, difficulty, sessionLength, onSe
                     className="w-full mt-2 py-2 rounded-full text-xs font-bold"
                     style={{ backgroundColor: `${gold}20`, color: ink, boxShadow: `0 0 0 1px ${gold}55` }}
                   >
-                    Vérifier avec une question très proche
+                    {similarExercise.recoveryCheck?.scope === "obstacle" ? "Vérifier avec une question très proche" : "Réessayer la même compétence"}
                   </button>
                 )}
                 </>

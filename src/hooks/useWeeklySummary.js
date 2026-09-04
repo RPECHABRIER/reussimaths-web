@@ -110,9 +110,9 @@ export function useWeeklySummary(userId, levelId = null) {
         .sort((a, b) => a.rate - b.rate || (a.last_correct === b.last_correct ? 0 : a.last_correct ? 1 : -1))
         .slice(0, 5);
 
-      // Une notion entre dans le palier de consolidation avec plusieurs
-      // essais, au moins 75 % de réussite cumulée, une dernière réponse
-      // correcte et une prochaine révision repoussée d'au moins 7 jours.
+      // Repère de réussites cumulées, pas une preuve de rappel différé :
+      // interval_stage peut avancer plusieurs fois dans la même journée.
+      // Le bilan présente donc ces notions comme restant à consolider.
       const consolidatedSkills = [...skillsWorked]
         .filter((s) => s.attempts >= 3 && s.correct / s.attempts >= 0.75 && s.last_correct && s.interval_stage >= 2)
         .sort((a, b) => new Date(b.last_practiced_at) - new Date(a.last_practiced_at));

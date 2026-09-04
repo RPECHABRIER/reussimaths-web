@@ -498,7 +498,7 @@ test("une erreur déclenche une vérification proche et priorise les erreurs ré
   ]);
   assert.match(runner, /practiceSimilar/);
   assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
-  assert.match(runner, /Question de vérification — même notion, sans changer de thème/);
+  assert.match(runner, /Question de vérification — même type de raisonnement/);
   assert.match(tracking, /getRecurringErrors/);
   assert.match(tracking, /item\.count >= 2/);
   assert.match(review, /Priorité :/);
@@ -778,11 +778,11 @@ test("la vitrine 6e de proportionnalité garde une seule méthode dans le dérou
 
 test("une question proche de vitrine ne repart jamais sur une notion étrangère", async () => {
   const runner = await read("./components/ChapterRunner.jsx");
-  assert.match(runner, /currentExercise\?\.similarExercise \?\? null/);
+  const { generateSimilarExercise } = await import("./lib/recoveryAnalogue.js");
+  const original = { chapter: "Compétence", type: "numeric", prompt: "Calculer 2 + 3" };
+  assert.equal(generateSimilarExercise({ showcaseExercises: [original] }, "standard", original), null);
+  assert.equal(generateSimilarExercise({ showcaseExercises: [original] }, "standard", { ...original, similarExercise: { ...original, chapter: "Autre" } }), null);
   assert.match(runner, /generateSimilarExercise\(chapter, effectiveDifficulty, exercise\)/);
-  assert.match(runner, /exercisePromptTemplate\(candidate\.prompt\) === template/);
-  assert.match(runner, /candidate\.prompt !== currentExercise\?\.prompt/);
-  assert.match(runner, /return null;/);
   assert.match(runner, /\{similarExercise && \(/);
 });
 
@@ -918,7 +918,8 @@ test("la fin de séance rend le progrès visible et partageable aux parents", as
   ]);
   assert.match(runner, /<SessionCelebration/);
   assert.match(celebration, /Ton chemin de maîtrise/);
-  assert.match(celebration, /prochaine révision programmée/);
+  assert.doesNotMatch(celebration, /prochaine révision programmée/);
+  assert.match(celebration, /à revoir lors d’une autre séance/);
   assert.match(celebration, /Montrer ce progrès à mes parents/);
   assert.match(celebration, /account_cta_clicked/);
 });

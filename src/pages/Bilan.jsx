@@ -1,3 +1,4 @@
+import { reviewObservation } from "../lib/pedagogicalReliability";
 import { Link } from "react-router-dom";
 import { Clock, Target, TrendingUp, ListChecks, Award, ArrowRight, BookOpenCheck, Sparkles, Printer, CalendarDays, HeartHandshake, Brain, ShieldCheck } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
@@ -69,13 +70,13 @@ function parentSummary(summary) {
   }
   if (summary.previousSuccessRate !== null && summary.successRate !== null) {
     const delta = summary.successRate - summary.previousSuccessRate;
-    if (delta >= 5) return `La réussite progresse de ${delta} points. Le travail de la semaine porte ses fruits.`;
+    if (delta >= 5) return `Le taux de réponses correctes est supérieur de ${delta} points à celui de la semaine précédente. Les questions peuvent être différentes.`;
     if (delta <= -5) return `La réussite baisse de ${Math.abs(delta)} points. Les notions fragiles ci-dessous sont à revoir en priorité.`;
   }
   if (summary.consolidatedSkills.length > 0) {
-    return `${summary.consolidatedSkills.length} notion${summary.consolidatedSkills.length > 1 ? "s ont" : " a"} atteint un palier de consolidation cette semaine.`;
+    return `${summary.consolidatedSkills.length} notion${summary.consolidatedSkills.length > 1 ? "s ont" : " a"} plusieurs réussites enregistrées. Un rappel lors d’une autre séance reste nécessaire.`;
   }
-  return `${summary.totalAttempts} exercice${summary.totalAttempts > 1 ? "s" : ""} réalisé${summary.totalAttempts > 1 ? "s" : ""} sur ${summary.activeDays} jour${summary.activeDays > 1 ? "s" : ""}. La régularité aidera à consolider les acquis.`;
+  return `${summary.totalAttempts} réponse${summary.totalAttempts > 1 ? "s" : ""} enregistrée${summary.totalAttempts > 1 ? "s" : ""} sur ${summary.activeDays} jour${summary.activeDays > 1 ? "s" : ""}. La régularité aidera à consolider les acquis.`;
 }
 
 export default function Bilan() {
@@ -144,13 +145,13 @@ export default function Bilan() {
               <div className="min-w-0">
                 <p className="text-xs uppercase tracking-widest font-bold" style={{ color: gold }}>Ce que j’ai appris</p>
                 <h2 className="mt-1 text-lg font-black" style={{ color: ink, fontFamily: fonts.display }}>Mes explications de la semaine</h2>
-                <p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>Ouvre une carte pour revoir avec tes parents l’erreur, la méthode et l’animation associée.</p>
+                <p className="mt-1 text-xs leading-relaxed" style={{ color: slate }}>Ouvre une carte pour revoir avec tes parents le résultat observé, la méthode et l’animation associée.</p>
               </div>
             </div>
             <div className="mt-4 rounded-2xl p-4" style={{backgroundColor:`${colors.green}10`,border:`1px solid ${colors.green}25`}}>
               <p className="text-[10px] uppercase tracking-widest font-black" style={{color:colors.green}}>L’apprentissage à raconter cette semaine</p>
-              <p className="mt-2 text-sm leading-relaxed" style={{color:ink}}>Une difficulté a été rencontrée en <strong>{learningReviews[0].chapter}</strong>. RéussiMaths a repris l’idée importante et la méthode étape par étape. L’objectif suivant est de réussir une question proche sans aide, puis de vérifier quelques jours plus tard que la méthode revient.</p>
-              <p className="mt-2 text-xs" style={{color:slate}}><strong style={{color:ink}}>À demander à votre enfant :</strong> « Peux-tu m’expliquer avec tes mots ce que tu feras différemment la prochaine fois ? »</p>
+              <p className="mt-2 text-sm leading-relaxed" style={{color:ink}}><strong>{learningReviews[0].chapter}</strong> : {reviewObservation(learningReviews[0])}</p>
+              <p className="mt-2 text-xs" style={{color:slate}}><strong style={{color:ink}}>À demander à votre enfant :</strong> « Peux-tu m’expliquer avec tes mots la méthode utilisée ? »</p>
             </div>
             <div className="mt-4 flex flex-col gap-2">
               {learningReviews.slice(0, 8).map((review, index) => (
@@ -163,10 +164,11 @@ export default function Bilan() {
                     </span>
                   </summary>
                   <div className="mt-3 border-t pt-3 text-xs leading-relaxed" style={{ borderColor: colors.hairline, color: slate }}>
+                    <p className="mb-2">{reviewObservation(review)} {review.methodStatus === "consulted" ? "Explication consultée." : "Explication disponible."}</p>
                     <p><strong style={{ color: ink }}>L’idée importante :</strong> <MathText text={review.meaning} /></p>
                     <p className="mt-2"><strong style={{ color: ink }}>Méthode à retenir :</strong> <MathText text={review.rule} /></p>
                     {review.steps?.length > 0 && <div className="mt-2 rounded-xl bg-white p-3">{review.steps.map((step, stepIndex) => <MathText key={`${review.id}-${stepIndex}`} as="p" text={`${stepIndex + 1}. ${typeof step === "string" ? step : step?.text ?? ""}`} className={stepIndex ? "mt-1" : ""} />)}</div>}
-                    <FeedbackVisual family={review.family} exercise={{ prompt: review.prompt, chapter: review.chapter }} />
+                    {review.expectedAnswer !== undefined && <FeedbackVisual family={review.family} exercise={{ prompt: review.prompt, chapter: review.chapter, answer: review.expectedAnswer, type: review.exerciseType }} />}
                     <p className="mt-2 font-bold" style={{ color: ink }}><MathText text={review.conclusion} /></p>
                   </div>
                 </details>
@@ -200,8 +202,8 @@ export default function Bilan() {
               <div className="grid grid-cols-3 gap-2 mt-4">
                 {[
                   [`${summary.activeDays}/7`, "jours actifs"],
-                  [summary.totalAttempts, "exercices"],
-                  [summary.consolidatedSkills.length, "acquis consolidés"],
+                  [summary.totalAttempts, "réponses"],
+                  [summary.consolidatedSkills.length, "notions à consolider"],
                 ].map(([value, label]) => <div key={label} className="min-w-0 rounded-2xl p-2.5 text-center" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}><p className="text-base font-black" style={{ color: gold }}>{value}</p><p className="text-[9px] leading-tight mt-0.5" style={{ color: colors.bg }}>{label}</p></div>)}
               </div>
               {summary.priorities.length > 0 && (
@@ -303,7 +305,7 @@ export default function Bilan() {
               </div>
               {summary.successRate === null ? (
                 <p className="text-sm" style={{ color: slate }}>
-                  Pas encore assez d'exercices cette semaine pour calculer un taux de réussite.
+                  Pas encore assez de réponses cette semaine pour calculer un taux de réussite.
                 </p>
               ) : (
                 <>
@@ -311,11 +313,11 @@ export default function Bilan() {
                     {summary.successRate} %
                   </p>
                   <p className="text-xs mt-1" style={{ color: slate }}>
-                    {summary.totalCorrect} bonnes réponses sur {summary.totalAttempts} exercices faits.
+                    {summary.totalCorrect} bonnes réponses sur {summary.totalAttempts} réponses enregistrées.
                   </p>
-                  {comparison(summary.totalAttempts, summary.previousAttempts, " exercices") && (
+                  {comparison(summary.totalAttempts, summary.previousAttempts, " réponses") && (
                     <p className="text-xs mt-1" style={{ color: slate }}>
-                      {comparison(summary.totalAttempts, summary.previousAttempts, " exercices")}
+                      {comparison(summary.totalAttempts, summary.previousAttempts, " réponses")}
                     </p>
                   )}
                   {comparison(summary.successRate, summary.previousSuccessRate, " points") && (
@@ -332,12 +334,12 @@ export default function Bilan() {
               <div className="flex items-center gap-2 mb-3">
                 <Award size={16} color={gold} />
                 <p className="text-xs uppercase tracking-wide font-semibold" style={{ color: slate }}>
-                  Notions en cours de consolidation
+                  Plusieurs réussites — à consolider
                 </p>
               </div>
               {summary.consolidatedSkills.length === 0 ? (
                 <p className="text-sm" style={{ color: slate }}>
-                  Aucune notion n'a encore atteint ce palier cette semaine. Plusieurs réussites sont nécessaires.
+                  Pas encore de série de réussites correspondant à ce repère. Cela ne mesure pas la mémorisation durable.
                 </p>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -401,7 +403,7 @@ export default function Bilan() {
               </div>
               {summary.priorities.length === 0 ? (
                 <p className="text-sm" style={{ color: slate }}>
-                  Rien à signaler : les notions travaillées cette semaine sont bien maîtrisées.
+                  Aucune priorité ne ressort des critères de ce bilan. Cela ne permet pas de conclure à une maîtrise durable.
                 </p>
               ) : (
                 <div className="flex flex-col gap-2.5">

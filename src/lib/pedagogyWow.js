@@ -102,7 +102,7 @@ const PROFILES = {
       [/Thalès|trigonométrie|géométrie dans l'espace/i, "Identifie les données et la propriété adaptée.", "Écris directement la relation utile puis remplace les valeurs."],
       [/transformations|mesures et grandeurs/i, "Repère ce qui est conservé et l’unité demandée.", "Applique la propriété ou la conversion en une étape contrôlée."],
     ],
-    success: "Exact. L’automatisme est maîtrisé.",
+    success: "Exact. Ce calcul est réussi.",
   },
   "calcul-numerique-troisieme": {
     level: "troisieme",
@@ -601,7 +601,7 @@ const PROFILES = {
       [/probabilités/i, "Identifie la condition de référence.", "Lis le chemin ou la proportion correspondant exactement à l’événement."],
       [/variables aléatoires/i, "Repère n, p et l’événement sur X.", "Applique la formule binomiale ou l’espérance en une étape contrôlée."],
     ],
-    success: "Exact. L’automatisme est maîtrisé.",
+    success: "Exact. Ce calcul est réussi.",
   },
   "probabilites-conditionnelles-terminale-techno": {
     level: "terminale-techno",
@@ -664,7 +664,7 @@ const PROFILES = {
       [/pourcentages/i, "Prends 100 comme quantité de référence.", "Écris le pourcentage sous forme décimale, puis multiplie par la quantité totale."],
       [/géométrie|vocabulaire/i, "Relis le mot précis demandé.", "Associe la définition à la propriété avant de conclure."],
     ],
-    success: "Exact. Le prérequis est bien maîtrisé.",
+    success: "Exact. Cette question sur le prérequis est réussie.",
   },
   "automatismes-cinquieme": {
     level: "cinquieme",
@@ -768,7 +768,7 @@ const PROFILES = {
       [/proportionnalité/i, "Distingue taux, coefficient et valeur finale.", "Écris le coefficient multiplicateur adapté puis interprète le résultat."],
       [/vecteurs/i, "Choisis une base ou des coordonnées communes.", "Traduis la relation vectorielle coordonnée par coordonnée puis vérifie la direction obtenue."],
     ],
-    success: "Exact. Le prérequis algébrique est maîtrisé.",
+    success: "Exact. Cette question d’algèbre est réussie.",
   },
   "reviser-les-bases-premiere-non-spe": {
     level: "premiere-non-spe",
@@ -1613,8 +1613,9 @@ export function prepareWowExercise(chapter, exercise) {
   };
 }
 
-export function correctWowMessage(exercise, recovered = false) {
-  if (recovered) return "✓ Cette fois, tu as réussi seul. La méthode est réparée.";
+export function correctWowMessage(exercise, recovered = false, assisted = false) {
+  if (recovered) return "✓ Cette fois, tu as réussi seul sur une question analogue après la reprise.";
+  if (assisted) return "✓ Réponse correcte après la reprise. Un prochain essai sans aide permettra de vérifier la méthode.";
   return exercise?.wowSuccess ?? "✓ Exact. Tu peux poursuivre sans revoir toute la correction.";
 }
 

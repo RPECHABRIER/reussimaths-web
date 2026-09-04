@@ -20,12 +20,15 @@ export function getLearningReviews() {
   }
 }
 
-export function rememberLearningReview({ exercise, response, feedback, levelId = null }) {
+export function rememberLearningReview({ exercise, response, feedback, levelId = null, correct = null, assisted = null, autonomous = null, hadError = null, recovered = null, methodStatus = "available" }) {
   if (!exercise || !feedback || typeof localStorage === "undefined") return;
   const review = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     createdAt: Date.now(),
     levelId,
+    correct, assisted, autonomous, hadError, recovered, methodStatus,
+    expectedAnswer: exercise.answer,
+    exerciseType: exercise.type,
     chapter: String(exercise.chapter ?? "Notion travaillée").slice(0, 180),
     prompt: String(exercise.prompt ?? "").slice(0, 500),
     response: Array.isArray(response) ? response.join(" ; ") : String(response ?? ""),
@@ -37,11 +40,23 @@ export function rememberLearningReview({ exercise, response, feedback, levelId =
     steps: feedback.steps,
   };
   const previous = getLearningReviews();
-  const duplicate = previous.find((item) => item.prompt === review.prompt && item.response === review.response && Date.now() - item.createdAt < 60_000);
-  const storedReview = duplicate ? { ...review, id: duplicate.id, createdAt: duplicate.createdAt } : review;
+  const duplicate = previous.find((item) => item.prompt === review.prompt && item.chapter === review.chapter && Date.now() - item.createdAt < 60_000);
+  // Une carte affichée plus tard ne doit ni effacer une erreur observée,
+  // ni inventer l'autonomie des historiques antérieurs au contrat P0-B.
+  const storedReview = duplicate ? {
+    ...review, id: duplicate.id, createdAt: duplicate.createdAt,
+    correct: correct ?? duplicate.correct ?? null,
+    assisted: assisted ?? duplicate.assisted ?? null,
+    autonomous: autonomous ?? duplicate.autonomous ?? null,
+    hadError: Boolean(hadError || duplicate.hadError || correct === false),
+    recovered: recovered ?? duplicate.recovered ?? null,
+    methodStatus: methodStatus === "consulted" || duplicate.methodStatus === "consulted" ? "consulted" : "available",
+  } : { ...review, hadError: hadError ?? (correct === false ? true : null) };
   const next = duplicate ? [storedReview, ...previous.filter((item) => item.id !== duplicate.id)] : [storedReview, ...previous];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(next.slice(0, MAX_REVIEWS)));
-  window.dispatchEvent(new Event("reussimaths:learning-reviews"));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next.slice(0, MAX_REVIEWS)));
+    window.dispatchEvent(new Event("reussimaths:learning-reviews"));
+  } catch { /* stockage indisponible : la séance reste utilisable */ }
   return storedReview;
 }
 
